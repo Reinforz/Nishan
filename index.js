@@ -1,5 +1,6 @@
 const copyBlock = require('./api/copyBlock');
 const transferBlock = require('./api/transferBlock');
+const createFiltersSort = require('./api/createFiltersSort');
 
 class Noshon {
 	constructor ({ user_id, shardId, token, spaceId }) {
@@ -32,6 +33,10 @@ class Noshon {
 			parent_id,
 			block_id
 		});
+	}
+
+	async createFiltersSort ({ sort, filters, pageId }) {
+		return await createFiltersSort({ sort, filters, pageId, token: this.token });
 	}
 }
 

@@ -1,7 +1,7 @@
 {
-  "name": "Notion",
+  "name": "noshon",
   "version": "1.0.0",
-  "description": "",
+  "description": "Unofficial Notion Api",
   "main": "index.js",
   "dependencies": {
     "axios": "^0.20.0",

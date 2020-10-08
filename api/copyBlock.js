@@ -52,7 +52,6 @@ module.exports = async function ({ title, parent_id, spaceId, shardId, token, so
 		},
 		opts
 	);
-
 	if (title)
 		await axios.post(
 			'https://www.notion.so/api/v3/saveTransactions',

@@ -25,5 +25,14 @@ module.exports = {
 			command: 'listAfter',
 			args
 		};
+	},
+	blockListRemove (id, path, args) {
+		return {
+			table: 'block',
+			id,
+			path,
+			command: 'listRemove',
+			args
+		};
 	}
 };

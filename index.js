@@ -1,4 +1,5 @@
 const copyBlock = require('./api/copyBlock');
+const transferBlock = require('./api/transferBlock');
 
 class Noshon {
 	constructor ({ user_id, shardId, token, spaceId }) {
@@ -8,7 +9,7 @@ class Noshon {
 		this.spaceId = spaceId;
 	}
 
-	async copyBlock ({ new_name, parent_id, source_block_id, spaceId }) {
+	async copyBlock ({ title, new_name, parent_id, source_block_id, spaceId }) {
 		return await copyBlock({
 			user_id: this.user_id,
 			shardId: this.shardId,
@@ -16,7 +17,20 @@ class Noshon {
 			spaceId: spaceId ? spaceId : this.spaceId,
 			parent_id,
 			new_name,
-			source_block_id
+			source_block_id,
+			title
+		});
+	}
+
+	async transferBlock ({ new_parent_id, parent_id, block_id, spaceId }) {
+		return await transferBlock({
+			user_id: this.user_id,
+			shardId: this.shardId,
+			spaceId: spaceId ? spaceId : this.spaceId,
+			token: this.token,
+			new_parent_id,
+			parent_id,
+			block_id
 		});
 	}
 }

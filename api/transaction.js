@@ -9,14 +9,12 @@ class Transaction {
 	createTransaction (operations) {
 		return {
 			requestId: uuidv4(),
-			transactions: [
-				{
-					id: uuidv4(),
-					shardId: this.shardId,
-					spaceId: this.spaceId,
-					operations
-				}
-			]
+			transactions: operations.map((operations) => ({
+				id: uuidv4(),
+				shardId: this.shardId,
+				spaceId: this.spaceId,
+				operations
+			}))
 		};
 	}
 }

@@ -22,37 +22,41 @@ module.exports = async function ({ sort, filters, pageId, token }) {
 	const block_ids = Object.values(res.data.recordMap.block)
 		.filter((block) => block.value.parent_id === pageId)
 		.map((block) => block.value.id);
-	const collection_view = Object.values(res.data.recordMap.collection_view).find((collection_view) =>
-		block_ids.includes(collection_view.value.parent_id)
-	);
+	console.log(res.data.recordMap);
 
-	await axios.post(
-		'https://www.notion.so/api/v3/saveTransactions',
-		{
-			requestId: uuidv4(),
-			transactions: [
-				{
-					id: uuidv4(),
-					operations: [
-						{
-							id: collection_view.value.id,
-							table: 'collection_view',
-							path: [],
-							command: 'update',
-							args: {
-								query2: {
-									sort,
-									filter: {
-										operator: 'and',
-										filters
+	if (block_ids.length > 0) {
+		const collection_view = Object.values(res.data.recordMap.collection_view).find((collection_view) =>
+			block_ids.includes(collection_view.value.parent_id)
+		);
+
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			{
+				requestId: uuidv4(),
+				transactions: [
+					{
+						id: uuidv4(),
+						operations: [
+							{
+								id: collection_view.value.id,
+								table: 'collection_view',
+								path: [],
+								command: 'update',
+								args: {
+									query2: {
+										sort,
+										filter: {
+											operator: 'and',
+											filters
+										}
 									}
 								}
 							}
-						}
-					]
-				}
-			]
-		},
-		opts
-	);
+						]
+					}
+				]
+			},
+			opts
+		);
+	}
 };

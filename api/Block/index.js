@@ -104,6 +104,34 @@ class Block {
 		);
 	}
 
+	async updateProperties (properties) {
+		const property_entries = Object.entries(properties);
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			this.Transaction.createTransaction([
+				[
+					...property_entries.map(([ path, arg ]) => blockSet(this.block_data.id, [ 'properties', path ], [ [ arg ] ])),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+				]
+			]),
+			Block.headers
+		);
+	}
+
+	async updateFormat (formats) {
+		const format_entries = Object.entries(formats);
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			this.Transaction.createTransaction([
+				[
+					...format_entries.map(([ path, arg ]) => blockSet(this.block_data.id, [ 'format', path ], arg)),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+				]
+			]),
+			Block.headers
+		);
+	}
+
 	async duplicateBlock () {
 		const generated_table_id = uuidv4();
 

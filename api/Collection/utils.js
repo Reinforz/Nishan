@@ -1,7 +1,7 @@
-function collectionView (id, path, args, command) {
+function collection (id, path, args, command) {
 	const res = {
 		path,
-		table: 'collection_view',
+		table: 'collection',
 		command,
 		args
 	};
@@ -10,8 +10,8 @@ function collectionView (id, path, args, command) {
 }
 
 module.exports = {
-	collectionViewSet: (id, path, args) => collectionView(id, path, args, 'set'),
-	collectionViewUpdate: (id, path, args) => collectionView(id, path, args, 'update'),
-	collectionViewListAfter: (id, path, args) => collectionView(id, path, args, 'listAfter'),
-	collectionViewListRemove: (id, path, args) => collectionView(id, path, args, 'listRemove')
+	collectionSet: (id, path, args) => collection(id, path, args, 'set'),
+	collectionUpdate: (id, path, args) => collection(id, path, args, 'update'),
+	collectionListAfter: (id, path, args) => collection(id, path, args, 'listAfter'),
+	collectionListRemove: (id, path, args) => collection(id, path, args, 'listRemove')
 };

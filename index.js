@@ -1,6 +1,6 @@
 const Block = require('./api/Block');
 
-class Noshon {
+class Nishan {
 	static cache = {
 		block: new Map(),
 		collection: new Map(),
@@ -8,7 +8,7 @@ class Noshon {
 	};
 
 	static addToCache (type, id, data) {
-		Noshon.cache[type].set(id, data);
+		Nishan.cache[type].set(id, data);
 	}
 
 	constructor ({ user_id, shardId, token, spaceId, interval }) {
@@ -21,7 +21,7 @@ class Noshon {
 
 	get Block () {
 		return Block.setStatic({
-			cache: Noshon.cache,
+			cache: Nishan.cache,
 			interval: this.inverval,
 			token: this.token,
 			shardId: this.shardId,
@@ -35,4 +35,4 @@ class Noshon {
 	}
 }
 
-module.exports = Noshon;
+module.exports = Nishan;

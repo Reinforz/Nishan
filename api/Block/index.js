@@ -5,7 +5,8 @@ const Transaction = require('./transaction');
 const { lastEditOperations, createOperation } = require('./operations');
 const { blockUpdate, blockListRemove, blockSet, blockListAfter } = require('./utils');
 
-const { collectionViewSet } = require('../Collection/utils');
+const { collectionViewSet, collectionViewUpdate } = require('../CollectionView/utils');
+const { collectionUpdate } = require('../Collection/utils');
 
 class Block {
 	static setStatic (obj) {
@@ -214,6 +215,61 @@ class Block {
 					}
 				}
 			},
+			Block.headers
+		);
+	}
+
+	async convertToFullPage (options) {
+		const { type = 'table', name = 'Default view', collection_name = 'Default collection name', format = {} } = options;
+		const $collection_id = uuidv4();
+		const $collection_view_id = uuidv4();
+		const current_time = Date.now();
+
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			this.Transaction.createTransaction([
+				[
+					blockUpdate(this.block_data.id, [], {
+						id: this.block_data.id,
+						type: 'collection_view_page',
+						collection_id: $collection_id,
+						view_ids: [ $collection_view_id ],
+						properties: {},
+						created_time: current_time,
+						last_edited_time: current_time
+					}),
+					collectionViewUpdate($collection_view_id, [], {
+						id: $collection_view_id,
+						version: 0,
+						type,
+						name,
+						format: {
+							table_properties: [ { property: 'title', visible: true, width: 250 } ],
+							table_wrap: true
+						},
+						query2: { aggregations: [ { property: 'title', aggregator: 'count' } ] },
+						page_sort: [],
+						parent_id: this.block_data.id,
+						parent_table: 'block',
+						alive: true
+					}),
+					collectionUpdate($collection_id, [], {
+						id: '4d397df7-6664-49a4-a1cd-0feddf234154',
+						schema: {
+							title: { name: 'Name', type: 'title' }
+						},
+						format: {
+							collection_page_properties: []
+						},
+						parent_id: this.block_data.id,
+						parent_table: 'block',
+						alive: true
+					}),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], current_time),
+					collectionUpdate($collection_id, [], { name: [ [ collection_name ] ], format }),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+				]
+			]),
 			Block.headers
 		);
 	}

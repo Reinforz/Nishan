@@ -219,7 +219,7 @@ class Block {
 		);
 	}
 
-	async convertToFullPage (options) {
+	async convertToCollection (options) {
 		const { type = 'table', name = 'Default view', collection_name = 'Default collection name', format = {} } = options;
 		const $collection_id = uuidv4();
 		const $collection_view_id = uuidv4();
@@ -267,6 +267,31 @@ class Block {
 					}),
 					blockSet(this.block_data.id, [ 'last_edited_time' ], current_time),
 					collectionUpdate($collection_id, [], { name: [ [ collection_name ] ], format }),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+				]
+			]),
+			Block.headers
+		);
+	}
+
+	async createCollectionView (options) {
+		const { type = 'table', name = 'Table View' } = options;
+		const $collection_view_id = uuidv4();
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			this.Transaction.createTransaction([
+				[
+					collectionViewSet($collection_view_id, [], {
+						id: $collection_view_id,
+						version: 1,
+						name,
+						type,
+						format: { list_properties: [] },
+						parent_table: 'block',
+						alive: true,
+						parent_id: this.block_data.id
+					}),
+					blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $collection_view_id }),
 					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
 				]
 			]),

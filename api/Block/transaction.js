@@ -1,12 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
 
 class Transaction {
-	constructor ({ spaceId, shardId }) {
-		this.spaceId = spaceId;
-		this.shardId = shardId;
+	static setStatic (obj) {
+		Object.entries(obj).forEach(([ key, value ]) => (Transaction[key] = value));
+		return Transaction;
 	}
 
-	createTransaction (operations) {
+	static createTransaction (operations) {
 		return {
 			requestId: uuidv4(),
 			transactions: operations.map((operations) => ({

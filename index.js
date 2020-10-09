@@ -1,3 +1,4 @@
+const Block = require('./api/Block/index');
 const copyBlock = require('./api/copyBlock');
 const transferBlock = require('./api/transferBlock');
 const createFiltersSort = require('./api/createFiltersSort');
@@ -6,6 +7,12 @@ const deleteBlock = require('./api/deleteBlock');
 const changePageTitle = require('./api/changePageTitle');
 
 class Noshon {
+	static cache = {
+		block: new Map(),
+		collection: new Map(),
+		space: new Map()
+	};
+
 	constructor ({ user_id, shardId, token, spaceId, interval }) {
 		this.user_id = user_id;
 		this.shardId = shardId;
@@ -13,6 +20,11 @@ class Noshon {
 		this.spaceId = spaceId;
 		this.interval = interval || 500;
 	}
+
+	static addToCache (type, id, data) {
+		Noshon.cache[type].set(id, data);
+	}
+
 	async changePageTitle ({ page_id, title }) {
 		const res = await changePageTitle({
 			page_id,
@@ -76,6 +88,13 @@ class Noshon {
 			spaceId: this.spaceId,
 			token: this.token
 		});
+		return new Promise((resolve) => setTimeout(() => resolve(res), this.interval));
+	}
+
+	async getBlock (block_id) {
+		if (Noshon.cache.block.has(block_id)) return Noshon.cache.block.get(block_id);
+
+		const res = await Block.getBlock(block_id, Noshon.cache, this.token);
 		return new Promise((resolve) => setTimeout(() => resolve(res), this.interval));
 	}
 }

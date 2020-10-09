@@ -4,7 +4,7 @@ interface ValueArg {
   color: string
 };
 
-type SchemaUnitType = 'numti_select' | 'select' | 'number' | 'title' | 'checkbox'
+type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation'
 
 interface SchemaUnit {
   name: string,
@@ -18,7 +18,7 @@ interface Schema {
 type Args = { value: ValueArg } | { schema: Schema } | string[][] | number;
 
 interface Operation {
-  table: 'collection' | 'block',
+  table: 'collection' | 'block' | 'collection_view' | 'space',
   id: string,
   command: 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter',
   path: string[],
@@ -119,37 +119,157 @@ interface SpaceView extends Node {
   visited_templated: string[]
 }
 
-interface UserContent {
-  recordMap: {
-    block: {
-      [key: string]: {
-        role: 'editor',
-        value: Block
-      }
-    },
-    collection: {
-      [key: string]: {
-        role: 'editor',
-        value: Collection
-      }
-    },
-    notion_user: {
-      [key: string]: {
-        role: 'editor',
-        value: NotionUser
-      }
-    },
-    space: {
-      [key: string]: {
-        role: 'editor',
-        value: Space
-      }
-    },
-    space_view: {
-      [key: string]: {
-        role: 'editor',
-        value: SpaceView
-      }
-    },
+interface CollectionViewFormatTableProperties {
+  width?: number,
+  visible: boolean,
+  property: string
+}
+
+interface CollectionViewFormat {
+  table_properties: CollectionViewFormatTableProperties[],
+  table_wrap: boolean
+}
+
+interface CollectionViewAggregation {
+  property: string,
+  aggregator: "count"
+}
+
+interface CollectionView extends Node {
+  format: CollectionViewFormat,
+  name: string,
+  page_sort: string[],
+  query2: {
+    aggregation: CollectionViewAggregation[]
+  },
+  type: 'table'
+}
+
+interface UserRoot {
+  id: string,
+  space_views: string[],
+  version: number
+}
+
+interface UserSettings {
+  locale: 'en-US' | 'en-GB',
+  persona: 'personal'
+}
+
+interface Cursor {
+  stack: Stack[][]
+}
+
+interface Stack {
+  id: string,
+  index: number,
+  table: 'block'
+}
+/*
+  API Interfaces
+*/
+
+interface BlockData {
+  [key: string]: {
+    role: 'editor',
+    value: Block
   }
+}
+
+interface SpaceData {
+  [key: string]: {
+    role: 'editor',
+    value: Space
+  }
+}
+
+interface SpaceViewData {
+  [key: string]: {
+    role: 'editor',
+    value: SpaceView
+  }
+}
+
+interface CollectionData {
+  [key: string]: {
+    role: 'editor',
+    value: Collection
+  }
+}
+
+interface CollectionViewData {
+  [key: string]: {
+    role: 'editor',
+    value: CollectionView
+  }
+}
+
+interface NotionUserData {
+  [key: string]: {
+    role: 'editor',
+    value: NotionUser
+  }
+}
+
+interface UserRootData {
+  [key: string]: {
+    role: 'editor',
+    value: UserRoot
+  }
+}
+
+interface UserSettingsData {
+  [key: string]: {
+    role: 'editor',
+    value: {
+      id: string,
+      version: number,
+      settings: UserSettings
+    }
+  }
+}
+
+interface GetUserContentRes {
+  recordMap: UserContent
+}
+
+interface GetSpacesRes {
+  // key is the id of the user
+  [key: string]: UserContent
+}
+
+interface GetUserSharePagesRes {
+  pages: { id: string, spaceId: string }[],
+  recordMap: {
+    block: BlockData,
+    space: SpaceData,
+  }
+}
+
+interface LoadPageChunkParam {
+  chunkNumber: 0,
+  cursor: Cursor,
+  limit: number,
+  pageId: string,
+  verticalColumns: boolean
+}
+
+interface LoadPageChunkRes {
+  cursor: Cursor,
+  recordMap: {
+    block: BlockData,
+    collection: CollectionData
+    collection_view: CollectionViewData,
+    space: SpaceData,
+  }
+}
+
+interface UserContent {
+  block: BlockData,
+  collection: CollectionData,
+  notion_user: NotionUserData,
+  space: SpaceData
+  space_view: SpaceViewData,
+  user_root: UserRootData,
+  user_settings: UserSettingsData,
 } 

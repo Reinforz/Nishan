@@ -31,6 +31,20 @@ class Block {
 		});
 	}
 
+	async loadUserChunk (limit = 10) {
+		const res = await axios.post(
+			'https://www.notion.so/api/v3/loadPageChunk',
+			{
+				pageId: this.block_data.id,
+				limit,
+				chunkNumber: 0
+			},
+			Block.headers
+		);
+		Block.saveToCache(res.data.recordMap);
+		return res.data;
+	}
+
 	async deleteBlock () {
 		const current_time = Date.now();
 		const { data: res } = await axios.post(
@@ -66,6 +80,26 @@ class Block {
 		if (!target) red(`The block could be a nested block, try passing nested: true to options`);
 		return new Promise((resolve) =>
 			setTimeout(() => resolve(target ? new Block(recordMap.block[block_id].value) : undefined), Block.interval)
+		);
+	}
+
+	async transferBlock (new_parent_id) {
+		const current_time = Date.now();
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			Transaction.createTransaction([
+				[
+					blockUpdate(this.block_data.id, [], { alive: false }),
+					blockListRemove(this.block_data.parent_id, [ 'content' ], { id: this.block_data.id }),
+					blockUpdate(this.block_data.id, [], { parent_id: new_parent_id, parent_table: 'block', alive: true }),
+					blockListAfter(new_parent_id, [ 'content' ], { id: this.block_data.id }),
+					blockUpdate(this.block_data.id, [], { permissions: null }),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], current_time),
+					blockSet(this.block_data.parent_id, [ 'last_edited_time' ], current_time),
+					blockSet(new_parent_id, [ 'last_edited_time' ], current_time)
+				]
+			]),
+			opts
 		);
 	}
 
@@ -389,7 +423,8 @@ class Block {
 		return new Collection({ block_data: this.block_data });
 	}
 
-	async getCollection () {
+	async getCollectionViewPage () {
+		// ? Return new CollectionViewPage passing parent block data and new block data
 		if (!this.block_data.collection_id) {
 			red(`The block is not a collection_view_page`);
 			return undefined;
@@ -399,13 +434,8 @@ class Block {
 					block_data: this.block_data,
 					collection_data: Block.cache.collection.get(this.block_data.collection_id)
 				});
-			const { res: { recordMap: data } } = await axios.post('https://www.notion.so/api/v3/loadPageChunk', {
-				pageId: this.block_data.id,
-				limit: 10,
-				chunkNumber: 0
-			});
+			await this.loadUserChunk();
 
-			saveToCache(data);
 			return new Collection({
 				block_data: this.block_data,
 				collection_data: Block.cache.collection.get(this.block_data.collection_id)

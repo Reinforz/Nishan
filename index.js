@@ -1,6 +1,10 @@
 const axios = require('axios');
 
 const Block = require('./api/Block');
+const Page = require('./api/Page');
+const CollectionView = require('./api/CollectionView');
+const CollectionViewPage = require('./api/CollectionViewPage');
+const View = require('./api/View');
 const Collection = require('./api/Collection');
 const Transaction = require('./api/Transaction');
 
@@ -21,29 +25,20 @@ class Nishan {
 		this.user_id = user_id;
 		this.shard_id = shard_id;
 		this.space_id = space_id;
-		Block.setStatic({
-			cache: Nishan.cache,
-			interval,
-			user_id,
-			token: this.token,
-			headers: {
-				headers: {
-					cookie: `token_v2=${this.token};`
-				}
-			}
-		});
 
-		Collection.setStatic({
-			cache: Nishan.cache,
-			interval,
-			user_id,
-			token: this.token,
-			headers: {
+		[ Page, CollectionView, CollectionViewPage, View, Collection, Block ].forEach((_class) =>
+			_class.setStatic({
+				cache: Nishan.cache,
+				interval,
+				user_id,
+				token: this.token,
 				headers: {
-					cookie: `token_v2=${this.token};`
+					headers: {
+						cookie: `token_v2=${this.token};`
+					}
 				}
-			}
-		});
+			})
+		);
 	}
 
 	async getSpace (fn) {

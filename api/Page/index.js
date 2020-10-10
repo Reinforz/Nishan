@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const Block = require('../Block');
 const CollectionViewPage = require('../CollectionViewPage');
+const CollectionView = require('../CollectionView');
 const Transaction = require('../Transaction');
 
 const { lastEditOperations, createOperation } = require('../Operations/utils');
@@ -329,6 +330,21 @@ class Page extends Block {
 				]),
 				Block.headers
 			);
+
+			const { data: { recordMap: { block: collection_view } } } = await axios.post(
+				'https://www.notion.so/api/v3/queryCollection',
+				{
+					collectionId: $collection_id,
+					collectionViewId: $view_id,
+					query: {},
+					loader: {
+						limit: 70,
+						type: 'table'
+					}
+				},
+				Page.headers
+			);
+			return new CollectionView(collection_view[$collection_view_id].value);
 		} catch (err) {
 			error(err.response.data);
 		}

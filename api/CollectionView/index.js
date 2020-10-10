@@ -1,6 +1,12 @@
-const Block = require('../Block');
+const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
-class CollectionView extends Block {
+const Collection = require('../Collection');
+const Transaction = require('../Transaction');
+
+const { error, warn } = require('../../utils/logs');
+
+class CollectionView extends Collection {
 	constructor (block_data) {
 		super(block_data);
 	}

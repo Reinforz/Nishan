@@ -183,33 +183,6 @@ class Page extends Block {
 		}
 	}
 
-	async createCollectionView (options) {
-		if (this.block_data.collection_id) {
-			const { type = 'table', name = 'Table View' } = options;
-			const $view_id = uuidv4();
-			await axios.post(
-				'https://www.notion.so/api/v3/saveTransactions',
-				Transaction.createTransaction([
-					[
-						collectionViewSet($view_id, [], {
-							id: $view_id,
-							version: 1,
-							name,
-							type,
-							format: { [`${type}_properties`]: [] },
-							parent_table: 'block',
-							alive: true,
-							parent_id: this.block_data.id
-						}),
-						blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $view_id }),
-						blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
-					]
-				]),
-				Block.headers
-			);
-		} else error(`This block is not collection type`);
-	}
-
 	async convertToCollectionViewPage (options = {}) {
 		// ? Take schema, properties and aggregates as options
 		const { type = 'table', name = 'Default view', collection_name = 'Collection view page', format = {} } = options;

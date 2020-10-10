@@ -24,6 +24,7 @@ class Nishan {
 		Block.setStatic({
 			cache: Nishan.cache,
 			interval,
+			user_id,
 			token: this.token,
 			headers: {
 				headers: {
@@ -35,6 +36,7 @@ class Nishan {
 		Collection.setStatic({
 			cache: Nishan.cache,
 			interval,
+			user_id,
 			token: this.token,
 			headers: {
 				headers: {

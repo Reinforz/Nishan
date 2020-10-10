@@ -75,7 +75,8 @@ class Block {
 			const { format = {}, properties = {}, type = 'page' } = options;
 			const $content_id = uuidv4();
 			const current_time = Date.now();
-			if (this.block_data.collection_id) red(`The block is a collection and thus cannot contain a page content`);
+			if (this.block_data.collection_id)
+				red(`The block is of collection_view_page and thus cannot contain a ${type} content`);
 			else {
 				try {
 					return new Promise((resolve) =>
@@ -115,7 +116,7 @@ class Block {
 						}, Block.interval)
 					);
 				} catch (err) {
-					console.log(err.response.data.message);
+					red(err.response.data);
 				}
 			}
 		} else {
@@ -124,17 +125,79 @@ class Block {
 		}
 	}
 
+	async createCollectionViewContent (options = {}) {
+		//? Returns collection_view and parent block
+		const $collection_view_id = uuidv4();
+		const $collection_id = uuidv4();
+		const $view_id = uuidv4();
+		const parent_id = this.block_data.id;
+		const user_id = Block.user_id;
+		const { type = 'table', name = 'Default view' } = options;
+		try {
+			await axios.post(
+				'https://www.notion.so/api/v3/saveTransactions',
+				Transaction.createTransaction([
+					[
+						blockUpdate($collection_view_id, [], {
+							id: $collection_view_id,
+							type: 'collection_view',
+							collection_id: $collection_id,
+							view_ids: [ $view_id ],
+							properties: {},
+							created_time: Date.now(),
+							last_edited_time: Date.now()
+						}),
+						collectionViewUpdate($view_id, [], {
+							id: $view_id,
+							version: 0,
+							type,
+							name,
+							format: {
+								[`${type}_properties`]: [ { property: 'title', visible: true, width: 250 } ],
+								[`${type}_wrap`]: true
+							},
+							query2: { aggregations: [ { property: 'title', aggregator: 'count' } ] },
+							page_sort: [],
+							parent_id: $collection_view_id,
+							parent_table: 'block',
+							alive: true
+						}),
+						collectionUpdate($collection_id, [], {
+							id: $collection_id,
+							schema: {
+								title: { name: 'Name', type: 'title' }
+							},
+							format: {
+								collection_page_properties: []
+							},
+							parent_id: $collection_view_id,
+							parent_table: 'block',
+							alive: true
+						}),
+						blockUpdate($collection_view_id, [], { parent_id: parent_id, parent_table: 'block', alive: true }),
+						blockListAfter(parent_id, [ 'content' ], { after: '', id: $collection_view_id }),
+						...createOperation($collection_view_id, user_id),
+						...lastEditOperations($collection_view_id, user_id)
+					]
+				]),
+				Block.headers
+			);
+		} catch (err) {
+			red(err.response.data);
+		}
+	}
+
 	async createLinkedDBContent (collection_id) {
 		const $content_id = uuidv4();
-		const $collection_view_id = uuidv4();
+		const $view_id = uuidv4();
 		const current_time = Date.now();
 		try {
 			await axios.post(
 				'https://www.notion.so/api/v3/saveTransactions',
 				Transaction.createTransaction([
 					[
-						collectionViewSet($collection_view_id, [], {
-							id: $collection_view_id,
+						collectionViewSet($view_id, [], {
+							id: $view_id,
 							version: 1,
 							type: 'table',
 							parent_id: $content_id,
@@ -146,7 +209,7 @@ class Block {
 							version: 1,
 							type: 'collection_view',
 							collection_id,
-							view_ids: [ $collection_view_id ],
+							view_ids: [ $view_id ],
 							parent_id: this.block_data.id,
 							parent_table: 'block',
 							alive: true,
@@ -244,31 +307,31 @@ class Block {
 	async createCollectionView (options) {
 		if (this.block_data.collection_id) {
 			const { type = 'table', name = 'Table View' } = options;
-			const $collection_view_id = uuidv4();
+			const $view_id = uuidv4();
 			await axios.post(
 				'https://www.notion.so/api/v3/saveTransactions',
 				Transaction.createTransaction([
 					[
-						collectionViewSet($collection_view_id, [], {
-							id: $collection_view_id,
+						collectionViewSet($view_id, [], {
+							id: $view_id,
 							version: 1,
 							name,
 							type,
-							format: { list_properties: [] },
+							format: { [`${type}_properties`]: [] },
 							parent_table: 'block',
 							alive: true,
 							parent_id: this.block_data.id
 						}),
-						blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $collection_view_id }),
+						blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $view_id }),
 						blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
 					]
 				]),
 				Block.headers
 			);
-		} else console.log(`This block is not collection type`);
+		} else red(`This block is not collection type`);
 	}
 
-	async convertToCollection (options = {}) {
+	async convertToCollectionViewPage (options = {}) {
 		// ? Take schema, properties and aggregates as options
 		const { type = 'table', name = 'Default view', collection_name = 'Default collection name', format = {} } = options;
 		const $collection_id = uuidv4();
@@ -328,7 +391,7 @@ class Block {
 
 	async getCollection () {
 		if (!this.block_data.collection_id) {
-			console.log(`The block is not a collection`);
+			red(`The block is not a collection_view_page`);
 			return undefined;
 		} else {
 			if (Block.cache.collection.has(this.block_data.collection_id))

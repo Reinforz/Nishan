@@ -111,7 +111,7 @@ class Block {
 								},
 								Block.headers
 							);
-							resolve(new Block(res.data.recordMap.block[$content_id]));
+							resolve(new Block(res.data.recordMap.block[$content_id].value));
 						}, Block.interval)
 					);
 				} catch (err) {
@@ -128,41 +128,44 @@ class Block {
 		const $content_id = uuidv4();
 		const $collection_view_id = uuidv4();
 		const current_time = Date.now();
-
-		await axios.post(
-			'https://www.notion.so/api/v3/saveTransactions',
-			Transaction.createTransaction([
-				[
-					collectionViewSet($collection_view_id, [], {
-						id: $collection_view_id,
-						version: 1,
-						type: 'table',
-						parent_id: $content_id,
-						parent_table: 'block',
-						alive: true
-					}),
-					blockSet($content_id, [], {
-						id: $content_id,
-						version: 1,
-						type: 'collection_view',
-						collection_id,
-						view_ids: [ $collection_view_id ],
-						parent_id: this.block_data.id,
-						parent_table: 'block',
-						alive: true,
-						created_by_table: 'notion_user',
-						created_by_id: Block.user_id,
-						created_time: current_time,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: Block.user_id,
-						last_edited_time: current_time
-					}),
-					blockListAfter(this.block_data.id, [ 'content' ], { after: '', id: $content_id }),
-					blockSet($content_id, [ 'last_edited_time' ], current_time)
-				]
-			]),
-			Block.headers
-		);
+		try {
+			await axios.post(
+				'https://www.notion.so/api/v3/saveTransactions',
+				Transaction.createTransaction([
+					[
+						collectionViewSet($collection_view_id, [], {
+							id: $collection_view_id,
+							version: 1,
+							type: 'table',
+							parent_id: $content_id,
+							parent_table: 'block',
+							alive: true
+						}),
+						blockSet($content_id, [], {
+							id: $content_id,
+							version: 1,
+							type: 'collection_view',
+							collection_id,
+							view_ids: [ $collection_view_id ],
+							parent_id: this.block_data.id,
+							parent_table: 'block',
+							alive: true,
+							created_by_table: 'notion_user',
+							created_by_id: Block.user_id,
+							created_time: current_time,
+							last_edited_by_table: 'notion_user',
+							last_edited_by_id: Block.user_id,
+							last_edited_time: current_time
+						}),
+						blockListAfter(this.block_data.id, [ 'content' ], { after: '', id: $content_id }),
+						blockSet($content_id, [ 'last_edited_time' ], current_time)
+					]
+				]),
+				Block.headers
+			);
+		} catch (err) {
+			red(err.response.data);
+		}
 	}
 
 	async updateProperties (properties) {

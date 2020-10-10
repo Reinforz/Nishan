@@ -7,7 +7,7 @@ const { blockUpdate, blockListRemove, blockSet, blockListAfter } = require('./ut
 
 const Transaction = require('../Transaction');
 
-const { red, yellow } = require('../../utils/logs');
+const { error, warn } = require('../../utils/logs');
 
 class Block {
 	constructor (block_data) {
@@ -89,7 +89,7 @@ class Block {
 		Block.saveToCache(recordMap);
 		const target = recordMap.block[block_id];
 		if (!target) {
-			yellow(`No block with the id ${block_id} exists`);
+			warn(`No block with the id ${block_id} exists`);
 			return undefined;
 		}
 		return new Promise((resolve) =>
@@ -137,7 +137,7 @@ class Block {
 			Block.cache.block.delete(this.block_data.id);
 			success = true;
 		} catch (err) {
-			red(err.response.data);
+			error(err.response.data);
 			success = false;
 		}
 

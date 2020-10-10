@@ -2,7 +2,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 
 const Block = require('../Block');
-const Collection = require('../Collection');
+const CollectionViewPage = require('../CollectionViewPage');
 const Transaction = require('../Transaction');
 
 const { lastEditOperations, createOperation } = require('../Operations/utils');
@@ -10,12 +10,12 @@ const { collectionViewSet, collectionViewUpdate } = require('../CollectionView/u
 const { collectionUpdate } = require('../Collection/utils');
 const { blockUpdate, blockSet, blockListAfter } = require('../Block/utils');
 
-const { red, yellow } = require('../../utils/logs');
+const { error, warn } = require('../../utils/logs');
 
 class Page extends Block {
 	constructor (block_data) {
 		super(block_data);
-		if (block_data.type !== 'page') throw new Error(red(`Cannot create page block from ${block_data.type} block`));
+		if (block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${block_data.type} block`));
 	}
 
 	static setStatic (obj) {
@@ -34,7 +34,7 @@ class Page extends Block {
 		Page.saveToCache(recordMap);
 		const target = recordMap.block[page_id];
 		if (!target) {
-			yellow(`No page with the id ${page_id} exists`);
+			warn(`No page with the id ${page_id} exists`);
 			return undefined;
 		}
 		return new Promise((resolve) =>
@@ -56,7 +56,7 @@ class Page extends Block {
 			const $content_id = uuidv4();
 			const current_time = Date.now();
 			if (this.block_data.collection_id)
-				red(`The block is of collection_view_page and thus cannot contain a ${type} content`);
+				error(`The block is of collection_view_page and thus cannot contain a ${type} content`);
 			else {
 				try {
 					return new Promise((resolve) =>
@@ -92,20 +92,22 @@ class Page extends Block {
 								},
 								Block.headers
 							);
-							resolve(new Block(res.data.recordMap.block[$content_id].value));
+							if (type === 'page') resolve(new Page(res.data.recordMap.block[$content_id].value));
+							else resolve(new Block(res.data.recordMap.block[$content_id].value));
 						}, Block.interval)
 					);
 				} catch (err) {
-					red(err.response.data);
+					error(err.response.data);
 				}
 			}
 		} else {
-			red('The block must be of type page to create a content inside it');
+			error('The block must be of type page to create a content inside it');
 			return undefined;
 		}
 	}
 
 	async createLinkedDBContent (collection_id) {
+		// ? Return LinkedDB block instance
 		const $content_id = uuidv4();
 		const $view_id = uuidv4();
 		const current_time = Date.now();
@@ -145,7 +147,7 @@ class Page extends Block {
 				Block.headers
 			);
 		} catch (err) {
-			red(err.response.data);
+			error(err.response.data);
 		}
 	}
 
@@ -173,14 +175,14 @@ class Page extends Block {
 				]),
 				Block.headers
 			);
-		} else red(`This block is not collection type`);
+		} else error(`This block is not collection type`);
 	}
 
 	async convertToCollectionViewPage (options = {}) {
 		// ? Take schema, properties and aggregates as options
-		const { type = 'table', name = 'Default view', collection_name = 'Default collection name', format = {} } = options;
+		const { type = 'table', name = 'Default view', collection_name = 'Collection view page', format = {} } = options;
 		const $collection_id = uuidv4();
-		const $collection_view_id = uuidv4();
+		const $view_id = uuidv4();
 		const current_time = Date.now();
 		// ? Get the new collection data
 		// ? Shcema = {name, type, visible, width}
@@ -192,13 +194,13 @@ class Page extends Block {
 						id: this.block_data.id,
 						type: 'collection_view_page',
 						collection_id: $collection_id,
-						view_ids: [ $collection_view_id ],
+						view_ids: [ $view_id ],
 						properties: {},
 						created_time: current_time,
 						last_edited_time: current_time
 					}),
-					collectionViewUpdate($collection_view_id, [], {
-						id: $collection_view_id,
+					collectionViewUpdate($view_id, [], {
+						id: $view_id,
 						version: 0,
 						type,
 						name,
@@ -231,13 +233,23 @@ class Page extends Block {
 			]),
 			Block.headers
 		);
-		return new Collection({ block_data: this.block_data });
+		const { data: { recordMap: { block: collection_view_page } } } = await axios.post(
+			`https://www.notion.so/api/v3/loadPageChunk`,
+			{
+				chunkNumber: 0,
+				limit: 50,
+				pageId: this.block_data.parent_id,
+				verticalColumns: false
+			},
+			Page.headers
+		);
+		return new CollectionViewPage(collection_view_page[this.block_data.id].value);
 	}
 
 	async getCollectionViewPage () {
 		// ? Return new CollectionViewPage passing parent block data and new block data
 		if (!this.block_data.collection_id) {
-			red(`The block is not a collection_view_page`);
+			error(`The block is not a collection_view_page`);
 			return undefined;
 		} else {
 			const cache_data = Block.cache.collection.get(this.block_data.collection_id);
@@ -313,7 +325,7 @@ class Page extends Block {
 				Block.headers
 			);
 		} catch (err) {
-			red(err.response.data);
+			error(err.response.data);
 		}
 	}
 }

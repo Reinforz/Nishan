@@ -1,4 +1,6 @@
 const Block = require('./api/Block');
+const Collection = require('./api/Collection');
+const Transaction = require('./api/Transaction');
 
 class Nishan {
 	static cache = {
@@ -16,21 +18,33 @@ class Nishan {
 		this.shardId = shardId;
 		this.token = token;
 		this.spaceId = spaceId;
-		this.interval = interval || 500;
-	}
+		this.interval = interval || 1000;
 
-	get Block () {
-		return Block.setStatic({
+		Block.setStatic({
 			cache: Nishan.cache,
-			interval: this.inverval,
+			interval,
 			token: this.token,
-			shardId: this.shardId,
-			spaceId: this.spaceId,
 			headers: {
 				headers: {
 					cookie: `token_v2=${this.token};`
 				}
 			}
+		});
+
+		Collection.setStatic({
+			cache: Nishan.cache,
+			interval,
+			token: this.token,
+			headers: {
+				headers: {
+					cookie: `token_v2=${this.token};`
+				}
+			}
+		});
+
+		Transaction.setStatic({
+			shardId,
+			spaceId
 		});
 	}
 }

@@ -1,4 +1,4 @@
-const { blockSet } = require('./utils');
+const { blockSet } = require('../Block/utils');
 
 module.exports = {
 	createOperation (generated_table_id, user_id) {

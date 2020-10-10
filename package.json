@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.20.0",
+    "colors": "^1.4.0",
     "uuid": "^8.3.1"
   },
   "devDependencies": {},

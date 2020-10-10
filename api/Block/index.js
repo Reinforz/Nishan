@@ -10,6 +10,8 @@ const { blockUpdate, blockListRemove, blockSet, blockListAfter } = require('./ut
 const Transaction = require('../Transaction');
 const Collection = require('../Collection');
 
+const red = (msg) => console.log(colors.red.bold(msg));
+
 class Block {
 	static setStatic (obj) {
 		Object.entries(obj).forEach(([ key, value ]) => (Block[key] = value));
@@ -61,62 +63,64 @@ class Block {
 		const { data: { recordMap } } = await axios.post(url, data, Block.headers);
 		Block.saveToCache(recordMap);
 		const target = recordMap.block[block_id];
+		if (!target) red(`The block could be a nested block, try passing nested: true to options`);
 		return new Promise((resolve) =>
 			setTimeout(() => resolve(target ? new Block(recordMap.block[block_id].value) : undefined), Block.interval)
 		);
 	}
 
-	async createPageContent (options = {}) {
-		const { title = '', page_icon = '' } = options;
-		const generated_block_id = uuidv4();
-		const current_time = Date.now();
-		if (this.block_data.collection_id)
-			console.log(colors.bold.red(`The block is a collection and thus cannot contain a page content`));
-		else {
-			try {
-				return new Promise((resolve) =>
-					setTimeout(async () => {
-						await axios.post(
-							'https://www.notion.so/api/v3/saveTransactions',
-							Transaction.createTransaction([
-								[
-									blockUpdate(generated_block_id, [], {
-										id: generated_block_id,
-										type: 'page',
-										properties: {
-											title: [ [ title ] ]
-										},
-										format: {
-											page_icon
-										},
-										created_time: current_time,
-										last_edited_time: current_time
-									}),
-									blockUpdate(generated_block_id, [], {
-										parent_id: this.block_data.id,
-										parent_table: 'block',
-										alive: true
-									}),
-									blockListAfter(this.block_data.id, [ 'content' ], { after: '', id: generated_block_id }),
-									...createOperation(generated_block_id, Block.user_id),
-									...lastEditOperations(generated_block_id, Block.user_id)
-								]
-							]),
-							Block.headers
-						);
-						const res = await axios.post(
-							'https://www.notion.so/api/v3/getBacklinksForBlock',
-							{
-								blockId: generated_block_id
-							},
-							Block.headers
-						);
-						resolve(new Block(res.data));
-					}, Block.interval)
-				);
-			} catch (err) {
-				console.log(err.response.data.message);
+	async createContent (options = {}) {
+		// ? User given after id as position
+		if (this.block_data.type === 'page') {
+			const { format = {}, properties = {}, type = 'page' } = options;
+			const $content_id = uuidv4();
+			const current_time = Date.now();
+			if (this.block_data.collection_id) red(`The block is a collection and thus cannot contain a page content`);
+			else {
+				try {
+					return new Promise((resolve) =>
+						setTimeout(async () => {
+							await axios.post(
+								'https://www.notion.so/api/v3/saveTransactions',
+								Transaction.createTransaction([
+									[
+										blockUpdate($content_id, [], {
+											id: $content_id,
+											type,
+											properties,
+											format,
+											created_time: current_time,
+											last_edited_time: current_time
+										}),
+										blockUpdate($content_id, [], {
+											parent_id: this.block_data.id,
+											parent_table: 'block',
+											alive: true
+										}),
+										blockListAfter(this.block_data.id, [ 'content' ], { after: '', id: $content_id }),
+										...createOperation($content_id, Block.user_id),
+										...lastEditOperations($content_id, Block.user_id)
+									]
+								]),
+								Block.headers
+							);
+							const res = await axios.post(
+								'https://www.notion.so/api/v3/getBacklinksForBlock',
+								{
+									blockId: $content_id
+								},
+								Block.headers
+							);
+							resolve(new Block(res.data.recordMap.block[$content_id]));
+						}, Block.interval)
+					);
+				} catch (err) {
+					console.log(err.response.data.message);
+				}
 			}
+		} else {
+			red('The block must be of type page to create a content inside it');
+			return undefined;
 		}
 	}
 

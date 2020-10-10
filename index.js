@@ -36,7 +36,8 @@ class Nishan {
 					headers: {
 						cookie: `token_v2=${this.token};`
 					}
-				}
+				},
+				saveToCache: Nishan.saveToCache
 			})
 		);
 	}
@@ -82,6 +83,22 @@ class Nishan {
 		);
 		this.user_id = Object.entries(user_root)[0].value.id;
 	}
+
+	static saveToCache (recordMap) {
+		Object.keys(Nishan.cache).forEach((key) => {
+			if (recordMap[key])
+				Object.entries(recordMap[key]).forEach(([ record_id, record_value ]) => {
+					Nishan.cache[key].set(record_id, record_value.value);
+				});
+		});
+	}
 }
 
-module.exports = Nishan;
+module.exports = {
+	Nishan,
+	Block,
+	Page,
+	Collection,
+	CollectionView,
+	CollectionViewPage
+};

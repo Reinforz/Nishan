@@ -1,6 +1,13 @@
-class CollectionViewPage {
-	constructor (obj) {
-		Object.entries(obj).forEach(([ key, value ]) => (this[key] = value));
+const Block = require('../Block');
+
+class CollectionViewPage extends Block {
+	constructor (block_data) {
+		super(block_data);
+	}
+
+	static setStatic (obj) {
+		Object.entries(obj).forEach(([ key, value ]) => (CollectionViewPage[key] = value));
+		return CollectionViewPage;
 	}
 }
 

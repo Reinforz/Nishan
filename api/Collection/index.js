@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const Transaction = require('../Transaction');
 const Block = require('../Block');
+const View = require('../View');
 
 const { collectionSet } = require('./utils');
 const { blockSet, blockListAfter } = require('../Block/utils');
@@ -66,6 +67,20 @@ class Collection extends Block {
 				]),
 				Collection.headers
 			);
+			const { data: { recordMap: { collection_view } } } = await axios.post(
+				'https://www.notion.so/api/v3/queryCollection',
+				{
+					collectionId: this.block_data.collection_id,
+					collectionViewId: $view_id,
+					query: {},
+					loader: {
+						limit: 70,
+						type: 'table'
+					}
+				},
+				Collection.headers
+			);
+			return new View({ block_data: this.block_data, view_data: collection_view[$view_id].value });
 		} else error(`This block is not collection type`);
 	}
 }

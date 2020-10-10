@@ -23,25 +23,57 @@ class Page extends Block {
 		return Page;
 	}
 
-	static async get (page_id) {
-		const cache_data = Page.cache.block.get(page_id);
-		if (cache_data) return cache_data;
-		const { data: { recordMap } } = await axios.post(
-			'https://www.notion.so/api/v3/getBacklinksForBlock',
-			{ blockId: page_id },
-			Page.headers
-		);
-		Page.saveToCache(recordMap);
-		const target = recordMap.block[page_id];
-		if (!target) {
-			warn(`No page with the id ${page_id} exists`);
-			return undefined;
+	static async get (arg) {
+		if (typeof arg === 'string') {
+			const page_id = arg;
+			const cache_data = Page.cache.block.get(page_id);
+			if (cache_data) return cache_data;
+			const { data: { recordMap } } = await axios.post(
+				'https://www.notion.so/api/v3/getBacklinksForBlock',
+				{ blockId: page_id },
+				Page.headers
+			);
+			Page.saveToCache(recordMap);
+			const target = recordMap.block[page_id];
+			if (!target) {
+				warn(`No page with the id ${page_id} exists`);
+				return undefined;
+			}
+			return new Promise((resolve) =>
+				setTimeout(() => {
+					resolve(new Page(recordMap.block[page_id].value));
+				}, Page.interval)
+			);
+		} else if (typeof arg === 'function') {
+			const cached_pages = [];
+			for (const [ , block ] in Page.cache.block) {
+				if (block.type === 'page') cached_pages.push(block);
+			}
+
+			const filtered_pages = [];
+
+			for (let i = 0; i < cached_pages.length; i++) {
+				const res = await arg(cached_pages[i].value, i);
+				if (res) filtered_pages.push(cached_pages[i].value);
+			}
+
+			if (filtered_pages.length > 0) return filtered_pages;
+			else {
+				const { data: { recordMap } } = await axios.post(
+					'https://www.notion.so/api/v3/loadUserContent',
+					{},
+					Page.headers
+				);
+				Page.saveToCache(recordMap);
+
+				const pages = Object.values(recordMap.block);
+				for (let i = 0; i < pages.length; i++) {
+					const res = await arg(pages[i].value, i);
+					if (res) filtered_pages.push(pages[i].value);
+				}
+				return filtered_pages;
+			}
 		}
-		return new Promise((resolve) =>
-			setTimeout(() => {
-				resolve(new Page(recordMap.block[page_id].value));
-			}, Page.interval)
-		);
 	}
 
 	/**

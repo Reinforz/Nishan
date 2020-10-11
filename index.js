@@ -13,7 +13,8 @@ class Nishan {
 	static cache = {
 		block: new Map(),
 		collection: new Map(),
-		space: new Map()
+		space: new Map(),
+		collection_view: new Map()
 	};
 
 	static addToCache (type, id, data) {

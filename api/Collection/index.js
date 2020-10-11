@@ -13,10 +13,10 @@ class Collection extends Block {
 		return Collection;
 	}
 
-	constructor ({ block_data, collection_data }) {
-		super(block_data);
-		if (!block_data.type.match(/collection_view/))
-			throw new Error(error(`Cannot create collection_view_page block from ${block_data.type} block`));
+	constructor ({ parent_data, collection_data }) {
+		super(parent_data);
+		if (!parent_data.type.match(/collection_view/))
+			throw new Error(error(`Cannot create collection_view_page block from ${parent_data.type} block`));
 		this.collection_data = collection_data;
 	}
 
@@ -38,6 +38,10 @@ class Collection extends Block {
 			]),
 			Collection.headers
 		);
+	}
+
+	getSchemaKey (fn) {
+		return Object.entries(this.collection_data.schema).find(([ key, value ]) => fn(value));
 	}
 }
 

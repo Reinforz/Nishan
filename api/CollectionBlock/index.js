@@ -17,61 +17,67 @@ class CollectionBlock extends Block {
 		return CollectionBlock;
 	}
 
-	constructor (block_data) {
+	constructor ({ parent_data, block_data }) {
 		super(block_data);
 		if (!block_data.type.match(/collection_view/))
-			throw new Error(error(`Cannot create collection_view_page block from ${block_data.type} block`));
+			throw new Error(error(`Cannot create collection_block from ${block_data.type} block`));
+		this.parent_data = parent_data;
 	}
 
 	async createView (options = {}) {
-		if (this.block_data.collection_id) {
-			const { type = 'table', name = 'Table View' } = options;
-			const $view_id = uuidv4();
-			await axios.post(
-				'https://www.notion.so/api/v3/saveTransactions',
-				Transaction.createTransaction([
-					[
-						collectionViewSet($view_id, [], {
-							id: $view_id,
-							version: 1,
-							name,
-							type,
-							format: { [`${type}_properties`]: [] },
-							parent_table: 'block',
-							alive: true,
-							parent_id: this.block_data.id
-						}),
-						blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $view_id }),
-						blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
-					]
-				]),
-				CollectionBlock.headers
-			);
-			const { data: { recordMap: { collection_view } } } = await axios.post(
-				'https://www.notion.so/api/v3/queryCollection',
-				{
-					collectionId: this.block_data.collection_id,
-					collectionViewId: $view_id,
-					query: {},
-					loader: {
-						limit: 70,
-						type: 'table'
-					}
-				},
-				CollectionBlock.headers
-			);
-			return new View({ block_data: this.block_data, view_data: collection_view[$view_id].value });
-		} else error(`This block is not collection type`);
+		const { type = 'table', name = 'Table View' } = options;
+		const $view_id = uuidv4();
+		await axios.post(
+			'https://www.notion.so/api/v3/saveTransactions',
+			Transaction.createTransaction([
+				[
+					collectionViewSet($view_id, [], {
+						id: $view_id,
+						version: 1,
+						name,
+						type,
+						format: { [`${type}_properties`]: [] },
+						parent_table: 'block',
+						alive: true,
+						parent_id: this.block_data.id
+					}),
+					blockListAfter(this.block_data.id, [ 'view_ids' ], { after: '', id: $view_id }),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+				]
+			]),
+			CollectionBlock.headers
+		);
+		const { data: { recordMap, recordMap: { collection_view } } } = await axios.post(
+			'https://www.notion.so/api/v3/loadPageChunk',
+			{
+				chunkNumber: 0,
+				cursor: { stack: [] },
+				limit: 50,
+				pageId: this.parent_data.id,
+				verticalColumns: false
+			},
+			CollectionBlock.headers
+		);
+		CollectionBlock.saveToCache(recordMap);
+		return new View({
+			parent_data: this.block_data,
+			view_data: collection_view[$view_id].value
+		});
 	}
 
-	async getCollection () {
+	async getCollection (fromCache = true) {
+		if (fromCache)
+			return new Collection({
+				parent_data: this.block_data,
+				collection_data: CollectionBlock.cache.collection.get(this.block_data.collection_id)
+			});
 		try {
 			const { data: { recordMap } } = await axios.post(
 				'https://www.notion.so/api/v3/loadPageChunk',
 				{
 					chunkNumber: 0,
 					limit: 50,
-					pageId: this.block_data.parent_id,
+					pageId: this.parent_data.parent_id,
 					cursor: { stack: [] },
 					verticalColumns: false
 				},
@@ -79,8 +85,8 @@ class CollectionBlock extends Block {
 			);
 			CollectionBlock.saveToCache(recordMap);
 			return new Collection({
-				block_data: this.block_data,
-				collection_data: recordMap.collection[this.block_data.collection_id].value
+				parent_data: this.parent_data,
+				collection_data: recordMap.collection[this.parent_data.collection_id].value
 			});
 		} catch (err) {
 			error(err.response.data);
@@ -88,13 +94,22 @@ class CollectionBlock extends Block {
 	}
 
 	async getViews () {
+		/* if (fromCache) {
+			return CollectionBlock.cache.block.get(this.block_data.id).view_ids.map(
+				(view_id) =>
+					new View({
+						parent_data: this.block_data,
+						view_data: CollectionBlock.cache.collection_view.get(view_id)
+					})
+			);
+		} */
 		try {
 			const { data: { recordMap } } = await axios.post(
 				'https://www.notion.so/api/v3/loadPageChunk',
 				{
 					chunkNumber: 0,
 					limit: 50,
-					pageId: this.block_data.parent_id,
+					pageId: this.parent_data.id,
 					cursor: { stack: [] },
 					verticalColumns: false
 				},

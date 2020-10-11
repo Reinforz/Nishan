@@ -85,7 +85,7 @@ class Page extends Block {
 		// ? User given after id as position
 		// ? Return specific class instances based on content type
 		if (this.block_data.type === 'page') {
-			const { format = {}, properties = {}, type = 'page' } = options;
+			const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
 			const $content_id = uuidv4();
 			const current_time = Date.now();
 			if (this.block_data.collection_id)
@@ -140,7 +140,6 @@ class Page extends Block {
 	}
 
 	async createLinkedDBContent (collection_id) {
-		// ? Return LinkedDB block instance
 		const $content_id = uuidv4();
 		const $view_id = uuidv4();
 		const current_time = Date.now();
@@ -179,8 +178,32 @@ class Page extends Block {
 				]),
 				Block.headers
 			);
+			try {
+				const { data: { recordMap } } = await axios.post(
+					'https://www.notion.so/api/v3/queryCollection',
+					{
+						collectionId: collection_id,
+						collectionViewId: $view_id,
+						query: {},
+						loader: {
+							limit: 70,
+							type: 'table'
+						}
+					},
+					Page.headers
+				);
+				Page.saveToCache(recordMap);
+				return new CollectionView({
+					parent_data: this.block_data,
+					block_data: recordMap.block[$content_id].value
+				});
+			} catch (err) {
+				error(err.response.data);
+				return undefined;
+			}
 		} catch (err) {
 			error(err.response.data);
+			return undefined;
 		}
 	}
 
@@ -239,7 +262,7 @@ class Page extends Block {
 			]),
 			Block.headers
 		);
-		const { data: { recordMap: { block: collection_view_page } } } = await axios.post(
+		const { data: { recordMap, recordMap: { block: collection_view_page } } } = await axios.post(
 			`https://www.notion.so/api/v3/loadPageChunk`,
 			{
 				chunkNumber: 0,
@@ -249,7 +272,11 @@ class Page extends Block {
 			},
 			Page.headers
 		);
-		return new CollectionViewPage(collection_view_page[this.block_data.id].value);
+		Page.saveToCache(recordMap);
+		return new CollectionViewPage({
+			parent_data: this.block_data,
+			block_data: collection_view_page[this.block_data.id].value
+		});
 	}
 
 	async getCollectionViewPage () {
@@ -267,7 +294,7 @@ class Page extends Block {
 			await this.loadUserChunk();
 
 			return new Collection({
-				block_data: this.block_data,
+				parent_data: this.block_data,
 				collection_data: Block.cache.collection.get(this.block_data.collection_id)
 			});
 		}
@@ -345,9 +372,11 @@ class Page extends Block {
 				Page.headers
 			);
 			Page.saveToCache(recordMap);
-			return new CollectionView(recordMap.block[$collection_view_id].value);
+			return new CollectionView({
+				parent_data: this.block_data,
+				block_data: recordMap.block[$collection_view_id].value
+			});
 		} catch (err) {
-			console.log(err);
 			error(err.response.data);
 		}
 	}

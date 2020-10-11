@@ -3,6 +3,7 @@ const axios = require('axios');
 const Block = require('./api/Block');
 const Page = require('./api/Page');
 const CollectionView = require('./api/CollectionView');
+const CollectionBlock = require('./api/CollectionBlock');
 const CollectionViewPage = require('./api/CollectionViewPage');
 const View = require('./api/View');
 const Collection = require('./api/Collection');
@@ -26,7 +27,7 @@ class Nishan {
 		this.shard_id = shard_id;
 		this.space_id = space_id;
 
-		[ Page, CollectionView, CollectionViewPage, View, Collection, Block ].forEach((_class) =>
+		[ Page, CollectionView, CollectionViewPage, View, Collection, Block, CollectionBlock ].forEach((_class) =>
 			_class.setStatic({
 				cache: Nishan.cache,
 				interval,
@@ -100,5 +101,6 @@ module.exports = {
 	Page,
 	Collection,
 	CollectionView,
-	CollectionViewPage
+	CollectionViewPage,
+	CollectionBlock
 };

@@ -1,12 +1,12 @@
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 
-const Collection = require('../Collection');
+const CollectionBlock = require('../CollectionBlock');
 const Transaction = require('../Transaction');
 
 const { error, warn } = require('../../utils/logs');
 
-class CollectionViewPage extends Collection {
+class CollectionViewPage extends CollectionBlock {
 	constructor (block_data) {
 		super(block_data);
 		if (block_data.type !== 'collection_view_page')

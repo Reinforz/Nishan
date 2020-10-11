@@ -1,14 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 
-const Collection = require('../Collection');
+const CollectionBlock = require('../CollectionBlock');
 const Transaction = require('../Transaction');
 
 const { error, warn } = require('../../utils/logs');
 
-class CollectionView extends Collection {
-	constructor (block_data) {
-		super(block_data);
+class CollectionView extends CollectionBlock {
+	constructor (obj) {
+		super(obj);
 	}
 
 	static setStatic (obj) {

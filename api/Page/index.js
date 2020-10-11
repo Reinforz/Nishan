@@ -331,7 +331,7 @@ class Page extends Block {
 				Block.headers
 			);
 
-			const { data: { recordMap: { block: collection_view } } } = await axios.post(
+			const { data: { recordMap } } = await axios.post(
 				'https://www.notion.so/api/v3/queryCollection',
 				{
 					collectionId: $collection_id,
@@ -344,8 +344,10 @@ class Page extends Block {
 				},
 				Page.headers
 			);
-			return new CollectionView(collection_view[$collection_view_id].value);
+			Page.saveToCache(recordMap);
+			return new CollectionView(recordMap.block[$collection_view_id].value);
 		} catch (err) {
+			console.log(err);
 			error(err.response.data);
 		}
 	}

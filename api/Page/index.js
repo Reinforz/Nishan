@@ -208,13 +208,18 @@ class Page extends Block {
 	}
 
 	async convertToCollectionViewPage (options = {}) {
-		// ? Take schema, properties and aggregates as options
-		const { type = 'table', name = 'Default view', collection_name = 'Collection view page', format = {} } = options;
+		// ? Take schema, properties, views, filters, sorts and aggregates as options
+		const views = options.views.map((view) => ({ ...view, id: uuidv4() }));
+		const view_ids = views.map((view) => view.id);
 		const $collection_id = uuidv4();
-		const $view_id = uuidv4();
-		const current_time = Date.now();
-		// ? Get the new collection data
-		// ? Shcema = {name, type, visible, width}
+    const current_time = Date.now();
+    const schema = {};
+    options.schema.forEach(opt=>{
+      const schema_key = (opt[1] === "title" ? "Title" : opt[0] ).toLowerCase().replace(/\s/g,'_');
+      schema[schema_key] = {name: opt[0], type: opt[1],...(opt[2] ?? {})};
+      if(schema[schema_key].options) schema[schema_key].options = schema[schema_key].options.map(([value,color])=>({id: uuidv4(), value, color}))
+    });
+
 		await axios.post(
 			'https://www.notion.so/api/v3/saveTransactions',
 			Transaction.createTransaction([
@@ -223,41 +228,61 @@ class Page extends Block {
 						id: this.block_data.id,
 						type: 'collection_view_page',
 						collection_id: $collection_id,
-						view_ids: [ $view_id ],
-						properties: {},
+						view_ids,
 						created_time: current_time,
 						last_edited_time: current_time
 					}),
-					collectionViewUpdate($view_id, [], {
-						id: $view_id,
-						version: 0,
-						type,
-						name,
-						format: {
-							[`${type}_properties`]: [ { property: 'title', visible: true, width: 250 } ],
-							[`${type}_wrap`]: true
-						},
-						query2: { aggregations: [ { property: 'title', aggregator: 'count' } ] },
-						page_sort: [],
-						parent_id: this.block_data.id,
-						parent_table: 'block',
-						alive: true
-					}),
 					collectionUpdate($collection_id, [], {
 						id: $collection_id,
-						schema: {
-							title: { name: 'Name', type: 'title' }
-						},
+						schema,
 						format: {
 							collection_page_properties: []
 						},
+						icon: this.block_data.format.page_icon,
 						parent_id: this.block_data.id,
 						parent_table: 'block',
-						alive: true
+						alive: true,
+						name: this.block_data.properties.title
 					}),
-					collectionUpdate($collection_id, [], { name: [ [ collection_name ] ], format }),
-					blockSet(this.block_data.id, [ 'last_edited_time' ], current_time),
-					blockSet(this.block_data.id, [ 'last_edited_time' ], Date.now())
+					...views.map(({id, aggregations = [],sorts=[], filters=[], properties={}, wrap = true, name, type='table'}) =>collectionViewUpdate(id, [], {
+                id,
+                version: 0,
+                type,
+                name,
+                format: {
+                  [`${type}_properties`]: Object.keys(schema).map((key)=>({
+                    visible: properties?.[key]?.[0] ?? true,
+                    property: key,
+                    width: properties?.[key]?.[1] ?? 250
+                  })),
+                  [`${type}_wrap`]: wrap
+                },
+                query2: { 
+                  sort: sorts.map((sort) => ({
+                    property: sort[0],
+                    direction: sort[1] === -1 ? 'ascending' : 'descending'
+                  })),
+                  filter: {
+                    operator: "and",
+                    filters: filters.map((filter) => ({
+                      property: filter[0],
+                      filter: {
+                        operator: filter[1],
+                        value: {
+                          type: filter[2],
+                          value: filter[3]
+                        }
+                      }
+                    }))
+                  },
+                  aggregations: aggregations.map(aggregation=>({property: aggregation[0], aggregator: aggregation[1]})) },
+                page_sort: [],
+                parent_id: this.block_data.id,
+                parent_table: 'block',
+                alive: true
+              })
+					),
+					blockSet(this.block_data.id, [ 'last_edited_time' ], current_time)
 				]
 			]),
 			Block.headers
@@ -267,13 +292,14 @@ class Page extends Block {
 			{
 				chunkNumber: 0,
 				limit: 50,
-				pageId: this.block_data.parent_id,
+				pageId: this.block_data.id,
 				verticalColumns: false
 			},
 			Page.headers
 		);
-		Page.saveToCache(recordMap);
+    Page.saveToCache(recordMap);
 		return new CollectionViewPage({
+      // ! Uh oh error as parent would either be a page or space, not the current block
 			parent_data: this.block_data,
 			block_data: collection_view_page[this.block_data.id].value
 		});
@@ -301,7 +327,8 @@ class Page extends Block {
 	}
 
 	async createCollectionViewContent (options = {}) {
-		//? Returns collection_view and parent block
+    //? Returns collection_view and parent block
+    //? Same logic as convertToCollectionViewPage
 		const $collection_view_id = uuidv4();
 		const $collection_id = uuidv4();
 		const $view_id = uuidv4();

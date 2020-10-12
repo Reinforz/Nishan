@@ -228,7 +228,8 @@ class Page extends Block {
 						id: this.block_data.id,
 						type: 'collection_view_page',
 						collection_id: $collection_id,
-						view_ids,
+            view_ids,
+            properties: {},
 						created_time: current_time,
 						last_edited_time: current_time
 					}),
@@ -286,23 +287,32 @@ class Page extends Block {
 				]
 			]),
 			Block.headers
-		);
-		const { data: { recordMap, recordMap: { block: collection_view_page } } } = await axios.post(
-			`https://www.notion.so/api/v3/loadPageChunk`,
-			{
-				chunkNumber: 0,
-				limit: 50,
-				pageId: this.block_data.id,
-				verticalColumns: false
-			},
-			Page.headers
-		);
-    Page.saveToCache(recordMap);
-		return new CollectionViewPage({
-      // ! Uh oh error as parent would either be a page or space, not the current block
-			parent_data: this.block_data,
-			block_data: collection_view_page[this.block_data.id].value
-		});
+    );
+    
+    return new Promise((resolve)=>{
+      setTimeout(async ()=>{
+        const { data: { recordMap, recordMap: { block: collection_view_page } } } = await axios.post(
+          `https://www.notion.so/api/v3/queryCollection`,
+          {
+            collectionId: $collection_id,
+            collectionViewId: view_ids[0],
+            loader: {
+              limit: 140,
+              searchQuery: "",
+              type: "table",
+            },
+            query: {}
+          },
+          Page.headers
+        );
+        Page.saveToCache(recordMap);
+        resolve(new CollectionViewPage({
+          // ! Uh oh error as parent would either be a page or space, not the current block
+          parent_data: this.block_data,
+          block_data: collection_view_page[this.block_data.id].value
+        }))
+      },Page.timeout)
+    });
 	}
 
 	async getCollectionViewPage () {

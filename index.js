@@ -8,6 +8,7 @@ const CollectionViewPage = require('./api/CollectionViewPage');
 const View = require('./api/View');
 const Collection = require('./api/Collection');
 const Transaction = require('./api/Transaction');
+const Space = require('./api/Space');
 
 class Nishan {
 	static cache = {
@@ -28,7 +29,7 @@ class Nishan {
 		this.shard_id = shard_id;
 		this.space_id = space_id;
 
-		[ Page, CollectionView, CollectionViewPage, View, Collection, Block, CollectionBlock ].forEach((_class) =>
+		[ Space, Page, CollectionView, CollectionViewPage, View, Collection, Block, CollectionBlock ].forEach((_class) =>
 			_class.setStatic({
 				cache: Nishan.cache,
 				interval,
@@ -103,5 +104,6 @@ module.exports = {
 	Collection,
 	CollectionView,
 	CollectionViewPage,
-	CollectionBlock
+	CollectionBlock,
+	Space
 };

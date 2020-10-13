@@ -14,7 +14,14 @@ import Nishan from "./Nishan";
 class Block extends Nishan {
   block_data: IBlock;
 
-  constructor({ token, interval, user_id, shard_id, space_id, block_data }: ) {
+  constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
+    token: string,
+    interval: number,
+    user_id: string,
+    shard_id: number,
+    space_id: string,
+    block_data: IBlock
+  }) {
     super({ token, interval, user_id, shard_id, space_id })
     this.block_data = block_data;
   }
@@ -29,7 +36,7 @@ class Block extends Nishan {
       },
       this.headers
     );
-    Block.saveToCache(res.data.recordMap);
+    this.saveToCache(res.data.recordMap);
     return res.data;
   }
 
@@ -106,24 +113,24 @@ class Block extends Nishan {
             blockUpdate(this.block_data.id, [], {
               alive: false
             }),
-            blockListRemove(this.block_data.this.block_data.id, ['content'], { id: this.block_data.id }),
+            blockListRemove(this.block_data.id, ['content'], { id: this.block_data.id }),
             blockSet(this.block_data.id, ['last_edited_time'], current_time),
-            blockSet(this.block_data.this.block_data.id, ['last_edited_time'], current_time)
+            blockSet(this.block_data.id, ['last_edited_time'], current_time)
           ]
         ]),
         this.headers
       );
-      Block.cache.block.delete(this.block_data.id);
+      this.cache.block.delete(this.block_data.id);
       success = true;
     } catch (err) {
       error(err.response.data);
       success = false;
     }
 
-    return new Promise((resolve) => setTimeout(() => resolve(success), Block.interval));
+    return new Promise((resolve) => setTimeout(() => resolve(success), this.interval));
   }
 
-  async transfer(new_parent_id) {
+  async transfer(new_parent_id: string) {
     const current_time = Date.now();
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
@@ -139,7 +146,7 @@ class Block extends Nishan {
           blockSet(new_parent_id, ['last_edited_time'], current_time)
         ]
       ]),
-      opts
+      this.headers
     );
   }
 }

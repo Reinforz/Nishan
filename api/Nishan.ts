@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import Block from "./Block";
-
 import { warn } from "../utils/logs";
 import { LoadUserContentResult, Space, Entity } from "../types";
 
@@ -44,6 +42,7 @@ class Nishan {
   }
 
   async getBlock(block_id: string) {
+    const Block = require("./Block");
     const cache_data = this.cache.block.get(block_id);
     if (cache_data) return cache_data;
     const { data: { recordMap } } = await axios.post(
@@ -59,7 +58,15 @@ class Nishan {
     }
     return new Promise((resolve) =>
       setTimeout(() => {
-        resolve(new Block(recordMap.block[block_id].value));
+        resolve(new Block({
+          block_data: recordMap.block[block_id].value,
+          token: this.token,
+          interval: this.interval,
+          user_id: this.user_id,
+          shard_id: this.shard_id,
+          space_id: this.space_id,
+          headers: this.headers,
+        }));
       }, this.interval)
     );
   }

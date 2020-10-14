@@ -383,7 +383,7 @@ class Page extends Block {
         'https://www.notion.so/api/v3/queryCollection',
         {
           collectionId: $collection_id,
-          collectionViewId: $view_id,
+          collectionViewId: view_ids[0],
           query: {},
           loader: {
             limit: 70,

@@ -62,4 +62,4 @@ class View {
   }
 }
 
-module.exports = View;
+export default View;

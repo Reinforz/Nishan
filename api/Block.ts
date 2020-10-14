@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation } from '../utils/chunk';
 
-import Transaction from "./Transaction"
+import Transaction from "./Transaction";
 
 import { error, warn } from "../utils/logs";
 

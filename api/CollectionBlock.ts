@@ -1,31 +1,50 @@
 import axios from "axios";
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 import Transaction from "./Transaction"
-const Collection = require('../Collection');
-const Block = require('../Block');
-const View = require('../View');
+import Collection from './Collection';
+import Block from './Block';
+import View from './View';
 
-const { blockSet, blockListAfter, blockUpdate } = require('../Block/utils');
-const { collectionViewSet, collectionViewListAfter } = require('../CollectionView/utils');
+import { createOperation, lastEditOperations, collectionViewSet, blockSet, blockListAfter, blockUpdate } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
-const { createOperation, lastEditOperations } = require('../Operations/utils');
+
+import { ICollectionBlock, LoadPageChunkResult, Page as IPage, Space as ISpace } from "../types";
 
 class CollectionBlock extends Block {
-  static setStatic(obj) {
-    Object.entries(obj).forEach(([key, value]) => (CollectionBlock[key] = value));
-    return CollectionBlock;
-  }
-
-  constructor({ parent_data, block_data }) {
-    super(block_data);
+  parent_data: IPage | ISpace;
+  constructor({ token,
+    interval,
+    user_id,
+    shard_id,
+    space_id,
+    parent_data,
+    block_data
+  }: {
+    parent_data: IPage | ISpace,
+    block_data: ICollectionBlock,
+    token: string,
+    interval: number,
+    user_id: string,
+    shard_id: number,
+    space_id: string
+  }) {
+    super({
+      token,
+      interval,
+      user_id,
+      shard_id,
+      space_id,
+      block_data,
+    });
     if (!block_data.type.match(/collection_view/))
       throw new Error(error(`Cannot create collection_block from ${block_data.type} block`));
     this.parent_data = parent_data;
   }
 
   async createView(options = {}) {
+    // ? Page.prototype.createLinkedDBContent view options
     const { type = 'table', name = 'Table View' } = options;
     const $view_id = uuidv4();
     await axios.post(
@@ -46,7 +65,7 @@ class CollectionBlock extends Block {
           blockSet(this.block_data.id, ['last_edited_time'], Date.now())
         ]
       ]),
-      CollectionBlock.headers
+      this.headers
     );
     const { data: { recordMap, recordMap: { collection_view } } } = await axios.post(
       'https://www.notion.so/api/v3/loadPageChunk',
@@ -57,9 +76,9 @@ class CollectionBlock extends Block {
         pageId: this.parent_data.id,
         verticalColumns: false
       },
-      CollectionBlock.headers
-    );
-    CollectionBlock.saveToCache(recordMap);
+      this.headers
+    ) as { data: LoadPageChunkResult };
+    this.saveToCache(recordMap);
     return new View({
       parent_data: this.block_data,
       view_data: collection_view[$view_id].value

@@ -5,6 +5,7 @@ export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keye
 export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
+type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 
 export interface ValueArg {
   id: string,
@@ -87,7 +88,7 @@ export interface Page extends Block {
   content?: string[]
 }
 
-interface CollectionBlock extends Block {
+export interface CollectionBlock extends Block {
   view_ids: string[],
   collection_id: string
 }
@@ -99,6 +100,8 @@ export interface CollectionView extends CollectionBlock {
 export interface CollectionViewPage extends CollectionBlock {
   type: 'collection_view_page',
 }
+
+export type ICollectionBlock = CollectionView | CollectionViewPage;
 
 export interface Collection extends Node, ParentProps {
   description: string[][],
@@ -187,8 +190,6 @@ export interface CalendarView extends Node, ParentProps {
     calender_by: string
   },
 }
-
-type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 
 export interface NotionUser {
   email: string,
@@ -348,12 +349,12 @@ export interface UserSettingsData {
 
 /* Api endpoint result */
 export interface LoadUserContentResult {
-  recordMap: UserContent
+  recordMap: RecordMap
 }
 
 export interface GetSpacesResult {
   // key is the id of the user
-  [key: string]: UserContent
+  [key: string]: RecordMap
 }
 
 export interface GetUserSharePagesResult {
@@ -374,20 +375,27 @@ export interface LoadPageChunkParams {
 
 export interface LoadPageChunkResult {
   cursor: Cursor,
-  recordMap: {
-    block: BlockData,
-    collection: CollectionData
-    collection_view: ViewData,
-    space: SpaceData,
-  }
+  recordMap: RecordMap
 }
 
-export interface UserContent {
+export interface RecordMap {
   block: BlockData,
   collection: CollectionData,
+  collection_view: CollectionViewData,
+  space: SpaceData,
   notion_user: NotionUserData,
-  space: SpaceData
   space_view: SpaceViewData,
   user_root: UserRootData,
   user_settings: UserSettingsData,
-} 
+}
+
+export interface Cache {
+  block: Map<string, BlockData>,
+  collection: Map<string, CollectionData>
+  collection_view: Map<string, ViewData>,
+  space: Map<string, SpaceData>,
+  notion_user: Map<string, NotionUserData>,
+  space_view: Map<string, SpaceViewData>,
+  user_root: Map<string, UserRootData>,
+  user_settings: Map<string, UserSettingsData>,
+}

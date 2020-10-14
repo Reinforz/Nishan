@@ -1,19 +1,17 @@
 import axios from "axios";
 
-import Transaction from "./Transaction"
+import Transaction from "./Transaction";
+
 const Block = require('../Block');
 const View = require('../View');
 
 const { collectionSet } = require('./utils');
 const pluckKeys = require('../../utils/pluckKeys');
 
-class Collection extends Block {
-  static setStatic(obj) {
-    Object.entries(obj).forEach(([key, value]) => (Collection[key] = value));
-    return Collection;
-  }
+import { Collection as ICollection } from "../types";
 
-  constructor({ parent_data, collection_data }) {
+class Collection extends Block {
+  constructor({ parent_data, collection_data }: { collection_data: ICollection }) {
     super(parent_data);
     if (!parent_data.type.match(/collection_view/))
       throw new Error(error(`Cannot create collection_view_page block from ${parent_data.type} block`));

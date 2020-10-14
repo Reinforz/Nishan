@@ -1,12 +1,15 @@
+export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup'
+export type Entity = BlockData | SpaceData | CollectionData;
+export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
+export type Command = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
+export type Table = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
+
 export interface ValueArg {
   id: string,
   value: string,
   color: string
 };
 
-type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation'
-
-export type Entity = BlockData | SpaceData | CollectionData;
 export interface SchemaUnit {
   name: string,
   type: SchemaUnitType,
@@ -16,16 +19,9 @@ export interface Schema {
   [key: string]: SchemaUnit
 };
 
-export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
-export type Command = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
-export type Table = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
-
-export interface Operation {
-  table: Table,
-  id: string,
-  command: Command,
-  path: string[],
-  args: Args
+export interface Request {
+  requestId: string,
+  transactions: Transaction[]
 };
 
 export interface Transaction {
@@ -35,9 +31,12 @@ export interface Transaction {
   operations: Operation[]
 };
 
-export interface Request {
-  requestId: string,
-  transactions: Transaction[]
+export interface Operation {
+  table: Table,
+  id: string,
+  command: Command,
+  path: string[],
+  args: Args
 };
 
 export interface Permission {
@@ -50,32 +49,51 @@ export interface Node {
   alive: boolean,
   version: number,
   id: string,
+}
+
+export interface ParentProps {
   parent_id: string,
   parent_table: 'block' | 'space' | 'user_root',
 }
 
-export interface CreateProperties {
+export interface CreateProps {
   created_by_id: string,
   created_by_table: 'notion_user',
   created_time: number,
 }
 
-export interface LastEditedProperties {
+export interface LastEditedProps {
   last_edited_by_id: string,
   last_edited_by_table: 'notion_user',
   last_edited_time: number,
 }
 
-export interface Block extends Node, CreateProperties, LastEditedProperties {
+export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
   permission: Permission[],
-  properties: {
-    title: string[][]
-  },
   shard_id: number,
   space_id: string,
-  type: 'block' | 'page',
   collection_id?: string,
   view_ids?: string[]
+}
+
+export interface Page extends Block {
+  properties: {
+    title: string[][],
+    [k: string]: string[][]
+  },
+  type: 'page',
+  content?: string[]
+}
+
+export interface CollectionView extends Block {
+  type: 'collection_view',
+  collection_id: string
+}
+
+export interface CollectionViewPage extends Block {
+  type: 'collection_view_page',
+  view_ids: string[],
+  collection_id: string
 }
 
 export interface NotionUser {
@@ -88,7 +106,7 @@ export interface NotionUser {
   version: number
 }
 
-export interface Space extends CreateProperties {
+export interface Space extends CreateProps {
   beta_enabled: boolean,
   icon: string,
   id: string,
@@ -135,17 +153,17 @@ export interface CollectionViewFormat {
 
 export interface CollectionViewAggregation {
   property: string,
-  aggregator: "count"
+  aggregator: "count" | "unique"
 }
 
-export interface CollectionView extends Node {
+export interface View extends Node {
   format: CollectionViewFormat,
   name: string,
   page_sort: string[],
   query2: {
     aggregation: CollectionViewAggregation[]
   },
-  type: 'table'
+  type: 'table',
 }
 
 export interface UserRoot {
@@ -168,9 +186,24 @@ export interface Stack {
   index: number,
   table: 'block'
 }
+
 /*
   API Interfaces
 */
+
+export interface CollectionViewData {
+  [key: string]: {
+    role: 'editor',
+    value: CollectionView
+  }
+};
+
+export interface CollectionViewPageData {
+  [key: string]: {
+    role: 'editor',
+    value: CollectionViewPage
+  }
+};
 
 export interface BlockData {
   [key: string]: {
@@ -200,10 +233,10 @@ export interface CollectionData {
   }
 }
 
-export interface CollectionViewData {
+export interface ViewData {
   [key: string]: {
     role: 'editor',
-    value: CollectionView
+    value: View
   }
 }
 
@@ -232,16 +265,17 @@ export interface UserSettingsData {
   }
 }
 
+/* Api endpoint result */
 export interface LoadUserContentResult {
   recordMap: UserContent
 }
 
-export interface GetSpacesRes {
+export interface GetSpacesResult {
   // key is the id of the user
   [key: string]: UserContent
 }
 
-export interface GetUserSharePagesRes {
+export interface GetUserSharePagesResult {
   pages: { id: string, spaceId: string }[],
   recordMap: {
     block: BlockData,
@@ -249,7 +283,7 @@ export interface GetUserSharePagesRes {
   }
 }
 
-export interface LoadPageChunkParam {
+export interface LoadPageChunkParams {
   chunkNumber: 0,
   cursor: Cursor,
   limit: number,
@@ -257,12 +291,12 @@ export interface LoadPageChunkParam {
   verticalColumns: boolean
 }
 
-export interface LoadPageChunkRes {
+export interface LoadPageChunkResult {
   cursor: Cursor,
   recordMap: {
     block: BlockData,
     collection: CollectionData
-    collection_view: CollectionViewData,
+    collection_view: ViewData,
     space: SpaceData,
   }
 }

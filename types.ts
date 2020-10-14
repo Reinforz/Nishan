@@ -3,8 +3,8 @@ export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
 export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
 export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
-export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
+export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 
 export interface ValueArg {
   id: string,
@@ -87,15 +87,17 @@ export interface Page extends Block {
   content?: string[]
 }
 
-export interface CollectionView extends Block {
-  type: 'collection_view',
+interface CollectionBlock extends Block {
+  view_ids: string[],
   collection_id: string
 }
 
-export interface CollectionViewPage extends Block {
+export interface CollectionView extends CollectionBlock {
+  type: 'collection_view',
+}
+
+export interface CollectionViewPage extends CollectionBlock {
   type: 'collection_view_page',
-  view_ids: string[],
-  collection_id: string
 }
 
 export interface Collection extends Node, ParentProps {
@@ -106,17 +108,87 @@ export interface Collection extends Node, ParentProps {
   schema: Schema
 }
 
-export interface View extends Node, ParentProps {
-  format: ViewFormat,
+export interface TableView extends Node, ParentProps {
   name: string,
+  type: 'table',
   page_sort: string[],
+  format: {
+    table_wrap: boolean,
+    table_properties: ViewFormatProperties[]
+  },
   query2?: {
     aggregations: ViewAggregations[],
     sort: ViewSorts[],
-    filters: ViewFilters[],
+    filter: {
+      filters: ViewFilters[]
+    },
   },
-  type: ViewType,
 }
+
+export interface ListView extends Node, ParentProps {
+  name: string,
+  type: 'list',
+  format: {
+    list_properties: ViewFormatProperties[]
+  },
+  query2?: {
+    sort: ViewSorts[],
+    filter: {
+      filters: ViewFilters[]
+    },
+  },
+}
+
+export interface BoardView extends Node, ParentProps {
+  type: 'board',
+  format: {
+    board_cover: ViewFormatCover,
+    board_properties: ViewFormatProperties[],
+    board_cover_aspect?: 'contain' | 'cover',
+    board_cover_size?: 'small' | 'medium' | 'large',
+    board_groups2: { hidden: boolean, property: string, value: { type: "select" | "multi_select", value: string } }[]
+  },
+  query2?: {
+    aggregations: ViewAggregations[],
+    sort: ViewSorts[],
+    filter: {
+      filters: ViewFilters[]
+    },
+    group_by: string
+  },
+}
+
+export interface GalleryView extends Node, ParentProps {
+  type: 'gallery',
+  format: {
+    gallery_cover?: ViewFormatCover,
+    gallery_cover_aspect?: 'contain' | 'cover',
+    gallery_cover_size?: 'small' | 'medium' | 'large',
+    gallery_properties: ViewFormatProperties[]
+  },
+  query2?: {
+    sort: ViewSorts[],
+    filter: {
+      filters: ViewFilters[]
+    },
+  },
+}
+
+export interface CalendarView extends Node, ParentProps {
+  type: 'calendar',
+  format: {
+    calendar_properties: ViewFormatProperties[]
+  },
+  query2?: {
+    sort: ViewSorts[],
+    filter: {
+      filters: ViewFilters[]
+    },
+    calender_by: string
+  },
+}
+
+type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 
 export interface NotionUser {
   email: string,
@@ -154,15 +226,10 @@ export interface SpaceView extends Node {
   visited_templated: string[]
 }
 
-export interface CollectionViewFormatTableProperties {
+export interface ViewFormatProperties {
   width?: number,
   visible: boolean,
   property: string
-}
-
-export interface ViewFormat {
-  table_properties: CollectionViewFormatTableProperties[],
-  table_wrap: boolean
 }
 
 export interface ViewAggregations {
@@ -172,7 +239,8 @@ export interface ViewAggregations {
 }
 
 export interface ViewSorts {
-
+  property: string,
+  direction: "ascending" | "descending"
 }
 
 export interface ViewFilters {
@@ -249,7 +317,7 @@ export interface CollectionData {
 export interface ViewData {
   [key: string]: {
     role: 'editor',
-    value: View
+    value: TableView | ListView | BoardView | CalendarView | GalleryView
   }
 }
 

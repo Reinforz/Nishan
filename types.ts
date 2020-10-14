@@ -1,8 +1,10 @@
-export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup'
+export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup' | 'text' | 'date' | 'person' | 'file' | 'url' | 'email' | 'phone' | 'created_time' | 'created_by' | 'last_edited_time' | 'last_edited_by'
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
-export type Command = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
-export type Table = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
+export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
+export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block';
+export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
+export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 
 export interface ValueArg {
   id: string,
@@ -32,9 +34,9 @@ export interface Transaction {
 };
 
 export interface Operation {
-  table: Table,
+  table: OperationTable,
   id: string,
-  command: Command,
+  command: OperationCommand,
   path: string[],
   args: Args
 };
@@ -96,6 +98,26 @@ export interface CollectionViewPage extends Block {
   collection_id: string
 }
 
+export interface Collection extends Node, ParentProps {
+  description: string[][],
+  icon?: string,
+  migrated: boolean,
+  name: string[][],
+  schema: Schema
+}
+
+export interface View extends Node, ParentProps {
+  format: ViewFormat,
+  name: string,
+  page_sort: string[],
+  query2?: {
+    aggregations: ViewAggregations[],
+    sort: ViewSorts[],
+    filters: ViewFilters[],
+  },
+  type: ViewType,
+}
+
 export interface NotionUser {
   email: string,
   family_name: string,
@@ -120,14 +142,6 @@ export interface Space extends CreateProps {
   version: number
 }
 
-export interface Collection extends Node {
-  description: string[][],
-  icon: string,
-  migrated: boolean,
-  name: string[][],
-  schema: Schema
-}
-
 export interface SpaceView extends Node {
   created_getting_started: true,
   created_onboarding_templates: true,
@@ -146,24 +160,23 @@ export interface CollectionViewFormatTableProperties {
   property: string
 }
 
-export interface CollectionViewFormat {
+export interface ViewFormat {
   table_properties: CollectionViewFormatTableProperties[],
   table_wrap: boolean
 }
 
-export interface CollectionViewAggregation {
+export interface ViewAggregations {
   property: string,
-  aggregator: "count" | "unique"
+  // ? Get all aggregator values
+  aggregator: ViewAggregationsAggregators
 }
 
-export interface View extends Node {
-  format: CollectionViewFormat,
-  name: string,
-  page_sort: string[],
-  query2: {
-    aggregation: CollectionViewAggregation[]
-  },
-  type: 'table',
+export interface ViewSorts {
+
+}
+
+export interface ViewFilters {
+
 }
 
 export interface UserRoot {

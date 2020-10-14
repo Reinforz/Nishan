@@ -390,12 +390,12 @@ export interface RecordMap {
 }
 
 export interface Cache {
-  block: Map<string, BlockData>,
-  collection: Map<string, CollectionData>
-  collection_view: Map<string, ViewData>,
-  space: Map<string, SpaceData>,
-  notion_user: Map<string, NotionUserData>,
-  space_view: Map<string, SpaceViewData>,
-  user_root: Map<string, UserRootData>,
-  user_settings: Map<string, UserSettingsData>,
+  block: Map<string, Block>,
+  collection: Map<string, Collection>
+  collection_view: Map<string, CollectionView>,
+  space: Map<string, Space>,
+  notion_user: Map<string, NotionUser>,
+  space_view: Map<string, SpaceView>,
+  user_root: Map<string, UserRoot>,
+  user_settings: Map<string, UserSettings>,
 }

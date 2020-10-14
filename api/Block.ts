@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation } from '../utils/chunk';
 
-import Transaction from "./Transaction";
+import createTransaction from "../utils/createTransaction";
 
 import { error, warn } from "../utils/logs";
 
@@ -13,6 +13,7 @@ import Nishan from "./Nishan";
 
 class Block extends Nishan {
   block_data: IBlock;
+  createTransaction = createTransaction.bind(this, this.shard_id, this.space_id);
 
   constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
     token: string,
@@ -45,7 +46,7 @@ class Block extends Nishan {
 
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
-      Transaction.createTransaction([
+      this.createTransaction([
         [
           blockSet(generated_table_id, [], {
             type: 'copy_indicator',
@@ -89,7 +90,7 @@ class Block extends Nishan {
     // ? Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
-      Transaction.createTransaction([
+      this.createTransaction([
         [
           ...Object.entries(args.format).map(([path, arg]) => blockSet(this.block_data.id, ['format', path], arg)),
           ...Object.entries(args.properties).map(([path, arg]) =>
@@ -108,7 +109,7 @@ class Block extends Nishan {
     try {
       await axios.post(
         'https://www.notion.so/api/v3/saveTransactions',
-        Transaction.createTransaction([
+        this.createTransaction([
           [
             blockUpdate(this.block_data.id, [], {
               alive: false
@@ -134,7 +135,7 @@ class Block extends Nishan {
     const current_time = Date.now();
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
-      Transaction.createTransaction([
+      this.createTransaction([
         [
           blockUpdate(this.block_data.id, [], { alive: false }),
           blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),

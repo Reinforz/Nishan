@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import Transaction from "./Transaction";
 
 import { collectionSet } from '../utils/chunk';
 import { error } from "../utils/logs";
+import createTransaction from "../utils/createTransaction";
 
 import { Collection as ICollection, ICollectionBlock } from "../types";
 import Nishan from "./Nishan";
@@ -40,7 +40,7 @@ class Collection extends Nishan {
   async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
-      Transaction.createTransaction([
+      createTransaction(this.shard_id, this.space_id, [
         [
           ...Object.entries(properties).map(([path, arg]) => collectionSet(this.collection_data.id, [path], arg)),
           collectionSet(this.collection_data.id, ['last_edited_time'], Date.now())

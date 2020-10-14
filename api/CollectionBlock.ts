@@ -16,7 +16,8 @@ class CollectionBlock extends Block {
   parent_data: IPage | ISpace;
   Transaction = createTransaction.bind(this, this.shard_id, this.space_id);
 
-  constructor({ token,
+  constructor({
+    token,
     interval,
     user_id,
     shard_id,

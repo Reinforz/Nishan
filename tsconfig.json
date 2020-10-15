@@ -11,6 +11,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "watch": true
-  }
+    "watch": true,
+    "declaration": true
+  },
+  "exclude": [
+    "experiment"
+  ]
 }

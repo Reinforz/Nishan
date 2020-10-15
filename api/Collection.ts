@@ -6,7 +6,7 @@ import { error } from "../utils/logs";
 import createTransaction from "../utils/createTransaction";
 
 import { Collection as ICollection } from "../types";
-import Nishan from "./Nishan";
+import Nishan from "../Nishan";
 
 class Collection extends Nishan {
   collection_data: ICollection;

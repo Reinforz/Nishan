@@ -1,10 +1,10 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, Cache, RecordMap } from "../types";
-import { error, warn } from "../utils/logs";
-import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from '../utils/chunk';
-import createTransaction from "../utils/createTransaction";
+import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, Cache, RecordMap } from "./types";
+import { error, warn } from "./utils/logs";
+import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
+import createTransaction from "./utils/createTransaction";
 
 class Nishan {
   token: string;
@@ -53,7 +53,7 @@ class Nishan {
   }
 
   async getBlock(block_id: string) {
-    const { default: Block } = await import("./Block");
+    const { default: Block } = await import("./api/Block");
     const cache_data = this.cache.block.get(block_id);
     if (cache_data) return cache_data;
     const { data: { recordMap } } = await axios.post(
@@ -81,7 +81,7 @@ class Nishan {
   }
 
   async getCollection(collection_id: string) {
-    const { default: Collection } = await import("./Collection");
+    const { default: Collection } = await import("./api/Collection");
     const { data: { recordMap: { collection } } } = await axios.post(
       'https://www.notion.so/api/v3/syncRecordValues',
       {
@@ -127,7 +127,7 @@ class Nishan {
 
   async createPage(opts = {} as { properties: PageProps, format: PageFormat }) {
     const { properties = {}, format = {} } = opts;
-    const { default: Page } = await import("./Page");
+    const { default: Page } = await import("./api/Page");
     const $block_id = uuidv4();
     if (this.space_id && this.user_id)
       await axios.post(
@@ -161,7 +161,7 @@ class Nishan {
   }
 
   async getPage(arg: string | ((page: IPage, index: number) => boolean)) {
-    const { default: Page } = await import("./Page");
+    const { default: Page } = await import("./api/Page");
 
     if (typeof arg === 'string') {
       const page_id = arg;
@@ -215,7 +215,7 @@ class Nishan {
     }
   }
 
-  async setSpace(fn: (space: Space) => boolean) {
+  async setSpace(arg: (space: Space) => boolean | string) {
     const { data: { recordMap, recordMap: { space } } } = await axios.post(
       'https://www.notion.so/api/v3/loadUserContent',
       {},
@@ -223,11 +223,13 @@ class Nishan {
     ) as { data: LoadUserContentResult };
 
     this.saveToCache(recordMap);
-    const target_space: Space = (Object.values(space).find((space) => fn(space.value))?.value || Object.values(space)[0].value);
+    const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
     if (!this.user_id) error("User id is not provided");
+    if (!target_space) error(`No space matches the criteria`);
     else {
+      this.shard_id = target_space.shard_id;
       this.space_id = target_space.id;
-      this.user_id = target_space.permission[0].user_id;
+      this.user_id = target_space.permissions[0].user_id;
       this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
     }
   }

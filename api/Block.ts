@@ -9,7 +9,7 @@ import { error, warn } from "../utils/logs";
 
 import { Block as IBlock } from "../types"
 
-import Nishan from "./Nishan";
+import Nishan from "../Nishan";
 
 class Block extends Nishan {
   block_data: IBlock;

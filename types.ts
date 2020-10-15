@@ -230,7 +230,7 @@ export interface Space extends CreateProps {
   invite_link_enabled: boolean,
   name: string,
   pages: string[],
-  permission: Permission[],
+  permissions: Permission[],
   plan_type: "personal",
   shard_id: number,
   version: number

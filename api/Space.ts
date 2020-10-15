@@ -2,7 +2,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
 import Page from './Page';
-import Nishan from "./Nishan";
+import Nishan from "../Nishan";
 
 import createTransaction from "../utils/createTransaction";
 

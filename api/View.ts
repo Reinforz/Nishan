@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import Nishan from "./Nishan";
+import Nishan from "../Nishan";
 
 import { collectionViewUpdate } from '../utils/chunk';
 

@@ -13,7 +13,6 @@ import Nishan from "./Nishan";
 
 class Block extends Nishan {
   block_data: IBlock;
-  createTransaction = createTransaction.bind(this, this.shard_id, this.space_id);
 
   constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
     token: string,

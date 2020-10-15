@@ -1,6 +1,6 @@
 import { Operation, Request } from "../types";
 
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 export default (shardId: number, spaceId: string, operations: Operation[][]) => {
   return {

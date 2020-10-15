@@ -7,14 +7,13 @@ import CollectionView from './CollectionView';
 import createTransaction from "../utils/createTransaction"
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, createOperation, collectionViewUpdate, blockUpdate, blockSet, blockListAfter } from '../utils/chunk';
+import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
 import { Page as IPage } from "../types";
 
 class Page extends Block {
-  createTransaction = createTransaction.bind(this, this.shard_id, this.space_id);
   constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
     token: string,
     interval: number,
@@ -307,4 +306,3 @@ class Page extends Block {
 }
 
 export default Page;
-

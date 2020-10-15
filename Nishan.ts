@@ -22,22 +22,22 @@ class Nishan {
 
   constructor({ token, interval, user_id, cache, shard_id, space_id }: {
     token: string,
-    interval?: number,
-    user_id?: string,
+    user_id: string,
+    shard_id: number;
+    space_id: string;
     cache?: Cache,
-    space_id?: string;
-    shard_id?: number;
+    interval?: number,
   }) {
     this.token = token;
     this.interval = interval || 1000;
-    this.user_id = user_id || '';
+    this.user_id = user_id;
     this.headers = {
       headers: {
         cookie: `token_v2=${token}`
       }
     };
-    this.shard_id = shard_id || 0;
-    this.space_id = space_id || '';
+    this.shard_id = shard_id;
+    this.space_id = space_id;
     this.cache = cache || {
       block: new Map(),
       collection: new Map(),
@@ -48,8 +48,7 @@ class Nishan {
       user_root: new Map(),
       user_settings: new Map(),
     }
-    if (shard_id && space_id)
-      this.createTransaction = createTransaction.bind(this, shard_id, space_id);
+    this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
   async getBlock(block_id: string) {
@@ -77,6 +76,7 @@ class Nishan {
         user_id: this.user_id,
         shard_id: this.shard_id,
         space_id: this.space_id,
+        cache: this.cache
       });
   }
 
@@ -160,59 +160,42 @@ class Nishan {
     return new Page(recordMap.block[$block_id].value);
   }
 
-  async getPage(arg: string | ((page: IPage, index: number) => boolean)) {
-    const { default: Page } = await import("./api/Page");
+  async getPage(arg: string) {
+    const Page = require("./api/Page").default;
+    const page_id = arg;
+    const cache_data = this.cache.block.get(page_id) as IPage;
+    if (cache_data) return new Page({
+      block_data: cache_data,
+      token: this.token,
+      interval: this.interval,
+      user_id: this.user_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
+      cache: this.cache
+    });
 
-    if (typeof arg === 'string') {
-      const page_id = arg;
-      const cache_data = this.cache.block.get(page_id);
-      if (cache_data) return cache_data;
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/getBacklinksForBlock',
-        { blockId: page_id },
-        this.headers
-      );
-      this.saveToCache(recordMap);
-      const target = recordMap.block[page_id];
-      if (!target) {
-        warn(`No page with the id ${page_id} exists`);
-        return undefined;
-      }
-      return new Promise((resolve) =>
-        setTimeout(() => {
-          resolve(new Page(recordMap.block[page_id].value));
-        }, this.interval)
-      );
-    } else if (typeof arg === 'function') {
-      const cached_pages: IPage[] = [];
-      this.cache.block.forEach(block => {
-        if (block.type === 'page') cached_pages.push(block);
-      })
-
-      const filtered_pages: IPage[] = [];
-
-      for (let i = 0; i < cached_pages.length; i++) {
-        const res = await arg(cached_pages[i], i);
-        if (res) filtered_pages.push(cached_pages[i]);
-      }
-
-      if (filtered_pages.length > 0) return filtered_pages;
-      else {
-        const { data: { recordMap } } = await axios.post(
-          'https://www.notion.so/api/v3/loadUserContent',
-          {},
-          this.headers
-        ) as { data: LoadUserContentResult };
-        this.saveToCache(recordMap);
-
-        const pages = Object.values(recordMap.block).filter((block) => block.value.type === "page").map(block => block.value) as IPage[];
-        for (let i = 0; i < pages.length; i++) {
-          const res = await arg(pages[i], i);
-          if (res) filtered_pages.push(pages[i]);
-        }
-        return filtered_pages;
-      }
+    const { data: { recordMap } } = await axios.post(
+      'https://www.notion.so/api/v3/getBacklinksForBlock',
+      { blockId: page_id },
+      this.headers
+    );
+    this.saveToCache(recordMap);
+    const target = recordMap.block[page_id];
+    if (!target) {
+      warn(`No page with the id ${page_id} exists`);
+      return undefined;
     }
+    return new Page(
+      {
+        block_data: recordMap.block[page_id].value,
+        token: this.token,
+        interval: this.interval,
+        user_id: this.user_id,
+        shard_id: this.shard_id,
+        space_id: this.space_id,
+        cache: this.cache
+      }
+    );
   }
 
   async setSpace(arg: (space: Space) => boolean | string) {

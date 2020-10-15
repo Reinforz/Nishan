@@ -3,26 +3,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation } from '../utils/chunk';
 
-import createTransaction from "../utils/createTransaction";
-
 import { error, warn } from "../utils/logs";
 
-import { Block as IBlock } from "../types"
+import { Block as IBlock, Cache } from "../types"
 
 import Nishan from "../Nishan";
 
 class Block extends Nishan {
   block_data: IBlock;
 
-  constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
+  constructor({ cache, token, interval, user_id, shard_id, space_id, block_data }: {
     token: string,
     interval: number,
     user_id: string,
     shard_id: number,
     space_id: string,
-    block_data: IBlock
+    block_data: IBlock,
+    cache: Cache
   }) {
-    super({ token, interval, user_id, shard_id, space_id })
+    super({ token, interval, user_id, shard_id, space_id, cache })
     this.block_data = block_data;
   }
 

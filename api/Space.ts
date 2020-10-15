@@ -16,6 +16,8 @@ class Space extends Nishan {
 
   constructor({ interval, user_id, token, space_data }: { space_data: ISpace, token: string, interval: number, user_id: string }) {
     super({
+      space_id: space_data.id,
+      shard_id: space_data.shard_id,
       interval,
       user_id,
       token,

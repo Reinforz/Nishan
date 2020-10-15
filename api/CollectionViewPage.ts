@@ -4,7 +4,7 @@ import axios from "axios";
 import CollectionBlock from './CollectionBlock';
 
 import { error, warn } from "../utils/logs";
-import { CollectionViewPage as ICollectionViewPage } from '../types';
+import { Cache, CollectionViewPage as ICollectionViewPage } from '../types';
 
 class CollectionViewPage extends CollectionBlock {
   block_data: ICollectionViewPage
@@ -16,7 +16,8 @@ class CollectionViewPage extends CollectionBlock {
     shard_id,
     space_id,
     parent_id,
-    block_data
+    block_data,
+    cache
   }: {
     token: string,
     interval: number,
@@ -24,9 +25,11 @@ class CollectionViewPage extends CollectionBlock {
     shard_id: number,
     space_id: string,
     parent_id: string,
-    block_data: ICollectionViewPage
+    block_data: ICollectionViewPage,
+    cache: Cache
   }) {
     super({
+      cache,
       token,
       interval,
       user_id,

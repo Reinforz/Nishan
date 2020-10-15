@@ -12,19 +12,27 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage } from "../types";
+import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage } from "../types";
 
 class Page extends Block {
-  constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
+  constructor({ cache, token, interval, user_id, shard_id, space_id, block_data }: {
     token: string,
     interval: number,
     user_id: string,
     shard_id: number,
     space_id: string,
-    block_data: IPage
+    block_data: IPage,
+    cache: Cache
   }) {
-    super({ token, interval, user_id, shard_id, space_id, block_data });
+    super({ token, interval, user_id, shard_id, space_id, block_data, cache, });
     if (block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${block_data.type} block`));
+  }
+
+  async update(format: Partial<PageFormat> = {}) {
+    await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+      blockUpdate(this.block_data.id, ['format'], format),
+      blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+    ]]), this.headers);
   }
 
   /**
@@ -134,6 +142,7 @@ class Page extends Block {
         );
         this.saveToCache(recordMap);
         return new CollectionView({
+          cache: this.cache,
           token: this.token,
           interval: this.interval,
           user_id: this.user_id,
@@ -215,6 +224,7 @@ class Page extends Block {
         ) as { data: QueryCollectionResult };
         this.saveToCache(recordMap);
         resolve(new CollectionViewPage({
+          cache: this.cache,
           token: this.token,
           interval: this.interval,
           user_id: this.user_id,
@@ -309,6 +319,7 @@ class Page extends Block {
       );
       this.saveToCache(recordMap);
       return new CollectionView({
+        cache: this.cache,
         token: this.token,
         interval: this.interval,
         user_id: this.user_id,

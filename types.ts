@@ -94,7 +94,14 @@ export interface PageProps {
 }
 
 export interface PageFormat {
-  page_icon: string
+  page_icon: string,
+  page_font: string,
+  page_full_width: boolean,
+  page_small_text: boolean,
+  block_locked_by: string,
+  block_locked: boolean,
+  page_cover: string,
+  page_cover_position: number
 }
 export interface Page extends Block {
   properties: PageProps,

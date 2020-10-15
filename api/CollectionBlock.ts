@@ -10,7 +10,7 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 import createTransaction from "../utils/createTransaction"
 import { error, warn } from "../utils/logs";
 
-import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView } from "../types";
+import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache } from "../types";
 
 class CollectionBlock extends Block {
   parent_id: string;
@@ -23,7 +23,8 @@ class CollectionBlock extends Block {
     shard_id,
     space_id,
     parent_id,
-    block_data
+    block_data,
+    cache
   }: {
     parent_id: string,
     block_data: TCollectionBlock,
@@ -31,9 +32,11 @@ class CollectionBlock extends Block {
     interval: number,
     user_id: string,
     shard_id: number,
-    space_id: string
+    space_id: string,
+    cache: Cache
   }) {
     super({
+      cache,
       token,
       interval,
       user_id,

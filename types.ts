@@ -129,6 +129,8 @@ export interface Collection extends Node, ParentProps {
   schema: Schema
 }
 
+export type TView = TableView | ListView | BoardView | GalleryView | CalendarView;
+
 export interface TableView extends Node, ParentProps {
   name: string,
   type: 'table',

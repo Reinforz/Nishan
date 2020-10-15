@@ -82,6 +82,11 @@ class CollectionBlock extends Block {
     ) as { data: LoadPageChunkResult };
     this.saveToCache(recordMap);
     return new View({
+      token: this.token,
+      interval: this.interval,
+      user_id: this.user_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
       parent_data: this.block_data,
       view_data: collection_view[$view_id].value
     });
@@ -96,7 +101,6 @@ class CollectionBlock extends Block {
         user_id: this.user_id,
         shard_id: this.shard_id,
         space_id: this.space_id,
-        parent_data: this.block_data as ICollectionBlock,
         collection_data: cached_data
       });
     try {
@@ -118,7 +122,6 @@ class CollectionBlock extends Block {
         user_id: this.user_id,
         shard_id: this.shard_id,
         space_id: this.space_id,
-        parent_data: this.block_data as ICollectionBlock,
         collection_data: recordMap.collection[(this.block_data as ICollectionBlock).collection_id].value
       });
     } catch (err) {

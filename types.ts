@@ -105,7 +105,8 @@ export interface Page extends Block {
 
 export interface CollectionBlock extends Block {
   view_ids: string[],
-  collection_id: string
+  collection_id: string,
+  type: 'collection_view' | 'collection_view_page'
 }
 
 export interface CollectionView extends CollectionBlock {
@@ -116,9 +117,9 @@ export interface CollectionViewPage extends CollectionBlock {
   type: 'collection_view_page',
 }
 
-export type ICollectionBlock = CollectionView | CollectionViewPage;
+export type TCollectionBlock = CollectionView | CollectionViewPage;
 
-export type BlockType = ICollectionBlock | Page;
+export type BlockType = TCollectionBlock | Page;
 export type ParentType = Page | Space;
 
 export interface Collection extends Node, ParentProps {
@@ -368,6 +369,11 @@ export interface UserSettingsData {
 }
 
 /* Api endpoint result */
+
+export interface QueryCollectionResult {
+  recordMap: RecordMap
+}
+
 export interface LoadUserContentResult {
   recordMap: RecordMap
 }
@@ -400,7 +406,7 @@ export interface LoadPageChunkResult {
 export interface RecordMap {
   block: BlockData,
   collection: CollectionData,
-  collection_view: CollectionViewData,
+  collection_view: ViewData,
   space: SpaceData,
   notion_user: NotionUserData,
   space_view: SpaceViewData,
@@ -411,7 +417,7 @@ export interface RecordMap {
 export interface Cache {
   block: Map<string, BlockType>,
   collection: Map<string, Collection>
-  collection_view: Map<string, CollectionView>,
+  collection_view: Map<string, TView>,
   space: Map<string, Space>,
   notion_user: Map<string, NotionUser>,
   space_view: Map<string, SpaceView>,

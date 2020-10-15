@@ -10,7 +10,7 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 import createTransaction from "../utils/createTransaction"
 import { error, warn } from "../utils/logs";
 
-import { ICollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace } from "../types";
+import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView } from "../types";
 
 class CollectionBlock extends Block {
   parent_id: string;
@@ -26,7 +26,7 @@ class CollectionBlock extends Block {
     block_data
   }: {
     parent_id: string,
-    block_data: ICollectionBlock,
+    block_data: TCollectionBlock,
     token: string,
     interval: number,
     user_id: string,
@@ -87,13 +87,13 @@ class CollectionBlock extends Block {
       user_id: this.user_id,
       shard_id: this.shard_id,
       space_id: this.space_id,
-      parent_data: this.block_data,
-      view_data: collection_view[$view_id].value
+      parent_id: this.block_data.id,
+      view_data: collection_view[$view_id].value as TView
     });
   }
 
   async fetchCollection() {
-    const cached_data = this.cache.collection.get((this.block_data as ICollectionBlock).collection_id);
+    const cached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
     if (cached_data)
       return new Collection({
         token: this.token,
@@ -122,7 +122,7 @@ class CollectionBlock extends Block {
         user_id: this.user_id,
         shard_id: this.shard_id,
         space_id: this.space_id,
-        collection_data: recordMap.collection[(this.block_data as ICollectionBlock).collection_id].value
+        collection_data: recordMap.collection[(this.block_data as TCollectionBlock).collection_id].value
       });
     } catch (err) {
       error(err.response.data);
@@ -143,8 +143,16 @@ class CollectionBlock extends Block {
         this.headers
       ) as { data: { recordMap: RecordMap } };
       this.saveToCache(recordMap);
-      return (recordMap.block[this.block_data.id].value as ICollectionBlock).view_ids.map(
-        (view_id) => new View({ parent_data: this.block_data, view_data: recordMap.collection_view[view_id].value })
+      return (recordMap.block[this.block_data.id].value as TCollectionBlock).view_ids.map(
+        (view_id) => new View({
+          token: this.token,
+          interval: this.interval,
+          user_id: this.user_id,
+          shard_id: this.shard_id,
+          space_id: this.space_id,
+          parent_id: this.block_data.id,
+          view_data: recordMap.collection_view[view_id].value
+        })
       );
     } catch (err) {
       error(err.response.data);
@@ -189,7 +197,7 @@ class CollectionBlock extends Block {
             'https://www.notion.so/api/v3/queryCollection',
             {
               collectionId: this.block_data.collection_id,
-              collectionViewId: (this.block_data as ICollectionBlock).view_ids[0],
+              collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
               query: {},
               loader: {
                 limit: 1000,

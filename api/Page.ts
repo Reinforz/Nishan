@@ -12,11 +12,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg } from "../types";
-
-interface ViewArg {
-
-}
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage } from "../types";
 
 class Page extends Block {
   constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
@@ -216,7 +212,7 @@ class Page extends Block {
             query: {}
           },
           this.headers
-        );
+        ) as { data: QueryCollectionResult };
         this.saveToCache(recordMap);
         resolve(new CollectionViewPage({
           token: this.token,
@@ -226,7 +222,7 @@ class Page extends Block {
           space_id: this.space_id,
           // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
           parent_id: this.block_data.id,
-          block_data: collection_view_page[this.block_data.id].value
+          block_data: collection_view_page[this.block_data.id].value as ICollectionViewPage
         }))
       }, this.interval)
     });

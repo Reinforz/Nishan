@@ -85,7 +85,8 @@ class Block extends Nishan {
     // ? Return New Block
   }
 
-  async update(args) {
+  // ? TD: Better TD for args
+  async update(args: any) {
     // ? Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',

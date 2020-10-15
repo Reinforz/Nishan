@@ -8,8 +8,11 @@ import createTransaction from "../utils/createTransaction";
 
 import { warn } from "../utils/logs";
 
+import { Space as ISpace } from "../types";
+
 class Space extends Nishan {
-  createTransaction: any
+  createTransaction: any;
+  space_data: ISpace;
 
   constructor({ interval, user_id, token, space_data }: { space_data: ISpace, token: string, interval: number, user_id: string }) {
     super({

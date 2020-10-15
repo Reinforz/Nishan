@@ -4,9 +4,11 @@ import axios from "axios";
 import CollectionBlock from './CollectionBlock';
 
 import { error, warn } from "../utils/logs";
-import { Page, Space, CollectionViewPage as ICollectionViewPage } from '../types';
+import { CollectionViewPage as ICollectionViewPage } from '../types';
 
 class CollectionViewPage extends CollectionBlock {
+  block_data: ICollectionViewPage
+
   constructor({
     token,
     interval,
@@ -35,6 +37,7 @@ class CollectionViewPage extends CollectionBlock {
     });
     if (block_data.type !== 'collection_view_page')
       throw new Error(error(`Cannot create collection_view_page block from ${block_data.type} block`));
+    this.block_data = block_data;
   }
 }
 

@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "../dist/run",
+    "outDir": "./dist",
     "watch": true
   }
 }

@@ -121,7 +121,6 @@ class Nishan {
         user_id: this.user_id,
         shard_id: this.shard_id,
         space_id: this.space_id,
-        parent_data: block[collection_data.parent_id].value,
         collection_data
       });
   }

@@ -76,16 +76,25 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
   shard_id: number,
   space_id: string,
   collection_id?: string,
-  view_ids?: string[]
+  view_ids?: string[],
+  type: 'page' | 'collection_view_page' | 'collection_view'
 }
 
+// ? TD: Page format and properties
+
+export interface PageProps {
+  title: string[][],
+  [k: string]: string[][]
+}
+
+export interface PageFormat {
+  page_icon: string
+}
 export interface Page extends Block {
-  properties: {
-    title: string[][],
-    [k: string]: string[][]
-  },
+  properties: PageProps,
   type: 'page',
-  content?: string[]
+  content?: string[],
+  format: PageFormat
 }
 
 export interface CollectionBlock extends Block {
@@ -102,6 +111,9 @@ export interface CollectionViewPage extends CollectionBlock {
 }
 
 export type ICollectionBlock = CollectionView | CollectionViewPage;
+
+export type BlockType = ICollectionBlock | Page;
+export type ParentType = Page | Space;
 
 export interface Collection extends Node, ParentProps {
   description: string[][],
@@ -290,7 +302,7 @@ export interface CollectionViewPageData {
 export interface BlockData {
   [key: string]: {
     role: 'editor',
-    value: Block
+    value: Page | CollectionView | CollectionViewPage
   }
 }
 
@@ -353,7 +365,6 @@ export interface LoadUserContentResult {
 }
 
 export interface GetSpacesResult {
-  // key is the id of the user
   [key: string]: RecordMap
 }
 
@@ -388,9 +399,9 @@ export interface RecordMap {
   user_root: UserRootData,
   user_settings: UserSettingsData,
 }
-
+/* Nishan Specific */
 export interface Cache {
-  block: Map<string, Block>,
+  block: Map<string, BlockType>,
   collection: Map<string, Collection>
   collection_view: Map<string, CollectionView>,
   space: Map<string, Space>,

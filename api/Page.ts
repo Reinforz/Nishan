@@ -4,14 +4,19 @@ import { v4 as uuidv4 } from 'uuid';
 import Block from './Block';
 import CollectionViewPage from './CollectionViewPage';
 import CollectionView from './CollectionView';
-import createTransaction from "../utils/createTransaction"
+import Collection from './Collection';
+
 import createViews from "../utils/createViews";
 
 import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
-import { Page as IPage } from "../types";
+import { Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg } from "../types";
+
+interface ViewArg {
+
+}
 
 class Page extends Block {
   constructor({ token, interval, user_id, shard_id, space_id, block_data }: {
@@ -30,7 +35,8 @@ class Page extends Block {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  async createContent(options = {}) {
+  // ? TD: ContentType definitions page | header | sub_sub_header etc
+  async createContent(options: { format?: PageFormat, properties?: PageProps, type?: 'page' } = {}) {
     // ? User given after id as position
     // ? Return specific class instances based on content type
     const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
@@ -83,7 +89,7 @@ class Page extends Block {
     }
   }
 
-  async createLinkedDBContent(collection_id: string, views = []) {
+  async createLinkedDBContent(collection_id: string, views: UserViewArg[] = []) {
     const $content_id = uuidv4();
     const $views = views.map((view) => ({ ...view, id: uuidv4() }));
     const view_ids = $views.map((view) => view.id);
@@ -132,7 +138,12 @@ class Page extends Block {
         );
         this.saveToCache(recordMap);
         return new CollectionView({
-          parent_data: this.block_data,
+          token: this.token,
+          interval: this.interval,
+          user_id: this.user_id,
+          shard_id: this.shard_id,
+          space_id: this.space_id,
+          parent_id: this.block_data.id,
           block_data: recordMap.block[$content_id].value
         });
       } catch (err) {
@@ -145,17 +156,18 @@ class Page extends Block {
     }
   }
 
-  async convertToCollectionViewPage(options = {}) {
-    const views = options.views.map((view) => ({ ...view, id: uuidv4() }));
+  async convertToCollectionViewPage(options: { views?: UserViewArg[], schema?: [string, SchemaUnitType, Record<string, any>][] } = {}): Promise<CollectionViewPage> {
+    const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
     const view_ids = views.map((view) => view.id);
     const $collection_id = uuidv4();
     const current_time = Date.now();
-    const schema = {};
-    options.schema.forEach(opt => {
-      const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-      schema[schema_key] = { name: opt[0], type: opt[1], ...(opt[2] ?? {}) };
-      if (schema[schema_key].options) schema[schema_key].options = schema[schema_key].options.map(([value, color]) => ({ id: uuidv4(), value, color }))
-    });
+    const schema: Schema = {};
+    if (options.schema)
+      options.schema.forEach(opt => {
+        const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+        schema[schema_key] = { name: opt[0], type: opt[1], ...(opt[2] ?? {}) };
+        if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({ id: uuidv4(), value, color }))
+      });
 
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
@@ -176,11 +188,11 @@ class Page extends Block {
             format: {
               collection_page_properties: []
             },
-            icon: this.block_data.format.page_icon,
+            icon: (this.block_data as IPage).format.page_icon,
             parent_id: this.block_data.id,
             parent_table: 'block',
             alive: true,
-            name: this.block_data.properties.title
+            name: (this.block_data as IPage).properties.title
           }),
           ...createViews(views, this.block_data.id),
           blockSet(this.block_data.id, ['last_edited_time'], current_time)
@@ -207,40 +219,45 @@ class Page extends Block {
         );
         this.saveToCache(recordMap);
         resolve(new CollectionViewPage({
-          // ! Uh oh error as parent would either be a page or space, not the current block
-          parent_data: this.block_data,
+          token: this.token,
+          interval: this.interval,
+          user_id: this.user_id,
+          shard_id: this.shard_id,
+          space_id: this.space_id,
+          // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
+          parent_id: this.block_data.id,
           block_data: collection_view_page[this.block_data.id].value
         }))
-      }, Page.timeout)
+      }, this.interval)
     });
   }
 
-  async getCollectionViewPage() {
+  // ? RF: Transfer to CollectionBlock class 
+  async getCollectionViewPage(): Promise<undefined | Collection> {
     // ? Return new CollectionViewPage passing parent block data and new block data
     if (!this.block_data.collection_id) {
       error(`The block is not a collection_view_page`);
       return undefined;
     } else {
-      const cache_data = Block.cache.collection.get(this.block_data.collection_id);
+      await this.loadUserChunk();
+      const cache_data = this.cache.collection.get(this.block_data.collection_id);
       if (cache_data)
         return new Collection({
-          block_data: this.block_data,
+          token: this.token,
+          interval: this.interval,
+          user_id: this.user_id,
+          shard_id: this.shard_id,
+          space_id: this.space_id,
           collection_data: cache_data
         });
-      await this.loadUserChunk();
-
-      return new Collection({
-        parent_data: this.block_data,
-        collection_data: Block.cache.collection.get(this.block_data.collection_id)
-      });
     }
   }
 
-  async createCollectionViewContent(options = {}) {
+  async createCollectionViewContent(options: { views?: UserViewArg[] } = {}): Promise<undefined | CollectionView> {
     //? Returns collection_view and parent block
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();
-    const views = options.views.map((view) => ({ ...view, id: uuidv4() }));
+    const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
     const view_ids = views.map((view) => view.id);
     const parent_id = this.block_data.id;
     const user_id = this.user_id;
@@ -296,7 +313,12 @@ class Page extends Block {
       );
       this.saveToCache(recordMap);
       return new CollectionView({
-        parent_data: this.block_data,
+        token: this.token,
+        interval: this.interval,
+        user_id: this.user_id,
+        shard_id: this.shard_id,
+        space_id: this.space_id,
+        parent_id: this.block_data.id,
         block_data: recordMap.block[$collection_view_id].value
       });
     } catch (err) {

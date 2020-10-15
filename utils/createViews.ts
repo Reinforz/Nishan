@@ -1,19 +1,8 @@
-import { ViewType } from "../types";
+import { UserViewArg } from "../types";
 import { collectionViewUpdate } from "./chunk";
 
-interface ViewArg {
-  id: string,
-  sorts: [string, number][],
-  aggregations: [string, number][],
-  filters: any,
-  properties: [string, number, number][],
-  name: string,
-  type: ViewType,
-  wrap: boolean
-}
-
 // ? TD: FilterType interface
-export default function createViews(views: ViewArg[], parent_id: string) {
+export default function createViews(views: UserViewArg[], parent_id: string) {
   return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => collectionViewUpdate(id, [], {
     id,
     version: 0,

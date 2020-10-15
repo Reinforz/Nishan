@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": [
       "ESNext",
-      "dom"
+      "dom",
     ],
     "module": "commonjs",
     "target": "ESNext",

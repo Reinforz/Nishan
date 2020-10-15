@@ -13,7 +13,7 @@ import { error, warn } from "../utils/logs";
 import { ICollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace } from "../types";
 
 class CollectionBlock extends Block {
-  parent_data: IPage | ISpace;
+  parent_id: string;
   Transaction = createTransaction.bind(this, this.shard_id, this.space_id);
 
   constructor({
@@ -22,10 +22,10 @@ class CollectionBlock extends Block {
     user_id,
     shard_id,
     space_id,
-    parent_data,
+    parent_id,
     block_data
   }: {
-    parent_data: IPage | ISpace,
+    parent_id: string,
     block_data: ICollectionBlock,
     token: string,
     interval: number,
@@ -43,7 +43,7 @@ class CollectionBlock extends Block {
     });
     if (!block_data.type.match(/collection_view/))
       throw new Error(error(`Cannot create collection_block from ${block_data.type} block`));
-    this.parent_data = parent_data;
+    this.parent_id = parent_id;
   }
 
   async createView() {
@@ -75,7 +75,7 @@ class CollectionBlock extends Block {
         chunkNumber: 0,
         cursor: { stack: [] },
         limit: 50,
-        pageId: this.parent_data.id,
+        pageId: this.parent_id,
         verticalColumns: false
       },
       this.headers
@@ -105,7 +105,7 @@ class CollectionBlock extends Block {
         {
           chunkNumber: 0,
           limit: 50,
-          pageId: this.parent_data.id,
+          pageId: this.parent_id,
           cursor: { stack: [] },
           verticalColumns: false
         },
@@ -133,7 +133,7 @@ class CollectionBlock extends Block {
         {
           chunkNumber: 0,
           limit: 50,
-          pageId: this.parent_data.id,
+          pageId: this.parent_id,
           cursor: { stack: [] },
           verticalColumns: false
         },

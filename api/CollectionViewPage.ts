@@ -13,7 +13,7 @@ class CollectionViewPage extends CollectionBlock {
     user_id,
     shard_id,
     space_id,
-    parent_data,
+    parent_id,
     block_data
   }: {
     token: string,
@@ -21,7 +21,7 @@ class CollectionViewPage extends CollectionBlock {
     user_id: string,
     shard_id: number,
     space_id: string,
-    parent_data: Page | Space,
+    parent_id: string,
     block_data: ICollectionViewPage
   }) {
     super({
@@ -30,7 +30,7 @@ class CollectionViewPage extends CollectionBlock {
       user_id,
       shard_id,
       space_id,
-      parent_data,
+      parent_id,
       block_data
     });
     if (block_data.type !== 'collection_view_page')

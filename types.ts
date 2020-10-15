@@ -16,6 +16,12 @@ export interface ValueArg {
 export interface SchemaUnit {
   name: string,
   type: SchemaUnitType,
+  options?: {
+    id: string,
+    value: string,
+    // ? TD: Add Options Color Enum 
+    color: string
+  }[]
 }
 
 export interface Schema {
@@ -409,4 +415,16 @@ export interface Cache {
   space_view: Map<string, SpaceView>,
   user_root: Map<string, UserRoot>,
   user_settings: Map<string, UserSettings>,
+}
+
+/*User custom View Arguments */
+export interface UserViewArg {
+  id: string,
+  sorts: [string, number][],
+  aggregations: [string, number][],
+  filters: any,
+  properties: [string, number, number][],
+  name: string,
+  type: ViewType,
+  wrap: boolean
 }

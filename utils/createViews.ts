@@ -3,7 +3,7 @@ import { collectionViewUpdate } from "./chunk";
 
 // ? TD: FilterType interface
 export default function createViews(views: UserViewArg[], parent_id: string) {
-  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => collectionViewUpdate(id, [], {
+  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => collectionViewUpdate(id as string, [], {
     id,
     version: 0,
     type,

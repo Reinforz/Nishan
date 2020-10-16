@@ -434,12 +434,12 @@ export interface Cache {
 
 /*User custom View Arguments */
 export interface UserViewArg {
-  id: string,
-  sorts: [string, number][],
-  aggregations: [string, number][],
-  filters: any,
-  properties: [string, number, number][],
+  id?: string,
+  sorts?: [string, number][],
+  aggregations?: [string, ViewAggregationsAggregators][],
+  filters?: any,
+  properties?: [string, number, number][],
   name: string,
   type: ViewType,
-  wrap: boolean
+  wrap?: boolean
 }

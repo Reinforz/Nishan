@@ -129,7 +129,7 @@ class Nishan {
     const { properties = {}, format = {} } = opts;
     const { default: Page } = await import("./api/Page");
     const $block_id = uuidv4();
-    if (this.space_id && this.user_id)
+    if (this.space_id && this.user_id) {
       await axios.post(
         'https://www.notion.so/api/v3/saveTransactions',
         this.createTransaction([
@@ -151,13 +151,23 @@ class Nishan {
         this.headers
       );
 
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/getBacklinksForBlock',
-      { blockId: $block_id },
-      this.headers
-    );
-    this.saveToCache(recordMap);
-    return new Page(recordMap.block[$block_id].value);
+      const { data: { recordMap } } = await axios.post(
+        'https://www.notion.so/api/v3/getBacklinksForBlock',
+        { blockId: $block_id },
+        this.headers
+      );
+      this.saveToCache(recordMap);
+      return new Page({
+        token: this.token,
+        interval: this.interval,
+        user_id: this.user_id,
+        shard_id: this.shard_id,
+        space_id: this.space_id,
+        cache: this.cache,
+        block_data: recordMap.block[$block_id].value
+      });
+    } else
+      error("Space and User id not provided")
   }
 
   async getPage(arg: string) {
@@ -207,7 +217,6 @@ class Nishan {
 
     this.saveToCache(recordMap);
     const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
-    if (!this.user_id) error("User id is not provided");
     if (!target_space) error(`No space matches the criteria`);
     else {
       this.shard_id = target_space.shard_id;

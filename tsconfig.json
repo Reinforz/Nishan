@@ -14,7 +14,11 @@
     "watch": true,
     "declaration": true,
   },
+  "include": [
+    "./Nishan.ts"
+  ],
   "exclude": [
-    "experiment"
+    "experiment",
+    "./node_modules"
   ]
 }

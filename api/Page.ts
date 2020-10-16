@@ -83,7 +83,15 @@ class Page extends Block {
               },
               this.headers
             );
-            if (type === 'page') resolve(new Page(res.data.recordMap.block[$content_id].value));
+            if (type === 'page') resolve(new Page({
+              block_data: res.data.recordMap.block[$content_id].value,
+              cache: this.cache,
+              token: this.token,
+              interval: this.interval,
+              user_id: this.user_id,
+              shard_id: this.shard_id,
+              space_id: this.space_id,
+            }));
             else resolve(new Block(res.data.recordMap.block[$content_id].value));
           }, this.interval)
         );
@@ -161,7 +169,10 @@ class Page extends Block {
     }
   }
 
-  async convertToCollectionViewPage(options: { views?: UserViewArg[], schema?: [string, SchemaUnitType, Record<string, any>][] } = {}): Promise<CollectionViewPage> {
+  // ? FEAT: Default view and Schema
+  async convertToCollectionViewPage(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}): Promise<CollectionViewPage> {
+    if (!options.views) options.views = [{ aggregations: [['title', 'count']], name: 'Default View', type: 'table' }];
+    if (!options.schema) options.schema = [['Name', 'title']];
     const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
     const view_ids = views.map((view) => view.id);
     const $collection_id = uuidv4();

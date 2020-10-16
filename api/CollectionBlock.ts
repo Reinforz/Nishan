@@ -85,11 +85,7 @@ class CollectionBlock extends Block {
     ) as { data: LoadPageChunkResult };
     this.saveToCache(recordMap);
     return new View({
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
+      ...this.getProps(),
       parent_id: this.block_data.id,
       view_data: collection_view[$view_id].value as TView
     });
@@ -99,11 +95,7 @@ class CollectionBlock extends Block {
     const cached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
     if (cached_data)
       return new Collection({
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
+        ...this.getProps(),
         collection_data: cached_data
       });
     try {
@@ -120,11 +112,7 @@ class CollectionBlock extends Block {
       );
       this.saveToCache(recordMap);
       return new Collection({
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
+        ...this.getProps(),
         collection_data: recordMap.collection[(this.block_data as TCollectionBlock).collection_id].value
       });
     } catch (err) {
@@ -148,11 +136,7 @@ class CollectionBlock extends Block {
       this.saveToCache(recordMap);
       return (recordMap.block[this.block_data.id].value as TCollectionBlock).view_ids.map(
         (view_id) => new View({
-          token: this.token,
-          interval: this.interval,
-          user_id: this.user_id,
-          shard_id: this.shard_id,
-          space_id: this.space_id,
+          ...this.getProps(),
           parent_id: this.block_data.id,
           view_data: recordMap.collection_view[view_id].value
         })
@@ -210,7 +194,10 @@ class CollectionBlock extends Block {
             },
             this.headers
           );
-          resolve(page_ids.map((page_id) => new Page(recordMap.block[page_id].value)));
+          resolve(page_ids.map((page_id) => new Page({
+            block_data: recordMap.block[page_id].value,
+            ...this.getProps()
+          })));
         }, this.interval);
       });
     } catch (err) {

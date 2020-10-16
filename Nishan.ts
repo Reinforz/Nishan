@@ -51,6 +51,17 @@ class Nishan {
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
+  getProps() {
+    return {
+      token: this.token,
+      interval: this.interval,
+      user_id: this.user_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
+      cache: this.cache
+    }
+  }
+
   /**
    * Return a new block by its id
    * @param block_id The id of the block to obtain

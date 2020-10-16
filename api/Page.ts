@@ -109,21 +109,11 @@ class Page extends Block {
             // ? RF:1 Convert similar ctor properties to function call in top level class ie Nishan
             if (type === 'page') resolve(new Page({
               block_data: res.data.recordMap.block[$content_id].value,
-              cache: this.cache,
-              token: this.token,
-              interval: this.interval,
-              user_id: this.user_id,
-              shard_id: this.shard_id,
-              space_id: this.space_id,
+              ...this.getProps()
             }));
             else resolve(new Block({
               block_data: res.data.recordMap.block[$content_id].value,
-              cache: this.cache,
-              token: this.token,
-              interval: this.interval,
-              user_id: this.user_id,
-              shard_id: this.shard_id,
-              space_id: this.space_id,
+              ...this.getProps()
             }));
           }, this.interval)
         );
@@ -182,12 +172,7 @@ class Page extends Block {
         );
         this.saveToCache(recordMap);
         return new CollectionView({
-          cache: this.cache,
-          token: this.token,
-          interval: this.interval,
-          user_id: this.user_id,
-          shard_id: this.shard_id,
-          space_id: this.space_id,
+          ...this.getProps(),
           parent_id: this.block_data.id,
           block_data: recordMap.block[$content_id].value
         });
@@ -266,12 +251,7 @@ class Page extends Block {
         ) as { data: QueryCollectionResult };
         this.saveToCache(recordMap);
         resolve(new CollectionViewPage({
-          cache: this.cache,
-          token: this.token,
-          interval: this.interval,
-          user_id: this.user_id,
-          shard_id: this.shard_id,
-          space_id: this.space_id,
+          ...this.getProps(),
           // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
           parent_id: this.block_data.id,
           block_data: collection_view_page[this.block_data.id].value as ICollectionViewPage
@@ -291,11 +271,7 @@ class Page extends Block {
       const cache_data = this.cache.collection.get(this.block_data.collection_id);
       if (cache_data)
         return new Collection({
-          token: this.token,
-          interval: this.interval,
-          user_id: this.user_id,
-          shard_id: this.shard_id,
-          space_id: this.space_id,
+          ...this.getProps(),
           collection_data: cache_data
         });
     }
@@ -361,12 +337,7 @@ class Page extends Block {
       );
       this.saveToCache(recordMap);
       return new CollectionView({
-        cache: this.cache,
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
+        ...this.getProps(),
         parent_id: this.block_data.id,
         block_data: recordMap.block[$collection_view_id].value
       });

@@ -1,28 +1,20 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation, pageSet, spaceSet, spaceListRemove, pageListRemove } from '../utils/chunk';
+import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation, spaceSet, spaceListRemove } from '../utils/chunk';
 
-import { error, warn } from "../utils/logs";
+import { error } from "../utils/logs";
 
-import { Block as IBlock, Cache } from "../types"
+import { Block as IBlock, NishanArg } from "../types"
 
 import Nishan from "../Nishan";
 
 class Block extends Nishan {
   block_data: IBlock;
 
-  constructor({ cache, token, interval, user_id, shard_id, space_id, block_data }: {
-    token: string,
-    interval: number,
-    user_id: string,
-    shard_id: number,
-    space_id: string,
-    block_data: IBlock,
-    cache: Cache
-  }) {
-    super({ token, interval, user_id, shard_id, space_id, cache })
-    this.block_data = block_data;
+  constructor(arg: NishanArg & { block_data: IBlock }) {
+    super(arg)
+    this.block_data = arg.block_data;
   }
 
   async loadUserChunk(limit = 10) {
@@ -85,6 +77,7 @@ class Block extends Nishan {
   }
 
   // ? TD: Better TD for args
+  // ? FEAT: Add Permission to args
   async update(args: any) {
     // ? Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await axios.post(
@@ -102,6 +95,9 @@ class Block extends Nishan {
     );
   }
 
+  /**
+   * Delete the current block, whether its a page or regular block
+   */
   async delete() {
     const current_time = Date.now();
     const is_root_page = this.block_data.parent_table === "space" && this.block_data.type === "page";

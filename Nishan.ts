@@ -86,12 +86,7 @@ class Nishan {
     else
       return new Block({
         block_data: recordMap.block[block_id].value,
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
-        cache: this.cache
+        ...this.getProps()
       });
   }
 
@@ -137,11 +132,7 @@ class Nishan {
       throw new Error(error(`UserId, SpaceId or ShardId is null`));
     else
       return new Collection({
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
+        ...this.getProps(),
         collection_data
       });
   }
@@ -155,12 +146,7 @@ class Nishan {
     const cache_data = this.cache.block.get(page_id) as IPage;
     if (cache_data) return new Page({
       block_data: cache_data,
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache
+      ...this.getProps()
     });
 
     const { data: { recordMap } } = await axios.post(
@@ -177,12 +163,7 @@ class Nishan {
     return new Page(
       {
         block_data: recordMap.block[page_id].value,
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
-        cache: this.cache
+        ...this.getProps()
       }
     );
   }
@@ -229,12 +210,7 @@ class Nishan {
       );
       this.saveToCache(recordMap);
       return new Page({
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
-        cache: this.cache,
+        ...this.getProps(),
         block_data: recordMap.block[$block_id].value
       });
     } else

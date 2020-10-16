@@ -10,43 +10,19 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 import createTransaction from "../utils/createTransaction"
 import { error, warn } from "../utils/logs";
 
-import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache } from "../types";
+import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache, NishanArg } from "../types";
 
 class CollectionBlock extends Block {
   parent_id: string;
-  Transaction = createTransaction.bind(this, this.shard_id, this.space_id);
 
-  constructor({
-    token,
-    interval,
-    user_id,
-    shard_id,
-    space_id,
-    parent_id,
-    block_data,
-    cache
-  }: {
+  constructor(arg: NishanArg & {
     parent_id: string,
     block_data: TCollectionBlock,
-    token: string,
-    interval: number,
-    user_id: string,
-    shard_id: number,
-    space_id: string,
-    cache: Cache
   }) {
-    super({
-      cache,
-      token,
-      interval,
-      user_id,
-      shard_id,
-      space_id,
-      block_data,
-    });
-    if (!block_data.type.match(/collection_view/))
-      throw new Error(error(`Cannot create collection_block from ${block_data.type} block`));
-    this.parent_id = parent_id;
+    super(arg);
+    if (!arg.block_data.type.match(/collection_view/))
+      throw new Error(error(`Cannot create collection_block from ${arg.block_data.type} block`));
+    this.parent_id = arg.parent_id;
   }
 
   async createView() {
@@ -54,7 +30,7 @@ class CollectionBlock extends Block {
     const $view_id = uuidv4();
     await axios.post(
       'https://www.notion.so/api/v3/saveTransactions',
-      this.Transaction([
+      this.createTransaction([
         [
           collectionViewSet($view_id, [], {
             id: $view_id,

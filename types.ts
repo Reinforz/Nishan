@@ -420,6 +420,7 @@ export interface RecordMap {
   user_root: UserRootData,
   user_settings: UserSettingsData,
 }
+
 /* Nishan Specific */
 export interface Cache {
   block: Map<string, BlockType>,
@@ -432,7 +433,16 @@ export interface Cache {
   user_settings: Map<string, UserSettings>,
 }
 
-/*User custom View Arguments */
+export interface NishanArg {
+  token: string,
+  interval: number,
+  user_id: string,
+  shard_id: number,
+  space_id: string,
+  cache: Cache,
+}
+
+/* Function args */
 export interface UserViewArg {
   id?: string,
   sorts?: [string, number][],
@@ -443,3 +453,4 @@ export interface UserViewArg {
   type: ViewType,
   wrap?: boolean
 }
+

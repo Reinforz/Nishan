@@ -12,20 +12,12 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage } from "../types";
+import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg } from "../types";
 
 class Page extends Block {
-  constructor({ cache, token, interval, user_id, shard_id, space_id, block_data }: {
-    token: string,
-    interval: number,
-    user_id: string,
-    shard_id: number,
-    space_id: string,
-    block_data: IPage,
-    cache: Cache
-  }) {
-    super({ token, interval, user_id, shard_id, space_id, block_data, cache, });
-    if (block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${block_data.type} block`));
+  constructor(arg: NishanArg & { block_data: IPage }) {
+    super(arg);
+    if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
   }
 
   /**
@@ -106,7 +98,6 @@ class Page extends Block {
               },
               this.headers
             );
-            // ? RF:1 Convert similar ctor properties to function call in top level class ie Nishan
             if (type === 'page') resolve(new Page({
               block_data: res.data.recordMap.block[$content_id].value,
               ...this.getProps()

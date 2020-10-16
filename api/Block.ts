@@ -1,7 +1,7 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation } from '../utils/chunk';
+import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation, pageSet, spaceSet, spaceListRemove, pageListRemove } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
@@ -103,8 +103,8 @@ class Block extends Nishan {
   }
 
   async delete() {
-    let success = true;
     const current_time = Date.now();
+    const is_root_page = this.block_data.parent_table === "space" && this.block_data.type === "page";
     try {
       await axios.post(
         'https://www.notion.so/api/v3/saveTransactions',
@@ -113,21 +113,18 @@ class Block extends Nishan {
             blockUpdate(this.block_data.id, [], {
               alive: false
             }),
-            blockListRemove(this.block_data.id, ['content'], { id: this.block_data.id }),
+            is_root_page ? spaceListRemove(this.block_data.space_id, ['pages'], { id: this.block_data.id }) : blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
             blockSet(this.block_data.id, ['last_edited_time'], current_time),
-            blockSet(this.block_data.id, ['last_edited_time'], current_time)
+            is_root_page ? spaceSet(this.block_data.space_id, ['last_edited_time'], current_time) : blockSet(this.block_data.parent_id, ['last_edited_time'], current_time)
           ]
         ]),
         this.headers
       );
       this.cache.block.delete(this.block_data.id);
-      success = true;
     } catch (err) {
-      error(err.response.data);
-      success = false;
+      throw new Error(error(err.data.response));
     }
-
-    return new Promise((resolve) => setTimeout(() => resolve(success), this.interval));
+    return new Promise((resolve) => setTimeout(() => resolve(undefined), this.interval));
   }
 
   async transfer(new_parent_id: string) {

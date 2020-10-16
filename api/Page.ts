@@ -62,7 +62,7 @@ class Page extends Block {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  // ? TD: ContentType definitions page | header | sub_sub_header etc
+  // ? TD:1 ContentType definitions page | header | sub_sub_header etc
   async createContent(options: { format?: PageFormat, properties?: PageProps, type?: 'page' } = {}) {
     // ? User given after id as position
     // ? Return specific class instances based on content type
@@ -106,6 +106,7 @@ class Page extends Block {
               },
               this.headers
             );
+            // ? RF:1 Convert similar ctor properties to function call in top level class ie Nishan
             if (type === 'page') resolve(new Page({
               block_data: res.data.recordMap.block[$content_id].value,
               cache: this.cache,
@@ -115,7 +116,15 @@ class Page extends Block {
               shard_id: this.shard_id,
               space_id: this.space_id,
             }));
-            else resolve(new Block(res.data.recordMap.block[$content_id].value));
+            else resolve(new Block({
+              block_data: res.data.recordMap.block[$content_id].value,
+              cache: this.cache,
+              token: this.token,
+              interval: this.interval,
+              user_id: this.user_id,
+              shard_id: this.shard_id,
+              space_id: this.space_id,
+            }));
           }, this.interval)
         );
       } catch (err) {
@@ -192,7 +201,6 @@ class Page extends Block {
     }
   }
 
-  // ? FEAT: Default view and Schema
   async convertToCollectionViewPage(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}): Promise<CollectionViewPage> {
     if (!options.views) options.views = [{ aggregations: [['title', 'count']], name: 'Default View', type: 'table' }];
     if (!options.schema) options.schema = [['Name', 'title']];

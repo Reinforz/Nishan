@@ -17,9 +17,12 @@ import { error, warn } from "../utils/logs";
 import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType } from "../types";
 
 class Page extends Block {
+  block_data: IPage;
+
   constructor(arg: NishanArg & { block_data: IPage }) {
     super(arg);
     if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
+    this.block_data = arg.block_data;
   }
 
   /**
@@ -327,7 +330,7 @@ class Page extends Block {
       error(`The block is not a collection_view_page`);
       return undefined;
     } else {
-      await this.loadUserChunk();
+      await this.loadUserChunk(this.block_data.id);
       const cache_data = this.cache.collection.get(this.block_data.collection_id);
       if (cache_data)
         return new Collection({

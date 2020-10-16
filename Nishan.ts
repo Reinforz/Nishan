@@ -1,56 +1,16 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap } from "./types";
+import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap, NishanArg } from "./types";
 import { error, warn } from "./utils/logs";
 import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
-import createTransaction from "./utils/createTransaction";
 import Page from "./api/Page";
-import Cache from "./api/Cache";
+import Getters from "./api/Getters";
+import createTransaction from "./utils/createTransaction";
 
-class Nishan extends Cache {
-  token: string;
-  interval: number;
-  user_id: string;
-  space_id: string;
-  shard_id: number;
-  headers: {
-    headers: {
-      cookie: string
-    }
-  };
-  createTransaction: any;
-
-  constructor({ token, interval, user_id, shard_id, space_id }: {
-    token: string,
-    user_id: string,
-    shard_id: number;
-    space_id: string;
-    interval?: number,
-  }) {
-    super();
-    this.token = token;
-    this.interval = interval || 1000;
-    this.user_id = user_id;
-    this.headers = {
-      headers: {
-        cookie: `token_v2=${token}`
-      }
-    };
-    this.shard_id = shard_id;
-    this.space_id = space_id;
-    this.createTransaction = createTransaction.bind(this, shard_id, space_id);
-  }
-
-  getProps() {
-    return {
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache
-    }
+class Nishan extends Getters {
+  constructor(arg: NishanArg) {
+    super(arg);
   }
 
   /**

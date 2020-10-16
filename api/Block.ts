@@ -5,65 +5,16 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperati
 
 import { error } from "../utils/logs";
 
-import Cache from "./Cache";
+import Getters from "./Getters";
 
 import { Block as IBlock, NishanArg } from "../types"
 
-import createTransaction from "../utils/createTransaction";
-
-class Block extends Cache {
+class Block extends Getters {
   block_data: IBlock;
-  token: string;
-  interval: number;
-  user_id: string;
-  shard_id: number;
-  space_id: string;
-  headers: {
-    headers: {
-      cookie: string
-    }
-  };
-  createTransaction: any;
 
   constructor(arg: NishanArg & { block_data: IBlock }) {
-    super();
-    this.headers = {
-      headers: {
-        cookie: `token_v2=${arg.token}`
-      }
-    };
-    this.token = arg.token;
-    this.interval = arg.interval;
-    this.user_id = arg.user_id;
-    this.shard_id = arg.shard_id;
-    this.space_id = arg.space_id;
+    super(arg);
     this.block_data = arg.block_data;
-    this.createTransaction = createTransaction.bind(this, arg.shard_id, arg.space_id);
-  }
-
-  getProps() {
-    return {
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache
-    }
-  }
-
-  async loadUserChunk(limit = 10) {
-    const res = await axios.post(
-      'https://www.notion.so/api/v3/loadPageChunk',
-      {
-        pageId: this.block_data.id,
-        limit,
-        chunkNumber: 0
-      },
-      this.headers
-    );
-    this.saveToCache(res.data.recordMap);
-    return res.data;
   }
 
   async duplicate() {

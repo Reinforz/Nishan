@@ -20,5 +20,9 @@
   "exclude": [
     "experiment",
     "./node_modules"
-  ]
+  ],
+  "typedocOptions": {
+    "mode": "modules",
+    "out": "docs"
+  }
 }

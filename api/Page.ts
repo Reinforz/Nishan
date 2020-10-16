@@ -8,7 +8,7 @@ import Collection from './Collection';
 
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter } from '../utils/chunk';
+import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter, spaceViewListBefore } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
@@ -39,6 +39,23 @@ class Page extends Block {
       blockUpdate(this.block_data.id, ['properties'], properties),
       blockSet(this.block_data.id, ['last_edited_time'], Date.now())
     ]]), this.headers);
+  }
+
+  async addToFavourite() {
+    try {
+      let space_view_id: string = "";
+      for (let [, space_view] of this.cache.space_view) {
+        if (space_view.space_id === this.block_data.space_id) {
+          space_view_id = space_view.id;
+          break;
+        }
+      };
+      await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+        spaceViewListBefore(space_view_id, ["bookmarked_pages"], { id: this.block_data.id })
+      ]]), this.headers)
+    } catch (err) {
+      throw new Error(error(err.data.response));
+    }
   }
 
   /**

@@ -56,6 +56,56 @@ export const spaceListRemove = (id: string, path: string[], args: Args): Operati
   }
 }
 
+export const spaceViewSet = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'space_view',
+    command: 'set',
+    args,
+    id
+  }
+}
+
+export const spaceViewUpdate = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'space_view',
+    command: 'update',
+    args,
+    id
+  }
+}
+
+export const spaceViewListAfter = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'space_view',
+    command: 'listAfter',
+    args,
+    id
+  }
+}
+
+export const spaceViewListBefore = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'space_view',
+    command: 'listBefore',
+    args,
+    id
+  }
+}
+
+export const spaceViewListRemove = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'space_view',
+    command: 'listRemove',
+    args,
+    id
+  }
+}
+
 export const collectionSet = (id: string, path: string[], args: Args): Operation => {
   return {
     path,

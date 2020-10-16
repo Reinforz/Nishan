@@ -7,7 +7,9 @@ export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | 
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'link_to_page';
-
+export type FontColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
+export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
+export type FormatBlockColor = FontColor | BGColor;
 export interface ValueArg {
   id: string,
   value: string,
@@ -20,8 +22,7 @@ export interface SchemaUnit {
   options?: {
     id: string,
     value: string,
-    // ? TD: Add Options Color Enum 
-    color: string
+    color: FontColor
   }[]
 }
 
@@ -102,8 +103,10 @@ export interface PageFormat {
   block_locked_by: string,
   block_locked: boolean,
   page_cover: string,
-  page_cover_position: number
+  page_cover_position: number,
+  block_color?: FormatBlockColor
 }
+
 export interface Page extends Block {
   properties: PageProps,
   type: 'page',

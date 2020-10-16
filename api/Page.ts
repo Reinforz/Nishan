@@ -50,7 +50,10 @@ class Page extends Block {
     }
   }
 
-  // ? FEAT:1:M Add Link to Page content
+  /**
+   * Add a page as a linked page to current page
+   * @param $block_id Id of the page to add as a linked page
+   */
   async createLinkedPageContent($block_id: string) {
     const parent_id = this.block_data.id;
     try {
@@ -65,11 +68,6 @@ class Page extends Block {
 
   // ? FEAT:1:M Add mention a person/page/date content
   async createMentionBlockContent() {
-
-  }
-
-  // ? FEAT:1:E Add emoji content
-  async createEmojiContent() {
 
   }
 

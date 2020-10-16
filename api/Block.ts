@@ -162,7 +162,7 @@ class Block {
       );
       this.cache.block.delete(this.block_data.id);
     } catch (err) {
-      throw new Error(error(err.data.response));
+      throw new Error(error(err.response.data));
     }
     return new Promise((resolve) => setTimeout(() => resolve(undefined), this.interval));
   }

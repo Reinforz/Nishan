@@ -1,5 +1,7 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import fs from "fs";
+import path from "path";
 
 import Block from './Block';
 import CollectionViewPage from './CollectionViewPage';
@@ -12,7 +14,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType } from "../types";
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType } from "../types";
 
 class Page extends Block {
   constructor(arg: NishanArg & { block_data: IPage }) {
@@ -46,7 +48,7 @@ class Page extends Block {
         spaceViewListBefore(space_view_id, ["bookmarked_pages"], { id: this.block_data.id })
       ]]), this.headers)
     } catch (err) {
-      throw new Error(error(err.data.response));
+      throw new Error(error(err.response.data));
     }
   }
 
@@ -62,7 +64,7 @@ class Page extends Block {
         ...lastEditOperations(parent_id, this.user_id)
       ]]), this.headers);
     } catch (err) {
-      throw new Error(error(err.data.response))
+      throw new Error(error(err.response.data))
     }
   }
 
@@ -79,6 +81,38 @@ class Page extends Block {
   // ? FEAT:1:H Add image content
   async createImageContent() {
 
+  }
+
+  // ? FEAT:1:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
+  async export(arg: { dir: string, timeZone: string, recursive: boolean, exportType: ExportType }) {
+    const { dir = "output", timeZone, recursive = true, exportType = "markdown" } = arg || {};
+    try {
+      const { data: { taskId } } = await axios.post('https://www.notion.so/api/v3/enqueueTask', {
+        task: {
+          eventName: 'exportBlock',
+          request: {
+            blockId: this.block_data.id,
+            exportOptions: {
+              exportType,
+              locale: "en",
+              timeZone
+            },
+            recursive
+          }
+        }
+      }, this.headers);
+      setTimeout(async () => {
+        const { data: { results } } = await axios.post('https://www.notion.so/api/v3/getTasks', { taskIds: [taskId] }, this.headers);
+        const response = await axios.get(results[0].status.exportURL, {
+          responseType: 'arraybuffer'
+        });
+        const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
+
+        fs.createWriteStream(fullpath).end(response.data);
+      }, this.interval)
+    } catch (err) {
+      throw new Error(error(err.response.data))
+    }
   }
 
   /**

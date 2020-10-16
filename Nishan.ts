@@ -1,13 +1,14 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, Cache, RecordMap } from "./types";
+import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap } from "./types";
 import { error, warn } from "./utils/logs";
 import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
 import createTransaction from "./utils/createTransaction";
 import Page from "./api/Page";
+import Cache from "./api/Cache";
 
-class Nishan {
+class Nishan extends Cache {
   token: string;
   interval: number;
   user_id: string;
@@ -18,17 +19,16 @@ class Nishan {
       cookie: string
     }
   };
-  cache: Cache;
   createTransaction: any;
 
-  constructor({ token, interval, user_id, cache, shard_id, space_id }: {
+  constructor({ token, interval, user_id, shard_id, space_id }: {
     token: string,
     user_id: string,
     shard_id: number;
     space_id: string;
-    cache?: Cache,
     interval?: number,
   }) {
+    super();
     this.token = token;
     this.interval = interval || 1000;
     this.user_id = user_id;
@@ -39,16 +39,6 @@ class Nishan {
     };
     this.shard_id = shard_id;
     this.space_id = space_id;
-    this.cache = cache || {
-      block: new Map(),
-      collection: new Map(),
-      space: new Map(),
-      collection_view: new Map(),
-      notion_user: new Map(),
-      space_view: new Map(),
-      user_root: new Map(),
-      user_settings: new Map(),
-    }
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
@@ -258,20 +248,6 @@ class Nishan {
     ) as { data: LoadUserContentResult };
     this.saveToCache(recordMap);
     this.user_id = Object.values(user_root)[0].value.id;
-  }
-
-  /**
-   * Save the passed recordMap to cache
-   * @param recordMap RecordMap map to save to cache
-   */
-  saveToCache(recordMap: RecordMap) {
-    type keys = keyof Cache;
-    (Object.keys(this.cache) as keys[]).forEach((key) => {
-      if (recordMap[key])
-        Object.entries(recordMap[key]).forEach(([record_id, record_value]) => {
-          this.cache[key].set(record_id, record_value.value);
-        });
-    });
   }
 }
 

@@ -5,18 +5,19 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperati
 
 import { error } from "../utils/logs";
 
-import { Block as IBlock, NishanArg, Cache, RecordMap } from "../types"
+import Cache from "./Cache";
+
+import { Block as IBlock, NishanArg } from "../types"
 
 import createTransaction from "../utils/createTransaction";
 
-class Block {
+class Block extends Cache {
   block_data: IBlock;
   token: string;
   interval: number;
   user_id: string;
   shard_id: number;
   space_id: string;
-  cache: Cache;
   headers: {
     headers: {
       cookie: string
@@ -25,6 +26,7 @@ class Block {
   createTransaction: any;
 
   constructor(arg: NishanArg & { block_data: IBlock }) {
+    super();
     this.headers = {
       headers: {
         cookie: `token_v2=${arg.token}`
@@ -35,7 +37,6 @@ class Block {
     this.user_id = arg.user_id;
     this.shard_id = arg.shard_id;
     this.space_id = arg.space_id;
-    this.cache = arg.cache;
     this.block_data = arg.block_data;
     this.createTransaction = createTransaction.bind(this, arg.shard_id, arg.space_id);
   }
@@ -49,16 +50,6 @@ class Block {
       space_id: this.space_id,
       cache: this.cache
     }
-  }
-
-  saveToCache(recordMap: RecordMap) {
-    type keys = keyof Cache;
-    (Object.keys(this.cache) as keys[]).forEach((key) => {
-      if (recordMap[key])
-        Object.entries(recordMap[key]).forEach(([record_id, record_value]) => {
-          this.cache[key].set(record_id, record_value.value);
-        });
-    });
   }
 
   async loadUserChunk(limit = 10) {

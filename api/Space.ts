@@ -10,14 +10,13 @@ import { NishanArg, Space as ISpace } from "../types";
 class Space extends Nishan {
   space_data: ISpace;
 
-  constructor({ interval, user_id, token, space_data, cache }: NishanArg & { space_data: ISpace }) {
+  constructor({ interval, user_id, token, space_data }: NishanArg & { space_data: ISpace }) {
     super({
       space_id: space_data.id,
       shard_id: space_data.shard_id,
       interval,
       user_id,
       token,
-      cache
     })
     this.space_data = space_data;
   }

@@ -430,7 +430,7 @@ export interface RecordMap {
 /* Nishan Specific */
 export interface Cache {
   block: Map<string, IBlock>,
-  collection: Map<string, Collection>
+  collection: Map<string, Collection>,
   collection_view: Map<string, TView>,
   space: Map<string, Space>,
   notion_user: Map<string, NotionUser>,

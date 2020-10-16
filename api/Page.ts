@@ -83,6 +83,10 @@ class Page extends Block {
 
   }
 
+  /**
+   * Export the page and its content as a zip
+   * @param arg Options used for setting up export
+   */
   // ? FEAT:1:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
   async export(arg: { dir: string, timeZone: string, recursive: boolean, exportType: ExportType }) {
     const { dir = "output", timeZone, recursive = true, exportType = "markdown" } = arg || {};

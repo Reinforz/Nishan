@@ -51,6 +51,10 @@ class Nishan {
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
+  /**
+   * Return a new block by its id
+   * @param block_id The id of the block to obtain
+   */
   async getBlock(block_id: string) {
     const { default: Block } = await import("./api/Block");
     const cache_data = this.cache.block.get(block_id);
@@ -69,7 +73,7 @@ class Nishan {
     if (!this.user_id || !this.space_id || !this.shard_id)
       throw new Error(error(`UserId, SpaceId or ShardId is null`));
     else
-      new Block({
+      return new Block({
         block_data: recordMap.block[block_id].value,
         token: this.token,
         interval: this.interval,
@@ -80,6 +84,10 @@ class Nishan {
       });
   }
 
+  /**
+   * Obtain a collection using its id
+   * @param collection_id The id of the collection to obtain
+   */
   async getCollection(collection_id: string) {
     const { default: Collection } = await import("./api/Collection");
     const { data: { recordMap: { collection } } } = await axios.post(
@@ -98,7 +106,7 @@ class Nishan {
 
     const collection_data = collection[collection_id].value;
 
-    const { data: { recordMap: { block } } } = await axios.post(
+    const { data: { recordMap } } = await axios.post(
       'https://www.notion.so/api/v3/syncRecordValues',
       {
         requests: [
@@ -111,6 +119,8 @@ class Nishan {
       },
       this.headers
     );
+
+    this.saveToCache(recordMap);
 
     if (!this.user_id || !this.space_id || !this.shard_id)
       throw new Error(error(`UserId, SpaceId or ShardId is null`));
@@ -125,6 +135,56 @@ class Nishan {
       });
   }
 
+  /**
+   * Obtain a page using the passed id
+   * @param page_id Id of the page to obtain 
+   */
+  async getPage(page_id: string) {
+    const Page = require("./api/Page").default;
+    const cache_data = this.cache.block.get(page_id) as IPage;
+    if (cache_data) return new Page({
+      block_data: cache_data,
+      token: this.token,
+      interval: this.interval,
+      user_id: this.user_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
+      cache: this.cache
+    });
+
+    const { data: { recordMap } } = await axios.post(
+      'https://www.notion.so/api/v3/getBacklinksForBlock',
+      { blockId: page_id },
+      this.headers
+    );
+    this.saveToCache(recordMap);
+    const target = recordMap.block[page_id];
+    if (!target) {
+      warn(`No page with the id ${page_id} exists`);
+      return undefined;
+    }
+    return new Page(
+      {
+        block_data: recordMap.block[page_id].value,
+        token: this.token,
+        interval: this.interval,
+        user_id: this.user_id,
+        shard_id: this.shard_id,
+        space_id: this.space_id,
+        cache: this.cache
+      }
+    );
+  }
+
+  // ? FEAT: getSpace method using function or id
+  async getSpace() {
+
+  }
+
+  /**
+   * Create a new page using passed properties and formats
+   * @param opts format and properties of the new page
+   */
   async createPage(opts = {} as { properties: PageProps, format: PageFormat }) {
     const { properties = {}, format = {} } = opts;
     const { default: Page } = await import("./api/Page");
@@ -167,47 +227,13 @@ class Nishan {
         block_data: recordMap.block[$block_id].value
       });
     } else
-      error("Space and User id not provided")
+      throw new Error(error("Space and User id not provided"))
   }
 
-  async getPage(arg: string) {
-    const Page = require("./api/Page").default;
-    const page_id = arg;
-    const cache_data = this.cache.block.get(page_id) as IPage;
-    if (cache_data) return new Page({
-      block_data: cache_data,
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache
-    });
-
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/getBacklinksForBlock',
-      { blockId: page_id },
-      this.headers
-    );
-    this.saveToCache(recordMap);
-    const target = recordMap.block[page_id];
-    if (!target) {
-      warn(`No page with the id ${page_id} exists`);
-      return undefined;
-    }
-    return new Page(
-      {
-        block_data: recordMap.block[page_id].value,
-        token: this.token,
-        interval: this.interval,
-        user_id: this.user_id,
-        shard_id: this.shard_id,
-        space_id: this.space_id,
-        cache: this.cache
-      }
-    );
-  }
-
+  /**
+   * The the internal space of the instance using a predicate or string id
+   * @param arg A string representing the space id or a predicate function
+   */
   async setSpace(arg: (space: Space) => boolean | string) {
     const { data: { recordMap, recordMap: { space } } } = await axios.post(
       'https://www.notion.so/api/v3/loadUserContent',
@@ -226,6 +252,9 @@ class Nishan {
     }
   }
 
+  /**
+   * Sets the root user of the instance
+   */
   async setRootUser() {
     const { data: { recordMap, recordMap: { user_root } } } = await axios.post(
       'https://www.notion.so/api/v3/loadUserContent',
@@ -236,6 +265,10 @@ class Nishan {
     this.user_id = Object.values(user_root)[0].value.id;
   }
 
+  /**
+   * Save the passed recordMap to cache
+   * @param recordMap RecordMap map to save to cache
+   */
   saveToCache(recordMap: RecordMap) {
     type keys = keyof Cache;
     (Object.keys(this.cache) as keys[]).forEach((key) => {

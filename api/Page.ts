@@ -28,9 +28,15 @@ class Page extends Block {
     if (block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${block_data.type} block`));
   }
 
-  async update(format: Partial<PageFormat> = {}) {
+  /**
+   * Update the properties and the format of the page
+   * @param opts The format and properties of the page to update
+   */
+  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> } = { format: {}, properties: {} }) {
+    const { format = {}, properties = {} } = opts;
     await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
       blockUpdate(this.block_data.id, ['format'], format),
+      blockUpdate(this.block_data.id, ['properties'], properties),
       blockSet(this.block_data.id, ['last_edited_time'], Date.now())
     ]]), this.headers);
   }

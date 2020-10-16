@@ -12,7 +12,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg } from "../types";
+import { Cache, QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType } from "../types";
 
 class Page extends Block {
   constructor(arg: NishanArg & { block_data: IPage }) {
@@ -50,12 +50,45 @@ class Page extends Block {
     }
   }
 
+  // ? FEAT:1:M Add Link to Page content
+  async createLinkedPageContent($block_id: string) {
+    const parent_id = this.block_data.id;
+    try {
+      await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+        blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
+        ...lastEditOperations(parent_id, this.user_id)
+      ]]), this.headers);
+    } catch (err) {
+      throw new Error(error(err.data.response))
+    }
+  }
+
+  // ? FEAT:1:M Add mention a person/page/date content
+  async createMentionBlockContent() {
+
+  }
+
+  // ? FEAT:1:E Add emoji content
+  async createEmojiContent() {
+
+  }
+
+  // ? FEAT:1:E Add inline equation content
+  async createInlineEquationContent() {
+
+  }
+
+  // ? FEAT:1:H Add image content
+  async createImageContent() {
+
+  }
+
   /**
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
   // ? TD:1 ContentType definitions page | header | sub_sub_header etc
-  async createContent(options: { format?: PageFormat, properties?: PageProps, type?: 'page' } = {}) {
+  async createContent(options: { format?: PageFormat, properties?: PageProps, type?: BlockType } = {}) {
     // ? User given after id as position
     // ? Return specific class instances based on content type
     const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
@@ -177,7 +210,7 @@ class Page extends Block {
     }
   }
 
-  async convertToCollectionViewPage(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}): Promise<CollectionViewPage> {
+  async createFullPageDBContent(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}): Promise<CollectionViewPage> {
     if (!options.views) options.views = [{ aggregations: [['title', 'count']], name: 'Default View', type: 'table' }];
     if (!options.schema) options.schema = [['Name', 'title']];
     const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
@@ -251,7 +284,7 @@ class Page extends Block {
     });
   }
 
-  // ? RF: Transfer to CollectionBlock class 
+  // ? RF:1 Transfer to CollectionBlock class 
   async getCollectionViewPage(): Promise<undefined | Collection> {
     // ? Return new CollectionViewPage passing parent block data and new block data
     if (!this.block_data.collection_id) {
@@ -268,7 +301,7 @@ class Page extends Block {
     }
   }
 
-  async createCollectionViewContent(options: { views?: UserViewArg[] } = {}): Promise<undefined | CollectionView> {
+  async createInlineDBContent(options: { views?: UserViewArg[] } = {}): Promise<undefined | CollectionView> {
     //? Returns collection_view and parent block
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();

@@ -1,41 +1,45 @@
 import axios from "axios";
 
-import Nishan from "../Nishan";
-
 import { collectionViewUpdate } from '../utils/chunk';
 
-import { TView, ViewAggregations, ViewFormatProperties } from "../types";
+import { NishanArg, Cache, TView, ViewAggregations, ViewFormatProperties } from "../types";
+import createTransaction from "../utils/createTransaction";
 
-class View extends Nishan {
+class View {
   parent_id: string;
   view_data: TView;
+  token: string;
+  interval: number;
+  user_id: string;
+  shard_id: number;
+  space_id: string;
+  cache: Cache;
+  headers: {
+    headers: {
+      cookie: string
+    }
+  };
+  createTransaction: any;
 
-  constructor({
-    token,
-    interval,
-    user_id,
-    shard_id,
-    space_id,
-    parent_id,
-    view_data
-  }: {
+  constructor(arg: NishanArg & {
     parent_id: string,
     view_data: TView,
-    token: string,
-    interval: number,
-    user_id: string,
-    shard_id: number,
-    space_id: string
   }) {
-    super({
-      token,
-      interval,
-      user_id,
-      shard_id,
-      space_id,
-    })
-    this.parent_id = parent_id;
-    this.view_data = view_data;
+
+    this.token = arg.token,
+      this.interval = arg.interval,
+      this.user_id = arg.user_id,
+      this.shard_id = arg.shard_id,
+      this.space_id = arg.space_id,
+      this.parent_id = arg.parent_id;
+    this.view_data = arg.view_data;
+    this.headers = {
+      headers: {
+        cookie: `token_v2=${arg.token}`
+      }
+    }
+    this.cache = arg.cache;
+    this.createTransaction = createTransaction.bind(this, arg.shard_id, arg.space_id);
   }
 
   async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {

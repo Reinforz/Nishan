@@ -5,7 +5,8 @@ export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keye
 export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view';
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
-type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
+export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
+export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'link_to_page';
 
 export interface ValueArg {
   id: string,
@@ -83,7 +84,7 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
   space_id: string,
   collection_id?: string,
   view_ids?: string[],
-  type: 'page' | 'collection_view_page' | 'collection_view'
+  type: BlockType
 }
 
 // ? TD: Page format and properties
@@ -126,7 +127,7 @@ export interface CollectionViewPage extends CollectionBlock {
 
 export type TCollectionBlock = CollectionView | CollectionViewPage;
 
-export type BlockType = TCollectionBlock | Page;
+export type IBlock = TCollectionBlock | Page;
 export type ParentType = Page | Space;
 
 export interface Collection extends Node, ParentProps {
@@ -423,7 +424,7 @@ export interface RecordMap {
 
 /* Nishan Specific */
 export interface Cache {
-  block: Map<string, BlockType>,
+  block: Map<string, IBlock>,
   collection: Map<string, Collection>
   collection_view: Map<string, TView>,
   space: Map<string, Space>,

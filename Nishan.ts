@@ -5,6 +5,7 @@ import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, Cac
 import { error, warn } from "./utils/logs";
 import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
 import createTransaction from "./utils/createTransaction";
+import Page from "./api/Page";
 
 class Nishan {
   token: string;
@@ -142,30 +143,33 @@ class Nishan {
    * @param page_id Id of the page to obtain 
    */
   async getPage(page_id: string) {
-    const Page = require("./api/Page").default;
     const cache_data = this.cache.block.get(page_id) as IPage;
     if (cache_data) return new Page({
       block_data: cache_data,
       ...this.getProps()
     });
 
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/getBacklinksForBlock',
-      { blockId: page_id },
-      this.headers
-    );
-    this.saveToCache(recordMap);
-    const target = recordMap.block[page_id];
-    if (!target) {
-      warn(`No page with the id ${page_id} exists`);
-      return undefined;
+    try {
+      const { data: { recordMap } } = await axios.post(
+        'https://www.notion.so/api/v3/getBacklinksForBlock',
+        { blockId: page_id },
+        this.headers
+      );
+
+      this.saveToCache(recordMap);
+      const target = recordMap.block[page_id];
+      if (!target)
+        throw new Error(warn(`No page with the id ${page_id} exists`));
+
+      return new Page(
+        {
+          block_data: recordMap.block[page_id].value,
+          ...this.getProps()
+        }
+      );
+    } catch (err) {
+      throw new Error(error(err.response.data));
     }
-    return new Page(
-      {
-        block_data: recordMap.block[page_id].value,
-        ...this.getProps()
-      }
-    );
   }
 
   // ? FEAT: getSpace method using function or id
@@ -222,20 +226,24 @@ class Nishan {
    * @param arg A string representing the space id or a predicate function
    */
   async setSpace(arg: (space: Space) => boolean | string) {
-    const { data: { recordMap, recordMap: { space } } } = await axios.post(
-      'https://www.notion.so/api/v3/loadUserContent',
-      {},
-      this.headers
-    ) as { data: LoadUserContentResult };
+    try {
+      const { data: { recordMap, recordMap: { space } } } = await axios.post(
+        'https://www.notion.so/api/v3/loadUserContent',
+        {},
+        this.headers
+      ) as { data: LoadUserContentResult };
 
-    this.saveToCache(recordMap);
-    const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
-    if (!target_space) error(`No space matches the criteria`);
-    else {
-      this.shard_id = target_space.shard_id;
-      this.space_id = target_space.id;
-      this.user_id = target_space.permissions[0].user_id;
-      this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
+      this.saveToCache(recordMap);
+      const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
+      if (!target_space) error(`No space matches the criteria`);
+      else {
+        this.shard_id = target_space.shard_id;
+        this.space_id = target_space.id;
+        this.user_id = target_space.permissions[0].user_id;
+        this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
+      }
+    } catch (err) {
+      throw new Error(error(err.data.message))
     }
   }
 

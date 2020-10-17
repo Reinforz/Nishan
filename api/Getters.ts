@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { LoadUserContentResult, Operation, RecordMap, Request } from "../types";
+import { LoadUserContentResult, Operation, QueryCollectionResult, RecordMap, Request } from "../types";
 
 export default class Getter extends Cache {
   token: string;
@@ -50,6 +50,33 @@ export default class Getter extends Cache {
       space_id: this.space_id,
       cache: this.cache
     }
+  }
+
+  async queryCollection(collectionId: string, collectionViewId: string): Promise<RecordMap> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data: { recordMap } } = await axios.post(
+            'https://www.notion.so/api/v3/queryCollection',
+            {
+              collectionId,
+              collectionViewId,
+              query: {},
+              loader: {
+                limit: 1000,
+                searchQuery: '',
+                type: 'table'
+              }
+            },
+            this.headers
+          ) as { data: QueryCollectionResult };
+          this.saveToCache(recordMap);
+          resolve(recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
   }
 
   async loadUserContent(): Promise<RecordMap> {

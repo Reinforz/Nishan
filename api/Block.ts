@@ -7,12 +7,12 @@ import { error } from "../utils/logs";
 
 import Getters from "./Getters";
 
-import { Block as IBlock, BlockData, BlockType, GetBackLinksForBlockResult, NishanArg, RecordMap } from "../types"
+import { Block as IBlock, BlockData, BlockType, GetBackLinksForBlockResult, NishanArg, RecordMap, TBlock } from "../types"
 
-class Block extends Getters {
-  block_data: IBlock;
+class Block<T extends TBlock> extends Getters {
+  block_data: T;
 
-  constructor(arg: NishanArg & { block_data: IBlock }) {
+  constructor(arg: NishanArg & { block_data: T }) {
     super(arg);
     this.block_data = arg.block_data;
   }

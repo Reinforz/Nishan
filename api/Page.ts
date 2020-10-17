@@ -14,9 +14,9 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult, RecordMap } from "../types";
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult, RecordMap, ICollectionView } from "../types";
 
-class Page extends Block {
+class Page extends Block<IPage> {
   block_data: IPage;
 
   constructor(arg: NishanArg & { block_data: IPage }) {
@@ -246,33 +246,16 @@ class Page extends Block {
       ]
     ]);
 
-    try {
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/queryCollection',
-        {
-          collectionId: collection_id,
-          collectionViewId: view_ids[0],
-          query: {},
-          loader: {
-            limit: 70,
-            type: 'table'
-          }
-        },
-        this.headers
-      );
-      this.saveToCache(recordMap);
-      return new CollectionView({
-        ...this.getProps(),
-        parent_id: this.block_data.id,
-        block_data: recordMap.block[$content_id].value
-      });
-    } catch (err) {
-      error(err.response.data);
-      return undefined;
-    }
+    const recordMap = await this.queryCollection(collection_id, view_ids[0]);
+
+    return new CollectionView({
+      ...this.getProps(),
+      parent_id: this.block_data.id,
+      block_data: recordMap.block[$content_id].value as ICollectionView
+    });
   }
 
-  async createFullPageDBContent(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}): Promise<CollectionViewPage> {
+  async createFullPageDBContent(options: { views?: UserViewArg[], schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[] } = {}) {
     if (!options.views) options.views = [{ aggregations: [['title', 'count']], name: 'Default View', type: 'table' }];
     if (!options.schema) options.schema = [['Name', 'title']];
     const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
@@ -315,31 +298,14 @@ class Page extends Block {
       ]
     ]);
 
-    return new Promise((resolve) => {
-      setTimeout(async () => {
-        const { data: { recordMap, recordMap: { block: collection_view_page } } } = await axios.post(
-          `https://www.notion.so/api/v3/queryCollection`,
-          {
-            collectionId: $collection_id,
-            collectionViewId: view_ids[0],
-            loader: {
-              limit: 140,
-              searchQuery: "",
-              type: "table",
-            },
-            query: {}
-          },
-          this.headers
-        ) as { data: QueryCollectionResult };
-        this.saveToCache(recordMap);
-        resolve(new CollectionViewPage({
-          ...this.getProps(),
-          // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
-          parent_id: this.block_data.id,
-          block_data: collection_view_page[this.block_data.id].value as ICollectionViewPage
-        }))
-      }, this.interval)
-    });
+    const recordMap = await this.queryCollection($collection_id, view_ids[0]);
+
+    return new CollectionViewPage({
+      ...this.getProps(),
+      // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
+      parent_id: this.block_data.id,
+      block_data: recordMap.block[this.block_data.id].value as ICollectionViewPage
+    })
   }
 
   // ? RF:1 Transfer to CollectionBlock class 
@@ -359,7 +325,7 @@ class Page extends Block {
     }
   }
 
-  async createInlineDBContent(options: { views?: UserViewArg[] } = {}): Promise<undefined | CollectionView> {
+  async createInlineDBContent(options: { views?: UserViewArg[] } = {}) {
     //? Returns collection_view and parent block
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();
@@ -399,25 +365,13 @@ class Page extends Block {
       ]
     ]);
 
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/queryCollection',
-      {
-        collectionId: $collection_id,
-        collectionViewId: view_ids[0],
-        query: {},
-        loader: {
-          limit: 70,
-          type: 'table'
-        }
-      },
-      this.headers
-    );
-    this.saveToCache(recordMap);
+    const recordMap = await this.queryCollection($collection_id, view_ids[0]);
+
     return new CollectionView({
       ...this.getProps(),
       parent_id: this.block_data.id,
-      block_data: recordMap.block[$collection_view_id].value
-    });
+      block_data: recordMap.block[$collection_view_id].value as ICollectionView
+    })
   }
 }
 

@@ -11,7 +11,7 @@ import { error, warn } from "../utils/logs";
 
 import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache, NishanArg } from "../types";
 
-class CollectionBlock extends Block {
+class CollectionBlock extends Block<TCollectionBlock> {
   parent_id: string;
 
   constructor(arg: NishanArg & {
@@ -145,29 +145,12 @@ class CollectionBlock extends Block {
     await this.saveTransactions([ops])
 
     // ? FEAT:1:L Add queryCollection to api
-    return new Promise((resolve) => {
-      setTimeout(async () => {
-        const { data: { recordMap } } = await axios.post(
-          'https://www.notion.so/api/v3/queryCollection',
-          {
-            collectionId: this.block_data.collection_id,
-            collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
-            query: {},
-            loader: {
-              limit: 1000,
-              searchQuery: '',
-              type: 'table'
-            }
-          },
-          this.headers
-        );
-        resolve(page_ids.map((page_id) => new Page({
-          block_data: recordMap.block[page_id].value,
-          ...this.getProps()
-        })));
-      }, this.interval);
-    });
+    const recordMap = await this.queryCollection(this.block_data.collection_id, (this.block_data as TCollectionBlock).view_ids[0]);
 
+    return page_ids.map((page_id) => new Page({
+      block_data: recordMap.block[page_id].value,
+      ...this.getProps()
+    }))
   }
 }
 

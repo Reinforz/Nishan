@@ -136,26 +136,22 @@ class Nishan extends Getters {
     const { default: Page } = await import("./api/Page");
     const $block_id = uuidv4();
     if (this.space_id && this.user_id) {
-      await axios.post(
-        'https://www.notion.so/api/v3/saveTransactions',
-        this.createTransaction([
-          [
-            blockSet($block_id, [], { type: 'page', id: $block_id, version: 1 }),
-            blockUpdate($block_id, [], { permissions: [{ type: 'space_permission', role: 'editor' }] }),
-            blockUpdate($block_id, [], {
-              parent_id: this.space_id,
-              parent_table: 'space',
-              alive: true,
-              properties,
-              format
-            }),
-            spaceListBefore(this.space_id, ['pages'], { id: $block_id }),
-            ...lastEditOperations($block_id, this.user_id),
-            ...createOperation($block_id, this.user_id)
-          ]
-        ]),
-        this.headers
-      );
+      await this.saveTransactions([
+        [
+          blockSet($block_id, [], { type: 'page', id: $block_id, version: 1 }),
+          blockUpdate($block_id, [], { permissions: [{ type: 'space_permission', role: 'editor' }] }),
+          blockUpdate($block_id, [], {
+            parent_id: this.space_id,
+            parent_table: 'space',
+            alive: true,
+            properties,
+            format
+          }),
+          spaceListBefore(this.space_id, ['pages'], { id: $block_id }),
+          ...lastEditOperations($block_id, this.user_id),
+          ...createOperation($block_id, this.user_id)
+        ]
+      ]);
 
       const { data: { recordMap } } = await axios.post(
         'https://www.notion.so/api/v3/getBacklinksForBlock',

@@ -122,7 +122,7 @@ export interface CollectionBlock extends Block {
   type: 'collection_view' | 'collection_view_page'
 }
 
-export interface CollectionView extends CollectionBlock {
+export interface ICollectionView extends CollectionBlock {
   type: 'collection_view',
 }
 
@@ -130,9 +130,9 @@ export interface CollectionViewPage extends CollectionBlock {
   type: 'collection_view_page',
 }
 
-export type TCollectionBlock = CollectionView | CollectionViewPage;
+export type TCollectionBlock = ICollectionView | CollectionViewPage;
 
-export type IBlock = TCollectionBlock | Page;
+export type TBlock = TCollectionBlock | Page;
 export type ParentType = Page | Space;
 
 export interface Collection extends Node, ParentProps {
@@ -311,7 +311,7 @@ export interface Stack {
 export interface CollectionViewData {
   [key: string]: {
     role: 'editor',
-    value: CollectionView
+    value: ICollectionView
   }
 };
 
@@ -325,7 +325,7 @@ export interface CollectionViewPageData {
 export interface BlockData {
   [key: string]: {
     role: 'editor',
-    value: Page | CollectionView | CollectionViewPage
+    value: Page | ICollectionView | CollectionViewPage
   }
 }
 
@@ -436,7 +436,7 @@ export interface RecordMap {
 
 /* Nishan Specific */
 export interface Cache {
-  block: Map<string, IBlock>,
+  block: Map<string, TBlock>,
   collection: Map<string, Collection>,
   collection_view: Map<string, TView>,
   space: Map<string, Space>,

@@ -30,11 +30,11 @@ class Page extends Block<IPage> {
    */
   async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> }) {
     const { format = this.block_data.format, properties = this.block_data.properties } = opts;
-    await this.saveTransactions([[
+    await this.saveTransactions([
       blockUpdate(this.block_data.id, ['format'], format),
       blockUpdate(this.block_data.id, ['properties'], properties),
       blockSet(this.block_data.id, ['last_edited_time'], Date.now())
-    ]])
+    ])
   }
 
   /**
@@ -51,9 +51,9 @@ class Page extends Block<IPage> {
     };
     if (target_space_view) {
       const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(this.block_data.id);
-      await this.saveTransactions([[
+      await this.saveTransactions([
         (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], { id: this.block_data.id })
-      ]])
+      ])
     }
   }
 
@@ -63,10 +63,10 @@ class Page extends Block<IPage> {
    */
   async createLinkedPageContent($block_id: string) {
     const parent_id = this.block_data.id;
-    await this.saveTransactions([[
+    await this.saveTransactions([
       blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
       ...lastEditOperations(parent_id, this.user_id)
-    ]]);
+    ]);
   }
 
   // ? FEAT:1:M Add mention a person/page/date content
@@ -122,7 +122,7 @@ class Page extends Block<IPage> {
     const $content_id = uuidv4();
     if (this.block_data.collection_id)
       throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));
-    await this.saveTransactions([
+    await this.saveTransactions(
       [
         this.createBlock({
           $block_id: $content_id,
@@ -132,7 +132,7 @@ class Page extends Block<IPage> {
         }),
         blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
       ]
-    ])
+    )
 
     const recordMap = await this.loadPageChunk({
       chunkNumber: 0,
@@ -157,7 +157,7 @@ class Page extends Block<IPage> {
     const $views = views.map((view) => ({ ...view, id: uuidv4() }));
     const view_ids = $views.map((view) => view.id);
     const current_time = Date.now();
-    await this.saveTransactions([
+    await this.saveTransactions(
       [
         ...createViews($views, $content_id),
         blockSet($content_id, [], {
@@ -179,7 +179,7 @@ class Page extends Block<IPage> {
         blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
         blockSet($content_id, ['last_edited_time'], current_time)
       ]
-    ]);
+    );
 
     const recordMap = await this.queryCollection(collection_id, view_ids[0]);
 
@@ -205,7 +205,7 @@ class Page extends Block<IPage> {
         if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({ id: uuidv4(), value, color }))
       });
 
-    await this.saveTransactions([
+    await this.saveTransactions(
       [
         blockUpdate(this.block_data.id, [], {
           id: this.block_data.id,
@@ -230,7 +230,7 @@ class Page extends Block<IPage> {
         }),
         ...createViews(views, this.block_data.id)
       ]
-    ]);
+    );
 
     const recordMap = await this.queryCollection($collection_id, view_ids[0]);
 
@@ -249,7 +249,7 @@ class Page extends Block<IPage> {
     const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
     const view_ids = views.map((view) => view.id);
     const parent_id = this.block_data.id;
-    await this.saveTransactions([
+    await this.saveTransactions(
       [
         this.createBlock({ $block_id: $collection_view_id, properties: {}, format: {}, type: 'collection_view' }),
         ...createViews(views, this.block_data.id),
@@ -267,7 +267,7 @@ class Page extends Block<IPage> {
         }),
         blockListAfter(parent_id, ['content'], { after: '', id: $collection_view_id }),
       ]
-    ]);
+    );
 
     const recordMap = await this.queryCollection($collection_id, view_ids[0]);
 

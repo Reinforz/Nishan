@@ -13,12 +13,12 @@ class Collection extends Getters {
   }
 
   async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
-    this.saveTransactions([
+    this.saveTransactions(
       [
         ...Object.entries(properties).map(([path, arg]) => collectionSet(this.collection_data.id, [path], arg)),
         collectionSet(this.collection_data.id, ['last_edited_time'], Date.now())
       ]
-    ])
+    )
   }
 }
 

@@ -99,7 +99,7 @@ class Nishan extends Getters {
     const { default: Page } = await import("./api/Page");
     const $block_id = uuidv4();
     if (this.space_id && this.user_id) {
-      await this.saveTransactions([
+      await this.saveTransactions(
         [
           blockSet($block_id, [], { type: 'page', id: $block_id, version: 1 }),
           blockUpdate($block_id, [], { permissions: [{ type: 'space_permission', role: 'editor' }] }),
@@ -114,7 +114,7 @@ class Nishan extends Getters {
           ...lastEditOperations($block_id, this.user_id),
           ...createOperation($block_id, this.user_id)
         ]
-      ]);
+      );
 
       const recordMap = await this.getBacklinksForBlock($block_id);
 

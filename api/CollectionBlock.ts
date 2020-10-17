@@ -26,7 +26,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
   async createView() {
     // ? RF:1:H Same view options as Page.createLinkedDBContent
     const $view_id = uuidv4();
-    await this.saveTransactions([
+    await this.saveTransactions(
       [
         collectionViewSet($view_id, [], {
           id: $view_id,
@@ -41,7 +41,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
         blockListAfter(this.block_data.id, ['view_ids'], { after: '', id: $view_id }),
         blockSet(this.block_data.id, ['last_edited_time'], Date.now())
       ]
-    ]);
+    );
 
     const { collection_view } = await this.loadPageChunk({
       chunkNumber: 0,
@@ -123,7 +123,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
         blockSet(this.block_data.id, ['last_edited_time'], Date.now())
       );
     });
-    await this.saveTransactions([ops])
+    await this.saveTransactions(ops)
 
     const recordMap = await this.queryCollection(this.block_data.collection_id, (this.block_data as TCollectionBlock).view_ids[0]);
 

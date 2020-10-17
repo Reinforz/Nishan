@@ -18,7 +18,7 @@ export default class Getters extends Cache {
     }
   };
   // ? TD:1:M Add typedef for bounded createTransaction function
-  createTransaction: (operations: Operation[][]) => Request
+  createTransaction: (operations: Operation[]) => Request
 
   constructor({ token, interval, user_id, shard_id, space_id }: {
     token: string,
@@ -133,7 +133,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async saveTransactions(Operations: Operation[][]): Promise<RecordMap> {
+  async saveTransactions(Operations: Operation[]): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

@@ -55,7 +55,7 @@ class View extends Getters {
     }
 
     // ? FIX:2:H Respect previous filters and sorts
-    await this.saveTransactions([[collectionViewUpdate(this.view_data.id, [], args)]]);
+    await this.saveTransactions([collectionViewUpdate(this.view_data.id, [], args)]);
   }
 }
 

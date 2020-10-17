@@ -65,21 +65,18 @@ class CollectionBlock extends Block<TCollectionBlock> {
         ...this.getProps(),
         collection_data: cached_data
       });
-    try {
-      const { collection } = await this.loadPageChunk({
-        chunkNumber: 0,
-        limit: 50,
-        pageId: this.parent_id,
-        cursor: { stack: [] },
-        verticalColumns: false
-      });
-      return new Collection({
-        ...this.getProps(),
-        collection_data: collection[(this.block_data as TCollectionBlock).collection_id].value
-      });
-    } catch (err) {
-      error(err.response.data);
-    }
+    const { collection } = await this.loadPageChunk({
+      chunkNumber: 0,
+      limit: 50,
+      pageId: this.parent_id,
+      cursor: { stack: [] },
+      verticalColumns: false
+    });
+    return new Collection({
+      ...this.getProps(),
+      collection_data: collection[(this.block_data as TCollectionBlock).collection_id].value
+    });
+
   }
 
   async getViews() {

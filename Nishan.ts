@@ -135,7 +135,7 @@ class Nishan extends Getters {
     const { space } = await this.loadUserContent();
 
     const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
-    if (!target_space) error(`No space matches the criteria`);
+    if (!target_space) throw new Error(error(`No space matches the criteria`));
     else {
       this.shard_id = target_space.shard_id;
       this.space_id = target_space.id;

@@ -44,23 +44,19 @@ class Page extends Block<IPage> {
    * Add/remove this page from the favourite list
    */
   async toggleFavourite() {
-    try {
-      await this.loadUserContent();
-      let target_space_view: SpaceView | null = null;
-      for (let [, space_view] of this.cache.space_view) {
-        if (space_view.space_id === this.block_data.space_id) {
-          target_space_view = space_view;
-          break;
-        }
-      };
-      if (target_space_view) {
-        const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(this.block_data.id);
-        await this.saveTransactions([[
-          (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], { id: this.block_data.id })
-        ]])
+    await this.loadUserContent();
+    let target_space_view: SpaceView | null = null;
+    for (let [, space_view] of this.cache.space_view) {
+      if (space_view.space_id === this.block_data.space_id) {
+        target_space_view = space_view;
+        break;
       }
-    } catch (err) {
-      throw new Error(error(err.response.data));
+    };
+    if (target_space_view) {
+      const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(this.block_data.id);
+      await this.saveTransactions([[
+        (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], { id: this.block_data.id })
+      ]])
     }
   }
 
@@ -290,10 +286,9 @@ class Page extends Block<IPage> {
   // ? RF:1 Transfer to CollectionBlock class 
   async getCollectionViewPage(): Promise<undefined | Collection> {
     // ? Return new CollectionViewPage passing parent block data and new block data
-    if (!this.block_data.collection_id) {
-      error(`The block is not a collection_view_page`);
-      return undefined;
-    } else {
+    if (!this.block_data.collection_id)
+      throw new Error(error(`The block is not a collection_view_page`));
+    else {
       await this.loadPageChunk({
         pageId: this.block_data.id,
         limit: 50,

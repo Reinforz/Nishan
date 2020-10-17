@@ -193,7 +193,7 @@ class Nishan extends Getters {
         this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
       }
     } catch (err) {
-      throw new Error(error(err.data.message))
+      throw new Error(error(err.response.data))
     }
   }
 

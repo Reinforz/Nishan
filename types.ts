@@ -258,7 +258,8 @@ export interface SpaceView extends Node {
   notify_mobile: true,
   sidebar_hidden_templates: string[],
   space_id: string,
-  visited_templated: string[]
+  visited_templated: string[],
+  bookmarked_pages: string[]
 }
 
 export interface ViewFormatProperties {

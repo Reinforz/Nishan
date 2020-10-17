@@ -3,6 +3,8 @@ import axios from "axios";
 import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
+import { error } from "../utils/logs";
+import { LoadUserContentResult } from "../types";
 
 export default class Getter extends Cache {
   token: string;
@@ -62,5 +64,17 @@ export default class Getter extends Cache {
     );
     this.saveToCache(res.data.recordMap);
     return res.data;
+  }
+
+  async loadUserContent() {
+    try {
+      const res = await axios.post(
+        'https://www.notion.so/api/v3/loadUserContent', {}, this.headers
+      ) as { data: LoadUserContentResult };
+      this.saveToCache(res.data.recordMap);
+      return res.data;
+    } catch (err) {
+      error(err.response.data)
+    }
   }
 }

@@ -10,11 +10,11 @@ import Collection from './Collection';
 
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter, spaceViewListBefore } from '../utils/chunk';
+import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType } from "../types";
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView } from "../types";
 
 class Page extends Block {
   block_data: IPage;
@@ -38,18 +38,25 @@ class Page extends Block {
     ]]), this.headers);
   }
 
-  async addToFavourite() {
+  /**
+   * Add/remove this page from the favourite list
+   */
+  async toggleFavourite() {
     try {
-      let space_view_id: string = "";
+      await this.loadUserContent();
+      let target_space_view: SpaceView | null = null;
       for (let [, space_view] of this.cache.space_view) {
         if (space_view.space_id === this.block_data.space_id) {
-          space_view_id = space_view.id;
+          target_space_view = space_view;
           break;
         }
       };
-      await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
-        spaceViewListBefore(space_view_id, ["bookmarked_pages"], { id: this.block_data.id })
-      ]]), this.headers)
+      if (target_space_view) {
+        const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(this.block_data.id);
+        await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+          (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], { id: this.block_data.id })
+        ]]), this.headers);
+      }
     } catch (err) {
       throw new Error(error(err.response.data));
     }

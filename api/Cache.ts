@@ -1,4 +1,4 @@
-import { Cache as ICache, RecordMap } from "../types";
+import { ICache, RecordMap } from "../types";
 
 export default class Cache {
   cache: ICache;

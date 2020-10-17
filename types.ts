@@ -109,31 +109,33 @@ export interface PageFormat {
   block_color?: FormatBlockColor
 }
 
-export interface Page extends Block {
+export interface IPage extends Block {
   properties: PageProps,
   type: 'page',
   content?: string[],
   format: PageFormat
 }
 
-export interface CollectionBlock extends Block {
+export interface ICollectionBlock extends Block {
   view_ids: string[],
   collection_id: string,
   type: 'collection_view' | 'collection_view_page'
 }
 
-export interface ICollectionView extends CollectionBlock {
+export interface ICollectionView extends ICollectionBlock {
   type: 'collection_view',
 }
 
-export interface CollectionViewPage extends CollectionBlock {
+export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
 
-export type TCollectionBlock = ICollectionView | CollectionViewPage;
+export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
-export type TBlock = TCollectionBlock | Page;
-export type ParentType = Page | Space;
+// ? TD:2:H Add all block type
+export type TBlock = TCollectionBlock | IPage;
+
+export type ParentType = IPage | Space;
 
 export interface Collection extends Node, ParentProps {
   description: string[][],
@@ -318,14 +320,14 @@ export interface CollectionViewData {
 export interface CollectionViewPageData {
   [key: string]: {
     role: 'editor',
-    value: CollectionViewPage
+    value: ICollectionViewPage
   }
 };
 
 export interface BlockData {
   [key: string]: {
     role: 'editor',
-    value: Page | ICollectionView | CollectionViewPage
+    value: TBlock
   }
 }
 
@@ -443,7 +445,7 @@ export interface RecordMap {
 }
 
 /* Nishan Specific */
-export interface Cache {
+export interface ICache {
   block: Map<string, TBlock>,
   collection: Map<string, Collection>,
   collection_view: Map<string, TView>,
@@ -460,7 +462,7 @@ export interface NishanArg {
   user_id: string,
   shard_id: number,
   space_id: string,
-  cache: Cache,
+  cache: ICache,
 }
 
 /* Function args */

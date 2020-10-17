@@ -9,7 +9,7 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 
 import { error, warn } from "../utils/logs";
 
-import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache, NishanArg } from "../types";
+import { TCollectionBlock, LoadPageChunkResult, Operation, IPage, RecordMap, Space as ISpace, TView, ICache, NishanArg } from "../types";
 
 class CollectionBlock extends Block<TCollectionBlock> {
   parent_id: string;
@@ -62,11 +62,11 @@ class CollectionBlock extends Block<TCollectionBlock> {
    * Fetch the collection of the block from the collection_id
    */
   async fetchCollection() {
-    const cached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
-    if (cached_data)
+    const ICached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
+    if (ICached_data)
       return new Collection({
         ...this.getProps(),
-        collection_data: cached_data
+        collection_data: ICached_data
       });
     const { collection } = await this.loadPageChunk({
       chunkNumber: 0,

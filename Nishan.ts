@@ -1,7 +1,7 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap, NishanArg, TBlock } from "./types";
+import { IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap, NishanArg, TBlock } from "./types";
 import { error, warn } from "./utils/logs";
 import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
 import Page from "./api/Page";

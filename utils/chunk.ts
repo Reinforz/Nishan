@@ -2,7 +2,6 @@ import { Args, Operation, } from "../types";
 
 /* export type OperationArgs = (id: string, path: string[], args: Args) => Operation;
 export type EditedArgs = (block_id: string, user_id: string) => Operation[]; */
-const Exports: Record<string, any> = {};
 
 const uppercase = (str: string) => str.charAt(0).toUpperCase() + str.substr(1);
 
@@ -367,5 +366,3 @@ export const lastEditOperations = (block_id: string, user_id: string) => [
   blockSet(block_id, ['last_edited_by_id'], user_id),
   blockSet(block_id, ['last_edited_by_table'], 'notion_user')
 ];
-
-export default Exports;

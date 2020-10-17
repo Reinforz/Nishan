@@ -14,7 +14,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult, RecordMap, ICollectionView } from "../types";
+import { QueryCollectionResult, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult, RecordMap, ICollectionView } from "../types";
 
 class Page extends Block<IPage> {
   block_data: IPage;

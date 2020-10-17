@@ -4,7 +4,7 @@ import axios from "axios";
 import CollectionBlock from './CollectionBlock';
 
 import { error, warn } from "../utils/logs";
-import { Cache, Page, Space, ICollectionView, NishanArg } from '../types';
+import { IPage, Space, ICollectionView, NishanArg } from '../types';
 
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg & {

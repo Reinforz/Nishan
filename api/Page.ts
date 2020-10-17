@@ -26,29 +26,6 @@ class Page extends Block<IPage> {
   }
 
   // ? RF:1:H Add All api function utils
-  async loadPageChunk(limit: number = 100): Promise<RecordMap> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            'https://www.notion.so/api/v3/loadPageChunk',
-            {
-              pageId: this.block_data.id,
-              limit,
-              chunkNumber: 0,
-              cursor: { stack: [] },
-              verticalColumns: false
-            },
-            this.headers
-          ) as { data: LoadPageChunkResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      })
-    })
-  }
 
   /**
    * Update the properties and the format of the page
@@ -136,9 +113,16 @@ class Page extends Block<IPage> {
       })
     ]]);
 
-    const res = await this.loadPageChunk();
+    const { block } = await this.loadPageChunk({
+      pageId: this.block_data.id,
+      limit: 50,
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      verticalColumns: false
+    });
+
     return new Block({
-      block_data: res.block[$block_id].value,
+      block_data: block[$block_id].value,
       ...this.getProps()
     })
   }
@@ -150,33 +134,28 @@ class Page extends Block<IPage> {
   // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
   async export(arg: { dir: string, timeZone: string, recursive: boolean, exportType: ExportType }) {
     const { dir = "output", timeZone, recursive = true, exportType = "markdown" } = arg || {};
-    try {
-      const { data: { taskId } } = await axios.post('https://www.notion.so/api/v3/enqueueTask', {
-        task: {
-          eventName: 'exportBlock',
-          request: {
-            blockId: this.block_data.id,
-            exportOptions: {
-              exportType,
-              locale: "en",
-              timeZone
-            },
-            recursive
-          }
-        }
-      }, this.headers);
-      setTimeout(async () => {
-        const { data: { results } } = await axios.post('https://www.notion.so/api/v3/getTasks', { taskIds: [taskId] }, this.headers);
-        const response = await axios.get(results[0].status.exportURL, {
-          responseType: 'arraybuffer'
-        });
-        const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
+    const { taskId } = await this.enqueueTask({
+      eventName: 'exportBlock',
+      request: {
+        blockId: this.block_data.id,
+        exportOptions: {
+          exportType,
+          locale: "en",
+          timeZone
+        },
+        recursive
+      }
+    });
 
-        fs.createWriteStream(fullpath).end(response.data);
-      }, this.interval)
-    } catch (err) {
-      throw new Error(error(err.response.data))
-    }
+    const { results } = await this.getTasks([taskId]);
+
+    const response = await axios.get(results[0].status.exportURL, {
+      responseType: 'arraybuffer'
+    });
+
+    const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
+
+    fs.createWriteStream(fullpath).end(response.data);
   }
 
   /**
@@ -204,7 +183,7 @@ class Page extends Block<IPage> {
         ]
       ])
 
-      const recordMap = await this.getBackLinksForBlock();
+      const recordMap = await this.getBackLinksForBlock(this.block_data.id);
 
       if (type === 'page') return new Page({
         block_data: recordMap.block[$content_id].value as IPage,
@@ -315,7 +294,13 @@ class Page extends Block<IPage> {
       error(`The block is not a collection_view_page`);
       return undefined;
     } else {
-      await this.loadPageChunk();
+      await this.loadPageChunk({
+        pageId: this.block_data.id,
+        limit: 50,
+        chunkNumber: 0,
+        cursor: { stack: [] },
+        verticalColumns: false
+      });
       const cache_data = this.cache.collection.get(this.block_data.collection_id);
       if (cache_data)
         return new Collection({

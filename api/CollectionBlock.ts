@@ -43,18 +43,14 @@ class CollectionBlock extends Block<TCollectionBlock> {
         blockSet(this.block_data.id, ['last_edited_time'], Date.now())
       ]
     ]);
-    const { data: { recordMap, recordMap: { collection_view } } } = await axios.post(
-      'https://www.notion.so/api/v3/loadPageChunk',
-      {
-        chunkNumber: 0,
-        cursor: { stack: [] },
-        limit: 50,
-        pageId: this.parent_id,
-        verticalColumns: false
-      },
-      this.headers
-    ) as { data: LoadPageChunkResult };
-    this.saveToCache(recordMap);
+
+    const { collection_view } = await this.loadPageChunk({
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      limit: 50,
+      pageId: this.parent_id,
+      verticalColumns: false
+    })
     return new View({
       ...this.getProps(),
       parent_id: this.block_data.id,
@@ -70,21 +66,16 @@ class CollectionBlock extends Block<TCollectionBlock> {
         collection_data: cached_data
       });
     try {
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/loadPageChunk',
-        {
-          chunkNumber: 0,
-          limit: 50,
-          pageId: this.parent_id,
-          cursor: { stack: [] },
-          verticalColumns: false
-        },
-        this.headers
-      );
-      this.saveToCache(recordMap);
+      const { collection } = await this.loadPageChunk({
+        chunkNumber: 0,
+        limit: 50,
+        pageId: this.parent_id,
+        cursor: { stack: [] },
+        verticalColumns: false
+      });
       return new Collection({
         ...this.getProps(),
-        collection_data: recordMap.collection[(this.block_data as TCollectionBlock).collection_id].value
+        collection_data: collection[(this.block_data as TCollectionBlock).collection_id].value
       });
     } catch (err) {
       error(err.response.data);
@@ -92,29 +83,20 @@ class CollectionBlock extends Block<TCollectionBlock> {
   }
 
   async getViews() {
-    try {
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/loadPageChunk',
-        {
-          chunkNumber: 0,
-          limit: 50,
-          pageId: this.parent_id,
-          cursor: { stack: [] },
-          verticalColumns: false
-        },
-        this.headers
-      ) as { data: { recordMap: RecordMap } };
-      this.saveToCache(recordMap);
-      return (recordMap.block[this.block_data.id].value as TCollectionBlock).view_ids.map(
-        (view_id) => new View({
-          ...this.getProps(),
-          parent_id: this.block_data.id,
-          view_data: recordMap.collection_view[view_id].value
-        })
-      );
-    } catch (err) {
-      error(err.response.data);
-    }
+    const { block, collection_view } = await this.loadPageChunk({
+      chunkNumber: 0,
+      limit: 50,
+      pageId: this.parent_id,
+      cursor: { stack: [] },
+      verticalColumns: false
+    })
+    return (block[this.block_data.id].value as TCollectionBlock).view_ids.map(
+      (view_id) => new View({
+        ...this.getProps(),
+        parent_id: this.block_data.id,
+        view_data: collection_view[view_id].value
+      })
+    );
   }
   // ? TS: Better TS Support rather than using any
   async addRows(rows: { format: any, properties: any }[]) {

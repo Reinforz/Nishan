@@ -4,9 +4,9 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { LoadUserContentResult, Operation, QueryCollectionResult, RecordMap, Request } from "../types";
+import { BlockData, EnqueueTaskResult, GetBackLinksForBlockResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult } from "../types";
 
-export default class Getter extends Cache {
+export default class Getters extends Cache {
   token: string;
   interval: number;
   user_id: string;
@@ -50,6 +50,44 @@ export default class Getter extends Cache {
       space_id: this.space_id,
       cache: this.cache
     }
+  }
+
+  async getBacklinksForBlock(blockId: string): Promise<{ block: BlockData }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data: { recordMap } } = await axios.post(
+            'https://www.notion.so/api/v3/getBacklinksForBlock',
+            { blockId },
+            this.headers
+          ) as { data: GetBackLinksForBlockResult };
+          this.saveToCache(recordMap);
+          resolve(recordMap)
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
+  }
+
+  async syncRecordValues(requests: { id: string, table: OperationTable, version: number }[]): Promise<RecordMap> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data: { recordMap } } = await axios.post(
+            'https://www.notion.so/api/v3/syncRecordValues',
+            {
+              requests
+            },
+            this.headers
+          ) as { data: SyncRecordValuesResult };
+          this.saveToCache(recordMap);
+          resolve(recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
   }
 
   async queryCollection(collectionId: string, collectionViewId: string): Promise<RecordMap> {
@@ -103,6 +141,83 @@ export default class Getter extends Cache {
           resolve(res.data.recordMap);
         } catch (err) {
           reject(error(err.response.data));
+        }
+      }, this.interval)
+    })
+  }
+
+  // ? TD:2:M Add task typedef
+  // ? TD:2:M Add EnqueueTaskResult interface
+  async enqueueTask(task: any): Promise<EnqueueTaskResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/enqueueTask', {
+            task
+          }, this.headers);
+          resolve(res.data);
+        } catch (err) {
+          reject(error(err.response.data));
+        }
+      }, this.interval)
+    })
+  }
+
+  async loadPageChunk(arg: LoadPageChunkParams): Promise<RecordMap> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/loadPageChunk',
+            arg,
+            this.headers
+          ) as { data: LoadPageChunkResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      })
+    })
+  }
+
+  async getBackLinksForBlock(blockId: string): Promise<{ block: BlockData }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/getBacklinksForBlock',
+            {
+              blockId
+            },
+            this.headers
+          ) as { data: GetBackLinksForBlockResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
+  }
+
+  // ? TD:2:H getTaskResult interface
+  async getTasks(taskIds: string[]): Promise<any> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/getTasks',
+            {
+              taskIds
+            },
+            this.headers
+          ) as { data: GetBackLinksForBlockResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
         }
       }, this.interval)
     })

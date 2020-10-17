@@ -404,6 +404,14 @@ export interface GetUserSharePagesResult {
   }
 }
 
+export interface EnqueueTaskResult {
+  taskId: string
+}
+
+export interface SyncRecordValuesResult {
+  recordMap: RecordMap
+}
+
 export interface LoadPageChunkParams {
   chunkNumber: 0,
   cursor: Cursor,

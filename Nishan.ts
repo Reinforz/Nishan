@@ -1,10 +1,12 @@
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap, NishanArg } from "./types";
+import { Page as IPage, LoadUserContentResult, PageFormat, PageProps, Space, RecordMap, NishanArg, TBlock } from "./types";
 import { error, warn } from "./utils/logs";
 import { lastEditOperations, createOperation, spaceListBefore, blockUpdate, blockSet } from './utils/chunk';
 import Page from "./api/Page";
+import Block from "./api/Block";
+import Collection from "./api/Collection";
 import Getters from "./api/Getters";
 import createTransaction from "./utils/createTransaction";
 
@@ -17,26 +19,18 @@ class Nishan extends Getters {
    * Return a new block by its id
    * @param block_id The id of the block to obtain
    */
-  async getBlock(block_id: string) {
-    const { default: Block } = await import("./api/Block");
+  async getBlock(block_id: string): Promise<Block<TBlock>> {
     const cache_data = this.cache.block.get(block_id);
-    if (cache_data) return cache_data;
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/getBacklinksForBlock',
-      { blockId: block_id },
-      this.headers
-    );
-    this.saveToCache(recordMap);
+    if (cache_data) return new Block({ block_data: cache_data, ...this.getProps() });
+    const recordMap = await this.getBacklinksForBlock(block_id);
     const target = recordMap.block[block_id];
-    if (!target) {
-      warn(`No block with the id ${block_id} exists`);
-      return undefined;
-    }
+    if (!target)
+      throw new Error(error(`No block with the id ${block_id} exists`));
     if (!this.user_id || !this.space_id || !this.shard_id)
       throw new Error(error(`UserId, SpaceId or ShardId is null`));
     else
       return new Block({
-        block_data: recordMap.block[block_id].value,
+        block_data: target.value,
         ...this.getProps()
       });
   }
@@ -46,38 +40,15 @@ class Nishan extends Getters {
    * @param collection_id The id of the collection to obtain
    */
   async getCollection(collection_id: string) {
-    const { default: Collection } = await import("./api/Collection");
-    const { data: { recordMap: { collection } } } = await axios.post(
-      'https://www.notion.so/api/v3/syncRecordValues',
+    const { collection } = await this.syncRecordValues([
       {
-        requests: [
-          {
-            id: collection_id,
-            table: 'collection',
-            version: -1
-          }
-        ]
-      },
-      this.headers
-    );
+        id: collection_id,
+        table: 'collection',
+        version: -1
+      }
+    ]);
 
     const collection_data = collection[collection_id].value;
-
-    const { data: { recordMap } } = await axios.post(
-      'https://www.notion.so/api/v3/syncRecordValues',
-      {
-        requests: [
-          {
-            id: collection_data.parent_id,
-            table: 'block',
-            version: -1
-          }
-        ]
-      },
-      this.headers
-    );
-
-    this.saveToCache(recordMap);
 
     if (!this.user_id || !this.space_id || !this.shard_id)
       throw new Error(error(`UserId, SpaceId or ShardId is null`));
@@ -99,27 +70,20 @@ class Nishan extends Getters {
       ...this.getProps()
     });
 
-    try {
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/getBacklinksForBlock',
-        { blockId: page_id },
-        this.headers
-      );
+    const { block } = await this.getBacklinksForBlock(page_id);
+    const target = block[page_id].value as IPage;
 
-      this.saveToCache(recordMap);
-      const target = recordMap.block[page_id];
-      if (!target)
-        throw new Error(warn(`No page with the id ${page_id} exists`));
+    if (!target)
+      throw new Error(warn(`No page with the id ${page_id} exists`));
+    if (target.type !== "page")
+      throw new Error(warn(`The target block is not a page,but rather a ${target.type} type`));
 
-      return new Page(
-        {
-          block_data: recordMap.block[page_id].value,
-          ...this.getProps()
-        }
-      );
-    } catch (err) {
-      throw new Error(error(err.response.data));
-    }
+    return new Page(
+      {
+        block_data: target,
+        ...this.getProps()
+      }
+    );
   }
 
   // ? FEAT: getSpace method using function or id
@@ -153,15 +117,11 @@ class Nishan extends Getters {
         ]
       ]);
 
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/getBacklinksForBlock',
-        { blockId: $block_id },
-        this.headers
-      );
-      this.saveToCache(recordMap);
+      const recordMap = await this.getBacklinksForBlock($block_id);
+
       return new Page({
         ...this.getProps(),
-        block_data: recordMap.block[$block_id].value
+        block_data: recordMap.block[$block_id].value as IPage
       });
     } else
       throw new Error(error("Space and User id not provided"))
@@ -172,24 +132,15 @@ class Nishan extends Getters {
    * @param arg A string representing the space id or a predicate function
    */
   async setSpace(arg: (space: Space) => boolean | string) {
-    try {
-      const { data: { recordMap, recordMap: { space } } } = await axios.post(
-        'https://www.notion.so/api/v3/loadUserContent',
-        {},
-        this.headers
-      ) as { data: LoadUserContentResult };
+    const { space } = await this.loadUserContent();
 
-      this.saveToCache(recordMap);
-      const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
-      if (!target_space) error(`No space matches the criteria`);
-      else {
-        this.shard_id = target_space.shard_id;
-        this.space_id = target_space.id;
-        this.user_id = target_space.permissions[0].user_id;
-        this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
-      }
-    } catch (err) {
-      throw new Error(error(err.response.data))
+    const target_space: Space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
+    if (!target_space) error(`No space matches the criteria`);
+    else {
+      this.shard_id = target_space.shard_id;
+      this.space_id = target_space.id;
+      this.user_id = target_space.permissions[0].user_id;
+      this.createTransaction = createTransaction.bind(this, target_space.shard_id, target_space.id);
     }
   }
 
@@ -197,12 +148,7 @@ class Nishan extends Getters {
    * Sets the root user of the instance
    */
   async setRootUser() {
-    const { data: { recordMap, recordMap: { user_root } } } = await axios.post(
-      'https://www.notion.so/api/v3/loadUserContent',
-      {},
-      this.headers
-    ) as { data: LoadUserContentResult };
-    this.saveToCache(recordMap);
+    const { user_root } = await this.loadUserContent();
     this.user_id = Object.values(user_root)[0].value.id;
   }
 }

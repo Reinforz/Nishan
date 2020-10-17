@@ -17,29 +17,8 @@ class Block<T extends TBlock> extends Getters {
     this.block_data = arg.block_data;
   }
 
-  async getBackLinksForBlock(): Promise<{ block: BlockData }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            'https://www.notion.so/api/v3/getBacklinksForBlock',
-            {
-              blockId: this.block_data.id
-            },
-            this.headers
-          ) as { data: GetBackLinksForBlockResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
-  }
-
   async duplicate() {
     const generated_table_id = uuidv4();
-
     await this.saveTransactions([
       [
         blockSet(generated_table_id, [], {
@@ -61,21 +40,15 @@ class Block<T extends TBlock> extends Getters {
       ]
     ]);
 
-    await axios.post(
-      'https://www.notion.so/api/v3/enqueueTask',
-      {
-        task: {
-          eventName: 'duplicateBlock',
-          request: {
-            sourceBlockId: this.block_data.id,
-            targetBlockId: generated_table_id,
-            addCopyName: true
-          }
-        }
-      },
-      this.headers
-    );
-    // ? Return New Block
+    // ? FEAT:1:M Return New Block
+    await this.enqueueTask({
+      eventName: 'duplicateBlock',
+      request: {
+        sourceBlockId: this.block_data.id,
+        targetBlockId: generated_table_id,
+        addCopyName: true
+      }
+    })
   }
 
   // ? TD:2:M Better TD for args

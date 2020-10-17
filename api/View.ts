@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { collectionViewUpdate } from '../utils/chunk';
 import Getters from "./Getters";
 import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";

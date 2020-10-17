@@ -1,13 +1,10 @@
-import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
 import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation, spaceSet, spaceListRemove } from '../utils/chunk';
 
-import { error } from "../utils/logs";
-
 import Getters from "./Getters";
 
-import { Block as IBlock, BlockData, BlockType, GetBackLinksForBlockResult, NishanArg, RecordMap, TBlock } from "../types"
+import { BlockType, NishanArg, TBlock } from "../types"
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;

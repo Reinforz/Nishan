@@ -1,7 +1,4 @@
-import axios from "axios";
-
 import { collectionSet } from '../utils/chunk';
-import { error } from "../utils/logs";
 
 import Getters from "./Getters";
 

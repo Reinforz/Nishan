@@ -3,8 +3,6 @@ import { Args, Operation, } from "../types";
 /* export type OperationArgs = (id: string, path: string[], args: Args) => Operation;
 export type EditedArgs = (block_id: string, user_id: string) => Operation[]; */
 
-const uppercase = (str: string) => str.charAt(0).toUpperCase() + str.substr(1);
-
 export const spaceSet = (id: string, path: string[], args: Args): Operation => {
   return {
     path,

@@ -1,10 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-import axios from "axios";
-
 import CollectionBlock from './CollectionBlock';
 
-import { error, warn } from "../utils/logs";
-import { IPage, Space, ICollectionViewPage, NishanArg } from '../types';
+import { error } from "../utils/logs";
+import { ICollectionViewPage, NishanArg } from '../types';
 
 class CollectionViewPage extends CollectionBlock {
   constructor(arg: NishanArg & {

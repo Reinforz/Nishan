@@ -134,7 +134,13 @@ class Page extends Block<IPage> {
       ]
     ])
 
-    const recordMap = await this.getBackLinksForBlock(this.block_data.id);
+    const recordMap = await this.loadPageChunk({
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      limit: 100,
+      pageId: this.block_data.id,
+      verticalColumns: false
+    });
 
     if (type === 'page') return new Page({
       block_data: recordMap.block[$content_id].value as IPage,

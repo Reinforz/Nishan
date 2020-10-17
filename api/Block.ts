@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockUpdate, blockListRemove, blockSet, blockListAfter, lastEditOperations, createOperation, spaceSet, spaceListRemove } from '../utils/chunk';
+import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove } from '../utils/chunk';
 
 import Getters from "./Getters";
 
 import { BlockType, NishanArg, TBlock } from "../types"
+import { RSA_NO_PADDING } from 'constants';
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -15,25 +16,14 @@ class Block<T extends TBlock> extends Getters {
   }
 
   async duplicate() {
-    const generated_table_id = uuidv4();
+    const $gen_block_id = uuidv4();
     await this.saveTransactions([
       [
-        blockSet(generated_table_id, [], {
-          type: 'copy_indicator',
-          id: generated_table_id,
-          version: 1
-        }),
-        blockUpdate(generated_table_id, [], {
-          parent_id: this.block_data.parent_id,
-          parent_table: 'block',
-          alive: true
-        }),
+        this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: this.block_data.parent_id }),
         blockListAfter(this.block_data.parent_id, ['content'], {
           after: this.block_data.id,
-          id: generated_table_id
+          id: $gen_block_id
         }),
-        ...lastEditOperations(generated_table_id, this.user_id),
-        ...createOperation(generated_table_id, this.user_id)
       ]
     ]);
 
@@ -42,9 +32,21 @@ class Block<T extends TBlock> extends Getters {
       eventName: 'duplicateBlock',
       request: {
         sourceBlockId: this.block_data.id,
-        targetBlockId: generated_table_id,
+        targetBlockId: $gen_block_id,
         addCopyName: true
       }
+    });
+
+    const { block } = await this.syncRecordValues([
+      {
+        id: $gen_block_id,
+        table: 'block',
+        version: -1
+      }
+    ]);
+    return new Block({
+      block_data: block[$gen_block_id].value,
+      ...this.getProps()
     })
   }
 
@@ -100,7 +102,7 @@ class Block<T extends TBlock> extends Getters {
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
-  createBlock({ $block_id, type, properties, format }: { $block_id: string, type: BlockType, properties: any, format: any }) {
+  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: { $block_id: string, type: BlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string }) {
     const current_time = Date.now();
 
     return blockUpdate($block_id, [], {
@@ -108,7 +110,7 @@ class Block<T extends TBlock> extends Getters {
       properties,
       format,
       type,
-      parent_id: this.block_data.id,
+      parent_id: parent_id || this.block_data.id,
       parent_table: 'block',
       alive: true,
       created_time: current_time,

@@ -214,8 +214,7 @@ export default class Getters extends Cache {
             },
             this.headers
           ) as { data: GetBackLinksForBlockResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
+          resolve(res.data);
         } catch (err) {
           reject(error(err.response.data))
         }

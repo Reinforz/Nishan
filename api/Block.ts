@@ -7,7 +7,7 @@ import { error } from "../utils/logs";
 
 import Getters from "./Getters";
 
-import { Block as IBlock, NishanArg } from "../types"
+import { Block as IBlock, BlockType, NishanArg } from "../types"
 
 class Block extends Getters {
   block_data: IBlock;
@@ -127,6 +127,27 @@ class Block extends Getters {
       ]),
       this.headers
     );
+  }
+
+  // ? TD:1:H Add type definition propertoes and format for specific block types
+  createBlock({ $block_id, type, properties, format }: { $block_id: string, type: BlockType, properties: any, format: any }) {
+    const current_time = Date.now();
+
+    return blockUpdate($block_id, [], {
+      id: $block_id,
+      properties,
+      format,
+      type,
+      parent_id: this.block_data.id,
+      parent_table: 'block',
+      alive: true,
+      created_time: current_time,
+      created_by_id: this.user_id,
+      created_by_table: 'notion_user',
+      last_edited_time: current_time,
+      last_edited_by_id: this.user_id,
+      last_edited_by_table: 'notion_user',
+    })
   }
 }
 

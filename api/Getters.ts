@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { LoadUserContentResult } from "../types";
+import { LoadUserContentResult, Operation } from "../types";
 
 export default class Getter extends Cache {
   token: string;
@@ -17,7 +17,8 @@ export default class Getter extends Cache {
       cookie: string
     }
   };
-  createTransaction: any;
+  // ? TD:2:M Add typedef for bounded createTransaction function 
+  createTransaction: any
 
   constructor({ token, interval, user_id, shard_id, space_id }: {
     token: string,
@@ -51,21 +52,6 @@ export default class Getter extends Cache {
     }
   }
 
-  // ? RF:1:M Add All api function utils
-  async loadUserChunk(pageId: string, limit = 10) {
-    const res = await axios.post(
-      'https://www.notion.so/api/v3/loadPageChunk',
-      {
-        pageId,
-        limit,
-        chunkNumber: 0
-      },
-      this.headers
-    );
-    this.saveToCache(res.data.recordMap);
-    return res.data;
-  }
-
   async loadUserContent() {
     try {
       const res = await axios.post(
@@ -74,7 +60,15 @@ export default class Getter extends Cache {
       this.saveToCache(res.data.recordMap);
       return res.data;
     } catch (err) {
-      error(err.response.data)
+      error(err.response.data);
+    }
+  }
+
+  async saveTransactions(Operations: Operation[][]) {
+    try {
+      await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
+    } catch (err) {
+      error(err.response.data);
     }
   }
 }

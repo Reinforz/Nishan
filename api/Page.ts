@@ -14,7 +14,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView } from "../types";
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult } from "../types";
 
 class Page extends Block {
   block_data: IPage;
@@ -23,6 +23,27 @@ class Page extends Block {
     super(arg);
     if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
     this.block_data = arg.block_data;
+  }
+
+  // ? RF:1:H Add All api function utils
+  async loadPageChunk(limit: number = 100) {
+    try {
+      const res = await axios.post(
+        'https://www.notion.so/api/v3/loadPageChunk',
+        {
+          pageId: this.block_data.id,
+          limit,
+          chunkNumber: 0,
+          cursor: { stack: [] },
+          verticalColumns: false
+        },
+        this.headers
+      ) as { data: LoadPageChunkResult };
+      this.saveToCache(res.data.recordMap);
+      return res.data.recordMap;
+    } catch (err) {
+      throw new Error(error(err.response.data))
+    }
   }
 
   /**
@@ -88,9 +109,34 @@ class Page extends Block {
 
   }
 
-  // ? FEAT:1:H Add image content
-  async createImageContent() {
+  // ? FEAT:1:M Add image content
+  async createImageContent({ source, caption = [['']] }: { source: string, caption?: string[][] }) {
+    const $block_id = uuidv4();
+    const current_time = Date.now();
+    await this.saveTransactions([[
+      this.createBlock({
+        $block_id,
+        properties: {
+          source,
+          caption
+        },
+        format: {
+          display_source: source
+        },
+        type: 'image'
+      }),
+      blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
+      blockUpdate(this.block_data.id, [], {
+        last_edited_time: current_time,
+        last_edited_by_id: this.user_id,
+      })
+    ]]);
 
+    const res = await this.loadPageChunk();
+    return new Block({
+      block_data: res.block[$block_id].value,
+      ...this.getProps()
+    })
   }
 
   /**
@@ -337,7 +383,7 @@ class Page extends Block {
       error(`The block is not a collection_view_page`);
       return undefined;
     } else {
-      await this.loadUserChunk(this.block_data.id);
+      await this.loadPageChunk();
       const cache_data = this.cache.collection.get(this.block_data.collection_id);
       if (cache_data)
         return new Collection({

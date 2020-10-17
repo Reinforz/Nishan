@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { LoadUserContentResult, Operation, RecordMap } from "../types";
+import { LoadUserContentResult, Operation, RecordMap, Request } from "../types";
 
 export default class Getter extends Cache {
   token: string;
@@ -17,8 +17,8 @@ export default class Getter extends Cache {
       cookie: string
     }
   };
-  // ? TD:2:M Add typedef for bounded createTransaction function 
-  createTransaction: any
+  // ? TD:1:M Add typedef for bounded createTransaction function
+  createTransaction: (operations: Operation[][]) => Request
 
   constructor({ token, interval, user_id, shard_id, space_id }: {
     token: string,
@@ -68,12 +68,12 @@ export default class Getter extends Cache {
     })
   }
 
-  async saveTransactions(Operations: Operation[][]) {
+  async saveTransactions(Operations: Operation[][]): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
           const res = await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
-          resolve(res);
+          resolve(res.data.recordMap);
         } catch (err) {
           reject(error(err.response.data));
         }

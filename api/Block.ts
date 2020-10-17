@@ -40,30 +40,26 @@ class Block extends Getters {
   async duplicate() {
     const generated_table_id = uuidv4();
 
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([
-        [
-          blockSet(generated_table_id, [], {
-            type: 'copy_indicator',
-            id: generated_table_id,
-            version: 1
-          }),
-          blockUpdate(generated_table_id, [], {
-            parent_id: this.block_data.parent_id,
-            parent_table: 'block',
-            alive: true
-          }),
-          blockListAfter(this.block_data.parent_id, ['content'], {
-            after: this.block_data.id,
-            id: generated_table_id
-          }),
-          ...lastEditOperations(generated_table_id, this.user_id),
-          ...createOperation(generated_table_id, this.user_id)
-        ]
-      ]),
-      this.headers
-    );
+    await this.saveTransactions([
+      [
+        blockSet(generated_table_id, [], {
+          type: 'copy_indicator',
+          id: generated_table_id,
+          version: 1
+        }),
+        blockUpdate(generated_table_id, [], {
+          parent_id: this.block_data.parent_id,
+          parent_table: 'block',
+          alive: true
+        }),
+        blockListAfter(this.block_data.parent_id, ['content'], {
+          after: this.block_data.id,
+          id: generated_table_id
+        }),
+        ...lastEditOperations(generated_table_id, this.user_id),
+        ...createOperation(generated_table_id, this.user_id)
+      ]
+    ]);
 
     await axios.post(
       'https://www.notion.so/api/v3/enqueueTask',
@@ -82,23 +78,19 @@ class Block extends Getters {
     // ? Return New Block
   }
 
-  // ? TD: Better TD for args
-  // ? FEAT: Add Permission to args
+  // ? TD:2:M Better TD for args
+  // ? FEAT:2:M Add Permission to args
   async update(args: any) {
-    // ? Handle when args does not have appropriate shape eg: when format is not given, use the current value
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([
-        [
-          ...Object.entries(args.format).map(([path, arg]) => blockSet(this.block_data.id, ['format', path], arg)),
-          ...Object.entries(args.properties).map(([path, arg]) =>
-            blockSet(this.block_data.id, ['properties', path], [[arg]])
-          ),
-          blockSet(this.block_data.id, ['last_edited_time'], Date.now())
-        ]
-      ]),
-      this.headers
-    );
+    // ? FIX:2:H Handle when args does not have appropriate shape eg: when format is not given, use the current value
+    await this.saveTransactions([
+      [
+        ...Object.entries(args.format).map(([path, arg]) => blockSet(this.block_data.id, ['format', path], arg)),
+        ...Object.entries(args.properties).map(([path, arg]) =>
+          blockSet(this.block_data.id, ['properties', path], [[arg]])
+        ),
+        blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+      ]
+    ])
   }
 
   /**
@@ -107,46 +99,34 @@ class Block extends Getters {
   async delete() {
     const current_time = Date.now();
     const is_root_page = this.block_data.parent_table === "space" && this.block_data.type === "page";
-    try {
-      await axios.post(
-        'https://www.notion.so/api/v3/saveTransactions',
-        this.createTransaction([
-          [
-            blockUpdate(this.block_data.id, [], {
-              alive: false
-            }),
-            is_root_page ? spaceListRemove(this.block_data.space_id, ['pages'], { id: this.block_data.id }) : blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
-            blockSet(this.block_data.id, ['last_edited_time'], current_time),
-            is_root_page ? spaceSet(this.block_data.space_id, ['last_edited_time'], current_time) : blockSet(this.block_data.parent_id, ['last_edited_time'], current_time)
-          ]
-        ]),
-        this.headers
-      );
-      this.cache.block.delete(this.block_data.id);
-    } catch (err) {
-      throw new Error(error(err.response.data));
-    }
+    await this.saveTransactions([
+      [
+        blockUpdate(this.block_data.id, [], {
+          alive: false
+        }),
+        is_root_page ? spaceListRemove(this.block_data.space_id, ['pages'], { id: this.block_data.id }) : blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
+        blockSet(this.block_data.id, ['last_edited_time'], current_time),
+        is_root_page ? spaceSet(this.block_data.space_id, ['last_edited_time'], current_time) : blockSet(this.block_data.parent_id, ['last_edited_time'], current_time)
+      ]
+    ]);
+    this.cache.block.delete(this.block_data.id);
     return new Promise((resolve) => setTimeout(() => resolve(undefined), this.interval));
   }
 
   async transfer(new_parent_id: string) {
     const current_time = Date.now();
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([
-        [
-          blockUpdate(this.block_data.id, [], { alive: false }),
-          blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
-          blockUpdate(this.block_data.id, [], { parent_id: new_parent_id, parent_table: 'block', alive: true }),
-          blockListAfter(new_parent_id, ['content'], { id: this.block_data.id }),
-          blockUpdate(this.block_data.id, [], { permissions: null }),
-          blockSet(this.block_data.id, ['last_edited_time'], current_time),
-          blockSet(this.block_data.parent_id, ['last_edited_time'], current_time),
-          blockSet(new_parent_id, ['last_edited_time'], current_time)
-        ]
-      ]),
-      this.headers
-    );
+    await this.saveTransactions([
+      [
+        blockUpdate(this.block_data.id, [], { alive: false }),
+        blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
+        blockUpdate(this.block_data.id, [], { parent_id: new_parent_id, parent_table: 'block', alive: true }),
+        blockListAfter(new_parent_id, ['content'], { id: this.block_data.id }),
+        blockUpdate(this.block_data.id, [], { permissions: null }),
+        blockSet(this.block_data.id, ['last_edited_time'], current_time),
+        blockSet(this.block_data.parent_id, ['last_edited_time'], current_time),
+        blockSet(new_parent_id, ['last_edited_time'], current_time)
+      ]
+    ])
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types

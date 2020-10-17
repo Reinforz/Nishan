@@ -7,7 +7,6 @@ import View from './View';
 
 import { createOperation, lastEditOperations, collectionViewSet, blockSet, blockListAfter, blockUpdate } from '../utils/chunk';
 
-import createTransaction from "../utils/createTransaction"
 import { error, warn } from "../utils/logs";
 
 import { TCollectionBlock, LoadPageChunkResult, Operation, Page as IPage, RecordMap, Space as ISpace, TView, Cache, NishanArg } from "../types";
@@ -26,28 +25,24 @@ class CollectionBlock extends Block {
   }
 
   async createView() {
-    // ? Page.prototype.createLinkedDBContent view options
+    // ? RF:1:H Same view options as Page.createLinkedDBContent
     const $view_id = uuidv4();
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([
-        [
-          collectionViewSet($view_id, [], {
-            id: $view_id,
-            version: 1,
-            name: 'Table View',
-            type: 'table',
-            format: { [`table_properties`]: [] },
-            parent_table: 'block',
-            alive: true,
-            parent_id: this.block_data.id
-          }),
-          blockListAfter(this.block_data.id, ['view_ids'], { after: '', id: $view_id }),
-          blockSet(this.block_data.id, ['last_edited_time'], Date.now())
-        ]
-      ]),
-      this.headers
-    );
+    await this.saveTransactions([
+      [
+        collectionViewSet($view_id, [], {
+          id: $view_id,
+          version: 1,
+          name: 'Table View',
+          type: 'table',
+          format: { [`table_properties`]: [] },
+          parent_table: 'block',
+          alive: true,
+          parent_id: this.block_data.id
+        }),
+        blockListAfter(this.block_data.id, ['view_ids'], { after: '', id: $view_id }),
+        blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+      ]
+    ]);
     const { data: { recordMap, recordMap: { collection_view } } } = await axios.post(
       'https://www.notion.so/api/v3/loadPageChunk',
       {
@@ -147,38 +142,32 @@ class CollectionBlock extends Block {
         blockSet(this.block_data.id, ['last_edited_time'], Date.now())
       );
     });
-    try {
-      await axios.post(
-        'https://www.notion.so/api/v3/saveTransactions',
-        this.createTransaction([ops]),
-        this.headers
-      );
+    await this.saveTransactions([ops])
 
-      return new Promise((resolve) => {
-        setTimeout(async () => {
-          const { data: { recordMap } } = await axios.post(
-            'https://www.notion.so/api/v3/queryCollection',
-            {
-              collectionId: this.block_data.collection_id,
-              collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
-              query: {},
-              loader: {
-                limit: 1000,
-                searchQuery: '',
-                type: 'table'
-              }
-            },
-            this.headers
-          );
-          resolve(page_ids.map((page_id) => new Page({
-            block_data: recordMap.block[page_id].value,
-            ...this.getProps()
-          })));
-        }, this.interval);
-      });
-    } catch (err) {
-      error(err.response.data);
-    }
+    // ? FEAT:1:L Add queryCollection to api
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        const { data: { recordMap } } = await axios.post(
+          'https://www.notion.so/api/v3/queryCollection',
+          {
+            collectionId: this.block_data.collection_id,
+            collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
+            query: {},
+            loader: {
+              limit: 1000,
+              searchQuery: '',
+              type: 'table'
+            }
+          },
+          this.headers
+        );
+        resolve(page_ids.map((page_id) => new Page({
+          block_data: recordMap.block[page_id].value,
+          ...this.getProps()
+        })));
+      }, this.interval);
+    });
+
   }
 }
 

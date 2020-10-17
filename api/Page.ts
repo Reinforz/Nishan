@@ -56,11 +56,11 @@ class Page extends Block {
    */
   async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> } = { format: {}, properties: {} }) {
     const { format = {}, properties = {} } = opts;
-    await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+    await this.saveTransactions([[
       blockUpdate(this.block_data.id, ['format'], format),
       blockUpdate(this.block_data.id, ['properties'], properties),
       blockSet(this.block_data.id, ['last_edited_time'], Date.now())
-    ]]), this.headers);
+    ]])
   }
 
   /**
@@ -78,9 +78,9 @@ class Page extends Block {
       };
       if (target_space_view) {
         const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(this.block_data.id);
-        await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
+        await this.saveTransactions([[
           (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], { id: this.block_data.id })
-        ]]), this.headers);
+        ]])
       }
     } catch (err) {
       throw new Error(error(err.response.data));
@@ -93,14 +93,10 @@ class Page extends Block {
    */
   async createLinkedPageContent($block_id: string) {
     const parent_id = this.block_data.id;
-    try {
-      await axios.post('https://www.notion.so/api/v3/saveTransactions', this.createTransaction([[
-        blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
-        ...lastEditOperations(parent_id, this.user_id)
-      ]]), this.headers);
-    } catch (err) {
-      throw new Error(error(err.response.data))
-    }
+    await this.saveTransactions([[
+      blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
+      ...lastEditOperations(parent_id, this.user_id)
+    ]]);
   }
 
   // ? FEAT:1:M Add mention a person/page/date content
@@ -226,58 +222,50 @@ class Page extends Block {
     const $views = views.map((view) => ({ ...view, id: uuidv4() }));
     const view_ids = $views.map((view) => view.id);
     const current_time = Date.now();
+    await this.saveTransactions([
+      [
+        ...createViews($views, $content_id),
+        blockSet($content_id, [], {
+          id: $content_id,
+          version: 1,
+          type: 'collection_view',
+          collection_id,
+          view_ids,
+          parent_id: this.block_data.id,
+          parent_table: 'block',
+          alive: true,
+          created_by_table: 'notion_user',
+          created_by_id: this.user_id,
+          created_time: current_time,
+          last_edited_by_table: 'notion_user',
+          last_edited_by_id: this.user_id,
+          last_edited_time: current_time
+        }),
+        blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
+        blockSet($content_id, ['last_edited_time'], current_time)
+      ]
+    ]);
+
     try {
-      await axios.post(
-        'https://www.notion.so/api/v3/saveTransactions',
-        this.createTransaction([
-          [
-            ...createViews($views, $content_id),
-            blockSet($content_id, [], {
-              id: $content_id,
-              version: 1,
-              type: 'collection_view',
-              collection_id,
-              view_ids,
-              parent_id: this.block_data.id,
-              parent_table: 'block',
-              alive: true,
-              created_by_table: 'notion_user',
-              created_by_id: this.user_id,
-              created_time: current_time,
-              last_edited_by_table: 'notion_user',
-              last_edited_by_id: this.user_id,
-              last_edited_time: current_time
-            }),
-            blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
-            blockSet($content_id, ['last_edited_time'], current_time)
-          ]
-        ]),
+      const { data: { recordMap } } = await axios.post(
+        'https://www.notion.so/api/v3/queryCollection',
+        {
+          collectionId: collection_id,
+          collectionViewId: view_ids[0],
+          query: {},
+          loader: {
+            limit: 70,
+            type: 'table'
+          }
+        },
         this.headers
       );
-      try {
-        const { data: { recordMap } } = await axios.post(
-          'https://www.notion.so/api/v3/queryCollection',
-          {
-            collectionId: collection_id,
-            collectionViewId: view_ids[0],
-            query: {},
-            loader: {
-              limit: 70,
-              type: 'table'
-            }
-          },
-          this.headers
-        );
-        this.saveToCache(recordMap);
-        return new CollectionView({
-          ...this.getProps(),
-          parent_id: this.block_data.id,
-          block_data: recordMap.block[$content_id].value
-        });
-      } catch (err) {
-        error(err.response.data);
-        return undefined;
-      }
+      this.saveToCache(recordMap);
+      return new CollectionView({
+        ...this.getProps(),
+        parent_id: this.block_data.id,
+        block_data: recordMap.block[$content_id].value
+      });
     } catch (err) {
       error(err.response.data);
       return undefined;
@@ -299,37 +287,33 @@ class Page extends Block {
         if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({ id: uuidv4(), value, color }))
       });
 
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([
-        [
-          blockUpdate(this.block_data.id, [], {
-            id: this.block_data.id,
-            type: 'collection_view_page',
-            collection_id: $collection_id,
-            view_ids,
-            properties: {},
-            created_time: current_time,
-            last_edited_time: current_time
-          }),
-          collectionUpdate($collection_id, [], {
-            id: $collection_id,
-            schema,
-            format: {
-              collection_page_properties: []
-            },
-            icon: (this.block_data as IPage).format.page_icon,
-            parent_id: this.block_data.id,
-            parent_table: 'block',
-            alive: true,
-            name: (this.block_data as IPage).properties.title
-          }),
-          ...createViews(views, this.block_data.id),
-          blockSet(this.block_data.id, ['last_edited_time'], current_time)
-        ]
-      ]),
-      this.headers
-    );
+    await this.saveTransactions([
+      [
+        blockUpdate(this.block_data.id, [], {
+          id: this.block_data.id,
+          type: 'collection_view_page',
+          collection_id: $collection_id,
+          view_ids,
+          properties: {},
+          created_time: current_time,
+          last_edited_time: current_time
+        }),
+        collectionUpdate($collection_id, [], {
+          id: $collection_id,
+          schema,
+          format: {
+            collection_page_properties: []
+          },
+          icon: (this.block_data as IPage).format.page_icon,
+          parent_id: this.block_data.id,
+          parent_table: 'block',
+          alive: true,
+          name: (this.block_data as IPage).properties.title
+        }),
+        ...createViews(views, this.block_data.id),
+        blockSet(this.block_data.id, ['last_edited_time'], current_time)
+      ]
+    ]);
 
     return new Promise((resolve) => {
       setTimeout(async () => {
@@ -383,65 +367,57 @@ class Page extends Block {
     const view_ids = views.map((view) => view.id);
     const parent_id = this.block_data.id;
     const user_id = this.user_id;
-    try {
-      await axios.post(
-        'https://www.notion.so/api/v3/saveTransactions',
-        this.createTransaction([
-          [
-            blockUpdate($collection_view_id, [], {
-              id: $collection_view_id,
-              type: 'collection_view',
-              collection_id: $collection_id,
-              view_ids,
-              properties: {},
-              created_time: Date.now(),
-              last_edited_time: Date.now()
-            }),
-            // ! Needs The schema argument
-            ...createViews(views, this.block_data.id),
-            collectionUpdate($collection_id, [], {
-              id: $collection_id,
-              schema: {
-                title: { name: 'Name', type: 'title' }
-              },
-              format: {
-                collection_page_properties: []
-              },
-              parent_id: $collection_view_id,
-              parent_table: 'block',
-              alive: true
-            }),
-            blockUpdate($collection_view_id, [], { parent_id: parent_id, parent_table: 'block', alive: true }),
-            blockListAfter(parent_id, ['content'], { after: '', id: $collection_view_id }),
-            ...createOperation($collection_view_id, user_id),
-            ...lastEditOperations($collection_view_id, user_id)
-          ]
-        ]),
-        this.headers
-      );
+    await this.saveTransactions([
+      [
+        blockUpdate($collection_view_id, [], {
+          id: $collection_view_id,
+          type: 'collection_view',
+          collection_id: $collection_id,
+          view_ids,
+          properties: {},
+          created_time: Date.now(),
+          last_edited_time: Date.now()
+        }),
+        // ! Needs The schema argument
+        ...createViews(views, this.block_data.id),
+        collectionUpdate($collection_id, [], {
+          id: $collection_id,
+          schema: {
+            title: { name: 'Name', type: 'title' }
+          },
+          format: {
+            collection_page_properties: []
+          },
+          parent_id: $collection_view_id,
+          parent_table: 'block',
+          alive: true
+        }),
+        blockUpdate($collection_view_id, [], { parent_id: parent_id, parent_table: 'block', alive: true }),
+        blockListAfter(parent_id, ['content'], { after: '', id: $collection_view_id }),
+        ...createOperation($collection_view_id, user_id),
+        ...lastEditOperations($collection_view_id, user_id)
+      ]
+    ]);
 
-      const { data: { recordMap } } = await axios.post(
-        'https://www.notion.so/api/v3/queryCollection',
-        {
-          collectionId: $collection_id,
-          collectionViewId: view_ids[0],
-          query: {},
-          loader: {
-            limit: 70,
-            type: 'table'
-          }
-        },
-        this.headers
-      );
-      this.saveToCache(recordMap);
-      return new CollectionView({
-        ...this.getProps(),
-        parent_id: this.block_data.id,
-        block_data: recordMap.block[$collection_view_id].value
-      });
-    } catch (err) {
-      error(err.response.data);
-    }
+    const { data: { recordMap } } = await axios.post(
+      'https://www.notion.so/api/v3/queryCollection',
+      {
+        collectionId: $collection_id,
+        collectionViewId: view_ids[0],
+        query: {},
+        loader: {
+          limit: 70,
+          type: 'table'
+        }
+      },
+      this.headers
+    );
+    this.saveToCache(recordMap);
+    return new CollectionView({
+      ...this.getProps(),
+      parent_id: this.block_data.id,
+      block_data: recordMap.block[$collection_view_id].value
+    });
   }
 }
 

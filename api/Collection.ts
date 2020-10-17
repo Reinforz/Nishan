@@ -2,7 +2,6 @@ import axios from "axios";
 
 import { collectionSet } from '../utils/chunk';
 import { error } from "../utils/logs";
-import createTransaction from "../utils/createTransaction";
 
 import Getters from "./Getters";
 
@@ -17,16 +16,12 @@ class Collection extends Getters {
   }
 
   async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      createTransaction(this.shard_id, this.space_id, [
-        [
-          ...Object.entries(properties).map(([path, arg]) => collectionSet(this.collection_data.id, [path], arg)),
-          collectionSet(this.collection_data.id, ['last_edited_time'], Date.now())
-        ]
-      ]),
-      this.headers
-    );
+    this.saveTransactions([
+      [
+        ...Object.entries(properties).map(([path, arg]) => collectionSet(this.collection_data.id, [path], arg)),
+        collectionSet(this.collection_data.id, ['last_edited_time'], Date.now())
+      ]
+    ])
   }
 }
 

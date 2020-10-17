@@ -56,12 +56,8 @@ class View extends Getters {
       args.format[`${this.view_data.type}_properties`] = properties;
     }
 
-    // ? Respect previous filters and sorts
-    await axios.post(
-      'https://www.notion.so/api/v3/saveTransactions',
-      this.createTransaction([[collectionViewUpdate(this.view_data.id, [], args)]]),
-      this.headers
-    );
+    // ? FIX:2:H Respect previous filters and sorts
+    await this.saveTransactions([[collectionViewUpdate(this.view_data.id, [], args)]]);
   }
 }
 

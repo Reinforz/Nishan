@@ -25,14 +25,12 @@ class Page extends Block<IPage> {
     this.block_data = arg.block_data;
   }
 
-  // ? RF:1:H Add All api function utils
-
   /**
    * Update the properties and the format of the page
    * @param opts The format and properties of the page to update
    */
-  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> } = { format: {}, properties: {} }) {
-    const { format = {}, properties = {} } = opts;
+  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> }) {
+    const { format = this.block_data.format, properties = this.block_data.properties } = opts;
     await this.saveTransactions([[
       blockUpdate(this.block_data.id, ['format'], format),
       blockUpdate(this.block_data.id, ['properties'], properties),
@@ -83,47 +81,6 @@ class Page extends Block<IPage> {
   }
 
   /**
-   * 
-   * @param opts  
-   */
-  async createImageContent(opts: { source: string, caption?: string[][] }) {
-    const { source, caption = [['']] } = opts;
-    const $block_id = uuidv4();
-    const current_time = Date.now();
-    await this.saveTransactions([[
-      this.createBlock({
-        $block_id,
-        properties: {
-          source,
-          caption
-        },
-        format: {
-          display_source: source
-        },
-        type: 'image'
-      }),
-      blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
-      blockUpdate(this.block_data.id, [], {
-        last_edited_time: current_time,
-        last_edited_by_id: this.user_id,
-      })
-    ]]);
-
-    const { block } = await this.loadPageChunk({
-      pageId: this.block_data.id,
-      limit: 50,
-      chunkNumber: 0,
-      cursor: { stack: [] },
-      verticalColumns: false
-    });
-
-    return new Block({
-      block_data: block[$block_id].value,
-      ...this.getProps()
-    })
-  }
-
-  /**
    * Export the page and its content as a zip
    * @param arg Options used for setting up export
    */
@@ -158,38 +115,36 @@ class Page extends Block<IPage> {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  // ? TD:1 ContentType definitions page | header | sub_sub_header etc
+  // ? TD:1:H Format and properties based on BlockType
   async createContent(options: { format?: PageFormat, properties?: PageProps, type?: BlockType } = {}) {
-    // ? User given after id as position
-    // ? Return specific class instances based on content type
+    // ? FEAT:1:M User given after id as position
+    // ? FEAT:2:H Return specific class instances based on content type
     const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
     const $content_id = uuidv4();
     if (this.block_data.collection_id)
       throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));
-    else {
-      await this.saveTransactions([
-        [
-          this.createBlock({
-            $block_id: $content_id,
-            type,
-            properties,
-            format,
-          }),
-          blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
-        ]
-      ])
+    await this.saveTransactions([
+      [
+        this.createBlock({
+          $block_id: $content_id,
+          type,
+          properties,
+          format,
+        }),
+        blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
+      ]
+    ])
 
-      const recordMap = await this.getBackLinksForBlock(this.block_data.id);
+    const recordMap = await this.getBackLinksForBlock(this.block_data.id);
 
-      if (type === 'page') return new Page({
-        block_data: recordMap.block[$content_id].value as IPage,
-        ...this.getProps()
-      });
-      else return new Block({
-        block_data: recordMap.block[$content_id].value,
-        ...this.getProps()
-      });
-    }
+    if (type === 'page') return new Page({
+      block_data: recordMap.block[$content_id].value as IPage,
+      ...this.getProps()
+    });
+    else return new Block({
+      block_data: recordMap.block[$content_id].value,
+      ...this.getProps()
+    });
   }
 
   async createLinkedDBContent(collection_id: string, views: UserViewArg[] = []) {
@@ -268,8 +223,7 @@ class Page extends Block<IPage> {
           alive: true,
           name: (this.block_data as IPage).properties.title
         }),
-        ...createViews(views, this.block_data.id),
-        blockSet(this.block_data.id, ['last_edited_time'], current_time)
+        ...createViews(views, this.block_data.id)
       ]
     ]);
 
@@ -283,48 +237,16 @@ class Page extends Block<IPage> {
     })
   }
 
-  // ? RF:1 Transfer to CollectionBlock class 
-  async getCollectionViewPage(): Promise<undefined | Collection> {
-    // ? Return new CollectionViewPage passing parent block data and new block data
-    if (!this.block_data.collection_id)
-      throw new Error(error(`The block is not a collection_view_page`));
-    else {
-      await this.loadPageChunk({
-        pageId: this.block_data.id,
-        limit: 50,
-        chunkNumber: 0,
-        cursor: { stack: [] },
-        verticalColumns: false
-      });
-      const cache_data = this.cache.collection.get(this.block_data.collection_id);
-      if (cache_data)
-        return new Collection({
-          ...this.getProps(),
-          collection_data: cache_data
-        });
-    }
-  }
-
   async createInlineDBContent(options: { views?: UserViewArg[] } = {}) {
-    //? Returns collection_view and parent block
+    // ? FEAT:1:M Task in schema
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();
     const views = (options.views && options.views.map((view) => ({ ...view, id: uuidv4() }))) || [];
     const view_ids = views.map((view) => view.id);
     const parent_id = this.block_data.id;
-    const user_id = this.user_id;
     await this.saveTransactions([
       [
-        blockUpdate($collection_view_id, [], {
-          id: $collection_view_id,
-          type: 'collection_view',
-          collection_id: $collection_id,
-          view_ids,
-          properties: {},
-          created_time: Date.now(),
-          last_edited_time: Date.now()
-        }),
-        // ! Needs The schema argument
+        this.createBlock({ $block_id: $collection_view_id, properties: {}, format: {}, type: 'collection_view' }),
         ...createViews(views, this.block_data.id),
         collectionUpdate($collection_id, [], {
           id: $collection_id,
@@ -338,10 +260,7 @@ class Page extends Block<IPage> {
           parent_table: 'block',
           alive: true
         }),
-        blockUpdate($collection_view_id, [], { parent_id: parent_id, parent_table: 'block', alive: true }),
         blockListAfter(parent_id, ['content'], { after: '', id: $collection_view_id }),
-        ...createOperation($collection_view_id, user_id),
-        ...lastEditOperations($collection_view_id, user_id)
       ]
     ]);
 

@@ -58,6 +58,9 @@ class CollectionBlock extends Block<TCollectionBlock> {
     });
   }
 
+  /**
+   * Fetch the collection of the block from the collection_id
+   */
   async fetchCollection() {
     const cached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
     if (cached_data)
@@ -76,7 +79,6 @@ class CollectionBlock extends Block<TCollectionBlock> {
       ...this.getProps(),
       collection_data: collection[(this.block_data as TCollectionBlock).collection_id].value
     });
-
   }
 
   async getViews() {
@@ -95,7 +97,8 @@ class CollectionBlock extends Block<TCollectionBlock> {
       })
     );
   }
-  // ? TS: Better TS Support rather than using any
+
+  // ? TD:2:H Better TS Support rather than using any
   async addRows(rows: { format: any, properties: any }[]) {
     const page_ids: string[] = [];
     const Page = require('../Page');
@@ -123,7 +126,6 @@ class CollectionBlock extends Block<TCollectionBlock> {
     });
     await this.saveTransactions([ops])
 
-    // ? FEAT:1:L Add queryCollection to api
     const recordMap = await this.queryCollection(this.block_data.collection_id, (this.block_data as TCollectionBlock).view_ids[0]);
 
     return page_ids.map((page_id) => new Page({

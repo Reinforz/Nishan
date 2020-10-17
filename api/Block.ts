@@ -7,7 +7,7 @@ import { error } from "../utils/logs";
 
 import Getters from "./Getters";
 
-import { Block as IBlock, BlockType, NishanArg } from "../types"
+import { Block as IBlock, BlockData, BlockType, GetBackLinksForBlockResult, NishanArg, RecordMap } from "../types"
 
 class Block extends Getters {
   block_data: IBlock;
@@ -15,6 +15,26 @@ class Block extends Getters {
   constructor(arg: NishanArg & { block_data: IBlock }) {
     super(arg);
     this.block_data = arg.block_data;
+  }
+
+  async getBackLinksForBlock(): Promise<{ block: BlockData }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/getBacklinksForBlock',
+            {
+              blockId: this.block_data.id
+            },
+            this.headers
+          ) as { data: GetBackLinksForBlockResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
   }
 
   async duplicate() {

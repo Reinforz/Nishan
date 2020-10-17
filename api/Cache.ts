@@ -20,11 +20,11 @@ export default class Cache {
    * Save the passed recordMap to cache
    * @param recordMap RecordMap map to save to cache
    */
-  saveToCache(recordMap: RecordMap) {
+  saveToCache(recordMap: Partial<RecordMap>) {
     type keys = keyof ICache;
     (Object.keys(this.cache) as keys[]).forEach((key) => {
       if (recordMap[key])
-        Object.entries(recordMap[key]).forEach(([record_id, record_value]) => {
+        Object.entries(recordMap[key] || {}).forEach(([record_id, record_value]) => {
           this.cache[key].set(record_id, record_value.value);
         });
     });

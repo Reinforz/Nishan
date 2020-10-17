@@ -14,7 +14,7 @@ import { collectionUpdate, lastEditOperations, createOperation, blockUpdate, blo
 
 import { error, warn } from "../utils/logs";
 
-import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult } from "../types";
+import { QueryCollectionResult, Page as IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, CollectionViewPage as ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, LoadPageChunkResult, RecordMap } from "../types";
 
 class Page extends Block {
   block_data: IPage;
@@ -26,24 +26,28 @@ class Page extends Block {
   }
 
   // ? RF:1:H Add All api function utils
-  async loadPageChunk(limit: number = 100) {
-    try {
-      const res = await axios.post(
-        'https://www.notion.so/api/v3/loadPageChunk',
-        {
-          pageId: this.block_data.id,
-          limit,
-          chunkNumber: 0,
-          cursor: { stack: [] },
-          verticalColumns: false
-        },
-        this.headers
-      ) as { data: LoadPageChunkResult };
-      this.saveToCache(res.data.recordMap);
-      return res.data.recordMap;
-    } catch (err) {
-      throw new Error(error(err.response.data))
-    }
+  async loadPageChunk(limit: number = 100): Promise<RecordMap> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/loadPageChunk',
+            {
+              pageId: this.block_data.id,
+              limit,
+              chunkNumber: 0,
+              cursor: { stack: [] },
+              verticalColumns: false
+            },
+            this.headers
+          ) as { data: LoadPageChunkResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      })
+    })
   }
 
   /**
@@ -109,8 +113,12 @@ class Page extends Block {
 
   }
 
-  // ? FEAT:1:M Add image content
-  async createImageContent({ source, caption = [['']] }: { source: string, caption?: string[][] }) {
+  /**
+   * 
+   * @param opts  
+   */
+  async createImageContent(opts: { source: string, caption?: string[][] }) {
+    const { source, caption = [['']] } = opts;
     const $block_id = uuidv4();
     const current_time = Date.now();
     await this.saveTransactions([[
@@ -143,7 +151,7 @@ class Page extends Block {
    * Export the page and its content as a zip
    * @param arg Options used for setting up export
    */
-  // ? FEAT:1:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
+  // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
   async export(arg: { dir: string, timeZone: string, recursive: boolean, exportType: ExportType }) {
     const { dir = "output", timeZone, recursive = true, exportType = "markdown" } = arg || {};
     try {
@@ -185,57 +193,31 @@ class Page extends Block {
     // ? Return specific class instances based on content type
     const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
     const $content_id = uuidv4();
-    const current_time = Date.now();
     if (this.block_data.collection_id)
-      error(`The block is of collection_view_page and thus cannot contain a ${type} content`);
+      throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));
     else {
-      try {
-        return new Promise((resolve) =>
-          setTimeout(async () => {
-            await axios.post(
-              'https://www.notion.so/api/v3/saveTransactions',
-              this.createTransaction([
-                [
-                  blockUpdate($content_id, [], {
-                    id: $content_id,
-                    type,
-                    properties,
-                    format,
-                    created_time: current_time,
-                    last_edited_time: current_time
-                  }),
-                  blockUpdate($content_id, [], {
-                    parent_id: this.block_data.id,
-                    parent_table: 'block',
-                    alive: true
-                  }),
-                  blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
-                  ...createOperation($content_id, this.user_id),
-                  ...lastEditOperations($content_id, this.user_id)
-                ]
-              ]),
-              this.headers
-            );
-            const res = await axios.post(
-              'https://www.notion.so/api/v3/getBacklinksForBlock',
-              {
-                blockId: $content_id
-              },
-              this.headers
-            );
-            if (type === 'page') resolve(new Page({
-              block_data: res.data.recordMap.block[$content_id].value,
-              ...this.getProps()
-            }));
-            else resolve(new Block({
-              block_data: res.data.recordMap.block[$content_id].value,
-              ...this.getProps()
-            }));
-          }, this.interval)
-        );
-      } catch (err) {
-        error(err.response.data);
-      }
+      await this.saveTransactions([
+        [
+          this.createBlock({
+            $block_id: $content_id,
+            type,
+            properties,
+            format,
+          }),
+          blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
+        ]
+      ])
+
+      const recordMap = await this.getBackLinksForBlock();
+
+      if (type === 'page') return new Page({
+        block_data: recordMap.block[$content_id].value as IPage,
+        ...this.getProps()
+      });
+      else return new Block({
+        block_data: recordMap.block[$content_id].value,
+        ...this.getProps()
+      });
     }
   }
 

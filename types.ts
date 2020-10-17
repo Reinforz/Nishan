@@ -417,6 +417,12 @@ export interface LoadPageChunkResult {
   recordMap: RecordMap
 }
 
+export interface GetBackLinksForBlockResult {
+  recordMap: {
+    block: BlockData,
+  }
+}
+
 export interface RecordMap {
   block: BlockData,
   collection: CollectionData,

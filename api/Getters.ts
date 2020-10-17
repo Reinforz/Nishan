@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { LoadUserContentResult, Operation } from "../types";
+import { LoadUserContentResult, Operation, RecordMap } from "../types";
 
 export default class Getter extends Cache {
   token: string;
@@ -52,23 +52,32 @@ export default class Getter extends Cache {
     }
   }
 
-  async loadUserContent() {
-    try {
-      const res = await axios.post(
-        'https://www.notion.so/api/v3/loadUserContent', {}, this.headers
-      ) as { data: LoadUserContentResult };
-      this.saveToCache(res.data.recordMap);
-      return res.data;
-    } catch (err) {
-      error(err.response.data);
-    }
+  async loadUserContent(): Promise<RecordMap> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post(
+            'https://www.notion.so/api/v3/loadUserContent', {}, this.headers
+          ) as { data: LoadUserContentResult };
+          this.saveToCache(res.data.recordMap);
+          resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data));
+        }
+      }, this.interval)
+    })
   }
 
   async saveTransactions(Operations: Operation[][]) {
-    try {
-      await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
-    } catch (err) {
-      error(err.response.data);
-    }
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const res = await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
+          resolve(res);
+        } catch (err) {
+          reject(error(err.response.data));
+        }
+      }, this.interval)
+    })
   }
 }

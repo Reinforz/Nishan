@@ -287,7 +287,7 @@ export interface NotionUser {
   version: number
 }
 
-export interface ISpace extends CreateProps {
+export interface ISpace extends CreateProps, LastEditedProps {
   beta_enabled: boolean,
   icon: string,
   id: string,
@@ -311,7 +311,7 @@ export interface SpaceView extends Node {
   sidebar_hidden_templates: string[],
   space_id: string,
   visited_templated: string[],
-  bookmarked_pages: string[]
+  bookmarked_pages: string[],
 }
 
 export interface ViewFormatProperties {
@@ -338,7 +338,8 @@ export interface ViewFilters {
 export interface UserRoot {
   id: string,
   space_views: string[],
-  version: number
+  version: number,
+  left_spaces: string[]
 }
 
 export interface UserSettings {

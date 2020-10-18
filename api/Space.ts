@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Getters from "./Getters";
 import Page from "./Page";
 
-import { spaceListBefore, blockUpdate } from '../utils/chunk';
+import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from "../utils/logs";
 
 import { NishanArg, ISpace, PageFormat, PageProps, IRootPage } from "../types";
@@ -54,6 +54,21 @@ class Space extends Getters {
       throw new Error(error("Space and User id not provided"))
   }
 
+  /**
+   * Update the workspace settings
+   * @param opt Properties of the space to update
+   */
+  async update(opt: Partial<Pick<ISpace, "name" | "beta_enabled" | "icon">>) {
+    const { name = this.space_data.name, beta_enabled = this.space_data.beta_enabled, icon = this.space_data.icon } = opt;
+    await this.saveTransactions([
+      spaceUpdate(this.space_data.id, [], {
+        name,
+        beta_enabled,
+        icon,
+        last_edited_time: Date.now()
+      })
+    ]);
+  }
 }
 
 export default Space;

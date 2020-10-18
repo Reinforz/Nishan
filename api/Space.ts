@@ -60,14 +60,40 @@ class Space extends Getters {
    */
   async update(opt: Partial<Pick<ISpace, "name" | "beta_enabled" | "icon">>) {
     const { name = this.space_data.name, beta_enabled = this.space_data.beta_enabled, icon = this.space_data.icon } = opt;
+    const current_time = Date.now();
     await this.saveTransactions([
       spaceUpdate(this.space_data.id, [], {
         name,
         beta_enabled,
         icon,
-        last_edited_time: Date.now()
+        last_edited_time: current_time
       })
     ]);
+    // ? RF:1:M Use a utility method to update the cache and internal class state
+    const cached_data = this.cache.space.get(this.space_data.id);
+    if (cached_data) {
+      cached_data.icon = icon;
+      cached_data.beta_enabled = beta_enabled;
+      cached_data.last_edited_time = current_time;
+      cached_data.name = name;
+      this.cache.space.set(this.space_data.id, cached_data)
+    }
+    this.space_data.icon = icon;
+    this.space_data.beta_enabled = beta_enabled;
+    this.space_data.last_edited_time = current_time;
+    this.space_data.name = name;
+  }
+
+  /**
+   * Delete the current workspace
+   */
+  async delete() {
+    await this.enqueueTask({
+      eventName: "deleteSpace",
+      request: {
+        spaceId: this.space_data.id
+      }
+    })
   }
 }
 

@@ -12,6 +12,7 @@ export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'gr
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
+export type TaskType = "deleteSpace" | "exportBlock";
 
 export interface ValueArg {
   id: string,

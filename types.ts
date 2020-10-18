@@ -12,7 +12,7 @@ export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'gr
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
-export type TaskType = "deleteSpace" | "exportBlock";
+export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 
 export interface ValueArg {
   id: string,
@@ -465,6 +465,41 @@ export interface EnqueueTaskResult {
 export interface SyncRecordValuesResult {
   recordMap: RecordMap
 }
+
+export interface EnqueueTaskParams {
+  eventName: TaskType
+}
+
+export interface DuplicateBlockTaskParams extends EnqueueTaskParams {
+  eventName: "duplicateBlock",
+  request: {
+    sourceBlockId: string,
+    targetBlockId: string,
+    addCopyName: boolean
+  }
+}
+
+export interface ExportBlockTaskParams extends EnqueueTaskParams {
+  eventName: "exportBlock",
+  request: {
+    blockId: string,
+    exportOptions: {
+      exportType: ExportType,
+      locale: "en",
+      timeZone: string
+    },
+    recursive: boolean
+  }
+}
+
+export interface DeleteSpaceTaskParams extends EnqueueTaskParams {
+  eventName: "deleteSpace",
+  request: {
+    spaceId: string
+  }
+}
+
+export type TEnqueueTaskParams = DuplicateBlockTaskParams | ExportBlockTaskParams | DeleteSpaceTaskParams;
 
 export interface LoadPageChunkParams {
   chunkNumber: 0,

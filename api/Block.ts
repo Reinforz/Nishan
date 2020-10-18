@@ -4,7 +4,7 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, space
 
 import Getters from "./Getters";
 
-import { BlockType, NishanArg, TBlock } from "../types"
+import { BlockType, ContentBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -53,17 +53,36 @@ class Block<T extends TBlock> extends Getters {
 
   // ? TD:2:M Better TD for args
   // ? FEAT:2:M Add Permission to args
-  async update(args: any) {
+  /**
+   * Update a block properties and format
+   * @param args Block update format and properties options
+   */
+  async update(args: { format?: Partial<PageFormat>, properties?: Partial<PageProps> } = {}) {
+    const { format = {}, properties = {} } = args;
     // ? FIX:2:H Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await this.saveTransactions(
       [
-        ...Object.entries(args.format).map(([path, arg]) => blockSet(this.block_data.id, ['format', path], arg)),
-        ...Object.entries(args.properties).map(([path, arg]) =>
-          blockSet(this.block_data.id, ['properties', path], [[arg]])
-        ),
-        blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+        blockUpdate(this.block_data.id, [], {
+          properties,
+          format,
+          last_edited_time: Date.now()
+        }),
       ]
     )
+  }
+
+  // ? TD:1:H Add all ContentBlockType interfaces  
+  async convertTo(type: ContentBlockType) {
+    await this.saveTransactions([
+      blockUpdate(this.block_data.id, [], { type })
+    ]);
+
+    const cached_value = this.cache.block.get(this.block_data.id);
+    if (cached_value) {
+      this.block_data.type = type;
+      cached_value.type = type;
+      this.cache.block.set(this.block_data.id, cached_value);
+    }
   }
 
   /**
@@ -86,6 +105,10 @@ class Block<T extends TBlock> extends Getters {
     return new Promise((resolve) => setTimeout(() => resolve(undefined), this.interval));
   }
 
+  /**
+   * Transfer a block from one parent page to another page
+   * @param new_parent_id Id of the new parent page
+   */
   async transfer(new_parent_id: string) {
     const current_time = Date.now();
     await this.saveTransactions(

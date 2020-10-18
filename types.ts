@@ -6,10 +6,11 @@ export type OperationTable = 'space' | 'collection_view' | 'collection' | 'colle
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
-export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'link_to_page' | 'image';
-export type FontColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
+export type ContentBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout'
+export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | ContentBlockType | 'link_to_page' | 'image';
+export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
-export type FormatBlockColor = FontColor | BGColor;
+export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
 
 export interface ValueArg {
@@ -24,7 +25,7 @@ export interface SchemaUnit {
   options?: {
     id: string,
     value: string,
-    color: FontColor
+    color: TextColor
   }[]
 }
 
@@ -116,6 +117,7 @@ export interface IPage extends Block {
   format: PageFormat
 }
 
+// ? TD:1:H Add properties and format for specific block type
 export interface ICollectionBlock extends Block {
   view_ids: string[],
   collection_id: string,
@@ -130,10 +132,54 @@ export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
 
+export interface IHeader extends Block {
+  type: 'header'
+}
+
+export interface ISubHeader extends Block {
+  type: 'sub_header'
+}
+
+export interface ISubSubHeader extends Block {
+  type: 'sub_sub_header'
+}
+
+export interface IText extends Block {
+  type: 'text'
+}
+
+export interface ITodo extends Block {
+  type: 'to_do'
+}
+
+export interface IBulletedList extends Block {
+  type: 'bulleted_list'
+}
+
+export interface INumberedList extends Block {
+  type: 'numbered_list'
+}
+
+export interface IToggle extends Block {
+  type: 'toggle'
+}
+
+export interface IQuote extends Block {
+  type: 'quote'
+}
+
+export interface IDivider extends Block {
+  type: 'divider'
+}
+
+export interface ICallout extends Block {
+  type: 'callout'
+}
+
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:H Add all block type
-export type TBlock = TCollectionBlock | IPage;
+export type TBlock = TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout;
 
 export type ParentType = IPage | Space;
 

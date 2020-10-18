@@ -55,7 +55,7 @@ export interface Operation {
 
 export interface Permission {
   role: 'editor',
-  type: 'user_permission',
+  type: 'user_permission' | 'space_permission',
   user_id: string,
 }
 
@@ -115,6 +115,10 @@ export interface IPage extends Block {
   type: 'page',
   content?: string[],
   format: PageFormat
+}
+
+export interface IRootPage extends IPage {
+  permissions: Permission[]
 }
 
 // ? TD:1:H Add properties and format for specific block type
@@ -179,9 +183,9 @@ export interface ICallout extends Block {
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:H Add all block type
-export type TBlock = TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout;
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout;
 
-export type ParentType = IPage | Space;
+export type ParentType = IRootPage | ISpace;
 
 export interface Collection extends Node, ParentProps {
   description: string[][],
@@ -283,7 +287,7 @@ export interface NotionUser {
   version: number
 }
 
-export interface Space extends CreateProps {
+export interface ISpace extends CreateProps {
   beta_enabled: boolean,
   icon: string,
   id: string,
@@ -380,7 +384,7 @@ export interface BlockData {
 export interface SpaceData {
   [key: string]: {
     role: 'editor',
-    value: Space
+    value: ISpace
   }
 }
 
@@ -495,7 +499,7 @@ export interface ICache {
   block: Map<string, TBlock>,
   collection: Map<string, Collection>,
   collection_view: Map<string, TView>,
-  space: Map<string, Space>,
+  space: Map<string, ISpace>,
   notion_user: Map<string, NotionUser>,
   space_view: Map<string, SpaceView>,
   user_root: Map<string, UserRoot>,

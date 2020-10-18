@@ -51,7 +51,7 @@ class Block<T extends TBlock> extends Getters {
     })
   }
 
-  // ? TD:2:M Better TD for args
+  // ? TD:1:H BlockType specific arg properties and format
   // ? FEAT:2:M Add Permission to args
   /**
    * Update a block properties and format
@@ -71,7 +71,6 @@ class Block<T extends TBlock> extends Getters {
     )
   }
 
-  // ? TD:1:H Add all ContentBlockType interfaces  
   async convertTo(type: ContentBlockType) {
     await this.saveTransactions([
       blockUpdate(this.block_data.id, [], { type })

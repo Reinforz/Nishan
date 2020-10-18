@@ -33,6 +33,12 @@ class Nishan extends Getters {
       });
   }
 
+  async init(arg: string | ((space: ISpace) => boolean)) {
+    await this.loadUserContent();
+    const space = await this.getSpace(arg);
+    return space;
+  }
+
   /**
    * Obtain a collection using its id
    * @param collection_id The id of the collection to obtain
@@ -85,7 +91,7 @@ class Nishan extends Getters {
   }
 
   // ? FEAT: getSpace method using function or id
-  async getSpace(arg: (space: ISpace) => boolean | string) {
+  async getSpace(arg: ((space: ISpace) => boolean) | string) {
     const { space } = await this.loadUserContent();
 
     const target_space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
@@ -104,7 +110,7 @@ class Nishan extends Getters {
    * The the internal space of the instance using a predicate or string id
    * @param arg A string representing the space id or a predicate function
    */
-  async setSpace(arg: (space: ISpace) => boolean | string) {
+  async setSpace(arg: string | ((space: ISpace) => boolean)) {
     const { space } = await this.loadUserContent();
 
     const target_space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);

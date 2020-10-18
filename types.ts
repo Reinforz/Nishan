@@ -302,7 +302,7 @@ export interface ISpace extends CreateProps, LastEditedProps {
   version: number
 }
 
-export interface SpaceView extends Node {
+export interface ISpaceView extends Node {
   created_getting_started: true,
   created_onboarding_templates: true,
   joined: boolean,
@@ -393,7 +393,7 @@ export interface SpaceData {
 export interface SpaceViewData {
   [key: string]: {
     role: 'editor',
-    value: SpaceView
+    value: ISpaceView
   }
 }
 
@@ -538,7 +538,7 @@ export interface ICache {
   collection_view: Map<string, TView>,
   space: Map<string, ISpace>,
   notion_user: Map<string, NotionUser>,
-  space_view: Map<string, SpaceView>,
+  space_view: Map<string, ISpaceView>,
   user_root: Map<string, UserRoot>,
   user_settings: Map<string, UserSettings>,
 }

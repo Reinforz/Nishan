@@ -2,11 +2,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Getters from "./Getters";
 import Page from "./Page";
+import SpaceView from "./SpaceView";
 
 import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from "../utils/logs";
 
-import { NishanArg, ISpace, PageFormat, PageProps, IRootPage } from "../types";
+import { NishanArg, ISpace, PageFormat, PageProps, IRootPage, ISpaceView } from "../types";
 
 // ? FEAT:2 Add space related methods
 class Space extends Getters {
@@ -103,6 +104,20 @@ class Space extends Getters {
       throw new Error(error("This space has been deleted"))
 
     this.space_data = undefined;
+  }
+
+  async getSpaceView() {
+    let target_space_view: ISpaceView | null = null;
+    for (let [, space_view] of this.cache.space_view) {
+      if (this.space_data && space_view.space_id === this.space_data.id) {
+        target_space_view = space_view;
+        break;
+      }
+    }
+    if (target_space_view) return new SpaceView({
+      space_view_data: target_space_view,
+      ...this.getProps()
+    })
   }
 }
 

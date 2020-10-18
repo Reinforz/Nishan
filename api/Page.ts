@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, SpaceView, ICollectionView } from "../types";
+import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView } from "../types";
 
 class Page extends Block<IPage> {
   block_data: IPage;
@@ -42,7 +42,7 @@ class Page extends Block<IPage> {
    */
   async toggleFavourite() {
     await this.loadUserContent();
-    let target_space_view: SpaceView | null = null;
+    let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {
       if (space_view.space_id === this.block_data.space_id) {
         target_space_view = space_view;

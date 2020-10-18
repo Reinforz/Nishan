@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { BlockData, EnqueueTaskResult, GetBackLinksForBlockResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult } from "../types";
+import { BlockData, EnqueueTaskResult, GetBackLinksForBlockResult, ICache, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult } from "../types";
 
 export default class Getters extends Cache {
   token: string;
@@ -20,14 +20,15 @@ export default class Getters extends Cache {
   // ? TD:1:M Add typedef for bounded createTransaction function
   createTransaction: (operations: Operation[]) => Request
 
-  constructor({ token, interval, user_id, shard_id, space_id }: {
+  constructor({ token, interval, user_id, shard_id, space_id, cache }: {
     token: string,
     user_id: string,
     shard_id: number;
     space_id: string;
     interval?: number,
+    cache?: ICache
   }) {
-    super();
+    super(cache);
     this.token = token;
     this.interval = interval || 1000;
     this.user_id = user_id;

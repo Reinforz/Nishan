@@ -17,7 +17,6 @@ export default class Getters extends Cache {
       cookie: string
     }
   };
-  // ? TD:1:M Add typedef for bounded createTransaction function
   createTransaction: (operations: Operation[]) => Request
 
   constructor({ token, interval, user_id, shard_id, space_id, cache }: {

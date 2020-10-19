@@ -7,7 +7,7 @@ export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | 
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type ContentBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout'
-export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | ContentBlockType | 'link_to_page' | 'image';
+export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | ContentBlockType | 'link_to_page' | 'image' | 'video';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -97,6 +97,7 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
 
 // ? TD: Page format and properties
 
+/* Block Specific Format and Properties */
 export interface PageProps {
   title: string[][],
   [k: string]: string[][]
@@ -113,6 +114,51 @@ export interface PageFormat {
   page_cover_position: number,
   block_color?: FormatBlockColor
 }
+
+export interface MediaProps {
+  source: string[][],
+  caption?: string[][]
+}
+
+export interface MediaFormat {
+  block_aspect_ratio?: number,
+  block_full_width?: boolean,
+  block_page_width?: boolean,
+  block_preserve_scale?: boolean,
+  block_width?: number,
+  display_source: string
+}
+
+// -----------------
+
+/* Function API Params*/
+
+export interface IPageInput {
+  type: 'page',
+  properties: PageProps,
+  format: PageFormat
+}
+
+export interface IVideoInput {
+  type: 'video',
+  properties: MediaFormat,
+  format: MediaFormat
+}
+
+export interface IImageInput {
+  type: 'image',
+  properties: MediaFormat,
+  format: MediaFormat
+}
+
+export interface IAudioInput {
+  type: 'image',
+  properties: MediaFormat,
+  format: MediaFormat
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput;
+// -----------------
 
 export interface IPage extends Block {
   properties: PageProps,

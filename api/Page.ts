@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage } from "../types";
+import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput } from "../types";
 
 class Page extends Block<TPage> {
   block_data: TPage;
@@ -117,10 +117,11 @@ class Page extends Block<TPage> {
    * @param {ContentOptions} options Options for modifying the content during creation
    */
   // ? TD:1:H Format and properties based on BlockType
-  async createContent(options: { format?: PageFormat, properties?: PageProps, type?: BlockType } = {}) {
+  async createContent(options: TBlockInput) {
     // ? FEAT:1:M User given after id as position
     // ? FEAT:2:H Return specific class instances based on content type
-    const { format = {}, properties = { title: 'Default page title' }, type = 'page' } = options;
+    const { format, properties, type } = options;
+
     const $content_id = uuidv4();
     if (this.block_data.collection_id)
       throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));

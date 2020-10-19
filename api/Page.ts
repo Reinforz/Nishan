@@ -13,26 +13,28 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole } from "../types";
+import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage } from "../types";
 
-class Page extends Block<IPage> {
-  block_data: IPage;
+class Page extends Block<IPage | IRootPage> {
+  block_data: IPage | IRootPage;
 
-  constructor(arg: NishanArg & { block_data: IPage }) {
+  constructor(arg: NishanArg & { block_data: IPage | IRootPage }) {
     super(arg);
     if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
     this.block_data = arg.block_data;
   }
 
+  // ? FEAT:1:H Add updated value to cache and internal class state
   /**
    * Update the properties and the format of the page
    * @param opts The format and properties of the page to update
    */
-  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps> }) {
-    const { format = this.block_data.format, properties = this.block_data.properties } = opts;
+  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps>, permissions: Permission[] }) {
+    const { format = this.block_data.format, properties = this.block_data.properties, permissions = (this.block_data as IRootPage).permissions } = opts;
     await this.saveTransactions([
       blockUpdate(this.block_data.id, ['format'], format),
       blockUpdate(this.block_data.id, ['properties'], properties),
+      blockUpdate(this.block_data.id, ['permissions'], permissions),
       blockSet(this.block_data.id, ['last_edited_time'], Date.now())
     ])
   }

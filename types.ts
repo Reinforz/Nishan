@@ -15,7 +15,7 @@ export type ExportType = "markdown" | "pdf" | "html";
 export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader';
-export type TPermissionType = 'user_permission' | 'space_permission';
+export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export interface ValueArg {
   id: string,
   value: string,
@@ -120,8 +120,14 @@ export interface IPage extends Block {
   format: PageFormat
 }
 
+export interface IPublicPermission {
+  type: 'public_permission',
+  role: TPermissionRole,
+  allow_duplicate: boolean
+}
+
 export interface IRootPage extends IPage {
-  permissions: Permission[]
+  permissions: (Permission | IPublicPermission)[]
 }
 
 // ? TD:1:H Add properties and format for specific block type

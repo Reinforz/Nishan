@@ -19,7 +19,17 @@ class NotionUser extends Getters {
         given_name,
         profile_photo
       })
-    ])
+    ]);
+
+    const cached_data = this.cache.notion_user.get(this.notion_user.id);
+    if (cached_data) {
+      cached_data.family_name = family_name;
+      cached_data.given_name = given_name;
+      cached_data.profile_photo = profile_photo;
+    }
+    this.notion_user.family_name = family_name;
+    this.notion_user.given_name = given_name;
+    this.notion_user.profile_photo = profile_photo;
   }
 }
 

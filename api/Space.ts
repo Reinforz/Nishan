@@ -176,7 +176,6 @@ class Space extends Getters {
         cached_data.beta_enabled = beta_enabled;
         cached_data.last_edited_time = current_time;
         cached_data.name = name;
-        this.cache.space.set(this.space_data.id, cached_data)
       }
       this.space_data.icon = icon;
       this.space_data.beta_enabled = beta_enabled;

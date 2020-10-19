@@ -353,6 +353,106 @@ export const collectionViewPageListRemove = (id: string, path: string[], args: A
   }
 }
 
+export const notionUserSet = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'notion_user',
+    command: 'set',
+    args,
+    id
+  }
+}
+
+export const notionUserUpdate = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'notion_user',
+    command: 'update',
+    args,
+    id
+  }
+}
+
+export const notionUserListAfter = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'notion_user',
+    command: 'listAfter',
+    args,
+    id
+  }
+}
+
+export const notionUserListBefore = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'notion_user',
+    command: 'listBefore',
+    args,
+    id
+  }
+}
+
+export const notionUserListRemove = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'notion_user',
+    command: 'listRemove',
+    args,
+    id
+  }
+}
+
+export const userSettingsSet = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_settings',
+    command: 'set',
+    args,
+    id
+  }
+}
+
+export const userSettingsUpdate = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_settings',
+    command: 'update',
+    args,
+    id
+  }
+}
+
+export const userSettingsListAfter = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_settings',
+    command: 'listAfter',
+    args,
+    id
+  }
+}
+
+export const userSettingsListBefore = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_settings',
+    command: 'listBefore',
+    args,
+    id
+  }
+}
+
+export const userSettingsListRemove = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_settings',
+    command: 'listRemove',
+    args,
+    id
+  }
+}
+
 export const createOperation = (block_id: string, user_id: string) => [
   blockSet(block_id, ['created_by_id'], user_id),
   blockSet(block_id, ['created_by_table'], 'notion_user'),

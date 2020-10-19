@@ -6,6 +6,7 @@ import SpaceView from "./SpaceView";
 import Block from './Block';
 import Collection from './Collection';
 import NotionUser from "./NotionUser";
+import UserSettings from "./UserSettings";
 
 import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from "../utils/logs";
@@ -24,11 +25,21 @@ class Space extends Getters {
 
   async getNotionUser() {
     if (this.space_data) {
-      // ? FIX:3:M Maybe use another logic to get the notion_user, ie using user_root
-      const notion_user = this.cache.notion_user.get(this.space_data.created_by_id);
+      const notion_user = this.cache.notion_user.get(this.user_id);
       if (notion_user) return new NotionUser({
         ...this.getProps(),
         notion_user
+      })
+    } else
+      throw new Error(error("This space has been deleted"))
+  }
+
+  async getUserSettings() {
+    if (this.space_data) {
+      const user_settings = this.cache.user_settings.get(this.user_id);
+      if (user_settings) return new UserSettings({
+        ...this.getProps(),
+        user_settings
       })
     } else
       throw new Error(error("This space has been deleted"))

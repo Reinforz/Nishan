@@ -2,7 +2,7 @@ export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'c
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
 export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
-export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view';
+export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings';
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
@@ -13,6 +13,7 @@ export type BGColor = 'default_background' | 'gray_background' | 'brown_backgrou
 export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
 export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
+export type TLocale = 'en-US' | 'ko-KR';
 
 export interface ValueArg {
   id: string,
@@ -343,9 +344,22 @@ export interface UserRoot {
   left_spaces: string[]
 }
 
-export interface UserSettings {
-  locale: 'en-US' | 'en-GB',
-  persona: 'personal'
+export interface IUserSettings {
+  id: string,
+  version: number,
+  settings: IUserSettingsSettings
+}
+
+export interface IUserSettingsSettings {
+  locale: TLocale,
+  persona: 'personal',
+  preferred_locale: TLocale,
+  preferred_locale_origin: "autodetect",
+  signup_time: number,
+  start_day_of_week: number,
+  time_zone: string,
+  type: "personal",
+  used_desktop_web_app: boolean
 }
 
 export interface Cursor {
@@ -428,11 +442,7 @@ export interface UserRootData {
 export interface UserSettingsData {
   [key: string]: {
     role: 'editor',
-    value: {
-      id: string,
-      version: number,
-      settings: UserSettings
-    }
+    value: IUserSettings
   }
 }
 
@@ -540,7 +550,7 @@ export interface ICache {
   notion_user: Map<string, INotionUser>,
   space_view: Map<string, ISpaceView>,
   user_root: Map<string, UserRoot>,
-  user_settings: Map<string, UserSettings>,
+  user_settings: Map<string, IUserSettings>,
 }
 
 export interface NishanArg {

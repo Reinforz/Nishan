@@ -278,7 +278,7 @@ export interface CalendarView extends Node, ParentProps {
   },
 }
 
-export interface NotionUser {
+export interface INotionUser {
   email: string,
   family_name: string,
   given_name: string,
@@ -414,7 +414,7 @@ export interface ViewData {
 export interface NotionUserData {
   [key: string]: {
     role: 'editor',
-    value: NotionUser
+    value: INotionUser
   }
 }
 
@@ -537,7 +537,7 @@ export interface ICache {
   collection: Map<string, ICollection>,
   collection_view: Map<string, TView>,
   space: Map<string, ISpace>,
-  notion_user: Map<string, NotionUser>,
+  notion_user: Map<string, INotionUser>,
   space_view: Map<string, ISpaceView>,
   user_root: Map<string, UserRoot>,
   user_settings: Map<string, UserSettings>,

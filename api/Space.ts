@@ -52,7 +52,7 @@ class Space extends Getters {
   async getBlock(block_id: string): Promise<Block<TBlock>> {
     const cache_data = this.cache.block.get(block_id);
     if (cache_data) return new Block({ block_data: cache_data, ...this.getProps() });
-    const recordMap = await this.getBacklinksForBlock(block_id);
+    const { recordMap } = await this.getBacklinksForBlock(block_id);
     const target = recordMap.block[block_id];
     if (!target)
       throw new Error(error(`No block with the id ${block_id} exists`));
@@ -70,7 +70,7 @@ class Space extends Getters {
    * @param collection_id The id of the collection to obtain
    */
   async getCollection(collection_id: string) {
-    const { collection } = await this.syncRecordValues([
+    const { recordMap: { collection } } = await this.syncRecordValues([
       {
         id: collection_id,
         table: 'collection',
@@ -100,7 +100,7 @@ class Space extends Getters {
       ...this.getProps()
     });
 
-    const { block } = await this.getBacklinksForBlock(page_id);
+    const { recordMap: { block } } = await this.getBacklinksForBlock(page_id);
     const target = block[page_id].value as IPage;
 
     if (!target)
@@ -143,7 +143,7 @@ class Space extends Getters {
         ]
       );
 
-      const recordMap = await this.getBacklinksForBlock($block_id);
+      const { recordMap } = await this.getBacklinksForBlock($block_id);
 
       return new Page({
         ...this.getProps(),

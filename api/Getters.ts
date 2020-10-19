@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { BlockData, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, QueryCollectionParams, QueryCollectionResult, RecordMap, Request, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
 
 export default class Getters extends Cache {
   token: string;
@@ -53,17 +53,17 @@ export default class Getters extends Cache {
     }
   }
 
-  async getBacklinksForBlock(blockId: string): Promise<{ block: BlockData }> {
+  async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const { data: { recordMap } } = await axios.post(
+          const { data, data: { recordMap } } = await axios.post(
             'https://www.notion.so/api/v3/getBacklinksForBlock',
             { blockId },
             this.headers
           ) as { data: GetBackLinksForBlockResult };
           this.saveToCache(recordMap);
-          resolve(recordMap)
+          resolve(data)
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -131,11 +131,11 @@ export default class Getters extends Cache {
     })
   }
 
-  async syncRecordValues(requests: { id: string, table: OperationTable, version: number }[]): Promise<RecordMap> {
+  async syncRecordValues(requests: SyncRecordValuesParams[]): Promise<SyncRecordValuesResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const { data: { recordMap } } = await axios.post(
+          const { data, data: { recordMap } } = await axios.post(
             'https://www.notion.so/api/v3/syncRecordValues',
             {
               requests
@@ -143,7 +143,7 @@ export default class Getters extends Cache {
             this.headers
           ) as { data: SyncRecordValuesResult };
           this.saveToCache(recordMap);
-          resolve(recordMap);
+          resolve(data);
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -151,26 +151,17 @@ export default class Getters extends Cache {
     })
   }
 
-  async queryCollection(collectionId: string, collectionViewId: string): Promise<RecordMap> {
+  async queryCollection(arg: QueryCollectionParams): Promise<QueryCollectionResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const { data: { recordMap } } = await axios.post(
+          const { data, data: { recordMap } } = await axios.post(
             'https://www.notion.so/api/v3/queryCollection',
-            {
-              collectionId,
-              collectionViewId,
-              query: {},
-              loader: {
-                limit: 1000,
-                searchQuery: '',
-                type: 'table'
-              }
-            },
+            arg,
             this.headers
           ) as { data: QueryCollectionResult };
           this.saveToCache(recordMap);
-          resolve(recordMap);
+          resolve(data);
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -243,7 +234,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getBackLinksForBlock(blockId: string): Promise<{ block: BlockData }> {
+  async getBackLinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -255,7 +246,7 @@ export default class Getters extends Cache {
             this.headers
           ) as { data: GetBackLinksForBlockResult };
           this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
+          resolve(res.data);
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -263,7 +254,7 @@ export default class Getters extends Cache {
     })
   }
 
-  // ? TD:2:H getTaskResult interface
+  // ? TD:2:H GetTaskResult interface
   async getTasks(taskIds: string[]): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {

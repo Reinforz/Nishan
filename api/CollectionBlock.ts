@@ -125,7 +125,16 @@ class CollectionBlock extends Block<TCollectionBlock> {
     });
     await this.saveTransactions(ops)
 
-    const recordMap = await this.queryCollection(this.block_data.collection_id, (this.block_data as TCollectionBlock).view_ids[0]);
+    const { recordMap } = await this.queryCollection({
+      collectionId: this.block_data.collection_id,
+      collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
+      query: {},
+      loader: {
+        limit: 100,
+        searchQuery: '',
+        type: 'table'
+      }
+    });
 
     return page_ids.map((page_id) => new Page({
       block_data: recordMap.block[page_id].value,

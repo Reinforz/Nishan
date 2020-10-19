@@ -38,7 +38,7 @@ class Block<T extends TBlock> extends Getters {
       }
     });
 
-    const { block } = await this.syncRecordValues([
+    const { recordMap: { block } } = await this.syncRecordValues([
       {
         id: $gen_block_id,
         table: 'block',

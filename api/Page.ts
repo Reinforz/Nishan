@@ -13,12 +13,12 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage } from "../types";
+import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage } from "../types";
 
-class Page extends Block<IPage | IRootPage> {
-  block_data: IPage | IRootPage;
+class Page extends Block<TPage> {
+  block_data: TPage;
 
-  constructor(arg: NishanArg & { block_data: IPage | IRootPage }) {
+  constructor(arg: NishanArg & { block_data: TPage }) {
     super(arg);
     if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
     this.block_data = arg.block_data;
@@ -183,7 +183,14 @@ class Page extends Block<IPage | IRootPage> {
       ]
     );
 
-    const recordMap = await this.queryCollection(collection_id, view_ids[0]);
+    const { recordMap } = await this.queryCollection({
+      collectionId: collection_id, collectionViewId: view_ids[0], query: {},
+      loader: {
+        limit: 100,
+        searchQuery: '',
+        type: 'table'
+      }
+    });
 
     return new CollectionView({
       ...this.getProps(),
@@ -234,7 +241,14 @@ class Page extends Block<IPage | IRootPage> {
       ]
     );
 
-    const recordMap = await this.queryCollection($collection_id, view_ids[0]);
+    const { recordMap } = await this.queryCollection({
+      collectionId: $collection_id, collectionViewId: view_ids[0], query: {},
+      loader: {
+        limit: 100,
+        searchQuery: '',
+        type: 'table'
+      }
+    });
 
     return new CollectionViewPage({
       ...this.getProps(),
@@ -271,7 +285,14 @@ class Page extends Block<IPage | IRootPage> {
       ]
     );
 
-    const recordMap = await this.queryCollection($collection_id, view_ids[0]);
+    const { recordMap } = await this.queryCollection({
+      collectionId: $collection_id, collectionViewId: view_ids[0], query: {},
+      loader: {
+        limit: 100,
+        searchQuery: '',
+        type: 'table'
+      }
+    });
 
     return new CollectionView({
       ...this.getProps(),

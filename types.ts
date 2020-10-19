@@ -16,6 +16,7 @@ export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
+export type TPage = IPage | IRootPage;
 export interface ValueArg {
   id: string,
   value: string,
@@ -454,6 +455,23 @@ export interface UserSettingsData {
 }
 
 /* Api endpoint result */
+
+export interface QueryCollectionParams {
+  collectionId: string,
+  collectionViewId: string,
+  query: {},
+  loader: {
+    limit: number,
+    searchQuery: string,
+    type: 'table'
+  }
+}
+
+export interface SyncRecordValuesParams {
+  id: string,
+  table: OperationTable,
+  version: number
+}
 
 export interface InviteGuestsToSpaceParams {
   blockId: string,

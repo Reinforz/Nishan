@@ -188,7 +188,7 @@ export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader
 
 export type ParentType = IRootPage | ISpace;
 
-export interface Collection extends Node, ParentProps {
+export interface ICollection extends Node, ParentProps {
   description: string[][],
   icon?: string,
   migrated: boolean,
@@ -400,7 +400,7 @@ export interface SpaceViewData {
 export interface CollectionData {
   [key: string]: {
     role: 'editor',
-    value: Collection
+    value: ICollection
   }
 }
 
@@ -534,7 +534,7 @@ export interface RecordMap {
 /* Nishan Specific */
 export interface ICache {
   block: Map<string, TBlock>,
-  collection: Map<string, Collection>,
+  collection: Map<string, ICollection>,
   collection_view: Map<string, TView>,
   space: Map<string, ISpace>,
   notion_user: Map<string, NotionUser>,

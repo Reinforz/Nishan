@@ -2,7 +2,7 @@ import { collectionSet } from '../utils/chunk';
 
 import Getters from "./Getters";
 
-import { Collection as ICollection, NishanArg } from "../types";
+import { ICollection, NishanArg } from "../types";
 
 class Collection extends Getters {
   collection_data: ICollection;

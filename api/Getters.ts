@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { BlockData, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, GetBackLinksForBlockResult, ICache, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
+import { BlockData, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
 
 export default class Getters extends Cache {
   token: string;
@@ -34,7 +34,7 @@ export default class Getters extends Cache {
     this.user_id = user_id;
     this.headers = {
       headers: {
-        cookie: `token_v2=${token}`
+        cookie: `token_v2=${token};notion_user_id=${this.user_id};`
       }
     };
     this.shard_id = shard_id;
@@ -64,6 +64,40 @@ export default class Getters extends Cache {
           ) as { data: GetBackLinksForBlockResult };
           this.saveToCache(recordMap);
           resolve(recordMap)
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
+  }
+
+  async inviteGuestsToSpace(arg: InviteGuestsToSpaceParams): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          await axios.post(
+            'https://www.notion.so/api/v3/inviteGuestsToSpace',
+            arg,
+            this.headers
+          );
+          resolve()
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
+  }
+
+  async findUser(email: string): Promise<INotionUser> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data: { value } } = await axios.post(
+            'https://www.notion.so/api/v3/findUser',
+            { email },
+            this.headers
+          ) as { data: FindUserResult };
+          resolve(value.value)
         } catch (err) {
           reject(error(err.response.data))
         }

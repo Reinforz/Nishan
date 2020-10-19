@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView } from "../types";
+import { IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, BlockType, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole } from "../types";
 
 class Page extends Block<IPage> {
   block_data: IPage;
@@ -275,6 +275,26 @@ class Page extends Block<IPage> {
       ...this.getProps(),
       parent_id: this.block_data.id,
       block_data: recordMap.block[$collection_view_id].value as ICollectionView
+    })
+  }
+
+  async addUsers(args: [string, TPermissionRole][]) {
+    const permissionItems: Permission[] = [];
+    for (let i = 0; i < args.length; i++) {
+      const [email, permission] = args[i];
+      const notion_user = await this.findUser(email);
+      if (!notion_user) throw new Error(error(`User does not have a notion account`));
+      else
+        permissionItems.push({
+          role: permission,
+          type: "user_permission",
+          user_id: notion_user.id
+        });
+    }
+    await this.inviteGuestsToSpace({
+      blockId: this.block_data.id,
+      permissionItems,
+      spaceId: this.space_id
     })
   }
 }

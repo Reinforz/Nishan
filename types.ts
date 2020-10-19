@@ -14,7 +14,8 @@ export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
 export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
-
+export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader';
+export type TPermissionType = 'user_permission' | 'space_permission';
 export interface ValueArg {
   id: string,
   value: string,
@@ -56,8 +57,8 @@ export interface Operation {
 };
 
 export interface Permission {
-  role: 'editor',
-  type: 'user_permission' | 'space_permission',
+  role: TPermissionRole,
+  type: TPermissionType,
   user_id: string,
 }
 
@@ -447,6 +448,18 @@ export interface UserSettingsData {
 }
 
 /* Api endpoint result */
+
+export interface InviteGuestsToSpaceParams {
+  blockId: string,
+  permissionItems: Permission[],
+  spaceId: string
+}
+export interface FindUserResult {
+  value: {
+    role: "reader",
+    value: INotionUser
+  }
+}
 
 export interface CreateSpaceParams {
   icon: string,

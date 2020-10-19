@@ -2,7 +2,7 @@ export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'c
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
 export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore';
-export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings';
+export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings' | 'user_root';
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
@@ -447,6 +447,20 @@ export interface UserSettingsData {
 }
 
 /* Api endpoint result */
+
+export interface CreateSpaceParams {
+  icon: string,
+  initialUseCases: string[],
+  name: string,
+  planType: "personal"
+}
+
+export interface CreateSpaceResult {
+  recordMap: {
+    space: SpaceData
+  },
+  spaceId: string
+}
 
 export interface QueryCollectionResult {
   recordMap: RecordMap

@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { BlockData, EnqueueTaskResult, GetBackLinksForBlockResult, ICache, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult } from "../types";
+import { BlockData, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, GetBackLinksForBlockResult, ICache, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, OperationTable, QueryCollectionResult, RecordMap, Request, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
 
 export default class Getters extends Cache {
   token: string;
@@ -64,6 +64,32 @@ export default class Getters extends Cache {
           ) as { data: GetBackLinksForBlockResult };
           this.saveToCache(recordMap);
           resolve(recordMap)
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
+  }
+
+  async createSpace(params: Partial<CreateSpaceParams>): Promise<CreateSpaceResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data, data: { recordMap } } = await axios.post(
+            'https://www.notion.so/api/v3/createSpace',
+            {
+              ...params,
+              planType: "personal",
+              initialUseCases: []
+            },
+            {
+              headers: {
+                cookie: `token_v2=${this.token};notion_user_id=${this.user_id};`
+              }
+            }
+          ) as { data: CreateSpaceResult };
+          this.saveToCache(recordMap);
+          resolve(data);
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -149,7 +175,7 @@ export default class Getters extends Cache {
 
   // ? TD:2:M Add task typedef
   // ? TD:2:M Add EnqueueTaskResult interface
-  async enqueueTask(task: any): Promise<EnqueueTaskResult> {
+  async enqueueTask(task: TEnqueueTaskParams): Promise<EnqueueTaskResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

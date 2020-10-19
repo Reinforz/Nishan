@@ -453,6 +453,56 @@ export const userSettingsListRemove = (id: string, path: string[], args: Args): 
   }
 }
 
+export const userRootSet = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_root',
+    command: 'set',
+    args,
+    id
+  }
+}
+
+export const userRootUpdate = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_root',
+    command: 'update',
+    args,
+    id
+  }
+}
+
+export const userRootListAfter = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_root',
+    command: 'listAfter',
+    args,
+    id
+  }
+}
+
+export const userRootListBefore = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_root',
+    command: 'listBefore',
+    args,
+    id
+  }
+}
+
+export const userRootListRemove = (id: string, path: string[], args: Args): Operation => {
+  return {
+    path,
+    table: 'user_root',
+    command: 'listRemove',
+    args,
+    id
+  }
+}
+
 export const createOperation = (block_id: string, user_id: string) => [
   blockSet(block_id, ['created_by_id'], user_id),
   blockSet(block_id, ['created_by_table'], 'notion_user'),

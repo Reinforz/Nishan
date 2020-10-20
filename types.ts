@@ -6,8 +6,8 @@ export type OperationTable = 'space' | 'collection_view' | 'collection' | 'colle
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
-export type ContentBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout'
-export type BlockType = 'page' | 'collection_view_page' | 'collection_view' | ContentBlockType | 'link_to_page' | 'image' | 'video';
+export type ContentBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'image' | 'video' | 'bookmark';
+export type BlockType = ContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -129,6 +129,18 @@ export interface MediaFormat {
   display_source: string
 }
 
+export interface WebBookmarkFormat{
+  bookmark_cover: string,
+  bookmark_icon: string,
+  block_color?: FormatBlockColor
+}
+
+export interface WebBookmarkProps{
+  link: string[][],
+  description: string[][],
+  title: string[][],
+  caption?: string[][]
+}
 // -----------------
 
 /* Function API Params*/
@@ -157,7 +169,13 @@ export interface IAudioInput {
   format: MediaFormat
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput;
+export interface WebBookmarkInput{
+  type: 'bookmark',
+  properties: WebBookmarkProps,
+  format: WebBookmarkFormat
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | WebBookmarkInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -501,6 +519,11 @@ export interface UserSettingsData {
 }
 
 /* Api endpoint result */
+
+export interface SetBookmarkMetadataParams{
+  blockId: string,
+  url: string
+}
 
 export interface QueryCollectionParams {
   collectionId: string,

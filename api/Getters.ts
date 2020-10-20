@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, QueryCollectionParams, QueryCollectionResult, RecordMap, Request, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, QueryCollectionParams, QueryCollectionResult, RecordMap, Request, SyncRecordValuesParams, SetBookmarkMetadataParams,SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
 
 export default class Getters extends Cache {
   token: string;
@@ -226,6 +226,23 @@ export default class Getters extends Cache {
           ) as { data: LoadPageChunkResult };
           this.saveToCache(res.data.recordMap);
           resolve(res.data.recordMap);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      })
+    })
+  }
+
+  async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined>{
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          await axios.post(
+            'https://www.notion.so/api/v3/setBookmarkMetadata',
+            arg,
+            this.headers
+          );
+          resolve(undefined);
         } catch (err) {
           reject(error(err.response.data))
         }

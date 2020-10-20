@@ -122,20 +122,26 @@ class Page extends Block<TPage> {
     // ? FEAT:2:H Return specific class instances based on content type
     const { format, properties, type } = options;
 
-    const $content_id = uuidv4();
+    const $block_id = uuidv4();
     if (this.block_data.collection_id)
       throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));
     await this.saveTransactions(
       [
         this.createBlock({
-          $block_id: $content_id,
+          $block_id,
           type,
           properties,
           format,
         }),
-        blockListAfter(this.block_data.id, ['content'], { after: '', id: $content_id }),
+        blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
       ]
-    )
+    );
+
+    if(type === "bookmark")
+      await this.setBookmarkMetadata({
+        blockId: $block_id,
+        url: properties.link[0][0]
+      })
 
     const recordMap = await this.loadPageChunk({
       chunkNumber: 0,
@@ -146,11 +152,11 @@ class Page extends Block<TPage> {
     });
 
     if (type === 'page') return new Page({
-      block_data: recordMap.block[$content_id].value as IPage,
+      block_data: recordMap.block[$block_id].value as IPage,
       ...this.getProps()
     });
     else return new Block({
-      block_data: recordMap.block[$content_id].value,
+      block_data: recordMap.block[$block_id].value,
       ...this.getProps()
     });
   }

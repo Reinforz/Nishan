@@ -4,7 +4,7 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, space
 
 import Getters from "./Getters";
 
-import { IBlockType, TBasicBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
+import { TBasicBlockType, NishanArg, PageFormat, PageProps, TBlock, CreateBlockArg } from "../types"
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -122,9 +122,9 @@ class Block<T extends TBlock> extends Getters {
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
-  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: { $block_id: string, type: IBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string }) {
+  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: CreateBlockArg) {
     const current_time = Date.now();
-    return blockUpdate($block_id, [], {
+    const arg: any = {
       id: $block_id,
       properties,
       format,
@@ -138,7 +138,8 @@ class Block<T extends TBlock> extends Getters {
       last_edited_time: current_time,
       last_edited_by_id: this.user_id,
       last_edited_by_table: 'notion_user',
-    })
+    };
+    return blockUpdate($block_id, [], arg);
   }
 }
 

@@ -8,7 +8,8 @@ export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
-export type IBlockType = TMediaBlockType | TBasicBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory';
+export type IBlockType = TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -276,7 +277,36 @@ export interface ITodoInput {
   }
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput;
+export interface ITOCInput {
+  type: 'table_of_contents',
+  format: {
+    block_color?: FormatBlockColor
+  },
+  properties?: {}
+}
+
+export interface IEquationInput {
+  type: 'equation',
+  properties: {
+    title: string[][]
+  },
+  format: {
+    block_color?: FormatBlockColor
+  }
+}
+
+export interface IFactoryInput {
+  type: 'factory',
+  properties: {
+    title: string[][]
+  },
+  format: {
+    block_color?: FormatBlockColor
+  },
+  contents: TBlockInput[]
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -331,10 +361,24 @@ export interface IQuote extends IQuoteInput, Block { }
 export interface IDivider extends IDividerInput, Block { }
 export interface ICallout extends ICalloutInput, Block { }
 
+// Advanced block types
+export interface ITOC extends ITOCInput, Block { };
+export interface IEquation extends IEquationInput, Block { };
+export interface IFactory extends Block {
+  type: 'factory',
+  properties: {
+    title: string[][]
+  },
+  format: {
+    block_color?: FormatBlockColor
+  },
+  contents: string[]
+}
+
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:H Add all block type
-export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile;
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory;
 
 export type ParentType = IRootPage | ISpace;
 
@@ -771,3 +815,7 @@ export interface UserViewArg {
   wrap?: boolean
 }
 
+
+export interface CreateBlockArg {
+  $block_id: string, type: IBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string
+}

@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput, WebBookmarkProps } from "../types";
+import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput, WebBookmarkProps, IFactoryInput, CreateBlockArg } from "../types";
 
 class Page extends Block<TPage> {
   block_data: TPage;
@@ -112,6 +112,49 @@ class Page extends Block<TPage> {
     fs.createWriteStream(fullpath).end(response.data);
   }
 
+  async createTemplateContent(factory: IFactoryInput) {
+    const { format, properties, type } = factory;
+    const $block_id = uuidv4();
+    const content_blocks = (factory.contents.map(content => ({ ...content, $block_id: uuidv4() })) as CreateBlockArg[]).map(content => {
+      const obj = this.createBlock(content);
+      obj.args.parent_id = $block_id;
+      return obj;
+    });
+    const content_block_ids = content_blocks.map(content_block => content_block.id);
+
+    await this.saveTransactions(
+      [
+        this.createBlock({
+          $block_id,
+          type,
+          properties,
+          format
+        }),
+        ...content_block_ids.map(content_block_id => blockListAfter($block_id, ['content'], { after: '', id: content_block_id })),
+        blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
+        ...content_blocks
+      ]
+    );
+
+    const recordMap = await this.loadPageChunk({
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      limit: 100,
+      pageId: this.block_data.id,
+      verticalColumns: false
+    });
+
+    return {
+      template: new Block({
+        block_data: recordMap.block[$block_id].value,
+        ...this.getProps()
+      }),
+      contents: content_block_ids.map(content_block_id => new Block({
+        block_data: recordMap.block[content_block_id].value,
+        ...this.getProps()
+      }))
+    }
+  }
   /**
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
@@ -123,8 +166,6 @@ class Page extends Block<TPage> {
     const { format, properties, type } = options;
 
     const $block_id = uuidv4();
-    if (this.block_data.collection_id)
-      throw new Error(error(`The block is of collection_view_page and thus cannot contain a ${type} content`));
     await this.saveTransactions(
       [
         this.createBlock({

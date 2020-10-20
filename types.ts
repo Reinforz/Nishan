@@ -6,9 +6,9 @@ export type OperationTable = 'space' | 'collection_view' | 'collection' | 'colle
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
-export type MediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio';
-export type ContentBlockType = MediaBlockType | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
-export type IBlockType = ContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
+export type TContentBlockType = TMediaBlockType | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
+export type IBlockType = TContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -152,6 +152,16 @@ export interface CodeProps {
   title: string[][],
   language: TCodeLanguage
 }
+
+export interface FileProps {
+  title: string[][],
+  source: string[][],
+  caption?: string[][]
+}
+
+export interface FileFormat {
+  block_color?: FormatBlockColor
+}
 // -----------------
 
 /* Function API Params*/
@@ -192,7 +202,13 @@ export interface ICodeInput {
   format: CodeFormat
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput;
+export interface IFileInput {
+  type: 'file',
+  properties: FileProps,
+  format: FileFormat
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -232,6 +248,7 @@ export interface IAudio extends Block, IAudioInput { };
 export interface IImage extends Block, IImageInput { };
 export interface IWebBookmark extends Block, IWebBookmarkInput { };
 export interface ICode extends Block, ICodeInput { };
+export interface IFile extends Block, IFileInput { };
 
 export interface IHeader extends Block {
   type: 'header'
@@ -280,7 +297,7 @@ export interface ICallout extends Block {
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:H Add all block type
-export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode;
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile;
 
 export type ParentType = IRootPage | ISpace;
 

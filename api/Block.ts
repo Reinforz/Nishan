@@ -4,7 +4,7 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, space
 
 import Getters from "./Getters";
 
-import { IBlockType, ContentBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
+import { IBlockType, TContentBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -71,7 +71,7 @@ class Block<T extends TBlock> extends Getters {
     )
   }
 
-  async convertTo(type: ContentBlockType) {
+  async convertTo(type: TContentBlockType) {
     await this.saveTransactions([
       blockUpdate(this.block_data.id, [], { type })
     ]);

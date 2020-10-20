@@ -7,8 +7,8 @@ export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | 
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
-export type TContentBlockType = TMediaBlockType | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
-export type IBlockType = TContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
+export type IBlockType = TMediaBlockType | TBasicBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -162,6 +162,11 @@ export interface FileProps {
 export interface FileFormat {
   block_color?: FormatBlockColor
 }
+
+export interface TodoProps {
+  title: string[][],
+  checked: ("Yes" | "No")[][]
+}
 // -----------------
 
 /* Function API Params*/
@@ -208,7 +213,25 @@ export interface IFileInput {
   format: FileFormat
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput;
+export interface ITextInput {
+  type: 'text',
+  properties: {
+    title: string[][]
+  },
+  format: {
+    block_color?: FormatBlockColor
+  }
+}
+
+export interface ITodoInput {
+  type: 'to_do',
+  properties: TodoProps,
+  format: {
+    block_color?: FormatBlockColor
+  }
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -228,7 +251,6 @@ export interface IRootPage extends IPage {
   permissions: (Permission | IPublicPermission)[]
 }
 
-// ? TD:1:H Add properties and format for specific block type
 export interface ICollectionBlock extends Block {
   view_ids: string[],
   collection_id: string,
@@ -262,13 +284,9 @@ export interface ISubSubHeader extends Block {
   type: 'sub_sub_header'
 }
 
-export interface IText extends Block {
-  type: 'text'
-}
+export interface IText extends ITextInput, Block { }
 
-export interface ITodo extends Block {
-  type: 'to_do'
-}
+export interface ITodo extends ITodoInput, Block { }
 
 export interface IBulletedList extends Block {
   type: 'bulleted_list'

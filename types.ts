@@ -319,7 +319,8 @@ export interface IPage extends Block {
   properties: PageProps,
   type: 'page',
   content?: string[],
-  format: PageFormat
+  format: PageFormat,
+  is_template?: boolean
 }
 
 export interface IPublicPermission {
@@ -394,7 +395,8 @@ export interface ICollection extends Node, ParentProps {
   icon?: string,
   migrated: boolean,
   name: string[][],
-  schema: Schema
+  schema: Schema,
+  template_pages?: string[]
 }
 
 export type TView = TableView | ListView | BoardView | GalleryView | CalendarView;

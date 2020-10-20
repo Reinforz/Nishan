@@ -4,7 +4,7 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, space
 
 import Getters from "./Getters";
 
-import { BlockType, ContentBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
+import { IBlockType, ContentBlockType, NishanArg, PageFormat, PageProps, TBlock } from "../types"
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -51,7 +51,7 @@ class Block<T extends TBlock> extends Getters {
     })
   }
 
-  // ? TD:1:H BlockType specific arg properties and format
+  // ? TD:1:H IBlockType specific arg properties and format
   // ? FEAT:2:M Add Permission to args
   /**
    * Update a block properties and format
@@ -122,7 +122,7 @@ class Block<T extends TBlock> extends Getters {
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
-  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: { $block_id: string, type: BlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string }) {
+  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: { $block_id: string, type: IBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string }) {
     const current_time = Date.now();
     return blockUpdate($block_id, [], {
       id: $block_id,

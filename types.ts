@@ -6,8 +6,9 @@ export type OperationTable = 'space' | 'collection_view' | 'collection' | 'colle
 export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
 export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
 export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
-export type ContentBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'image' | 'video' | 'bookmark';
-export type BlockType = ContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type MediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio';
+export type ContentBlockType = MediaBlockType | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
+export type IBlockType = ContentBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'green_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -17,6 +18,8 @@ export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export type TPage = IPage | IRootPage;
+export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
+
 export interface ValueArg {
   id: string,
   value: string,
@@ -92,7 +95,6 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
   space_id: string,
   collection_id?: string,
   view_ids?: string[],
-  type: BlockType
 }
 
 // ? TD: Page format and properties
@@ -129,17 +131,26 @@ export interface MediaFormat {
   display_source: string
 }
 
-export interface WebBookmarkFormat{
+export interface WebBookmarkFormat {
   bookmark_cover: string,
   bookmark_icon: string,
   block_color?: FormatBlockColor
 }
 
-export interface WebBookmarkProps{
+export interface WebBookmarkProps {
   link: string[][],
   description: string[][],
   title: string[][],
   caption?: string[][]
+}
+
+export interface CodeFormat {
+  code_wrap: boolean
+}
+
+export interface CodeProps {
+  title: string[][],
+  language: TCodeLanguage
 }
 // -----------------
 
@@ -164,18 +175,24 @@ export interface IImageInput {
 }
 
 export interface IAudioInput {
-  type: 'image',
+  type: 'audio',
   properties: MediaFormat,
   format: MediaFormat
 }
 
-export interface WebBookmarkInput{
+export interface IWebBookmarkInput {
   type: 'bookmark',
   properties: WebBookmarkProps,
   format: WebBookmarkFormat
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | WebBookmarkInput;
+export interface ICodeInput {
+  type: 'code',
+  properties: CodeProps,
+  format: CodeFormat
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -209,6 +226,12 @@ export interface ICollectionView extends ICollectionBlock {
 export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
+
+export interface IVideo extends Block, IVideoInput { };
+export interface IAudio extends Block, IAudioInput { };
+export interface IImage extends Block, IImageInput { };
+export interface IWebBookmark extends Block, IWebBookmarkInput { };
+export interface ICode extends Block, ICodeInput { };
 
 export interface IHeader extends Block {
   type: 'header'
@@ -257,7 +280,7 @@ export interface ICallout extends Block {
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:H Add all block type
-export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout;
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode;
 
 export type ParentType = IRootPage | ISpace;
 
@@ -520,7 +543,7 @@ export interface UserSettingsData {
 
 /* Api endpoint result */
 
-export interface SetBookmarkMetadataParams{
+export interface SetBookmarkMetadataParams {
   blockId: string,
   url: string
 }

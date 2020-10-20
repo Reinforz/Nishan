@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput } from "../types";
+import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput, WebBookmarkProps } from "../types";
 
 class Page extends Block<TPage> {
   block_data: TPage;
@@ -116,7 +116,7 @@ class Page extends Block<TPage> {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  // ? TD:1:H Format and properties based on BlockType
+  // ? TD:1:H Format and properties based on IBlockType
   async createContent(options: TBlockInput) {
     // ? FEAT:1:M User given after id as position
     // ? FEAT:2:H Return specific class instances based on content type
@@ -137,10 +137,10 @@ class Page extends Block<TPage> {
       ]
     );
 
-    if(type === "bookmark")
+    if (type === "bookmark")
       await this.setBookmarkMetadata({
         blockId: $block_id,
-        url: properties.link[0][0]
+        url: (properties as WebBookmarkProps).link[0][0]
       })
 
     const recordMap = await this.loadPageChunk({

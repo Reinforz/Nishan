@@ -213,12 +213,57 @@ export interface IFileInput {
   format: FileFormat
 }
 
-export interface ITextInput {
-  type: 'text',
+export interface ICommonTextInput {
   properties: {
     title: string[][]
   },
   format: {
+    block_color?: FormatBlockColor
+  }
+}
+
+export interface ITextInput extends ICommonTextInput {
+  type: 'text'
+}
+
+export interface IHeaderInput extends ICommonTextInput {
+  type: 'header'
+}
+
+export interface ISubHeaderInput extends ICommonTextInput {
+  type: 'sub_header'
+}
+
+export interface ISubSubHeaderInput extends ICommonTextInput {
+  type: 'sub_sub_header'
+}
+
+export interface INumberedListInput extends ICommonTextInput {
+  type: 'numbered_list'
+}
+
+export interface IBulletedListInput extends ICommonTextInput {
+  type: 'bulleted_list'
+}
+
+export interface IToggleInput extends ICommonTextInput {
+  type: 'toggle'
+}
+
+export interface IQuoteInput extends ICommonTextInput {
+  type: 'quote'
+}
+
+export interface IDividerInput {
+  type: 'divider',
+  properties?: {},
+  format?: {}
+}
+
+export interface ICalloutInput extends ICommonTextInput {
+  type: 'callout',
+  format: {
+    page_icon: string,
     block_color?: FormatBlockColor
   }
 }
@@ -231,7 +276,7 @@ export interface ITodoInput {
   }
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput;
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -265,6 +310,7 @@ export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
 
+// Media Block Types
 export interface IVideo extends Block, IVideoInput { };
 export interface IAudio extends Block, IAudioInput { };
 export interface IImage extends Block, IImageInput { };
@@ -272,45 +318,18 @@ export interface IWebBookmark extends Block, IWebBookmarkInput { };
 export interface ICode extends Block, ICodeInput { };
 export interface IFile extends Block, IFileInput { };
 
-export interface IHeader extends Block {
-  type: 'header'
-}
-
-export interface ISubHeader extends Block {
-  type: 'sub_header'
-}
-
-export interface ISubSubHeader extends Block {
-  type: 'sub_sub_header'
-}
-
+// Basic Block Types
 export interface IText extends ITextInput, Block { }
-
 export interface ITodo extends ITodoInput, Block { }
-
-export interface IBulletedList extends Block {
-  type: 'bulleted_list'
-}
-
-export interface INumberedList extends Block {
-  type: 'numbered_list'
-}
-
-export interface IToggle extends Block {
-  type: 'toggle'
-}
-
-export interface IQuote extends Block {
-  type: 'quote'
-}
-
-export interface IDivider extends Block {
-  type: 'divider'
-}
-
-export interface ICallout extends Block {
-  type: 'callout'
-}
+export interface IHeader extends IHeaderInput, Block { }
+export interface ISubHeader extends ISubHeaderInput, Block { }
+export interface ISubSubHeader extends ISubSubHeaderInput, Block { }
+export interface IBulletedList extends IBulletedListInput, Block { }
+export interface INumberedList extends INumberedListInput, Block { }
+export interface IToggle extends IToggleInput, Block { }
+export interface IQuote extends IQuoteInput, Block { }
+export interface IDivider extends IDividerInput, Block { }
+export interface ICallout extends ICalloutInput, Block { }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 

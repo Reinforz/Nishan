@@ -7,65 +7,75 @@ export function inlineDate(arg: InlineDateArg) {
     text,
     add(title: string) {
       text.push([title, [[""]]]);
-      return chunk(text);
+      return new chunk(text);
     }
   }
 }
 
 export function inlineMention(id: string) {
   const mod_title: [[string, string[][]]] = [["‣", [["u", id]]]];
-  return chunk(mod_title);
+  return new chunk(mod_title);
 }
 
 export function inlinePage(id: string) {
   const mod_title: [[string, string[][]]] = [["‣", [["p", id]]]];
-  return chunk(mod_title);
+  return new chunk(mod_title);
 }
 
 export function inlineEquation(equation: string) {
   const mod_title: [[string, string[][]]] = [["⁍", [["e", equation]]]];
-  return chunk(mod_title);
+  return new chunk(mod_title);
 }
 
-function chunk(text: [[string, string[][]]]) {
-  return {
-    text,
-    strikeThrough() {
-      text[text.length - 1][1].push(["s"]);
-      return chunk(text);
-    },
-    code() {
-      text[text.length - 1][1].push(["c"]);
-      return chunk(text);
-    },
-    bold() {
-      text[text.length - 1][1].push(["b"]);
-      return chunk(text);
-    },
-    italic() {
-      text[text.length - 1][1].push(["i"]);
-      return chunk(text);
-    },
-    underline() {
-      text[text.length - 1][1].push(["_"]);
-      return chunk(text);
-    },
-    add(title: string) {
-      text.push([title, [[""]]]);
-      return chunk(text);
-    },
-    highlight(color: FormatBlockColor) {
-      text[text.length - 1][1].push(["h", color]);
-      return chunk(text);
-    },
-    equation(equation: string) {
-      text.push(["⁍", [["e", equation]]]);
-      return chunk(text);
-    }
+class chunk {
+  text: [[string, string[][]]];
+
+  constructor(text: [[string, string[][]]]) {
+    this.text = text;
+  }
+
+  get strikeThrough() {
+    this.text[this.text.length - 1][1].push(["s"]);
+    return new chunk(this.text);
+  }
+
+  get code() {
+    this.text[this.text.length - 1][1].push(["c"]);
+    return new chunk(this.text);
+  }
+
+  get bold() {
+    this.text[this.text.length - 1][1].push(["b"]);
+    return new chunk(this.text);
+  }
+
+  get italic() {
+    this.text[this.text.length - 1][1].push(["i"]);
+    return new chunk(this.text);
+  }
+
+  get underline() {
+    this.text[this.text.length - 1][1].push(["_"]);
+    return new chunk(this.text);
+  }
+
+  add(title: string) {
+    this.text.push([title, [[""]]]);
+    return new chunk(this.text);
+  }
+
+  highlight(color: FormatBlockColor) {
+    this.text[this.text.length - 1][1].push(["h", color]);
+    return new chunk(this.text);
+  }
+
+  equation(equation: string) {
+    this.text.push(["⁍", [["e", equation]]]);
+    return new chunk(this.text);
   }
 }
 
 export function inlineText(title: string) {
   const mod_title: [[string, string[][]]] = [[title, [[""]]]];
-  return chunk(mod_title);
+  return new chunk(mod_title);
 }

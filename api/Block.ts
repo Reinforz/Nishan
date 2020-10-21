@@ -17,7 +17,10 @@ class Block<T extends TBlock> extends Getters {
     this.block_data = arg.block_data;
   }
 
-  // ? FEAT:1:E Reposition after id or as a number
+  /**
+   * Reposition a block to a new position
+   * @param arg number of new index
+   */
   async reposition(arg: number | BlockRepostionArg) {
     const parent = this.cache.block.get(this.block_data.parent_id) as IPage;
     if (parent) {

@@ -28,6 +28,8 @@ export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "r
 export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
 
+export type Predicate<T> = (T: T, index: number) => boolean;
+
 export interface IDateReminder {
   time?: string,
   unit: TDateReminderUnit,

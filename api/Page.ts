@@ -9,11 +9,11 @@ import CollectionView from './CollectionView';
 
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove } from '../utils/chunk';
+import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove } from '../utils/chunk';
 
 import { error } from "../utils/logs";
 
-import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, } from "../types/types";
+import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
 import { ISpaceView, SetBookmarkMetadataParams } from "../types/api";
 import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock } from "../types/block";
@@ -52,6 +52,59 @@ class Page extends Block<TPage> {
     } else
       throw new Error(error("This page doesnot have any content"));
   }
+
+  async deleteBlock(arg: string | Predicate<TBlock>) {
+    const current_time = Date.now();
+    if (typeof arg === "string") {
+      if (this.block_data.content?.includes(arg)) {
+        const block = this.cache.block.get(arg);
+        if (!block)
+          throw new Error(error(`No block with the id ${arg} exists`))
+        else {
+          await this.saveTransactions(
+            [
+              blockUpdate(arg, [], {
+                alive: false
+              }),
+              blockListRemove(this.block_data.id, ['content'], { id: arg }),
+              blockSet(this.block_data.id, ['last_edited_time'], current_time),
+              blockSet(arg, ['last_edited_time'], current_time)
+            ]
+          );
+          this.cache.block.delete(arg);
+        }
+      } else
+        throw new Error(error(`This page is not the parent of the block with id ${arg}`))
+    } else if (typeof arg === "function") {
+      let target_block = null, index = 0;
+      for (let [, value] of this.cache.block) {
+        if (value.parent_id === this.block_data.id) {
+          const is_target_block = await arg(value, index);
+          if (is_target_block) {
+            target_block = value;
+            break;
+          }
+        }
+        index++;
+      }
+      if (!target_block)
+        throw new Error(error(`No block matched`))
+      else {
+        await this.saveTransactions(
+          [
+            blockUpdate(target_block.id, [], {
+              alive: false
+            }),
+            blockListRemove(this.block_data.id, ['content'], { id: target_block.id }),
+            blockSet(this.block_data.id, ['last_edited_time'], current_time),
+            blockSet(target_block.id, ['last_edited_time'], current_time)
+          ]
+        );
+        this.cache.block.delete(target_block.id);
+      }
+    }
+  }
+
 
   // ? FEAT:1:H Add updated value to cache and internal class state
   /**
@@ -98,16 +151,6 @@ class Page extends Block<TPage> {
       blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
       ...lastEditOperations(parent_id, this.user_id)
     ]);
-  }
-
-  // ? FEAT:1:M Add mention a person/page/date content
-  async createMentionBlockContent() {
-
-  }
-
-  // ? FEAT:1:E Add inline equation content
-  async createInlineEquationContent() {
-
   }
 
   /**
@@ -185,6 +228,11 @@ class Page extends Block<TPage> {
     }
   }
 
+  /**
+   * Batch add multiple contents
+   * @param contents Contents options
+   */
+
   async createContents(contents: TBlockInput[]) {
     const operations: Operation[] = [];
     const bookmarks: SetBookmarkMetadataParams[] = [];
@@ -228,12 +276,24 @@ class Page extends Block<TPage> {
       if (block.type === "page") blocks.push(new Page({
         block_data: block as IPage,
         ...this.getProps()
-      }))
+      }));
+
+      else if (block.type === "collection_view") blocks.push(new CollectionView({
+        block_data: block,
+        ...this.getProps(),
+        parent_id: this.block_data.id
+      }));
+
       else blocks.push(new Block({
         block_data: recordMap.block[$block_id].value,
         ...this.getProps()
       }))
-    })
+    });
+
+    this.block_data.content?.push(...$block_ids);
+
+    const cached_data = this.cache.block.get(this.block_data.id) as IPage;
+    cached_data?.content?.push(...$block_ids);
 
     return blocks;
   }

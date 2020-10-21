@@ -97,6 +97,7 @@ class Space extends Getters {
    */
   async getPage(page_id: string) {
     const cache_data = this.cache.block.get(page_id) as IPage;
+
     if (cache_data) return new Page({
       block_data: cache_data,
       ...this.getProps()

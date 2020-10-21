@@ -127,7 +127,7 @@ class Block<T extends TBlock> extends Getters {
       ]
     );
     this.cache.block.delete(this.block_data.id);
-    return new Promise((resolve) => setTimeout(() => resolve(undefined), this.interval));
+    return undefined;
   }
 
   /**

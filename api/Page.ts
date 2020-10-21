@@ -11,7 +11,7 @@ import createViews from "../utils/createViews";
 
 import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove } from '../utils/chunk';
 
-import { error } from "../utils/logs";
+import { error, warn } from "../utils/logs";
 
 import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
@@ -53,6 +53,10 @@ class Page extends Block<TPage> {
       throw new Error(error("This page doesnot have any content"));
   }
 
+  /**
+   * Delete block from a page based on an id or a predicate filter 
+   * @param arg id string or a predicate acting as a filter
+   */
   async deleteBlock(arg: string | Predicate<TBlock>) {
     const current_time = Date.now();
     if (typeof arg === "string") {
@@ -105,6 +109,65 @@ class Page extends Block<TPage> {
     }
   }
 
+  /**
+   * Delete block from a page based on an id or a predicate filter 
+   * @param arg array of ids or a predicate acting as a filter
+   */
+  async deleteBlocks(arg: string[] | Predicate<TBlock>) {
+    if (Array.isArray(arg)) {
+      const operations: Operation[] = [];
+      arg.forEach(id => {
+        const current_time = Date.now();
+        if (this.block_data.content?.includes(id)) {
+          const block = this.cache.block.get(id);
+          if (!block)
+            throw new Error(error(`No block with the id ${arg} exists`))
+          else {
+            operations.push(blockUpdate(id, [], {
+              alive: false
+            }),
+              blockListRemove(this.block_data.id, ['content'], { id }),
+              blockSet(this.block_data.id, ['last_edited_time'], current_time),
+              blockSet(id, ['last_edited_time'], current_time))
+            this.cache.block.delete(id);
+          }
+        } else
+          throw new Error(error(`This page is not the parent of the block with id ${id}`))
+      });
+
+      await this.saveTransactions(operations);
+
+    } else if (typeof arg === "function") {
+      const target_blocks: TBlock[] = [], operations: Operation[] = [];
+      let index = 0;
+
+      for (let [, value] of this.cache.block) {
+        if (value.parent_id === this.block_data.id) {
+          const is_target_block = await arg(value, index);
+          if (is_target_block)
+            target_blocks.push(value);
+        }
+        index++;
+      }
+
+      target_blocks.forEach(target_block => {
+        const current_time = Date.now();
+        if (!target_block)
+          throw new Error(error(`No block matched`))
+        else operations.push(blockUpdate(target_block.id, [], {
+          alive: false
+        }),
+          blockListRemove(this.block_data.id, ['content'], { id: target_block.id }),
+          blockSet(this.block_data.id, ['last_edited_time'], current_time),
+          blockSet(target_block.id, ['last_edited_time'], current_time));
+        this.cache.block.delete(target_block.id);
+      });
+      if (operations.length === 0)
+        warn("No block matched criteria")
+      else
+        await this.saveTransactions(operations);
+    }
+  }
 
   // ? FEAT:1:H Add updated value to cache and internal class state
   /**
@@ -290,7 +353,9 @@ class Page extends Block<TPage> {
       }))
     });
 
-    this.block_data.content?.push(...$block_ids);
+    if (!this.block_data.content) this.block_data.content = $block_ids;
+    else
+      this.block_data.content.push(...$block_ids);
 
     const cached_data = this.cache.block.get(this.block_data.id) as IPage;
     cached_data?.content?.push(...$block_ids);

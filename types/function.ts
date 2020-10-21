@@ -1,4 +1,4 @@
-import { IBlockType, ViewAggregationsAggregators, ViewType } from "./types";
+import { IBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType } from "./types";
 
 export interface UserViewArg {
   id?: string,
@@ -15,3 +15,5 @@ export interface UserViewArg {
 export interface CreateBlockArg {
   $block_id: string, type: IBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string
 }
+
+export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange

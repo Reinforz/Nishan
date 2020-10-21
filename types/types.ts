@@ -23,6 +23,47 @@ export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 're
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export type TPage = IPage | IRootPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
+export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
+export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "relative";
+export type TTimeFormat = "H:mm" | "LT";
+export type TDateReminderUnit = "day" | "hour" | "minute";
+
+export interface IDateReminder {
+  time?: string,
+  unit: TDateReminderUnit,
+  value: number
+}
+
+export interface Date {
+  date_format: TDateFormat,
+  type: TDateType,
+  start_date: string,
+  time_format: TTimeFormat,
+  reminder: IDateReminder
+}
+
+export interface IDate extends Date {
+  type: "date",
+}
+
+export interface IDateTime extends Date {
+  type: "datetime",
+  start_time: string,
+  time_zone: string,
+}
+
+export interface IDateTimeRange extends Date {
+  type: "datetimerange",
+  end_date: string,
+  start_time: string,
+  end_time: string,
+  time_zone: string,
+}
+
+export interface IDateRange extends Date {
+  type: "daterange",
+  end_date: string
+}
 
 export interface ValueArg {
   id: string,

@@ -288,7 +288,7 @@ export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 // ? TD:2:H Add all block type
 export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb;
 
-export type ParentType = IRootPage | ISpace;
+export type TParentType = IRootPage | ISpace;
 
 export interface ICollection extends Node, ParentProps {
   description: string[][],

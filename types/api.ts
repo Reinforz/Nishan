@@ -113,7 +113,7 @@ export interface DeleteSpaceTaskParams extends EnqueueTaskParams {
 export type TEnqueueTaskParams = DuplicateBlockTaskParams | ExportBlockTaskParams | DeleteSpaceTaskParams;
 
 export interface LoadPageChunkParams {
-  chunkNumber: 0,
+  chunkNumber: number,
   cursor: Cursor,
   limit: number,
   pageId: string,

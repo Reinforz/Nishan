@@ -16,7 +16,7 @@ import { error } from "../utils/logs";
 import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
 import { ISpaceView } from "../types/api";
-import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage } from "../types/block";
+import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock } from "../types/block";
 
 class Page extends Block<TPage> {
   block_data: TPage;
@@ -25,6 +25,32 @@ class Page extends Block<TPage> {
     super(arg);
     if (arg.block_data.type !== 'page') throw new Error(error(`Cannot create page block from ${arg.block_data.type} block`));
     this.block_data = arg.block_data;
+  }
+
+  async getBlocks() {
+    const { block } = await this.loadPageChunk({
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      limit: 50,
+      pageId: this.block_data.id,
+      verticalColumns: false
+    });
+
+    const blocks: Block<TBlock>[] = [];
+    if (this.block_data.content) {
+      this.block_data.content.forEach(content_id => {
+        const block_data = block[content_id].value;
+        if (block_data) blocks.push(block_data.type === "page" ? new Page({
+          block_data,
+          ...this.getProps()
+        }) : new Block({
+          block_data,
+          ...this.getProps()
+        }))
+      })
+      return blocks;
+    } else
+      throw new Error(error("This page doesnot have any content"));
   }
 
   // ? FEAT:1:H Add updated value to cache and internal class state

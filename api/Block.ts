@@ -6,7 +6,7 @@ import Getters from "./Getters";
 
 import { TBasicBlockType, NishanArg } from "../types/types"
 import { CreateBlockArg } from "../types/function";
-import { TBlock, PageFormat, PageProps } from '../types/block';
+import { TBlock, PageFormat, PageProps, IPage } from '../types/block';
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -14,6 +14,14 @@ class Block<T extends TBlock> extends Getters {
   constructor(arg: NishanArg & { block_data: T }) {
     super(arg);
     this.block_data = arg.block_data;
+  }
+
+  // ? FEAT:1:E Reposition after id or as a number
+  async reposition(new_position: number) {
+    const parent = this.cache.block.get(this.block_data.parent_id) as IPage;
+    if (parent) {
+      console.log(parent.content)
+    }
   }
 
   /**

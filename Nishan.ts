@@ -81,3 +81,4 @@ class Nishan extends Getters {
 }
 
 export default Nishan;
+export * from "./utils/inlineBlocks";

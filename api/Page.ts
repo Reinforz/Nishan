@@ -13,9 +13,9 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, } from "../types/types";
+import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
-import { ISpaceView } from "../types/api";
+import { ISpaceView, SetBookmarkMetadataParams } from "../types/api";
 import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock } from "../types/block";
 
 class Page extends Block<TPage> {
@@ -184,6 +184,60 @@ class Page extends Block<TPage> {
       }))
     }
   }
+
+  async createContents(contents: TBlockInput[]) {
+    const operations: Operation[] = [];
+    const bookmarks: SetBookmarkMetadataParams[] = [];
+    const $block_ids: string[] = [];
+
+    contents.forEach(content => {
+      const { format, properties, type } = content;
+      const $block_id = uuidv4();
+      $block_ids.push($block_id);
+      if (type === "bookmark")
+        bookmarks.push({
+          blockId: $block_id,
+          url: (properties as WebBookmarkProps).link[0][0]
+        })
+      operations.push(this.createBlock({
+        $block_id,
+        type,
+        properties,
+        format,
+      }),
+        blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }))
+    });
+
+    await this.saveTransactions(operations);
+    for (let bookmark of bookmarks) {
+      await this.setBookmarkMetadata(bookmark)
+    }
+
+    const recordMap = await this.loadPageChunk({
+      chunkNumber: 0,
+      cursor: { stack: [] },
+      limit: 100,
+      pageId: this.block_data.id,
+      verticalColumns: false
+    });
+
+    const blocks: Block<TBlock>[] = [];
+
+    $block_ids.forEach($block_id => {
+      const block = recordMap.block[$block_id].value;
+      if (block.type === "page") blocks.push(new Page({
+        block_data: block as IPage,
+        ...this.getProps()
+      }))
+      else blocks.push(new Block({
+        block_data: recordMap.block[$block_id].value,
+        ...this.getProps()
+      }))
+    })
+
+    return blocks;
+  }
+
   /**
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation

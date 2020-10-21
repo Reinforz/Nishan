@@ -11,7 +11,9 @@ import UserSettings from "./UserSettings";
 import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from "../utils/logs";
 
-import { NishanArg, ISpace, PageFormat, PageProps, IRootPage, ISpaceView, TBlock, IPage } from "../types";
+import { NishanArg } from "../types/types";
+import { ISpace, ISpaceView } from '../types/api';
+import { TBlock, IPage, PageProps, PageFormat, IRootPage } from '../types/block';
 
 
 // ? FEAT:2 Add space related methods

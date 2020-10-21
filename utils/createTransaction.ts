@@ -1,4 +1,4 @@
-import { Operation, Request } from "../types";
+import { Operation, Request } from "../types/types";
 
 import { v4 as uuidv4 } from 'uuid';
 

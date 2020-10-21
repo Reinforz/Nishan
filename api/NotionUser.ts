@@ -1,7 +1,8 @@
 import Getters from "./Getters";
 
-import { INotionUser, NishanArg } from "../types";
+import { NishanArg } from "../types/types";
 import { notionUserUpdate } from "../utils/chunk";
+import { INotionUser } from "../types/api";
 
 class NotionUser extends Getters {
   notion_user: INotionUser;

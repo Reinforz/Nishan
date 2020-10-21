@@ -1,6 +1,6 @@
 import { collectionViewUpdate } from '../utils/chunk';
 import Getters from "./Getters";
-import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
+import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
 
 class View extends Getters {
   parent_id: string;

@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { ISpace, NishanArg } from "./types";
+import { NishanArg } from "./types/types";
 import { error } from "./utils/logs";
 import Space from "./api/Space";
 import Getters from "./api/Getters";
 import { blockUpdate, spaceListAfter, spaceViewSet, userSettingsUpdate, userRootListAfter } from './utils/chunk';
+import { ISpace } from './types/api';
 
 class Nishan extends Getters {
   constructor(arg: NishanArg) {

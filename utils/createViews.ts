@@ -1,4 +1,4 @@
-import { UserViewArg } from "../types";
+import { UserViewArg } from "../types/function";
 import { collectionViewUpdate } from "./chunk";
 
 // ? TD: FilterType interface

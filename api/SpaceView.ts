@@ -1,7 +1,8 @@
 import Getters from "./Getters";
 
-import { ISpaceView, NishanArg } from '../types';
+import { NishanArg } from '../types/types';
 import { spaceViewUpdate } from "../utils/chunk";
+import { ISpaceView } from "../types/api";
 
 class SpaceView extends Getters {
   space_view_data: ISpaceView

@@ -8,7 +8,8 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 
 import { error } from "../utils/logs";
 
-import { TCollectionBlock, Operation, TView, NishanArg } from "../types";
+import { Operation, TView, NishanArg } from "../types/types";
+import { TCollectionBlock } from '../types/block';
 
 class CollectionBlock extends Block<TCollectionBlock> {
   parent_id: string;

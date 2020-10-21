@@ -1,7 +1,8 @@
 import CollectionBlock from './CollectionBlock';
 
 import { error } from "../utils/logs";
-import { ICollectionView, NishanArg } from '../types';
+import { NishanArg } from '../types/types';
+import { ICollectionView } from '../types/block';
 
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg & {

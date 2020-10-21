@@ -4,7 +4,9 @@ import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, space
 
 import Getters from "./Getters";
 
-import { TBasicBlockType, NishanArg, PageFormat, PageProps, TBlock, CreateBlockArg } from "../types"
+import { TBasicBlockType, NishanArg } from "../types/types"
+import { CreateBlockArg } from "../types/function";
+import { TBlock, PageFormat, PageProps } from '../types/block';
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;

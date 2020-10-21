@@ -1,7 +1,8 @@
 import Getters from "./Getters";
 
-import { IUserSettingsSettings, IUserSettings, NishanArg } from "../types";
+import { NishanArg } from "../types/types";
 import { userSettingsUpdate } from "../utils/chunk";
+import { IUserSettings, IUserSettingsSettings } from "../types/api";
 
 class UserSettings extends Getters {
   user_settings: IUserSettings;

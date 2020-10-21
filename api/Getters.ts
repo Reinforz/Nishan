@@ -4,7 +4,8 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, ICache, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, Operation, QueryCollectionParams, QueryCollectionResult, RecordMap, Request, SyncRecordValuesParams, SetBookmarkMetadataParams,SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
+import { ICache, Operation, Request } from "../types/types";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 
 export default class Getters extends Cache {
   token: string;
@@ -233,7 +234,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined>{
+  async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

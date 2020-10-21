@@ -4,7 +4,8 @@ import { blockSet, collectionListAfter, collectionSet } from '../utils/chunk';
 
 import Getters from "./Getters";
 
-import { ICollection, NishanArg, PageFormat, PageProps } from "../types";
+import { NishanArg } from "../types/types";
+import { ICollection, PageProps, PageFormat } from '../types/block';
 
 class Collection extends Getters {
   collection_data: ICollection;

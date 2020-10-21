@@ -13,7 +13,10 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error } from "../utils/logs";
 
-import { TPage, IPage, PageFormat, PageProps, Schema, SchemaUnitType, UserViewArg, ICollectionViewPage, NishanArg, ExportType, ISpaceView, ICollectionView, Permission, TPermissionRole, IRootPage, TBlockInput, WebBookmarkProps, IFactoryInput, CreateBlockArg } from "../types";
+import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, } from "../types/types";
+import { CreateBlockArg, UserViewArg } from "../types/function";
+import { ISpaceView } from "../types/api";
+import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage } from "../types/block";
 
 class Page extends Block<TPage> {
   block_data: TPage;

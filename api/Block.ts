@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove } from '../utils/chunk';
+import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockListBefore } from '../utils/chunk';
 
 import Getters from "./Getters";
 
 import { TBasicBlockType, NishanArg } from "../types/types"
-import { CreateBlockArg } from "../types/function";
+import { BlockRepostionArg, CreateBlockArg } from "../types/function";
 import { TBlock, PageFormat, PageProps, IPage } from '../types/block';
+import { error } from '../utils/logs';
 
 class Block<T extends TBlock> extends Getters {
   block_data: T;
@@ -17,11 +18,23 @@ class Block<T extends TBlock> extends Getters {
   }
 
   // ? FEAT:1:E Reposition after id or as a number
-  async reposition(new_position: number) {
+  async reposition(arg: number | BlockRepostionArg) {
     const parent = this.cache.block.get(this.block_data.parent_id) as IPage;
     if (parent) {
-      console.log(parent.content)
-    }
+      if (parent.content) {
+        if (typeof arg === "number") {
+          const block_id_at_pos = parent.content[arg];
+          await this.saveTransactions([
+            blockListAfter(this.block_data.parent_id, ["content"], { after: block_id_at_pos, id: this.block_data.id })
+          ]);
+        } else
+          await this.saveTransactions([
+            arg.position === "after" ? blockListAfter(this.block_data.parent_id, ["content"], { after: arg.id, id: this.block_data.id }) : blockListBefore(this.block_data.parent_id, ["content"], { after: arg.id, id: this.block_data.id })
+          ]);
+      } else
+        throw new Error(error("Block parent doesn't have any children"))
+    } else
+      throw new Error(error("Block doesn't have a parent"))
   }
 
   /**

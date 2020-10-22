@@ -1,5 +1,5 @@
 import { ICollectionView, ICollectionViewPage, TBlock, ICollection } from "./block";
-import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale } from "./types";
+import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile } from "./types";
 
 export interface GetUploadFileUrlParams {
   bucket: "secure",
@@ -26,6 +26,23 @@ export interface QueryCollectionParams {
     limit: number,
     searchQuery: string,
     type: 'table'
+  }
+}
+
+export interface GetGoogleDriveAccountsResult {
+  accounts: Account[]
+}
+
+export interface InitializeGoogleDriveBlockParams {
+  blockId: string,
+  fileId: string,
+  token: Token
+}
+
+export interface InitializeGoogleDriveBlockResult {
+  file: GoogleDriveFile,
+  recordMap: {
+    block: BlockData
   }
 }
 

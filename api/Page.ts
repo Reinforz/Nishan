@@ -270,6 +270,24 @@ class Page extends Block<TPage> {
     fs.createWriteStream(fullpath).end(response.data);
   }
 
+  async createDriveContent(fileId: string) {
+    const { accounts } = await this.getGoogleDriveAccounts();
+    const block = await this.createContent({
+      type: "drive"
+    });
+
+    const { recordMap } = await this.initializeGoogleDriveBlock({
+      blockId: block.block_data.id,
+      fileId,
+      token: accounts[0].token
+    });
+
+    return new Block({
+      block_data: recordMap.block[block.block_data.id].value,
+      ...this.getProps()
+    });
+  }
+
   async createTemplateContent(factory: IFactoryInput) {
     const { format, properties, type } = factory;
     const $block_id = uuidv4();
@@ -393,7 +411,6 @@ class Page extends Block<TPage> {
   // ? TD:1:H Format and properties based on IBlockType
   async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
-    // ? FEAT:2:H Return specific class instances based on content type
     const { format, properties, type } = options;
     const $block_id = uuidv4();
 

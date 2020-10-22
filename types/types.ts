@@ -12,7 +12,8 @@ export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
-export type IBlockType = TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type TEmbedsBlockType = 'gist' | 'drive';
+export type IBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'teal' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -29,6 +30,38 @@ export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
 
 export type Predicate<T> = (T: T, index: number) => boolean;
+
+export interface GoogleDriveFileUser {
+  displayName: string,
+  emailAddress: string,
+  kind: "drive#user",
+  me: boolean,
+  permissionId: string,
+  photoLink: string
+}
+
+export interface GoogleDriveFile {
+  iconLink: string,
+  id: string,
+  lastModifyingUser: GoogleDriveFileUser,
+  mimeType: string,
+  modifiedTime: string,
+  name: string,
+  thumbnailVersion: "0",
+  trashed: boolean,
+  webViewLink: string
+}
+
+export interface Token {
+  id: string,
+  accessToken: string
+}
+
+export interface Account {
+  accountId: string,
+  accountName: string,
+  token: Token
+}
 
 export interface IDateReminder {
   time?: string,

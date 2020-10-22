@@ -212,7 +212,21 @@ export interface IBreadcrumbInput {
   format?: {},
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput;
+export interface IDriveInput {
+  type: 'drive',
+  properties?: {},
+  format?: {}
+}
+
+export interface IGistInput {
+  type: 'gist',
+  properties: {
+    source: string[][]
+  },
+  format?: {}
+}
+
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput | IDriveInput | IGistInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -284,10 +298,19 @@ export interface IFactory extends Block {
   contents: string[]
 }
 
+// Embeds Type
+export interface IGist extends Block {
+  type: 'gist'
+}
+
+export interface IDrive extends Block {
+  type: 'block'
+}
+
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
-// ? TD:2:H Add all block type
-export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb;
+// ? TD:2:E Add group wise block interface types ie advanced, embeds etc etc
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb | IGist | IDrive;
 
 export type TParentType = IRootPage | ISpace;
 

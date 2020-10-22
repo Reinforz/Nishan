@@ -209,13 +209,21 @@ export interface IFactoryInput {
 export interface IBreadcrumbInput {
   type: 'breadcrumb',
   properties?: {},
-  format?: {},
+  format: {},
 }
 
 export interface IDriveInput {
   type: 'drive',
   properties?: {},
-  format?: {}
+  format?: {},
+}
+
+export interface ITweetInput {
+  type: 'tweet',
+  properties: {
+    source: string[][]
+  },
+  format?: {},
 }
 
 export interface IGistInput {
@@ -223,10 +231,13 @@ export interface IGistInput {
   properties: {
     source: string[][]
   },
-  format?: {}
+  format?: {
+    block_color?: FormatBlockColor,
+    display_source: null
+  },
 }
 
-export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput | IDriveInput | IGistInput;
+export type TBlockInput = IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput | IDriveInput | IGistInput | ITweetInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -299,18 +310,38 @@ export interface IFactory extends Block {
 }
 
 // Embeds Type
-export interface IGist extends Block {
+export interface IGist extends Block, IGistInput {
   type: 'gist'
 }
 
-export interface IDrive extends Block {
-  type: 'block'
+// ? TD:1:E Add formats and properties of drive
+export interface IDrive extends Block, IDriveInput {
+  type: 'drive',
+  format: {
+    drive_properties: {
+      file_id: string,
+      icon: string,
+      modified_time: number,
+      title: string,
+      trashed: boolean,
+      url: string,
+      user_name: string,
+    },
+    drive_status: {
+      authed: boolean,
+      last_fetched: number
+    }
+  }
+}
+
+export interface ITweet extends Block, ITweetInput {
+  type: 'tweet'
 }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:E Add group wise block interface types ie advanced, embeds etc etc
-export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb | IGist | IDrive;
+export type TBlock = IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb | IGist | IDrive | ITweet;
 
 export type TParentType = IRootPage | ISpace;
 

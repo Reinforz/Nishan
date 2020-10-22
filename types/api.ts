@@ -1,6 +1,18 @@
 import { ICollectionView, ICollectionViewPage, TBlock, ICollection } from "./block";
 import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale } from "./types";
 
+export interface GetUploadFileUrlParams {
+  bucket: "secure",
+  contentType: string,
+  name: string
+}
+
+export interface GetUploadFileUrlResult {
+  signedGetUrl: string,
+  signedPutUrl: string,
+  url: string
+}
+
 export interface SetBookmarkMetadataParams {
   blockId: string,
   url: string

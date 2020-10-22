@@ -5,7 +5,7 @@ import Cache from "./Cache";
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
 import { ICache, Operation, Request } from "../types/types";
-import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetUploadFileUrlParams, GetUploadFileUrlResult, INotionUser, InviteGuestsToSpaceParams, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 
 export default class Getters extends Cache {
   token: string;
@@ -51,6 +51,23 @@ export default class Getters extends Cache {
       space_id: this.space_id,
       cache: this.cache
     }
+  }
+
+  async getUploadFileUrl(arg: GetUploadFileUrlParams): Promise<GetUploadFileUrlResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/getUploadFileUrl',
+            arg,
+            this.headers
+          ) as { data: GetUploadFileUrlResult };
+          resolve(data)
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    })
   }
 
   async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {

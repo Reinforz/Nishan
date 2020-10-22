@@ -78,22 +78,22 @@ export interface IPageInput {
   format: PageFormat
 }
 
-export interface IVideoInput {
+export interface IMediaInput {
+  properties: MediaProps,
+  format: MediaFormat,
+  file_ids: string[]
+}
+
+export interface IVideoInput extends IMediaInput {
   type: 'video',
-  properties: MediaFormat,
-  format: MediaFormat
 }
 
-export interface IImageInput {
+export interface IImageInput extends IMediaInput {
   type: 'image',
-  properties: MediaFormat,
-  format: MediaFormat
 }
 
-export interface IAudioInput {
+export interface IAudioInput extends IMediaInput {
   type: 'audio',
-  properties: MediaFormat,
-  format: MediaFormat
 }
 
 export interface IWebBookmarkInput {
@@ -220,7 +220,8 @@ export interface IPage extends Block {
   type: 'page',
   content?: string[],
   format: PageFormat,
-  is_template?: boolean
+  is_template?: boolean,
+  file_ids?: string[]
 }
 
 export interface IPublicPermission {

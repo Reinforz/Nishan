@@ -53,6 +53,29 @@ class Page extends Block<TPage> {
       throw new Error(error("This page doesnot have any content"));
   }
 
+  /* async upload() {
+    const res = await this.getUploadFileUrl({
+      bucket: "secure",
+      contentType: "image/jpeg",
+      name: "68sfghkgmvd51.jpg"
+    });
+
+    const file_url_chunks = res.url.split("/");
+    const file_id = file_url_chunks[file_url_chunks.length - 2];
+
+    await axios.put(res.signedPutUrl);
+    await this.createContent({
+      type: "image",
+      properties: {
+        source: [[res.url]]
+      },
+      format: {
+        display_source: res.url
+      },
+      file_ids: file_id
+    } as IImageInput & { file_ids: string });
+  } */
+
   /**
    * Delete block from a page based on an id or a predicate filter 
    * @param arg id string or a predicate acting as a filter
@@ -368,22 +391,26 @@ class Page extends Block<TPage> {
    * @param {ContentOptions} options Options for modifying the content during creation
    */
   // ? TD:1:H Format and properties based on IBlockType
-  async createContent(options: TBlockInput) {
+  async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
     // ? FEAT:2:H Return specific class instances based on content type
     const { format, properties, type } = options;
-
     const $block_id = uuidv4();
+
+    const operations = [
+      this.createBlock({
+        $block_id,
+        type,
+        properties,
+        format,
+      }),
+      blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
+    ];
+
+    if (type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], { id: options.file_id }));
+
     await this.saveTransactions(
-      [
-        this.createBlock({
-          $block_id,
-          type,
-          properties,
-          format,
-        }),
-        blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
-      ]
+      operations
     );
 
     if (type === "bookmark")

@@ -1,6 +1,10 @@
 import { ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
+export interface GetSpacesResult {
+  [k: string]: RecordMap
+}
+
 export interface GetGenericEmbedBlockDataParams {
   pageWidth: number,
   source: string,
@@ -98,10 +102,6 @@ export interface QueryCollectionResult {
 
 export interface LoadUserContentResult {
   recordMap: RecordMap
-}
-
-export interface GetSpacesResult {
-  [key: string]: RecordMap
 }
 
 export interface GetUserSharePagesResult {

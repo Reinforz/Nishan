@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { NishanArg } from "./types/types";
+import { NishanArg, Predicate } from "./types/types";
 import { error } from "./utils/logs";
 import Space from "./api/Space";
 import Getters from "./api/Getters";
@@ -12,26 +12,56 @@ class Nishan extends Getters {
     super(arg);
   }
 
-  async init(arg: string | ((space: ISpace) => boolean)) {
-    await this.loadUserContent();
+  async init(arg: string | Predicate<ISpace>) {
+    await this.getAllSpaces();
     const space = await this.getSpace(arg);
     return space;
   }
 
-  // ? FEAT: getSpace method using function or id
-  async getSpace(arg: ((space: ISpace) => boolean) | string) {
-    const { space } = await this.loadUserContent();
+  async getSpace(arg: Predicate<ISpace> | string) {
+    const res = await this.getAllSpaces();
+    let target_space: ISpace | undefined = undefined;
 
-    const target_space = (Object.values(space).find((space) => typeof arg === "string" ? space.value.id === arg : arg(space.value))?.value || Object.values(space)[0].value);
-    if (!target_space) throw new Error(error(`No space matches the criteria`));
+    Object.values(res).forEach(user => {
+      target_space = (Object.values(user.space).find((space, index) => typeof arg === "string" ? space.value.id === arg : arg(space.value, index))?.value)
+    });
 
-    return new Space({
-      ...this.getProps(),
-      shard_id: target_space.shard_id,
-      space_id: target_space.id,
-      user_id: target_space.permissions[0].user_id,
-      space_data: target_space
-    })
+    if (target_space)
+      return new Space({
+        ...this.getProps(),
+        shard_id: (target_space as ISpace).shard_id,
+        space_id: (target_space as ISpace).id,
+        user_id: (target_space as ISpace).permissions[0].user_id,
+        space_data: target_space
+      })
+    else throw new Error(error(`No space matches the criteria`));
+  }
+
+  async getSpaces(arg: undefined | Predicate<ISpace> | string[]) {
+    const res = Object.values(await this.getAllSpaces());
+    let target_spaces: Space[] = [];
+
+    for (let i = 0; i < res.length; i++) {
+      const spaces = Object.values(res[i].space);
+      for (let j = 0; j < spaces.length; j++) {
+        const space = spaces[j];
+        let should_add = false;
+        if (arg === undefined)
+          should_add = true;
+        else if (Array.isArray(arg) && arg.includes(space.value.id))
+          should_add = true;
+        else if (typeof arg === "function")
+          should_add = await arg(space.value, i);
+
+        if (should_add) {
+          target_spaces.push(new Space({
+            space_data: space.value,
+            ...this.getProps()
+          }))
+        }
+      }
+    }
+    return target_spaces;
   }
 
   // ? FIX:1:H Not working

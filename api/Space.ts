@@ -13,7 +13,8 @@ import { error } from "../utils/logs";
 
 import { NishanArg, Predicate } from "../types/types";
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IPage, PageProps, PageFormat, IRootPage } from '../types/block';
+import { TBlock, IPage, PageProps, PageFormat, IRootPage, ICollectionViewPage } from '../types/block';
+import CollectionViewPage from './CollectionViewPage';
 
 
 // ? FEAT:2 Add space related methods
@@ -91,25 +92,37 @@ class Space extends Getters {
       });
   }
 
-  async getPages(arg: undefined): Promise<Page[]>;
-  async getPages(arg: undefined | string[] | Predicate<IPage>) {
-    const pages: Page[] = [];
+  async getPages(arg: undefined | string[] | Predicate<IPage | ICollectionViewPage>) {
+    const pages: (Page | CollectionViewPage)[] = [];
     if (this.space_data) {
       for (let i = 0; i < this.space_data.pages.length; i++) {
         const page_id = this.space_data.pages[i];
-        let page = this.cache.block.get(page_id) as IPage;
+        let page = this.cache.block.get(page_id) as IPage | ICollectionViewPage;
         let should_add = false;
         if (arg === undefined)
           should_add = true;
         else if (Array.isArray(arg) && arg.includes(page_id))
           should_add = true;
         else if (typeof arg === "function")
-          should_add = arg(page, i);
-        if (should_add && page && (page as IPage).type === "page")
-          pages.push(new Page({
-            block_data: page,
-            ...this.getProps()
-          }))
+          should_add = await arg(page, i);
+
+        if (should_add && page) {
+          switch (page.type) {
+            case "page":
+              pages.push(new Page({
+                block_data: page,
+                ...this.getProps()
+              }))
+              break
+            case "collection_view_page":
+              pages.push(new CollectionViewPage({
+                parent_id: this.space_data.id,
+                block_data: page,
+                ...this.getProps()
+              }))
+              break
+          }
+        }
       }
       return pages;
     } else

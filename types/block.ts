@@ -234,6 +234,14 @@ export interface ICodepenInput {
   format: MediaFormat,
 }
 
+export interface IMapsInput {
+  type: 'maps',
+  properties: {
+    source: string[][]
+  },
+  format: MediaFormat,
+}
+
 export interface IGistInput {
   type: 'gist',
   properties: {
@@ -245,7 +253,7 @@ export interface IGistInput {
   },
 }
 
-export type TBlockInput = ICodepenInput | IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput | IDriveInput | IGistInput | ITweetInput;
+export type TBlockInput = IMapsInput | ICodepenInput | IPageInput | IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput | ITextInput | ITodoInput | IHeaderInput | ISubHeaderInput | ISubSubHeaderInput | IBulletedListInput | INumberedListInput | IToggleInput | IQuoteInput | IDividerInput | ICalloutInput | ITOCInput | IEquationInput | IFactoryInput | IBreadcrumbInput | IDriveInput | IGistInput | ITweetInput;
 // -----------------
 
 export interface IPage extends Block {
@@ -319,8 +327,6 @@ export interface IFactory extends Block {
 
 // Embeds Type
 export interface IGist extends Block, IGistInput { }
-
-// ? TD:1:E Add formats and properties of drive
 export interface IDrive extends Block, IDriveInput {
   format: {
     drive_properties: {
@@ -338,14 +344,14 @@ export interface IDrive extends Block, IDriveInput {
     }
   }
 }
-
 export interface ITweet extends Block, ITweetInput { }
 export interface ICodepen extends Block, ICodepenInput { }
+export interface IMaps extends Block, IMapsInput { }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 // ? TD:2:E Add group wise block interface types ie advanced, embeds etc etc
-export type TBlock = ICodepen | IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb | IGist | IDrive | ITweet;
+export type TBlock = IMaps | ICodepen | IRootPage | TCollectionBlock | IPage | IHeader | ISubHeader | ISubSubHeader | IText | ITodo | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IVideo | IAudio | IImage | IWebBookmark | ICode | IFile | ITOC | IEquation | IFactory | IBreadcrumb | IGist | IDrive | ITweet;
 
 export type TParentType = IRootPage | ISpace;
 

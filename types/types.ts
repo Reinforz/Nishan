@@ -1,7 +1,7 @@
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, UserRoot } from "./api";
 import { ICollection, IPage, IRootPage, TBlock } from "./block";
 
-export type TGenericEmbedBlockType = "codepen" | "gist";
+export type TGenericEmbedBlockType = "tweet" | "codepen" | "gist" | "maps";
 export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup' | 'text' | 'date' | 'person' | 'file' | 'url' | 'email' | 'phone' | 'created_time' | 'created_by' | 'last_edited_time' | 'last_edited_by'
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
@@ -13,7 +13,7 @@ export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
-export type TEmbedsBlockType = 'gist' | 'drive' | 'tweet' | 'codepen';
+export type TEmbedsBlockType = 'gist' | 'drive' | 'tweet' | 'codepen' | "maps";
 export type IBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'teal' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';

@@ -1,5 +1,19 @@
-import { ICollectionView, ICollectionViewPage, TBlock, ICollection } from "./block";
-import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile } from "./types";
+import { ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
+import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+
+export interface GetGenericEmbedBlockDataParams {
+  pageWidth: number,
+  source: string,
+  type: TGenericEmbedBlockType
+}
+
+export interface GetGenericEmbedBlockDataResult {
+  format: MediaFormat,
+  properties: {
+    source: string[][]
+  },
+  type: TGenericEmbedBlockType
+}
 
 export interface GetUploadFileUrlParams {
   bucket: "secure",

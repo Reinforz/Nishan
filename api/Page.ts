@@ -13,7 +13,7 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error, warn } from "../utils/logs";
 
-import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, } from "../types/types";
+import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, TGenericEmbedBlockType, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
 import { ISpaceView, SetBookmarkMetadataParams } from "../types/api";
 import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock } from "../types/block";
@@ -411,6 +411,15 @@ class Page extends Block<TPage> {
   // ? TD:1:H Format and properties based on IBlockType
   async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
+
+    if (options.type.match(/gist|codepen/)) {
+      options.format = (await this.getGenericEmbedBlockData({
+        pageWidth: 500,
+        source: (options.properties as any).source[0][0] as string,
+        type: options.type as TGenericEmbedBlockType
+      })).format;
+    }
+
     const { format, properties, type } = options;
     const $block_id = uuidv4();
 

@@ -22,16 +22,22 @@ export default class Data extends Getters {
 
   addToContentArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
     const data = this.data as TPage;
+    const cached_data = this.cache.block.get(this.data.id) as TPage;
 
     if (data.content) {
-      if (arg === undefined)
+      if (arg === undefined) {
+        cached_data.content.push($block_id);
         data.content.push($block_id);
+      }
       else {
-        if (typeof arg === "number")
+        if (typeof arg === "number") {
           data.content.splice(arg, 0, $block_id);
+          cached_data.content.splice(arg, 0, $block_id);
+        }
         else {
           const target_index = data.content.indexOf(arg.id);
           data.content.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
+          cached_data.content.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
         }
       }
     } else

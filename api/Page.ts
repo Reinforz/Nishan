@@ -9,7 +9,7 @@ import CollectionView from './CollectionView';
 
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove, blockListBefore } from '../utils/chunk';
+import { collectionUpdate, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove, blockListBefore } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import Getters from "./Getters";
+import Data from "./Data";
 import Page from "./Page";
 import SpaceView from "./SpaceView";
 import Block from './Block';
@@ -17,8 +17,7 @@ import { TBlock, IPage, PageProps, PageFormat, IRootPage, ICollectionViewPage, T
 import CollectionViewPage from './CollectionViewPage';
 
 
-// ? FEAT:2 Add space related methods
-class Space extends Getters {
+class Space extends Data {
   space_data: undefined | ISpace;
 
   constructor(arg: NishanArg & { space_data: ISpace }) {
@@ -31,7 +30,8 @@ class Space extends Getters {
       const notion_user = this.cache.notion_user.get(this.user_id);
       if (notion_user) return new NotionUser({
         ...this.getProps(),
-        notion_user
+        notion_user,
+        data: notion_user
       })
     } else
       throw new Error(error("This space has been deleted"))
@@ -42,7 +42,8 @@ class Space extends Getters {
       const user_settings = this.cache.user_settings.get(this.user_id);
       if (user_settings) return new UserSettings({
         ...this.getProps(),
-        user_settings
+        user_settings,
+        data: user_settings
       })
     } else
       throw new Error(error("This space has been deleted"))
@@ -54,7 +55,7 @@ class Space extends Getters {
    */
   async getBlock(block_id: string): Promise<Block<TBlock, TBlockInput>> {
     const cache_data = this.cache.block.get(block_id);
-    if (cache_data) return new Block({ block_data: cache_data, ...this.getProps() });
+    if (cache_data) return new Block({ block_data: cache_data, data: cache_data, ...this.getProps() });
     const { recordMap } = await this.getBacklinksForBlock(block_id);
     const target = recordMap.block[block_id];
     if (!target)
@@ -64,6 +65,7 @@ class Space extends Getters {
     else
       return new Block({
         block_data: target.value,
+        data: target.value,
         ...this.getProps()
       });
   }
@@ -88,7 +90,8 @@ class Space extends Getters {
     else
       return new Collection({
         ...this.getProps(),
-        collection_data
+        collection_data,
+        data: collection_data
       });
   }
 
@@ -111,12 +114,14 @@ class Space extends Getters {
             case "page":
               pages.push(new Page({
                 block_data: page,
+                data: page,
                 ...this.getProps()
               }))
               break
             case "collection_view_page":
               pages.push(new CollectionViewPage({
                 block_data: page,
+                data: page,
                 ...this.getProps()
               }))
               break
@@ -136,6 +141,7 @@ class Space extends Getters {
 
     if (cache_data) return new Page({
       block_data: cache_data,
+      data: cache_data,
       ...this.getProps()
     });
 
@@ -150,6 +156,7 @@ class Space extends Getters {
     return new Page(
       {
         block_data: target,
+        data: target,
         ...this.getProps()
       }
     );
@@ -186,7 +193,8 @@ class Space extends Getters {
 
       return new Page({
         ...this.getProps(),
-        block_data: recordMap.block[$block_id].value as IRootPage
+        block_data: recordMap.block[$block_id].value as IRootPage,
+        data: recordMap.block[$block_id].value as IRootPage
       });
     } else
       throw new Error(error("Space and User id not provided"))
@@ -208,7 +216,7 @@ class Space extends Getters {
           last_edited_time: current_time
         })
       ]);
-      // ? RF:1:M Use a utility method to update the cache and internal class state
+      // ? RF:1:M Use a utility method to update the cache and internal class state, add data method to all getters and use a method to save to cache and update internal class state
       const cached_data = this.cache.space.get(this.space_data.id);
       if (cached_data) {
         cached_data.icon = icon;
@@ -252,6 +260,7 @@ class Space extends Getters {
     }
     if (target_space_view) return new SpaceView({
       space_view_data: target_space_view,
+      data: target_space_view,
       ...this.getProps()
     })
   }

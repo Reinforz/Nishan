@@ -49,7 +49,7 @@ export default class Getters extends Cache {
       user_id: this.user_id,
       shard_id: this.shard_id,
       space_id: this.space_id,
-      cache: this.cache
+      cache: this.cache,
     }
   }
 

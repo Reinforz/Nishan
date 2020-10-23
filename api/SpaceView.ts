@@ -1,10 +1,10 @@
-import Getters from "./Getters";
+import Data from "./Data";
 
 import { NishanArg } from '../types/types';
 import { spaceViewUpdate } from "../utils/chunk";
 import { ISpaceView } from "../types/api";
 
-class SpaceView extends Getters {
+class SpaceView extends Data {
   space_view_data: ISpaceView
   constructor(arg: NishanArg & { space_view_data: ISpaceView }) {
     super(arg)

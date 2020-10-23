@@ -2,12 +2,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { blockSet, collectionListAfter, collectionSet } from '../utils/chunk';
 
-import Getters from "./Getters";
+import Data from "./Data";
 
 import { NishanArg } from "../types/types";
 import { ICollection, PageProps, PageFormat } from '../types/block';
 
-class Collection extends Getters {
+class Collection extends Data {
   collection_data: ICollection;
 
   constructor(arg: NishanArg & { collection_data: ICollection }) {
@@ -15,7 +15,6 @@ class Collection extends Getters {
     this.collection_data = arg.collection_data;
   }
 
-  // ? FEAT:2:E Update cache and class state
   async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
     await this.saveTransactions(
       [

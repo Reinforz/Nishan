@@ -178,8 +178,6 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
   view_ids?: string[],
 }
 
-// ? TD: Page format and properties
-
 /* Block Specific Format and Properties */
 
 export type TView = TableView | ListView | BoardView | GalleryView | CalendarView;
@@ -298,6 +296,8 @@ export interface Stack {
 /* Api endpoint result */
 
 /* Nishan Specific */
+
+export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | UserRoot | IUserSettings
 export interface ICache {
   block: Map<string, TBlock>,
   collection: Map<string, ICollection>,
@@ -316,4 +316,5 @@ export interface NishanArg {
   shard_id: number,
   space_id: string,
   cache: ICache,
+  data: TData
 }

@@ -42,9 +42,11 @@ class Page extends Block<TPage, IPageInput> {
         const block_data = block[content_id].value;
         if (block_data) blocks.push(block_data.type === "page" ? new Page({
           block_data,
+          data: block_data,
           ...this.getProps()
         }) : new Block({
           block_data,
+          data: block_data,
           ...this.getProps()
         }))
       })
@@ -192,7 +194,6 @@ class Page extends Block<TPage, IPageInput> {
     }
   }
 
-  // ? FEAT:1:H Add updated value to cache and internal class state
   /**
    * Update the properties and the format of the page
    * @param opts The format and properties of the page to update
@@ -243,7 +244,7 @@ class Page extends Block<TPage, IPageInput> {
    * Export the page and its content as a zip
    * @param arg Options used for setting up export
    */
-  // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionViewPage will also support it)
+  // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionBlock will also support it)
   async export(arg: { dir: string, timeZone: string, recursive: boolean, exportType: ExportType }) {
     const { dir = "output", timeZone, recursive = true, exportType = "markdown" } = arg || {};
     const { taskId } = await this.enqueueTask({
@@ -281,9 +282,10 @@ class Page extends Block<TPage, IPageInput> {
       fileId,
       token: accounts[0].token
     });
-
+    const data = recordMap.block[block.block_data.id].value;
     return new Block({
-      block_data: recordMap.block[block.block_data.id].value,
+      block_data: data,
+      data,
       ...this.getProps()
     });
   }
@@ -319,14 +321,16 @@ class Page extends Block<TPage, IPageInput> {
       pageId: this.block_data.id,
       verticalColumns: false
     });
-
+    const data = recordMap.block[$block_id].value;
     return {
       template: new Block({
-        block_data: recordMap.block[$block_id].value,
+        block_data: data,
+        data,
         ...this.getProps()
       }),
       contents: content_block_ids.map(content_block_id => new Block({
         block_data: recordMap.block[content_block_id].value,
+        data: recordMap.block[content_block_id].value,
         ...this.getProps()
       }))
     }
@@ -379,11 +383,13 @@ class Page extends Block<TPage, IPageInput> {
       const block = recordMap.block[$block_id].value;
       if (block.type === "page") blocks.push(new Page({
         block_data: block as IPage,
+        data: block,
         ...this.getProps()
       }));
 
       else if (block.type === "collection_view") blocks.push(new CollectionView({
         block_data: block,
+        data: block,
         ...this.getProps(),
       }));
 
@@ -407,7 +413,6 @@ class Page extends Block<TPage, IPageInput> {
   // ? TD:1:H Format and properties based on TBlockType
   async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
-
     if (options.type.match(/gist|codepen|tweet|maps|figma/)) {
       options.format = (await this.getGenericEmbedBlockData({
         pageWidth: 500,
@@ -489,10 +494,11 @@ class Page extends Block<TPage, IPageInput> {
         type: 'table'
       }
     });
-
+    const data = recordMap.block[$content_id].value as ICollectionView;
     return new CollectionView({
       ...this.getProps(),
-      block_data: recordMap.block[$content_id].value as ICollectionView
+      block_data: data,
+      data
     });
   }
 
@@ -546,11 +552,11 @@ class Page extends Block<TPage, IPageInput> {
         type: 'table'
       }
     });
-
+    const data = recordMap.block[this.block_data.id].value as ICollectionViewPage;
     return new CollectionViewPage({
       ...this.getProps(),
-      // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
-      block_data: recordMap.block[this.block_data.id].value as ICollectionViewPage
+      block_data: data,
+      data
     })
   }
 
@@ -589,10 +595,11 @@ class Page extends Block<TPage, IPageInput> {
         type: 'table'
       }
     });
-
+    const data = recordMap.block[$collection_view_id].value as ICollectionView;
     return new CollectionView({
       ...this.getProps(),
-      block_data: recordMap.block[$collection_view_id].value as ICollectionView
+      block_data: data,
+      data
     })
   }
 
@@ -621,168 +628,201 @@ class Page extends Block<TPage, IPageInput> {
       case "video":
         return new Block<IVideo, IVideoInput>({
           block_data: value as IVideo,
+          data: value,
           ...this.getProps()
         });
       case "audio":
         return new Block<IAudio, IAudioInput>({
           block_data: value as IAudio,
+          data: value,
           ...this.getProps()
         });
       case "image":
         return new Block<IImage, IImageInput>({
           block_data: value as IImage,
+          data: value,
           ...this.getProps()
         });
       case "bookmark":
         return new Block<IWebBookmark, IWebBookmarkInput>({
           block_data: value as IWebBookmark,
+          data: value,
           ...this.getProps()
         });
       case "code":
         return new Block<ICode, ICodeInput>({
           block_data: value as ICode,
+          data: value,
           ...this.getProps()
         });
       case "file":
         return new Block<IFile, IFileInput>({
           block_data: value as IFile,
+          data: value,
           ...this.getProps()
         });
 
       case "tweet":
         return new Block<ITweet, ITweetInput>({
           block_data: value as ITweet,
+          data: value,
           ...this.getProps()
         });
       case "gist":
         return new Block<IGist, IGistInput>({
           block_data: value as IGist,
+          data: value,
           ...this.getProps()
         });
       case "codepen":
         return new Block<ICodepen, ICodepenInput>({
           block_data: value as ICodepen,
+          data: value,
           ...this.getProps()
         });
       case "maps":
         return new Block<IMaps, IMapsInput>({
           block_data: value as IMaps,
+          data: value,
           ...this.getProps()
         });
       case "figma":
         return new Block<IFigma, IFigmaInput>({
           block_data: value as IFigma,
+          data: value,
           ...this.getProps()
         });
       case "drive":
         return new Block<IDrive, IDriveInput>({
           block_data: value as IDrive,
+          data: value,
           ...this.getProps()
         });
 
       case "text":
         return new Block<IText, ITextInput>({
           block_data: value as IText,
+          data: value,
           ...this.getProps()
         });
       case "table_of_contents":
         return new Block<ITOC, ITOCInput>({
           block_data: value as ITOC,
+          data: value,
           ...this.getProps()
         });
       case "equation":
         return new Block<IEquation, IEquationInput>({
           block_data: value as IEquation,
+          data: value,
           ...this.getProps()
         });
       case "breadcrumb":
         return new Block<IBreadcrumb, IBreadcrumbInput>({
           block_data: value as IBreadcrumb,
+          data: value,
           ...this.getProps()
         });
       case "factory":
         return new Block<IFactory, IFactoryInput>({
           block_data: value as IFactory,
+          data: value,
           ...this.getProps()
         });
       case "page":
         return new Page({
           block_data: value as IPage,
+          data: value,
           ...this.getProps()
         });
       case "text":
         return new Block<IText, ITextInput>({
           block_data: value as IText,
+          data: value,
           ...this.getProps()
         });
       case "to_do":
         return new Block<ITodo, ITodoInput>({
           block_data: value as ITodo,
+          data: value,
           ...this.getProps()
         });
       case "header":
         return new Block<IHeader, IHeaderInput>({
           block_data: value as IHeader,
+          data: value,
           ...this.getProps()
         });
       case "sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           block_data: value as ISubHeader,
+          data: value,
           ...this.getProps()
         });
       case "sub_sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           block_data: value as ISubHeader,
+          data: value,
           ...this.getProps()
         });
       case "bulleted_list":
         return new Block<IBulletedList, IBulletedListInput>({
           block_data: value as IBulletedList,
+          data: value,
           ...this.getProps()
         });
       case "numbered_list":
         return new Block<INumberedList, INumberedListInput>({
           block_data: value as INumberedList,
+          data: value,
           ...this.getProps()
         });
       case "toggle":
         return new Block<IToggle, IToggleInput>({
           block_data: value as IToggle,
+          data: value,
           ...this.getProps()
         });
       case "quote":
         return new Block<IQuote, IQuoteInput>({
           block_data: value as IQuote,
+          data: value,
           ...this.getProps()
         });
       case "divider":
         return new Block<IDivider, IDividerInput>({
           block_data: value as IDivider,
+          data: value,
           ...this.getProps()
         });
       case "callout":
         return new Block<ICallout, ICalloutInput>({
           block_data: value as ICallout,
+          data: value,
           ...this.getProps()
         });
       case "toggle":
         return new Block<IToggle, IToggleInput>({
           block_data: value as IToggle,
+          data: value,
           ...this.getProps()
         });
       case "sub_sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           block_data: value as ISubHeader,
+          data: value,
           ...this.getProps()
         });
       case "drive":
         return new Block<IDrive, IDriveInput>({
           block_data: value as IDrive,
+          data: value,
           ...this.getProps()
         });
       default:
         return new Page({
           block_data: value as IPage,
+          data: value,
           ...this.getProps()
         });
     }

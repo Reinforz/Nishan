@@ -2,14 +2,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockListBefore } from '../utils/chunk';
 
-import Getters from "./Getters";
+import Data from "./Data";
 
 import { TBasicBlockType, NishanArg } from "../types/types"
 import { BlockRepostionArg, CreateBlockArg } from "../types/function";
 import { TBlock, IPage, TBlockInput } from '../types/block';
 import { error } from '../utils/logs';
 
-class Block<T extends TBlock, A extends TBlockInput> extends Getters {
+class Block<T extends TBlock, A extends TBlockInput> extends Data {
   block_data: T;
 
   constructor(arg: NishanArg & { block_data: T }) {
@@ -73,11 +73,11 @@ class Block<T extends TBlock, A extends TBlockInput> extends Getters {
     ]);
     return new Block({
       block_data: block[$gen_block_id].value,
+      data: block[$gen_block_id].value,
       ...this.getProps()
     })
   }
 
-  // ? TD:1:H TBlockType specific arg properties and format
   // ? FEAT:2:M Add Permission to args
   /**
    * Update a block properties and format
@@ -85,7 +85,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Getters {
    */
   async update(args: Partial<A> = {}) {
     const { format = {}, properties = {} } = args;
-    // ? FIX:2:H Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await this.saveTransactions(
       [
         blockUpdate(this.block_data.id, [], {

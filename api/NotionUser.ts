@@ -1,10 +1,10 @@
-import Getters from "./Getters";
+import Data from "./Data";
 
 import { NishanArg } from "../types/types";
 import { notionUserUpdate } from "../utils/chunk";
 import { INotionUser } from "../types/api";
 
-class NotionUser extends Getters {
+class NotionUser extends Data {
   notion_user: INotionUser;
 
   constructor(arg: NishanArg & { notion_user: INotionUser }) {

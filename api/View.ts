@@ -1,17 +1,14 @@
 import { collectionViewUpdate } from '../utils/chunk';
-import Getters from "./Getters";
+import Data from "./Data";
 import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
 
-class View extends Getters {
-  parent_id: string;
+class View extends Data {
   view_data: TView;
 
   constructor(arg: NishanArg & {
-    parent_id: string,
     view_data: TView,
   }) {
     super(arg);
-    this.parent_id = arg.parent_id;
     this.view_data = arg.view_data;
   }
 

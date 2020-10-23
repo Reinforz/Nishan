@@ -1,10 +1,10 @@
-import Getters from "./Getters";
+import Data from "./Data";
 
 import { NishanArg } from "../types/types";
 import { userSettingsUpdate } from "../utils/chunk";
 import { IUserSettings, IUserSettingsSettings } from "../types/api";
 
-class UserSettings extends Getters {
+class UserSettings extends Data {
   user_settings: IUserSettings;
 
   constructor(arg: NishanArg & { user_settings: IUserSettings }) {

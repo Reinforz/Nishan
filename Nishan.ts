@@ -32,7 +32,8 @@ class Nishan extends Getters {
         shard_id: (target_space as ISpace).shard_id,
         space_id: (target_space as ISpace).id,
         user_id: (target_space as ISpace).permissions[0].user_id,
-        space_data: target_space
+        space_data: target_space,
+        data: target_space
       })
     else throw new Error(error(`No space matches the criteria`));
   }
@@ -56,6 +57,7 @@ class Nishan extends Getters {
         if (should_add) {
           target_spaces.push(new Space({
             space_data: space.value,
+            data: space.value,
             ...this.getProps()
           }))
         }

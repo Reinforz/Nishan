@@ -378,7 +378,6 @@ export interface IFigma extends Block, IFigmaInput { }
 
 export type TEmbedBlock = ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
 
-// ? TD:2:E Add group wise block interface types ie advanced, embeds etc etc
 export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock;
 
 export type TParentType = IRootPage | ISpace;

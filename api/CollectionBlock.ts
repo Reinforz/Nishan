@@ -46,11 +46,12 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       limit: 50,
       pageId: this.block_data.parent_id,
       verticalColumns: false
-    })
+    });
+    const data = collection_view[$view_id].value as TView;
     return new View({
       ...this.getProps(),
-      parent_id: this.block_data.id,
-      view_data: collection_view[$view_id].value as TView
+      view_data: data,
+      data
     });
   }
 
@@ -62,7 +63,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     if (ICached_data)
       return new Collection({
         ...this.getProps(),
-        collection_data: ICached_data
+        collection_data: ICached_data,
+        data: ICached_data
       });
     const { collection } = await this.loadPageChunk({
       chunkNumber: 0,
@@ -71,9 +73,12 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       cursor: { stack: [] },
       verticalColumns: false
     });
+    const data = collection[(this.block_data as TCollectionBlock).collection_id].value;
+
     return new Collection({
       ...this.getProps(),
-      collection_data: collection[(this.block_data as TCollectionBlock).collection_id].value
+      collection_data: data,
+      data
     });
   }
 
@@ -88,8 +93,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     return (block[this.block_data.id].value as TCollectionBlock).view_ids.map(
       (view_id) => new View({
         ...this.getProps(),
-        parent_id: this.block_data.id,
-        view_data: collection_view[view_id].value
+        view_data: collection_view[view_id].value,
+        data: collection_view[view_id].value
       })
     );
   }

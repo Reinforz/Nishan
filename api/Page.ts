@@ -412,7 +412,7 @@ class Page extends Block<TPage> {
   async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
 
-    if (options.type.match(/gist|codepen|tweet|maps/)) {
+    if (options.type.match(/gist|codepen|tweet|maps|figma/)) {
       options.format = (await this.getGenericEmbedBlockData({
         pageWidth: 500,
         source: (options.properties as any).source[0][0] as string,

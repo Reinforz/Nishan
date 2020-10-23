@@ -13,7 +13,7 @@ import { error } from "../utils/logs";
 
 import { NishanArg, Predicate } from "../types/types";
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IPage, PageProps, PageFormat, IRootPage, ICollectionViewPage } from '../types/block';
+import { TBlock, IPage, PageProps, PageFormat, IRootPage, ICollectionViewPage, TBlockInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 
 
@@ -52,7 +52,7 @@ class Space extends Getters {
    * Return a new block by its id
    * @param block_id The id of the block to obtain
    */
-  async getBlock(block_id: string): Promise<Block<TBlock>> {
+  async getBlock(block_id: string): Promise<Block<TBlock, TBlockInput>> {
     const cache_data = this.cache.block.get(block_id);
     if (cache_data) return new Block({ block_data: cache_data, ...this.getProps() });
     const { recordMap } = await this.getBacklinksForBlock(block_id);

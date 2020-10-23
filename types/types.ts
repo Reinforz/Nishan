@@ -14,7 +14,7 @@ export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' 
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
 export type TEmbedsBlockType = 'drive' | TGenericEmbedBlockType;
-export type IBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
+export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
 export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'teal' | 'blue' | 'purple' | "pink" | 'red';
 export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
 export type FormatBlockColor = TextColor | BGColor;
@@ -317,6 +317,3 @@ export interface NishanArg {
   space_id: string,
   cache: ICache,
 }
-
-/* Function args */
-

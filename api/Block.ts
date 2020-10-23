@@ -6,10 +6,10 @@ import Getters from "./Getters";
 
 import { TBasicBlockType, NishanArg } from "../types/types"
 import { BlockRepostionArg, CreateBlockArg } from "../types/function";
-import { TBlock, PageFormat, PageProps, IPage } from '../types/block';
+import { TBlock, IPage, TBlockInput } from '../types/block';
 import { error } from '../utils/logs';
 
-class Block<T extends TBlock> extends Getters {
+class Block<T extends TBlock, A extends TBlockInput> extends Getters {
   block_data: T;
 
   constructor(arg: NishanArg & { block_data: T }) {
@@ -77,13 +77,13 @@ class Block<T extends TBlock> extends Getters {
     })
   }
 
-  // ? TD:1:H IBlockType specific arg properties and format
+  // ? TD:1:H TBlockType specific arg properties and format
   // ? FEAT:2:M Add Permission to args
   /**
    * Update a block properties and format
    * @param args Block update format and properties options
    */
-  async update(args: { format?: Partial<PageFormat>, properties?: Partial<PageProps> } = {}) {
+  async update(args: Partial<A> = {}) {
     const { format = {}, properties = {} } = args;
     // ? FIX:2:H Handle when args does not have appropriate shape eg: when format is not given, use the current value
     await this.saveTransactions(

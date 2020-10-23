@@ -9,9 +9,9 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 import { error } from "../utils/logs";
 
 import { Operation, TView, NishanArg } from "../types/types";
-import { TCollectionBlock } from '../types/block';
+import { TBlockInput, TCollectionBlock } from '../types/block';
 
-class CollectionBlock extends Block<TCollectionBlock> {
+class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   constructor(arg: NishanArg & {
     block_data: TCollectionBlock,
   }) {

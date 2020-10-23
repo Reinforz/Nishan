@@ -13,12 +13,12 @@ import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListA
 
 import { error, warn } from "../utils/logs";
 
-import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, TGenericEmbedBlockType, } from "../types/types";
+import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, TGenericEmbedBlockType, TBlockType, } from "../types/types";
 import { CreateBlockArg, UserViewArg } from "../types/function";
 import { ISpaceView, SetBookmarkMetadataParams } from "../types/api";
-import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock } from "../types/block";
+import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock, IPageInput, IHeader, IHeaderInput, IDriveInput, IDrive, IText, ITextInput, ITodo, ITodoInput, ISubHeader, ISubHeaderInput, IBulletedList, IBulletedListInput, INumberedList, IToggle, ICallout, ICalloutInput, IDivider, IDividerInput, INumberedListInput, IQuote, IQuoteInput, IToggleInput, ITOC, ITOCInput, IBreadcrumb, IBreadcrumbInput, IEquation, IEquationInput, IFactory, IAudio, IAudioInput, ICode, ICodeInput, IFile, IFileInput, IImage, IImageInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, ICodepen, ICodepenInput, IFigma, IFigmaInput, IGist, IGistInput, IMaps, IMapsInput, ITweet, ITweetInput } from "../types/block";
 
-class Page extends Block<TPage> {
+class Page extends Block<TPage, IPageInput> {
   block_data: TPage;
 
   constructor(arg: NishanArg & { block_data: TPage }) {
@@ -36,7 +36,7 @@ class Page extends Block<TPage> {
       verticalColumns: false
     });
 
-    const blocks: Block<TBlock>[] = [];
+    const blocks: Block<TBlock, TBlockInput>[] = [];
     if (this.block_data.content) {
       this.block_data.content.forEach(content_id => {
         const block_data = block[content_id].value;
@@ -197,7 +197,7 @@ class Page extends Block<TPage> {
    * Update the properties and the format of the page
    * @param opts The format and properties of the page to update
    */
-  async update(opts: { format: Partial<PageFormat>, properties: Partial<PageProps>, permissions: Permission[] }) {
+  async updatePage(opts: { format: Partial<PageFormat>, properties: Partial<PageProps>, permissions: Permission[] }) {
     const { format = this.block_data.format, properties = this.block_data.properties, permissions = (this.block_data as IRootPage).permissions } = opts;
     await this.saveTransactions([
       blockUpdate(this.block_data.id, ['format'], format),
@@ -373,7 +373,7 @@ class Page extends Block<TPage> {
       verticalColumns: false
     });
 
-    const blocks: Block<TBlock>[] = [];
+    const blocks: Block<TBlock, TBlockInput>[] = [];
 
     $block_ids.forEach($block_id => {
       const block = recordMap.block[$block_id].value;
@@ -387,10 +387,7 @@ class Page extends Block<TPage> {
         ...this.getProps(),
       }));
 
-      else blocks.push(new Block({
-        block_data: recordMap.block[$block_id].value,
-        ...this.getProps()
-      }))
+      else blocks.push(this.createClass(block.type, recordMap.block[$block_id].value))
     });
 
     if (!this.block_data.content) this.block_data.content = $block_ids;
@@ -407,7 +404,7 @@ class Page extends Block<TPage> {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  // ? TD:1:H Format and properties based on IBlockType
+  // ? TD:1:H Format and properties based on TBlockType
   async createContent(options: TBlockInput & { file_id?: string }) {
     // ? FEAT:1:M User given after id as position
 
@@ -452,14 +449,7 @@ class Page extends Block<TPage> {
       verticalColumns: false
     });
 
-    if (type === 'page') return new Page({
-      block_data: recordMap.block[$block_id].value as IPage,
-      ...this.getProps()
-    });
-    else return new Block({
-      block_data: recordMap.block[$block_id].value,
-      ...this.getProps()
-    });
+    return this.createClass(type, recordMap.block[$block_id].value);
   }
 
   async createLinkedDBContent(collection_id: string, views: UserViewArg[] = []) {
@@ -624,6 +614,178 @@ class Page extends Block<TPage> {
       permissionItems,
       spaceId: this.space_id
     })
+  }
+
+  createClass(type: TBlockType, value: TBlock) {
+    switch (type) {
+      case "video":
+        return new Block<IVideo, IVideoInput>({
+          block_data: value as IVideo,
+          ...this.getProps()
+        });
+      case "audio":
+        return new Block<IAudio, IAudioInput>({
+          block_data: value as IAudio,
+          ...this.getProps()
+        });
+      case "image":
+        return new Block<IImage, IImageInput>({
+          block_data: value as IImage,
+          ...this.getProps()
+        });
+      case "bookmark":
+        return new Block<IWebBookmark, IWebBookmarkInput>({
+          block_data: value as IWebBookmark,
+          ...this.getProps()
+        });
+      case "code":
+        return new Block<ICode, ICodeInput>({
+          block_data: value as ICode,
+          ...this.getProps()
+        });
+      case "file":
+        return new Block<IFile, IFileInput>({
+          block_data: value as IFile,
+          ...this.getProps()
+        });
+
+      case "tweet":
+        return new Block<ITweet, ITweetInput>({
+          block_data: value as ITweet,
+          ...this.getProps()
+        });
+      case "gist":
+        return new Block<IGist, IGistInput>({
+          block_data: value as IGist,
+          ...this.getProps()
+        });
+      case "codepen":
+        return new Block<ICodepen, ICodepenInput>({
+          block_data: value as ICodepen,
+          ...this.getProps()
+        });
+      case "maps":
+        return new Block<IMaps, IMapsInput>({
+          block_data: value as IMaps,
+          ...this.getProps()
+        });
+      case "figma":
+        return new Block<IFigma, IFigmaInput>({
+          block_data: value as IFigma,
+          ...this.getProps()
+        });
+      case "drive":
+        return new Block<IDrive, IDriveInput>({
+          block_data: value as IDrive,
+          ...this.getProps()
+        });
+
+      case "text":
+        return new Block<IText, ITextInput>({
+          block_data: value as IText,
+          ...this.getProps()
+        });
+      case "table_of_contents":
+        return new Block<ITOC, ITOCInput>({
+          block_data: value as ITOC,
+          ...this.getProps()
+        });
+      case "equation":
+        return new Block<IEquation, IEquationInput>({
+          block_data: value as IEquation,
+          ...this.getProps()
+        });
+      case "breadcrumb":
+        return new Block<IBreadcrumb, IBreadcrumbInput>({
+          block_data: value as IBreadcrumb,
+          ...this.getProps()
+        });
+      case "factory":
+        return new Block<IFactory, IFactoryInput>({
+          block_data: value as IFactory,
+          ...this.getProps()
+        });
+      case "page":
+        return new Page({
+          block_data: value as IPage,
+          ...this.getProps()
+        });
+      case "text":
+        return new Block<IText, ITextInput>({
+          block_data: value as IText,
+          ...this.getProps()
+        });
+      case "to_do":
+        return new Block<ITodo, ITodoInput>({
+          block_data: value as ITodo,
+          ...this.getProps()
+        });
+      case "header":
+        return new Block<IHeader, IHeaderInput>({
+          block_data: value as IHeader,
+          ...this.getProps()
+        });
+      case "sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>({
+          block_data: value as ISubHeader,
+          ...this.getProps()
+        });
+      case "sub_sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>({
+          block_data: value as ISubHeader,
+          ...this.getProps()
+        });
+      case "bulleted_list":
+        return new Block<IBulletedList, IBulletedListInput>({
+          block_data: value as IBulletedList,
+          ...this.getProps()
+        });
+      case "numbered_list":
+        return new Block<INumberedList, INumberedListInput>({
+          block_data: value as INumberedList,
+          ...this.getProps()
+        });
+      case "toggle":
+        return new Block<IToggle, IToggleInput>({
+          block_data: value as IToggle,
+          ...this.getProps()
+        });
+      case "quote":
+        return new Block<IQuote, IQuoteInput>({
+          block_data: value as IQuote,
+          ...this.getProps()
+        });
+      case "divider":
+        return new Block<IDivider, IDividerInput>({
+          block_data: value as IDivider,
+          ...this.getProps()
+        });
+      case "callout":
+        return new Block<ICallout, ICalloutInput>({
+          block_data: value as ICallout,
+          ...this.getProps()
+        });
+      case "toggle":
+        return new Block<IToggle, IToggleInput>({
+          block_data: value as IToggle,
+          ...this.getProps()
+        });
+      case "sub_sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>({
+          block_data: value as ISubHeader,
+          ...this.getProps()
+        });
+      case "drive":
+        return new Block<IDrive, IDriveInput>({
+          block_data: value as IDrive,
+          ...this.getProps()
+        });
+      default:
+        return new Page({
+          block_data: value as IPage,
+          ...this.getProps()
+        });
+    }
   }
 }
 

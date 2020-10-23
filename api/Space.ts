@@ -11,7 +11,7 @@ import UserSettings from "./UserSettings";
 import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from "../utils/logs";
 
-import { NishanArg } from "../types/types";
+import { NishanArg, Predicate } from "../types/types";
 import { ISpace, ISpaceView } from '../types/api';
 import { TBlock, IPage, PageProps, PageFormat, IRootPage } from '../types/block';
 
@@ -91,6 +91,30 @@ class Space extends Getters {
       });
   }
 
+  async getPages(arg: undefined): Promise<Page[]>;
+  async getPages(arg: undefined | string[] | Predicate<IPage>) {
+    const pages: Page[] = [];
+    if (this.space_data) {
+      for (let i = 0; i < this.space_data.pages.length; i++) {
+        const page_id = this.space_data.pages[i];
+        let page = this.cache.block.get(page_id) as IPage;
+        let should_add = false;
+        if (arg === undefined)
+          should_add = true;
+        else if (Array.isArray(arg) && arg.includes(page_id))
+          should_add = true;
+        else if (typeof arg === "function")
+          should_add = arg(page, i);
+        if (should_add && page && (page as IPage).type === "page")
+          pages.push(new Page({
+            block_data: page,
+            ...this.getProps()
+          }))
+      }
+      return pages;
+    } else
+      throw new Error(error("This space has been deleted"))
+  }
   /**
    * Obtain a page using the passed id
    * @param page_id Id of the page to obtain 

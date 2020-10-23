@@ -1,5 +1,6 @@
 import { TParentType } from "../types/block";
-import { NishanArg, TData } from "../types/types";
+import { BlockRepostionArg } from "../types/function";
+import { NishanArg, TData, TPage } from "../types/types";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
@@ -17,5 +18,23 @@ export default class Data extends Getters {
       return parent;
     } else
       throw new Error(error(`Block with id ${this.data.id} doesnot have a parent`));
+  }
+
+  addToContentArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
+    const data = this.data as TPage;
+
+    if (data.content) {
+      if (arg === undefined)
+        data.content.push($block_id);
+      else {
+        if (typeof arg === "number")
+          data.content.splice(arg, 0, $block_id);
+        else {
+          const target_index = data.content.indexOf(arg.id);
+          data.content.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
+        }
+      }
+    } else
+      throw new Error("The data is not of type page")
   }
 }

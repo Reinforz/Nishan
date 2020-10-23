@@ -229,18 +229,6 @@ class Page extends Block<TPage, IPageInput> {
   }
 
   /**
-   * Add a page as a linked page to current page
-   * @param $block_id Id of the page to add as a linked page
-   */
-  async createLinkedPageContent($block_id: string) {
-    const parent_id = this.block_data.id;
-    await this.saveTransactions([
-      blockListAfter(parent_id, ['content'], { after: '', id: $block_id }),
-      ...lastEditOperations(parent_id, this.user_id)
-    ]);
-  }
-
-  /**
    * Export the page and its content as a zip
    * @param arg Options used for setting up export
    */
@@ -271,12 +259,12 @@ class Page extends Block<TPage, IPageInput> {
     fs.createWriteStream(fullpath).end(response.data);
   }
 
-  async createDriveContent(fileId: string) {
+  async createDriveContent(fileId: string, position?: number | BlockRepostionArg) {
     const { accounts } = await this.getGoogleDriveAccounts();
     const block = await this.createContent({
       type: "drive"
     });
-
+    this.addToContentArray(block.block_data.id, position);
     const { recordMap } = await this.initializeGoogleDriveBlock({
       blockId: block.block_data.id,
       fileId,
@@ -290,7 +278,7 @@ class Page extends Block<TPage, IPageInput> {
     });
   }
 
-  async createTemplateContent(factory: IFactoryInput) {
+  async createTemplateContent(factory: IFactoryInput, position?: number | BlockRepostionArg) {
     const { format, properties, type } = factory;
     const $block_id = uuidv4();
     const content_blocks = (factory.contents.map(content => ({ ...content, $block_id: uuidv4() })) as CreateBlockArg[]).map(content => {
@@ -321,6 +309,8 @@ class Page extends Block<TPage, IPageInput> {
       pageId: this.block_data.id,
       verticalColumns: false
     });
+
+    this.addToContentArray($block_id, position);
     const data = recordMap.block[$block_id].value;
     return {
       template: new Block({
@@ -341,15 +331,17 @@ class Page extends Block<TPage, IPageInput> {
    * @param contents Contents options
    */
 
-  async createContents(contents: TBlockInput[]) {
+  async createContents(contents: (TBlockInput & { position?: number | BlockRepostionArg })[]) {
     const operations: Operation[] = [];
     const bookmarks: SetBookmarkMetadataParams[] = [];
     const $block_ids: string[] = [];
 
     contents.forEach(content => {
-      const { format, properties, type } = content;
+      const { format, properties, type, position } = content;
       const $block_id = uuidv4();
       $block_ids.push($block_id);
+      this.addToContentArray($block_id, position);
+
       if (type === "bookmark")
         bookmarks.push({
           blockId: $block_id,
@@ -393,7 +385,8 @@ class Page extends Block<TPage, IPageInput> {
         ...this.getProps(),
       }));
 
-      else blocks.push(this.createClass(block.type, recordMap.block[$block_id].value))
+      else blocks.push(this.createClass(block.type, recordMap.block[$block_id].value));
+
     });
 
     if (!this.block_data.content) this.block_data.content = $block_ids;
@@ -462,21 +455,13 @@ class Page extends Block<TPage, IPageInput> {
       pageId: this.block_data.id,
       verticalColumns: false
     });
-    if (options.position === undefined)
-      this.block_data.content.push($block_id);
-    else {
-      if (typeof options.position === "number")
-        this.block_data.content.splice(options.position, 0, $block_id);
-      else {
-        const target_index = this.block_data.content.indexOf(options.position.id);
-        this.block_data.content.splice(target_index + (options.position.position === "before" ? -1 : 1), 0, $block_id);
-      }
-    }
+
+    this.addToContentArray($block_id, options.position);
 
     return this.createClass(type, recordMap.block[$block_id].value);
   }
 
-  async createLinkedDBContent(collection_id: string, views: UserViewArg[] = []) {
+  async createLinkedDBContent(collection_id: string, views: UserViewArg[] = [], position?: number | BlockRepostionArg) {
     const $content_id = uuidv4();
     const $views = views.map((view) => ({ ...view, id: uuidv4() }));
     const view_ids = $views.map((view) => view.id);
@@ -514,6 +499,7 @@ class Page extends Block<TPage, IPageInput> {
       }
     });
     const data = recordMap.block[$content_id].value as ICollectionView;
+    this.addToContentArray($content_id, position);
     return new CollectionView({
       ...this.getProps(),
       block_data: data,
@@ -579,7 +565,7 @@ class Page extends Block<TPage, IPageInput> {
     })
   }
 
-  async createInlineDBContent(options: { views?: UserViewArg[] } = {}) {
+  async createInlineDBContent(options: { views?: UserViewArg[] } = {}, position?: number | BlockRepostionArg) {
     // ? FEAT:1:M Task in schema
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();
@@ -615,6 +601,8 @@ class Page extends Block<TPage, IPageInput> {
       }
     });
     const data = recordMap.block[$collection_view_id].value as ICollectionView;
+    this.addToContentArray($collection_view_id, position);
+
     return new CollectionView({
       ...this.getProps(),
       block_data: data,

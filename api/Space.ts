@@ -116,7 +116,6 @@ class Space extends Getters {
               break
             case "collection_view_page":
               pages.push(new CollectionViewPage({
-                parent_id: this.space_data.id,
                 block_data: page,
                 ...this.getProps()
               }))

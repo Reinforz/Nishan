@@ -6,7 +6,6 @@ import { ICollectionView } from '../types/block';
 
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg & {
-    parent_id: string,
     block_data: ICollectionView,
   }) {
     super(arg);

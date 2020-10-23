@@ -385,7 +385,6 @@ class Page extends Block<TPage> {
       else if (block.type === "collection_view") blocks.push(new CollectionView({
         block_data: block,
         ...this.getProps(),
-        parent_id: this.block_data.id
       }));
 
       else blocks.push(new Block({
@@ -503,7 +502,6 @@ class Page extends Block<TPage> {
 
     return new CollectionView({
       ...this.getProps(),
-      parent_id: this.block_data.id,
       block_data: recordMap.block[$content_id].value as ICollectionView
     });
   }
@@ -562,7 +560,6 @@ class Page extends Block<TPage> {
     return new CollectionViewPage({
       ...this.getProps(),
       // ? RF: Why would you need parent id if `collection_view_page[this.block_data.id]` already has that
-      parent_id: this.block_data.id,
       block_data: recordMap.block[this.block_data.id].value as ICollectionViewPage
     })
   }
@@ -605,7 +602,6 @@ class Page extends Block<TPage> {
 
     return new CollectionView({
       ...this.getProps(),
-      parent_id: this.block_data.id,
       block_data: recordMap.block[$collection_view_id].value as ICollectionView
     })
   }

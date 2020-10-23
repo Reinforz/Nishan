@@ -12,16 +12,12 @@ import { Operation, TView, NishanArg } from "../types/types";
 import { TCollectionBlock } from '../types/block';
 
 class CollectionBlock extends Block<TCollectionBlock> {
-  parent_id: string;
-
   constructor(arg: NishanArg & {
-    parent_id: string,
     block_data: TCollectionBlock,
   }) {
     super(arg);
     if (!arg.block_data.type.match(/collection_view/))
       throw new Error(error(`Cannot create collection_block from ${arg.block_data.type} block`));
-    this.parent_id = arg.parent_id;
   }
 
   async createView() {
@@ -48,7 +44,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
       chunkNumber: 0,
       cursor: { stack: [] },
       limit: 50,
-      pageId: this.parent_id,
+      pageId: this.block_data.parent_id,
       verticalColumns: false
     })
     return new View({
@@ -71,7 +67,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
     const { collection } = await this.loadPageChunk({
       chunkNumber: 0,
       limit: 50,
-      pageId: this.parent_id,
+      pageId: this.block_data.parent_id,
       cursor: { stack: [] },
       verticalColumns: false
     });
@@ -85,7 +81,7 @@ class CollectionBlock extends Block<TCollectionBlock> {
     const { block, collection_view } = await this.loadPageChunk({
       chunkNumber: 0,
       limit: 50,
-      pageId: this.parent_id,
+      pageId: this.block_data.parent_id,
       cursor: { stack: [] },
       verticalColumns: false
     })

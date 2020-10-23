@@ -9,12 +9,12 @@ import CollectionView from './CollectionView';
 
 import createViews from "../utils/createViews";
 
-import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove } from '../utils/chunk';
+import { collectionUpdate, lastEditOperations, blockUpdate, blockSet, blockListAfter, spaceViewListBefore, spaceViewListRemove, blockListRemove, blockListBefore } from '../utils/chunk';
 
 import { error, warn } from "../utils/logs";
 
 import { TPage, Schema, SchemaUnitType, NishanArg, ExportType, Permission, TPermissionRole, Operation, Predicate, TGenericEmbedBlockType, TBlockType, } from "../types/types";
-import { CreateBlockArg, UserViewArg } from "../types/function";
+import { BlockRepostionArg, CreateBlockArg, UserViewArg } from "../types/function";
 import { ISpaceView, SetBookmarkMetadataParams } from "../types/api";
 import { PageFormat, PageProps, IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, ICollectionView, ICollectionViewPage, TBlock, IPageInput, IHeader, IHeaderInput, IDriveInput, IDrive, IText, ITextInput, ITodo, ITodoInput, ISubHeader, ISubHeaderInput, IBulletedList, IBulletedListInput, INumberedList, IToggle, ICallout, ICalloutInput, IDivider, IDividerInput, INumberedListInput, IQuote, IQuoteInput, IToggleInput, ITOC, ITOCInput, IBreadcrumb, IBreadcrumbInput, IEquation, IEquationInput, IFactory, IAudio, IAudioInput, ICode, ICodeInput, IFile, IFileInput, IImage, IImageInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, ICodepen, ICodepenInput, IFigma, IFigmaInput, IGist, IGistInput, IMaps, IMapsInput, ITweet, ITweetInput } from "../types/block";
 
@@ -411,18 +411,27 @@ class Page extends Block<TPage, IPageInput> {
    * @param {ContentOptions} options Options for modifying the content during creation
    */
   // ? TD:1:H Format and properties based on TBlockType
-  async createContent(options: TBlockInput & { file_id?: string }) {
+  async createContent(options: TBlockInput & { file_id?: string, position?: number | BlockRepostionArg }) {
     // ? FEAT:1:M User given after id as position
+    const $block_id = uuidv4();
+    if (!this.block_data.content) this.block_data.content = []
+
     if (options.type.match(/gist|codepen|tweet|maps|figma/)) {
       options.format = (await this.getGenericEmbedBlockData({
         pageWidth: 500,
         source: (options.properties as any).source[0][0] as string,
         type: options.type as TGenericEmbedBlockType
       })).format;
-    }
+    };
+    let block_list_after_op = blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id });
+
+    if (typeof options.position === "number") {
+      const block_id_at_pos = this.block_data?.content?.[options.position] ?? '';
+      block_list_after_op = blockListBefore(this.block_data.id, ["content"], { before: block_id_at_pos, id: $block_id });
+    } else
+      block_list_after_op = options.position?.position === "after" ? blockListAfter(this.block_data.id, ["content"], { after: options.position.id, id: $block_id }) : blockListBefore(this.block_data.id, ["content"], { after: options.position?.id, id: $block_id })
 
     const { format, properties, type } = options;
-    const $block_id = uuidv4();
 
     const operations = [
       this.createBlock({
@@ -431,7 +440,7 @@ class Page extends Block<TPage, IPageInput> {
         properties,
         format,
       }),
-      blockListAfter(this.block_data.id, ['content'], { after: '', id: $block_id }),
+      block_list_after_op,
     ];
 
     if (type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], { id: options.file_id }));
@@ -453,6 +462,16 @@ class Page extends Block<TPage, IPageInput> {
       pageId: this.block_data.id,
       verticalColumns: false
     });
+    if (options.position === undefined)
+      this.block_data.content.push($block_id);
+    else {
+      if (typeof options.position === "number")
+        this.block_data.content.splice(options.position, 0, $block_id);
+      else {
+        const target_index = this.block_data.content.indexOf(options.position.id);
+        this.block_data.content.splice(target_index + (options.position.position === "before" ? -1 : 1), 0, $block_id);
+      }
+    }
 
     return this.createClass(type, recordMap.block[$block_id].value);
   }

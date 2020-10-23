@@ -295,7 +295,7 @@ export type TMediaBlock = IVideo | IAudio | IImage | IWebBookmark | ICode | IFil
 export interface IPage extends Block {
   properties: PageProps,
   type: 'page',
-  content?: string[],
+  content: string[],
   format: PageFormat,
   is_template?: boolean,
   file_ids?: string[]

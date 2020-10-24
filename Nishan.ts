@@ -15,16 +15,21 @@ class Nishan extends Getters {
   async init(arg: string | Predicate<ISpace>) {
     await this.getAllSpaces();
     const space = await this.getSpace(arg);
+    if (space.space_data) {
+      this.shard_id = space.space_data.shard_id;
+      this.space_id = space.space_data.id;
+      this.user_id = space.space_data.permissions[0].user_id;
+    }
     return space;
   }
 
   async getSpace(arg: Predicate<ISpace> | string) {
     const res = await this.getAllSpaces();
-    let target_space: ISpace | undefined = undefined;
-
-    Object.values(res).forEach(user => {
-      target_space = (Object.values(user.space).find((space, index) => typeof arg === "string" ? space.value.id === arg : arg(space.value, index))?.value)
-    });
+    let target_space: ISpace | undefined = arg === undefined ? Object.values(Object.values(res)[0].space)[0].value : undefined;
+    if (arg !== undefined)
+      Object.values(res).forEach(user => {
+        target_space = (Object.values(user.space).find((space, index) => typeof arg === "string" ? space.value.id === arg : arg(space.value, index))?.value)
+      });
 
     if (target_space)
       return new Space({
@@ -92,12 +97,16 @@ class Nishan extends Getters {
         joined: true,
         id: $space_view_id,
         version: 1,
-        visited_templates: [],
-        sidebar_hidden_templates: [],
+        visited_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
+        sidebar_hidden_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
       }),
       blockUpdate($block_id, [], {
-        type: 'copy_indicator', id: $block_id, version: 1,
-        parent_id: $space_id, parent_table: 'space', alive: true,
+        type: 'page',
+        id: $block_id,
+        version: 1,
+        parent_id: $space_id,
+        parent_table: 'space',
+        alive: true,
         permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
         created_by_id: this.user_id,
         created_by_table: 'notion_user',
@@ -105,11 +114,14 @@ class Nishan extends Getters {
         last_edited_time: Date.now(),
         last_edited_by_table: 'notion_user',
         last_edited_by_id: this.user_id,
+        properties: {
+          title: [[name]]
+        }
       }),
       userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
       spaceListAfter($space_id, ['pages'], { id: $block_id }),
     ]);
-  }
+  };
 }
 
 export default Nishan;

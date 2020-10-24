@@ -1,6 +1,19 @@
 import { ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
+export interface InitializePageTemplateParams {
+  recordMap: {}
+  sourceBlockId: string,
+  spaceId: string,
+  targetBlockId: string
+}
+
+export interface InitializePageTemplateResult {
+  recordMap: {
+    block: BlockData
+  }
+}
+
 export interface LoadBlockSubtreeParams {
   blockId: string,
   shallow: boolean

@@ -2,14 +2,10 @@ import { collectionViewUpdate } from '../utils/chunk';
 import Data from "./Data";
 import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
 
-class View extends Data {
-  view_data: TView;
-
-  constructor(arg: NishanArg & {
-    view_data: TView,
-  }) {
+class View extends Data<TView> {
+  constructor(arg: NishanArg<TView>) {
     super(arg);
-    this.view_data = arg.view_data;
+    this.data = arg.data;
   }
 
   async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {
@@ -47,12 +43,12 @@ class View extends Data {
     }
 
     if (properties && properties.length !== 0) {
-      args.format = { [`${this.view_data.type}_wrap`]: true };
-      args.format[`${this.view_data.type}_properties`] = properties;
+      args.format = { [`${this.data.type}_wrap`]: true };
+      args.format[`${this.data.type}_properties`] = properties;
     }
 
     // ? FIX:2:H Respect previous filters and sorts
-    await this.saveTransactions([collectionViewUpdate(this.view_data.id, [], args)]);
+    await this.saveTransactions([collectionViewUpdate(this.data.id, [], args)]);
   }
 }
 

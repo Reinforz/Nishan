@@ -309,12 +309,12 @@ export interface ICache {
   user_settings: Map<string, IUserSettings>,
 }
 
-export interface NishanArg {
+export interface NishanArg<T extends TData> {
   token: string,
   interval: number,
   user_id: string,
   shard_id: number,
   space_id: string,
   cache: ICache,
-  data: TData
+  data: T
 }

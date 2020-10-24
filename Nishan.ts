@@ -8,17 +8,17 @@ import { blockUpdate, spaceListAfter, spaceViewSet, userSettingsUpdate, userRoot
 import { ISpace } from './types/api';
 
 class Nishan extends Getters {
-  constructor(arg: NishanArg) {
+  constructor(arg: NishanArg<any>) {
     super(arg);
   }
 
   async init(arg: string | Predicate<ISpace>) {
     await this.getAllSpaces();
     const space = await this.getSpace(arg);
-    if (space.space_data) {
-      this.shard_id = space.space_data.shard_id;
-      this.space_id = space.space_data.id;
-      this.user_id = space.space_data.permissions[0].user_id;
+    if (space.data) {
+      this.shard_id = space.data.shard_id;
+      this.space_id = space.data.id;
+      this.user_id = space.data.permissions[0].user_id;
     }
     return space;
   }
@@ -37,7 +37,6 @@ class Nishan extends Getters {
         shard_id: (target_space as ISpace).shard_id,
         space_id: (target_space as ISpace).id,
         user_id: (target_space as ISpace).permissions[0].user_id,
-        space_data: target_space,
         data: target_space
       })
     else throw new Error(error(`No space matches the criteria`));
@@ -61,7 +60,6 @@ class Nishan extends Getters {
 
         if (should_add) {
           target_spaces.push(new Space({
-            space_data: space.value,
             data: space.value,
             ...this.getProps()
           }))
@@ -71,7 +69,6 @@ class Nishan extends Getters {
     return target_spaces;
   }
 
-  // ? FIX:1:H Not working
   async createWorkSpace(opt: Partial<Pick<ISpace, "name" | "icon">>) {
     const { name = "Workspace", icon = "" } = opt;
 
@@ -121,7 +118,16 @@ class Nishan extends Getters {
       userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
       spaceListAfter($space_id, ['pages'], { id: $block_id }),
     ]);
+    await this.loadUserContent();
+    const space = this.cache.space.get($space_id);
+    if (space) {
+      return new Space({
+        data: space,
+        ...this.getProps()
+      })
+    };
   };
+
 }
 
 export default Nishan;

@@ -12,12 +12,10 @@ import { Operation, TView, NishanArg } from "../types/types";
 import { TBlockInput, TCollectionBlock } from '../types/block';
 
 class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
-  constructor(arg: NishanArg & {
-    block_data: TCollectionBlock,
-  }) {
+  constructor(arg: NishanArg<TCollectionBlock>) {
     super(arg);
-    if (!arg.block_data.type.match(/collection_view/))
-      throw new Error(error(`Cannot create collection_block from ${arg.block_data.type} block`));
+    if (!arg.data.type.match(/collection_view/))
+      throw new Error(error(`Cannot create collection_block from ${arg.data.type} block`));
   }
 
   async createView() {
@@ -33,10 +31,10 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
           format: { [`table_properties`]: [] },
           parent_table: 'block',
           alive: true,
-          parent_id: this.block_data.id
+          parent_id: this.data.id
         }),
-        blockListAfter(this.block_data.id, ['view_ids'], { after: '', id: $view_id }),
-        blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+        blockListAfter(this.data.id, ['view_ids'], { after: '', id: $view_id }),
+        blockSet(this.data.id, ['last_edited_time'], Date.now())
       ]
     );
 
@@ -44,13 +42,12 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       chunkNumber: 0,
       cursor: { stack: [] },
       limit: 50,
-      pageId: this.block_data.parent_id,
+      pageId: this.data.parent_id,
       verticalColumns: false
     });
     const data = collection_view[$view_id].value as TView;
     return new View({
       ...this.getProps(),
-      view_data: data,
       data
     });
   }
@@ -59,25 +56,23 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
    * Fetch the collection of the block from the collection_id
    */
   async fetchCollection() {
-    const ICached_data = this.cache.collection.get((this.block_data as TCollectionBlock).collection_id);
+    const ICached_data = this.cache.collection.get((this.data as TCollectionBlock).collection_id);
     if (ICached_data)
       return new Collection({
         ...this.getProps(),
-        collection_data: ICached_data,
         data: ICached_data
       });
     const { collection } = await this.loadPageChunk({
       chunkNumber: 0,
       limit: 50,
-      pageId: this.block_data.parent_id,
+      pageId: this.data.parent_id,
       cursor: { stack: [] },
       verticalColumns: false
     });
-    const data = collection[(this.block_data as TCollectionBlock).collection_id].value;
+    const data = collection[(this.data as TCollectionBlock).collection_id].value;
 
     return new Collection({
       ...this.getProps(),
-      collection_data: data,
       data
     });
   }
@@ -86,14 +81,13 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     const { block, collection_view } = await this.loadPageChunk({
       chunkNumber: 0,
       limit: 50,
-      pageId: this.block_data.parent_id,
+      pageId: this.data.parent_id,
       cursor: { stack: [] },
       verticalColumns: false
     })
-    return (block[this.block_data.id].value as TCollectionBlock).view_ids.map(
+    return (block[this.data.id].value as TCollectionBlock).view_ids.map(
       (view_id) => new View({
         ...this.getProps(),
-        view_data: collection_view[view_id].value,
         data: collection_view[view_id].value
       })
     );
@@ -116,20 +110,20 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
           format,
         }),
         blockUpdate($page_id, [], {
-          parent_id: this.block_data.collection_id,
+          parent_id: this.data.collection_id,
           parent_table: 'collection',
           alive: true
         }),
         ...createOperation($page_id, this.user_id),
         ...lastEditOperations($page_id, this.user_id),
-        blockSet(this.block_data.id, ['last_edited_time'], Date.now())
+        blockSet(this.data.id, ['last_edited_time'], Date.now())
       );
     });
     await this.saveTransactions(ops)
 
     const { recordMap } = await this.queryCollection({
-      collectionId: this.block_data.collection_id,
-      collectionViewId: (this.block_data as TCollectionBlock).view_ids[0],
+      collectionId: this.data.collection_id,
+      collectionViewId: (this.data as TCollectionBlock).view_ids[0],
       query: {},
       loader: {
         limit: 100,

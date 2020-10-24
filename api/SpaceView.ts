@@ -1,38 +1,35 @@
-import Data from "./Data";
+import Data from './Data';
 
 import { NishanArg } from '../types/types';
-import { spaceViewUpdate } from "../utils/chunk";
-import { ISpaceView } from "../types/api";
+import { spaceViewUpdate } from '../utils/chunk';
+import { ISpaceView } from '../types/api';
 
-class SpaceView extends Data {
-  space_view_data: ISpaceView
-  constructor(arg: NishanArg & { space_view_data: ISpaceView }) {
-    super(arg)
-    this.space_view_data = arg.space_view_data;
+class SpaceView extends Data<ISpaceView> {
+  constructor(arg: NishanArg<ISpaceView>) {
+    super(arg);
+    this.data = arg.data;
   }
 
-  async update(arg: Partial<Pick<ISpaceView, "notify_desktop" |
-    "notify_email" |
-    "notify_mobile">>) {
-    const { notify_email = this.space_view_data.notify_email, notify_desktop = this.space_view_data.notify_desktop, notify_mobile = this.space_view_data.notify_mobile } = arg;
+  async update(arg: Partial<Pick<ISpaceView, 'notify_desktop' | 'notify_email' | 'notify_mobile'>>) {
+    const {
+      notify_email = this.data.notify_email,
+      notify_desktop = this.data.notify_desktop,
+      notify_mobile = this.data.notify_mobile
+    } = arg;
 
     await this.saveTransactions([
-      spaceViewUpdate(this.space_view_data.id, [], {
+      spaceViewUpdate(this.data.id, [], {
         notify_email,
         notify_desktop,
         notify_mobile
       })
     ]);
 
-    const cached_data = this.cache.space_view.get(this.space_view_data.id);
-    if (cached_data) {
-      cached_data.notify_email = notify_email;
-      cached_data.notify_desktop = notify_desktop;
-      cached_data.notify_mobile = notify_mobile;
-    }
-    this.space_view_data.notify_email = notify_email;
-    this.space_view_data.notify_desktop = notify_desktop;
-    this.space_view_data.notify_mobile = notify_mobile;
+    this.updateCache('space_view', [
+      ['notify_email', notify_email],
+      ['notify_desktop', notify_desktop],
+      ['notify_mobile', notify_mobile]
+    ]);
   }
 }
 

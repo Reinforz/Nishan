@@ -7,19 +7,17 @@ import Data from "./Data";
 import { NishanArg } from "../types/types";
 import { ICollection, PageProps, PageFormat } from '../types/block';
 
-class Collection extends Data {
-  collection_data: ICollection;
-
-  constructor(arg: NishanArg & { collection_data: ICollection }) {
+class Collection extends Data<ICollection> {
+  constructor(arg: NishanArg<ICollection>) {
     super(arg);
-    this.collection_data = arg.collection_data;
+    this.data = arg.data;
   }
 
   async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
     await this.saveTransactions(
       [
-        ...Object.entries(properties).map(([path, arg]) => collectionSet(this.collection_data.id, [path], arg)),
-        collectionSet(this.collection_data.id, ['last_edited_time'], Date.now())
+        ...Object.entries(properties).map(([path, arg]) => collectionSet(this.data.id, [path], arg)),
+        collectionSet(this.data.id, ['last_edited_time'], Date.now())
       ]
     )
   }
@@ -33,13 +31,13 @@ class Collection extends Data {
         id: $template_id,
         version: 1,
         is_template: true,
-        parent_id: this.collection_data.id,
+        parent_id: this.data.id,
         parent_table: 'collection',
         alive: true,
         properties,
         format
       }),
-      collectionListAfter(this.collection_data.id, ['template_pages'], { id: $template_id })
+      collectionListAfter(this.data.id, ['template_pages'], { id: $template_id })
     ]);
   }
 }

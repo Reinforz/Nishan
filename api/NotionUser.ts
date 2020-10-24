@@ -1,36 +1,33 @@
-import Data from "./Data";
+import Data from './Data';
 
-import { NishanArg } from "../types/types";
-import { notionUserUpdate } from "../utils/chunk";
-import { INotionUser } from "../types/api";
+import { NishanArg } from '../types/types';
+import { notionUserUpdate } from '../utils/chunk';
+import { INotionUser } from '../types/api';
 
-class NotionUser extends Data {
-  notion_user: INotionUser;
-
-  constructor(arg: NishanArg & { notion_user: INotionUser }) {
+class NotionUser extends Data<INotionUser> {
+  constructor(arg: NishanArg<INotionUser>) {
     super(arg);
-    this.notion_user = arg.notion_user;
+    this.data = arg.data;
   }
 
-  async update(opt: Partial<Pick<INotionUser, "family_name" | "given_name" | "profile_photo">>) {
-    const { family_name = this.notion_user.family_name, given_name = this.notion_user.given_name, profile_photo = this.notion_user.profile_photo } = opt;
+  async update(opt: Partial<Pick<INotionUser, 'family_name' | 'given_name' | 'profile_photo'>>) {
+    const {
+      family_name = this.data.family_name,
+      given_name = this.data.given_name,
+      profile_photo = this.data.profile_photo
+    } = opt;
     await this.saveTransactions([
-      notionUserUpdate(this.notion_user.id, [], {
+      notionUserUpdate(this.data.id, [], {
         family_name,
         given_name,
         profile_photo
       })
     ]);
-
-    const cached_data = this.cache.notion_user.get(this.notion_user.id);
-    if (cached_data) {
-      cached_data.family_name = family_name;
-      cached_data.given_name = given_name;
-      cached_data.profile_photo = profile_photo;
-    }
-    this.notion_user.family_name = family_name;
-    this.notion_user.given_name = given_name;
-    this.notion_user.profile_photo = profile_photo;
+    this.updateCache('notion_user', [
+      ['family_name', family_name],
+      ['given_name', given_name],
+      ['profile_photo', profile_photo]
+    ]);
   }
 }
 

@@ -4,11 +4,11 @@ import { NishanArg, TData, TPage } from "../types/types";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
-export default class Data extends Getters {
-  data: TData;
-  constructor(arg: NishanArg) {
+export default class Data<T extends TData> extends Getters {
+  data: T;
+  constructor(arg: NishanArg<T>) {
     super(arg);
-    this.data = arg.data;
+    this.data = arg.data as any;
   }
 
   getParent() {
@@ -42,5 +42,13 @@ export default class Data extends Getters {
       }
     } else
       throw new Error("The data is not of type page")
+  }
+
+  updateCache(key: "space_view" | "notion_user" | "user_settings" | "space" | "block" | "collection", items: [keyof T, any][]) {
+    const cached_data = this.cache[key].get(this.data.id) as T;
+    if (cached_data) items.forEach(([key, value]) => {
+      cached_data[key] = value;
+      this.data[key] = value;
+    })
   }
 }

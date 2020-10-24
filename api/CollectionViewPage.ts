@@ -5,12 +5,10 @@ import { NishanArg } from '../types/types';
 import { ICollectionViewPage } from '../types/block';
 
 class CollectionViewPage extends CollectionBlock {
-  constructor(arg: NishanArg & {
-    block_data: ICollectionViewPage,
-  }) {
+  constructor(arg: NishanArg<ICollectionViewPage>) {
     super(arg);
-    if (arg.block_data.type !== 'collection_view_page')
-      throw new Error(error(`Cannot create collection_view_page block from ${arg.block_data.type} block`));
+    if (arg.data.type !== 'collection_view_page')
+      throw new Error(error(`Cannot create collection_view_page block from ${arg.data.type} block`));
   }
 }
 

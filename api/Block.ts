@@ -9,12 +9,10 @@ import { BlockRepostionArg, CreateBlockArg } from "../types/function";
 import { TBlock, IPage, TBlockInput } from '../types/block';
 import { error } from '../utils/logs';
 
-class Block<T extends TBlock, A extends TBlockInput> extends Data {
-  block_data: T;
-
-  constructor(arg: NishanArg & { block_data: T }) {
+class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
+  constructor(arg: NishanArg<T>) {
     super(arg);
-    this.block_data = arg.block_data;
+    this.data = arg.data;
   }
 
   /**
@@ -22,17 +20,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
    * @param arg number of new index
    */
   async reposition(arg: number | BlockRepostionArg) {
-    const parent = this.cache.block.get(this.block_data.parent_id) as IPage;
+    const parent = this.cache.block.get(this.data.parent_id) as IPage;
     if (parent) {
       if (parent.content) {
         if (typeof arg === "number") {
           const block_id_at_pos = parent.content[arg];
           await this.saveTransactions([
-            blockListAfter(this.block_data.parent_id, ["content"], { after: block_id_at_pos, id: this.block_data.id })
+            blockListAfter(this.data.parent_id, ["content"], { after: block_id_at_pos, id: this.data.id })
           ]);
         } else
           await this.saveTransactions([
-            arg.position === "after" ? blockListAfter(this.block_data.parent_id, ["content"], { after: arg.id, id: this.block_data.id }) : blockListBefore(this.block_data.parent_id, ["content"], { after: arg.id, id: this.block_data.id })
+            arg.position === "after" ? blockListAfter(this.data.parent_id, ["content"], { after: arg.id, id: this.data.id }) : blockListBefore(this.data.parent_id, ["content"], { after: arg.id, id: this.data.id })
           ]);
       } else
         throw new Error(error("Block parent doesn't have any children"))
@@ -47,9 +45,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
     const $gen_block_id = uuidv4();
     await this.saveTransactions(
       [
-        this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: this.block_data.parent_id }),
-        blockListAfter(this.block_data.parent_id, ['content'], {
-          after: this.block_data.id,
+        this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: this.data.parent_id }),
+        blockListAfter(this.data.parent_id, ['content'], {
+          after: this.data.id,
           id: $gen_block_id
         }),
       ]
@@ -58,7 +56,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
     await this.enqueueTask({
       eventName: 'duplicateBlock',
       request: {
-        sourceBlockId: this.block_data.id,
+        sourceBlockId: this.data.id,
         targetBlockId: $gen_block_id,
         addCopyName: true
       }
@@ -72,7 +70,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
       }
     ]);
     return new Block({
-      block_data: block[$gen_block_id].value,
       data: block[$gen_block_id].value,
       ...this.getProps()
     })
@@ -87,7 +84,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
     const { format = {}, properties = {} } = args;
     await this.saveTransactions(
       [
-        blockUpdate(this.block_data.id, [], {
+        blockUpdate(this.data.id, [], {
           properties,
           format,
           last_edited_time: Date.now()
@@ -98,14 +95,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
 
   async convertTo(type: TBasicBlockType) {
     await this.saveTransactions([
-      blockUpdate(this.block_data.id, [], { type })
+      blockUpdate(this.data.id, [], { type })
     ]);
 
-    const cached_value = this.cache.block.get(this.block_data.id);
+    const cached_value = this.cache.block.get(this.data.id);
     if (cached_value) {
-      this.block_data.type = type;
+      this.data.type = type;
       cached_value.type = type;
-      this.cache.block.set(this.block_data.id, cached_value);
+      this.cache.block.set(this.data.id, cached_value);
     }
   }
 
@@ -114,18 +111,18 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
    */
   async delete() {
     const current_time = Date.now();
-    const is_root_page = this.block_data.parent_table === "space" && this.block_data.type === "page";
+    const is_root_page = this.data.parent_table === "space" && this.data.type === "page";
     await this.saveTransactions(
       [
-        blockUpdate(this.block_data.id, [], {
+        blockUpdate(this.data.id, [], {
           alive: false
         }),
-        is_root_page ? spaceListRemove(this.block_data.space_id, ['pages'], { id: this.block_data.id }) : blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
-        blockSet(this.block_data.id, ['last_edited_time'], current_time),
-        is_root_page ? spaceSet(this.block_data.space_id, ['last_edited_time'], current_time) : blockSet(this.block_data.parent_id, ['last_edited_time'], current_time)
+        is_root_page ? spaceListRemove(this.data.space_id, ['pages'], { id: this.data.id }) : blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
+        blockSet(this.data.id, ['last_edited_time'], current_time),
+        is_root_page ? spaceSet(this.data.space_id, ['last_edited_time'], current_time) : blockSet(this.data.parent_id, ['last_edited_time'], current_time)
       ]
     );
-    this.cache.block.delete(this.block_data.id);
+    this.cache.block.delete(this.data.id);
     return undefined;
   }
 
@@ -137,10 +134,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
     const current_time = Date.now();
     await this.saveTransactions(
       [
-        blockUpdate(this.block_data.id, [], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
-        blockListRemove(this.block_data.parent_id, ['content'], { id: this.block_data.id }),
-        blockListAfter(new_parent_id, ['content'], { after: '', id: this.block_data.id }),
-        blockSet(this.block_data.parent_id, ['last_edited_time'], current_time),
+        blockUpdate(this.data.id, [], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
+        blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
+        blockListAfter(new_parent_id, ['content'], { after: '', id: this.data.id }),
+        blockSet(this.data.parent_id, ['last_edited_time'], current_time),
         blockSet(new_parent_id, ['last_edited_time'], current_time)
       ]
     )
@@ -154,7 +151,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data {
       properties,
       format,
       type,
-      parent_id: parent_id || this.block_data.id,
+      parent_id: parent_id || this.data.id,
       parent_table: 'block',
       alive: true,
       created_time: current_time,

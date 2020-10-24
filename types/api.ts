@@ -315,7 +315,12 @@ export interface UserRoot {
 export interface IUserSettings {
   id: string,
   version: number,
-  settings: IUserSettingsSettings
+  settings: IUserSettingsSettings,
+  time_zone: string,
+  locale: TLocale
+  preferred_locale: TLocale,
+  preferred_locale_origin: string,
+  start_day_of_week: number
 }
 
 export interface IUserSettingsSettings {

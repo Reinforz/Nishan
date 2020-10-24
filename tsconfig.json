@@ -20,7 +20,8 @@
   ],
   "exclude": [
     "experiment",
-    "./node_modules"
+    "./node_modules",
+    "docs"
   ],
   "typedocOptions": {
     "mode": "modules",

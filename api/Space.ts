@@ -205,7 +205,6 @@ class Space extends Data<ISpace> {
           last_edited_time: current_time
         })
       ]);
-      // ? RF:1:M Use a utility method to update the cache and internal class state, add data method to all getters and use a method to save to cache and update internal class state
 
       this.updateCache('space', [
         ['icon', icon],
@@ -213,11 +212,6 @@ class Space extends Data<ISpace> {
         ['last_edited_time', current_time],
         ['name', name]
       ]);
-
-      this.data.icon = icon;
-      this.data.beta_enabled = beta_enabled;
-      this.data.last_edited_time = current_time;
-      this.data.name = name;
     } else throw new Error(error('This space has been deleted'));
   }
 

@@ -553,12 +553,10 @@ class Page extends Block<TPage, IPageInput> {
    * Create contents for a page except **linked Database** and **Collection view** block
    * @param {ContentOptions} options Options for modifying the content during creation
    */
-  // ? TD:1:H Format and properties based on TBlockType
   async createContent(options: TBlockInput & {
     file_id?: string,
     position?: number | BlockRepostionArg
   }) {
-    // ? FEAT:1:M User given after id as position
     const $block_id = uuidv4();
     if (!this.data.content) this.data.content = []
 

@@ -130,7 +130,6 @@ class Nishan extends Getters {
       })
     };
   };
-
 }
 
 export default Nishan;

@@ -1,6 +1,8 @@
+import { ISpace } from "../types/api";
 import { IPage, IRootPage, TParentType } from "../types/block";
 import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TDataType, TData } from "../types/types";
+import { NishanArg, TDataType, TData, Operation } from "../types/types";
+import { blockListAfter, blockListBefore, spaceListAfter, spaceListBefore } from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
@@ -23,28 +25,57 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error(`Block with id ${this.data.id} doesnot have a parent`));
   }
 
-  addToContentArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
-    const data = this.data as IPage | IRootPage;
-    const cached_data = this.cache.block.get(this.data.id) as IPage | IRootPage;
+  addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
+    const data = this.type === "space" ? this.data as ISpace : this.data as IPage | IRootPage;
+    const cached_data = this.type === "space" ? this.cache.space.get(this.data.id) as ISpace : this.cache.block.get(this.data.id) as IPage | IRootPage;
+    const container = this.type === "space" ? (data as ISpace).pages : (data as IPage).content;
+    const cached_container = this.type === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
+    const path = this.type === "space" ? "pages" : "content";
+    const listAfter = this.type === "space" ? spaceListAfter : blockListAfter;
+    const listBefore = this.type === "space" ? spaceListBefore : blockListBefore;
+    if (container) {
+      let block_list_after_op = listAfter(data.id, [path], {
+        after: '',
+        id: $block_id
+      });
 
-    if (data.content) {
-      if (arg === undefined) {
-        cached_data.content.push($block_id);
-        data.content.push($block_id);
-      }
-      else {
+      if (arg !== undefined) {
         if (typeof arg === "number") {
-          data.content.splice(arg, 0, $block_id);
-          cached_data.content.splice(arg, 0, $block_id);
+          const block_id_at_pos = (data as any)?.[path]?.[arg] ?? '';
+          block_list_after_op = listBefore(data.id, [path], {
+            before: block_id_at_pos,
+            id: $block_id
+          });
+        } else
+          block_list_after_op = arg.position === "after" ? listAfter(data.id, [path], {
+            after: arg.id,
+            id: $block_id
+          }) : listBefore(data.id, [path], {
+            after: arg.id,
+            id: $block_id
+          })
+      }
+
+      return [block_list_after_op, function () {
+        if (arg === undefined) {
+          cached_container.push($block_id);
+          container.push($block_id);
         }
         else {
-          const target_index = data.content.indexOf(arg.id);
-          data.content.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
-          cached_data.content.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
+          if (typeof arg === "number") {
+            container.splice(arg, 0, $block_id);
+            cached_container.splice(arg, 0, $block_id);
+          }
+          else {
+            const target_index = container.indexOf(arg.id);
+            container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
+            cached_container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
+          }
         }
-      }
+      }];
+
     } else
-      throw new Error("The data is not of type page")
+      throw new Error("The data does not contain children")
   }
 
   updateCache(key: "space_view" | "notion_user" | "user_settings" | "space" | "block" | "collection", items: [keyof T, any][]) {

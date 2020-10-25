@@ -8,13 +8,14 @@ import Collection from './Collection';
 import NotionUser from './NotionUser';
 import UserSettings from './UserSettings';
 
-import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
+import { blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
 import { NishanArg, Predicate, TPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { TBlock, PageProps, PageFormat, IRootPage, TBlockInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
+import { BlockRepostionArg } from '../types/function';
 
 class Space extends Data<ISpace> {
   constructor(arg: NishanArg<ISpace>) {
@@ -151,9 +152,10 @@ class Space extends Data<ISpace> {
    * Create a new page using passed properties and formats
    * @param opts format and properties of the new page
    */
-  async createRootPage(opts = {} as { properties: PageProps; format: PageFormat; isPrivate: boolean }) {
-    const { properties = {}, format = {}, isPrivate = false } = opts;
+  async createRootPage(opts = {} as { properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: number | BlockRepostionArg }) {
+    const { position, properties = {}, format = {}, isPrivate = false } = opts;
     const $block_id = uuidv4();
+    const [block_list_op, update] = this.addToChildArray($block_id, position);
     await this.saveTransactions([
       blockUpdate($block_id, [], {
         type: 'page',
@@ -173,10 +175,11 @@ class Space extends Data<ISpace> {
         created_by_table: 'notion_user',
         created_time: Date.now()
       }),
-      spaceListBefore(this.space_id, ['pages'], { id: $block_id })
+      block_list_op
     ]);
 
     const { recordMap } = await this.getBacklinksForBlock($block_id);
+    update();
 
     return new Page({
       type: "block",

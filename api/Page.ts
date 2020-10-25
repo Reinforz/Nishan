@@ -19,7 +19,6 @@ import {
   spaceViewListBefore,
   spaceViewListRemove,
   blockListRemove,
-  blockListBefore
 } from '../utils/chunk';
 
 import {
@@ -391,7 +390,6 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     const block = await this.createContent({
       type: "drive"
     });
-    this.addToContentArray(block.data.id, position);
     const {
       recordMap
     } = await this.initializeGoogleDriveBlock({
@@ -423,7 +421,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       return obj;
     });
     const content_block_ids = content_blocks.map(content_block => content_block.id);
-
+    const [block_list_op, update] = this.addToChildArray($block_id, position);
     await this.saveTransactions(
       [
         this.createBlock({
@@ -436,10 +434,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
           after: '',
           id: content_block_id
         })),
-        blockListAfter(this.data.id, ['content'], {
-          after: '',
-          id: $block_id
-        }),
+        block_list_op,
         ...content_blocks
       ]
     );
@@ -454,7 +449,8 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       verticalColumns: false
     });
 
-    this.addToContentArray($block_id, position);
+    update();
+
     const data = recordMap.block[$block_id].value;
     return {
       template: new Block({
@@ -492,7 +488,8 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       } = content;
       const $block_id = uuidv4();
       $block_ids.push($block_id);
-      this.addToContentArray($block_id, position);
+      // ? FEAT:1:M Update multiple items
+      const [block_list_op] = this.addToChildArray($block_id, position);
 
       if (type === "bookmark")
         bookmarks.push({
@@ -505,16 +502,14 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         properties,
         format,
       }),
-        blockListAfter(this.data.id, ['content'], {
-          after: '',
-          id: $block_id
-        }))
+        block_list_op);
     });
 
     await this.saveTransactions(operations);
     for (let bookmark of bookmarks) {
       await this.setBookmarkMetadata(bookmark)
     }
+
 
     const recordMap = await this.loadPageChunk({
       chunkNumber: 0,
@@ -576,25 +571,8 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         type: options.type as TGenericEmbedBlockType
       })).format;
     };
-    let block_list_after_op = blockListAfter(this.data.id, ['content'], {
-      after: '',
-      id: $block_id
-    });
 
-    if (typeof options.position === "number") {
-      const block_id_at_pos = this.data?.content?.[options.position] ?? '';
-      block_list_after_op = blockListBefore(this.data.id, ["content"], {
-        before: block_id_at_pos,
-        id: $block_id
-      });
-    } else
-      block_list_after_op = options.position?.position === "after" ? blockListAfter(this.data.id, ["content"], {
-        after: options.position.id,
-        id: $block_id
-      }) : blockListBefore(this.data.id, ["content"], {
-        after: options.position?.id,
-        id: $block_id
-      })
+    const [block_list_op, update] = this.addToChildArray($block_id, options.position);
 
     const {
       format,
@@ -609,7 +587,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         properties,
         format,
       }),
-      block_list_after_op,
+      block_list_op,
     ];
 
     if (type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], {
@@ -636,7 +614,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       verticalColumns: false
     });
 
-    this.addToContentArray($block_id, options.position);
+    update();
 
     return this.createClass(type, recordMap.block[$block_id].value);
   }
@@ -649,6 +627,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     }));
     const view_ids = $views.map((view) => view.id);
     const current_time = Date.now();
+    const [block_list_op, update] = this.addToChildArray($content_id, position);
     await this.saveTransactions(
       [
         ...createViews($views, $content_id),
@@ -668,10 +647,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
           last_edited_by_id: this.user_id,
           last_edited_time: current_time
         }),
-        blockListAfter(this.data.id, ['content'], {
-          after: '',
-          id: $content_id
-        }),
+        block_list_op,
         blockSet($content_id, ['last_edited_time'], current_time)
       ]
     );
@@ -688,8 +664,8 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         type: 'table'
       }
     });
+    update();
     const data = recordMap.block[$content_id].value as ICollectionView;
-    this.addToContentArray($content_id, position);
     return new CollectionView({
       type: "collection_view",
 
@@ -793,7 +769,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       id: uuidv4()
     }))) || [];
     const view_ids = views.map((view) => view.id);
-    const parent_id = this.data.id;
+    const [block_list_op, update] = this.addToChildArray($collection_view_id, position);
     await this.saveTransactions(
       [
         this.createBlock({
@@ -818,10 +794,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
           parent_table: 'block',
           alive: true
         }),
-        blockListAfter(parent_id, ['content'], {
-          after: '',
-          id: $collection_view_id
-        }),
+        block_list_op
       ]
     );
 
@@ -838,7 +811,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       }
     });
     const data = recordMap.block[$collection_view_id].value as ICollectionView;
-    this.addToContentArray($collection_view_id, position);
+    update();
 
     return new CollectionView({
       type: "collection_view",

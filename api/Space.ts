@@ -91,7 +91,7 @@ class Space extends Data<ISpace> {
    * Get the pages of this space which matches a passed criteria
    * @param arg criteria to filter pages by
    */
-  async getPages(arg: undefined | string[] | Predicate<TPage>) {
+  async getPages(arg: undefined | string[] | Predicate<TPage>, return_single: boolean) {
     const pages: (Page | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
@@ -121,9 +121,11 @@ class Space extends Data<ISpace> {
               );
               break;
           }
+
+          if (pages.length === 1 && return_single) break;
         }
       }
-      return pages;
+      return return_single ? pages[0] : pages;
     } else throw new Error(error('This space has been deleted'));
   }
 
@@ -132,30 +134,8 @@ class Space extends Data<ISpace> {
    * @param page_id Id of the page to obtain 
    */
   async getPage(arg: string | Predicate<TPage>) {
-    if (this.data) {
-      for (let i = 0; i < this.data.pages.length; i++) {
-        let should_add = false;
-        const page_id = this.data.pages[i];
-        let page = this.cache.block.get(page_id) as TPage;
-        if (typeof arg === "string" && arg.includes(page_id)) should_add = true;
-        else if (typeof arg === 'function') should_add = await arg(page, i);
-
-        if (should_add && page) {
-          switch (page.type) {
-            case 'page':
-              return new Page({
-                data: page,
-                ...this.getProps()
-              })
-            case 'collection_view_page':
-              return new CollectionViewPage({
-                data: page,
-                ...this.getProps()
-              })
-          }
-        }
-      }
-    } else throw new Error(error('This space has been deleted'));
+    if (typeof arg === "string") return this.getPages([arg], true);
+    else return this.getPages(arg, true);
   }
 
   /**

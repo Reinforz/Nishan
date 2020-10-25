@@ -28,7 +28,6 @@ import {
 } from "../utils/logs";
 
 import {
-  TPage,
   Schema,
   SchemaUnitType,
   NishanArg,
@@ -114,8 +113,8 @@ import {
   ITweetInput
 } from "../types/block";
 
-class Page extends Block<TPage, IPageInput> {
-  constructor(arg: NishanArg<TPage>) {
+class Page extends Block<IPage | IRootPage, IPageInput> {
+  constructor(arg: NishanArg<IPage | IRootPage>) {
     super(arg);
     this.data = arg.data;
   }

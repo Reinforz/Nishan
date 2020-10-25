@@ -1,6 +1,6 @@
-import { TParentType } from "../types/block";
+import { IPage, IRootPage, TParentType } from "../types/block";
 import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TData, TPage } from "../types/types";
+import { NishanArg, TData } from "../types/types";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
@@ -21,8 +21,8 @@ export default class Data<T extends TData> extends Getters {
   }
 
   addToContentArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
-    const data = this.data as TPage;
-    const cached_data = this.cache.block.get(this.data.id) as TPage;
+    const data = this.data as IPage | IRootPage;
+    const cached_data = this.cache.block.get(this.data.id) as IPage | IRootPage;
 
     if (data.content) {
       if (arg === undefined) {

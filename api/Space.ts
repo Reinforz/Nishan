@@ -11,9 +11,9 @@ import UserSettings from './UserSettings';
 import { spaceListBefore, blockUpdate, spaceUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
-import { NishanArg, Predicate } from '../types/types';
+import { NishanArg, Predicate, TPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IPage, PageProps, PageFormat, IRootPage, ICollectionViewPage, TBlockInput } from '../types/block';
+import { TBlock, PageProps, PageFormat, IRootPage, TBlockInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 
 class Space extends Data<ISpace> {
@@ -22,6 +22,9 @@ class Space extends Data<ISpace> {
     this.data = arg.data;
   }
 
+  /**
+   * Get the current logged in notion user
+   */
   async getNotionUser() {
     if (this.data) {
       const notion_user = this.cache.notion_user.get(this.user_id);
@@ -33,6 +36,9 @@ class Space extends Data<ISpace> {
     } else throw new Error(error('This space has been deleted'));
   }
 
+  /**
+   * Get the current logged in user settings
+   */
   async getUserSettings() {
     if (this.data) {
       const user_settings = this.cache.user_settings.get(this.user_id);
@@ -45,7 +51,7 @@ class Space extends Data<ISpace> {
   }
 
   /**
-   * Return a new block by its id
+   * Return a block by its id 
    * @param block_id The id of the block to obtain
    */
   async getBlock(block_id: string): Promise<Block<TBlock, TBlockInput>> {
@@ -54,7 +60,6 @@ class Space extends Data<ISpace> {
     const { recordMap } = await this.getBacklinksForBlock(block_id);
     const target = recordMap.block[block_id];
     if (!target) throw new Error(error(`No block with the id ${block_id} exists`));
-    if (!this.user_id || !this.space_id || !this.shard_id) throw new Error(error(`UserId, SpaceId or ShardId is null`));
     else
       return new Block({
         data: target.value,
@@ -76,21 +81,22 @@ class Space extends Data<ISpace> {
     ]);
 
     const collection_data = collection[collection_id].value;
-
-    if (!this.user_id || !this.space_id || !this.shard_id) throw new Error(error(`UserId, SpaceId or ShardId is null`));
-    else
-      return new Collection({
-        ...this.getProps(),
-        data: collection_data
-      });
+    return new Collection({
+      ...this.getProps(),
+      data: collection_data
+    });
   }
 
-  async getPages(arg: undefined | string[] | Predicate<IPage | ICollectionViewPage>) {
+  /**
+   * Get the pages of this space which matches a passed criteria
+   * @param arg criteria to filter pages by
+   */
+  async getPages(arg: undefined | string[] | Predicate<TPage>) {
     const pages: (Page | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
         const page_id = this.data.pages[i];
-        let page = this.cache.block.get(page_id) as IPage | ICollectionViewPage;
+        let page = this.cache.block.get(page_id) as TPage;
         let should_add = false;
         if (arg === undefined) should_add = true;
         else if (Array.isArray(arg) && arg.includes(page_id)) should_add = true;
@@ -120,30 +126,36 @@ class Space extends Data<ISpace> {
       return pages;
     } else throw new Error(error('This space has been deleted'));
   }
+
   /**
-   * Obtain a page using the passed id
+   * Get a single page of this space which matches a passed criteria
    * @param page_id Id of the page to obtain 
    */
-  async getPage(page_id: string) {
-    const cache_data = this.cache.block.get(page_id) as IPage;
+  async getPage(arg: string | Predicate<TPage>) {
+    if (this.data) {
+      for (let i = 0; i < this.data.pages.length; i++) {
+        let should_add = false;
+        const page_id = this.data.pages[i];
+        let page = this.cache.block.get(page_id) as TPage;
+        if (typeof arg === "string" && arg.includes(page_id)) should_add = true;
+        else if (typeof arg === 'function') should_add = await arg(page, i);
 
-    if (cache_data)
-      return new Page({
-        data: cache_data,
-        ...this.getProps()
-      });
-
-    const { recordMap: { block } } = await this.getBacklinksForBlock(page_id);
-    const target = block[page_id].value as IPage;
-
-    if (!target) throw new Error(error(`No page with the id ${page_id} exists`));
-    if (target.type !== 'page')
-      throw new Error(error(`The target block is not a page,but rather a ${target.type} type`));
-
-    return new Page({
-      data: target,
-      ...this.getProps()
-    });
+        if (should_add && page) {
+          switch (page.type) {
+            case 'page':
+              return new Page({
+                data: page,
+                ...this.getProps()
+              })
+            case 'collection_view_page':
+              return new CollectionViewPage({
+                data: page,
+                ...this.getProps()
+              })
+          }
+        }
+      }
+    } else throw new Error(error('This space has been deleted'));
   }
 
   /**

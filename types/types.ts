@@ -1,4 +1,4 @@
-import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, UserRoot } from "./api";
+import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, UserRoot, RecordMap } from "./api";
 import { ICollection, ICollectionViewPage, IPage, IRootPage, TBlock } from "./block";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
@@ -29,7 +29,7 @@ export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
 export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "relative";
 export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
-
+export type TDataType = keyof RecordMap;
 export type Predicate<T> = (T: T, index: number) => boolean;
 
 export interface GoogleDriveFileUser {
@@ -316,5 +316,6 @@ export interface NishanArg<T extends TData> {
   shard_id: number,
   space_id: string,
   cache: ICache,
-  data: T
+  data: T,
+  type: TDataType
 }

@@ -48,7 +48,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     const data = collection_view[$view_id].value as TView;
     return new View({
       ...this.getProps(),
-      data
+      data,
+      type: "collection_view"
     });
   }
 
@@ -60,7 +61,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     if (ICached_data)
       return new Collection({
         ...this.getProps(),
-        data: ICached_data
+        data: ICached_data,
+        type: "collection"
       });
     const { collection } = await this.loadPageChunk({
       chunkNumber: 0,
@@ -73,7 +75,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
 
     return new Collection({
       ...this.getProps(),
-      data
+      data,
+      type: "collection"
     });
   }
 
@@ -88,7 +91,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     return (block[this.data.id].value as TCollectionBlock).view_ids.map(
       (view_id) => new View({
         ...this.getProps(),
-        data: collection_view[view_id].value
+        data: collection_view[view_id].value,
+        type: "collection_view"
       })
     );
   }

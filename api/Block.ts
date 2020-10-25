@@ -70,6 +70,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       }
     ]);
     return new Block({
+      type: "block",
       data: block[$gen_block_id].value,
       ...this.getProps()
     })

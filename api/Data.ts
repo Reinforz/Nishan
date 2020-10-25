@@ -1,13 +1,16 @@
 import { IPage, IRootPage, TParentType } from "../types/block";
 import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TData } from "../types/types";
+import { NishanArg, TDataType, TData } from "../types/types";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
 export default class Data<T extends TData> extends Getters {
   data: T;
+  type: TDataType;
+
   constructor(arg: NishanArg<T>) {
     super(arg);
+    this.type = arg.type;
     this.data = arg.data as any;
   }
 

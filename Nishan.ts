@@ -33,6 +33,7 @@ class Nishan extends Getters {
 
     if (target_space)
       return new Space({
+        type: "space",
         ...this.getProps(),
         shard_id: (target_space as ISpace).shard_id,
         space_id: (target_space as ISpace).id,
@@ -60,6 +61,7 @@ class Nishan extends Getters {
 
         if (should_add) {
           target_spaces.push(new Space({
+            type: "space",
             data: space.value,
             ...this.getProps()
           }))
@@ -122,6 +124,7 @@ class Nishan extends Getters {
     const space = this.cache.space.get($space_id);
     if (space) {
       return new Space({
+        type: "space",
         data: space,
         ...this.getProps()
       })

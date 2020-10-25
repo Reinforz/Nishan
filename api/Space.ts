@@ -31,7 +31,8 @@ class Space extends Data<ISpace> {
       if (notion_user)
         return new NotionUser({
           ...this.getProps(),
-          data: notion_user
+          data: notion_user,
+          type: "notion_user"
         });
     } else throw new Error(error('This space has been deleted'));
   }
@@ -45,7 +46,8 @@ class Space extends Data<ISpace> {
       if (user_settings)
         return new UserSettings({
           ...this.getProps(),
-          data: user_settings
+          data: user_settings,
+          type: "user_settings"
         });
     } else throw new Error(error('This space has been deleted'));
   }
@@ -56,14 +58,15 @@ class Space extends Data<ISpace> {
    */
   async getBlock(block_id: string): Promise<Block<TBlock, TBlockInput>> {
     const cache_data = this.cache.block.get(block_id);
-    if (cache_data) return new Block({ data: cache_data, ...this.getProps() });
+    if (cache_data) return new Block({ data: cache_data, ...this.getProps(), type: "block" });
     const { recordMap } = await this.getBacklinksForBlock(block_id);
     const target = recordMap.block[block_id];
     if (!target) throw new Error(error(`No block with the id ${block_id} exists`));
     else
       return new Block({
         data: target.value,
-        ...this.getProps()
+        ...this.getProps(),
+        type: "block"
       });
   }
 
@@ -82,6 +85,7 @@ class Space extends Data<ISpace> {
 
     const collection_data = collection[collection_id].value;
     return new Collection({
+      type: "collection",
       ...this.getProps(),
       data: collection_data
     });
@@ -107,6 +111,7 @@ class Space extends Data<ISpace> {
             case 'page':
               pages.push(
                 new Page({
+                  type: "block",
                   data: page,
                   ...this.getProps()
                 })
@@ -115,6 +120,7 @@ class Space extends Data<ISpace> {
             case 'collection_view_page':
               pages.push(
                 new CollectionViewPage({
+                  type: "block",
                   data: page,
                   ...this.getProps()
                 })
@@ -138,6 +144,9 @@ class Space extends Data<ISpace> {
     else return this.getPages(arg, true);
   }
 
+  // ? FEAT:1:M Add custom page order
+  // ? FEAT:1:M Update space cache after creation
+  // ? FEAT:1:M Batch rootpage creation
   /**
    * Create a new page using passed properties and formats
    * @param opts format and properties of the new page
@@ -145,36 +154,35 @@ class Space extends Data<ISpace> {
   async createRootPage(opts = {} as { properties: PageProps; format: PageFormat; isPrivate: boolean }) {
     const { properties = {}, format = {}, isPrivate = false } = opts;
     const $block_id = uuidv4();
-    if (this.space_id && this.user_id) {
-      await this.saveTransactions([
-        blockUpdate($block_id, [], {
-          type: 'page',
-          id: $block_id,
-          version: 1,
-          permissions:
-            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-          parent_id: this.space_id,
-          parent_table: 'space',
-          alive: true,
-          properties,
-          format,
-          last_edited_time: Date.now(),
-          last_edited_by_id: this.user_id,
-          last_edited_by_table: 'notion_user',
-          created_by_id: this.user_id,
-          created_by_table: 'notion_user',
-          created_time: Date.now()
-        }),
-        spaceListBefore(this.space_id, ['pages'], { id: $block_id })
-      ]);
+    await this.saveTransactions([
+      blockUpdate($block_id, [], {
+        type: 'page',
+        id: $block_id,
+        version: 1,
+        permissions:
+          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+        parent_id: this.space_id,
+        parent_table: 'space',
+        alive: true,
+        properties,
+        format,
+        last_edited_time: Date.now(),
+        last_edited_by_id: this.user_id,
+        last_edited_by_table: 'notion_user',
+        created_by_id: this.user_id,
+        created_by_table: 'notion_user',
+        created_time: Date.now()
+      }),
+      spaceListBefore(this.space_id, ['pages'], { id: $block_id })
+    ]);
 
-      const { recordMap } = await this.getBacklinksForBlock($block_id);
+    const { recordMap } = await this.getBacklinksForBlock($block_id);
 
-      return new Page({
-        ...this.getProps(),
-        data: recordMap.block[$block_id].value as IRootPage
-      });
-    } else throw new Error(error('Space and User id not provided'));
+    return new Page({
+      type: "block",
+      ...this.getProps(),
+      data: recordMap.block[$block_id].value as IRootPage
+    });
   }
 
   /**
@@ -234,6 +242,7 @@ class Space extends Data<ISpace> {
     }
     if (target_space_view)
       return new SpaceView({
+        type: "space_view",
         data: target_space_view,
         ...this.getProps()
       });

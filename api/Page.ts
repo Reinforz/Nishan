@@ -138,10 +138,12 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         const block_data = block[content_id].value;
         if (block_data) blocks.push(block_data.type === "page" ? new Page({
           data: block_data,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         }) : new Block({
           data: block_data,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         }))
       })
       return blocks;
@@ -399,6 +401,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     });
     const data = recordMap.block[block.data.id].value;
     return new Block({
+      type: "block",
       data,
       ...this.getProps()
     });
@@ -455,10 +458,13 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     const data = recordMap.block[$block_id].value;
     return {
       template: new Block({
+        type: "block",
         data,
         ...this.getProps()
       }),
       contents: content_block_ids.map(content_block_id => new Block({
+        type: "block",
+
         data: recordMap.block[content_block_id].value,
         ...this.getProps()
       }))
@@ -525,11 +531,15 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     $block_ids.forEach($block_id => {
       const block = recordMap.block[$block_id].value;
       if (block.type === "page") blocks.push(new Page({
+        type: "block",
+
         data: block as IPage,
         ...this.getProps()
       }));
 
       else if (block.type === "collection_view") blocks.push(new CollectionView({
+        type: "collection_view",
+
         data: block,
         ...this.getProps(),
       }));
@@ -681,6 +691,8 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     const data = recordMap.block[$content_id].value as ICollectionView;
     this.addToContentArray($content_id, position);
     return new CollectionView({
+      type: "collection_view",
+
       ...this.getProps(),
       data
     });
@@ -764,6 +776,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     });
     const data = recordMap.block[this.data.id].value as ICollectionViewPage;
     return new CollectionViewPage({
+      type: "block",
       ...this.getProps(),
       data
     })
@@ -828,6 +841,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
     this.addToContentArray($collection_view_id, position);
 
     return new CollectionView({
+      type: "collection_view",
       ...this.getProps(),
       data
     })
@@ -858,169 +872,202 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       case "video":
         return new Block<IVideo, IVideoInput>({
           data: value as IVideo,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "audio":
         return new Block<IAudio, IAudioInput>({
           data: value as IAudio,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "image":
         return new Block<IImage, IImageInput>({
           data: value as IImage,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "bookmark":
         return new Block<IWebBookmark, IWebBookmarkInput>({
           data: value as IWebBookmark,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "code":
         return new Block<ICode, ICodeInput>({
           data: value as ICode,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "file":
         return new Block<IFile, IFileInput>({
           data: value as IFile,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
 
       case "tweet":
         return new Block<ITweet, ITweetInput>({
           data: value as ITweet,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "gist":
         return new Block<IGist, IGistInput>({
           data: value as IGist,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "codepen":
         return new Block<ICodepen, ICodepenInput>({
           data: value as ICodepen,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "maps":
         return new Block<IMaps, IMapsInput>({
           data: value as IMaps,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "figma":
         return new Block<IFigma, IFigmaInput>({
           data: value as IFigma,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "drive":
         return new Block<IDrive, IDriveInput>({
           data: value as IDrive,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
 
       case "text":
         return new Block<IText, ITextInput>({
           data: value as IText,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "table_of_contents":
         return new Block<ITOC, ITOCInput>({
           data: value as ITOC,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "equation":
         return new Block<IEquation, IEquationInput>({
           data: value as IEquation,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "breadcrumb":
         return new Block<IBreadcrumb, IBreadcrumbInput>({
           data: value as IBreadcrumb,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "factory":
         return new Block<IFactory, IFactoryInput>({
           data: value as IFactory,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "page":
         return new Page({
           data: value as IPage,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "text":
         return new Block<IText, ITextInput>({
           data: value as IText,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "to_do":
         return new Block<ITodo, ITodoInput>({
           data: value as ITodo,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "header":
         return new Block<IHeader, IHeaderInput>({
           data: value as IHeader,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           data: value as ISubHeader,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "sub_sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           data: value as ISubHeader,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "bulleted_list":
         return new Block<IBulletedList, IBulletedListInput>({
           data: value as IBulletedList,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "numbered_list":
         return new Block<INumberedList, INumberedListInput>({
           data: value as INumberedList,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "toggle":
         return new Block<IToggle, IToggleInput>({
           data: value as IToggle,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "quote":
         return new Block<IQuote, IQuoteInput>({
           data: value as IQuote,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "divider":
         return new Block<IDivider, IDividerInput>({
           data: value as IDivider,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "callout":
         return new Block<ICallout, ICalloutInput>({
           data: value as ICallout,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "toggle":
         return new Block<IToggle, IToggleInput>({
           data: value as IToggle,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "sub_sub_header":
         return new Block<ISubHeader, ISubHeaderInput>({
           data: value as ISubHeader,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       case "drive":
         return new Block<IDrive, IDriveInput>({
           data: value as IDrive,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
       default:
         return new Page({
           data: value as IPage,
-          ...this.getProps()
+          ...this.getProps(),
+          type: "block"
         });
     }
   }

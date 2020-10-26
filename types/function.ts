@@ -1,3 +1,4 @@
+import { PageFormat, PageProps } from "./block";
 import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType } from "./types";
 
 export interface UserViewArg {
@@ -20,4 +21,8 @@ export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange
 export interface BlockRepostionArg {
   id: string,
   position: "before" | "after"
+}
+
+export interface CreateRootPageArgs {
+  properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: number | BlockRepostionArg
 }

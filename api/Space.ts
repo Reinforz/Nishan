@@ -13,9 +13,9 @@ import { error } from '../utils/logs';
 
 import { NishanArg, Predicate, TPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, PageProps, PageFormat, IRootPage, TBlockInput } from '../types/block';
+import { TBlock, IRootPage, TBlockInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
-import { BlockRepostionArg } from '../types/function';
+import { CreateRootPageArgs } from '../types/function';
 
 class Space extends Data<ISpace> {
   constructor(arg: NishanArg<ISpace>) {
@@ -96,7 +96,7 @@ class Space extends Data<ISpace> {
    * Get the pages of this space which matches a passed criteria
    * @param arg criteria to filter pages by
    */
-  async getPages(arg: undefined | string[] | Predicate<TPage>, return_single: boolean) {
+  async getPages(arg: undefined | string[] | Predicate<TPage>, return_single: boolean = false) {
     const pages: (Page | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
@@ -145,47 +145,59 @@ class Space extends Data<ISpace> {
     else return this.getPages(arg, true);
   }
 
-  // ? FEAT:1:M Add custom page order
-  // ? FEAT:1:M Update space cache after creation
   // ? FEAT:1:M Batch rootpage creation
   /**
    * Create a new page using passed properties and formats
-   * @param opts format and properties of the new page
+   * @param opts format and properties for the root page
    */
-  async createRootPage(opts = {} as { properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: number | BlockRepostionArg }) {
-    const { position, properties = {}, format = {}, isPrivate = false } = opts;
-    const $block_id = uuidv4();
-    const [block_list_op, update] = this.addToChildArray($block_id, position);
-    await this.saveTransactions([
-      blockUpdate($block_id, [], {
-        type: 'page',
-        id: $block_id,
-        version: 1,
-        permissions:
-          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.space_id,
-        parent_table: 'space',
-        alive: true,
-        properties,
-        format,
-        last_edited_time: Date.now(),
-        last_edited_by_id: this.user_id,
-        last_edited_by_table: 'notion_user',
-        created_by_id: this.user_id,
-        created_by_table: 'notion_user',
-        created_time: Date.now()
-      }),
-      block_list_op
-    ]);
+  async createRootPage(opts: CreateRootPageArgs) {
+    const [page] = await this.createRootPages([opts]);
+    return page;
+  }
 
-    const { recordMap } = await this.getBacklinksForBlock($block_id);
-    update();
+  /**
+   * Create new pages using passed properties and formats
+   * @param opts array of format and properties for the root pages
+   */
+  async createRootPages(opts: CreateRootPageArgs[]) {
+    const block_ids: string[] = []
+    for (let index = 0; index < opts.length; index++) {
+      const opt = opts[index];
+      const { position, properties = {}, format = {}, isPrivate = false } = opt;
+      const $block_id = uuidv4();
+      block_ids.push($block_id);
+      const [block_list_op, update] = this.addToChildArray($block_id, position);
+      await this.saveTransactions([
+        blockUpdate($block_id, [], {
+          type: 'page',
+          id: $block_id,
+          version: 1,
+          permissions:
+            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          parent_id: this.space_id,
+          parent_table: 'space',
+          alive: true,
+          properties,
+          format,
+          last_edited_time: Date.now(),
+          last_edited_by_id: this.user_id,
+          last_edited_by_table: 'notion_user',
+          created_by_id: this.user_id,
+          created_by_table: 'notion_user',
+          created_time: Date.now()
+        }),
+        block_list_op
+      ]);
+      update();
+    }
 
-    return new Page({
+    const { block } = await this.loadUserContent();
+
+    return block_ids.map(block_id => new Page({
       type: "block",
       ...this.getProps(),
-      data: recordMap.block[$block_id].value as IRootPage
-    });
+      data: block[block_id].value as IRootPage
+    }));
   }
 
   /**

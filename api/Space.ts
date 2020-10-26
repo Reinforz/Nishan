@@ -15,7 +15,7 @@ import { NishanArg, Predicate, TPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { TBlock, IRootPage, TBlockInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
-import { CreateRootPageArgs } from '../types/function';
+import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
 class Space extends Data<ISpace> {
   constructor(arg: NishanArg<ISpace>) {
@@ -160,58 +160,63 @@ class Space extends Data<ISpace> {
    * @param opts array of format and properties for the root pages
    */
   async createRootPages(opts: CreateRootPageArgs[]) {
-    const block_ids: string[] = []
-    for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index];
-      const { position, properties = {}, format = {}, isPrivate = false } = opt;
-      const $block_id = uuidv4();
-      block_ids.push($block_id);
-      const [block_list_op, update] = this.addToChildArray($block_id, position);
-      await this.saveTransactions([
-        blockUpdate($block_id, [], {
-          type: 'page',
-          id: $block_id,
-          version: 1,
-          permissions:
-            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-          parent_id: this.space_id,
-          parent_table: 'space',
-          alive: true,
-          properties,
-          format,
-          last_edited_time: Date.now(),
-          last_edited_by_id: this.user_id,
-          last_edited_by_table: 'notion_user',
-          created_by_id: this.user_id,
-          created_by_table: 'notion_user',
-          created_time: Date.now()
-        }),
-        block_list_op
-      ]);
-      update();
-    }
+    if (this.data) {
+      const block_ids: string[] = []
+      for (let index = 0; index < opts.length; index++) {
+        const opt = opts[index];
+        const { position, properties = {}, format = {}, isPrivate = false } = opt;
+        const $block_id = uuidv4();
+        block_ids.push($block_id);
+        const [block_list_op, update] = this.addToChildArray($block_id, position);
+        await this.saveTransactions([
+          blockUpdate($block_id, [], {
+            type: 'page',
+            id: $block_id,
+            version: 1,
+            permissions:
+              [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+            parent_id: this.space_id,
+            parent_table: 'space',
+            alive: true,
+            properties,
+            format,
+            last_edited_time: Date.now(),
+            last_edited_by_id: this.user_id,
+            last_edited_by_table: 'notion_user',
+            created_by_id: this.user_id,
+            created_by_table: 'notion_user',
+            created_time: Date.now()
+          }),
+          block_list_op
+        ]);
+        update();
+      }
 
-    const { block } = await this.loadUserContent();
+      const { block } = await this.loadUserContent();
 
-    return block_ids.map(block_id => new Page({
-      type: "block",
-      ...this.getProps(),
-      data: block[block_id].value as IRootPage
-    }));
+      return block_ids.map(block_id => new Page({
+        type: "block",
+        ...this.getProps(),
+        data: block[block_id].value as IRootPage
+      }));
+    } else throw new Error(error('This space has been deleted'));
   }
 
+  // ? FEAT:1:M Update space permissions
   /**
    * Update the workspace settings
    * @param opt Properties of the space to update
    */
-  async update(opt: Partial<Pick<ISpace, 'name' | 'beta_enabled' | 'icon'>>) {
+  async update(opt: SpaceUpdateParam) {
     if (this.data) {
+      const current_time = Date.now();
+
       const {
         name = this.data.name,
         beta_enabled = this.data.beta_enabled,
         icon = this.data.icon
       } = opt;
-      const current_time = Date.now();
+
       await this.saveTransactions([
         spaceUpdate(this.data.id, [], {
           name,
@@ -221,12 +226,13 @@ class Space extends Data<ISpace> {
         })
       ]);
 
-      this.updateCache('space', [
+      this.updateCache([
         ['icon', icon],
         ['beta_enabled', beta_enabled],
         ['last_edited_time', current_time],
         ['name', name]
       ]);
+
     } else throw new Error(error('This space has been deleted'));
   }
 

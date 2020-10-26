@@ -3,6 +3,7 @@ import Data from './Data';
 import { NishanArg } from '../types/types';
 import { notionUserUpdate } from '../utils/chunk';
 import { INotionUser } from '../types/api';
+import { UpdatableNotionUserParam } from '../types/function';
 
 class NotionUser extends Data<INotionUser> {
   constructor(arg: NishanArg<INotionUser>) {
@@ -10,7 +11,7 @@ class NotionUser extends Data<INotionUser> {
     this.data = arg.data;
   }
 
-  async update(opt: Partial<Pick<INotionUser, 'family_name' | 'given_name' | 'profile_photo'>>) {
+  async update(opt: UpdatableNotionUserParam) {
     const {
       family_name = this.data.family_name,
       given_name = this.data.given_name,
@@ -23,7 +24,7 @@ class NotionUser extends Data<INotionUser> {
         profile_photo
       })
     ]);
-    this.updateCache('notion_user', [
+    this.updateCache([
       ['family_name', family_name],
       ['given_name', given_name],
       ['profile_photo', profile_photo]

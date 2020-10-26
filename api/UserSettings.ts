@@ -2,7 +2,8 @@ import Data from './Data';
 
 import { NishanArg } from '../types/types';
 import { userSettingsUpdate } from '../utils/chunk';
-import { IUserSettings, IUserSettingsSettings } from '../types/api';
+import { IUserSettings } from '../types/api';
+import { UpdatableUserSettingsParam } from '../types/function';
 
 class UserSettings extends Data<IUserSettings> {
   constructor(arg: NishanArg<IUserSettings>) {
@@ -11,12 +12,7 @@ class UserSettings extends Data<IUserSettings> {
   }
 
   async update(
-    opt: Partial<
-      Pick<
-        IUserSettingsSettings,
-        'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin'
-      >
-    >
+    opt: UpdatableUserSettingsParam
   ) {
     const {
       start_day_of_week = this.data.settings.start_day_of_week,
@@ -35,7 +31,7 @@ class UserSettings extends Data<IUserSettings> {
       })
     ]);
 
-    this.updateCache('user_settings', [
+    this.updateCache([
       ['start_day_of_week', start_day_of_week],
       ['time_zone', time_zone],
       ['locale', locale],

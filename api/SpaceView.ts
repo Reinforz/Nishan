@@ -3,6 +3,7 @@ import Data from './Data';
 import { NishanArg } from '../types/types';
 import { spaceViewUpdate } from '../utils/chunk';
 import { ISpaceView } from '../types/api';
+import { UpdatableSpaceViewParam } from '../types/function';
 
 class SpaceView extends Data<ISpaceView> {
   constructor(arg: NishanArg<ISpaceView>) {
@@ -10,7 +11,7 @@ class SpaceView extends Data<ISpaceView> {
     this.data = arg.data;
   }
 
-  async update(arg: Partial<Pick<ISpaceView, 'notify_desktop' | 'notify_email' | 'notify_mobile'>>) {
+  async update(arg: UpdatableSpaceViewParam) {
     const {
       notify_email = this.data.notify_email,
       notify_desktop = this.data.notify_desktop,
@@ -25,7 +26,7 @@ class SpaceView extends Data<ISpaceView> {
       })
     ]);
 
-    this.updateCache('space_view', [
+    this.updateCache([
       ['notify_email', notify_email],
       ['notify_desktop', notify_desktop],
       ['notify_mobile', notify_mobile]

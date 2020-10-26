@@ -78,8 +78,8 @@ export default class Data<T extends TData> extends Getters {
       throw new Error("The data does not contain children")
   }
 
-  updateCache(key: "space_view" | "notion_user" | "user_settings" | "space" | "block" | "collection", items: [keyof T, any][]) {
-    const cached_data = this.cache[key].get(this.data.id) as T;
+  updateCache(items: [keyof T, any][]) {
+    const cached_data = this.cache[this.type].get(this.data.id) as T;
     if (cached_data) items.forEach(([key, value]) => {
       cached_data[key] = value;
       this.data[key] = value;

@@ -6,14 +6,14 @@ import Data from "./Data";
 
 import { NishanArg } from "../types/types";
 import { ICollection, PageProps, PageFormat } from '../types/block';
+import { CollectionUpdateParam } from '../types/function';
 
 class Collection extends Data<ICollection> {
   constructor(arg: NishanArg<ICollection>) {
     super(arg);
-    this.data = arg.data;
   }
 
-  async updateProperties(properties: { name: string[][], icon: string, description: string[][] }) {
+  async update(properties: CollectionUpdateParam) {
     await this.saveTransactions(
       [
         ...Object.entries(properties).map(([path, arg]) => collectionSet(this.data.id, [path], arg)),

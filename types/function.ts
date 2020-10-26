@@ -1,4 +1,5 @@
-import { PageFormat, PageProps } from "./block";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
+import { ICollection, PageFormat, PageProps } from "./block";
 import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType } from "./types";
 
 export interface UserViewArg {
@@ -26,3 +27,18 @@ export interface BlockRepostionArg {
 export interface CreateRootPageArgs {
   properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: number | BlockRepostionArg
 }
+
+export type UpdatableSpaceKeys = 'name' | 'beta_enabled' | 'icon';
+export type SpaceUpdateParam = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
+
+export type UpdatableCollectionKeys = "name" | "icon" | "description";
+export type CollectionUpdateParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
+
+export type UpdatableNotionUserKeys = 'family_name' | 'given_name' | 'profile_photo';
+export type UpdatableNotionUserParam = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;
+
+export type UpdatableSpaceViewKeys = 'notify_desktop' | 'notify_email' | 'notify_mobile';
+export type UpdatableSpaceViewParam = Partial<Pick<ISpaceView, UpdatableSpaceViewKeys>>;
+
+export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
+export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;

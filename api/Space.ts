@@ -239,6 +239,17 @@ class Space extends Data<ISpace> {
     this.deleteCompletely();
   }
 
+  async removeUsers(userIds: string[]) {
+    if (this.data) {
+      await this.removeUsersFromSpace({
+        removePagePermissions: true,
+        revokeUserTokens: false,
+        spaceId: this.data?.id,
+        userIds
+      });
+    } else throw new Error(error('This space has been deleted'));
+  }
+
   async getSpaceView() {
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {

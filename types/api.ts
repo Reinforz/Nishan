@@ -1,6 +1,20 @@
 import { ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
+export interface RemoveUsersFromSpaceParams {
+  removePagePermissions: boolean
+  revokeUserTokens: boolean
+  spaceId: string
+  userIds: string[]
+}
+
+export interface RemoveUsersFromSpaceResult {
+  recordMap: {
+    block: BlockData,
+    space: SpaceData
+  }
+}
+
 export interface InitializePageTemplateParams {
   recordMap: {}
   sourceBlockId: string,

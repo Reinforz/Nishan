@@ -5,7 +5,7 @@ import Cache from "./Cache";
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
 import { ICache, Operation, Request } from "../types/types";
-import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetSpacesResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetSpacesResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 
 export default class Getters extends Cache {
   token: string;
@@ -51,6 +51,24 @@ export default class Getters extends Cache {
       space_id: this.space_id,
       cache: this.cache,
     }
+  }
+
+  async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams) {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/removeUsersFromSpace',
+            arg,
+            this.headers
+          ) as { data: RemoveUsersFromSpaceResult };
+          this.saveToCache(data.recordMap);
+          resolve(data);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
   }
 
   async initializePageTemplate(arg: InitializePageTemplateParams): Promise<InitializePageTemplateResult> {

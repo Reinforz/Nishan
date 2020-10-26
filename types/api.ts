@@ -1,6 +1,26 @@
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { TPlanType, Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
+export interface GetPublicPageDataParams {
+  blockId: string,
+  name: "page",
+  saveParent: boolean
+  showMoveTo: boolean
+  type: "block-space"
+}
+
+export interface GetPublicPageDataResult {
+  betaEnabled: boolean
+  canJoinSpace: boolean
+  canRequestAccess: boolean
+  hasPublicAccess: boolean
+  icon: string
+  ownerUserId: string
+  spaceId: string
+  spaceName: string
+  userHasExplicitAccess: boolean
+}
+
 export interface GetPublicSpaceDataParams {
   type: 'space-ids',
   spaceIds: string[]

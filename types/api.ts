@@ -1,5 +1,29 @@
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
-import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+import { TPlanType, Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+
+export interface GetPublicSpaceDataParams {
+  type: 'space-ids',
+  spaceIds: string[]
+}
+
+export interface GetPublicSpaceDataResult {
+  results: SpaceDataResult[]
+}
+
+export interface SpaceDataResult {
+  createdTime: number
+  disableExport: boolean
+  disableGuests: boolean
+  disableMoveToSpace: boolean
+  disablePublicAccess: boolean
+  icon: string
+  id: string
+  inviteLinkEnabled: boolean
+  memberCount: number
+  name: string
+  planType: TPlanType
+  shardId: number
+}
 
 export interface GetSubscriptionDataParams {
   spaceId: string

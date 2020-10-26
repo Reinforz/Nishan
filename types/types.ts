@@ -32,6 +32,7 @@ export type TDateReminderUnit = "day" | "hour" | "minute";
 export type TDataType = keyof RecordMap;
 export type Predicate<T> = (T: T, index: number) => boolean;
 export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
+export type TPlanType = "personal";
 
 export interface GoogleDriveFileUser {
   displayName: string,

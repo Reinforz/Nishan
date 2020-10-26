@@ -2,16 +2,18 @@ import { ISpace } from "../types/api";
 import { IPage, IRootPage, TParentType } from "../types/block";
 import { BlockRepostionArg } from "../types/function";
 import { NishanArg, TDataType, TData, Operation, Args } from "../types/types";
-import { blockListAfter, blockListBefore, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserUpdate, spaceListAfter, spaceListBefore, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsUpdate } from "../utils/chunk";
+import { blockListAfter, blockListBefore, blockListRemove, blockSet, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserListRemove, notionUserSet, notionUserUpdate, spaceListAfter, spaceListBefore, spaceListRemove, spaceSet, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewListRemove, spaceViewSet, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsListRemove, userSettingsSet, userSettingsUpdate } from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
 export default class Data<T extends TData> extends Getters {
   data: T | undefined;
   type: TDataType;
-  listBeforeOp: (id: string, path: string[], args: Args) => Operation;
-  listAfterOp: (id: string, path: string[], args: Args) => Operation;
-  updateOp: (id: string, path: string[], args: Args) => Operation;
+  listBeforeOp: (path: string[], args: Args) => Operation;
+  listAfterOp: (path: string[], args: Args) => Operation;
+  updateOp: (path: string[], args: Args) => Operation;
+  setOp: (path: string[], args: Args) => Operation;
+  listRemoveOp: (path: string[], args: Args) => Operation;
 
   constructor(arg: NishanArg<T>) {
     super(arg);
@@ -19,34 +21,46 @@ export default class Data<T extends TData> extends Getters {
     this.data = arg.data as any;
     switch (this.type) {
       case "space":
-        this.listBeforeOp = spaceListBefore;
-        this.listAfterOp = spaceListAfter;
-        this.updateOp = spaceUpdate;
+        this.listBeforeOp = spaceListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = spaceListAfter.bind(this, (this.data as any).id);
+        this.updateOp = spaceUpdate.bind(this, (this.data as any).id);
+        this.setOp = spaceSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = spaceListRemove.bind(this, (this.data as any).id);
         break;
       case "block":
-        this.listBeforeOp = blockListBefore;
-        this.listAfterOp = blockListAfter;
-        this.updateOp = blockUpdate;
+        this.listBeforeOp = blockListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = blockListAfter.bind(this, (this.data as any).id);
+        this.updateOp = blockUpdate.bind(this, (this.data as any).id);
+        this.setOp = blockSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = blockListRemove.bind(this, (this.data as any).id);
         break;
       case "space_view":
-        this.listBeforeOp = spaceViewListBefore;
-        this.listAfterOp = spaceViewListAfter;
-        this.updateOp = spaceViewUpdate;
+        this.listBeforeOp = spaceViewListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = spaceViewListAfter.bind(this, (this.data as any).id);
+        this.updateOp = spaceViewUpdate.bind(this, (this.data as any).id);
+        this.setOp = spaceViewSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = spaceViewListRemove.bind(this, (this.data as any).id);
         break;
       case "user_settings":
-        this.listBeforeOp = userSettingsListBefore;
-        this.listAfterOp = userSettingsListAfter;
-        this.updateOp = userSettingsUpdate;
+        this.listBeforeOp = userSettingsListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = userSettingsListAfter.bind(this, (this.data as any).id);
+        this.updateOp = userSettingsUpdate.bind(this, (this.data as any).id);
+        this.setOp = userSettingsSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = userSettingsListRemove.bind(this, (this.data as any).id);
         break;
       case "notion_user":
-        this.listBeforeOp = notionUserListBefore;
-        this.listAfterOp = notionUserListAfter;
-        this.updateOp = notionUserUpdate;
+        this.listBeforeOp = notionUserListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = notionUserListAfter.bind(this, (this.data as any).id);
+        this.updateOp = notionUserUpdate.bind(this, (this.data as any).id);
+        this.setOp = notionUserSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = notionUserListRemove.bind(this, (this.data as any).id);
         break;
       default:
-        this.listBeforeOp = blockListBefore;
-        this.listAfterOp = blockListAfter;
-        this.updateOp = blockUpdate;
+        this.listBeforeOp = blockListBefore.bind(this, (this.data as any).id);
+        this.listAfterOp = blockListAfter.bind(this, (this.data as any).id);
+        this.updateOp = blockUpdate.bind(this, (this.data as any).id);
+        this.setOp = blockSet.bind(this, (this.data as any).id);
+        this.listRemoveOp = blockListRemove.bind(this, (this.data as any).id);
         break;
     }
   }
@@ -86,7 +100,7 @@ export default class Data<T extends TData> extends Getters {
       const cached_container = this.type === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
       const path = this.type === "space" ? "pages" : "content";
       if (container) {
-        let block_list_after_op = this.listAfterOp(data.id, [path], {
+        let block_list_after_op = this.listAfterOp([path], {
           after: '',
           id: $block_id
         });
@@ -94,15 +108,15 @@ export default class Data<T extends TData> extends Getters {
         if (arg !== undefined) {
           if (typeof arg === "number") {
             const block_id_at_pos = (data as any)?.[path]?.[arg] ?? '';
-            block_list_after_op = this.listBeforeOp(data.id, [path], {
+            block_list_after_op = this.listBeforeOp([path], {
               before: block_id_at_pos,
               id: $block_id
             });
           } else
-            block_list_after_op = arg.position === "after" ? this.listAfterOp(data.id, [path], {
+            block_list_after_op = arg.position === "after" ? this.listAfterOp([path], {
               after: arg.id,
               id: $block_id
-            }) : this.listBeforeOp(data.id, [path], {
+            }) : this.listBeforeOp([path], {
               after: arg.id,
               id: $block_id
             })
@@ -144,7 +158,7 @@ export default class Data<T extends TData> extends Getters {
 
       (data as any).last_edited_time = Date.now();
 
-      return [this.updateOp(this.data.id, this.type === "user_settings" ? ["settings"] : [], data), function () {
+      return [this.updateOp(this.type === "user_settings" ? ["settings"] : [], data), function () {
         keys.forEach(key => {
           cached_data[key] = data[key];
           (_this as any).data[key] = data[key];

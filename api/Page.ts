@@ -18,7 +18,6 @@ import {
   blockListAfter,
   spaceViewListBefore,
   spaceViewListRemove,
-  blockListRemove,
 } from '../utils/chunk';
 
 import {
@@ -193,10 +192,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
                 blockUpdate(arg, [], {
                   alive: false
                 }),
-                blockListRemove(this.data.id, ['content'], {
+                this.listRemoveOp(['content'], {
                   id: arg
                 }),
-                blockSet(this.data.id, ['last_edited_time'], current_time),
+                this.setOp(['last_edited_time'], current_time),
                 blockSet(arg, ['last_edited_time'], current_time)
               ]
             );
@@ -225,10 +224,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
               blockUpdate(target_block.id, [], {
                 alive: false
               }),
-              blockListRemove(this.data.id, ['content'], {
+              this.listRemoveOp(['content'], {
                 id: target_block.id
               }),
-              blockSet(this.data.id, ['last_edited_time'], current_time),
+              this.setOp(['last_edited_time'], current_time),
               blockSet(target_block.id, ['last_edited_time'], current_time)
             ]
           );
@@ -257,10 +256,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
               operations.push(blockUpdate(id, [], {
                 alive: false
               }),
-                blockListRemove(this.data.id, ['content'], {
+                this.listRemoveOp(['content'], {
                   id
                 }),
-                blockSet(this.data.id, ['last_edited_time'], current_time),
+                this.setOp(['last_edited_time'], current_time),
                 blockSet(id, ['last_edited_time'], current_time))
               this.cache.block.delete(id);
             }
@@ -291,10 +290,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
           else if (this.data) operations.push(blockUpdate(target_block.id, [], {
             alive: false
           }),
-            blockListRemove(this.data.id, ['content'], {
+            this.listRemoveOp(['content'], {
               id: target_block.id
             }),
-            blockSet(this.data.id, ['last_edited_time'], current_time),
+            this.setOp(['last_edited_time'], current_time),
             blockSet(target_block.id, ['last_edited_time'], current_time));
           this.cache.block.delete(target_block.id);
         });
@@ -321,10 +320,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
         format = this.data.format, properties = this.data.properties, permissions = (this.data as IRootPage).permissions
       } = opts;
       await this.saveTransactions([
-        blockUpdate(this.data.id, ['format'], format),
-        blockUpdate(this.data.id, ['properties'], properties),
-        blockUpdate(this.data.id, ['permissions'], permissions),
-        blockSet(this.data.id, ['last_edited_time'], Date.now())
+        this.updateOp(['format'], format),
+        this.updateOp(['properties'], properties),
+        this.updateOp(['permissions'], permissions),
+        this.setOp(['last_edited_time'], Date.now())
       ])
     } else
       throw new Error(error('Data has been deleted'))
@@ -750,7 +749,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
 
       await this.saveTransactions(
         [
-          blockUpdate(this.data.id, [], {
+          this.updateOp([], {
             id: this.data.id,
             type: 'collection_view_page',
             collection_id: $collection_id,

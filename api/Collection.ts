@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockSet, collectionListAfter, collectionSet } from '../utils/chunk';
+import { blockSet, collectionSet } from '../utils/chunk';
 
 import Data from "./Data";
 
@@ -21,7 +21,7 @@ class Collection extends Data<ICollection> {
       await this.saveTransactions(
         [
           ...Object.entries(properties).map(([path, arg]) => collectionSet((this.data as any).id, [path], arg)),
-          collectionSet(this.data.id, ['last_edited_time'], Date.now())
+          this.setOp(['last_edited_time'], Date.now())
         ]
       )
     } else
@@ -44,7 +44,7 @@ class Collection extends Data<ICollection> {
           properties,
           format
         }),
-        collectionListAfter(this.data.id, ['template_pages'], { id: $template_id })
+        this.listAfterOp(['template_pages'], { id: $template_id })
       ]);
     } else
       throw new Error(error('Data has been deleted'))

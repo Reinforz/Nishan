@@ -4,7 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { createOperation, lastEditOperations, collectionViewSet, blockSet, blockListAfter, blockUpdate } from '../utils/chunk';
+import { createOperation, lastEditOperations, collectionViewSet, blockSet, blockUpdate } from '../utils/chunk';
 
 import { error } from "../utils/logs";
 
@@ -34,8 +34,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
             alive: true,
             parent_id: this.data.id
           }),
-          blockListAfter(this.data.id, ['view_ids'], { after: '', id: $view_id }),
-          blockSet(this.data.id, ['last_edited_time'], Date.now())
+          this.listAfterOp(['view_ids'], { after: '', id: $view_id }),
+          this.setOp(['last_edited_time'], Date.now())
         ]
       );
 
@@ -125,6 +125,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
               properties,
               format,
             }),
+            // ? RF:1:E Use a sinle block update operation
             blockUpdate($page_id, [], {
               parent_id: this.data.collection_id,
               parent_table: 'collection',
@@ -132,7 +133,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
             }),
             ...createOperation($page_id, this.user_id),
             ...lastEditOperations($page_id, this.user_id),
-            blockSet(this.data.id, ['last_edited_time'], Date.now())
+            this.setOp(['last_edited_time'], Date.now())
           );
         }
       });

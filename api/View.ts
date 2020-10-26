@@ -1,4 +1,3 @@
-import { collectionViewUpdate } from '../utils/chunk';
 import Data from "./Data";
 import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
 import { error } from '../utils/logs';
@@ -49,7 +48,7 @@ class View extends Data<TView> {
       }
 
       // ? FIX:2:H Respect previous filters and sorts
-      await this.saveTransactions([collectionViewUpdate(this.data.id, [], args)]);
+      await this.saveTransactions([this.updateOp([], args)]);
     } else
       throw new Error(error("Data has been deleted"))
   }

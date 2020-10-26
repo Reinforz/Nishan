@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockUpdate, blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockListBefore } from '../utils/chunk';
+import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockListBefore } from '../utils/chunk';
 
 import Data from "./Data";
 
@@ -92,7 +92,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       const { format = {}, properties = {} } = args;
       await this.saveTransactions(
         [
-          blockUpdate(this.data.id, [], {
+          this.updateOp([], {
             properties,
             format,
             last_edited_time: Date.now()
@@ -106,7 +106,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   async convertTo(type: TBasicBlockType) {
     if (this.data) {
       await this.saveTransactions([
-        blockUpdate(this.data.id, [], { type })
+        this.updateOp([], { type })
       ]);
 
       const cached_value = this.cache.block.get(this.data.id);
@@ -128,15 +128,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       const is_root_page = this.data.parent_table === "space" && this.data.type === "page";
       await this.saveTransactions(
         [
-          blockUpdate(this.data.id, [], {
+          this.updateOp([], {
             alive: false
           }),
           is_root_page ? spaceListRemove(this.data.space_id, ['pages'], { id: this.data.id }) : blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
-          blockSet(this.data.id, ['last_edited_time'], current_time),
+          this.setOp(['last_edited_time'], current_time),
           is_root_page ? spaceSet(this.data.space_id, ['last_edited_time'], current_time) : blockSet(this.data.parent_id, ['last_edited_time'], current_time)
         ]
       );
-      this.cache.block.delete(this.data.id);
       this.deleteCompletely();
     } else
       throw new Error(error('Data has been deleted'))
@@ -151,7 +150,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       const current_time = Date.now();
       await this.saveTransactions(
         [
-          blockUpdate(this.data.id, [], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
+          this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
           blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
           blockListAfter(new_parent_id, ['content'], { after: '', id: this.data.id }),
           blockSet(this.data.parent_id, ['last_edited_time'], current_time),
@@ -181,7 +180,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         last_edited_by_id: this.user_id,
         last_edited_by_table: 'notion_user',
       };
-      return blockUpdate($block_id, [], arg);
+      return this.updateOp([], arg);
     } else
       throw new Error(error('Data has been deleted'))
   }

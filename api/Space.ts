@@ -218,8 +218,7 @@ class Space extends Data<ISpace> {
         op
       ]);
 
-      update()
-
+      update();
     } else throw new Error(error('This space has been deleted'));
   }
 
@@ -237,7 +236,7 @@ class Space extends Data<ISpace> {
       });
       this.cache.space.delete(this.data.id);
     } else throw new Error(error('This space has been deleted'));
-    this.data = undefined as any;
+    this.deleteCompletely();
   }
 
   async getSpaceView() {

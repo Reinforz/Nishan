@@ -2,7 +2,7 @@
 
 Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more
 
-![Nishan Logo](https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/9dfc0c9bf38c37fea689f1cfe595d5a8065bd583/public/Logo3%40100px.svg)
+![Nishan Logo](https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/master/public/Logo%40175px.png)
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 

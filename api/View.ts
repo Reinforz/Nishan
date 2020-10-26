@@ -5,7 +5,6 @@ import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../typ
 class View extends Data<TView> {
   constructor(arg: NishanArg<TView>) {
     super(arg);
-    this.data = arg.data;
   }
 
   async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {

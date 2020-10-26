@@ -1,19 +1,54 @@
 import { ISpace } from "../types/api";
 import { IPage, IRootPage, TParentType } from "../types/block";
 import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TDataType, TData, Operation } from "../types/types";
-import { blockListAfter, blockListBefore, spaceListAfter, spaceListBefore } from "../utils/chunk";
+import { NishanArg, TDataType, TData, Operation, Args } from "../types/types";
+import { blockListAfter, blockListBefore, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserUpdate, spaceListAfter, spaceListBefore, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsUpdate } from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
 export default class Data<T extends TData> extends Getters {
   data: T;
   type: TDataType;
+  listBeforeOp: (id: string, path: string[], args: Args) => Operation;
+  listAfterOp: (id: string, path: string[], args: Args) => Operation;
+  updateOp: (id: string, path: string[], args: Args) => Operation;
 
   constructor(arg: NishanArg<T>) {
     super(arg);
     this.type = arg.type;
     this.data = arg.data as any;
+    switch (this.type) {
+      case "space":
+        this.listBeforeOp = spaceListBefore;
+        this.listAfterOp = spaceListAfter;
+        this.updateOp = spaceUpdate;
+        break;
+      case "block":
+        this.listBeforeOp = blockListBefore;
+        this.listAfterOp = blockListAfter;
+        this.updateOp = blockUpdate;
+        break;
+      case "space_view":
+        this.listBeforeOp = spaceViewListBefore;
+        this.listAfterOp = spaceViewListAfter;
+        this.updateOp = spaceViewUpdate;
+        break;
+      case "user_settings":
+        this.listBeforeOp = userSettingsListBefore;
+        this.listAfterOp = userSettingsListAfter;
+        this.updateOp = userSettingsUpdate;
+        break;
+      case "notion_user":
+        this.listBeforeOp = notionUserListBefore;
+        this.listAfterOp = notionUserListAfter;
+        this.updateOp = notionUserUpdate;
+        break;
+      default:
+        this.listBeforeOp = blockListBefore;
+        this.listAfterOp = blockListAfter;
+        this.updateOp = blockUpdate;
+        break;
+    }
   }
 
   getParent() {
@@ -25,16 +60,18 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error(`Block with id ${this.data.id} doesnot have a parent`));
   }
 
+  getCachedData() {
+    return this.cache[this.type].get(this.data.id) as T
+  }
+
   addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
     const data = this.type === "space" ? this.data as ISpace : this.data as IPage | IRootPage;
     const cached_data = this.type === "space" ? this.cache.space.get(this.data.id) as ISpace : this.cache.block.get(this.data.id) as IPage | IRootPage;
     const container = this.type === "space" ? (data as ISpace).pages : (data as IPage).content;
     const cached_container = this.type === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
     const path = this.type === "space" ? "pages" : "content";
-    const listAfter = this.type === "space" ? spaceListAfter : blockListAfter;
-    const listBefore = this.type === "space" ? spaceListBefore : blockListBefore;
     if (container) {
-      let block_list_after_op = listAfter(data.id, [path], {
+      let block_list_after_op = this.listAfterOp(data.id, [path], {
         after: '',
         id: $block_id
       });
@@ -42,15 +79,15 @@ export default class Data<T extends TData> extends Getters {
       if (arg !== undefined) {
         if (typeof arg === "number") {
           const block_id_at_pos = (data as any)?.[path]?.[arg] ?? '';
-          block_list_after_op = listBefore(data.id, [path], {
+          block_list_after_op = this.listBeforeOp(data.id, [path], {
             before: block_id_at_pos,
             id: $block_id
           });
         } else
-          block_list_after_op = arg.position === "after" ? listAfter(data.id, [path], {
+          block_list_after_op = arg.position === "after" ? this.listAfterOp(data.id, [path], {
             after: arg.id,
             id: $block_id
-          }) : listBefore(data.id, [path], {
+          }) : this.listBeforeOp(data.id, [path], {
             after: arg.id,
             id: $block_id
           })
@@ -78,11 +115,23 @@ export default class Data<T extends TData> extends Getters {
       throw new Error("The data does not contain children")
   }
 
-  updateCache(items: [keyof T, any][]) {
-    const cached_data = this.cache[this.type].get(this.data.id) as T;
-    if (cached_data) items.forEach(([key, value]) => {
-      cached_data[key] = value;
-      this.data[key] = value;
-    })
+  updateCache(arg: Partial<T>, keys: (keyof T)[]) {
+    const cached_data = this.getCachedData();
+    const _this = this;
+    const data = arg as T;
+
+    keys.forEach(key => {
+      data[key] = arg[key] ?? _this.data[key]
+    });
+
+    (data as any).last_edited_time = Date.now();
+
+    return [this.updateOp(this.data.id, this.type === "user_settings" ? ["settings"] : [], data), function () {
+      keys.forEach(key => {
+        cached_data[key] = data[key];
+        _this.data[key] = data[key];
+
+      })
+    }] as [Operation, (() => void)];
   }
 }

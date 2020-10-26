@@ -8,7 +8,7 @@ import Collection from './Collection';
 import NotionUser from './NotionUser';
 import UserSettings from './UserSettings';
 
-import { blockUpdate, spaceUpdate } from '../utils/chunk';
+import { blockUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
 import { NishanArg, Predicate, TPage } from '../types/types';
@@ -209,29 +209,16 @@ class Space extends Data<ISpace> {
    */
   async update(opt: SpaceUpdateParam) {
     if (this.data) {
-      const current_time = Date.now();
-
-      const {
-        name = this.data.name,
-        beta_enabled = this.data.beta_enabled,
-        icon = this.data.icon
-      } = opt;
+      const [op, update] = this.updateCache(opt, ['icon',
+        'beta_enabled',
+        'last_edited_time',
+        'name']);
 
       await this.saveTransactions([
-        spaceUpdate(this.data.id, [], {
-          name,
-          beta_enabled,
-          icon,
-          last_edited_time: current_time
-        })
+        op
       ]);
 
-      this.updateCache([
-        ['icon', icon],
-        ['beta_enabled', beta_enabled],
-        ['last_edited_time', current_time],
-        ['name', name]
-      ]);
+      update()
 
     } else throw new Error(error('This space has been deleted'));
   }

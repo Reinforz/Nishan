@@ -1,5 +1,5 @@
 import { ISpace } from "./api";
-import { Node, FormatBlockColor, TCodeLanguage, Block, TPermissionRole, Permission, ParentProps, Schema } from "./types";
+import { TCreditType, Node, FormatBlockColor, TCodeLanguage, Block, TPermissionRole, Permission, ParentProps, Schema } from "./types";
 
 export interface PageProps {
   title: string[][],
@@ -389,4 +389,20 @@ export interface ICollection extends Node, ParentProps {
   name: string[][],
   schema: Schema,
   template_pages?: string[]
+}
+
+export interface IMember {
+  userId: string,
+  role: TPermissionRole,
+  guestPageIds: string[]
+}
+
+export interface ICredit {
+  activated: boolean
+  amount: number
+  created_timestamp: string
+  id: string
+  type: TCreditType
+  user_id: string
+  version: number
 }

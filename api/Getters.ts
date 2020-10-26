@@ -5,7 +5,7 @@ import Cache from "./Cache";
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
 import { ICache, Operation, Request } from "../types/types";
-import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetSpacesResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
+import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 
 export default class Getters extends Cache {
   token: string;
@@ -52,6 +52,24 @@ export default class Getters extends Cache {
       cache: this.cache,
     }
   }
+
+  async getSubscriptionData(arg: GetSubscriptionDataParams) {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/getSubscriptionData',
+            arg,
+            this.headers
+          ) as { data: GetSubscriptionDataResult };
+          resolve(data);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
+  }
+
 
   async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams) {
     return new Promise((resolve, reject) => {

@@ -862,6 +862,10 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Share page to users
+   * @param args array of userid and role of user to share pages to
+   */
   async addUsers(args: [string, TPermissionRole][]) {
     if (this.data) {
       const permissionItems: Permission[] = [];

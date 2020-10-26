@@ -21,7 +21,7 @@ export type FormatBlockColor = TextColor | BGColor;
 export type ExportType = "markdown" | "pdf" | "html";
 export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
-export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader';
+export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader' | 'none';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export type TPage = IPage | IRootPage | ICollectionViewPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
@@ -31,6 +31,7 @@ export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
 export type TDataType = keyof RecordMap;
 export type Predicate<T> = (T: T, index: number) => boolean;
+export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 
 export interface GoogleDriveFileUser {
   displayName: string,

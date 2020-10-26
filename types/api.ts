@@ -1,5 +1,26 @@
-import { ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
+import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+
+export interface GetSubscriptionDataParams {
+  spaceId: string
+}
+
+export interface GetSubscriptionDataResult {
+  accountBalance: number,
+  availableCredit: number
+  blockUsage: number
+  bots: string[]
+  creditEnabled: boolean,
+  hasPaidNonzero: boolean
+  isDelinquent: boolean
+  isSubscribed: boolean
+  joinedMemberIds: string[]
+  credits: ICredit[]
+  members: IMember[]
+  spaceUsers: string[]
+  totalCredit: number
+  type: "unsubscribed_admin"
+}
 
 export interface RemoveUsersFromSpaceParams {
   removePagePermissions: boolean

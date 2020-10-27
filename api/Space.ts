@@ -2,8 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
 import SpaceView from './SpaceView';
-import Block from './Block';
-import Collection from './Collection';
 import NotionUser from './NotionUser';
 import UserSettings from './UserSettings';
 import RootPage from "./RootPage";
@@ -13,7 +11,7 @@ import { error } from '../utils/logs';
 
 import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IRootPage, TBlockInput, IPage, IPageInput } from '../types/block';
+import { IRootPage, IPage, IPageInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
@@ -51,45 +49,6 @@ class Space extends Data<ISpace> {
           type: "user_settings"
         });
     } else throw new Error(error('This space has been deleted'));
-  }
-
-  /**
-   * Return a block by its id 
-   * @param block_id The id of the block to obtain
-   */
-  async getBlock(block_id: string): Promise<Block<TBlock, TBlockInput>> {
-    const cache_data = this.cache.block.get(block_id);
-    if (cache_data) return new Block({ data: cache_data, ...this.getProps(), type: "block" });
-    const { recordMap } = await this.getBacklinksForBlock(block_id);
-    const target = recordMap.block[block_id];
-    if (!target) throw new Error(error(`No block with the id ${block_id} exists`));
-    else
-      return new Block({
-        data: target.value,
-        ...this.getProps(),
-        type: "block"
-      });
-  }
-
-  /**
-   * Obtain a collection using its id
-   * @param collection_id The id of the collection to obtain
-   */
-  async getCollection(collection_id: string) {
-    const { recordMap: { collection } } = await this.syncRecordValues([
-      {
-        id: collection_id,
-        table: 'collection',
-        version: -1
-      }
-    ]);
-
-    const collection_data = collection[collection_id].value;
-    return new Collection({
-      type: "collection",
-      ...this.getProps(),
-      data: collection_data
-    });
   }
 
   /**

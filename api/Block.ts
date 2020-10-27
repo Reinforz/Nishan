@@ -129,10 +129,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       await this.saveTransactions(
         [
           this.updateOp([], {
-            alive: false
+            alive: false,
+            last_edited_time: current_time
           }),
           is_root_page ? spaceListRemove(this.data.space_id, ['pages'], { id: this.data.id }) : blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
-          this.setOp(['last_edited_time'], current_time),
           is_root_page ? spaceSet(this.data.space_id, ['last_edited_time'], current_time) : blockSet(this.data.parent_id, ['last_edited_time'], current_time)
         ]
       );

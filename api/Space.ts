@@ -11,9 +11,9 @@ import UserSettings from './UserSettings';
 import { blockUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
-import { NishanArg, Predicate, TPage } from '../types/types';
+import { NishanArg, Operation, Predicate, TPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IRootPage, TBlockInput } from '../types/block';
+import { TBlock, IRootPage, TBlockInput, IPage } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
@@ -200,6 +200,34 @@ class Space extends Data<ISpace> {
         data: block[block_id].value as IRootPage
       }));
     } else throw new Error(error('This space has been deleted'));
+  }
+
+  // ? FIX:1:H Remove from normalized cache after root page deletion
+  async deleteRootPages(arg: string[] | Predicate<IPage | IRootPage>, delete_multiple: boolean = true) {
+    if (this.data) {
+      const current_time = Date.now();
+      const ops: Operation[] = [];
+      const is_array = Array.isArray(arg);
+
+      for (let index = 0; index < this.data.pages.length; index++) {
+        const id = this.data.pages[index];
+        const page = this.cache.block.get(id) as IPage;
+        const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
+        if (should_delete)
+          ops.push(blockUpdate(id, [], {
+            alive: false,
+            last_edited_time: current_time
+          }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
+        if (!delete_multiple && ops.length > 1) break;
+      }
+      await this.saveTransactions(ops);
+    } else
+      throw new Error(error('Data has been deleted'))
+  }
+
+  async deleteRootPage(arg: string | Predicate<IPage | IRootPage>): Promise<void> {
+    if (typeof arg === "string") return await this.deleteRootPages([arg], false);
+    else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
   }
 
   // ? FEAT:1:M Update space permissions

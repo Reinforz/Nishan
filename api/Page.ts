@@ -134,15 +134,7 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       if (this.data.content) {
         this.data.content.forEach(content_id => {
           const block_data = block[content_id].value;
-          if (block_data) blocks.push(block_data.type === "page" ? new Page({
-            data: block_data,
-            ...this.getProps(),
-            type: "block"
-          }) : new Block({
-            data: block_data,
-            ...this.getProps(),
-            type: "block"
-          }))
+          if (block_data) blocks.push(this.createClass(block_data.type, block_data))
         })
         return blocks;
       } else

@@ -11,9 +11,9 @@ import UserSettings from './UserSettings';
 import { blockUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
-import { NishanArg, Operation, Predicate, TPage } from '../types/types';
+import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { TBlock, IRootPage, TBlockInput, IPage } from '../types/block';
+import { TBlock, IRootPage, TBlockInput, IPage, IPageInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
@@ -96,12 +96,12 @@ class Space extends Data<ISpace> {
    * Get the pages of this space which matches a passed criteria
    * @param arg criteria to filter pages by
    */
-  async getPages(arg: undefined | string[] | Predicate<TPage>, return_single: boolean = false) {
+  async getPages(arg: undefined | string[] | Predicate<TRootPage>, return_single: boolean = false) {
     const pages: (Page | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
         const page_id = this.data.pages[i];
-        let page = this.cache.block.get(page_id) as TPage;
+        let page = this.cache.block.get(page_id) as TRootPage;
         let should_add = false;
         if (arg === undefined) should_add = true;
         else if (Array.isArray(arg) && arg.includes(page_id)) should_add = true;
@@ -228,6 +228,28 @@ class Space extends Data<ISpace> {
   async deleteRootPage(arg: string | Predicate<IPage | IRootPage>): Promise<void> {
     if (typeof arg === "string") return await this.deleteRootPages([arg], false);
     else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
+  }
+
+  // ? FEAT:1:H Update cache and class state
+  async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
+    if (this.data) {
+      const ops: Operation[] = [];
+      const current_time = Date.now();
+      for (let index = 0; index < arg.length; index++) {
+        const [id, opts] = arg[index];
+        if (this.data.pages.includes(id))
+          ops.push(blockUpdate(id, [], { ...opts, last_edited_time: current_time }))
+        else
+          throw new Error(error(`Space with id ${this.data.id} is not the parent of root page with id ${id}`));
+        if (!multiple && ops.length > 1) break;
+      }
+      await this.saveTransactions(ops);
+    } else
+      throw new Error(error('Data has been deleted'))
+  }
+
+  async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
+    await this.updateRootPages([[id, opt]], false);
   }
 
   // ? FEAT:1:M Update space permissions

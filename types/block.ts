@@ -308,7 +308,9 @@ export interface IRootPage extends IPage {
 export interface ICollectionBlock extends Block {
   view_ids: string[],
   collection_id: string,
-  type: 'collection_view' | 'collection_view_page'
+  type: 'collection_view' | 'collection_view_page',
+  properties?: {},
+  format?: {},
 }
 
 export interface ICollectionView extends ICollectionBlock {

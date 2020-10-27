@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
-import Page from './Page';
 import SpaceView from './SpaceView';
 import Block from './Block';
 import Collection from './Collection';
@@ -97,7 +96,7 @@ class Space extends Data<ISpace> {
    * Get the pages of this space which matches a passed criteria
    * @param arg criteria to filter pages by
    */
-  async getPages(arg: undefined | string[] | Predicate<TRootPage>, return_single: boolean = false) {
+  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
     const pages: (RootPage | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
@@ -130,10 +129,10 @@ class Space extends Data<ISpace> {
               break;
           }
 
-          if (pages.length === 1 && return_single) break;
+          if (pages.length === 1 && multiple) break;
         }
       }
-      return return_single ? pages[0] : pages;
+      return pages;
     } else throw new Error(error('This space has been deleted'));
   }
 
@@ -142,8 +141,8 @@ class Space extends Data<ISpace> {
    * @param page_id Id of the page to obtain 
    */
   async getPage(arg: string | Predicate<TPage>) {
-    if (typeof arg === "string") return this.getPages([arg], true);
-    else return this.getPages(arg, true);
+    if (typeof arg === "string") return (await this.getPages([arg], true))[0];
+    else return (await this.getPages(arg, true))[0];
   }
 
   // ? FEAT:1:M Batch rootpage creation
@@ -195,7 +194,7 @@ class Space extends Data<ISpace> {
 
       const { block } = await this.loadUserContent();
 
-      return block_ids.map(block_id => new Page({
+      return block_ids.map(block_id => new RootPage({
         type: "block",
         ...this.getProps(),
         data: block[block_id].value as IRootPage
@@ -290,6 +289,7 @@ class Space extends Data<ISpace> {
     this.deleteCompletely();
   }
 
+  // ? FEAT:1:M Empty userids for all user, a predicate
   async removeUsers(userIds: string[]) {
     if (this.data) {
       await this.removeUsersFromSpace({

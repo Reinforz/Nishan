@@ -19,7 +19,7 @@ class RootPage extends Page<IRootPage>{
    * Share page to users
    * @param args array of userid and role of user to share pages to
    */
-  async addUsers(args: [string, TPermissionRole][]) {
+  async addUsers(args: [string, TPermissionRole][], multiple: boolean = true) {
     if (this.data) {
       const permissionItems: Permission[] = [];
       for (let i = 0; i < args.length; i++) {
@@ -32,6 +32,7 @@ class RootPage extends Page<IRootPage>{
             type: "user_permission",
             user_id: notion_user.id
           });
+        if (!multiple && permissionItems.length === 1) break;
       }
       await this.inviteGuestsToSpace({
         blockId: this.data.id,
@@ -40,6 +41,10 @@ class RootPage extends Page<IRootPage>{
       })
     } else
       throw new Error(error('Data has been deleted'))
+  }
+
+  async addUser(email: string, role: TPermissionRole) {
+    await this.addUsers([[email, role]], false)
   }
 }
 

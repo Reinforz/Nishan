@@ -30,7 +30,6 @@ import {
   SchemaUnitType,
   NishanArg,
   ExportType,
-  Permission,
   Operation,
   Predicate,
   TGenericEmbedBlockType,
@@ -46,8 +45,6 @@ import {
   SetBookmarkMetadataParams
 } from "../types/api";
 import {
-  PageFormat,
-  PageProps,
   IRootPage,
   IFactoryInput,
   TBlockInput,
@@ -293,29 +290,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         else
           await this.saveTransactions(operations);
       }
-    } else
-      throw new Error(error('Data has been deleted'))
-  }
-
-  /**
-   * Update the properties and the format of the page
-   * @param opts The format and properties of the page to update
-   */
-  async updatePage(opts: {
-    format: Partial<PageFormat>,
-    properties: Partial<PageProps>,
-    permissions: Permission[]
-  }) {
-    if (this.data) {
-      const {
-        format = this.data.format, properties = this.data.properties, permissions = (this.data as IRootPage).permissions
-      } = opts;
-      await this.saveTransactions([
-        this.updateOp(['format'], format),
-        this.updateOp(['properties'], properties),
-        this.updateOp(['permissions'], permissions),
-        this.setOp(['last_edited_time'], Date.now())
-      ])
     } else
       throw new Error(error('Data has been deleted'))
   }

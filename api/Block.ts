@@ -81,7 +81,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       throw new Error(error('Data has been deleted'))
   }
 
-  // ? FEAT:2:M Add Permission to args
   // ? FIX:1:M Update cache
   /**
    * Update a block properties and format
@@ -89,7 +88,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
   async update(args: Partial<A> = {}) {
     if (this.data) {
-      const { format = {}, properties = {} } = args;
+      const { format = this.data.format, properties = this.data.properties } = args;
       await this.saveTransactions(
         [
           this.updateOp([], {

@@ -7,6 +7,7 @@ import Block from './Block';
 import Collection from './Collection';
 import NotionUser from './NotionUser';
 import UserSettings from './UserSettings';
+import RootPage from "./RootPage";
 
 import { blockUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
@@ -97,7 +98,7 @@ class Space extends Data<ISpace> {
    * @param arg criteria to filter pages by
    */
   async getPages(arg: undefined | string[] | Predicate<TRootPage>, return_single: boolean = false) {
-    const pages: (Page | CollectionViewPage)[] = [];
+    const pages: (RootPage | CollectionViewPage)[] = [];
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
         const page_id = this.data.pages[i];
@@ -111,7 +112,7 @@ class Space extends Data<ISpace> {
           switch (page.type) {
             case 'page':
               pages.push(
-                new Page({
+                new RootPage({
                   type: "block",
                   data: page,
                   ...this.getProps()

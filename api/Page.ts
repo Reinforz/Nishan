@@ -31,7 +31,6 @@ import {
   NishanArg,
   ExportType,
   Permission,
-  TPermissionRole,
   Operation,
   Predicate,
   TGenericEmbedBlockType,
@@ -111,8 +110,8 @@ import {
   ITweetInput
 } from "../types/block";
 
-class Page extends Block<IPage | IRootPage, IPageInput> {
-  constructor(arg: NishanArg<IPage | IRootPage>) {
+class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
+  constructor(arg: NishanArg<T>) {
     super(arg);
   }
 
@@ -854,32 +853,6 @@ class Page extends Block<IPage | IRootPage, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
-  /**
-   * Share page to users
-   * @param args array of userid and role of user to share pages to
-   */
-  async addUsers(args: [string, TPermissionRole][]) {
-    if (this.data) {
-      const permissionItems: Permission[] = [];
-      for (let i = 0; i < args.length; i++) {
-        const [email, permission] = args[i];
-        const notion_user = await this.findUser(email);
-        if (!notion_user) throw new Error(error(`User does not have a notion account`));
-        else
-          permissionItems.push({
-            role: permission,
-            type: "user_permission",
-            user_id: notion_user.id
-          });
-      }
-      await this.inviteGuestsToSpace({
-        blockId: this.data.id,
-        permissionItems,
-        spaceId: this.space_id
-      })
-    } else
-      throw new Error(error('Data has been deleted'))
-  }
 
   createClass(type: TBlockType, value: TBlock) {
     switch (type) {

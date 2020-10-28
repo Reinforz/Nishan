@@ -1,0 +1,28 @@
+---
+id: Understanding Notion
+title: Understanding Notion
+sidebar_label: Understanding Notion
+slug: /understanding_notion
+---
+
+This is what I've learnt after learning a bit about notion
+
+1. Everything in notion is a block.
+
+## Page
+
+A page is a special type of block which contain other blocks included pages known as subpages.
+
+## CollectionViewPage
+
+1. A CollectionViewPage is also a special type of page, which has been converted into a full page database.
+2. Every CollectionViewPage has a [collection](../api/interfaces/_types_block_.icollectionblock.md) related to it which contains various informations including the schema of the database.
+3. A CollectionViewPage can contain multiple views
+4. A CollectionViewPage and CollectionView are quite similar apart from the fact that
+  1. CollectionView is not a page
+  2. CollectionView is an inline database, while CollectionViewPage is a full-page database
+
+## CollectionView
+
+1. A special type of block that has similar functionalities to that of a CollectionViewPage
+2. It can be embedded inside a page as a block

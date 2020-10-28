@@ -1,0 +1,18 @@
+name: Deploy to Netlify
+on:  
+  push:
+    branches:
+      - docs
+jobs:
+  deploy:
+    name: Deploy to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: jsmrcaga/action-netlify-deploy@master
+        with:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_DEPLOY_MESSAGE: "Production deploy v${{ github.ref }}"
+          NETLIFY_DEPLOY_TO_PROD: true
+          build_command: "npm run build-doc"

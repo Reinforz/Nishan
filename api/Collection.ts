@@ -5,7 +5,7 @@ import { blockSet, collectionSet } from '../utils/chunk';
 import Data from "./Data";
 
 import { NishanArg } from "../types/types";
-import { ICollection, PageProps, PageFormat } from '../types/block';
+import { ICollection, IPageInput } from '../types/block';
 import { CollectionUpdateParam } from '../types/function';
 import { error } from '../utils/logs';
 
@@ -16,6 +16,10 @@ class Collection extends Data<ICollection> {
 
   // ? FIX:1:M Save to cache and utilize Data update
 
+  /**
+   * Update the collection
+   * @param properties `CollectionUpdateParam`
+   */
   async update(properties: CollectionUpdateParam) {
     if (this.data) {
       await this.saveTransactions(
@@ -28,7 +32,11 @@ class Collection extends Data<ICollection> {
       throw new Error(error('Data has been deleted'))
   }
 
-  async createTemplate(opts = {} as { properties: PageProps, format: PageFormat }) {
+  /**
+   * Create a template for the collection
+   * @param opts 
+   */
+  async createTemplate(opts: Omit<Partial<IPageInput>, "type">) {
     if (this.data) {
       const { properties = {}, format = {} } = opts;
       const $template_id = uuidv4();

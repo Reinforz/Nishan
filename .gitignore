@@ -2,3 +2,5 @@ node_modules
 experiment
 feature.md
 /dist
+/docs/.docusaurus
+/docs/docs/api

@@ -19,6 +19,9 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   }
 
   // ? RF:1:H Same view options as Page.createLinkedDBContent
+  /**
+   * Create a new view for the collection block
+   */
   async createView() {
     if (this.data) {
       const $view_id = uuidv4();
@@ -58,7 +61,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   }
 
   /**
-   * Fetch the collection of the block from the collection_id
+   * Fetch the corresponding collection of the collection block using the collection_id
    */
   async fetchCollection() {
     if (this.data) {
@@ -87,6 +90,9 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Get all the views associated with the collection block
+   */
   async getViews() {
     if (this.data) {
       const { block, collection_view } = await this.loadPageChunk({
@@ -108,6 +114,10 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   }
 
   // ? TD:2:H Better TS Support rather than using any
+  /**
+   * Add rows of data to the collection block
+   * @param rows 
+   */
   async addRows(rows: { format: any, properties: any }[]) {
     if (this.data) {
       const page_ids: string[] = [];

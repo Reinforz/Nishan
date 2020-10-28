@@ -112,6 +112,9 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     super(arg);
   }
 
+  /**
+   * Get all the blocks of the page as an object
+   */
   async getBlocks() {
     if (this.data) {
       const {
@@ -162,6 +165,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     } as IImageInput & { file_ids: string });
   } */
 
+  // ? RF:1:M Refactor to use deleteBlocks
   /**
    * Delete block from a page based on an id or a predicate filter 
    * @param arg id string or a predicate acting as a filter
@@ -227,7 +231,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   }
 
   /**
-   * Delete block from a page based on an id or a predicate filter 
+   * Delete blocks from a page based on id string array or a predicate filter 
    * @param arg array of ids or a predicate acting as a filter
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>) {
@@ -364,13 +368,19 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Create a google drive content as a block
+   * @param fileId id of the file to link in the block
+   * @param position Position obj
+   */
   async createDriveContent(fileId: string, position?: number | BlockRepostionArg) {
     if (this.data) {
       const {
         accounts
       } = await this.getGoogleDriveAccounts();
       const block = await this.createContent({
-        type: "drive"
+        type: "drive",
+        position
       });
       if (block.data) {
         const {
@@ -391,6 +401,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Create a template block content
+   * @param factory `IFactoryInput`
+   * @param position `IPosition`
+   */
   async createTemplateContent(factory: IFactoryInput, position?: number | BlockRepostionArg) {
 
     if (this.data) {
@@ -547,9 +562,10 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  // ? RF:1:M Refactor to use createContents function
   /**
-   * Create contents for a page except **linked Database** and **Collection view** block
-   * @param {ContentOptions} options Options for modifying the content during creation
+   * Create content for a page 
+   * @param options Options for modifying the content during creation
    */
   async createContent(options: TBlockInput & {
     file_id?: string,
@@ -616,6 +632,12 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Create a linked db content block as an object
+   * @param collection_id Id of the collectionblock to link with
+   * @param views views of the newly created content block
+   * @param position `Position`
+   */
   async createLinkedDBContent(collection_id: string, views: UserViewArg[] = [], position?: number | BlockRepostionArg) {
     if (this.data) {
       const $content_id = uuidv4();
@@ -674,6 +696,10 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Create a full page db content block as an object
+   * @param options 
+   */
   async createFullPageDBContent(options: {
     views?: UserViewArg[],
     schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[]

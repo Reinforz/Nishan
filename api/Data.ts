@@ -65,6 +65,9 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
+  /**
+   * Get the parent of the current data
+   */
   getParent() {
     if (this.data) {
       if ((this.data as any).parent_id) {
@@ -77,6 +80,9 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
+  /**
+   * Get the cached data using the current data id
+   */
   getCachedData() {
     if (this.data)
       return this.cache[this.type].get(this.data.id) as T;
@@ -84,6 +90,9 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
+  /**
+   * Delete the cached data using the id
+   */
   deleteCachedData() {
     if (this.data) {
       this.cache[this.type].delete(this.data.id);
@@ -92,6 +101,12 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
+  /**
+   * Adds the passed block id in the child container array of parent
+   * @param $block_id id of the block to add
+   * @param arg 
+   * @returns created Operation and a function to update the cache and the class data
+   */
   addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
     if (this.data) {
       const data = this.type === "space" ? this.data as ISpace : this.data as IPage | IRootPage;
@@ -146,6 +161,11 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
+  /**
+   * Update the cache of the data using only the passed keys
+   * @param arg 
+   * @param keys 
+   */
   updateCache(arg: Partial<T>, keys: (keyof T)[]) {
     if (this.data) {
       const _this = this;

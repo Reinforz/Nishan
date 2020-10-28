@@ -16,7 +16,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
   /**
    * Reposition a block to a new position
-   * @param arg number of new index
+   * @param arg number of new index or `BlockRepostionArg`
    */
   async reposition(arg: number | BlockRepostionArg) {
     if (this.data) {
@@ -83,10 +83,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
   // ? FIX:1:M Update cache
   /**
-   * Update a block properties and format
+   * Update a block's properties and format
    * @param args Block update format and properties options
    */
-  async update(args: Partial<A> = {}) {
+  async update(args: Partial<A>) {
     if (this.data) {
       const { format = this.data.format, properties = this.data.properties } = args;
       await this.saveTransactions(
@@ -102,6 +102,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Convert the current block to a different basic block
+   * @param type `TBasicBlockType` basic block types
+   */
   async convertTo(type: TBasicBlockType) {
     if (this.data) {
       await this.saveTransactions([

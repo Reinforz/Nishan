@@ -2,6 +2,7 @@ import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollec
 import { TPlanType, Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
 export interface GetPublicPageDataParams {
+  // Id of the block
   blockId: string,
   name: "page",
   saveParent: boolean

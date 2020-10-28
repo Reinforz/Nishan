@@ -9,6 +9,11 @@ class NotionUser extends Data<INotionUser> {
     super(arg);
   }
 
+  /**
+   * Update the notion user
+   * @param opt `UpdatableNotionUserParam`
+   */
+
   async update(opt: UpdatableNotionUserParam) {
     const [op, update] = this.updateCache(opt, ['family_name',
       'given_name',

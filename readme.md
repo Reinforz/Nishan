@@ -2,7 +2,7 @@
 
 # Nishan
 
-Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more
+Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more.
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
@@ -13,6 +13,6 @@ Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
 ## NOTE
 
-Right now this repo has not been published as a package yet, but that is definitely on the roadmap.
+Right now this repo is yet to be published as a package, but that is definitely on the roadmap.
 
-Feel free to submit a pull request or open a new issue.
+Feel free to submit a pull request or open a new issue, contributions are more than welcome !!!

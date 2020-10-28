@@ -22,7 +22,7 @@ module.exports = {
 					position: 'left'
 				},
 				{
-					href: 'https://github.com/Nishan-Open-Source/Nishan-Docs',
+					href: 'https://github.com/Nishan-Open-Source/Nishan/tree/master/docs',
 					label: 'GitHub',
 					position: 'right'
 				},
@@ -50,7 +50,7 @@ module.exports = {
 					items: [
 						{
 							label: 'GitHub',
-							href: 'https://github.com/Nishan-Open-Source/Nishan-Docs'
+							href: 'https://github.com/Nishan-Open-Source/Nishan/tree/master/docs'
 						}
 					]
 				}
@@ -64,7 +64,7 @@ module.exports = {
 			{
 				docs: {
 					sidebarPath: require.resolve('./sidebars.js'),
-					editUrl: 'https://github.com/Nishan-Open-Source/Nishan-Docs/edit/master/docs/'
+					editUrl: 'https://github.com/Nishan-Open-Source/Nishan/edit/master/docs/'
 				},
 				theme: {
 					customCss: require.resolve('./src/css/custom.css')
@@ -76,12 +76,12 @@ module.exports = {
 		[
 			'docusaurus-plugin-typedoc',
 			{
-				inputFiles: [ '../api' ],
+				inputFiles: [ '../api', '../utils', '../Nishan.ts', '../types' ],
 				docsRoot: 'docs',
 				out: 'api',
 				sidebar: {
 					sidebarFile: './typedoc-sidebars.js',
-					fullNames: true
+					fullNames: false
 				},
 				mode: 'modules',
 				target: `ESNext`,

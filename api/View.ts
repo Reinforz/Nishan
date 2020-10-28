@@ -2,11 +2,20 @@ import Data from "./Data";
 import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
 import { error } from '../utils/logs';
 
+/**
+ * A class to represent view of Notion
+ * @noInheritDoc
+ */
 class View extends Data<TView> {
   constructor(arg: NishanArg<TView>) {
     super(arg);
   }
 
+  /**
+   * Update the current view
+   * @param options Options to update the view
+   */
+  // ? TD:1:M Convert the parameter as an interface
   async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {
     if (this.data) {
       const { sorts = [], filters = [], properties = [], aggregations = [] } = options;

@@ -23,6 +23,11 @@ class Nishan extends Getters {
     return space;
   }
 
+  /**
+   * Get a space that is available on the user's account
+   * @param arg A predicate filter function or a string
+   * @returns The obtained Space object
+   */
   async getSpace(arg: Predicate<ISpace> | string) {
     const res = await this.getAllSpaces();
     let target_space: ISpace | undefined = arg === undefined ? Object.values(Object.values(res)[0].space)[0].value : undefined;
@@ -43,6 +48,11 @@ class Nishan extends Getters {
     else throw new Error(error(`No space matches the criteria`));
   }
 
+  /**
+   * Get multiple space objects on the user's account as an array
+   * @param arg empty or A predicate function or a string array of ids
+   * @returns An array of space objects
+   */
   async getSpaces(arg: undefined | Predicate<ISpace> | string[]) {
     const res = Object.values(await this.getAllSpaces());
     let target_spaces: Space[] = [];
@@ -71,6 +81,11 @@ class Nishan extends Getters {
     return target_spaces;
   }
 
+  /**
+   * Create and return a new Space
+   * @param opt Object for configuring the Space options
+   * @returns Newly created Space object
+   */
   async createWorkSpace(opt: Partial<Pick<ISpace, "name" | "icon">>) {
     const { name = "Workspace", icon = "" } = opt;
 
@@ -120,6 +135,7 @@ class Nishan extends Getters {
       userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
       spaceListAfter($space_id, ['pages'], { id: $block_id }),
     ]);
+    // ? IMP:1:M Use the syncRecordValues to get the space rather than using loadUserContent
     await this.loadUserContent();
     const space = this.cache.space.get($space_id);
     if (space) {

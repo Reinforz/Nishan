@@ -9,8 +9,13 @@ import { createOperation, lastEditOperations, collectionViewSet, blockSet, block
 import { error } from "../utils/logs";
 
 import { Operation, TView, NishanArg } from "../types/types";
-import { TBlockInput, TCollectionBlock } from '../types/block';
+import { IPage, TBlockInput, TCollectionBlock } from '../types/block';
+import Page from './Page';
 
+/**
+ * A class to represent collectionblock type in Notion
+ * @noInheritDoc
+ */
 class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   constructor(arg: NishanArg<TCollectionBlock>) {
     super(arg);
@@ -21,6 +26,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   // ? RF:1:H Same view options as Page.createLinkedDBContent
   /**
    * Create a new view for the collection block
+   * @returns The newly created view object
    */
   async createView() {
     if (this.data) {
@@ -62,6 +68,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
 
   /**
    * Fetch the corresponding collection of the collection block using the collection_id
+   * @returns The corresponding collection object
    */
   async fetchCollection() {
     if (this.data) {
@@ -92,6 +99,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
 
   /**
    * Get all the views associated with the collection block
+   * @returns An array of view objects of the collectionblock
    */
   async getViews() {
     if (this.data) {
@@ -116,9 +124,10 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   // ? TD:2:H Better TS Support rather than using any
   /**
    * Add rows of data to the collection block
-   * @param rows 
+   * @param rows
+   * @returns An array of newly created page objects
    */
-  async addRows(rows: { format: any, properties: any }[]) {
+  async addRows(rows: { format: any, properties: any }[]): Promise<Page<IPage>[]> {
     if (this.data) {
       const page_ids: string[] = [];
       const Page = require('../Page');
@@ -163,7 +172,7 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       return page_ids.map((page_id) => new Page({
         block_data: recordMap.block[page_id].value,
         ...this.getProps()
-      }))
+      }));
     } else
       throw new Error(error('Data has been deleted'))
   }

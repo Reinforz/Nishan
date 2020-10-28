@@ -9,6 +9,10 @@ import { BlockRepostionArg, CreateBlockArg } from "../types/function";
 import { TBlock, IPage, TBlockInput } from '../types/block';
 import { error } from '../utils/logs';
 
+/**
+ * A class to represent block of Notion
+ * @noInheritDoc
+ */
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   constructor(arg: NishanArg<T>) {
     super(arg);
@@ -42,6 +46,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
   /**
    * Duplicate the current block
+   * @returns The duplicated block object
    */
   async duplicate() {
     if (this.data) {
@@ -123,7 +128,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   /**
-   * Delete the current block, whether its a page or regular block
+   * Delete the current block
    */
   async delete() {
     if (this.data) {

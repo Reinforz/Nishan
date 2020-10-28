@@ -4,6 +4,10 @@ import { error } from "../utils/logs";
 import { NishanArg } from '../types/types';
 import { ICollectionView } from '../types/block';
 
+/**
+ * A class to represent collectionview of Notion
+ * @noInheritDoc
+ */
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg<ICollectionView>) {
     super(arg);

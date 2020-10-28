@@ -87,7 +87,8 @@ module.exports = {
 				target: `ESNext`,
 				disableOutputCheck: true,
 				excludeExternals: true,
-				ignoreCompilerErrors: true
+				ignoreCompilerErrors: true,
+				plugin: [ 'typedoc-plugin-no-inherit' ]
 			}
 		]
 	]

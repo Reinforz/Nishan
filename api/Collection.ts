@@ -9,6 +9,10 @@ import { ICollection, IPageInput } from '../types/block';
 import { CollectionUpdateParam } from '../types/function';
 import { error } from '../utils/logs';
 
+/**
+ * A class to represent collection of Notion
+ * @noInheritDoc
+ */
 class Collection extends Data<ICollection> {
   constructor(arg: NishanArg<ICollection>) {
     super(arg);
@@ -32,9 +36,10 @@ class Collection extends Data<ICollection> {
       throw new Error(error('Data has been deleted'))
   }
 
+  // ? FEAT:1:E Return a page object
   /**
    * Create a template for the collection
-   * @param opts 
+   * @param opts Object for configuring template options
    */
   async createTemplate(opts: Omit<Partial<IPageInput>, "type">) {
     if (this.data) {

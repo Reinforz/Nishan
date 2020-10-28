@@ -6,6 +6,10 @@ import { blockListAfter, blockListBefore, blockListRemove, blockSet, blockUpdate
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
+/**
+ * A class to update and control data specific stuffs
+ * @noInheritDoc
+ */
 export default class Data<T extends TData> extends Getters {
   data: T | undefined;
   type: TDataType;

@@ -4,11 +4,19 @@ import { NishanArg } from '../types/types';
 import { IUserSettings } from '../types/api';
 import { UpdatableUserSettingsParam } from '../types/function';
 
+/**
+ * A class to represent user settings of Notion
+ * @noInheritDoc
+ */
 class UserSettings extends Data<IUserSettings> {
   constructor(arg: NishanArg<IUserSettings>) {
     super(arg);
   }
 
+  /**
+   * Update the current user settings
+   * @param opt Options to update the User settings
+   */
   async update(
     opt: UpdatableUserSettingsParam
   ) {

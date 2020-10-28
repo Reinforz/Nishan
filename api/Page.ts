@@ -107,6 +107,10 @@ import {
   ITweetInput
 } from "../types/block";
 
+/**
+ * A class to represent Page type block of Notion
+ * @noInheritDoc
+ */
 class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   constructor(arg: NishanArg<T>) {
     super(arg);
@@ -114,6 +118,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
   /**
    * Get all the blocks of the page as an object
+   * @returns An array of block object
    */
   async getBlocks() {
     if (this.data) {
@@ -167,7 +172,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
   // ? RF:1:M Refactor to use deleteBlocks
   /**
-   * Delete block from a page based on an id or a predicate filter 
+   * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
   async deleteBlock(arg: string | Predicate<TBlock>) {
@@ -231,7 +236,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   }
 
   /**
-   * Delete blocks from a page based on id string array or a predicate filter 
+   * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>) {
@@ -371,7 +376,8 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   /**
    * Create a google drive content as a block
    * @param fileId id of the file to link in the block
-   * @param position Position obj
+   * @param position `Position` interface
+   * @returns Newly created drive content block
    */
   async createDriveContent(fileId: string, position?: number | BlockRepostionArg) {
     if (this.data) {
@@ -403,11 +409,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
   /**
    * Create a template block content
-   * @param factory `IFactoryInput`
-   * @param position `IPosition`
+   * @param factory `IFactoryInput` interface
+   * @param position number or `BlockRepostionArg` interface
+   * @returns An object containing Newly created array of template content blocks and the template block itself
    */
   async createTemplateContent(factory: IFactoryInput, position?: number | BlockRepostionArg) {
-
     if (this.data) {
       const {
         format,
@@ -463,7 +469,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         }),
         contents: content_block_ids.map(content_block_id => new Block({
           type: "block",
-
           data: recordMap.block[content_block_id].value,
           ...this.getProps()
         }))
@@ -473,8 +478,9 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   }
 
   /**
-   * Batch add multiple contents
-   * @param contents Contents options
+   * Batch add multiple block as contents
+   * @param contents array of options for configuring each content
+   * @returns Array of newly created block content objects
    */
 
   async createContents(contents: (TBlockInput & {
@@ -566,6 +572,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   /**
    * Create content for a page 
    * @param options Options for modifying the content during creation
+   * @returns Newly created block content object
    */
   async createContent(options: TBlockInput & {
     file_id?: string,
@@ -633,10 +640,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   }
 
   /**
-   * Create a linked db content block as an object
+   * Create a linked db content block
    * @param collection_id Id of the collectionblock to link with
    * @param views views of the newly created content block
-   * @param position `Position`
+   * @param position `Position` interface
+   * @returns Newly created linkedDB block content object
    */
   async createLinkedDBContent(collection_id: string, views: UserViewArg[] = [], position?: number | BlockRepostionArg) {
     if (this.data) {
@@ -696,9 +704,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  // ? TD:1:M Make the argument an interface
   /**
-   * Create a full page db content block as an object
-   * @param options 
+   * Create a full page db content block
+   * @param options Schema and the views of the newly created block
+   * @returns Returns the newly created full page db block object
    */
   async createFullPageDBContent(options: {
     views?: UserViewArg[],
@@ -787,6 +797,13 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
+  // ? FEAT:1:M Take in Schema as an option
+  /**
+   * Creates an inline database block inside current page
+   * @param options Views of the newly created inline db block
+   * @param position 
+   * @returns Returns the newly created inlinedb content block object
+   */
   async createInlineDBContent(options: {
     views?: UserViewArg[]
   } = {}, position?: number | BlockRepostionArg) {

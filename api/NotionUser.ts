@@ -4,6 +4,10 @@ import { NishanArg } from '../types/types';
 import { INotionUser } from '../types/api';
 import { UpdatableNotionUserParam } from '../types/function';
 
+/**
+ * A class to represent NotionUser of Notion
+ * @noInheritDoc
+ */
 class NotionUser extends Data<INotionUser> {
   constructor(arg: NishanArg<INotionUser>) {
     super(arg);

@@ -10,13 +10,17 @@ import {
 import { NishanArg, Permission, TPermissionRole } from "../types/types";
 import { IRootPage } from "../types/block";
 
+/**
+ * A class to represent RootPage type block of Notion
+ * @noInheritDoc
+ */
 class RootPage extends Page<IRootPage>{
   constructor(arg: NishanArg<IRootPage>) {
     super(arg);
   }
 
   /**
-   * Share page to users
+   * Share page to users with specific permissions
    * @param args array of userid and role of user to share pages to
    */
   async addUsers(args: [string, TPermissionRole][], multiple: boolean = true) {
@@ -43,6 +47,11 @@ class RootPage extends Page<IRootPage>{
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Share the current page with the user
+   * @param email email of the user to add
+   * @param role Role of the added user
+   */
   async addUser(email: string, role: TPermissionRole) {
     await this.addUsers([[email, role]], false)
   }

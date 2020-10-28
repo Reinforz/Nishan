@@ -5,11 +5,19 @@ import { ISpace, ISpaceView } from '../types/api';
 import { UpdatableSpaceViewParam } from '../types/function';
 import Space from './Space';
 
+/**
+ * A class to represent spaceview of Notion
+ * @noInheritDoc
+ */
 class SpaceView extends Data<ISpaceView> {
   constructor(arg: NishanArg<ISpaceView>) {
     super(arg);
   }
 
+  /**
+   * Update the current space view
+   * @param arg Options to update the spaceView
+   */
   async update(arg: UpdatableSpaceViewParam) {
     const [op, update] = this.updateCache(arg, ['notify_email',
       'notify_desktop',
@@ -20,6 +28,10 @@ class SpaceView extends Data<ISpaceView> {
     update();
   }
 
+  /**
+   * Get the corresponding space associated with this space view
+   * @returns The corresponding space object
+   */
   async getSpace() {
     let target_space: ISpace | null = null;
     for (let [, space] of this.cache.space) {

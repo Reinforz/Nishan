@@ -15,6 +15,10 @@ import { IRootPage, IPage, IPageInput } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
+/**
+ * A class to represent space of Notion
+ * @noInheritDoc
+ */
 class Space extends Data<ISpace> {
   constructor(arg: NishanArg<ISpace>) {
     super(arg);
@@ -23,6 +27,7 @@ class Space extends Data<ISpace> {
 
   /**
    * Get the current logged in notion user
+   * @returns The NotionUser object attached with the token
    */
   async getNotionUser() {
     if (this.data) {
@@ -38,6 +43,7 @@ class Space extends Data<ISpace> {
 
   /**
    * Get the current logged in user settings
+   * @returns Returns the logged in UserSettings object
    */
   async getUserSettings() {
     if (this.data) {
@@ -52,8 +58,9 @@ class Space extends Data<ISpace> {
   }
 
   /**
-   * Get the pages of this space which matches a passed criteria
+   * Get pages from this space
    * @param arg criteria to filter pages by
+   * @returns An array of pages object matching the passed criteria
    */
   async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
     const pages: (RootPage | CollectionViewPage)[] = [];
@@ -96,8 +103,9 @@ class Space extends Data<ISpace> {
   }
 
   /**
-   * Get a single page of this space which matches a passed criteria
-   * @param page_id Id of the page to obtain 
+   * Get a single page from this space
+   * @param arg criteria to filter pages by
+   * @returns A page object matching the passed criteria
    */
   async getPage(arg: string | Predicate<TPage>) {
     if (typeof arg === "string") return (await this.getPages([arg], true))[0];
@@ -108,6 +116,7 @@ class Space extends Data<ISpace> {
   /**
    * Create a new page using passed properties and formats
    * @param opts format and properties for the root page
+   * @return Newly created Root page object
    */
   async createRootPage(opts: CreateRootPageArgs) {
     const [page] = await this.createRootPages([opts]);
@@ -117,6 +126,7 @@ class Space extends Data<ISpace> {
   /**
    * Create new pages using passed properties and formats
    * @param opts array of format and properties for the root pages
+   * @returns An array of newly created rootpage block objects
    */
   async createRootPages(opts: CreateRootPageArgs[]) {
     if (this.data) {
@@ -162,6 +172,11 @@ class Space extends Data<ISpace> {
   }
 
   // ? FIX:1:H Remove from normalized cache after root page deletion
+  /**
+   * 
+   * @param arg Criteria to filter the pages to be deleted
+   * @param delete_multiple whether or not multiple root pages should be deleted
+   */
   async deleteRootPages(arg: string[] | Predicate<IPage | IRootPage>, delete_multiple: boolean = true) {
     if (this.data) {
       const current_time = Date.now();
@@ -184,12 +199,21 @@ class Space extends Data<ISpace> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Delete a single root page from the space
+   * @param arg Criteria to filter the page to be deleted
+   */
   async deleteRootPage(arg: string | Predicate<IPage | IRootPage>): Promise<void> {
     if (typeof arg === "string") return await this.deleteRootPages([arg], false);
     else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
   }
 
   // ? FEAT:1:H Update cache and class state
+  /**
+   * Update multiple root pages located in the space
+   * @param arg Array of tuple, id and object to configure each root page
+   * @param multiple whether multiple rootpages should be deleted
+   */
   async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
     if (this.data) {
       const ops: Operation[] = [];
@@ -207,13 +231,18 @@ class Space extends Data<ISpace> {
       throw new Error(error('Data has been deleted'))
   }
 
+  /**
+   * Update a singular root page in the space
+   * @param id id of the root page to update
+   * @param opt object to configure root page
+   */
   async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
     await this.updateRootPages([[id, opt]], false);
   }
 
   // ? FEAT:1:M Update space permissions
   /**
-   * Update the workspace settings
+   * Update the space settings
    * @param opt Properties of the space to update
    */
   async update(opt: SpaceUpdateParam) {
@@ -249,6 +278,10 @@ class Space extends Data<ISpace> {
   }
 
   // ? FEAT:1:M Empty userids for all user, a predicate
+  /**
+   * Remove multiple users from the current space
+   * @param userIds ids of the user to remove from the workspace
+   */
   async removeUsers(userIds: string[]) {
     if (this.data) {
       await this.removeUsersFromSpace({
@@ -260,6 +293,10 @@ class Space extends Data<ISpace> {
     } else throw new Error(error('This space has been deleted'));
   }
 
+  /**
+   * Get the space view associated with the space
+   * @returns The associated space view object
+   */
   async getSpaceView() {
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {

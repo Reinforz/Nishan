@@ -76,7 +76,7 @@ module.exports = {
 		[
 			'docusaurus-plugin-typedoc',
 			{
-				inputFiles: [ '../dist' ],
+				inputFiles: [ '../api' ],
 				docsRoot: 'docs',
 				out: 'api',
 				sidebar: {

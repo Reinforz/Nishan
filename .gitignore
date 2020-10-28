@@ -4,3 +4,5 @@ feature.md
 /dist
 /docs/.docusaurus
 /docs/docs/api
+.netlify
+/docs/build

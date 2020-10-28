@@ -1,5 +1,5 @@
 name: Deploy to Netlify
-on:  
+on:
   push:
     branches:
       - docs
@@ -15,4 +15,6 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_DEPLOY_MESSAGE: "Production deploy v${{ github.ref }}"
           NETLIFY_DEPLOY_TO_PROD: true
-          build_command: "npm run build-doc"
+          build_command: "cd ./docs & npm run build"
+          install_command: cd ./docs & npm i
+          build_directory: ./docs/build

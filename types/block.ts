@@ -1,5 +1,5 @@
 import { ISpace } from "./api";
-import { TCreditType, Node, FormatBlockColor, TCodeLanguage, Block, TPermissionRole, Permission, ParentProps, Schema } from "./types";
+import { TCreditType, Node, FormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps, Schema } from "./types";
 
 export interface PageProps {
   title: string[][],
@@ -302,7 +302,7 @@ export interface IPage extends Block {
 }
 
 export interface IRootPage extends IPage {
-  permissions: (Permission | IPublicPermission)[]
+  permissions: (IPermission | IPublicPermission)[]
 }
 
 export interface ICollectionBlock extends Block {

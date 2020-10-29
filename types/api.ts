@@ -1,5 +1,5 @@
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
-import { TPlanType, Node, OperationTable, Permission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+import { TPlanType, Node, OperationTable, IPermission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
 export interface GetPublicPageDataParams {
   // Id of the block
@@ -176,7 +176,7 @@ export interface SyncRecordValuesParams {
 
 export interface InviteGuestsToSpaceParams {
   blockId: string,
-  permissionItems: Permission[],
+  permissionItems: IPermission[],
   spaceId: string
 }
 export interface FindUserResult {
@@ -356,7 +356,7 @@ export interface ISpace extends CreateProps, LastEditedProps {
   invite_link_enabled: boolean,
   name: string,
   pages: string[],
-  permissions: Permission[],
+  permissions: IPermission[],
   plan_type: "personal",
   shard_id: number,
   version: number

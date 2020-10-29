@@ -144,7 +144,7 @@ export interface Operation {
   args: Args
 };
 
-export interface Permission {
+export interface IPermission {
   role: TPermissionRole,
   type: TPermissionType,
   user_id: string,
@@ -174,7 +174,7 @@ export interface LastEditedProps {
 }
 
 export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
-  permission: Permission[],
+  permission: IPermission[],
   shard_id: number,
   space_id: string,
   collection_id?: string,

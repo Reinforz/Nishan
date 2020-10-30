@@ -1,7 +1,9 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { ISpace } from "../types/api";
 import { IPage, IRootPage, TParentType } from "../types/block";
-import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TDataType, TData, Operation, Args } from "../types/types";
+import { BlockRepostionArg, CreateRootCollectionViewPageParams } from "../types/function";
+import { NishanArg, TDataType, TData, Operation, Args, Schema } from "../types/types";
 import { blockListAfter, blockListBefore, blockListRemove, blockSet, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserListRemove, notionUserSet, notionUserUpdate, spaceListAfter, spaceListBefore, spaceListRemove, spaceSet, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewListRemove, spaceViewSet, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsListRemove, userSettingsSet, userSettingsUpdate } from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
@@ -198,5 +200,45 @@ export default class Data<T extends TData> extends Getters {
       this.data = undefined as any;
     } else
       throw new Error(error("Data has been deleted"));
+  }
+
+  parseCollectionOptions(option: Partial<CreateRootCollectionViewPageParams>) {
+    const { properties, format } = option;
+
+    if (!option.views) option.views = [{
+      aggregations: [
+        ['title', 'count']
+      ],
+      name: 'Default View',
+      type: 'table'
+    }];
+
+    if (!option.schema) option.schema = [
+      ['Name', 'title']
+    ];
+    const schema: Schema = {};
+
+    if (option.schema)
+      option.schema.forEach(opt => {
+        const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+        schema[schema_key] = {
+          name: opt[0],
+          type: opt[1],
+          ...(opt[2] ?? {})
+        };
+        if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
+          id: uuidv4(),
+          value,
+          color
+        }))
+      });
+
+    const views = (option.views && option.views.map((view) => ({
+      ...view,
+      id: uuidv4()
+    }))) || [];
+
+    return { schema, views, properties, format }
+
   }
 }

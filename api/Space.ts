@@ -10,7 +10,7 @@ import RootCollectionViewPage from './RootCollectionViewPage';
 import { blockUpdate, collectionUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
-import { NishanArg, Operation, Predicate, Schema, TPage, TRootPage } from '../types/types';
+import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { IRootPage, IPageInput, IRootCollectionViewPage } from '../types/block';
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
@@ -117,46 +117,20 @@ class Space extends Data<ISpace> {
     return (await this.createRootCollectionViewPages([option], false))[0];
   }
 
-  // ? FEAT:1:M Add method for creating multiple pages
+  // ? FEAT:1:H Return newly created Collection,CollectionViewPage and all ViewIds
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], multiple: boolean = true) {
     if (this.data) {
       const ops: Operation[] = [], block_ids: string[] = [];
       for (let index = 0; index < options.length; index++) {
         const option = options[index];
-        if (!option.views) option.views = [{
-          aggregations: [
-            ['title', 'count']
-          ],
-          name: 'Default View',
-          type: 'table'
-        }];
-        if (!option.schema) option.schema = [
-          ['Name', 'title']
-        ];
-        const views = (option.views && option.views.map((view) => ({
-          ...view,
-          id: uuidv4()
-        }))) || [];
+        const { properties, format, schema, views } = this.parseCollectionOptions(option)
+
         const view_ids = views.map((view) => view.id);
         const $collection_id = uuidv4();
-        const schema: Schema = {};
-        if (option.schema)
-          option.schema.forEach(opt => {
-            const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-            schema[schema_key] = {
-              name: opt[0],
-              type: opt[1],
-              ...(opt[2] ?? {})
-            };
-            if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
-              id: uuidv4(),
-              value,
-              color
-            }))
-          });
         const block_id = uuidv4();
         block_ids.push(block_id);
         const [block_update_op, update] = this.addToChildArray(block_id, option.position);
+
         ops.push(blockUpdate(block_id, [], {
           type: 'page',
           id: block_id,
@@ -165,8 +139,8 @@ class Space extends Data<ISpace> {
           parent_id: this.space_id,
           parent_table: 'space',
           alive: true,
-          properties: option.properties,
-          format: option.format,
+          properties,
+          format,
         }),
           blockUpdate(block_id, [], {
             type: 'collection_view_page',
@@ -183,7 +157,7 @@ class Space extends Data<ISpace> {
             parent_id: block_id,
             parent_table: 'block',
             alive: true,
-            name: option.properties.title
+            name: properties?.title
           }),
           block_update_op,
           ...createViews(views, block_id));

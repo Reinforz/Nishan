@@ -26,7 +26,6 @@ import {
 } from "../utils/logs";
 
 import {
-  Schema,
   NishanArg,
   ExportType,
   Operation,
@@ -707,43 +706,16 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
   /**
    * Create a full page db content block
-   * @param options Schema and the views of the newly created block
+   * @param option Schema and the views of the newly created block
    * @returns Returns the newly created full page db block object
    */
-  async createFullPageDBContent(options: Partial<Pick<CreateRootCollectionViewPageParams, "schema" | "views">>) {
+  async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
     if (this.data) {
-      if (!options.views) options.views = [{
-        aggregations: [
-          ['title', 'count']
-        ],
-        name: 'Default View',
-        type: 'table'
-      }];
-      if (!options.schema) options.schema = [
-        ['Name', 'title']
-      ];
-      const views = (options.views && options.views.map((view) => ({
-        ...view,
-        id: uuidv4()
-      }))) || [];
+      const { schema, properties, format, views } = this.parseCollectionOptions(option);
+
       const view_ids = views.map((view) => view.id);
       const $collection_id = uuidv4();
       const current_time = Date.now();
-      const schema: Schema = {};
-      if (options.schema)
-        options.schema.forEach(opt => {
-          const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-          schema[schema_key] = {
-            name: opt[0],
-            type: opt[1],
-            ...(opt[2] ?? {})
-          };
-          if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
-            id: uuidv4(),
-            value,
-            color
-          }))
-        });
 
       await this.saveTransactions(
         [
@@ -752,7 +724,8 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
             type: 'collection_view_page',
             collection_id: $collection_id,
             view_ids,
-            properties: {},
+            properties,
+            format,
             created_time: current_time,
             last_edited_time: current_time
           }),
@@ -762,11 +735,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
             format: {
               collection_page_properties: []
             },
-            icon: (this.data as IPage).format.page_icon,
+            icon: this.data.format.page_icon,
             parent_id: this.data.id,
             parent_table: 'block',
             alive: true,
-            name: (this.data as IPage).properties.title
+            name: this.data.properties.title
           }),
           ...createViews(views, this.data.id)
         ]

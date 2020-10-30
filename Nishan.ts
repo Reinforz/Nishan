@@ -1,27 +1,43 @@
-import { v4 as uuidv4 } from 'uuid';
+
+import axios from "axios";
 
 import { NishanArg, Predicate } from "./types/types";
 import { error } from "./utils/logs";
 import Space from "./api/Space";
-import Getters from "./api/Getters";
-import { blockUpdate, spaceListAfter, spaceViewSet, userSettingsUpdate, userRootListAfter } from './utils/chunk';
-import { ISpace } from './types/api';
+import Cache from "./api/Cache";
+import { GetSpacesResult, ISpace } from './types/api';
 
-class Nishan extends Getters {
-  constructor(arg: NishanArg) {
-    super(arg);
+class Nishan extends Cache {
+  token: string;
+  interval: number;
+  init_cache: boolean;
+
+  constructor(arg: Pick<NishanArg, "token" | "interval" | "cache">) {
+    super(arg.cache);
+    this.token = arg.token;
+    this.interval = arg.interval;
+    this.init_cache = false;
   }
 
-  async init(arg: string | Predicate<ISpace>) {
-    await this.getAllSpaces();
-    const space = await this.getSpace(arg);
-    const cached_data = space.getCachedData();
-    if (cached_data) {
-      this.shard_id = cached_data.shard_id;
-      this.space_id = cached_data.id;
-      this.user_id = cached_data.permissions[0].user_id;
-    }
-    return space;
+
+  async initializeCache() {
+    setTimeout(async () => {
+      try {
+        const { data } = await axios.post(
+          'https://www.notion.so/api/v3/getSpaces',
+          {},
+          {
+            headers: {
+              cookie: `token_v2=${this.token}`
+            }
+          }
+        ) as { data: GetSpacesResult };
+        Object.values(data).forEach(data => this.saveToCache(data));
+        this.init_cache = true;
+      } catch (err) {
+        throw new Error(error(err.response.data))
+      }
+    }, this.interval)
   }
 
   /**
@@ -30,23 +46,7 @@ class Nishan extends Getters {
    * @returns The obtained Space object
    */
   async getSpace(arg: Predicate<ISpace> | string) {
-    const res = await this.getAllSpaces();
-    let target_space: ISpace | undefined = arg === undefined ? Object.values(Object.values(res)[0].space)[0].value : undefined;
-    if (arg !== undefined)
-      Object.values(res).forEach(user => {
-        target_space = (Object.values(user.space).find((space, index) => typeof arg === "string" ? space.value.id === arg : arg(space.value, index))?.value)
-      });
-
-    if (target_space)
-      return new Space({
-        type: "space",
-        ...this.getProps(),
-        shard_id: (target_space as ISpace).shard_id,
-        space_id: (target_space as ISpace).id,
-        user_id: (target_space as ISpace).permissions[0].user_id,
-        id: target_space.id
-      })
-    else throw new Error(error(`No space matches the criteria`));
+    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**
@@ -54,99 +54,39 @@ class Nishan extends Getters {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(arg: undefined | Predicate<ISpace> | string[]) {
-    const res = Object.values(await this.getAllSpaces());
-    let target_spaces: Space[] = [];
+  async getSpaces(arg: undefined | Predicate<ISpace> | string[], multiple: boolean = true) {
+    if (!this.init_cache) await this.initializeCache();
 
-    for (let i = 0; i < res.length; i++) {
-      const spaces = Object.values(res[i].space);
-      for (let j = 0; j < spaces.length; j++) {
-        const space = spaces[j];
-        let should_add = false;
-        if (arg === undefined)
-          should_add = true;
-        else if (Array.isArray(arg) && arg.includes(space.value.id))
-          should_add = true;
-        else if (typeof arg === "function")
-          should_add = await arg(space.value, i);
+    const target_spaces: Space[] = [];
+    let i = 0;
 
-        if (should_add) {
-          target_spaces.push(new Space({
-            type: "space",
-            id: space.value.id,
-            ...this.getProps()
-          }))
-        }
+    for (const [, space] of this.cache.space) {
+      let should_add = false;
+      if (arg === undefined)
+        should_add = true;
+      else if (Array.isArray(arg) && arg.includes(space.id))
+        should_add = true;
+      else if (typeof arg === "function")
+        should_add = await arg(space, i);
+
+      if (should_add) {
+        target_spaces.push(new Space({
+          type: "space",
+          id: space.id,
+          interval: this.interval,
+          token: this.token,
+          cache: this.cache,
+          user_id: space.permissions[0].user_id,
+          shard_id: space.shard_id,
+          space_id: space.id
+        }))
       }
+
+      if (!multiple && target_spaces.length === 1) break;
+      i++;
     }
     return target_spaces;
   }
-
-  /**
-   * Create and return a new Space
-   * @param opt Object for configuring the Space options
-   * @returns Newly created Space object
-   */
-  async createWorkSpace(opt: Partial<Pick<ISpace, "name" | "icon">>) {
-    const { name = "Workspace", icon = "" } = opt;
-
-    const $block_id = uuidv4();
-    const $space_view_id = uuidv4();
-
-    const { spaceId: $space_id } = await this.createSpace({ name, icon });
-
-    await this.saveTransactions([
-      userSettingsUpdate(this.user_id, ['settings'], {
-        persona: 'personal', type: 'personal'
-      }),
-      spaceViewSet($space_view_id, [], {
-        created_getting_started: false,
-        created_onboarding_templates: false,
-        space_id: $space_id,
-        notify_mobile: true,
-        notify_desktop: true,
-        notify_email: true,
-        parent_id: this.user_id,
-        parent_table: 'user_root',
-        alive: true,
-        joined: true,
-        id: $space_view_id,
-        version: 1,
-        visited_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
-        sidebar_hidden_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
-      }),
-      blockUpdate($block_id, [], {
-        type: 'page',
-        id: $block_id,
-        version: 1,
-        parent_id: $space_id,
-        parent_table: 'space',
-        alive: true,
-        permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
-        created_by_id: this.user_id,
-        created_by_table: 'notion_user',
-        created_time: Date.now(),
-        last_edited_time: Date.now(),
-        last_edited_by_table: 'notion_user',
-        last_edited_by_id: this.user_id,
-        properties: {
-          title: [[name]]
-        }
-      }),
-      userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-      spaceListAfter($space_id, ['pages'], { id: $block_id }),
-    ]);
-    // ? IMP:1:M Use the syncRecordValues to get the space rather than using loadUserContent
-    await this.loadUserContent();
-    const space = this.cache.space.get($space_id);
-    if (space) {
-      return new Space({
-        type: "space",
-        id: space.id,
-        ...this.getProps()
-      })
-    };
-  };
 }
 
 export default Nishan;

@@ -11,7 +11,7 @@ import { error } from '../utils/logs';
 
 import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
-import { IRootPage, IPage, IPageInput } from '../types/block';
+import { IRootPage, IPageInput, ICollectionViewPage } from '../types/block';
 import CollectionViewPage from './CollectionViewPage';
 import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
 
@@ -173,11 +173,11 @@ class Space extends Data<ISpace> {
 
   // ? FIX:1:H Remove from normalized cache after root page deletion
   /**
-   * 
+   * Delete multiple root_pages or collection_view_pages
    * @param arg Criteria to filter the pages to be deleted
-   * @param delete_multiple whether or not multiple root pages should be deleted
+   * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteRootPages(arg: string[] | Predicate<IPage | IRootPage>, delete_multiple: boolean = true) {
+  async deleteRootPages(arg: string[] | Predicate<ICollectionViewPage | IRootPage>, multiple: boolean = true) {
     if (this.data) {
       const current_time = Date.now();
       const ops: Operation[] = [];
@@ -185,14 +185,14 @@ class Space extends Data<ISpace> {
 
       for (let index = 0; index < this.data.pages.length; index++) {
         const id = this.data.pages[index];
-        const page = this.cache.block.get(id) as IPage;
+        const page = this.cache.block.get(id) as IRootPage;
         const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
         if (should_delete)
           ops.push(blockUpdate(id, [], {
             alive: false,
             last_edited_time: current_time
           }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
-        if (!delete_multiple && ops.length > 1) break;
+        if (!multiple && ops.length === 1) break;
       }
       await this.saveTransactions(ops);
     } else
@@ -203,7 +203,7 @@ class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteRootPage(arg: string | Predicate<IPage | IRootPage>): Promise<void> {
+  async deleteRootPage(arg: string | Predicate<ICollectionViewPage | IRootPage>): Promise<void> {
     if (typeof arg === "string") return await this.deleteRootPages([arg], false);
     else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
   }
@@ -224,7 +224,7 @@ class Space extends Data<ISpace> {
           ops.push(blockUpdate(id, [], { ...opts, last_edited_time: current_time }))
         else
           throw new Error(error(`Space with id ${this.data.id} is not the parent of root page with id ${id}`));
-        if (!multiple && ops.length > 1) break;
+        if (!multiple && ops.length === 1) break;
       }
       await this.saveTransactions(ops);
     } else

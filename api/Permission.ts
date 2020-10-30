@@ -49,7 +49,7 @@ export default {
       await this.addUsers([[email, role]], false)
     }
   },
-  collection_block: class Permission extends CollectionBlock {
+  collection_view_page: class Permission extends CollectionBlock {
     constructor(arg: NishanArg<ICollectionBlock>) {
       super(arg);
     }

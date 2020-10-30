@@ -68,7 +68,7 @@ class Space extends Data<ISpace> {
     if (this.data) {
       for (let i = 0; i < this.data.pages.length; i++) {
         const page_id = this.data.pages[i];
-        let page = this.cache.block.get(page_id) as TRootPage;
+        const page = this.cache.block.get(page_id) as TRootPage;
         let should_add = false;
         if (arg === undefined) should_add = true;
         else if (Array.isArray(arg) && arg.includes(page_id)) should_add = true;
@@ -166,14 +166,13 @@ class Space extends Data<ISpace> {
       }
 
       await this.saveTransactions(ops);
-      const {
-        block
-      } = await this.loadUserContent();
+
+      await this.syncRecordValues(block_ids.map(block_id => ({ id: block_id, table: "block", version: 0 })));
 
       return block_ids.map(block_id => new RootCollectionViewPage({
         type: "block",
         ...this.getProps(),
-        data: block[block_id].value as IRootCollectionViewPage
+        data: this.cache.block.get(block_id) as IRootCollectionViewPage
       }))
     } else throw new Error(error('This space has been deleted'));
   }
@@ -189,7 +188,7 @@ class Space extends Data<ISpace> {
     return page;
   }
 
-  // ? RF:1:E Capture multiple ops in an array and use one saveTransactions
+  // ? RF:1:M using syncrecords get only the created pages rather than whole of loadUserContent
   /**
    * Create new pages using passed properties and formats
    * @param opts array of format and properties for the root pages
@@ -197,43 +196,43 @@ class Space extends Data<ISpace> {
    */
   async createRootPages(opts: CreateRootPageArgs[]) {
     if (this.data) {
-      const block_ids: string[] = []
+      const block_ids: string[] = [], ops: Operation[] = [];
+
       for (let index = 0; index < opts.length; index++) {
         const opt = opts[index];
         const { position, properties = {}, format = {}, isPrivate = false } = opt;
         const $block_id = uuidv4();
         block_ids.push($block_id);
         const [block_list_op, update] = this.addToChildArray($block_id, position);
-        await this.saveTransactions([
-          blockUpdate($block_id, [], {
-            type: 'page',
-            id: $block_id,
-            version: 1,
-            permissions:
-              [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-            parent_id: this.space_id,
-            parent_table: 'space',
-            alive: true,
-            properties,
-            format,
-            last_edited_time: Date.now(),
-            last_edited_by_id: this.user_id,
-            last_edited_by_table: 'notion_user',
-            created_by_id: this.user_id,
-            created_by_table: 'notion_user',
-            created_time: Date.now()
-          }),
-          block_list_op
-        ]);
+        ops.push(blockUpdate($block_id, [], {
+          type: 'page',
+          id: $block_id,
+          version: 1,
+          permissions:
+            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          parent_id: this.space_id,
+          parent_table: 'space',
+          alive: true,
+          properties,
+          format,
+          last_edited_time: Date.now(),
+          last_edited_by_id: this.user_id,
+          last_edited_by_table: 'notion_user',
+          created_by_id: this.user_id,
+          created_by_table: 'notion_user',
+          created_time: Date.now()
+        }),
+          block_list_op);
         update();
-      }
+      };
 
-      const { block } = await this.loadUserContent();
+      await this.saveTransactions(ops);
+      await this.syncRecordValues(block_ids.map(block_id => ({ id: block_id, table: "block", version: 0 })));
 
       return block_ids.map(block_id => new RootPage({
         type: "block",
         ...this.getProps(),
-        data: block[block_id].value as IRootPage
+        data: this.cache.block.get(block_id) as IRootPage
       }));
     } else throw new Error(error('This space has been deleted'));
   }
@@ -244,7 +243,7 @@ class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteRootPages(arg: string[] | Predicate<IRootCollectionViewPage | IRootPage>, multiple: boolean = true) {
+  async deleteRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
     if (this.data) {
       const current_time = Date.now();
       const ops: Operation[] = [];
@@ -252,7 +251,7 @@ class Space extends Data<ISpace> {
 
       for (let index = 0; index < this.data.pages.length; index++) {
         const id = this.data.pages[index];
-        const page = this.cache.block.get(id) as IRootPage | IRootCollectionViewPage;
+        const page = this.cache.block.get(id) as IRootPage;
         const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
         if (should_delete)
           ops.push(blockUpdate(id, [], {
@@ -270,7 +269,7 @@ class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteRootPage(arg: string | Predicate<IRootCollectionViewPage | IRootPage>): Promise<void> {
+  async deleteRootPage(arg: string | Predicate<IRootPage>): Promise<void> {
     if (typeof arg === "string") return await this.deleteRootPages([arg], false);
     else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
   }

@@ -1,5 +1,5 @@
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, UserRoot, RecordMap } from "./api";
-import { ICollection, ICollectionViewPage, IPage, IRootPage, TBlock } from "./block";
+import { ICollection, ICollectionViewPage, IPage, IRootCollectionViewPage, IRootPage, TBlock } from "./block";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup' | 'text' | 'date' | 'person' | 'file' | 'url' | 'email' | 'phone' | 'created_time' | 'created_by' | 'last_edited_time' | 'last_edited_by'
@@ -24,14 +24,14 @@ export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader' | 'none';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export type TPage = IPage | IRootPage | ICollectionViewPage;
-export type TRootPage = IRootPage | ICollectionViewPage;
+export type TRootPage = IRootPage | IRootCollectionViewPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
 export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
 export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "relative";
 export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
 export type TDataType = keyof RecordMap;
-export type Predicate<T> = (T: T, index: number) => boolean;
+export type Predicate<T> = (T: T, index: number) => Promise<boolean>;
 export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 export type TPlanType = "personal";
 

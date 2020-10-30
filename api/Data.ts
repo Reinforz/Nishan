@@ -74,7 +74,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Get the parent of the current data
    */
-  getParent() {
+  protected getParent() {
     if (this.data) {
       if ((this.data as any).parent_id) {
         const parent = this.cache.block.get((this.data as any).parent_id) as TParentType;
@@ -89,7 +89,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Get the cached data using the current data id
    */
-  getCachedData() {
+  protected getCachedData() {
     if (this.data)
       return this.cache[this.type].get(this.data.id) as T;
     else
@@ -99,7 +99,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Delete the cached data using the id
    */
-  deleteCachedData() {
+  protected deleteCachedData() {
     if (this.data) {
       this.cache[this.type].delete(this.data.id);
       this.data = undefined;
@@ -113,7 +113,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
+  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
     if (this.data) {
       const data = this.type === "space" ? this.data as ISpace : this.data as IPage | IRootPage;
       const cached_data = this.type === "space" ? this.cache.space.get(this.data.id) as ISpace : this.cache.block.get(this.data.id) as IPage | IRootPage;
@@ -172,7 +172,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @param keys 
    */
-  updateCache(arg: Partial<T>, keys: (keyof T)[]) {
+  protected updateCache(arg: Partial<T>, keys: (keyof T)[]) {
     if (this.data) {
       const _this = this;
       const cached_data = this.getCachedData();
@@ -194,7 +194,7 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
-  deleteCompletely() {
+  protected deleteCompletely() {
     if (this.data) {
       this.deleteCachedData();
       this.data = undefined as any;
@@ -202,7 +202,7 @@ export default class Data<T extends TData> extends Getters {
       throw new Error(error("Data has been deleted"));
   }
 
-  parseCollectionOptions(option: Partial<CreateRootCollectionViewPageParams>) {
+  protected parseCollectionOptions(option: Partial<CreateRootCollectionViewPageParams>) {
     const { properties, format } = option;
 
     if (!option.views) option.views = [{

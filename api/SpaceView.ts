@@ -10,7 +10,7 @@ import Space from './Space';
  * @noInheritDoc
  */
 class SpaceView extends Data<ISpaceView> {
-  constructor(arg: NishanArg<ISpaceView>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 
@@ -33,9 +33,10 @@ class SpaceView extends Data<ISpaceView> {
    * @returns The corresponding space object
    */
   async getSpace() {
+    const data = this.getCachedData();
     let target_space: ISpace | null = null;
     for (let [, space] of this.cache.space) {
-      if (this.data && space.id === this.data.space_id) {
+      if (data && space.id === data.space_id) {
         target_space = space;
         break;
       }
@@ -43,7 +44,7 @@ class SpaceView extends Data<ISpaceView> {
     if (target_space)
       return new Space({
         type: "space",
-        data: target_space,
+        id: target_space.id,
         ...this.getProps()
       });
   }

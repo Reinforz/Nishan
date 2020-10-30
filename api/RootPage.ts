@@ -1,7 +1,6 @@
 import Permission from "./Permission";
 
-import { NishanArg, } from "../types/types";
-import { IRootPage } from "../types/block";
+import { NishanArg } from "../types/types";
 
 /**
  * A class to represent RootPage type block of Notion
@@ -9,7 +8,7 @@ import { IRootPage } from "../types/block";
  */
 
 class RootPage extends Permission.page {
-  constructor(arg: NishanArg<IRootPage>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 }

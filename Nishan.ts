@@ -8,17 +8,18 @@ import { blockUpdate, spaceListAfter, spaceViewSet, userSettingsUpdate, userRoot
 import { ISpace } from './types/api';
 
 class Nishan extends Getters {
-  constructor(arg: NishanArg<any>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 
   async init(arg: string | Predicate<ISpace>) {
     await this.getAllSpaces();
     const space = await this.getSpace(arg);
-    if (space.data) {
-      this.shard_id = space.data.shard_id;
-      this.space_id = space.data.id;
-      this.user_id = space.data.permissions[0].user_id;
+    const cached_data = space.getCachedData();
+    if (cached_data) {
+      this.shard_id = cached_data.shard_id;
+      this.space_id = cached_data.id;
+      this.user_id = cached_data.permissions[0].user_id;
     }
     return space;
   }
@@ -43,7 +44,7 @@ class Nishan extends Getters {
         shard_id: (target_space as ISpace).shard_id,
         space_id: (target_space as ISpace).id,
         user_id: (target_space as ISpace).permissions[0].user_id,
-        data: target_space
+        id: target_space.id
       })
     else throw new Error(error(`No space matches the criteria`));
   }
@@ -72,7 +73,7 @@ class Nishan extends Getters {
         if (should_add) {
           target_spaces.push(new Space({
             type: "space",
-            data: space.value,
+            id: space.value.id,
             ...this.getProps()
           }))
         }
@@ -141,7 +142,7 @@ class Nishan extends Getters {
     if (space) {
       return new Space({
         type: "space",
-        data: space,
+        id: space.id,
         ...this.getProps()
       })
     };

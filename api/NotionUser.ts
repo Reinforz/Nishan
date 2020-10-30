@@ -9,7 +9,7 @@ import { UpdatableNotionUserParam } from '../types/function';
  * @noInheritDoc
  */
 class NotionUser extends Data<INotionUser> {
-  constructor(arg: NishanArg<INotionUser>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 

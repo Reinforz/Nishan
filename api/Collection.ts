@@ -7,14 +7,13 @@ import Data from "./Data";
 import { NishanArg } from "../types/types";
 import { ICollection, IPageInput } from '../types/block';
 import { CollectionUpdateParam } from '../types/function';
-import { error } from '../utils/logs';
 
 /**
  * A class to represent collection of Notion
  * @noInheritDoc
  */
 class Collection extends Data<ICollection> {
-  constructor(arg: NishanArg<ICollection>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 
@@ -25,15 +24,14 @@ class Collection extends Data<ICollection> {
    * @param properties `CollectionUpdateParam`
    */
   async update(properties: CollectionUpdateParam) {
-    if (this.data) {
-      await this.saveTransactions(
-        [
-          ...Object.entries(properties).map(([path, arg]) => collectionSet((this.data as any).id, [path], arg)),
-          this.setOp(['last_edited_time'], Date.now())
-        ]
-      )
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+    await this.saveTransactions(
+      [
+        ...Object.entries(properties).map(([path, arg]) => collectionSet((data as any).id, [path], arg)),
+        this.setOp(['last_edited_time'], Date.now())
+      ]
+    )
+
   }
 
   // ? FEAT:1:E Return a page object
@@ -42,25 +40,24 @@ class Collection extends Data<ICollection> {
    * @param opts Object for configuring template options
    */
   async createTemplate(opts: Omit<Partial<IPageInput>, "type">) {
-    if (this.data) {
-      const { properties = {}, format = {} } = opts;
-      const $template_id = uuidv4();
-      await this.saveTransactions([
-        blockSet($template_id, [], {
-          type: 'page',
-          id: $template_id,
-          version: 1,
-          is_template: true,
-          parent_id: this.data.id,
-          parent_table: 'collection',
-          alive: true,
-          properties,
-          format
-        }),
-        this.listAfterOp(['template_pages'], { id: $template_id })
-      ]);
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+    const { properties = {}, format = {} } = opts;
+    const $template_id = uuidv4();
+    await this.saveTransactions([
+      blockSet($template_id, [], {
+        type: 'page',
+        id: $template_id,
+        version: 1,
+        is_template: true,
+        parent_id: data.id,
+        parent_table: 'collection',
+        alive: true,
+        properties,
+        format
+      }),
+      this.listAfterOp(['template_pages'], { id: $template_id })
+    ]);
+
   }
 }
 

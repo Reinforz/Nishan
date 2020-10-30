@@ -14,7 +14,7 @@ import { error } from '../utils/logs';
  * @noInheritDoc
  */
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
-  constructor(arg: NishanArg<T>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 
@@ -23,25 +23,23 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param arg number of new index or `BlockRepostionArg`
    */
   async reposition(arg: number | BlockRepostionArg) {
-    if (this.data) {
-      const parent = this.cache.block.get(this.data.parent_id) as IPage;
-      if (parent) {
-        if (parent.content) {
-          if (typeof arg === "number") {
-            const block_id_at_pos = parent.content[arg];
-            await this.saveTransactions([
-              blockListAfter(this.data.parent_id, ["content"], { after: block_id_at_pos, id: this.data.id })
-            ]);
-          } else
-            await this.saveTransactions([
-              arg.position === "after" ? blockListAfter(this.data.parent_id, ["content"], { after: arg.id, id: this.data.id }) : blockListBefore(this.data.parent_id, ["content"], { after: arg.id, id: this.data.id })
-            ]);
+    const data = this.getCachedData();
+    const parent = this.cache.block.get(data.parent_id) as IPage;
+    if (parent) {
+      if (parent.content) {
+        if (typeof arg === "number") {
+          const block_id_at_pos = parent.content[arg];
+          await this.saveTransactions([
+            blockListAfter(data.parent_id, ["content"], { after: block_id_at_pos, id: data.id })
+          ]);
         } else
-          throw new Error(error("Block parent doesn't have any children"))
+          await this.saveTransactions([
+            arg.position === "after" ? blockListAfter(data.parent_id, ["content"], { after: arg.id, id: data.id }) : blockListBefore(data.parent_id, ["content"], { after: arg.id, id: data.id })
+          ]);
       } else
-        throw new Error(error("Block doesn't have a parent"))
+        throw new Error(error("Block parent doesn't have any children"))
     } else
-      throw new Error(error('Data has been deleted'))
+      throw new Error(error("Block doesn't have a parent"))
   }
 
   /**
@@ -49,41 +47,32 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns The duplicated block object
    */
   async duplicate() {
-    if (this.data) {
-      const $gen_block_id = uuidv4();
-      await this.saveTransactions(
-        [
-          this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: this.data.parent_id }),
-          blockListAfter(this.data.parent_id, ['content'], {
-            after: this.data.id,
-            id: $gen_block_id
-          }),
-        ]
-      );
+    const data = this.getCachedData();
+    const $gen_block_id = uuidv4();
+    await this.saveTransactions(
+      [
+        this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: data.parent_id }),
+        blockListAfter(data.parent_id, ['content'], {
+          after: data.id,
+          id: $gen_block_id
+        }),
+      ]
+    );
 
-      await this.enqueueTask({
-        eventName: 'duplicateBlock',
-        request: {
-          sourceBlockId: this.data.id,
-          targetBlockId: $gen_block_id,
-          addCopyName: true
-        }
-      });
+    await this.enqueueTask({
+      eventName: 'duplicateBlock',
+      request: {
+        sourceBlockId: data.id,
+        targetBlockId: $gen_block_id,
+        addCopyName: true
+      }
+    });
 
-      const { recordMap: { block } } = await this.syncRecordValues([
-        {
-          id: $gen_block_id,
-          table: 'block',
-          version: -1
-        }
-      ]);
-      return new Block({
-        type: "block",
-        data: block[$gen_block_id].value,
-        ...this.getProps()
-      })
-    } else
-      throw new Error(error('Data has been deleted'))
+    return new Block({
+      type: "block",
+      id: $gen_block_id,
+      ...this.getProps()
+    })
   }
 
   // ? FIX:1:M Update cache
@@ -92,19 +81,18 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param args Block update format and properties options
    */
   async update(args: Partial<A>) {
-    if (this.data) {
-      const { format = this.data.format, properties = this.data.properties } = args;
-      await this.saveTransactions(
-        [
-          this.updateOp([], {
-            properties,
-            format,
-            last_edited_time: Date.now()
-          }),
-        ]
-      )
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+
+    const { format = data.format, properties = data.properties } = args;
+    await this.saveTransactions(
+      [
+        this.updateOp([], {
+          properties,
+          format,
+          last_edited_time: Date.now()
+        }),
+      ]
+    )
   }
 
   /**
@@ -112,41 +100,36 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param type `TBasicBlockType` basic block types
    */
   async convertTo(type: TBasicBlockType) {
-    if (this.data) {
-      await this.saveTransactions([
-        this.updateOp([], { type })
-      ]);
+    const data = this.getCachedData();
+    await this.saveTransactions([
+      this.updateOp([], { type })
+    ]);
 
-      const cached_value = this.cache.block.get(this.data.id);
-      if (cached_value) {
-        this.data.type = type;
-        cached_value.type = type;
-        this.cache.block.set(this.data.id, cached_value);
-      }
-    } else
-      throw new Error(error('Data has been deleted'))
+    const cached_value = this.cache.block.get(data.id);
+    if (cached_value) {
+      data.type = type;
+      cached_value.type = type;
+      this.cache.block.set(data.id, cached_value);
+    }
   }
 
   /**
    * Delete the current block
    */
   async delete() {
-    if (this.data) {
-      const current_time = Date.now();
-      const is_root_page = this.data.parent_table === "space" && this.data.type === "page";
-      await this.saveTransactions(
-        [
-          this.updateOp([], {
-            alive: false,
-            last_edited_time: current_time
-          }),
-          is_root_page ? spaceListRemove(this.data.space_id, ['pages'], { id: this.data.id }) : blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
-          is_root_page ? spaceSet(this.data.space_id, ['last_edited_time'], current_time) : blockSet(this.data.parent_id, ['last_edited_time'], current_time)
-        ]
-      );
-      this.deleteCompletely();
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+    const current_time = Date.now();
+    const is_root_page = data.parent_table === "space" && data.type === "page";
+    await this.saveTransactions(
+      [
+        this.updateOp([], {
+          alive: false,
+          last_edited_time: current_time
+        }),
+        is_root_page ? spaceListRemove(data.space_id, ['pages'], { id: data.id }) : blockListRemove(data.parent_id, ['content'], { id: data.id }),
+        is_root_page ? spaceSet(data.space_id, ['last_edited_time'], current_time) : blockSet(data.parent_id, ['last_edited_time'], current_time)
+      ]
+    );
   }
 
   /**
@@ -154,43 +137,41 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param new_parent_id Id of the new parent page
    */
   async transfer(new_parent_id: string) {
-    if (this.data) {
-      const current_time = Date.now();
-      await this.saveTransactions(
-        [
-          this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
-          blockListRemove(this.data.parent_id, ['content'], { id: this.data.id }),
-          blockListAfter(new_parent_id, ['content'], { after: '', id: this.data.id }),
-          blockSet(this.data.parent_id, ['last_edited_time'], current_time),
-          blockSet(new_parent_id, ['last_edited_time'], current_time)
-        ]
-      )
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+    const current_time = Date.now();
+    await this.saveTransactions(
+      [
+        this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
+        blockListRemove(data.parent_id, ['content'], { id: data.id }),
+        blockListAfter(new_parent_id, ['content'], { after: '', id: data.id }),
+        blockSet(data.parent_id, ['last_edited_time'], current_time),
+        blockSet(new_parent_id, ['last_edited_time'], current_time)
+      ]
+    )
+
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
   createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: CreateBlockArg) {
-    if (this.data) {
-      const current_time = Date.now();
-      const arg: any = {
-        id: $block_id,
-        properties,
-        format,
-        type,
-        parent_id: parent_id || this.data.id,
-        parent_table: 'block',
-        alive: true,
-        created_time: current_time,
-        created_by_id: this.user_id,
-        created_by_table: 'notion_user',
-        last_edited_time: current_time,
-        last_edited_by_id: this.user_id,
-        last_edited_by_table: 'notion_user',
-      };
-      return this.updateOp([], arg);
-    } else
-      throw new Error(error('Data has been deleted'))
+    const data = this.getCachedData();
+    const current_time = Date.now();
+    const arg: any = {
+      id: $block_id,
+      properties,
+      format,
+      type,
+      parent_id: parent_id || data.id,
+      parent_table: 'block',
+      alive: true,
+      created_time: current_time,
+      created_by_id: this.user_id,
+      created_by_table: 'notion_user',
+      last_edited_time: current_time,
+      last_edited_by_id: this.user_id,
+      last_edited_by_table: 'notion_user',
+    };
+    return this.updateOp([], arg);
+
   }
 }
 

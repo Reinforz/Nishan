@@ -3,13 +3,13 @@ import {
 } from "../utils/logs";
 
 import { NishanArg, IPermission, TPermissionRole } from "../types/types";
-import { ICollectionBlock, IRootPage } from "../types/block";
+import { IRootPage } from "../types/block";
 import CollectionBlock from "./CollectionBlock";
 import Page from "./Page";
 
 export default {
   page: class Permission extends Page<IRootPage>{
-    constructor(arg: NishanArg<IRootPage>) {
+    constructor(arg: NishanArg) {
       super(arg);
     }
     /**
@@ -17,27 +17,25 @@ export default {
      * @param args array of userid and role of user to share pages to
      */
     async addUsers(args: [string, TPermissionRole][], multiple: boolean = true) {
-      if (this.data) {
-        const permissionItems: IPermission[] = [];
-        for (let i = 0; i < args.length; i++) {
-          const [email, permission] = args[i];
-          const notion_user = await this.findUser(email);
-          if (!notion_user) throw new Error(error(`User does not have a notion account`));
-          else
-            permissionItems.push({
-              role: permission,
-              type: "user_permission",
-              user_id: notion_user.id
-            });
-          if (!multiple && permissionItems.length === 1) break;
-        }
-        await this.inviteGuestsToSpace({
-          blockId: this.data.id,
-          permissionItems,
-          spaceId: this.space_id
-        })
-      } else
-        throw new Error(error('Data has been deleted'))
+      const data = this.getCachedData();
+      const permissionItems: IPermission[] = [];
+      for (let i = 0; i < args.length; i++) {
+        const [email, permission] = args[i];
+        const notion_user = await this.findUser(email);
+        if (!notion_user) throw new Error(error(`User does not have a notion account`));
+        else
+          permissionItems.push({
+            role: permission,
+            type: "user_permission",
+            user_id: notion_user.id
+          });
+        if (!multiple && permissionItems.length === 1) break;
+      }
+      await this.inviteGuestsToSpace({
+        blockId: data.id,
+        permissionItems,
+        spaceId: this.space_id
+      })
     }
 
     /**
@@ -50,7 +48,7 @@ export default {
     }
   },
   collection_view_page: class Permission extends CollectionBlock {
-    constructor(arg: NishanArg<ICollectionBlock>) {
+    constructor(arg: NishanArg) {
       super(arg);
     }
     /**
@@ -58,27 +56,25 @@ export default {
      * @param args array of userid and role of user to share pages to
      */
     async addUsers(args: [string, TPermissionRole][], multiple: boolean = true) {
-      if (this.data) {
-        const permissionItems: IPermission[] = [];
-        for (let i = 0; i < args.length; i++) {
-          const [email, permission] = args[i];
-          const notion_user = await this.findUser(email);
-          if (!notion_user) throw new Error(error(`User does not have a notion account`));
-          else
-            permissionItems.push({
-              role: permission,
-              type: "user_permission",
-              user_id: notion_user.id
-            });
-          if (!multiple && permissionItems.length === 1) break;
-        }
-        await this.inviteGuestsToSpace({
-          blockId: this.data.id,
-          permissionItems,
-          spaceId: this.space_id
-        })
-      } else
-        throw new Error(error('Data has been deleted'))
+      const data = this.getCachedData();
+      const permissionItems: IPermission[] = [];
+      for (let i = 0; i < args.length; i++) {
+        const [email, permission] = args[i];
+        const notion_user = await this.findUser(email);
+        if (!notion_user) throw new Error(error(`User does not have a notion account`));
+        else
+          permissionItems.push({
+            role: permission,
+            type: "user_permission",
+            user_id: notion_user.id
+          });
+        if (!multiple && permissionItems.length === 1) break;
+      }
+      await this.inviteGuestsToSpace({
+        blockId: data.id,
+        permissionItems,
+        spaceId: this.space_id
+      })
     }
 
     /**

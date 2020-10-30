@@ -9,7 +9,7 @@ import { UpdatableUserSettingsParam } from '../types/function';
  * @noInheritDoc
  */
 class UserSettings extends Data<IUserSettings> {
-  constructor(arg: NishanArg<IUserSettings>) {
+  constructor(arg: NishanArg) {
     super(arg);
   }
 

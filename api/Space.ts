@@ -7,13 +7,14 @@ import UserSettings from './UserSettings';
 import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 
-import { blockUpdate } from '../utils/chunk';
+import { blockUpdate, collectionUpdate } from '../utils/chunk';
 import { error } from '../utils/logs';
 
-import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
+import { NishanArg, Operation, Predicate, Schema, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { IRootPage, IPageInput, IRootCollectionViewPage } from '../types/block';
-import { CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
+import createViews from '../utils/createViews';
 
 /**
  * A class to represent space of Notion
@@ -110,6 +111,90 @@ class Space extends Data<ISpace> {
   async getPage(arg: string | Predicate<TPage>) {
     if (typeof arg === "string") return (await this.getPages([arg], true))[0];
     else return (await this.getPages(arg, true))[0];
+  }
+
+  async createRootCollectionViewPage(options: CreateRootCollectionViewPageParams, multiple: boolean = true) {
+    if (this.data) {
+      const root_page = await this.createRootPage(options);
+
+      if (!options.views) options.views = [{
+        aggregations: [
+          ['title', 'count']
+        ],
+        name: 'Default View',
+        type: 'table'
+      }];
+      if (!options.schema) options.schema = [
+        ['Name', 'title']
+      ];
+      const views = (options.views && options.views.map((view) => ({
+        ...view,
+        id: uuidv4()
+      }))) || [];
+      const view_ids = views.map((view) => view.id);
+      const $collection_id = uuidv4();
+      const current_time = Date.now();
+      const schema: Schema = {};
+      if (options.schema)
+        options.schema.forEach(opt => {
+          const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+          schema[schema_key] = {
+            name: opt[0],
+            type: opt[1],
+            ...(opt[2] ?? {})
+          };
+          if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
+            id: uuidv4(),
+            value,
+            color
+          }))
+        });
+      const block_id = (root_page.data && root_page.data.id) ?? ""
+      await this.saveTransactions(
+        [
+          blockUpdate(block_id, [], {
+            id: block_id,
+            type: 'collection_view_page',
+            collection_id: $collection_id,
+            view_ids,
+            properties: {},
+            created_time: current_time,
+            last_edited_time: current_time
+          }),
+          collectionUpdate($collection_id, [], {
+            id: $collection_id,
+            schema,
+            format: {
+              collection_page_properties: []
+            },
+            parent_id: block_id,
+            parent_table: 'block',
+            alive: true,
+            name: options.properties.title
+          }),
+          ...createViews(views, block_id)
+        ]
+      );
+
+      const {
+        recordMap
+      } = await this.queryCollection({
+        collectionId: $collection_id,
+        collectionViewId: view_ids[0],
+        query: {},
+        loader: {
+          limit: 100,
+          searchQuery: '',
+          type: 'table'
+        }
+      });
+      const data = recordMap.block[this.data.id].value as IRootCollectionViewPage;
+      return new RootCollectionViewPage({
+        type: "block",
+        ...this.getProps(),
+        data
+      })
+    } else throw new Error(error('This space has been deleted'));
   }
 
   // ? FEAT:1:M Batch rootpage creation

@@ -27,7 +27,6 @@ import {
 
 import {
   Schema,
-  SchemaUnitType,
   NishanArg,
   ExportType,
   Operation,
@@ -38,6 +37,7 @@ import {
 import {
   BlockRepostionArg,
   CreateBlockArg,
+  CreateRootCollectionViewPageParams,
   UserViewArg
 } from "../types/function";
 import {
@@ -710,10 +710,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * @param options Schema and the views of the newly created block
    * @returns Returns the newly created full page db block object
    */
-  async createFullPageDBContent(options: {
-    views?: UserViewArg[],
-    schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[]
-  } = {}) {
+  async createFullPageDBContent(options: Partial<Pick<CreateRootCollectionViewPageParams, "schema" | "views">>) {
     if (this.data) {
       if (!options.views) options.views = [{
         aggregations: [

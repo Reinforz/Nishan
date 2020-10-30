@@ -305,6 +305,10 @@ export interface IRootPage extends IPage {
   permissions: (IPermission | IPublicPermission)[]
 }
 
+export interface IRootCollectionViewPage extends ICollectionViewPage {
+  permissions: (IPermission | IPublicPermission)[]
+}
+
 export interface ICollectionBlock extends Block {
   view_ids: string[],
   collection_id: string,

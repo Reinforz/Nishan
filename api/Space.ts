@@ -113,53 +113,66 @@ class Space extends Data<ISpace> {
     else return (await this.getPages(arg, true))[0];
   }
 
-  async createRootCollectionViewPage(options: CreateRootCollectionViewPageParams, multiple: boolean = true) {
-    if (this.data) {
-      const root_page = await this.createRootPage(options);
+  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
+    return (await this.createRootCollectionViewPages([option], false))[0];
+  }
 
-      if (!options.views) options.views = [{
-        aggregations: [
-          ['title', 'count']
-        ],
-        name: 'Default View',
-        type: 'table'
-      }];
-      if (!options.schema) options.schema = [
-        ['Name', 'title']
-      ];
-      const views = (options.views && options.views.map((view) => ({
-        ...view,
-        id: uuidv4()
-      }))) || [];
-      const view_ids = views.map((view) => view.id);
-      const $collection_id = uuidv4();
-      const current_time = Date.now();
-      const schema: Schema = {};
-      if (options.schema)
-        options.schema.forEach(opt => {
-          const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-          schema[schema_key] = {
-            name: opt[0],
-            type: opt[1],
-            ...(opt[2] ?? {})
-          };
-          if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
-            id: uuidv4(),
-            value,
-            color
-          }))
-        });
-      const block_id = (root_page.data && root_page.data.id) ?? ""
-      await this.saveTransactions(
-        [
+  // ? FEAT:1:M Add method for creating multiple pages
+  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], multiple: boolean = true) {
+    if (this.data) {
+      const ops: Operation[] = [], block_ids: string[] = [];
+      for (let index = 0; index < options.length; index++) {
+        const option = options[index];
+        if (!option.views) option.views = [{
+          aggregations: [
+            ['title', 'count']
+          ],
+          name: 'Default View',
+          type: 'table'
+        }];
+        if (!option.schema) option.schema = [
+          ['Name', 'title']
+        ];
+        const views = (option.views && option.views.map((view) => ({
+          ...view,
+          id: uuidv4()
+        }))) || [];
+        const view_ids = views.map((view) => view.id);
+        const $collection_id = uuidv4();
+        const schema: Schema = {};
+        if (option.schema)
+          option.schema.forEach(opt => {
+            const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+            schema[schema_key] = {
+              name: opt[0],
+              type: opt[1],
+              ...(opt[2] ?? {})
+            };
+            if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
+              id: uuidv4(),
+              value,
+              color
+            }))
+          });
+        const block_id = uuidv4();
+        block_ids.push(block_id);
+        const [block_update_op, update] = this.addToChildArray(block_id, option.position);
+        ops.push(blockUpdate(block_id, [], {
+          type: 'page',
+          id: block_id,
+          permissions:
+            [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          parent_id: this.space_id,
+          parent_table: 'space',
+          alive: true,
+          properties: option.properties,
+          format: option.format,
+        }),
           blockUpdate(block_id, [], {
-            id: block_id,
             type: 'collection_view_page',
             collection_id: $collection_id,
             view_ids,
             properties: {},
-            created_time: current_time,
-            last_edited_time: current_time
           }),
           collectionUpdate($collection_id, [], {
             id: $collection_id,
@@ -170,30 +183,24 @@ class Space extends Data<ISpace> {
             parent_id: block_id,
             parent_table: 'block',
             alive: true,
-            name: options.properties.title
+            name: option.properties.title
           }),
-          ...createViews(views, block_id)
-        ]
-      );
+          block_update_op,
+          ...createViews(views, block_id));
+        update();
+        if (!multiple && ops.length === 1) break;
+      }
 
+      await this.saveTransactions(ops);
       const {
-        recordMap
-      } = await this.queryCollection({
-        collectionId: $collection_id,
-        collectionViewId: view_ids[0],
-        query: {},
-        loader: {
-          limit: 100,
-          searchQuery: '',
-          type: 'table'
-        }
-      });
-      const data = recordMap.block[this.data.id].value as IRootCollectionViewPage;
-      return new RootCollectionViewPage({
+        block
+      } = await this.loadUserContent();
+
+      return block_ids.map(block_id => new RootCollectionViewPage({
         type: "block",
         ...this.getProps(),
-        data
-      })
+        data: block[block_id].value as IRootCollectionViewPage
+      }))
     } else throw new Error(error('This space has been deleted'));
   }
 
@@ -208,6 +215,7 @@ class Space extends Data<ISpace> {
     return page;
   }
 
+  // ? RF:1:E Capture multiple ops in an array and use one saveTransactions
   /**
    * Create new pages using passed properties and formats
    * @param opts array of format and properties for the root pages

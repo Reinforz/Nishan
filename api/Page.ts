@@ -704,7 +704,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       throw new Error(error('Data has been deleted'))
   }
 
-  // ? TD:1:M Make the argument an interface
+  // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
   /**
    * Create a full page db content block
    * @param options Schema and the views of the newly created block

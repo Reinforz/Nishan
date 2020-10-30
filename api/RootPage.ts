@@ -2,7 +2,7 @@
 import {
   v4 as uuidv4
 } from 'uuid'; */
-import Page from "./Page";
+import Permission from "./Permission";
 
 import { NishanArg, } from "../types/types";
 import { IRootPage } from "../types/block";
@@ -11,7 +11,8 @@ import { IRootPage } from "../types/block";
  * A class to represent RootPage type block of Notion
  * @noInheritDoc
  */
-class RootPage extends Page<IRootPage>{
+
+class RootPage extends Permission.page {
   constructor(arg: NishanArg<IRootPage>) {
     super(arg);
   }

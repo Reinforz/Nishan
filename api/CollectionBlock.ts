@@ -4,11 +4,10 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { createOperation, lastEditOperations, collectionViewSet, blockSet, blockUpdate } from '../utils/chunk';
+import { collectionViewSet } from '../utils/chunk';
 
-import { Operation, NishanArg } from "../types/types";
-import { IPage, TBlockInput, TCollectionBlock } from '../types/block';
-import Page from './Page';
+import { TBlockInput, TCollectionBlock } from '../types/block';
+import { NishanArg } from '../types/types';
 
 /**
  * A class to represent collectionblock type in Notion
@@ -44,21 +43,11 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       ]
     );
 
-    /* const { collection_view } = await this.loadPageChunk({
-      chunkNumber: 0,
-      cursor: { stack: [] },
-      limit: 50,
-      pageId: data.parent_id,
-      verticalColumns: false
-    }); */
-
     return new View({
       ...this.getProps(),
       id: $view_id,
       type: "collection_view"
     });
-
-
   }
 
   /**
@@ -74,13 +63,6 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
         id: (data as TCollectionBlock).collection_id,
         type: "collection"
       });
-    /* const { collection } = await this.loadPageChunk({
-      chunkNumber: 0,
-      limit: 50,
-      pageId: data.parent_id,
-      cursor: { stack: [] },
-      verticalColumns: false
-    }); */
 
     return new Collection({
       ...this.getProps(),
@@ -110,60 +92,6 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
         type: "collection_view"
       })
     );
-
-  }
-
-  // ? TD:2:H Better TS Support rather than using any
-  /**
-   * Add rows of data to the collection block
-   * @param rows
-   * @returns An array of newly created page objects
-   */
-  async addRows(rows: { format: any, properties: any }[]): Promise<Page<IPage>[]> {
-    // const data = this.getCachedData();
-    const page_ids: string[] = [];
-    const ops: Operation[] = [];
-    rows.map(({ format, properties }) => {
-      const data = this.getCachedData();
-      const $page_id = uuidv4();
-      page_ids.push($page_id);
-      ops.push(
-        blockSet($page_id, [], {
-          type: 'page',
-          id: $page_id,
-          version: 1,
-          properties,
-          format,
-        }),
-        // ? RF:1:E Use a sinle block update operation
-        blockUpdate($page_id, [], {
-          parent_id: data.collection_id,
-          parent_table: 'collection',
-          alive: true
-        }),
-        ...createOperation($page_id, this.user_id),
-        ...lastEditOperations($page_id, this.user_id),
-        this.setOp(['last_edited_time'], Date.now())
-      );
-    });
-    await this.saveTransactions(ops)
-
-    /* const { recordMap } = await this.queryCollection({
-      collectionId: data.collection_id,
-      collectionViewId: (data as TCollectionBlock).view_ids[0],
-      query: {},
-      loader: {
-        limit: 100,
-        searchQuery: '',
-        type: 'table'
-      }
-    }); */
-
-    return page_ids.map((page_id) => new Page({
-      type: "block",
-      id: page_id,
-      ...this.getProps()
-    }));
   }
 }
 

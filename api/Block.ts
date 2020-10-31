@@ -152,7 +152,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
-  createBlock({ $block_id, type, properties = {}, format = {}, parent_id }: CreateBlockArg) {
+  createBlock({ $block_id, type, properties = {}, format = {}, parent_id, parent_table = 'block' }: CreateBlockArg) {
     const data = this.getCachedData();
     const current_time = Date.now();
     const arg: any = {
@@ -161,7 +161,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       format,
       type,
       parent_id: parent_id || data.id,
-      parent_table: 'block',
+      parent_table,
       alive: true,
       created_time: current_time,
       created_by_id: this.user_id,

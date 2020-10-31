@@ -19,7 +19,7 @@ export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
 }
 
 export interface CreateBlockArg {
-  $block_id: string, type: TBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string
+  parent_table?: "block" | "collection" | "space", $block_id: string, type: TBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string
 }
 
 export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange

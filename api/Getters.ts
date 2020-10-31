@@ -38,7 +38,7 @@ export default class Getters extends Cache {
     this.user_id = user_id;
     this.headers = {
       headers: {
-        cookie: `token_v2=${token};notion_user_id=${this.user_id};`
+        cookie: `token_v2=${token}`
       }
     };
     this.shard_id = shard_id;

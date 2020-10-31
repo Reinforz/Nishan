@@ -34,7 +34,7 @@ export default {
       await this.inviteGuestsToSpace({
         blockId: data.id,
         permissionItems,
-        spaceId: this.space_id
+        spaceId: data.space_id
       })
     }
 
@@ -73,7 +73,7 @@ export default {
       await this.inviteGuestsToSpace({
         blockId: data.id,
         permissionItems,
-        spaceId: this.space_id
+        spaceId: data.space_id
       })
     }
 

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
 
-import { NishanArg } from '../types/types';
+import { NishanArg, Predicate } from '../types/types';
 import { INotionUser, ISpace } from '../types/api';
 import { UpdatableNotionUserParam } from '../types/function';
 import { userSettingsUpdate, spaceViewSet, blockUpdate, userRootListAfter, spaceListAfter } from '../utils/chunk';
@@ -31,6 +31,52 @@ class NotionUser extends Data<INotionUser> {
       op
     ]);
     update();
+  }
+
+  /**
+   * Get a space that is available on the user's account
+   * @param arg A predicate filter function or a string
+   * @returns The obtained Space object
+   */
+  async getSpace(arg: Predicate<ISpace> | string) {
+    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  /**
+   * Get multiple space objects on the user's account as an array
+   * @param arg empty or A predicate function or a string array of ids
+   * @returns An array of space objects
+   */
+  async getSpaces(arg: undefined | Predicate<ISpace> | string[], multiple: boolean = true) {
+    const target_spaces: Space[] = [];
+    let i = 0;
+
+    for (const [, space] of this.cache.space) {
+      let should_add = false;
+      if (arg === undefined)
+        should_add = true;
+      else if (Array.isArray(arg) && arg.includes(space.id))
+        should_add = true;
+      else if (typeof arg === "function")
+        should_add = await arg(space, i);
+
+      if (should_add) {
+        target_spaces.push(new Space({
+          type: "space",
+          id: space.id,
+          interval: this.interval,
+          token: this.token,
+          cache: this.cache,
+          user_id: space.permissions[0].user_id,
+          shard_id: space.shard_id,
+          space_id: space.id
+        }))
+      }
+
+      if (!multiple && target_spaces.length === 1) break;
+      i++;
+    }
+    return target_spaces;
   }
 
   /**

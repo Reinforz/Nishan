@@ -130,7 +130,7 @@ class Space extends Data<ISpace> {
         id: block_id,
         permissions:
           [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.space_id,
+        parent_id: this.id,
         parent_table: 'space',
         alive: true,
         properties,
@@ -202,7 +202,7 @@ class Space extends Data<ISpace> {
         version: 1,
         permissions:
           [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.space_id,
+        parent_id: this.id,
         parent_table: 'space',
         alive: true,
         properties,

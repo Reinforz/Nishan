@@ -1,11 +1,11 @@
 
 import axios from "axios";
 
+import NotionUser from "./api/NotionUser";
 import { NishanArg, Predicate } from "./types/types";
 import { error } from "./utils/logs";
-import Space from "./api/Space";
 import Cache from "./api/Cache";
-import { GetSpacesResult, ISpace } from './types/api';
+import { GetSpacesResult, INotionUser, ISpace } from './types/api';
 
 class Nishan extends Cache {
   token: string;
@@ -19,73 +19,59 @@ class Nishan extends Cache {
     this.init_cache = false;
   }
 
-
   async initializeCache() {
-    setTimeout(async () => {
-      try {
-        const { data } = await axios.post(
-          'https://www.notion.so/api/v3/getSpaces',
-          {},
-          {
-            headers: {
-              cookie: `token_v2=${this.token}`
-            }
+    try {
+      const { data } = await axios.post(
+        'https://www.notion.so/api/v3/getSpaces',
+        {},
+        {
+          headers: {
+            cookie: `token_v2=${this.token}`
           }
-        ) as { data: GetSpacesResult };
-        Object.values(data).forEach(data => this.saveToCache(data));
-        this.init_cache = true;
-      } catch (err) {
-        throw new Error(error(err.response.data))
-      }
-    }, this.interval)
-  }
-
-  /**
-   * Get a space that is available on the user's account
-   * @param arg A predicate filter function or a string
-   * @returns The obtained Space object
-   */
-  async getSpace(arg: Predicate<ISpace> | string) {
-    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  /**
-   * Get multiple space objects on the user's account as an array
-   * @param arg empty or A predicate function or a string array of ids
-   * @returns An array of space objects
-   */
-  async getSpaces(arg: undefined | Predicate<ISpace> | string[], multiple: boolean = true) {
-    if (!this.init_cache) await this.initializeCache();
-
-    const target_spaces: Space[] = [];
-    let i = 0;
-
-    for (const [, space] of this.cache.space) {
-      let should_add = false;
-      if (arg === undefined)
-        should_add = true;
-      else if (Array.isArray(arg) && arg.includes(space.id))
-        should_add = true;
-      else if (typeof arg === "function")
-        should_add = await arg(space, i);
-
-      if (should_add) {
-        target_spaces.push(new Space({
-          type: "space",
-          id: space.id,
-          interval: this.interval,
-          token: this.token,
-          cache: this.cache,
-          user_id: space.permissions[0].user_id,
-          shard_id: space.shard_id,
-          space_id: space.id
-        }))
-      }
-
-      if (!multiple && target_spaces.length === 1) break;
-      i++;
+        }
+      ) as { data: GetSpacesResult };
+      Object.values(data).forEach(data => this.saveToCache(data));
+      this.init_cache = true;
+    } catch (err) {
+      throw new Error(error(err.response.data))
     }
-    return target_spaces;
+  }
+
+  async getUser(arg: string | Predicate<INotionUser>) {
+    return (await this.getUsers(typeof arg === "string" ? [arg] : arg, false))[0];
+  }
+
+  async getUsers(arg: string[] | Predicate<INotionUser>, multiple: boolean = true) {
+    if (!this.init_cache) {
+      await this.initializeCache();
+      this.init_cache = true;
+    }
+    const users: NotionUser[] = [], is_arg_array = Array.isArray(arg), is_arg_function = typeof arg === "function";
+    let index = 0;
+    for (const [, user] of this.cache.notion_user) {
+      let should_add = false;
+      if (is_arg_array && (arg as string[]).includes(user.id)) should_add = true;
+      else if (is_arg_function) should_add = await (arg as Predicate<INotionUser>)(user, index);
+      index++
+      if (should_add) {
+        let space: ISpace | null = null;
+        for (let value of this.cache.space.values())
+          if (value.permissions.find((perm => perm.user_id === user.id))) space = value;
+        if (space)
+          users.push(new NotionUser({
+            id: user.id,
+            type: "notion_user",
+            space_id: space.id,
+            shard_id: space.shard_id,
+            token: this.token,
+            user_id: user.id,
+            cache: this.cache,
+            interval: this.interval
+          }));
+      }
+      if (!multiple && users.length === 1) break;
+    }
+    return users;
   }
 }
 

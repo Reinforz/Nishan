@@ -109,8 +109,25 @@ import {
  * @noInheritDoc
  */
 class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
+  init_cache: boolean;
   constructor(arg: NishanArg) {
     super(arg);
+    this.init_cache = false;
+  }
+
+  async initializeCache() {
+    if (!this.init_cache) {
+      await this.loadPageChunk({
+        chunkNumber: 0,
+        cursor: {
+          stack: []
+        },
+        limit: 50,
+        pageId: this.id,
+        verticalColumns: false
+      });
+      this.init_cache = true;
+    }
   }
 
   // ? FEAT:1:M Add a predicate, string[] argument
@@ -119,27 +136,29 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * @returns An array of block object
    */
   async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
+    await this.initializeCache();
     const data = this.getCachedData();
     const blocks: Block<TBlock, TBlockInput>[] = [];
-    /* await this.loadPageChunk({
-      chunkNumber: 0,
-      cursor: {
-        stack: []
-      },
-      limit: 50,
-      pageId: data.id,
-      verticalColumns: false
-    }); */
+
     if (data.content) {
-      for (let index = 0; index < data.content.length; index++) {
-        const block_id = data.content[index];
-        let should_add = false, block: TBlock = this.cache.block.get(block_id) as TBlock;
-        if (Array.isArray(arg) && arg.includes(block_id)) should_add = true;
-        else if (typeof arg === "function" && await arg(block, index)) should_add = true;
-        else should_add = true;
-        if (should_add) blocks.push(this.createClass(block.type, block_id))
-        if (!multiple && blocks.length === 1) break;
+      if (Array.isArray(arg)) {
+        for (let index = 0; index < arg.length; index++) {
+          const block_id = arg[index], block = this.getCachedData(block_id);
+          let should_add = data.content.includes(block_id);
+          if (should_add) {
+            blocks.push(this.createClass(block.type, block_id));
+          }
+          if (!multiple && blocks.length === 1) break;
+        }
+      } else if (typeof arg === "function") {
+        for (let index = 0; index < data.content.length; index++) {
+          const block_id = data.content[index], block: TBlock = this.getCachedData(block_id);
+          let should_add = await arg(block, index);
+          if (should_add) blocks.push(this.createClass(block.type, block_id))
+          if (!multiple && blocks.length === 1) break;
+        }
       }
+
       return blocks;
     } else
       throw new Error(error("This page doesnot have any content"));

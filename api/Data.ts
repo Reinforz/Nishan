@@ -88,11 +88,15 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Get the cached data using the current data id
    */
-  getCachedData() {
-    const data = this.cache[this.type].get(this.id) as T;
+  getCachedData(arg?: string) {
+    let id = this.id;
+    if (typeof arg === "string") id = arg;
+    const data = this.cache[this.type].get(id) as T;
     if (data) return data;
-    else
+    else if (data === undefined)
       throw new Error(error("Data has been deleted"));
+    else
+      throw new Error(error("Data not available in cache"))
   }
 
   /**

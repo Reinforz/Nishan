@@ -14,7 +14,8 @@
     "watch": true,
     "declaration": true,
     "noUnusedLocals": true,
-    "incremental": false
+    "incremental": false,
+    "experimentalDecorators": true
   },
   "include": [
     "./Nishan.ts"

@@ -22,7 +22,6 @@ import {
 
 import {
   error,
-  warn
 } from "../utils/logs";
 
 import {
@@ -130,12 +129,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     }
   }
 
-  // ? FEAT:1:M Add a predicate, string[] argument
   /**
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
+  async getBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
     const data = this.getCachedData();
     const blocks: Block<TBlock, TBlockInput>[] = [];
@@ -158,7 +156,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           if (!multiple && blocks.length === 1) break;
         }
       }
-
       return blocks;
     } else
       throw new Error(error("This page doesnot have any content"));
@@ -191,134 +188,53 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     } as IImageInput & { file_ids: string });
   } */
 
-  // ? RF:1:M Refactor to use deleteBlocks
   /**
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
   async deleteBlock(arg: string | Predicate<TBlock>) {
-    const data = this.getCachedData();
-    const current_time = Date.now();
-    if (typeof arg === "string") {
-      if (data.content?.includes(arg)) {
-        const block = this.cache.block.get(arg);
-        if (!block)
-          throw new Error(error(`No block with the id ${arg} exists`))
-        else {
-          await this.saveTransactions(
-            [
-              blockUpdate(arg, [], {
-                alive: false
-              }),
-              this.listRemoveOp(['content'], {
-                id: arg
-              }),
-              this.setOp(['last_edited_time'], current_time),
-              blockSet(arg, ['last_edited_time'], current_time)
-            ]
-          );
-          this.cache.block.delete(arg);
-        }
-      } else
-        throw new Error(error(`This page is not the parent of the block with id ${arg}`))
-    } else if (typeof arg === "function") {
-      let target_block = null,
-        index = 0;
-      for (let [, value] of this.cache.block) {
-        if (value.parent_id === data.id) {
-          const is_target_block = await arg(value, index);
-          if (is_target_block) {
-            target_block = value;
-            break;
-          }
-        }
-        index++;
-      }
-      if (!target_block)
-        throw new Error(error(`No block matched`))
-      else {
-        await this.saveTransactions(
-          [
-            blockUpdate(target_block.id, [], {
-              alive: false
-            }),
-            this.listRemoveOp(['content'], {
-              id: target_block.id
-            }),
-            this.setOp(['last_edited_time'], current_time),
-            blockSet(target_block.id, ['last_edited_time'], current_time)
-          ]
-        );
-        this.cache.block.delete(target_block.id);
-      }
-    }
-
+    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, false);
   }
 
   /**
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(arg: string[] | Predicate<TBlock>) {
-    const data = this.getCachedData();
-    if (Array.isArray(arg)) {
-      const operations: Operation[] = [];
-      arg.forEach(id => {
-        const current_time = Date.now();
-        if (data && data.content?.includes(id)) {
-          const block = this.cache.block.get(id);
-          if (!block)
-            throw new Error(error(`No block with the id ${arg} exists`))
-          else {
-            operations.push(blockUpdate(id, [], {
-              alive: false
-            }),
-              this.listRemoveOp(['content'], {
-                id
-              }),
-              this.setOp(['last_edited_time'], current_time),
-              blockSet(id, ['last_edited_time'], current_time))
-            this.cache.block.delete(id);
-          }
-        } else
-          throw new Error(error(`This page is not the parent of the block with id ${id}`))
-      });
-
-      await this.saveTransactions(operations);
-
-    } else if (typeof arg === "function") {
-      const target_blocks: TBlock[] = [],
-        operations: Operation[] = [];
-      let index = 0;
-
-      for (let [, value] of this.cache.block) {
-        if (value.parent_id === data.id) {
-          const is_target_block = await arg(value, index);
-          if (is_target_block)
-            target_blocks.push(value);
+  async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
+    await this.initializeCache();
+    const data = this.getCachedData(), ops: Operation[] = [], current_time = Date.now(), ids: string[] = [];
+    if (data.content) {
+      if (Array.isArray(arg)) {
+        for (let index = 0; index < arg.length; index++) {
+          const id = arg[index];
+          if (data.content.includes(id))
+            ids.push(id);
+          else
+            throw new Error(error(`This page is not the parent of the block with id ${id}`))
+          if (!multiple && ids.length === 1) break;
         }
-        index++;
+      } else if (typeof arg === "function") {
+        for (let index = 0; index < data.content.length; index++) {
+          const block_id = data.content[index];
+          const block = this.getCachedData(block_id);
+          if (block.parent_id === data.id && await arg(block, index))
+            ids.push(block_id);
+          if (!multiple && ids.length === 1) break;
+        }
       }
+    };
 
-      target_blocks.forEach(target_block => {
-        const current_time = Date.now();
-        if (!target_block)
-          throw new Error(error(`No block matched`))
-        else if (data) operations.push(blockUpdate(target_block.id, [], {
-          alive: false
-        }),
-          this.listRemoveOp(['content'], {
-            id: target_block.id
-          }),
-          this.setOp(['last_edited_time'], current_time),
-          blockSet(target_block.id, ['last_edited_time'], current_time));
-        this.cache.block.delete(target_block.id);
-      });
-      if (operations.length === 0)
-        warn("No block matched criteria")
-      else
-        await this.saveTransactions(operations);
-    }
+    ids.forEach(id => ops.push(blockUpdate(id, [], {
+      alive: false,
+      last_edited_time: current_time
+    }), this.listRemoveOp(['content'], {
+      id
+    })));
+
+    ops.push(this.setOp(['last_edited_time'], current_time))
+    await this.saveTransactions(ops);
+    // ? FIX:1:H Delete related data for example for collection_view delete the collection and the views from cache
+    ids.forEach(id => this.cache.block.delete(id));
   }
 
   /**

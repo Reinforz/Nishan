@@ -301,7 +301,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
 
     fs.createWriteStream(fullpath).end(response.data);
-
   }
 
   /**
@@ -324,7 +323,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       token: accounts[0].token
     });
     await this.addToCachedData("block", block.id)
-    await this.updateCache
+    await this.updateCacheLocally
     return new Block({
       type: "block",
       id: block.id,
@@ -532,9 +531,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
 
     update();
-
     return this.createClass(type, $block_id);
-
   }
 
   /**
@@ -691,9 +688,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ...this.getProps(),
       id: $collection_view_id
     })
-
   }
-
 
   createClass(type: TBlockType, id: string) {
     switch (type) {

@@ -156,15 +156,13 @@ class Space extends Data<ISpace> {
           name: properties?.title
         }),
         block_update_op,
-        ...createViews(views, block_id));
+        ...createViews(views, block_id)
+      );
       update();
       if (!multiple && ops.length === 1) break;
     }
-
     await this.saveTransactions(ops);
-
-    await this.syncRecordValues(block_ids.map(block_id => ({ id: block_id, table: "block", version: 0 })));
-
+    await this.updateCacheManually([...block_ids, [this.id, "space"]]);
     return block_ids.map(block_id => new RootCollectionViewPage({
       type: "block",
       ...this.getProps(),
@@ -216,13 +214,13 @@ class Space extends Data<ISpace> {
         created_by_table: 'notion_user',
         created_time: Date.now()
       }),
-        block_list_op);
-      update();
+        block_list_op
+      );
+      update()
     };
 
     await this.saveTransactions(ops);
-    await this.syncRecordValues(block_ids.map(block_id => ({ id: block_id, table: "block", version: 0 })));
-
+    await this.updateCacheManually([...block_ids, [this.id, "space"]]);
     return block_ids.map(block_id => new RootPage({
       type: "block",
       ...this.getProps(),
@@ -237,12 +235,12 @@ class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
-    const data = this.getCachedData();
-    const current_time = Date.now();
-    const ops: Operation[] = [];
-    const is_array = Array.isArray(arg);
-    const deleted_ids: string[] = [];
+  async deleteTRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
+    const data = this.getCachedData(),
+      current_time = Date.now(),
+      ops: Operation[] = [],
+      is_array = Array.isArray(arg),
+      deleted_ids: string[] = [];
     for (let index = 0; index < data.pages.length; index++) {
       const id = data.pages[index];
       const page = this.cache.block.get(id) as IRootPage;
@@ -257,15 +255,15 @@ class Space extends Data<ISpace> {
       if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
+    deleted_ids.forEach(deleted_id => this.cache.block.delete(deleted_id));
   }
 
   /**
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteRootPage(arg: string | Predicate<IRootPage>): Promise<void> {
-    if (typeof arg === "string") return await this.deleteRootPages([arg], false);
-    else if (typeof arg === "function") return await this.deleteRootPages(arg, false);
+  async deleteTRootPage(arg: string | Predicate<IRootPage>): Promise<void> {
+    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 
   // ? FEAT:1:H Update cache and class state
@@ -275,18 +273,18 @@ class Space extends Data<ISpace> {
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
-    const data = this.getCachedData();
-    const ops: Operation[] = [];
-    const current_time = Date.now();
+    const data = this.getCachedData(), ops: Operation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
       const [id, opts] = arg[index];
+      block_ids.push(id);
       if (data.pages.includes(id))
         ops.push(blockUpdate(id, [], { ...opts, last_edited_time: current_time }))
       else
-        throw new Error(error(`Space with id ${data.id} is not the parent of root page with id ${id}`));
+        throw new Error(error(`Space:${data.id} is not the parent of RootPage:${id}`));
       if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
+    await this.updateCacheManually(block_ids);
   }
 
   /**
@@ -304,7 +302,7 @@ class Space extends Data<ISpace> {
    * @param opt Properties of the space to update
    */
   async update(opt: SpaceUpdateParam) {
-    const [op, update] = this.updateCache(opt, ['icon',
+    const [op, update] = this.updateCacheLocally(opt, ['icon',
       'beta_enabled',
       'last_edited_time',
       'name']);

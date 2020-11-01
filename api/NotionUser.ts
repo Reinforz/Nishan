@@ -23,7 +23,7 @@ class NotionUser extends Data<INotionUser> {
    */
 
   async update(opt: UpdatableNotionUserParam) {
-    const [op, update] = this.updateCache(opt, ['family_name',
+    const [op, update] = this.updateCacheLocally(opt, ['family_name',
       'given_name',
       'profile_photo']);
 

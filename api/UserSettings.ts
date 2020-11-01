@@ -20,7 +20,7 @@ class UserSettings extends Data<IUserSettings> {
   async update(
     opt: UpdatableUserSettingsParam
   ) {
-    const [op, update] = this.updateCache(opt, ['start_day_of_week',
+    const [op, update] = this.updateCacheLocally(opt, ['start_day_of_week',
       'time_zone',
       'locale',
       'preferred_locale',

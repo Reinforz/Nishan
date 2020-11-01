@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { ICache, Operation, Request } from "../types/types";
+import { ICache, Operation, Request, TDataType } from "../types/types";
 import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 
 /**
@@ -486,5 +486,14 @@ export default class Getters extends Cache {
         }
       }, this.interval)
     })
+  }
+
+  async updateCacheManually(arg: (string | [string, TDataType])[]) {
+    const sync_record_values: SyncRecordValuesParams[] = [];
+    arg.forEach((arg: string | [string, TDataType]) => {
+      if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
+      else if (typeof arg === "string") sync_record_values.push({ id: arg, table: "block", version: 0 })
+    })
+    await this.syncRecordValues(sync_record_values);
   }
 }

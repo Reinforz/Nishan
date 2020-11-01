@@ -19,7 +19,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg Options to update the spaceView
    */
   async update(arg: UpdatableSpaceViewParam) {
-    const [op, update] = this.updateCache(arg, ['notify_email',
+    const [op, update] = this.updateCacheLocally(arg, ['notify_email',
       'notify_desktop',
       'notify_mobile'])
     await this.saveTransactions([

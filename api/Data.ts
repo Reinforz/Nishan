@@ -171,7 +171,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @param keys 
    */
-  protected updateCache(arg: Partial<T>, keys: (keyof T)[]) {
+  protected updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
     const _this = this;
     const cached_data = this.getCachedData();
     const data = arg as T;

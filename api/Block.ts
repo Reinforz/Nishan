@@ -1,13 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockListBefore } from '../utils/chunk';
+import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove } from '../utils/chunk';
 
 import Data from "./Data";
 
 import { TBasicBlockType, NishanArg } from "../types/types"
 import { BlockRepostionArg, CreateBlockArg } from "../types/function";
-import { TBlock, IPage, TBlockInput } from '../types/block';
-import { error } from '../utils/logs';
+import { TBlock, TBlockInput } from '../types/block';
 
 /**
  * A class to represent block of Notion
@@ -23,23 +22,15 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param arg number of new index or `BlockRepostionArg`
    */
   async reposition(arg: number | BlockRepostionArg) {
-    const data = this.getCachedData();
-    const parent = this.cache.block.get(data.parent_id) as IPage;
-    if (parent) {
-      if (parent.content) {
-        if (typeof arg === "number") {
-          const block_id_at_pos = parent.content[arg];
-          await this.saveTransactions([
-            blockListAfter(data.parent_id, ["content"], { after: block_id_at_pos, id: data.id })
-          ]);
-        } else
-          await this.saveTransactions([
-            arg.position === "after" ? blockListAfter(data.parent_id, ["content"], { after: arg.id, id: data.id }) : blockListBefore(data.parent_id, ["content"], { after: arg.id, id: data.id })
-          ]);
-      } else
-        throw new Error(error("Block parent doesn't have any children"))
-    } else
-      throw new Error(error("Block doesn't have a parent"))
+    const [block_content_op] = this.addToChildArray(this.id, arg);
+    await this.saveTransactions([block_content_op]);
+    await this.syncRecordValues([
+      {
+        id: this.id,
+        table: "block",
+        version: 0
+      }
+    ])
   }
 
   /**

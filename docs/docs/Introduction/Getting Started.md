@@ -40,9 +40,11 @@ const Nishan = require("./dist");
     token: /* Paste your copied token here */,
     timeout: 500 /* Timeout between each request */
   });
-
-  const space = await nishan.init((space)=>space.name === "My Notion");
+  const user = await nishan.getUser((user)=>user.given_name === "Devon");
+  const space = await user.init((space)=>space.name === "My Notion");
   const page = await space.getPage((page)=>page.name === "My Page");
   await page.delete();
 })()
 ```
+
+Please refer to the api section to see all the methods available in the classes.

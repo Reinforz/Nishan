@@ -344,6 +344,7 @@ class Space extends Data<ISpace> {
       }
     }
     await this.saveTransactions(ops);
+    target_space_view && await this.updateCacheManually([[target_space_view.id, "space_view"]]);
   }
 
   async toggleFavourite(arg: string | Predicate<TRootPage>) {
@@ -378,7 +379,9 @@ class Space extends Data<ISpace> {
       spaceId: data?.id,
       userIds
     });
-
+    this.updateCacheLocally({
+      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
+    }, ["permissions"]);
   }
 
   get spaceView() {

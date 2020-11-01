@@ -251,14 +251,13 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       }
     };
     if (target_space_view) {
-      const is_bookmarked = target_space_view.bookmarked_pages && target_space_view.bookmarked_pages.includes(data.id);
+      const is_bookmarked = target_space_view?.bookmarked_pages?.includes(data.id);
       await this.saveTransactions([
         (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
           id: data.id
         })
       ])
     }
-
   }
 
   /**

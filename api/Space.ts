@@ -7,8 +7,8 @@ import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
 
-import { blockUpdate, collectionUpdate } from '../utils/chunk';
-import { error } from '../utils/logs';
+import { blockUpdate, collectionUpdate, spaceViewListBefore, spaceViewListRemove } from '../utils/chunk';
+import { error, warn } from '../utils/logs';
 
 import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
@@ -21,6 +21,8 @@ import createViews from '../utils/createViews';
  * @noInheritDoc
  */
 class Space extends Data<ISpace> {
+  space_view?: ISpaceView;
+
   constructor(arg: NishanArg) {
     super(arg);
   }
@@ -285,7 +287,6 @@ class Space extends Data<ISpace> {
       if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
-
   }
 
   /**
@@ -313,7 +314,42 @@ class Space extends Data<ISpace> {
     ]);
 
     update();
+  }
 
+  async toggleFavourites(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
+    const target_space_view = this.spaceView, data = this.getCachedData(), ops: Operation[] = [];
+    if (target_space_view) {
+      if (Array.isArray(arg)) {
+        for (let index = 0; index < arg.length; index++) {
+          const page_id = arg[index];
+          if (data.pages.includes(page_id)) {
+            const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
+            ops.push((is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
+              id: page_id
+            }))
+          } else
+            warn(`Space:${this.id} doesnot contain Page:${page_id}`)
+          if (!multiple && ops.length === 1) break;
+        }
+      } else if (typeof arg === "function") {
+        for (let index = 0; index < data.pages.length; index++) {
+          const page_id = data.pages[index];
+          const page = this.getCachedData<TRootPage>(page_id);
+          if (page.parent_id === this.id && await arg(page, index)) {
+            const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
+            ops.push((is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
+              id: page_id
+            }))
+          }
+          if (!multiple && ops.length === 1) break;
+        }
+      }
+    }
+    await this.saveTransactions(ops);
+  }
+
+  async toggleFavourite(arg: string | Predicate<TRootPage>) {
+    return await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
   }
 
   /**
@@ -347,19 +383,23 @@ class Space extends Data<ISpace> {
 
   }
 
-  /**
-   * Get the space view associated with the space
-   * @returns The associated space view object
-   */
-  async getSpaceView() {
-    const data = this.getCachedData();
+  get spaceView() {
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {
-      if (data && space_view.space_id === data.id) {
+      if (space_view.space_id === this.id) {
         target_space_view = space_view;
         break;
       }
     }
+    return target_space_view;
+  }
+
+  /**
+   * Get the space view associated with the space
+   * @returns The associated space view object
+   */
+  getSpaceView() {
+    const target_space_view = this.spaceView;
     if (target_space_view)
       return new SpaceView({
         type: "space_view",

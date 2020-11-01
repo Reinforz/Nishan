@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ISpace } from "../types/api";
 import { IPage, IRootPage, TBlock, TParentType } from "../types/block";
 import { BlockRepostionArg, CreateRootCollectionViewPageParams } from "../types/function";
-import { NishanArg, TDataType, TData, Operation, Args, Schema } from "../types/types";
+import { NishanArg, TDataType, TData, Operation, Args, Schema, } from "../types/types";
 import { blockListAfter, blockListBefore, blockListRemove, blockSet, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserListRemove, notionUserSet, notionUserUpdate, spaceListAfter, spaceListBefore, spaceListRemove, spaceSet, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewListRemove, spaceViewSet, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsListRemove, userSettingsSet, userSettingsUpdate } from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
@@ -88,10 +88,11 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Get the cached data using the current data id
    */
-  getCachedData(arg?: string) {
+  getCachedData<Q extends TData = T>(arg?: string, type?: TDataType) {
+    type = type ? type : "block";
     let id = this.id;
     if (typeof arg === "string") id = arg;
-    const data = this.cache[this.type].get(id) as T;
+    const data = this.cache[arg ? type : this.type].get(id) as Q;
     if (data) return data;
     else if (data === undefined)
       throw new Error(error("Data has been deleted"));

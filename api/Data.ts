@@ -94,7 +94,7 @@ export default class Data<T extends TData> extends Getters {
     if (typeof arg === "string") id = arg;
     const data = this.cache[arg ? type : this.type].get(id) as Q;
     if (data) return data;
-    else if (data === undefined)
+    else if ((data as any).alive === false)
       throw new Error(error("Data has been deleted"));
     else
       throw new Error(error("Data not available in cache"))
@@ -113,12 +113,13 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined): [Operation, (() => void)] {
-    const cached_data = this.type === "space" ? this.cache.space.get(this.id) as ISpace : this.cache.block.get(this.id) as IPage | IRootPage;
-    const cached_container = this.type === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
-    const path = this.type === "space" ? "pages" : "content";
+  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page"]): [Operation, (() => void)] {
+    const target_id = parent?.[0] ?? this.id;
+    const cached_data = (parent?.[1] ?? this.type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
+    const cached_container = (parent?.[1] ?? this.type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
+    const path = (parent?.[1] ?? this.type) === "space" ? "pages" : "content";
     if (cached_container) {
-      let block_list_after_op = this.listAfterOp([path], {
+      let block_list_after_op = (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
         after: '',
         id: $block_id
       });
@@ -126,15 +127,15 @@ export default class Data<T extends TData> extends Getters {
       if (arg !== undefined) {
         if (typeof arg === "number") {
           const block_id_at_pos = (cached_data as any)?.[path]?.[arg] ?? '';
-          block_list_after_op = this.listBeforeOp([path], {
+          block_list_after_op = (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
             before: block_id_at_pos,
             id: $block_id
           });
         } else
-          block_list_after_op = arg.position === "after" ? this.listAfterOp([path], {
+          block_list_after_op = arg.position === "after" ? (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
             after: arg.id,
             id: $block_id
-          }) : this.listBeforeOp([path], {
+          }) : (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
             after: arg.id,
             id: $block_id
           })

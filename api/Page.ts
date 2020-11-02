@@ -133,7 +133,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
+  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
     const data = this.getCachedData();
     const blocks: Block<TBlock, TBlockInput>[] = [];
@@ -148,10 +148,10 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           }
           if (!multiple && blocks.length === 1) break;
         }
-      } else if (typeof arg === "function") {
+      } else if (typeof arg === "function" || arg === undefined) {
         for (let index = 0; index < data.content.length; index++) {
           const block_id = data.content[index], block: TBlock = this.getCachedData(block_id);
-          let should_add = await arg(block, index);
+          let should_add = typeof arg === "function" ? await arg(block, index) : true;
           if (should_add) blocks.push(this.createClass(block.type, block_id))
           if (!multiple && blocks.length === 1) break;
         }

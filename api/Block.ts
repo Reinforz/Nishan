@@ -22,17 +22,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param arg number of new index or `BlockRepostionArg`
    */
   async reposition(arg: number | BlockRepostionArg) {
-    const [block_content_op] = this.addToChildArray(this.id, arg);
+    const data = this.getCachedData(this.id);
+    const [block_content_op, update] = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as ("page" | "space")]);
     await this.saveTransactions([block_content_op]);
-    await this.syncRecordValues([
-      {
-        id: this.id,
-        table: "block",
-        version: 0
-      }
-    ])
+    update();
+    await this.updateCacheManually([data.parent_id]);
   }
 
+  // ? FEAT:1:M Take a position arg
   /**
    * Duplicate the current block
    * @returns The duplicated block object

@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove } from '../utils/chunk';
+import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockUpdate } from '../utils/chunk';
 
 import Data from "./Data";
 
-import { TBasicBlockType, NishanArg } from "../types/types"
+import { TBasicBlockType, NishanArg, TBlockType } from "../types/types"
 import { BlockRepostionArg, CreateBlockArg } from "../types/function";
-import { TBlock, TBlockInput } from '../types/block';
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput } from '../types/block';
+import Page from './Page';
 
 /**
  * A class to represent block of Notion
@@ -23,10 +24,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
   async reposition(arg: number | BlockRepostionArg) {
     const data = this.getCachedData(this.id);
-    const [block_content_op, update] = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as ("page" | "space")]);
+    const [block_content_op, update] = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as any]);
     await this.saveTransactions([block_content_op]);
     update();
-    await this.updateCacheManually([data.parent_id]);
+    await this.updateCacheManually([[data.parent_id, data.parent_table as any]]);
   }
 
   // ? FEAT:1:M Take a position arg
@@ -39,7 +40,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     const $gen_block_id = uuidv4();
     await this.saveTransactions(
       [
-        this.createBlock({ $block_id: $gen_block_id, type: 'copy_indicator', parent_id: data.parent_id }),
+        blockUpdate($gen_block_id, [], {
+          id: $gen_block_id,
+          type: "copy_indicator",
+          parent_id: data.parent_id,
+          parent_table: "block",
+          alive: true,
+        }),
         blockListAfter(data.parent_id, ['content'], {
           after: data.id,
           id: $gen_block_id
@@ -56,11 +63,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       }
     });
 
-    return new Block({
-      type: "block",
-      id: $gen_block_id,
-      ...this.getProps()
-    })
+    return this.createClass(data.type, $gen_block_id);
   }
 
   // ? FIX:1:M Update cache
@@ -159,7 +162,83 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       last_edited_by_table: 'notion_user',
     };
     return this.updateOp([], arg);
+  }
 
+  createClass(type: TBlockType, id: string): any {
+    const obj = {
+      id,
+      ...this.getProps(),
+      type: "block" as "block"
+    };
+
+    switch (type) {
+      case "video":
+        return new Block<IVideo, IVideoInput>(obj);
+      case "audio":
+        return new Block<IAudio, IAudioInput>(obj);
+      case "image":
+        return new Block<IImage, IImageInput>(obj);
+      case "bookmark":
+        return new Block<IWebBookmark, IWebBookmarkInput>(obj);
+      case "code":
+        return new Block<ICode, ICodeInput>(obj);
+      case "file":
+        return new Block<IFile, IFileInput>(obj);
+      case "tweet":
+        return new Block<ITweet, ITweetInput>(obj);
+      case "gist":
+        return new Block<IGist, IGistInput>(obj);
+      case "codepen":
+        return new Block<ICodepen, ICodepenInput>(obj);
+      case "maps":
+        return new Block<IMaps, IMapsInput>(obj);
+      case "figma":
+        return new Block<IFigma, IFigmaInput>(obj);
+      case "drive":
+        return new Block<IDrive, IDriveInput>(obj);
+      case "text":
+        return new Block<IText, ITextInput>(obj);
+      case "table_of_contents":
+        return new Block<ITOC, ITOCInput>(obj);
+      case "equation":
+        return new Block<IEquation, IEquationInput>(obj);
+      case "breadcrumb":
+        return new Block<IBreadcrumb, IBreadcrumbInput>(obj);
+      case "factory":
+        return new Block<IFactory, IFactoryInput>(obj);
+      case "page":
+        return new Page(obj);
+      case "text":
+        return new Block<IText, ITextInput>(obj);
+      case "to_do":
+        return new Block<ITodo, ITodoInput>(obj);
+      case "header":
+        return new Block<IHeader, IHeaderInput>(obj);
+      case "sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>(obj);
+      case "sub_sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>(obj);
+      case "bulleted_list":
+        return new Block<IBulletedList, IBulletedListInput>(obj);
+      case "numbered_list":
+        return new Block<INumberedList, INumberedListInput>(obj);
+      case "toggle":
+        return new Block<IToggle, IToggleInput>(obj);
+      case "quote":
+        return new Block<IQuote, IQuoteInput>(obj);
+      case "divider":
+        return new Block<IDivider, IDividerInput>(obj);
+      case "callout":
+        return new Block<ICallout, ICalloutInput>(obj);
+      case "toggle":
+        return new Block<IToggle, IToggleInput>(obj);
+      case "sub_sub_header":
+        return new Block<ISubHeader, ISubHeaderInput>(obj);
+      case "drive":
+        return new Block<IDrive, IDriveInput>(obj);
+      default:
+        return new Page(obj);
+    }
   }
 }
 

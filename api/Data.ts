@@ -119,20 +119,24 @@ export default class Data<T extends TData> extends Getters {
     const cached_container = (parent?.[1] ?? this.type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
     const path = (parent?.[1] ?? this.type) === "space" ? "pages" : "content";
     if (cached_container) {
-      let block_list_after_op = (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+      let block_list_pos_op = (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
         after: '',
         id: $block_id
       });
 
       if (arg !== undefined) {
         if (typeof arg === "number") {
+          const current_pos = (cached_data as any)?.[path].indexOf($block_id);
           const block_id_at_pos = (cached_data as any)?.[path]?.[arg] ?? '';
-          block_list_after_op = (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
+          block_list_pos_op = current_pos > arg ? (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
             before: block_id_at_pos,
+            id: $block_id
+          }) : (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+            after: block_id_at_pos,
             id: $block_id
           });
         } else
-          block_list_after_op = arg.position === "after" ? (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+          block_list_pos_op = arg.position === "after" ? (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
             after: arg.id,
             id: $block_id
           }) : (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
@@ -141,7 +145,7 @@ export default class Data<T extends TData> extends Getters {
           })
       }
 
-      return [block_list_after_op, function () {
+      return [block_list_pos_op, function () {
         if (arg === undefined)
           cached_container.push($block_id);
         else {

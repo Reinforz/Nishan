@@ -31,7 +31,6 @@ class Collection extends Data<ICollection> {
         this.setOp(['last_edited_time'], Date.now())
       ]
     )
-
   }
 
   // ? FEAT:1:E Return a page object

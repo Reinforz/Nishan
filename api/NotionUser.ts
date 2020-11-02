@@ -133,8 +133,7 @@ class NotionUser extends Data<INotionUser> {
       userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
       spaceListAfter($space_id, ['pages'], { id: $block_id }),
     ]);
-    // ? IMP:1:M Use the syncRecordValues to get the space rather than using loadUserContent
-    await this.loadUserContent();
+    await this.updateCacheManually([[$space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
     const space = this.cache.space.get($space_id);
     if (space) {
       return new Space({

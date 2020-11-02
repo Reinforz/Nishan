@@ -7,7 +7,6 @@ import Data from "./Data";
 import { TBasicBlockType, NishanArg, TBlockType } from "../types/types"
 import { BlockRepostionArg, CreateBlockArg } from "../types/function";
 import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput } from '../types/block';
-import Page from './Page';
 
 /**
  * A class to represent block of Notion
@@ -63,10 +62,11 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       }
     });
 
+    await this.updateCacheManually([$gen_block_id, data.parent_id])
+
     return this.createClass(data.type, $gen_block_id);
   }
 
-  // ? FIX:1:M Update cache
   /**
    * Update a block's properties and format
    * @param args Block update format and properties options
@@ -84,6 +84,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         }),
       ]
     )
+    await this.updateCacheManually([data.id]);
   }
 
   /**
@@ -102,6 +103,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       cached_value.type = type;
       this.cache.block.set(data.id, cached_value);
     }
+    await this.updateCacheManually([data.id]);
   }
 
   /**
@@ -121,6 +123,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         is_root_page ? spaceSet(data.space_id, ['last_edited_time'], current_time) : blockSet(data.parent_id, ['last_edited_time'], current_time)
       ]
     );
+    this.cache.block.delete(this.id);
   }
 
   /**
@@ -139,7 +142,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         blockSet(new_parent_id, ['last_edited_time'], current_time)
       ]
     )
-
+    await this.updateCacheManually([this.id, data.parent_id, new_parent_id]);
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
@@ -165,6 +168,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   createClass(type: TBlockType, id: string): any {
+    const Page = require("./Page");
     const obj = {
       id,
       ...this.getProps(),

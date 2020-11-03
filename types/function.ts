@@ -1,5 +1,5 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
-import { ICollection, PageFormat, PageProps } from "./block";
+import { ICollection, PageFormat, PageProps, TBlockInput } from "./block";
 import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType, SchemaUnitType, TDataType } from "./types";
 
 export interface UserViewArg {
@@ -49,3 +49,8 @@ export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'loc
 export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
 
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
+
+export type PageCreateContentParam = TBlockInput & {
+  file_id?: string,
+  position?: number | BlockRepostionArg
+}

@@ -83,11 +83,11 @@ class Space extends Data<ISpace> {
   }
 
   async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
-    return (await this.createRootCollectionViewPages([option], false))[0];
+    return (await this.createRootCollectionViewPages([option]))[0];
   }
 
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
-  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], multiple: boolean = true) {
+  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
     const ops: Operation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index];
@@ -135,7 +135,6 @@ class Space extends Data<ISpace> {
         ...createViews(views, block_id)
       );
       update();
-      if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
     const updated_ids: UpdateCacheManuallyParam = [];

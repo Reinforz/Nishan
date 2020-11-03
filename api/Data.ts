@@ -25,49 +25,48 @@ export default class Data<T extends TData> extends Getters {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;
-    const data = this.cache[this.type].get(this.id) as T;
     switch (this.type) {
       case "space":
-        this.listBeforeOp = spaceListBefore.bind(this, data.id);
-        this.listAfterOp = spaceListAfter.bind(this, data.id);
-        this.updateOp = spaceUpdate.bind(this, data.id);
-        this.setOp = spaceSet.bind(this, data.id);
-        this.listRemoveOp = spaceListRemove.bind(this, data.id);
+        this.listBeforeOp = spaceListBefore.bind(this, this.id);
+        this.listAfterOp = spaceListAfter.bind(this, this.id);
+        this.updateOp = spaceUpdate.bind(this, this.id);
+        this.setOp = spaceSet.bind(this, this.id);
+        this.listRemoveOp = spaceListRemove.bind(this, this.id);
         break;
       case "block":
-        this.listBeforeOp = blockListBefore.bind(this, data.id);
-        this.listAfterOp = blockListAfter.bind(this, data.id);
-        this.updateOp = blockUpdate.bind(this, data.id);
-        this.setOp = blockSet.bind(this, data.id);
-        this.listRemoveOp = blockListRemove.bind(this, data.id);
+        this.listBeforeOp = blockListBefore.bind(this, this.id);
+        this.listAfterOp = blockListAfter.bind(this, this.id);
+        this.updateOp = blockUpdate.bind(this, this.id);
+        this.setOp = blockSet.bind(this, this.id);
+        this.listRemoveOp = blockListRemove.bind(this, this.id);
         break;
       case "space_view":
-        this.listBeforeOp = spaceViewListBefore.bind(this, data.id);
-        this.listAfterOp = spaceViewListAfter.bind(this, data.id);
-        this.updateOp = spaceViewUpdate.bind(this, data.id);
-        this.setOp = spaceViewSet.bind(this, data.id);
-        this.listRemoveOp = spaceViewListRemove.bind(this, data.id);
+        this.listBeforeOp = spaceViewListBefore.bind(this, this.id);
+        this.listAfterOp = spaceViewListAfter.bind(this, this.id);
+        this.updateOp = spaceViewUpdate.bind(this, this.id);
+        this.setOp = spaceViewSet.bind(this, this.id);
+        this.listRemoveOp = spaceViewListRemove.bind(this, this.id);
         break;
       case "user_settings":
-        this.listBeforeOp = userSettingsListBefore.bind(this, data.id);
-        this.listAfterOp = userSettingsListAfter.bind(this, data.id);
-        this.updateOp = userSettingsUpdate.bind(this, data.id);
-        this.setOp = userSettingsSet.bind(this, data.id);
-        this.listRemoveOp = userSettingsListRemove.bind(this, data.id);
+        this.listBeforeOp = userSettingsListBefore.bind(this, this.id);
+        this.listAfterOp = userSettingsListAfter.bind(this, this.id);
+        this.updateOp = userSettingsUpdate.bind(this, this.id);
+        this.setOp = userSettingsSet.bind(this, this.id);
+        this.listRemoveOp = userSettingsListRemove.bind(this, this.id);
         break;
       case "notion_user":
-        this.listBeforeOp = notionUserListBefore.bind(this, data.id);
-        this.listAfterOp = notionUserListAfter.bind(this, data.id);
-        this.updateOp = notionUserUpdate.bind(this, data.id);
-        this.setOp = notionUserSet.bind(this, data.id);
-        this.listRemoveOp = notionUserListRemove.bind(this, data.id);
+        this.listBeforeOp = notionUserListBefore.bind(this, this.id);
+        this.listAfterOp = notionUserListAfter.bind(this, this.id);
+        this.updateOp = notionUserUpdate.bind(this, this.id);
+        this.setOp = notionUserSet.bind(this, this.id);
+        this.listRemoveOp = notionUserListRemove.bind(this, this.id);
         break;
       default:
-        this.listBeforeOp = blockListBefore.bind(this, data.id);
-        this.listAfterOp = blockListAfter.bind(this, data.id);
-        this.updateOp = blockUpdate.bind(this, data.id);
-        this.setOp = blockSet.bind(this, data.id);
-        this.listRemoveOp = blockListRemove.bind(this, data.id);
+        this.listBeforeOp = blockListBefore.bind(this, this.id);
+        this.listAfterOp = blockListAfter.bind(this, this.id);
+        this.updateOp = blockUpdate.bind(this, this.id);
+        this.setOp = blockSet.bind(this, this.id);
+        this.listRemoveOp = blockListRemove.bind(this, this.id);
         break;
     }
   }

@@ -35,6 +35,7 @@ import {
   BlockRepostionArg,
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
+  PageCreateContentParam,
   UserViewArg,
 } from "../types/function";
 import {
@@ -334,25 +335,31 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * @returns Array of newly created block content objects
    */
 
-  async createContents(contents: (TBlockInput & {
-    position?: number | BlockRepostionArg
-  })[]) {
+  async createContents(contents: PageCreateContentParam[]) {
+    const data = this.getCachedData(), operations: Operation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
 
-    const data = this.getCachedData();
-    const operations: Operation[] = [];
-    const bookmarks: SetBookmarkMetadataParams[] = [];
-    const $block_ids: string[] = [];
+    if (!data.content) data.content = []
 
-    contents.forEach(content => {
+    for (let index = 0; index < contents.length; index++) {
+      const content = contents[index];
+      const $block_id = uuidv4();
+      $block_ids.push($block_id);
+
+      if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
+        content.format = (await this.getGenericEmbedBlockData({
+          pageWidth: 500,
+          source: (content.properties as any).source[0][0] as string,
+          type: content.type as TGenericEmbedBlockType
+        })).format;
+      };
+
       const {
         format,
         properties,
         type,
         position
       } = content;
-      const $block_id = uuidv4();
-      $block_ids.push($block_id);
-      // ? FEAT:1:M Update multiple items
+
       const [block_list_op, update] = this.addToChildArray($block_id, position);
 
       if (type === "bookmark")
@@ -370,87 +377,35 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         block_list_op
       );
       update();
-    });
+
+      if (type === "bookmark")
+        await this.setBookmarkMetadata({
+          blockId: $block_id,
+          url: (properties as WebBookmarkProps).link[0][0]
+        });
+
+      blocks.push(this.createClass(type, $block_id));
+
+      if (content.file_id && type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], {
+        id: content.file_id
+      }));
+    }
 
     await this.saveTransactions(operations);
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
     await this.updateCacheManually($block_ids);
 
-    const blocks: Block<TBlock, TBlockInput>[] = [];
-
-    $block_ids.forEach($block_id => {
-      const block = this.getCachedData<TBlock>($block_id)
-      blocks.push(this.createClass(block.type, $block_id));
-    });
-
-    if (!data.content) data.content = $block_ids;
-    else
-      data.content.push(...$block_ids);
-
-    const cached_data = this.cache.block.get(data.id) as IPage;
-    cached_data?.content?.push(...$block_ids);
-
     return blocks;
   }
 
-  // ? RF:1:M Refactor to use createContents function
   /**
    * Create content for a page 
    * @param options Options for modifying the content during creation
    * @returns Newly created block content object
    */
-  async createContent(options: TBlockInput & {
-    file_id?: string,
-    position?: number | BlockRepostionArg
-  }) {
-    const data = this.getCachedData();
-    const $block_id = uuidv4();
-    if (!data.content) data.content = []
-
-    if (options.type.match(/gist|codepen|tweet|maps|figma/)) {
-      options.format = (await this.getGenericEmbedBlockData({
-        pageWidth: 500,
-        source: (options.properties as any).source[0][0] as string,
-        type: options.type as TGenericEmbedBlockType
-      })).format;
-    };
-
-    const [block_list_op, update] = this.addToChildArray($block_id, options.position);
-
-    const {
-      format,
-      properties,
-      type
-    } = options;
-
-    const operations = [
-      this.createBlock({
-        $block_id,
-        type,
-        properties,
-        format,
-      }),
-      block_list_op,
-    ];
-
-    if (type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], {
-      id: options.file_id
-    }));
-
-    await this.saveTransactions(
-      operations
-    );
-
-    if (type === "bookmark")
-      await this.setBookmarkMetadata({
-        blockId: $block_id,
-        url: (properties as WebBookmarkProps).link[0][0]
-      })
-
-
-    update();
-    return this.createClass(type, $block_id);
+  async createContent(option: PageCreateContentParam) {
+    return (await this.createContents([option]))[0];
   }
 
   /**

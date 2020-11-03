@@ -7,7 +7,7 @@ import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../typ
  */
 class View extends Data<TView> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "collection_view" });
   }
 
   /**

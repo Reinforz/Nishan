@@ -60,7 +60,6 @@ class Nishan extends Cache {
         if (space)
           users.push(new NotionUser({
             id: user.id,
-            type: "notion_user",
             space_id: space.id,
             shard_id: space.shard_id,
             token: this.token,

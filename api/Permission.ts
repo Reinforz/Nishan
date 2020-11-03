@@ -49,7 +49,7 @@ export default {
   },
   collection_view_page: class Permission extends CollectionBlock {
     constructor(arg: NishanArg) {
-      super(arg);
+      super({ ...arg, type: "collection_view_page" });
     }
     /**
      * Share page to users with specific permissions

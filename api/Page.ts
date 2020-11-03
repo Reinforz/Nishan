@@ -270,7 +270,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     await this.updateCacheManually([block.id]);
 
     return new Block({
-      type: "block",
       id: block.id,
       ...this.getProps()
     });
@@ -320,12 +319,10 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
     return {
       template: new Block({
-        type: "block",
         id: $block_id,
         ...this.getProps()
       }),
       contents: content_block_ids.map(content_block_id => new Block({
-        type: "block",
         id: content_block_id,
         ...this.getProps()
       }))
@@ -458,16 +455,14 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
     return {
       collection_view: new CollectionView({
-        type: "collection_view",
         ...this.getProps(),
         id: $content_id
       }),
       collection: new Collection({
-        type: "collection",
         id: collection_id,
         ...this.getProps()
       }),
-      collection_views: view_ids.map(view_id => new View({ type: "collection_view", id: view_id, ...this.getProps() }))
+      collection_views: view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
     }
   }
 
@@ -517,18 +512,15 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
     return {
       collection_view_page: new CollectionViewPage({
-        type: "block",
         ...this.getProps(),
         id: data.id
       }),
       collection: new Collection({
-        type: "collection",
         ...this.getProps(),
         id: $collection_id
       }),
       collection_views: view_ids.map(view_id => new View({
         id: view_id,
-        type: "collection_view",
         ...this.getProps()
       }))
     }
@@ -587,19 +579,16 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
     return {
       collection_view: new CollectionView({
-        type: "collection_view",
         ...this.getProps(),
         id: $collection_view_id
       }),
       collection: new Collection({
-        type: "collection",
         ...this.getProps(),
         id: $collection_id
       }),
       collection_views: views.map(view => new View({
         id: view.id,
         ...this.getProps(),
-        type: "collection_view"
       }))
     }
   }

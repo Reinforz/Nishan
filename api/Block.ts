@@ -14,7 +14,7 @@ import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBul
  */
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "block" });
   }
 
   /**

@@ -15,7 +15,7 @@ import UserSettings from './UserSettings';
  */
 class NotionUser extends Data<INotionUser> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "notion_user" });
   }
 
   /**
@@ -44,7 +44,6 @@ class NotionUser extends Data<INotionUser> {
       return new UserSettings({
         ...this.getProps(),
         id: user_settings.id,
-        type: "user_settings"
       });
   }
 
@@ -77,7 +76,6 @@ class NotionUser extends Data<INotionUser> {
 
       if (should_add) {
         target_spaces.push(new Space({
-          type: "space",
           id: space.id,
           interval: this.interval,
           token: this.token,
@@ -152,7 +150,6 @@ class NotionUser extends Data<INotionUser> {
     const space = this.cache.space.get($space_id);
     if (space) {
       return new Space({
-        type: "space",
         id: space.id,
         ...this.getProps()
       })

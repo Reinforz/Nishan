@@ -14,7 +14,7 @@ import { CollectionUpdateParam } from '../types/function';
  */
 class Collection extends Data<ICollection> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "collection" });
   }
 
   // ? FIX:1:M Save to cache and utilize Data update

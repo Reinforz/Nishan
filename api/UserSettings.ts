@@ -10,7 +10,7 @@ import { UpdatableUserSettingsParam } from '../types/function';
  */
 class UserSettings extends Data<IUserSettings> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "user_settings" });
   }
 
   /**

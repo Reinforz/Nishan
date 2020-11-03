@@ -24,7 +24,7 @@ class Space extends Data<ISpace> {
   space_view?: ISpaceView;
 
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "space" });
   }
 
   /**
@@ -48,7 +48,6 @@ class Space extends Data<ISpace> {
           case 'page':
             pages.push(
               new RootPage({
-                type: "block",
                 id: page.id,
                 ...this.getProps()
               })
@@ -57,7 +56,6 @@ class Space extends Data<ISpace> {
           case 'collection_view_page':
             pages.push(
               new RootCollectionViewPage({
-                type: "block",
                 id: page.id,
                 ...this.getProps()
               })
@@ -147,17 +145,14 @@ class Space extends Data<ISpace> {
     await this.updateCacheManually([...updated_ids, [this.id, "space"]]);
     return block_ids.map(block_id => ({
       block: new RootCollectionViewPage({
-        type: "block",
         ...this.getProps(),
         id: block_id.block
       }),
       collection: new Collection({
-        type: "collection",
         ...this.getProps(),
         id: block_id.collection
       }),
       collection_views: block_id.collection_views.map(collection_view => new View({
-        type: "collection_view",
         id: collection_view,
         ...this.getProps()
       }))
@@ -215,7 +210,6 @@ class Space extends Data<ISpace> {
     await this.saveTransactions(ops);
     await this.updateCacheManually([...block_ids, [this.id, "space"]]);
     return block_ids.map(block_id => new RootPage({
-      type: "block",
       ...this.getProps(),
       id: block_id
     }));
@@ -396,7 +390,6 @@ class Space extends Data<ISpace> {
     const target_space_view = this.spaceView;
     if (target_space_view)
       return new SpaceView({
-        type: "space_view",
         id: target_space_view.id,
         ...this.getProps()
       });

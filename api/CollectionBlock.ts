@@ -14,8 +14,8 @@ import { NishanArg } from '../types/types';
  * @noInheritDoc
  */
 class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
-  constructor(arg: NishanArg) {
-    super(arg);
+  constructor(arg: NishanArg & { type: "collection_view" | "collection_view_page" }) {
+    super({ ...arg });
   }
 
   // ? RF:1:H Same view options as Page.createLinkedDBContent
@@ -46,7 +46,6 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     return new View({
       ...this.getProps(),
       id: $view_id,
-      type: "collection_view"
     });
   }
 
@@ -61,13 +60,11 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       return new Collection({
         ...this.getProps(),
         id: (data as TCollectionBlock).collection_id,
-        type: "collection"
       });
 
     return new Collection({
       ...this.getProps(),
       id: (data as TCollectionBlock).collection_id,
-      type: "collection"
     });
 
   }
@@ -89,7 +86,6 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       (view_id) => new View({
         ...this.getProps(),
         id: view_id,
-        type: "collection_view"
       })
     );
   }

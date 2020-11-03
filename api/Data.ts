@@ -21,7 +21,7 @@ export default class Data<T extends TData> extends Getters {
   setOp: (path: string[], args: Args) => Operation;
   listRemoveOp: (path: string[], args: Args) => Operation;
 
-  constructor(arg: NishanArg) {
+  constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;

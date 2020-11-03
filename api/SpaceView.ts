@@ -11,7 +11,7 @@ import Space from './Space';
  */
 class SpaceView extends Data<ISpaceView> {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "space_view" });
   }
 
   /**
@@ -43,7 +43,6 @@ class SpaceView extends Data<ISpaceView> {
     }
     if (target_space)
       return new Space({
-        type: "space",
         id: target_space.id,
         ...this.getProps()
       });

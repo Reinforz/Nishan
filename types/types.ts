@@ -319,6 +319,5 @@ export interface NishanArg {
   shard_id: number,
   space_id: string,
   cache: ICache,
-  type: TDataType,
   id: string
 }

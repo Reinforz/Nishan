@@ -8,7 +8,7 @@ import { NishanArg } from '../types/types';
  */
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg) {
-    super(arg);
+    super({ ...arg, type: "collection_view" });
   }
 }
 

@@ -6,6 +6,7 @@ import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
 import { ICache, Operation, Request, TDataType } from "../types/types";
 import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
+import { UpdateCacheManuallyParam } from "../types/function";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -488,7 +489,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async updateCacheManually(arg: (string | [string, TDataType])[]) {
+  async updateCacheManually(arg: UpdateCacheManuallyParam) {
     const sync_record_values: SyncRecordValuesParams[] = [];
     arg.forEach((arg: string | [string, TDataType]) => {
       if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });

@@ -1,8 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
-import NotionUser from './NotionUser';
-import UserSettings from './UserSettings';
 import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
@@ -13,8 +11,10 @@ import { error, warn } from '../utils/logs';
 import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { IRootPage, IPageInput } from '../types/block';
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam } from '../types/function';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam } from '../types/function';
 import createViews from '../utils/createViews';
+import Collection from './Collection';
+import View from './View';
 
 /**
  * A class to represent space of Notion
@@ -25,34 +25,6 @@ class Space extends Data<ISpace> {
 
   constructor(arg: NishanArg) {
     super(arg);
-  }
-
-  /**
-   * Get the current logged in notion user
-   * @returns The NotionUser object attached with the token
-   */
-  async getNotionUser() {
-    const notion_user = this.cache.notion_user.get(this.user_id);
-    if (notion_user)
-      return new NotionUser({
-        ...this.getProps(),
-        id: notion_user.id,
-        type: "notion_user"
-      });
-  }
-
-  /**
-   * Get the current logged in user settings
-   * @returns Returns the logged in UserSettings object
-   */
-  async getUserSettings() {
-    const user_settings = this.cache.user_settings.get(this.user_id);
-    if (user_settings)
-      return new UserSettings({
-        ...this.getProps(),
-        id: user_settings.id,
-        type: "user_settings"
-      });
   }
 
   /**
@@ -115,16 +87,21 @@ class Space extends Data<ISpace> {
   }
 
   // ? FEAT:1:H Return newly created Collection,CollectionViewPage and all ViewIds
+  // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], multiple: boolean = true) {
-    const ops: Operation[] = [], block_ids: string[] = [];
+    const ops: Operation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index];
       const { properties, format, schema, views } = this.parseCollectionOptions(option)
 
-      const view_ids = views.map((view) => view.id);
+      const gen_view_ids = views.map((view) => view.id);
       const $collection_id = uuidv4();
       const block_id = uuidv4();
-      block_ids.push(block_id);
+      block_ids.push({
+        block: block_id,
+        collection: $collection_id,
+        collection_views: gen_view_ids
+      });
       const [block_update_op, update] = this.addToChildArray(block_id, option.position);
 
       ops.push(blockUpdate(block_id, [], {
@@ -141,7 +118,7 @@ class Space extends Data<ISpace> {
         blockUpdate(block_id, [], {
           type: 'collection_view_page',
           collection_id: $collection_id,
-          view_ids,
+          view_ids: gen_view_ids,
           properties: {},
         }),
         collectionUpdate($collection_id, [], {
@@ -162,13 +139,31 @@ class Space extends Data<ISpace> {
       if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
-    await this.updateCacheManually([...block_ids, [this.id, "space"]]);
-    return block_ids.map(block_id => new RootCollectionViewPage({
-      type: "block",
-      ...this.getProps(),
-      id: block_id
-    }))
+    const updated_ids: UpdateCacheManuallyParam = [];
+    block_ids.forEach(block_id => {
+      updated_ids.push([block_id.block, "block"]);
+      updated_ids.push([block_id.collection, "collection"]);
+      block_id.collection_views.map(collection_view => updated_ids.push([collection_view, "collection_view"]));
+    });
 
+    await this.updateCacheManually([...updated_ids, [this.id, "space"]]);
+    return block_ids.map(block_id => ({
+      block: new RootCollectionViewPage({
+        type: "block",
+        ...this.getProps(),
+        id: block_id.block
+      }),
+      collection: new Collection({
+        type: "collection",
+        ...this.getProps(),
+        id: block_id.collection
+      }),
+      collection_views: block_id.collection_views.map(collection_view => new View({
+        type: "collection_view",
+        id: collection_view,
+        ...this.getProps()
+      }))
+    }))
   }
 
   // ? FEAT:1:M Batch rootpage creation

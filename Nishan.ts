@@ -37,11 +37,11 @@ class Nishan extends Cache {
     }
   }
 
-  async getUser(arg: string | Predicate<INotionUser>) {
-    return (await this.getUsers(typeof arg === "string" ? [arg] : arg, false))[0];
+  async getNotionUser(arg: string | Predicate<INotionUser>) {
+    return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getUsers(arg: string[] | Predicate<INotionUser>, multiple: boolean = true) {
+  async getNotionUsers(arg: string[] | Predicate<INotionUser>, multiple: boolean = true) {
     if (!this.init_cache) {
       await this.initializeCache();
       this.init_cache = true;

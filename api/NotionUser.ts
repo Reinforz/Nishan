@@ -7,6 +7,7 @@ import { INotionUser, ISpace } from '../types/api';
 import { UpdatableNotionUserParam } from '../types/function';
 import { userSettingsUpdate, spaceViewSet, blockUpdate, userRootListAfter, spaceListAfter } from '../utils/chunk';
 import Space from './Space';
+import UserSettings from './UserSettings';
 
 /**
  * A class to represent NotionUser of Notion
@@ -31,6 +32,20 @@ class NotionUser extends Data<INotionUser> {
       op
     ]);
     update();
+  }
+
+  /**
+   * Get the current logged in user settings
+   * @returns Returns the logged in UserSettings object
+   */
+  async getUserSettings() {
+    const user_settings = this.cache.user_settings.get(this.user_id);
+    if (user_settings)
+      return new UserSettings({
+        ...this.getProps(),
+        id: user_settings.id,
+        type: "user_settings"
+      });
   }
 
   /**

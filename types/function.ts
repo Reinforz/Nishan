@@ -1,6 +1,6 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
 import { ICollection, PageFormat, PageProps } from "./block";
-import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType, SchemaUnitType } from "./types";
+import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType, SchemaUnitType, TDataType } from "./types";
 
 export interface UserViewArg {
   id?: string,
@@ -47,3 +47,5 @@ export type UpdatableSpaceViewParam = Partial<Pick<ISpaceView, UpdatableSpaceVie
 
 export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
 export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
+
+export type UpdateCacheManuallyParam = (string | [string, TDataType])[]

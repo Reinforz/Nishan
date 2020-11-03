@@ -164,11 +164,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       last_edited_by_id: this.user_id,
       last_edited_by_table: 'notion_user',
     };
-    return this.updateOp([], arg);
+    return blockUpdate($block_id, [], arg);
   }
 
   createClass(type: TBlockType, id: string): any {
     const Page = require("./Page");
+    const CollectionView = require("./CollectionView");
     const obj = {
       id,
       ...this.getProps(),
@@ -240,6 +241,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         return new Block<ISubHeader, ISubHeaderInput>(obj);
       case "drive":
         return new Block<IDrive, IDriveInput>(obj);
+      case "collection_view":
+        return new CollectionView(obj)
       default:
         return new Page(obj);
     }

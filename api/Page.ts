@@ -327,6 +327,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
   }
 
+  // TODO: RF:1:M Refactor createContent to utilize createContents
   /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content
@@ -352,56 +353,35 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       const $block_id = uuidv4();
       $block_ids.push($block_id);
       // ? FEAT:1:M Update multiple items
-      const [block_list_op] = this.addToChildArray($block_id, position);
+      const [block_list_op, update] = this.addToChildArray($block_id, position);
 
       if (type === "bookmark")
         bookmarks.push({
           blockId: $block_id,
           url: (properties as WebBookmarkProps).link[0][0]
         })
+
       operations.push(this.createBlock({
         $block_id,
         type,
         properties,
         format,
       }),
-        block_list_op);
+        block_list_op
+      );
+      update();
     });
 
     await this.saveTransactions(operations);
-    for (let bookmark of bookmarks) {
+    for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
-    }
-
-
-    const recordMap = await this.loadPageChunk({
-      chunkNumber: 0,
-      cursor: {
-        stack: []
-      },
-      limit: 100,
-      pageId: data.id,
-      verticalColumns: false
-    });
+    await this.updateCacheManually($block_ids);
 
     const blocks: Block<TBlock, TBlockInput>[] = [];
 
     $block_ids.forEach($block_id => {
-      const block = recordMap.block[$block_id].value;
-      if (block.type === "page") blocks.push(new Page({
-        type: "block",
-        id: block.id,
-        ...this.getProps()
-      }));
-
-      else if (block.type === "collection_view") blocks.push(new CollectionView({
-        type: "collection_view",
-        id: block.id,
-        ...this.getProps(),
-      }));
-
-      else blocks.push(this.createClass(block.type, $block_id));
-
+      const block = this.getCachedData<TBlock>($block_id)
+      blocks.push(this.createClass(block.type, $block_id));
     });
 
     if (!data.content) data.content = $block_ids;
@@ -412,7 +392,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     cached_data?.content?.push(...$block_ids);
 
     return blocks;
-
   }
 
   // ? RF:1:M Refactor to use createContents function
@@ -621,7 +600,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         block_list_op
       ]
     );
-
 
     return new CollectionView({
       type: "collection_view",

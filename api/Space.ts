@@ -86,7 +86,6 @@ class Space extends Data<ISpace> {
     return (await this.createRootCollectionViewPages([option], false))[0];
   }
 
-  // ? FEAT:1:H Return newly created Collection,CollectionViewPage and all ViewIds
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], multiple: boolean = true) {
     const ops: Operation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];

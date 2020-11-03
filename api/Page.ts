@@ -87,9 +87,8 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         for (let index = 0; index < arg.length; index++) {
           const block_id = arg[index], block = this.getCachedData(block_id);
           let should_add = data.content.includes(block_id);
-          if (should_add) {
+          if (should_add)
             blocks.push(this.createClass(block.type, block_id));
-          }
           if (!multiple && blocks.length === 1) break;
         }
       } else if (typeof arg === "function" || arg === undefined) {

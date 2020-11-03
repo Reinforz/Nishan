@@ -36,6 +36,7 @@ import {
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
+  UpdateCacheManuallyParam,
   UserViewArg,
 } from "../types/function";
 import {
@@ -43,6 +44,8 @@ import {
   SetBookmarkMetadataParams
 } from "../types/api";
 import { IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput } from "../types/block";
+import Collection from "./Collection";
+import View from "./View";
 
 /**
  * A class to represent Page type block of Notion
@@ -174,7 +177,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
     ops.push(this.setOp(['last_edited_time'], current_time))
     await this.saveTransactions(ops);
-    // ? FIX:1:H Delete related data for example for collection_view delete the collection and the views from cache
+    // TODO FIX:1:H Delete related data for example for collection_view delete the collection and the views from cache
     ids.forEach(id => this.cache.block.delete(id));
   }
 
@@ -198,6 +201,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           id: data.id
         })
       ])
+      await this.updateCacheManually([[target_space_view.id, "space_view"]]);
     }
   }
 
@@ -263,8 +267,8 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       fileId,
       token: accounts[0].token
     });
-    await this.addToCachedData("block", block.id)
-    await this.updateCacheLocally
+    await this.updateCacheManually([block.id]);
+
     return new Block({
       type: "block",
       id: block.id,
@@ -312,6 +316,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         ...content_blocks
       ]
     );
+    await this.updateCacheManually([$block_id]);
 
     return {
       template: new Block({
@@ -328,13 +333,12 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
   }
 
-  // TODO: RF:1:M Refactor createContent to utilize createContents
   /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-
+  // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
     const data = this.getCachedData(), operations: Operation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
 
@@ -408,6 +412,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     return (await this.createContents([option]))[0];
   }
 
+  // ? FEAT:1:M Remove views argument so as to keep the original one?
   /**
    * Create a linked db content block
    * @param collection_id Id of the collectionblock to link with
@@ -445,17 +450,25 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           last_edited_time: current_time
         }),
         block_list_op,
-        blockSet($content_id, ['last_edited_time'], current_time)
       ]
     );
 
     update();
-    return new CollectionView({
-      type: "collection_view",
-      ...this.getProps(),
-      id: $content_id
-    });
+    await this.updateCacheManually([...view_ids.map(view_id => [view_id, "collection_view"]), $content_id] as UpdateCacheManuallyParam);
 
+    return {
+      collection_view: new CollectionView({
+        type: "collection_view",
+        ...this.getProps(),
+        id: $content_id
+      }),
+      collection: new Collection({
+        type: "collection",
+        id: collection_id,
+        ...this.getProps()
+      }),
+      collection_views: view_ids.map(view_id => new View({ type: "collection_view", id: view_id, ...this.getProps() }))
+    }
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
@@ -500,14 +513,28 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    return new CollectionViewPage({
-      type: "block",
-      ...this.getProps(),
-      id: data.id
-    })
+    await this.updateCacheManually([...view_ids.map(view_id => [view_id, "collection_view"]), this.id, [$collection_id, "collection"]] as UpdateCacheManuallyParam);
 
+    return {
+      collection_view_page: new CollectionViewPage({
+        type: "block",
+        ...this.getProps(),
+        id: data.id
+      }),
+      collection: new Collection({
+        type: "collection",
+        ...this.getProps(),
+        id: $collection_id
+      }),
+      collection_views: view_ids.map(view_id => new View({
+        id: view_id,
+        type: "collection_view",
+        ...this.getProps()
+      }))
+    }
   }
 
+  // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
   // ? FEAT:1:M Take in Schema as an option
   /**
    * Creates an inline database block inside current page
@@ -556,11 +583,25 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    return new CollectionView({
-      type: "collection_view",
-      ...this.getProps(),
-      id: $collection_view_id
-    })
+    await this.updateCacheManually([...views.map(view => [view.id, "collection_view"]), $collection_view_id, [$collection_id, "collection"]] as UpdateCacheManuallyParam);
+
+    return {
+      collection_view: new CollectionView({
+        type: "collection_view",
+        ...this.getProps(),
+        id: $collection_view_id
+      }),
+      collection: new Collection({
+        type: "collection",
+        ...this.getProps(),
+        id: $collection_id
+      }),
+      collection_views: views.map(view => new View({
+        id: view.id,
+        ...this.getProps(),
+        type: "collection_view"
+      }))
+    }
   }
 }
 

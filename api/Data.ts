@@ -161,15 +161,6 @@ export default class Data<T extends TData> extends Getters {
       throw new Error("The data does not contain children")
   }
 
-  protected async addToCachedData(type: TDataType, id: string) {
-    const { recordMap } = await this.syncRecordValues([{
-      table: type,
-      id,
-      version: 0
-    }]);
-
-    this.cache[type].set(id, recordMap[type][id].value as any);
-  }
   /**
    * Update the cache of the data using only the passed keys
    * @param arg 

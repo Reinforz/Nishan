@@ -8,14 +8,24 @@ import { collectionViewSet } from '../utils/chunk';
 
 import { TBlockInput, TCollectionBlock } from '../types/block';
 import { NishanArg, Predicate, TView } from '../types/types';
+import {UpdateCacheManuallyParam} from "../types/function"
 
 /**
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
 class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
+  init_cache: boolean = false;
   constructor(arg: NishanArg & { type: "collection_view" | "collection_view_page" }) {
     super({ ...arg });
+  }
+
+  async initializeCache(){
+    if(!this.init_cache){
+      const data = this.getCachedData();
+      await this.updateCacheManually([...data.view_ids.map(view_id=>[view_id, "collection_view"]), [data.collection_id, "collection"]] as UpdateCacheManuallyParam)
+      this.init_cache = true;
+    }
   }
 
   // TODO RF:1:H Same view options as Page.createLinkedDBContent
@@ -76,12 +86,12 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
     return (await this.getViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  // ? FEAT:2:M Add a predicate function for filtering
   /**
    * Get all the views associated with the collection block
    * @returns An array of view objects of the collectionblock
    */
   async getViews(arg: undefined | string[] | Predicate<TView>, multiple: boolean = true) {
+    await this.initializeCache();
     const data = this.getCachedData(), views: View[] = [];
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {

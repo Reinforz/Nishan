@@ -394,6 +394,22 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     return (await this.createContents([option]))[0];
   }
 
+  #createDBArtifacts = async (arg: [[string, "collection_view" | "collection_view_page"], string, string[]]) => {
+    await this.updateCacheManually([...arg[2].map(view_id => [view_id, "collection_view"]), [arg[1], "collection"], arg[0][0]] as UpdateCacheManuallyParam);
+
+    return {
+      [arg[0][1]]: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
+        ...this.getProps(),
+        id: arg[0][0]
+      }),
+      collection: new Collection({
+        id: arg[1],
+        ...this.getProps()
+      }),
+      collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
+    }
+  }
+
   // ? FEAT:1:M Remove views argument so as to keep the original one?
   /**
    * Create a linked db content block
@@ -402,7 +418,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(collection_id: string, views: UserViewArg[] = [], position?: number | BlockRepostionArg) {
+  async createLinkedDBContent(collection_id: string, views: UserViewArg[], position?: number | BlockRepostionArg) {
     const data = this.getCachedData();
     const $content_id = uuidv4();
     const $views = views.map((view) => ({
@@ -410,7 +426,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       id: uuidv4()
     }));
     const view_ids = $views.map((view) => view.id);
-    const current_time = Date.now();
     const block_list_op = this.addToChildArray($content_id, position);
     await this.saveTransactions(
       [
@@ -424,30 +439,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           parent_id: data.id,
           parent_table: 'block',
           alive: true,
-          created_by_table: 'notion_user',
-          created_by_id: this.user_id,
-          created_time: current_time,
-          last_edited_by_table: 'notion_user',
-          last_edited_by_id: this.user_id,
-          last_edited_time: current_time
         }),
         block_list_op,
       ]
     );
-
-    await this.updateCacheManually([...view_ids.map(view_id => [view_id, "collection_view"]), $content_id] as UpdateCacheManuallyParam);
-
-    return {
-      collection_view: new CollectionView({
-        ...this.getProps(),
-        id: $content_id
-      }),
-      collection: new Collection({
-        id: collection_id,
-        ...this.getProps()
-      }),
-      collection_views: view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
-    }
+    return this.#createDBArtifacts([[data.id, "collection_view"], collection_id, view_ids]);
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
@@ -492,22 +488,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    await this.updateCacheManually([...view_ids.map(view_id => [view_id, "collection_view"]), this.id, [$collection_id, "collection"]] as UpdateCacheManuallyParam);
-
-    return {
-      collection_view_page: new CollectionViewPage({
-        ...this.getProps(),
-        id: data.id
-      }),
-      collection: new Collection({
-        ...this.getProps(),
-        id: $collection_id
-      }),
-      collection_views: view_ids.map(view_id => new View({
-        id: view_id,
-        ...this.getProps()
-      }))
-    }
+    return this.#createDBArtifacts([[data.id, "collection_view_page"], $collection_id, view_ids]);
   }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
@@ -521,8 +502,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   async createInlineDBContent(options: {
     views?: UserViewArg[]
   } = {}, position?: number | BlockRepostionArg) {
-    // ? FEAT:1:M Task in schema
-
     const data = this.getCachedData();
     const $collection_view_id = uuidv4();
     const $collection_id = uuidv4();
@@ -530,6 +509,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ...view,
       id: uuidv4()
     }))) || [];
+    const view_ids = views.map((view) => view.id);
     const block_list_op = this.addToChildArray($collection_view_id, position);
     await this.saveTransactions(
       [
@@ -559,22 +539,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    await this.updateCacheManually([...views.map(view => [view.id, "collection_view"]), $collection_view_id, [$collection_id, "collection"]] as UpdateCacheManuallyParam);
-
-    return {
-      collection_view: new CollectionView({
-        ...this.getProps(),
-        id: $collection_view_id
-      }),
-      collection: new Collection({
-        ...this.getProps(),
-        id: $collection_id
-      }),
-      collection_views: views.map(view => new View({
-        id: view.id,
-        ...this.getProps(),
-      }))
-    }
+    return this.#createDBArtifacts([[data.id, "collection_view"], $collection_id, view_ids]);
   }
 }
 

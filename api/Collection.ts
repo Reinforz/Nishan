@@ -98,6 +98,7 @@ class Collection extends Data<ICollection> {
       id: page_id,
       ...this.getProps()
     }))
+
   }
 }
 

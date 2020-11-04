@@ -75,4 +75,4 @@ class Nishan extends Cache {
 }
 
 export default Nishan;
-export * from "./utils/inlineBlocks";
+export * from "./utils/index";

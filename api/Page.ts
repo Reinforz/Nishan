@@ -9,13 +9,7 @@ import Block from './Block';
 import CollectionViewPage from './CollectionViewPage';
 import CollectionView from './CollectionView';
 
-import createViews from "../utils/createViews";
-
-import Operation from '../utils/chunk';
-
-import {
-  error,
-} from "../utils/logs";
+import { error, Operation, createViews, createCollection } from "../utils";
 
 import {
   NishanArg,
@@ -464,7 +458,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
     const data = this.getCachedData();
-    const { schema, properties, format, views } = this.parseCollectionOptions(option);
+    const { schema, properties, format, views } = createCollection(option);
 
     const view_ids = views.map((view) => view.id);
     const $collection_id = uuidv4();

@@ -5,7 +5,7 @@ import Data from './Data';
 import { NishanArg, Predicate } from '../types/types';
 import { INotionUser, ISpace } from '../types/api';
 import { UpdatableNotionUserParam } from '../types/function';
-import Operation from '../utils/chunk';
+import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 

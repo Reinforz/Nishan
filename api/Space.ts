@@ -5,14 +5,12 @@ import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
 
-import Operation from '../utils/chunk';
-import { error, warn } from '../utils/logs';
+import { Operation, error, warn, createViews, createCollection } from '../utils';
 
 import { NishanArg, IOperation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { IRootPage, IPageInput } from '../types/block';
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam } from '../types/function';
-import createViews from '../utils/createViews';
 import Collection from './Collection';
 import View from './View';
 
@@ -89,7 +87,7 @@ class Space extends Data<ISpace> {
     const ops: IOperation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index];
-      const { properties, format, schema, views } = this.parseCollectionOptions(option)
+      const { properties, format, schema, views } = createCollection(option)
 
       const gen_view_ids = views.map((view) => view.id);
       const $collection_id = uuidv4();

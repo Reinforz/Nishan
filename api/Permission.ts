@@ -1,6 +1,6 @@
 import {
   error,
-} from "../utils/logs";
+} from "../utils";
 
 import { NishanArg, IPermission, TPermissionRole } from "../types/types";
 import { IRootPage } from "../types/block";

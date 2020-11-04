@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import Operation from '../utils/chunk';
+import { Operation } from '../utils';
 
 import Data from "./Data";
 

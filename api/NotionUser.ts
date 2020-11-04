@@ -5,7 +5,7 @@ import Data from './Data';
 import { NishanArg, Predicate } from '../types/types';
 import { INotionUser, ISpace } from '../types/api';
 import { UpdatableNotionUserParam } from '../types/function';
-import { userSettingsUpdate, spaceViewSet, blockUpdate, userRootListAfter, spaceListAfter } from '../utils/chunk';
+import Operation from '../utils/chunk';
 import Space from './Space';
 import UserSettings from './UserSettings';
 
@@ -106,10 +106,10 @@ class NotionUser extends Data<INotionUser> {
     const { spaceId: $space_id } = await this.createSpace({ name, icon });
 
     await this.saveTransactions([
-      userSettingsUpdate(this.user_id, ['settings'], {
+      Operation.user_settings.update(this.user_id, ['settings'], {
         persona: 'personal', type: 'personal'
       }),
-      spaceViewSet($space_view_id, [], {
+      Operation.space_view.set($space_view_id, [], {
         created_getting_started: false,
         created_onboarding_templates: false,
         space_id: $space_id,
@@ -125,7 +125,7 @@ class NotionUser extends Data<INotionUser> {
         visited_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
         sidebar_hidden_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
       }),
-      blockUpdate($block_id, [], {
+      Operation.block.update($block_id, [], {
         type: 'page',
         id: $block_id,
         version: 1,
@@ -143,8 +143,8 @@ class NotionUser extends Data<INotionUser> {
           title: [[name]]
         }
       }),
-      userRootListAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-      spaceListAfter($space_id, ['pages'], { id: $block_id }),
+      Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
+      Operation.space.listAfter($space_id, ['pages'], { id: $block_id }),
     ]);
     await this.updateCacheManually([[$space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
     const space = this.cache.space.get($space_id);

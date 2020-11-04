@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ISpace } from "../types/api";
 import { IPage, IRootPage, TBlock, TParentType } from "../types/block";
 import { BlockRepostionArg, CreateRootCollectionViewPageParams } from "../types/function";
-import { NishanArg, TDataType, TData, Operation, Args, Schema, } from "../types/types";
-import { blockListAfter, blockListBefore, blockListRemove, blockSet, blockUpdate, notionUserListAfter, notionUserListBefore, notionUserListRemove, notionUserSet, notionUserUpdate, spaceListAfter, spaceListBefore, spaceListRemove, spaceSet, spaceUpdate, spaceViewListAfter, spaceViewListBefore, spaceViewListRemove, spaceViewSet, spaceViewUpdate, userSettingsListAfter, userSettingsListBefore, userSettingsListRemove, userSettingsSet, userSettingsUpdate } from "../utils/chunk";
+import { NishanArg, TDataType, TData, IOperation, Args, Schema, } from "../types/types";
+import Operation from "../utils/chunk";
 import { error } from "../utils/logs";
 import Getters from "./Getters";
 
@@ -12,63 +12,25 @@ import Getters from "./Getters";
  * A class to update and control data specific stuffs
  * @noInheritDoc
  */
+
 export default class Data<T extends TData> extends Getters {
   id: string;
   type: TDataType;
-  listBeforeOp: (path: string[], args: Args) => Operation;
-  listAfterOp: (path: string[], args: Args) => Operation;
-  updateOp: (path: string[], args: Args) => Operation;
-  setOp: (path: string[], args: Args) => Operation;
-  listRemoveOp: (path: string[], args: Args) => Operation;
+  listBeforeOp: (path: string[], args: Args) => IOperation;
+  listAfterOp: (path: string[], args: Args) => IOperation;
+  updateOp: (path: string[], args: Args) => IOperation;
+  setOp: (path: string[], args: Args) => IOperation;
+  listRemoveOp: (path: string[], args: Args) => IOperation;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;
-    switch (this.type) {
-      case "space":
-        this.listBeforeOp = spaceListBefore.bind(this, this.id);
-        this.listAfterOp = spaceListAfter.bind(this, this.id);
-        this.updateOp = spaceUpdate.bind(this, this.id);
-        this.setOp = spaceSet.bind(this, this.id);
-        this.listRemoveOp = spaceListRemove.bind(this, this.id);
-        break;
-      case "block":
-        this.listBeforeOp = blockListBefore.bind(this, this.id);
-        this.listAfterOp = blockListAfter.bind(this, this.id);
-        this.updateOp = blockUpdate.bind(this, this.id);
-        this.setOp = blockSet.bind(this, this.id);
-        this.listRemoveOp = blockListRemove.bind(this, this.id);
-        break;
-      case "space_view":
-        this.listBeforeOp = spaceViewListBefore.bind(this, this.id);
-        this.listAfterOp = spaceViewListAfter.bind(this, this.id);
-        this.updateOp = spaceViewUpdate.bind(this, this.id);
-        this.setOp = spaceViewSet.bind(this, this.id);
-        this.listRemoveOp = spaceViewListRemove.bind(this, this.id);
-        break;
-      case "user_settings":
-        this.listBeforeOp = userSettingsListBefore.bind(this, this.id);
-        this.listAfterOp = userSettingsListAfter.bind(this, this.id);
-        this.updateOp = userSettingsUpdate.bind(this, this.id);
-        this.setOp = userSettingsSet.bind(this, this.id);
-        this.listRemoveOp = userSettingsListRemove.bind(this, this.id);
-        break;
-      case "notion_user":
-        this.listBeforeOp = notionUserListBefore.bind(this, this.id);
-        this.listAfterOp = notionUserListAfter.bind(this, this.id);
-        this.updateOp = notionUserUpdate.bind(this, this.id);
-        this.setOp = notionUserSet.bind(this, this.id);
-        this.listRemoveOp = notionUserListRemove.bind(this, this.id);
-        break;
-      default:
-        this.listBeforeOp = blockListBefore.bind(this, this.id);
-        this.listAfterOp = blockListAfter.bind(this, this.id);
-        this.updateOp = blockUpdate.bind(this, this.id);
-        this.setOp = blockSet.bind(this, this.id);
-        this.listRemoveOp = blockListRemove.bind(this, this.id);
-        break;
-    }
+    this.listBeforeOp = Operation[arg.type].listBefore.bind(this, this.id);
+    this.listAfterOp = Operation[arg.type].listAfter.bind(this, this.id);
+    this.updateOp = Operation[arg.type].update.bind(this, this.id)
+    this.setOp = Operation[arg.type].set.bind(this, this.id)
+    this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
   }
 
   /**
@@ -112,13 +74,14 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page"]): [Operation, (() => void)] {
+  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page" | "collection_view_page" | "collection_view"] | [string, "space" | "page" | "collection_view_page" | "collection_view", string],): [IOperation, (() => void)] {
     const target_id = parent?.[0] ?? this.id;
-    const cached_data = (parent?.[1] ?? this.type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
-    const cached_container = (parent?.[1] ?? this.type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
-    const path = (parent?.[1] ?? this.type) === "space" ? "pages" : "content";
+    const parent_type = parent?.[1] ?? this.type;
+    const cached_data = (parent_type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
+    const cached_container = (parent_type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
+    const path = parent?.[2] ?? (parent_type) === "space" ? "pages" : (parent_type === "collection_view_page" || parent_type === "collection_view") ? "view_ids" : "content";
     if (cached_container) {
-      let block_list_pos_op = (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+      let block_list_pos_op = (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
         after: '',
         id: $block_id
       });
@@ -127,18 +90,18 @@ export default class Data<T extends TData> extends Getters {
         if (typeof arg === "number") {
           const current_pos = (cached_data as any)?.[path].indexOf($block_id);
           const block_id_at_pos = (cached_data as any)?.[path]?.[arg] ?? '';
-          block_list_pos_op = current_pos > arg ? (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
+          block_list_pos_op = current_pos > arg ? (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
             before: block_id_at_pos,
             id: $block_id
-          }) : (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+          }) : (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
             after: block_id_at_pos,
             id: $block_id
           });
         } else
-          block_list_pos_op = arg.position === "after" ? (path === "pages" ? spaceListAfter : blockListAfter)((target_id), [path], {
+          block_list_pos_op = arg.position === "after" ? (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
             after: arg.id,
             id: $block_id
-          }) : (path === "pages" ? spaceListBefore : blockListBefore)((target_id), [path], {
+          }) : (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
             after: arg.id,
             id: $block_id
           })
@@ -182,7 +145,7 @@ export default class Data<T extends TData> extends Getters {
         cached_data[key] = data[key];
         (_this as any).data[key] = data[key];
       })
-    }] as [Operation, (() => void)];
+    }] as [IOperation, (() => void)];
   }
 
   protected parseCollectionOptions(option: Partial<CreateRootCollectionViewPageParams>) {

@@ -11,14 +11,7 @@ import CollectionView from './CollectionView';
 
 import createViews from "../utils/createViews";
 
-import {
-  collectionUpdate,
-  blockUpdate,
-  blockSet,
-  blockListAfter,
-  spaceViewListBefore,
-  spaceViewListRemove,
-} from '../utils/chunk';
+import Operation from '../utils/chunk';
 
 import {
   error,
@@ -27,7 +20,7 @@ import {
 import {
   NishanArg,
   ExportType,
-  Operation,
+  IOperation,
   Predicate,
   TGenericEmbedBlockType,
 } from "../types/types";
@@ -145,7 +138,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
-    const data = this.getCachedData(), ops: Operation[] = [], current_time = Date.now(), ids: string[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
     if (data.content) {
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
@@ -167,7 +160,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       }
     };
 
-    ids.forEach(id => ops.push(blockUpdate(id, [], {
+    ids.forEach(id => ops.push(Operation.block.update(id, [], {
       alive: false,
       last_edited_time: current_time
     }), this.listRemoveOp(['content'], {
@@ -196,7 +189,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     if (target_space_view) {
       const is_bookmarked = target_space_view?.bookmarked_pages?.includes(data.id);
       await this.saveTransactions([
-        (is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
+        (is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
           id: data.id
         })
       ])
@@ -306,7 +299,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           properties,
           format
         }),
-        ...content_block_ids.map(content_block_id => blockListAfter($block_id, ['content'], {
+        ...content_block_ids.map(content_block_id => Operation.block.listAfter($block_id, ['content'], {
           after: '',
           id: content_block_id
         })),
@@ -336,7 +329,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
-    const data = this.getCachedData(), operations: Operation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
+    const data = this.getCachedData(), operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
 
     if (!data.content) data.content = []
 
@@ -386,7 +379,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
 
       blocks.push(this.createClass(type, $block_id));
 
-      if (content.file_id && type.match(/image|audio|video/)) operations.push(blockListAfter($block_id, ['file_ids'], {
+      if (content.file_id && type.match(/image|audio|video/)) operations.push(Operation.block.listAfter($block_id, ['file_ids'], {
         id: content.file_id
       }));
     }
@@ -429,7 +422,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     await this.saveTransactions(
       [
         ...createViews($views, $content_id),
-        blockSet($content_id, [], {
+        Operation.block.set($content_id, [], {
           id: $content_id,
           version: 1,
           type: 'collection_view',
@@ -491,7 +484,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           created_time: current_time,
           last_edited_time: current_time
         }),
-        collectionUpdate($collection_id, [], {
+        Operation.collection.update($collection_id, [], {
           id: $collection_id,
           schema,
           format: {
@@ -555,7 +548,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
           type: 'collection_view'
         }),
         ...createViews(views, data.id),
-        collectionUpdate($collection_id, [], {
+        Operation.collection.update($collection_id, [], {
           id: $collection_id,
           schema: {
             title: {

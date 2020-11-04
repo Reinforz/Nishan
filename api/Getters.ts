@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import createTransaction from "../utils/createTransaction";
 import { error } from "../utils/logs";
-import { ICache, Operation, Request, TDataType } from "../types/types";
+import { ICache, IOperation, Request, TDataType } from "../types/types";
 import { CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types/api";
 import { UpdateCacheManuallyParam } from "../types/function";
 
@@ -23,7 +23,7 @@ export default class Getters extends Cache {
       cookie: string
     }
   };
-  createTransaction: (operations: Operation[]) => Request
+  createTransaction: (operations: IOperation[]) => Request
 
   constructor({ token, interval, user_id, shard_id, space_id, cache }: {
     token: string,
@@ -383,7 +383,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async saveTransactions(Operations: Operation[]): Promise<RecordMap> {
+  async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

@@ -5,10 +5,10 @@ import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
 
-import { blockUpdate, collectionUpdate, spaceViewListBefore, spaceViewListRemove } from '../utils/chunk';
+import Operation from '../utils/chunk';
 import { error, warn } from '../utils/logs';
 
-import { NishanArg, Operation, Predicate, TPage, TRootPage } from '../types/types';
+import { NishanArg, IOperation, Predicate, TPage, TRootPage } from '../types/types';
 import { ISpace, ISpaceView } from '../types/api';
 import { IRootPage, IPageInput } from '../types/block';
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam } from '../types/function';
@@ -86,7 +86,7 @@ class Space extends Data<ISpace> {
 
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
-    const ops: Operation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
+    const ops: IOperation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index];
       const { properties, format, schema, views } = this.parseCollectionOptions(option)
@@ -101,7 +101,7 @@ class Space extends Data<ISpace> {
       });
       const [block_update_op, update] = this.addToChildArray(block_id, option.position);
 
-      ops.push(blockUpdate(block_id, [], {
+      ops.push(Operation.block.update(block_id, [], {
         type: 'page',
         id: block_id,
         permissions:
@@ -112,13 +112,13 @@ class Space extends Data<ISpace> {
         properties,
         format,
       }),
-        blockUpdate(block_id, [], {
+        Operation.block.update(block_id, [], {
           type: 'collection_view_page',
           collection_id: $collection_id,
           view_ids: gen_view_ids,
           properties: {},
         }),
-        collectionUpdate($collection_id, [], {
+        Operation.collection.update($collection_id, [], {
           id: $collection_id,
           schema,
           format: {
@@ -176,7 +176,7 @@ class Space extends Data<ISpace> {
    * @returns An array of newly created rootpage block objects
    */
   async createRootPages(opts: CreateRootPageArgs[]) {
-    const block_ids: string[] = [], ops: Operation[] = [];
+    const block_ids: string[] = [], ops: IOperation[] = [];
 
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index];
@@ -184,7 +184,7 @@ class Space extends Data<ISpace> {
       const $block_id = uuidv4();
       block_ids.push($block_id);
       const [block_list_op, update] = this.addToChildArray($block_id, position);
-      ops.push(blockUpdate($block_id, [], {
+      ops.push(Operation.block.update($block_id, [], {
         type: 'page',
         id: $block_id,
         version: 1,
@@ -225,7 +225,7 @@ class Space extends Data<ISpace> {
   async deleteTRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
     const data = this.getCachedData(),
       current_time = Date.now(),
-      ops: Operation[] = [],
+      ops: IOperation[] = [],
       is_array = Array.isArray(arg),
       deleted_ids: string[] = [];
     for (let index = 0; index < data.pages.length; index++) {
@@ -233,7 +233,7 @@ class Space extends Data<ISpace> {
       const page = this.cache.block.get(id) as IRootPage;
       const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
       if (should_delete) {
-        ops.push(blockUpdate(id, [], {
+        ops.push(Operation.block.update(id, [], {
           alive: false,
           last_edited_time: current_time
         }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
@@ -260,12 +260,12 @@ class Space extends Data<ISpace> {
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
-    const data = this.getCachedData(), ops: Operation[] = [], current_time = Date.now(), block_ids: string[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
       const [id, opts] = arg[index];
       block_ids.push(id);
       if (data.pages.includes(id))
-        ops.push(blockUpdate(id, [], { ...opts, last_edited_time: current_time }))
+        ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
       else
         throw new Error(error(`Space:${data.id} is not the parent of RootPage:${id}`));
       if (!multiple && ops.length === 1) break;
@@ -302,14 +302,14 @@ class Space extends Data<ISpace> {
   }
 
   async toggleFavourites(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const target_space_view = this.spaceView, data = this.getCachedData(), ops: Operation[] = [];
+    const target_space_view = this.spaceView, data = this.getCachedData(), ops: IOperation[] = [];
     if (target_space_view) {
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
           const page_id = arg[index];
           if (data.pages.includes(page_id)) {
             const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-            ops.push((is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
+            ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
               id: page_id
             }))
           } else
@@ -322,7 +322,7 @@ class Space extends Data<ISpace> {
           const page = this.getCachedData<TRootPage>(page_id);
           if (page.parent_id === this.id && await arg(page, index)) {
             const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-            ops.push((is_bookmarked ? spaceViewListRemove : spaceViewListBefore)(target_space_view.id, ["bookmarked_pages"], {
+            ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
               id: page_id
             }))
           }

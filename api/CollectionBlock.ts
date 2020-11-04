@@ -4,11 +4,10 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { collectionViewSet } from '../utils/chunk';
-
 import { TBlockInput, TCollectionBlock } from '../types/block';
-import { NishanArg, Predicate, TView } from '../types/types';
-import {UpdateCacheManuallyParam} from "../types/function"
+import { NishanArg, IOperation, Predicate, TView } from '../types/types';
+import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg } from "../types/function"
+import createViews from '../utils/createViews';
 
 /**
  * A class to represent collectionblock type in Notion
@@ -16,14 +15,14 @@ import {UpdateCacheManuallyParam} from "../types/function"
  */
 class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
   init_cache: boolean = false;
-  constructor(arg: NishanArg & { type: "collection_view" | "collection_view_page" }) {
+  constructor(arg: NishanArg & { type: "block" }) {
     super({ ...arg });
   }
 
-  async initializeCache(){
-    if(!this.init_cache){
+  async initializeCache() {
+    if (!this.init_cache) {
       const data = this.getCachedData();
-      await this.updateCacheManually([...data.view_ids.map(view_id=>[view_id, "collection_view"]), [data.collection_id, "collection"]] as UpdateCacheManuallyParam)
+      await this.updateCacheManually([...data.view_ids.map(view_id => [view_id, "collection_view"]), [data.collection_id, "collection"]] as UpdateCacheManuallyParam)
       this.init_cache = true;
     }
   }
@@ -33,30 +32,26 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
    * Create a new view for the collection block
    * @returns The newly created view object
    */
-  async createView() {
-    const data = this.getCachedData();
-    const $view_id = uuidv4();
-    await this.saveTransactions(
-      [
-        collectionViewSet($view_id, [], {
-          id: $view_id,
-          version: 1,
-          name: 'Table View',
-          type: 'table',
-          format: { [`table_properties`]: [] },
-          parent_table: 'block',
-          alive: true,
-          parent_id: data.id
-        }),
-        this.listAfterOp(['view_ids'], { after: '', id: $view_id }),
-        this.setOp(['last_edited_time'], Date.now())
-      ]
-    );
+  async createView(view: UserViewArg, position?: number | BlockRepostionArg) {
+    return (await this.createViews([{ view, position }]))[0]
+  }
 
-    return new View({
-      ...this.getProps(),
-      id: $view_id,
-    });
+  async createViews(params: { view: UserViewArg, position?: number | BlockRepostionArg }[], multiple: boolean = true) {
+    const ops: IOperation[] = [], view_ids: string[] = [];
+
+    for (let index = 0; index < params.length; index++) {
+      const param = params[index];
+      const view = { ...param.view, id: uuidv4() };
+      view_ids.push(view.id);
+      const [block_list_op, update] = this.addToChildArray(view.id, param.position);
+      ops.push(block_list_op, ...createViews([view], this.id));
+      update();
+      if (!multiple && ops.length === 1) break;
+    }
+
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(view_ids.map(view_id => [view_id, "collection_view"]));
+    return view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
   }
 
   /**

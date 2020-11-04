@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockListRemove, blockSet, blockListAfter, spaceSet, spaceListRemove, blockUpdate } from '../utils/chunk';
+import Operation from '../utils/chunk';
 
 import Data from "./Data";
 
@@ -39,14 +39,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     const $gen_block_id = uuidv4();
     await this.saveTransactions(
       [
-        blockUpdate($gen_block_id, [], {
+        Operation.block.update($gen_block_id, [], {
           id: $gen_block_id,
           type: "copy_indicator",
           parent_id: data.parent_id,
           parent_table: "block",
           alive: true,
         }),
-        blockListAfter(data.parent_id, ['content'], {
+        Operation.block.listAfter(data.parent_id, ['content'], {
           after: data.id,
           id: $gen_block_id
         }),
@@ -119,8 +119,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
           alive: false,
           last_edited_time: current_time
         }),
-        is_root_page ? spaceListRemove(data.space_id, ['pages'], { id: data.id }) : blockListRemove(data.parent_id, ['content'], { id: data.id }),
-        is_root_page ? spaceSet(data.space_id, ['last_edited_time'], current_time) : blockSet(data.parent_id, ['last_edited_time'], current_time)
+        is_root_page ? Operation.space.listRemove(data.space_id, ['pages'], { id: data.id }) : Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
+        is_root_page ? Operation.space.set(data.space_id, ['last_edited_time'], current_time) : Operation.block.set(data.parent_id, ['last_edited_time'], current_time)
       ]
     );
     this.cache.block.delete(this.id);
@@ -136,10 +136,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     await this.saveTransactions(
       [
         this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
-        blockListRemove(data.parent_id, ['content'], { id: data.id }),
-        blockListAfter(new_parent_id, ['content'], { after: '', id: data.id }),
-        blockSet(data.parent_id, ['last_edited_time'], current_time),
-        blockSet(new_parent_id, ['last_edited_time'], current_time)
+        Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
+        Operation.block.listAfter(new_parent_id, ['content'], { after: '', id: data.id }),
+        Operation.block.set(data.parent_id, ['last_edited_time'], current_time),
+        Operation.block.set(new_parent_id, ['last_edited_time'], current_time)
       ]
     )
     await this.updateCacheManually([this.id, data.parent_id, new_parent_id]);
@@ -164,7 +164,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       last_edited_by_id: this.user_id,
       last_edited_by_table: 'notion_user',
     };
-    return blockUpdate($block_id, [], arg);
+    return Operation.block.update($block_id, [], arg);
   }
 
   createClass(type: TBlockType, id: string): any {

@@ -1,9 +1,9 @@
 import { UserViewArg } from "../types/function";
-import { collectionViewUpdate } from "./chunk";
+import Operation from "./chunk";
 
 // ? TD: FilterType interface
 export default function createViews(views: UserViewArg[], parent_id: string) {
-  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => collectionViewUpdate(id as string, [], {
+  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => Operation.collection_view.update(id as string, [], {
     id,
     version: 0,
     type,

@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { blockSet, blockUpdate, collectionSet } from '../utils/chunk';
+import Operation from '../utils/chunk';
 
 import Data from "./Data";
 
-import { NishanArg, Operation } from "../types/types";
+import { NishanArg, IOperation } from "../types/types";
 import { ICollection, IPageInput } from '../types/block';
-import { CollectionUpdateParam } from '../types/function';
+import { UpdatableCollectionUpdateParam } from '../types/function';
 
 /**
  * A class to represent collection of Notion
@@ -21,16 +21,14 @@ class Collection extends Data<ICollection> {
 
   /**
    * Update the collection
-   * @param properties `CollectionUpdateParam`
+   * @param opt `CollectionUpdateParam`
    */
-  async update(properties: CollectionUpdateParam) {
-    const data = this.getCachedData();
-    await this.saveTransactions(
-      [
-        ...Object.entries(properties).map(([path, arg]) => collectionSet((data as any).id, [path], arg)),
-        this.setOp(['last_edited_time'], Date.now())
-      ]
-    )
+  async update(opt: UpdatableCollectionUpdateParam) {
+    const [op, update] = this.updateCacheLocally(opt, ["description", "name", "icon"])
+    await this.saveTransactions([
+      op
+    ]);
+    update();
   }
 
   // ? FEAT:1:E Return a page object
@@ -43,7 +41,7 @@ class Collection extends Data<ICollection> {
     const { properties = {}, format = {} } = opts;
     const $template_id = uuidv4();
     await this.saveTransactions([
-      blockSet($template_id, [], {
+      Operation.block.set($template_id, [], {
         type: 'page',
         id: $template_id,
         version: 1,
@@ -68,14 +66,14 @@ class Collection extends Data<ICollection> {
   async addRows(rows: { format: any, properties: any }[]) {
     const Page = require('./Page');
     const page_ids: string[] = [];
-    const ops: Operation[] = [];
+    const ops: IOperation[] = [];
     const current_time = Date.now();
     rows.map(({ format, properties }) => {
       const data = this.getCachedData();
       const $page_id = uuidv4();
       page_ids.push($page_id);
       ops.push(
-        blockUpdate($page_id, [], {
+        Operation.block.update($page_id, [], {
           alive: true,
           created_time: current_time,
           created_by_id: this.user_id,

@@ -133,10 +133,10 @@ export interface Transaction {
   id: string,
   shardId: number,
   spaceId: string,
-  operations: Operation[]
+  operations: IOperation[]
 };
 
-export interface Operation {
+export interface IOperation {
   table: OperationTable,
   id: string,
   command: OperationCommand,

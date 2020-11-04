@@ -37,7 +37,7 @@ export type UpdatableSpaceKeys = 'name' | 'beta_enabled' | 'icon';
 export type SpaceUpdateParam = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
 
 export type UpdatableCollectionKeys = "name" | "icon" | "description";
-export type CollectionUpdateParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
+export type UpdatableCollectionUpdateParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
 
 export type UpdatableNotionUserKeys = 'family_name' | 'given_name' | 'profile_photo';
 export type UpdatableNotionUserParam = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;

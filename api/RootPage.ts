@@ -10,7 +10,7 @@ import { IPage } from "../types/block";
  */
 
 
-class RootPage extends Permission(Page)<IPage> {
+class RootPage extends Permission(Page as any)<IPage> {
   constructor(arg: NishanArg) {
     super(arg);
   }

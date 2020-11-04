@@ -1,8 +1,7 @@
 import Permission from "./Permission";
 import Page from "./Page";
 
-import { NishanArg } from "../types/types";
-import { IPage } from "../types/block";
+import { IPage, NishanArg } from "../types";
 
 /**
  * A class to represent RootPage type block of Notion

@@ -7,10 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error, warn, createViews, createCollection } from '../utils';
 
-import { NishanArg, IOperation, Predicate, TPage, TRootPage } from '../types/types';
-import { ISpace, ISpaceView } from '../types/api';
-import { IRootPage, IPageInput } from '../types/block';
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam } from '../types/function';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage } from '../types';
 import Collection from './Collection';
 import View from './View';
 

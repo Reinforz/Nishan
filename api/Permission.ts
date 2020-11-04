@@ -2,10 +2,8 @@ import {
   error,
 } from "../utils";
 
-import { IOperation, IPermission, TPermissionRole, TRootPage } from "../types/types";
+import { IRootPage, INotionUser, ISpace, IOperation, IPermission, TPermissionRole, TRootPage } from "../types";
 import Data from "./Data";
-import { INotionUser, ISpace } from "../types/api";
-import { IRootPage } from "../types/block";
 
 type Constructor<T = Data<IRootPage | ISpace>> = new (...args: any[]) => T;
 

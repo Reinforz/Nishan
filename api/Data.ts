@@ -1,8 +1,5 @@
 
-import { ISpace } from "../types/api";
-import { IPage, IRootPage, TBlock, TParentType } from "../types/block";
-import { BlockRepostionArg } from "../types/function";
-import { NishanArg, TDataType, TData, IOperation, Args } from "../types/types";
+import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, IPage, IRootPage, TBlock, TParentType, ISpace } from "../types";
 import { Operation, error } from "../utils";
 import Getters from "./Getters";
 

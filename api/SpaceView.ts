@@ -1,8 +1,6 @@
 import Data from './Data';
 
-import { NishanArg } from '../types/types';
-import { ISpace, ISpaceView } from '../types/api';
-import { UpdatableSpaceViewParam } from '../types/function';
+import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg } from '../types';
 import Space from './Space';
 
 /**

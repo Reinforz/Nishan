@@ -17,20 +17,17 @@ import {
   IOperation,
   Predicate,
   TGenericEmbedBlockType,
-} from "../types/types";
-import {
   BlockRepostionArg,
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
   UpdateCacheManuallyParam,
   UserViewArg,
-} from "../types/function";
-import {
   ISpaceView,
-  SetBookmarkMetadataParams
-} from "../types/api";
-import { IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput } from "../types/block";
+  SetBookmarkMetadataParams,
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput
+} from "../types";
+
 import Collection from "./Collection";
 import View from "./View";
 

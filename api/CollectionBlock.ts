@@ -4,9 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { TBlockInput, TCollectionBlock } from '../types/block';
-import { NishanArg, IOperation, Predicate, TView } from '../types/types';
-import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg } from "../types/function"
+import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg, NishanArg, IOperation, Predicate, TView, TBlockInput, TCollectionBlock } from '../types';
 import { createViews } from '../utils';
 
 /**

@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types/types";
+import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
 
 /**
  * A class to represent view of Notion

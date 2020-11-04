@@ -2,9 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
 
-import { NishanArg, Predicate } from '../types/types';
-import { INotionUser, ISpace } from '../types/api';
-import { UpdatableNotionUserParam } from '../types/function';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, Predicate } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';

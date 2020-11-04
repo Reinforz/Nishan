@@ -1,8 +1,6 @@
 import Data from './Data';
 
-import { NishanArg } from '../types/types';
-import { IUserSettings } from '../types/api';
-import { UpdatableUserSettingsParam } from '../types/function';
+import { NishanArg, UpdatableUserSettingsParam, IUserSettings } from '../types';
 
 /**
  * A class to represent user settings of Notion

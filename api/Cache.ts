@@ -1,5 +1,4 @@
-import { RecordMap } from "../types/api";
-import { ICache } from "../types/types";
+import { RecordMap, ICache } from "../types";
 
 export default class Cache {
   cache: ICache;

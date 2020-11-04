@@ -4,9 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { NishanArg, IOperation } from "../types/types";
-import { ICollection, IPageInput } from '../types/block';
-import { UpdatableCollectionUpdateParam } from '../types/function';
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation } from "../types";
 
 /**
  * A class to represent collection of Notion

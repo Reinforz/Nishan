@@ -4,7 +4,7 @@ import {
 
 import { IOperation, IPermission, TPermissionRole, TRootPage } from "../types/types";
 import Data from "./Data";
-import { ISpace } from "../types/api";
+import { INotionUser, ISpace } from "../types/api";
 import { IRootPage } from "../types/block";
 
 type Constructor<T = Data<IRootPage | ISpace>> = new (...args: any[]) => T;
@@ -18,8 +18,8 @@ export default function Permissioned<TBase extends Constructor>(Base: TBase) {
      * Share page to users with specific permissions
      * @param args array of userid and role of user to share pages to
      */
-    async addUsers(args: [string, TPermissionRole][], multiple: boolean = true) {
-      const data = this.getCachedData() as TRootPage;
+    async addSharedUsers(args: [string, TPermissionRole][]) {
+      const data = this.getCachedData() as TRootPage, notion_users: INotionUser[] = [];
 
       const permissionItems: IPermission[] = [];
       for (let i = 0; i < args.length; i++) {
@@ -32,13 +32,15 @@ export default function Permissioned<TBase extends Constructor>(Base: TBase) {
             type: "user_permission",
             user_id: notion_user.id
           });
-        if (!multiple && permissionItems.length === 1) break;
+        notion_users.push(notion_user)
       }
       await this.inviteGuestsToSpace({
         blockId: data.id,
         permissionItems,
         spaceId: data.space_id
-      })
+      });
+      await this.updateCacheManually([this.id, [data.space_id, "space"]]);
+      return notion_users;
     }
 
     /**
@@ -46,16 +48,25 @@ export default function Permissioned<TBase extends Constructor>(Base: TBase) {
      * @param email email of the user to add
      * @param role Role of the added user
      */
-    async addUser(email: string, role: TPermissionRole) {
-      await this.addUsers([[email, role]], false)
+    async addSharedUser(email: string, role: TPermissionRole) {
+      return (await this.addSharedUsers([[email, role]]))[0]
     }
 
+    /**
+     * Update the role of the current user based on their id
+     * @param id Id of the user to update
+     * @param role new Role of the user to update
+     */
     async updateSharedUser(id: string, role: TPermissionRole) {
       return await this.updateSharedUsers([[id, role]]);
     }
 
+    /**
+     * Update the role of the current users based on their id
+     * @param args array of array [id of the user, role type for the user]
+     */
     async updateSharedUsers(args: [string, TPermissionRole][]) {
-      const ops: IOperation[] = [];
+      const data = this.getCachedData() as TRootPage, ops: IOperation[] = [];
       for (let index = 0; index < args.length; index++) {
         const arg = args[index];
         ops.push({
@@ -68,7 +79,23 @@ export default function Permissioned<TBase extends Constructor>(Base: TBase) {
       }
       ops.push(this.updateOp(["last_edited_time"], Date.now()));
       await this.saveTransactions(ops);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually([data.id, [data.space_id, "space"]]);
+    }
+
+    /**
+     * Remove a single user from the pages permission option
+     * @param id Id of the user to remove from permission
+     */
+    async removeSharedUser(id: string) {
+      return await this.removeSharedUsers([id]);
+    }
+
+    /**
+     * Remove multiple users from the pages permission option
+     * @param id array of the users id to remove from permission
+     */
+    async removeSharedUsers(ids: string[]) {
+      return await this.updateSharedUsers(ids.map(id => [id, "none"]));
     }
   }
 }

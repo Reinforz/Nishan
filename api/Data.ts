@@ -34,7 +34,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Get the parent of the current data
    */
-  protected getParent() {
+  getParent() {
     const data = this.getCachedData() as TBlock;
     if (this.type.match(/(space|block|collection)/) && data?.parent_id) {
       const parent = this.cache.block.get(data.parent_id) as TParentType;
@@ -62,7 +62,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Delete the cached data using the id
    */
-  protected deleteCachedData() {
+  deleteCachedData() {
     this.cache[this.type].delete(this.id);
   }
 
@@ -72,7 +72,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page" | "collection_view_page" | "collection_view"] | [string, "space" | "page" | "collection_view_page" | "collection_view", string],) {
+  addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page" | "collection_view_page" | "collection_view"] | [string, "space" | "page" | "collection_view_page" | "collection_view", string],) {
     const target_id = parent?.[0] ?? this.id;
     const parent_type = parent?.[1] ?? this.type;
     const cached_data = (parent_type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
@@ -127,7 +127,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @param keys 
    */
-  protected updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
+  updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
     const _this = this;
     const cached_data = this.getCachedData();
     const data = arg as T;

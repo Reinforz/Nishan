@@ -15,25 +15,27 @@ class Nishan extends Cache {
   constructor(arg: Pick<NishanArg, "token" | "interval" | "cache">) {
     super(arg.cache);
     this.token = arg.token;
-    this.interval = arg.interval;
+    this.interval = arg.interval || 500;
     this.init_cache = false;
   }
 
   async initializeCache() {
-    try {
-      const { data } = await axios.post(
-        'https://www.notion.so/api/v3/getSpaces',
-        {},
-        {
-          headers: {
-            cookie: `token_v2=${this.token}`
+    if (!this.init_cache) {
+      try {
+        const { data } = await axios.post(
+          'https://www.notion.so/api/v3/getSpaces',
+          {},
+          {
+            headers: {
+              cookie: `token_v2=${this.token}`
+            }
           }
-        }
-      ) as { data: GetSpacesResult };
-      Object.values(data).forEach(data => this.saveToCache(data));
-      this.init_cache = true;
-    } catch (err) {
-      throw new Error(error(err.response.data))
+        ) as { data: GetSpacesResult };
+        Object.values(data).forEach(data => this.saveToCache(data));
+        this.init_cache = true;
+      } catch (err) {
+        throw new Error(error(err.response.data))
+      }
     }
   }
 

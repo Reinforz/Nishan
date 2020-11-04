@@ -290,7 +290,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     });
 
     const content_block_ids = content_blocks.map(content_block => content_block.id);
-    const [block_list_op] = this.addToChildArray($block_id, position);
+    const block_list_op = this.addToChildArray($block_id, position);
     await this.saveTransactions(
       [
         this.createBlock({
@@ -353,7 +353,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
         position
       } = content;
 
-      const [block_list_op, update] = this.addToChildArray($block_id, position);
+      const block_list_op = this.addToChildArray($block_id, position);
 
       if (type === "bookmark")
         bookmarks.push({
@@ -369,7 +369,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       }),
         block_list_op
       );
-      update();
 
       if (type === "bookmark")
         await this.setBookmarkMetadata({
@@ -418,7 +417,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     }));
     const view_ids = $views.map((view) => view.id);
     const current_time = Date.now();
-    const [block_list_op, update] = this.addToChildArray($content_id, position);
+    const block_list_op = this.addToChildArray($content_id, position);
     await this.saveTransactions(
       [
         ...createViews($views, $content_id),
@@ -442,7 +441,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    update();
     await this.updateCacheManually([...view_ids.map(view_id => [view_id, "collection_view"]), $content_id] as UpdateCacheManuallyParam);
 
     return {
@@ -538,7 +536,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ...view,
       id: uuidv4()
     }))) || [];
-    const [block_list_op] = this.addToChildArray($collection_view_id, position);
+    const block_list_op = this.addToChildArray($collection_view_id, position);
     await this.saveTransactions(
       [
         this.createBlock({

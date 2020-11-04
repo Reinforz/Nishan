@@ -23,9 +23,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
   async reposition(arg: number | BlockRepostionArg) {
     const data = this.getCachedData(this.id);
-    const [block_content_op, update] = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as any]);
+    const block_content_op = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as any]);
     await this.saveTransactions([block_content_op]);
-    update();
     await this.updateCacheManually([[data.parent_id, data.parent_table as any]]);
   }
 

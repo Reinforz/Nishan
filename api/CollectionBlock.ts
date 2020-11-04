@@ -43,9 +43,8 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
       const param = params[index];
       const view = { ...param.view, id: uuidv4() };
       view_ids.push(view.id);
-      const [block_list_op, update] = this.addToChildArray(view.id, param.position);
+      const block_list_op = this.addToChildArray(view.id, param.position);
       ops.push(block_list_op, ...createViews([view], this.id));
-      update();
       if (!multiple && ops.length === 1) break;
     }
 

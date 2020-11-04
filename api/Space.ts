@@ -99,7 +99,7 @@ class Space extends Data<ISpace> {
         collection: $collection_id,
         collection_views: gen_view_ids
       });
-      const [block_update_op, update] = this.addToChildArray(block_id, option.position);
+      const block_update_op = this.addToChildArray(block_id, option.position);
 
       ops.push(Operation.block.update(block_id, [], {
         type: 'page',
@@ -132,7 +132,6 @@ class Space extends Data<ISpace> {
         block_update_op,
         ...createViews(views, block_id)
       );
-      update();
     }
     await this.saveTransactions(ops);
     const updated_ids: UpdateCacheManuallyParam = [];
@@ -183,7 +182,7 @@ class Space extends Data<ISpace> {
       const { position, properties = {}, format = {}, isPrivate = false } = opt;
       const $block_id = uuidv4();
       block_ids.push($block_id);
-      const [block_list_op, update] = this.addToChildArray($block_id, position);
+      const block_list_op = this.addToChildArray($block_id, position);
       ops.push(Operation.block.update($block_id, [], {
         type: 'page',
         id: $block_id,
@@ -204,7 +203,6 @@ class Space extends Data<ISpace> {
       }),
         block_list_op
       );
-      update()
     };
 
     await this.saveTransactions(ops);

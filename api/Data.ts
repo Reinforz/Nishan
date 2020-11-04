@@ -74,7 +74,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page" | "collection_view_page" | "collection_view"] | [string, "space" | "page" | "collection_view_page" | "collection_view", string],): [IOperation, (() => void)] {
+  protected addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined, parent?: [string, "space" | "page" | "collection_view_page" | "collection_view"] | [string, "space" | "page" | "collection_view_page" | "collection_view", string],) {
     const target_id = parent?.[0] ?? this.id;
     const parent_type = parent?.[1] ?? this.type;
     const cached_data = (parent_type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
@@ -107,18 +107,18 @@ export default class Data<T extends TData> extends Getters {
           })
       }
 
-      return [block_list_pos_op, function () {
-        if (arg === undefined)
-          cached_container.push($block_id);
+      if (arg === undefined)
+        cached_container.push($block_id);
+      else {
+        if (typeof arg === "number")
+          cached_container.splice(arg, 0, $block_id);
         else {
-          if (typeof arg === "number")
-            cached_container.splice(arg, 0, $block_id);
-          else {
-            const target_index = cached_container.indexOf(arg.id);
-            cached_container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
-          }
+          const target_index = cached_container.indexOf(arg.id);
+          cached_container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
         }
-      }];
+      }
+
+      return block_list_pos_op;
 
     } else
       throw new Error("The data does not contain children")

@@ -151,7 +151,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       properties,
       format,
       type,
-      parent_id: parent_id || data.id,
+      parent_id: parent_id ?? data.id,
       parent_table,
       alive: true,
       created_time: current_time,

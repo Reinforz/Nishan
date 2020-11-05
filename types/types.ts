@@ -34,6 +34,7 @@ export type TDataType = keyof RecordMap;
 export type Predicate<T> = (T: T, index: number) => Promise<boolean>;
 export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 export type TPlanType = "personal";
+export type TCollectionViewBlock = "collection_view" | "collection_view_page";
 
 export interface GoogleDriveFileUser {
   displayName: string,

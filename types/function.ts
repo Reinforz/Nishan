@@ -7,7 +7,7 @@ export interface UserViewArg {
   sorts?: [string, number][],
   aggregations?: [string, ViewAggregationsAggregators][],
   filters?: any,
-  properties?: [string, number, number][],
+  properties?: [string, boolean, number][],
   name: string,
   type: ViewType,
   wrap?: boolean

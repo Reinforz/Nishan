@@ -2,8 +2,13 @@ import { UserViewArg } from "../types/function";
 import Operation from "./chunk";
 
 // ? TD: FilterType interface
+/**
+ * 
+ * @param views View Argument
+ * @param parent_id id of the parent block
+ */
 export default function createViews(views: UserViewArg[], parent_id: string) {
-  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, name, type = 'table' }) => Operation.collection_view.update(id as string, [], {
+  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, type = 'table', name = `Default ${type}` }) => Operation.collection_view.update(id as string, [], {
     id,
     version: 0,
     type,

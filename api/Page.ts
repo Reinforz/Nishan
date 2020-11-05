@@ -9,7 +9,7 @@ import Block from './Block';
 
 import DBArtifacts from "../mixins/DBArtifacts";
 
-import { error, Operation, createViews, createCollection } from "../utils";
+import { error, Operation } from "../utils";
 
 import {
   NishanArg,
@@ -165,7 +165,6 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * Add/remove this page from the favourite list
    */
   async toggleFavourite() {
-    await this.loadUserContent();
     const data = this.getCachedData();
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {
@@ -395,54 +394,50 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
   }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
-  // ? FEAT:1:M Take in Schema as an option
   /**
    * Creates an inline database block inside current page
    * @param options Views of the newly created inline db block
    * @param position 
    * @returns Returns the newly created inlinedb content block object
    */
-  async createInlineDBContent(options: {
-    views?: UserViewArg[]
-  } = {}, position?: number | BlockRepostionArg) {
-    const data = this.getCachedData();
-    const $collection_view_id = uuidv4();
-    const $collection_id = uuidv4();
-    const views = (options.views && options.views.map((view) => ({
-      ...view,
-      id: uuidv4()
-    }))) || [];
+  async createInlineDBContent(options: Partial<CreateRootCollectionViewPageParams> = {}) {
+    const $collection_view_id = uuidv4(),
+      $collection_id = uuidv4();
+
+    const { properties, format, schema, views } = this.createCollection(options, $collection_view_id);
+
     const view_ids = views.map((view) => view.id);
-    const block_list_op = this.addToChildArray($collection_view_id, position);
+    const block_list_op = this.addToChildArray($collection_view_id, options.position);
     await this.saveTransactions(
       [
-        this.createBlock({
-          $block_id: $collection_view_id,
-          properties: {},
-          format: {},
-          type: 'collection_view'
+        Operation.block.update($collection_view_id, [], {
+          id: $collection_view_id,
+          properties,
+          format,
+          type: 'collection_view',
+          view_ids,
+          collection_id: $collection_id,
+          parent_id: this.id,
+          parent_table: "block",
+          alive: true,
         }),
-        ...createViews(views, data.id),
         Operation.collection.update($collection_id, [], {
           id: $collection_id,
-          schema: {
-            title: {
-              name: 'Name',
-              type: 'title'
-            }
-          },
+          schema,
           format: {
             collection_page_properties: []
           },
           parent_id: $collection_view_id,
           parent_table: 'block',
-          alive: true
+          alive: true,
+          name: properties?.title
         }),
-        block_list_op
+        block_list_op,
+        ...views
       ]
     );
 
-    return this.createDBArtifacts([[data.id, "collection_view"], $collection_id, view_ids]);
+    return this.createDBArtifacts([[$collection_view_id, "collection_view"], $collection_id, view_ids]);
   }
 
   // ? FEAT:1:M Remove views argument so as to keep the original one?
@@ -453,18 +448,15 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(collection_id: string, views: UserViewArg[], position?: number | BlockRepostionArg) {
+  async createLinkedDBContent(collection_id: string, user_views: UserViewArg[], position?: number | BlockRepostionArg) {
     const data = this.getCachedData();
     const $content_id = uuidv4();
-    const $views = views.map((view) => ({
-      ...view,
-      id: uuidv4()
-    }));
-    const view_ids = $views.map((view) => view.id);
+
+    const { views } = this.createCollection({ views: user_views }, $content_id);
+    const view_ids = views.map((view) => view.id);
     const block_list_op = this.addToChildArray($content_id, position);
     await this.saveTransactions(
       [
-        ...createViews($views, $content_id),
         Operation.block.set($content_id, [], {
           id: $content_id,
           version: 1,
@@ -476,6 +468,7 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
           alive: true,
         }),
         block_list_op,
+        ...views,
       ]
     );
     return this.createDBArtifacts([[data.id, "collection_view"], collection_id, view_ids]);
@@ -489,11 +482,10 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
    */
   async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
     const data = this.getCachedData<IPage>();
-    const { schema, properties, format, views } = createCollection(option);
+    const { schema, properties, format, views } = this.createCollection(option, data.id);
 
     const view_ids = views.map((view) => view.id);
     const $collection_id = uuidv4();
-    const current_time = Date.now();
 
     await this.saveTransactions(
       [
@@ -504,8 +496,6 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
           view_ids,
           properties,
           format,
-          created_time: current_time,
-          last_edited_time: current_time
         }),
         Operation.collection.update($collection_id, [], {
           id: $collection_id,
@@ -519,7 +509,7 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
           alive: true,
           name: data.properties.title
         }),
-        ...createViews(views, data.id)
+        ...views
       ]
     );
 

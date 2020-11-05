@@ -73,50 +73,46 @@ export default class Data<T extends TData> extends Getters {
     const target_id = parent?.[0] ?? this.id;
     const parent_type = parent?.[1] ?? this.type;
     const cached_data = (parent_type) === "space" ? this.cache.space.get(target_id) as ISpace : this.cache.block.get(target_id) as IPage | IRootPage;
-    const cached_container = (parent_type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content;
+    const cached_container = ((parent_type) === "space" ? (cached_data as ISpace).pages : (cached_data as IPage).content) || [];
     const path = parent?.[2] ?? (parent_type) === "space" ? "pages" : (parent_type === "collection_view_page" || parent_type === "collection_view") ? "view_ids" : "content";
-    if (cached_container) {
-      let block_list_pos_op = (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
-        after: '',
-        id: $block_id
-      });
+    let block_list_pos_op = (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
+      after: '',
+      id: $block_id
+    });
 
-      if (arg !== undefined) {
-        if (typeof arg === "number") {
-          const current_pos = (cached_data as any)?.[path].indexOf($block_id);
-          const block_id_at_pos = (cached_data as any)?.[path]?.[arg] ?? '';
-          block_list_pos_op = current_pos > arg ? (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
-            before: block_id_at_pos,
-            id: $block_id
-          }) : (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
-            after: block_id_at_pos,
-            id: $block_id
-          });
-        } else
-          block_list_pos_op = arg.position === "after" ? (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
-            after: arg.id,
-            id: $block_id
-          }) : (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
-            after: arg.id,
-            id: $block_id
-          })
-      }
+    if (arg !== undefined) {
+      if (typeof arg === "number") {
+        const current_pos = (cached_data as any)?.[path].indexOf($block_id);
+        const block_id_at_pos = (cached_data as any)?.[path]?.[arg] ?? '';
+        block_list_pos_op = current_pos > arg ? (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
+          before: block_id_at_pos,
+          id: $block_id
+        }) : (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
+          after: block_id_at_pos,
+          id: $block_id
+        });
+      } else
+        block_list_pos_op = arg.position === "after" ? (path === "pages" ? Operation.space.listAfter : Operation.block.listAfter)((target_id), [path], {
+          after: arg.id,
+          id: $block_id
+        }) : (path === "pages" ? Operation.space.listBefore : Operation.block.listBefore)((target_id), [path], {
+          after: arg.id,
+          id: $block_id
+        })
+    }
 
-      if (arg === undefined)
-        cached_container.push($block_id);
+    if (arg === undefined)
+      cached_container.push($block_id);
+    else {
+      if (typeof arg === "number")
+        cached_container.splice(arg, 0, $block_id);
       else {
-        if (typeof arg === "number")
-          cached_container.splice(arg, 0, $block_id);
-        else {
-          const target_index = cached_container.indexOf(arg.id);
-          cached_container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
-        }
+        const target_index = cached_container.indexOf(arg.id);
+        cached_container.splice(target_index + (arg.position === "before" ? -1 : 1), 0, $block_id);
       }
+    }
 
-      return block_list_pos_op;
-
-    } else
-      throw new Error("The data does not contain children")
+    return block_list_pos_op;
   }
 
   /**

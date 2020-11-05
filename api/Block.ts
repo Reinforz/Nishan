@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, BlockRepostionArg, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType } from "../types"
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, BlockRepostionArg } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -15,15 +15,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     super({ ...arg, type: "block" });
   }
 
-  /**
-   * Reposition a block to a new position
-   * @param arg number of new index or `BlockRepostionArg`
-   */
   async reposition(arg: number | BlockRepostionArg) {
-    const data = this.getCachedData(this.id);
-    const block_content_op = this.addToChildArray(this.id, arg, [data.parent_id, data.parent_table as any]);
-    await this.saveTransactions([block_content_op]);
-    await this.updateCacheManually([[data.parent_id, data.parent_table as any]]);
+    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
   }
 
   // ? FEAT:1:M Take a position arg
@@ -31,6 +24,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Duplicate the current block
    * @returns The duplicated block object
    */
+
   async duplicate() {
     const data = this.getCachedData();
     const $gen_block_id = uuidv4();

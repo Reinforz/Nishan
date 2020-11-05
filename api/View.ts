@@ -1,5 +1,5 @@
+import { BlockRepostionArg, NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
 import Data from "./Data";
-import { NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
 
 /**
  * A class to represent view of Notion
@@ -57,6 +57,10 @@ class View extends Data<TView> {
 
     // ? FIX:2:H Respect previous filters and sorts
     await this.saveTransactions([this.updateOp([], args)]);
+  }
+
+  async reposition(arg: number | BlockRepostionArg) {
+    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
   }
 }
 

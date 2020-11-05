@@ -6,7 +6,7 @@ export interface UserViewArg {
   id?: string,
   sorts?: [string, number][],
   aggregations?: [string, ViewAggregationsAggregators][],
-  filters?: any,
+  filters?: [string, string, string, string][],
   properties?: [string, boolean, number][],
   name: string,
   type: ViewType,

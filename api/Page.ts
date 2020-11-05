@@ -6,8 +6,8 @@ import fs from "fs";
 import path from "path";
 
 import Block from './Block';
-import CollectionViewPage from './CollectionViewPage';
-import CollectionView from './CollectionView';
+
+import DBArtifacts from "../mixins/DBArtifacts";
 
 import { error, Operation, createViews, createCollection } from "../utils";
 
@@ -21,20 +21,17 @@ import {
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
-  UpdateCacheManuallyParam,
   UserViewArg,
   ISpaceView,
   SetBookmarkMetadataParams,
   IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput
 } from "../types";
 
-import Collection from "./Collection";
-import View from "./View";
-
 /**
  * A class to represent Page type block of Notion
  * @noInheritDoc
  */
+
 class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   init_cache: boolean;
   constructor(arg: NishanArg) {
@@ -390,102 +387,11 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
   async createContent(option: PageCreateContentParam) {
     return (await this.createContents([option]))[0];
   }
+}
 
-  #createDBArtifacts = async (arg: [[string, "collection_view" | "collection_view_page"], string, string[]]) => {
-    await this.updateCacheManually([...arg[2].map(view_id => [view_id, "collection_view"]), [arg[1], "collection"], arg[0][0]] as UpdateCacheManuallyParam);
-
-    return {
-      [arg[0][1]]: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
-        ...this.getProps(),
-        id: arg[0][0]
-      }),
-      collection: new Collection({
-        id: arg[1],
-        ...this.getProps()
-      }),
-      collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
-    }
-  }
-
-  // ? FEAT:1:M Remove views argument so as to keep the original one?
-  /**
-   * Create a linked db content block
-   * @param collection_id Id of the collectionblock to link with
-   * @param views views of the newly created content block
-   * @param position `Position` interface
-   * @returns Newly created linkedDB block content object
-   */
-  async createLinkedDBContent(collection_id: string, views: UserViewArg[], position?: number | BlockRepostionArg) {
-    const data = this.getCachedData();
-    const $content_id = uuidv4();
-    const $views = views.map((view) => ({
-      ...view,
-      id: uuidv4()
-    }));
-    const view_ids = $views.map((view) => view.id);
-    const block_list_op = this.addToChildArray($content_id, position);
-    await this.saveTransactions(
-      [
-        ...createViews($views, $content_id),
-        Operation.block.set($content_id, [], {
-          id: $content_id,
-          version: 1,
-          type: 'collection_view',
-          collection_id,
-          view_ids,
-          parent_id: data.id,
-          parent_table: 'block',
-          alive: true,
-        }),
-        block_list_op,
-      ]
-    );
-    return this.#createDBArtifacts([[data.id, "collection_view"], collection_id, view_ids]);
-  }
-
-  // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
-  /**
-   * Create a full page db content block
-   * @param option Schema and the views of the newly created block
-   * @returns Returns the newly created full page db block object
-   */
-  async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
-    const data = this.getCachedData();
-    const { schema, properties, format, views } = createCollection(option);
-
-    const view_ids = views.map((view) => view.id);
-    const $collection_id = uuidv4();
-    const current_time = Date.now();
-
-    await this.saveTransactions(
-      [
-        this.updateOp([], {
-          id: data.id,
-          type: 'collection_view_page',
-          collection_id: $collection_id,
-          view_ids,
-          properties,
-          format,
-          created_time: current_time,
-          last_edited_time: current_time
-        }),
-        Operation.collection.update($collection_id, [], {
-          id: $collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          icon: data.format.page_icon,
-          parent_id: data.id,
-          parent_table: 'block',
-          alive: true,
-          name: data.properties.title
-        }),
-        ...createViews(views, data.id)
-      ]
-    );
-
-    return this.#createDBArtifacts([[data.id, "collection_view_page"], $collection_id, view_ids]);
+export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Page)<T>{
+  constructor(arg: NishanArg) {
+    super(arg);
   }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
@@ -536,8 +442,87 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       ]
     );
 
-    return this.#createDBArtifacts([[data.id, "collection_view"], $collection_id, view_ids]);
+    return this.createDBArtifacts([[data.id, "collection_view"], $collection_id, view_ids]);
+  }
+
+  // ? FEAT:1:M Remove views argument so as to keep the original one?
+  /**
+   * Create a linked db content block
+   * @param collection_id Id of the collectionblock to link with
+   * @param views views of the newly created content block
+   * @param position `Position` interface
+   * @returns Newly created linkedDB block content object
+   */
+  async createLinkedDBContent(collection_id: string, views: UserViewArg[], position?: number | BlockRepostionArg) {
+    const data = this.getCachedData();
+    const $content_id = uuidv4();
+    const $views = views.map((view) => ({
+      ...view,
+      id: uuidv4()
+    }));
+    const view_ids = $views.map((view) => view.id);
+    const block_list_op = this.addToChildArray($content_id, position);
+    await this.saveTransactions(
+      [
+        ...createViews($views, $content_id),
+        Operation.block.set($content_id, [], {
+          id: $content_id,
+          version: 1,
+          type: 'collection_view',
+          collection_id,
+          view_ids,
+          parent_id: data.id,
+          parent_table: 'block',
+          alive: true,
+        }),
+        block_list_op,
+      ]
+    );
+    return this.createDBArtifacts([[data.id, "collection_view"], collection_id, view_ids]);
+  }
+
+  // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
+  /**
+   * Create a full page db content block
+   * @param option Schema and the views of the newly created block
+   * @returns Returns the newly created full page db block object
+   */
+  async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
+    const data = this.getCachedData<IPage>();
+    const { schema, properties, format, views } = createCollection(option);
+
+    const view_ids = views.map((view) => view.id);
+    const $collection_id = uuidv4();
+    const current_time = Date.now();
+
+    await this.saveTransactions(
+      [
+        this.updateOp([], {
+          id: data.id,
+          type: 'collection_view_page',
+          collection_id: $collection_id,
+          view_ids,
+          properties,
+          format,
+          created_time: current_time,
+          last_edited_time: current_time
+        }),
+        Operation.collection.update($collection_id, [], {
+          id: $collection_id,
+          schema,
+          format: {
+            collection_page_properties: []
+          },
+          icon: data.format.page_icon,
+          parent_id: data.id,
+          parent_table: 'block',
+          alive: true,
+          name: data.properties.title
+        }),
+        ...createViews(views, data.id)
+      ]
+    );
+
+    return this.createDBArtifacts([[data.id, "collection_view_page"], $collection_id, view_ids]);
   }
 }
-
-export default Page;

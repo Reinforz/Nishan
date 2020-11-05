@@ -1,4 +1,4 @@
-import Permissions from './Permission';
+import Permissions from '../mixins/Permission';
 
 import { NishanArg } from '../types/types';
 import CollectionViewPage from './CollectionViewPage';

@@ -1,4 +1,4 @@
-import Permission from "./Permission";
+import Permission from "../mixins/Permission";
 import Page from "./Page";
 
 import { IPage, NishanArg } from "../types";
@@ -7,7 +7,6 @@ import { IPage, NishanArg } from "../types";
  * A class to represent RootPage type block of Notion
  * @noInheritDoc
  */
-
 
 class RootPage extends Permission(Page as any)<IPage> {
   constructor(arg: NishanArg) {

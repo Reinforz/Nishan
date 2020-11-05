@@ -8,14 +8,13 @@ import SpaceView from "./SpaceView";
 import { Operation, error, warn, createViews, createCollection } from '../utils';
 
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, UpdateCacheManuallyParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage } from '../types';
-import Collection from './Collection';
-import View from './View';
+import DBArtifacts from '../mixins/DBArtifacts';
 
 /**
  * A class to represent space of Notion
  * @noInheritDoc
  */
-class Space extends Data<ISpace> {
+class Space extends Data<ISpace>{
   space_view?: ISpaceView;
 
   constructor(arg: NishanArg) {
@@ -73,84 +72,6 @@ class Space extends Data<ISpace> {
   async getPage(arg: string | Predicate<TPage>) {
     if (typeof arg === "string") return (await this.getPages([arg], true))[0];
     else return (await this.getPages(arg, true))[0];
-  }
-
-  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
-    return (await this.createRootCollectionViewPages([option]))[0];
-  }
-
-  // ? RF:1:M Refactor to use Page.createCollectionViewPage method
-  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
-    const ops: IOperation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [];
-    for (let index = 0; index < options.length; index++) {
-      const option = options[index];
-      const { properties, format, schema, views } = createCollection(option)
-
-      const gen_view_ids = views.map((view) => view.id);
-      const $collection_id = uuidv4();
-      const block_id = uuidv4();
-      block_ids.push({
-        block: block_id,
-        collection: $collection_id,
-        collection_views: gen_view_ids
-      });
-      const block_update_op = this.addToChildArray(block_id, option.position);
-
-      ops.push(Operation.block.update(block_id, [], {
-        type: 'page',
-        id: block_id,
-        permissions:
-          [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.id,
-        parent_table: 'space',
-        alive: true,
-        properties,
-        format,
-      }),
-        Operation.block.update(block_id, [], {
-          type: 'collection_view_page',
-          collection_id: $collection_id,
-          view_ids: gen_view_ids,
-          properties: {},
-        }),
-        Operation.collection.update($collection_id, [], {
-          id: $collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          parent_id: block_id,
-          parent_table: 'block',
-          alive: true,
-          name: properties?.title
-        }),
-        block_update_op,
-        ...createViews(views, block_id)
-      );
-    }
-    await this.saveTransactions(ops);
-    const updated_ids: UpdateCacheManuallyParam = [];
-    block_ids.forEach(block_id => {
-      updated_ids.push([block_id.block, "block"]);
-      updated_ids.push([block_id.collection, "collection"]);
-      block_id.collection_views.map(collection_view => updated_ids.push([collection_view, "collection_view"]));
-    });
-
-    await this.updateCacheManually([...updated_ids, [this.id, "space"]]);
-    return block_ids.map(block_id => ({
-      block: new RootCollectionViewPage({
-        ...this.getProps(),
-        id: block_id.block
-      }),
-      collection: new Collection({
-        ...this.getProps(),
-        id: block_id.collection
-      }),
-      collection_views: block_id.collection_views.map(collection_view => new View({
-        id: collection_view,
-        ...this.getProps()
-      }))
-    }))
   }
 
   // ? FEAT:1:M Batch rootpage creation
@@ -312,7 +233,7 @@ class Space extends Data<ISpace> {
       } else if (typeof arg === "function") {
         for (let index = 0; index < data.pages.length; index++) {
           const page_id = data.pages[index];
-          const page = this.getCachedData<TRootPage>(page_id);
+          const page = this.getCachedData<IRootPage>(page_id);
           if (page.parent_id === this.id && await arg(page, index)) {
             const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
             ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
@@ -389,4 +310,74 @@ class Space extends Data<ISpace> {
   }
 }
 
-export default Space;
+export default class DBSpace extends DBArtifacts(Space) {
+  constructor(arg: NishanArg) {
+    super(arg);
+  }
+
+  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
+    return (await this.createRootCollectionViewPages([option]))[0];
+  }
+
+  // ? RF:1:M Refactor to use Page.createCollectionViewPage method
+  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
+    const ops: IOperation[] = [], block_ids: { block: string, collection: string, collection_views: string[] }[] = [], collection_ids: string[] = [], view_ids: string[] = [];
+    for (let index = 0; index < options.length; index++) {
+      const option = options[index];
+      const { properties, format, schema, views } = createCollection(option)
+
+      const gen_view_ids = views.map((view) => view.id);
+      view_ids.push(...gen_view_ids);
+      const $collection_id = uuidv4();
+      const block_id = uuidv4();
+      block_ids.push({
+        block: block_id,
+        collection: $collection_id,
+        collection_views: gen_view_ids
+      });
+      const block_update_op = this.addToChildArray(block_id, option.position);
+
+      ops.push(Operation.block.update(block_id, [], {
+        type: 'page',
+        id: block_id,
+        permissions:
+          [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+        parent_id: this.id,
+        parent_table: 'space',
+        alive: true,
+        properties,
+        format,
+      }),
+        Operation.block.update(block_id, [], {
+          type: 'collection_view_page',
+          collection_id: $collection_id,
+          view_ids: gen_view_ids,
+          properties: {},
+        }),
+        Operation.collection.update($collection_id, [], {
+          id: $collection_id,
+          schema,
+          format: {
+            collection_page_properties: []
+          },
+          parent_id: block_id,
+          parent_table: 'block',
+          alive: true,
+          name: properties?.title
+        }),
+        block_update_op,
+        ...createViews(views, block_id)
+      );
+      collection_ids.push($collection_id);
+    }
+    await this.saveTransactions(ops);
+    const updated_ids: UpdateCacheManuallyParam = [];
+    block_ids.forEach(block_id => {
+      updated_ids.push([block_id.block, "block"]);
+      updated_ids.push([block_id.collection, "collection"]);
+      block_id.collection_views.map(collection_view => updated_ids.push([collection_view, "collection_view"]));
+    });
+
+    return await this.createDBArtifacts([[this.id, "collection_view_page"], collection_ids, view_ids]);
+  }
+};

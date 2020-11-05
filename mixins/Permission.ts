@@ -2,10 +2,10 @@ import {
   error,
 } from "../utils";
 
-import { IRootPage, INotionUser, ISpace, IOperation, IPermission, TPermissionRole, TRootPage } from "../types";
-import Data from "./Data";
+import { INotionUser, IOperation, IPermission, TPermissionRole, TRootPage, } from "../types";
+import Data from "../api/Data";
 
-type Constructor<T = Data<IRootPage | ISpace>> = new (...args: any[]) => T;
+type Constructor<T = Data<TRootPage>> = new (...args: any[]) => T;
 
 export default function Permissioned<TBase extends Constructor>(Base: TBase) {
   return class Permission extends Base {

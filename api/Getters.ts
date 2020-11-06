@@ -3,7 +3,7 @@ import axios from "axios";
 import Cache from "./Cache";
 
 import { createTransaction, error } from "../utils";
-import { UpdateCacheManuallyParam, ICache, IOperation, Request, TDataType, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams } from "../types";
+import { UpdateCacheManuallyParam, ICache, IOperation, Request, TDataType, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, SetSpaceNotificationsAsReadParams, SetPageNotificationsAsReadParams } from "../types";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -53,6 +53,91 @@ export default class Getters extends Cache {
       space_id: this.space_id,
       cache: this.cache,
     }
+  }
+
+  async setPageNotificationsAsRead(arg: SetPageNotificationsAsReadParams) {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          await axios.post(
+            'https://www.notion.so/api/v3/setPageNotificationsAsRead',
+            arg,
+            this.headers
+          );
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
+  }
+
+  async setSpaceNotificationsAsRead(arg: SetSpaceNotificationsAsReadParams) {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          await axios.post(
+            'https://www.notion.so/api/v3/setSpaceNotificationsAsRead',
+            arg,
+            this.headers
+          );
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
+  }
+
+  async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/getPageVisits',
+            arg,
+            this.headers
+          ) as { data: GetPageVisitsResult };
+          resolve(data);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
+  }
+
+  async getUserSharedPages(arg: GetUserSharedPagesParams): Promise<GetUserSharedPagesResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/getUserSharedPages',
+            arg,
+            this.headers
+          ) as { data: GetUserSharedPagesResult };
+          resolve(data);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
+  }
+
+
+
+  async getUserTasks(): Promise<GetUserTasksResult> {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        try {
+          const { data } = await axios.post(
+            'https://www.notion.so/api/v3/getUserTasks',
+            {},
+            this.headers
+          ) as { data: GetUserTasksResult };
+          resolve(data);
+        } catch (err) {
+          reject(error(err.response.data))
+        }
+      }, this.interval)
+    });
   }
 
   async getPublicPageData(arg: GetPublicPageDataParams): Promise<GetPublicPageDataResult> {

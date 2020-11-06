@@ -1,6 +1,40 @@
 
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
-import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole } from "./types";
+
+export interface SetPageNotificationsAsReadParams {
+  navigableBlockId: string,
+  spaceId: string,
+  timestamp: number
+}
+
+export interface SetSpaceNotificationsAsReadParams {
+  spaceId: string,
+  timestamp: number
+}
+
+export interface GetPageVisitsParams {
+  blockId: string,
+  limit: number
+}
+
+export interface GetPageVisitsResult {
+  recordMap: {
+    page_visits: BlockData
+  }
+}
+
+export interface GetUserSharedPagesResult {
+  includeDeleted: boolean
+}
+
+export interface GetUserSharedPagesParams {
+  pages: { id: string, spaceId: string }[],
+  recordMap: {
+    block: BlockData,
+    space: SpaceData
+  }
+}
 
 export interface GetPublicPageDataParams {
   // Id of the block
@@ -279,72 +313,76 @@ export interface GetBackLinksForBlockResult {
   }
 }
 
+export interface GetUserTasksResult {
+  taskIds: string[]
+}
+
 export interface CollectionViewData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ICollectionView
   }
 };
 
 export interface CollectionViewPageData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ICollectionViewPage
   }
 };
 
 export interface BlockData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: TBlock
   }
 }
 
 export interface SpaceData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ISpace
   }
 }
 
 export interface SpaceViewData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ISpaceView
   }
 }
 
 export interface CollectionData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ICollection
   }
 }
 
 export interface ViewData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: ITableView | IListView | IBoardView | ICalendarView | IGalleryView
   }
 }
 
 export interface NotionUserData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: INotionUser
   }
 }
 
 export interface UserRootData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: IUserRoot
   }
 }
 
 export interface UserSettingsData {
   [key: string]: {
-    role: 'editor',
+    role: TPermissionRole,
     value: IUserSettings
   }
 }

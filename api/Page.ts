@@ -13,7 +13,7 @@ import { error, Operation } from "../utils";
 
 import {
   NishanArg,
-  ExportType,
+  TExportType,
   IOperation,
   Predicate,
   TGenericEmbedBlockType,
@@ -193,7 +193,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
     dir: string,
     timeZone: string,
     recursive: boolean,
-    exportType: ExportType
+    exportType: TExportType
   }) {
     const data = this.getCachedData();
     const {

@@ -1,6 +1,6 @@
 
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
-import { TPlanType, Node, OperationTable, IPermission, TaskType, ExportType, Cursor, BoardView, CalendarView, GalleryView, ListView, TableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
+import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType } from "./types";
 
 export interface GetPublicPageDataParams {
   // Id of the block
@@ -171,7 +171,7 @@ export interface InitializeGoogleDriveBlockResult {
 
 export interface SyncRecordValuesParams {
   id: string,
-  table: OperationTable,
+  table: TOperationTable,
   version: number
 }
 
@@ -226,7 +226,7 @@ export interface SyncRecordValuesResult {
 }
 
 export interface EnqueueTaskParams {
-  eventName: TaskType
+  eventName: TTaskType
 }
 
 export interface DuplicateBlockTaskParams extends EnqueueTaskParams {
@@ -243,7 +243,7 @@ export interface ExportBlockTaskParams extends EnqueueTaskParams {
   request: {
     blockId: string,
     exportOptions: {
-      exportType: ExportType,
+      exportType: TExportType,
       locale: "en",
       timeZone: string
     },
@@ -324,7 +324,7 @@ export interface CollectionData {
 export interface ViewData {
   [key: string]: {
     role: 'editor',
-    value: TableView | ListView | BoardView | CalendarView | GalleryView
+    value: ITableView | IListView | IBoardView | ICalendarView | IGalleryView
   }
 }
 
@@ -338,7 +338,7 @@ export interface NotionUserData {
 export interface UserRootData {
   [key: string]: {
     role: 'editor',
-    value: UserRoot
+    value: IUserRoot
   }
 }
 
@@ -386,7 +386,7 @@ export interface INotionUser {
   version: number
 }
 
-export interface UserRoot {
+export interface IUserRoot {
   id: string,
   space_views: string[],
   version: number,

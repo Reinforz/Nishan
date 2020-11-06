@@ -1,5 +1,5 @@
 import { InlineDateArg } from "../types/function";
-import { FormatBlockColor } from "../types/types";
+import { TFormatBlockColor } from "../types/types";
 
 export function inlineDate(arg: InlineDateArg) {
   const text: [[string, any[][]]] = [["‣", [["d", arg]]]];
@@ -170,7 +170,7 @@ class chunk extends Colors {
     return new chunk(this.text);
   }
 
-  highlight(color: FormatBlockColor) {
+  highlight(color: TFormatBlockColor) {
     this.text[this.text.length - 1][1].push(["h", color]);
     return new chunk(this.text);
   }

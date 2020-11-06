@@ -1,15 +1,15 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
 import { ICollection, PageFormat, PageProps, TBlockInput } from "./block";
-import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, ViewAggregationsAggregators, ViewType, SchemaUnitType, TDataType } from "./types";
+import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, SchemaUnitType, TDataType } from "./types";
 
 export interface UserViewArg {
   id?: string,
   sorts?: [string, number][],
-  aggregations?: [string, ViewAggregationsAggregators][],
+  aggregations?: [string, TViewAggregationsAggregators][],
   filters?: [string, string, string, string][],
   properties?: [string, boolean, number][],
   name: string,
-  type: ViewType,
+  type: TViewType,
   wrap?: boolean
 }
 

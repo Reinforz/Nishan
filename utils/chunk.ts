@@ -1,8 +1,8 @@
-import { Args, IOperation, OperationCommand, OperationTable, } from "../types/types";
+import { Args, IOperation, TOperationCommand, TOperationTable, } from "../types/types";
 
-const tables = ["space", "space_view", "collection", "block", "collection_view", "collection_view_page", "notion_user", "user_settings", "user_root"] as OperationTable[];
-const commands = ["listRemove", "listBefore", "listAfter", "update", "set"] as OperationCommand[];
-const Operations: Record<OperationTable, Record<OperationCommand, ((id: string, path: string[], args: Args) => IOperation)>> = {} as any;
+const tables = ["space", "space_view", "collection", "block", "collection_view", "collection_view_page", "notion_user", "user_settings", "user_root"] as TOperationTable[];
+const commands = ["listRemove", "listBefore", "listAfter", "update", "set"] as TOperationCommand[];
+const Operations: Record<TOperationTable, Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>> = {} as any;
 
 tables.forEach(table => {
   Operations[table] = {} as any;

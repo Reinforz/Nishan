@@ -1,25 +1,25 @@
-import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, UserRoot, RecordMap } from "./api";
+import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
 import { ICollection, ICollectionViewPage, IPage, IRootCollectionViewPage, IRootPage, TBlock } from "./block";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup' | 'text' | 'date' | 'person' | 'file' | 'url' | 'email' | 'phone' | 'created_time' | 'created_by' | 'last_edited_time' | 'last_edited_by'
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
-export type OperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore' | 'setPermissionItem'
-export type OperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings' | 'user_root';
-export type ViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
-export type ViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
-export type ViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
+export type TOperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore' | 'setPermissionItem'
+export type TOperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings' | 'user_root';
+export type TViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
+export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
+export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
 export type TEmbedsBlockType = 'drive' | TGenericEmbedBlockType;
 export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page';
-export type TextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'teal' | 'blue' | 'purple' | "pink" | 'red';
-export type BGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
-export type FormatBlockColor = TextColor | BGColor;
-export type ExportType = "markdown" | "pdf" | "html";
-export type TaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
+export type TTextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'teal' | 'blue' | 'purple' | "pink" | 'red';
+export type TBGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
+export type TFormatBlockColor = TTextColor | TBGColor;
+export type TExportType = "markdown" | "pdf" | "html";
+export type TTaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader' | 'none';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
@@ -117,7 +117,7 @@ export interface SchemaUnit {
   options?: {
     id: string,
     value: string,
-    color: TextColor
+    color: TTextColor
   }[]
 }
 
@@ -138,9 +138,9 @@ export interface Transaction {
 };
 
 export interface IOperation {
-  table: OperationTable,
+  table: TOperationTable,
   id: string,
-  command: OperationCommand,
+  command: TOperationCommand,
   path: string[],
   args: Args
 };
@@ -184,9 +184,9 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
 
 /* Block Specific Format and Properties */
 
-export type TView = TableView | ListView | BoardView | GalleryView | CalendarView;
+export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView;
 
-export interface TableView extends Node, ParentProps {
+export interface ITableView extends Node, ParentProps {
   name: string,
   type: 'table',
   page_sort: string[],
@@ -203,7 +203,7 @@ export interface TableView extends Node, ParentProps {
   },
 }
 
-export interface ListView extends Node, ParentProps {
+export interface IListView extends Node, ParentProps {
   name: string,
   type: 'list',
   format: {
@@ -217,10 +217,10 @@ export interface ListView extends Node, ParentProps {
   },
 }
 
-export interface BoardView extends Node, ParentProps {
+export interface IBoardView extends Node, ParentProps {
   type: 'board',
   format: {
-    board_cover: ViewFormatCover,
+    board_cover: TViewFormatCover,
     board_properties: ViewFormatProperties[],
     board_cover_aspect?: 'contain' | 'cover',
     board_cover_size?: 'small' | 'medium' | 'large',
@@ -236,10 +236,10 @@ export interface BoardView extends Node, ParentProps {
   },
 }
 
-export interface GalleryView extends Node, ParentProps {
+export interface IGalleryView extends Node, ParentProps {
   type: 'gallery',
   format: {
-    gallery_cover?: ViewFormatCover,
+    gallery_cover?: TViewFormatCover,
     gallery_cover_aspect?: 'contain' | 'cover',
     gallery_cover_size?: 'small' | 'medium' | 'large',
     gallery_properties: ViewFormatProperties[]
@@ -252,7 +252,7 @@ export interface GalleryView extends Node, ParentProps {
   },
 }
 
-export interface CalendarView extends Node, ParentProps {
+export interface ICalendarView extends Node, ParentProps {
   type: 'calendar',
   format: {
     calendar_properties: ViewFormatProperties[]
@@ -275,7 +275,7 @@ export interface ViewFormatProperties {
 export interface ViewAggregations {
   property: string,
   // ? Get all aggregator values
-  aggregator: ViewAggregationsAggregators
+  aggregator: TViewAggregationsAggregators
 }
 
 export interface ViewSorts {
@@ -301,7 +301,7 @@ export interface Stack {
 
 /* Nishan Specific */
 
-export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | UserRoot | IUserSettings
+export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | IUserRoot | IUserSettings
 export interface ICache {
   block: Map<string, TBlock>,
   collection: Map<string, ICollection>,
@@ -309,7 +309,7 @@ export interface ICache {
   space: Map<string, ISpace>,
   notion_user: Map<string, INotionUser>,
   space_view: Map<string, ISpaceView>,
-  user_root: Map<string, UserRoot>,
+  user_root: Map<string, IUserRoot>,
   user_settings: Map<string, IUserSettings>,
 }
 

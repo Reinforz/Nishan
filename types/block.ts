@@ -1,5 +1,5 @@
 import { ISpace } from "./api";
-import { TCreditType, Node, FormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps, Schema } from "./types";
+import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps, Schema } from "./types";
 
 export interface PageProps {
   title: string[][],
@@ -15,7 +15,7 @@ export interface PageFormat {
   block_locked: boolean,
   page_cover: string,
   page_cover_position: number,
-  block_color?: FormatBlockColor
+  block_color?: TFormatBlockColor
 }
 
 export interface MediaProps {
@@ -35,7 +35,7 @@ export interface MediaFormat {
 export interface WebBookmarkFormat {
   bookmark_cover: string,
   bookmark_icon: string,
-  block_color?: FormatBlockColor
+  block_color?: TFormatBlockColor
 }
 
 export interface WebBookmarkProps {
@@ -61,7 +61,7 @@ export interface FileProps {
 }
 
 export interface FileFormat {
-  block_color?: FormatBlockColor
+  block_color?: TFormatBlockColor
 }
 
 export interface TodoProps {
@@ -123,7 +123,7 @@ export interface ICommonTextInput {
     title: string[][]
   },
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   }
 }
 
@@ -169,7 +169,7 @@ export interface ICalloutInput extends ICommonTextInput {
   type: 'callout',
   format: {
     page_icon: string,
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   }
 }
 
@@ -177,7 +177,7 @@ export interface ITodoInput {
   type: 'to_do',
   properties: TodoProps,
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   }
 }
 
@@ -186,7 +186,7 @@ export type TBasicBlockInput = IPageInput | ITodoInput | ICalloutInput | IDivide
 export interface ITOCInput {
   type: 'table_of_contents',
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   },
   properties?: {}
 }
@@ -197,7 +197,7 @@ export interface IEquationInput {
     title: string[][]
   },
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   }
 }
 
@@ -207,7 +207,7 @@ export interface IFactoryInput {
     title: string[][]
   },
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   },
   contents: TBlockInput[]
 }
@@ -257,7 +257,7 @@ export interface IGistInput {
     source: string[][]
   },
   format?: {
-    block_color?: FormatBlockColor,
+    block_color?: TFormatBlockColor,
     display_source: null
   },
 }
@@ -351,7 +351,7 @@ export interface IFactory extends Block {
     title: string[][]
   },
   format: {
-    block_color?: FormatBlockColor
+    block_color?: TFormatBlockColor
   },
   contents: string[]
 }

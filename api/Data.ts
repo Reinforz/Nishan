@@ -71,12 +71,13 @@ export default class Data<T extends TData> extends Getters {
    */
   addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
     const data = this.getCachedData() as any;
-    const parent_id = data.parent_id ?? this.user_id
+    let parent_id: string = "";
     let path: "pages" | "view_ids" | "content" | "space_views" = "pages";
     let parent_type: "space" | "block" | "user_root" = "block";
     switch (this.type) {
       case "block":
         parent_type = data.parent_table;
+        parent_id = data.parent_id;
         switch (parent_type) {
           case "block":
             path = "content";
@@ -89,13 +90,18 @@ export default class Data<T extends TData> extends Getters {
       case "space_view":
         parent_type = "user_root";
         path = "space_views";
+        parent_id = this.user_id
         break;
       case "collection_view":
         parent_type = "block"
         path = "view_ids"
+        parent_id = data.parent_id
         break;
+      case "space":
+        parent_type = "space";
+        path = "pages"
+        parent_id = this.id;
     }
-
     const parent_data = this.cache[parent_type].get(parent_id) as any;
     const cached_container = parent_data[path];
 
@@ -114,13 +120,13 @@ export default class Data<T extends TData> extends Getters {
       return (Operation[parent_type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](parent_id, [path], {
         [where]: id,
         id: $block_id
-      })
+      }) as IOperation
     } else {
       cached_container.push($block_id);
       return Operation[parent_type].listAfter(parent_id, [path], {
         after: '',
         id: $block_id
-      });
+      }) as IOperation;
     }
   }
 

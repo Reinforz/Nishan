@@ -17,28 +17,36 @@ export default function DBArtifacts<T extends (IRootPage | IPage) | ISpace, TBas
       super(args[0]);
     }
 
-    async createDBArtifacts(arg: [[string, TCollectionViewBlock], string | string[], string[]]) {
+    async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {
       const update_tables: UpdateCacheManuallyParam = [];
-      Array.isArray(arg[1]) ? arg[1].forEach(arg => update_tables.push([arg, "collection"])) : update_tables.push([arg[1], "collection"]);
-      arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
-      update_tables.push(arg[0][0]);
+      args.forEach(arg => {
+        update_tables.push(arg[0][0]);
+        update_tables.push([arg[1], "collection"]);
+        arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
+      })
 
-      await this.updateCacheManually(update_tables)
+      await this.updateCacheManually(update_tables);
 
-      return {
-        [arg[0][1] as TCollectionViewBlock]: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
-          ...this.getProps(),
-          id: arg[0][0]
-        }),
-        collection: Array.isArray(arg[1]) ? arg[1].forEach(id => new Collection({
-          id,
-          ...this.getProps()
-        })) : new Collection({
-          id: arg[1],
-          ...this.getProps()
-        }),
-        collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
-      }
+      const res: {
+        block: CollectionView | CollectionViewPage,
+        collection: Collection,
+        collection_views: View[]
+      }[] = [];
+
+      args.forEach(arg => {
+        res.push({
+          block: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
+            ...this.getProps(),
+            id: arg[0][0]
+          }),
+          collection: new Collection({
+            id: arg[1],
+            ...this.getProps()
+          }),
+          collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
+        })
+      })
+      return res
     }
 
     createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {

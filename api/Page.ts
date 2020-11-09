@@ -437,7 +437,7 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
       ]
     );
 
-    return this.createDBArtifacts([[$collection_view_id, "collection_view"], $collection_id, view_ids]);
+    return this.createDBArtifacts([[[$collection_view_id, "collection_view"], $collection_id, view_ids]]);
   }
 
   // ? FEAT:1:M Remove views argument so as to keep the original one?
@@ -471,7 +471,7 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
         ...views,
       ]
     );
-    return this.createDBArtifacts([[data.id, "collection_view"], collection_id, view_ids]);
+    return this.createDBArtifacts([[[data.id, "collection_view"], collection_id, view_ids]]);
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
@@ -513,6 +513,6 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
       ]
     );
 
-    return this.createDBArtifacts([[data.id, "collection_view_page"], $collection_id, view_ids]);
+    return this.createDBArtifacts([[[data.id, "collection_view_page"], $collection_id, view_ids]]);
   }
 }

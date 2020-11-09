@@ -65,7 +65,6 @@ class Collection extends Data<ICollection> {
     const Page = require('./Page');
     const page_ids: string[] = [];
     const ops: IOperation[] = [];
-    const current_time = Date.now();
     rows.map(({ format, properties }) => {
       const data = this.getCachedData();
       const $page_id = uuidv4();
@@ -73,12 +72,6 @@ class Collection extends Data<ICollection> {
       ops.push(
         Operation.block.update($page_id, [], {
           alive: true,
-          created_time: current_time,
-          created_by_id: this.user_id,
-          created_by_table: 'notion_user',
-          last_edited_time: current_time,
-          last_edited_by_id: this.user_id,
-          last_edited_by_table: 'notion_user',
           $block_id: $page_id,
           type: "page",
           properties,
@@ -96,7 +89,6 @@ class Collection extends Data<ICollection> {
       id: page_id,
       ...this.getProps()
     }))
-
   }
 }
 

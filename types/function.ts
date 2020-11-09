@@ -54,3 +54,9 @@ export type PageCreateContentParam = TBlockInput & {
   file_id?: string,
   position?: number | BlockRepostionArg
 }
+
+export type CreateTRootPagesParams = ({
+  type: "page",
+} & CreateRootPageArgs | {
+  type: "collection_view_page"
+} & CreateRootCollectionViewPageParams)

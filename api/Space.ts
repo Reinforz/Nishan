@@ -7,9 +7,12 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error, warn } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, TCollectionViewBlock, UpdateCacheManuallyParam } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam } from '../types';
 import DBArtifacts from '../mixins/DBArtifacts';
 import GetItems from '../mixins/GetItems';
+import CollectionViewPage from './CollectionViewPage';
+import Collection from './Collection';
+import View from './View';
 
 /**
  * A class to represent space of Notion
@@ -43,59 +46,64 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   // ? FIX:1:M Manual parameter doesnot work
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], manual: boolean = false) {
-    const ops: IOperation[] = [],
-      block_ids: [[string, TCollectionViewBlock], string, string[]][] = [],
-      collection_ids: string[] = [],
-      view_ids: string[] = [];
+    const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
 
     for (let index = 0; index < options.length; index++) {
-      const option = options[index], block_id = uuidv4(), collection_id = uuidv4();
-      const { properties, format, schema, views } = this.createCollection(option, block_id)
-      const gen_view_ids = views.map((view) => view.id);
-      view_ids.push(...gen_view_ids);
-      block_ids.push([[block_id, "collection_view_page"], collection_id, gen_view_ids]);
-      const block_update_op = this.addToChildArray(block_id, option.position);
+      const option = options[index], block_id = uuidv4(), collection_id = uuidv4(),
+        { properties, format, schema, views } = this.createCollection(option, block_id),
+        gen_view_ids = views.map((view) => view.id), sync_records: UpdateCacheManuallyParam = [block_id, [collection_id, "collection"]];
+      gen_view_ids.forEach(gen_view_id => sync_records.push([gen_view_id, "collection_view"]));
 
-      ops.push(
-        Operation.block.update(block_id, [], {
-          type: 'page',
-          id: block_id,
-          permissions:
-            [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-          parent_id: this.id,
-          parent_table: 'space',
-          alive: true,
-          properties,
-          format,
-        }),
-        Operation.block.update(block_id, [], {
-          type: 'collection_view_page',
-          collection_id: collection_id,
-          view_ids: gen_view_ids,
-          properties: {},
-        }),
-        Operation.collection.update(collection_id, [], {
-          id: collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          parent_id: block_id,
-          parent_table: 'block',
-          alive: true,
-          name: properties?.title
-        }),
-        block_update_op,
-        ...views
-      );
-      collection_ids.push(collection_id);
+      manual_res.push([
+        [
+          Operation.block.update(block_id, [], {
+            type: 'page',
+            id: block_id,
+            permissions:
+              [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+            parent_id: this.id,
+            parent_table: 'space',
+            alive: true,
+            properties,
+            format,
+          }),
+          Operation.block.update(block_id, [], {
+            type: 'collection_view_page',
+            collection_id: collection_id,
+            view_ids: gen_view_ids,
+            properties: {},
+          }),
+          Operation.collection.update(collection_id, [], {
+            id: collection_id,
+            schema,
+            format: {
+              collection_page_properties: []
+            },
+            parent_id: block_id,
+            parent_table: 'block',
+            alive: true,
+            name: properties?.title
+          }),
+          this.addToChildArray(block_id, option.position),
+          ...views
+        ],
+        sync_records,
+        {
+          block: new CollectionViewPage({
+            ...this.getProps(),
+            id: block_id
+          }),
+          collection: new Collection({
+            id: collection_id,
+            ...this.getProps()
+          }),
+          collection_views: gen_view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
+        }
+      ])
     }
 
-    if (manual) return [ops, block_ids];
-    else {
-      await this.saveTransactions(ops);
-      return await this.createDBArtifacts(block_ids);
-    }
+    if (manual ?? false) return manual_res;
+    else return await this.returnArtifacts(manual_res)
   }
 
   // ? FEAT:1:M Batch rootpage creation
@@ -114,31 +122,35 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
    * @returns An array of newly created rootpage block objects
    */
   async createRootPages(opts: CreateRootPageArgs[], manual?: boolean) {
-    const block_ids: string[] = [], manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
+    const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index];
-      const { position, properties = {}, format = {}, isPrivate = false } = opt;
-      const $block_id = uuidv4();
-      block_ids.push($block_id);
+      const opt = opts[index],
+        { position, properties = {}, format = {}, isPrivate = false } = opt,
+        $block_id = uuidv4();
       const block_list_op = this.addToChildArray($block_id, position);
-      manual_res.push([[Operation.block.update($block_id, [], {
-        type: 'page',
-        id: $block_id,
-        version: 1,
-        permissions:
-          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.id,
-        parent_table: 'space',
-        alive: true,
-        properties,
-        format,
-      }),
-        block_list_op],
-      [$block_id],
-      new RootPage({
-        ...this.getProps(),
-        id: $block_id
-      })]
+      manual_res.push(
+        [
+          [
+            Operation.block.update($block_id, [], {
+              type: 'page',
+              id: $block_id,
+              version: 1,
+              permissions:
+                [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+              parent_id: this.id,
+              parent_table: 'space',
+              alive: true,
+              properties,
+              format,
+            }),
+            block_list_op
+          ],
+          [$block_id],
+          new RootPage({
+            ...this.getProps(),
+            id: $block_id
+          })
+        ]
       );
     };
     if (manual ?? false) return manual_res;

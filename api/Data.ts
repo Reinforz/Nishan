@@ -103,6 +103,7 @@ export default class Data<T extends TData> extends Getters {
         parent_id = this.id;
     }
     const parent_data = this.cache[parent_type].get(parent_id) as any;
+    parent_data[path] = parent_data[path] ?? [];
     const cached_container = parent_data[path];
 
     let where: "before" | "after" = "before", id: string = '';

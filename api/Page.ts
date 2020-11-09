@@ -8,6 +8,7 @@ import path from "path";
 import Block from './Block';
 
 import DBArtifacts from "../mixins/DBArtifacts";
+import GetItems from "../mixins/GetItems";
 
 import { error, Operation } from "../utils";
 
@@ -32,7 +33,7 @@ import {
  * @noInheritDoc
  */
 
-class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
+class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
   init_cache: boolean;
   constructor(arg: NishanArg) {
     super(arg);
@@ -60,29 +61,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
-    const data = this.getCachedData();
-    const blocks: Block<TBlock, TBlockInput>[] = [];
-
-    if (data.content) {
-      if (Array.isArray(arg)) {
-        for (let index = 0; index < arg.length; index++) {
-          const block_id = arg[index], block = this.getCachedData(block_id);
-          let should_add = data.content.includes(block_id);
-          if (should_add)
-            blocks.push(this.createClass(block.type, block_id));
-          if (!multiple && blocks.length === 1) break;
-        }
-      } else if (typeof arg === "function" || arg === undefined) {
-        for (let index = 0; index < data.content.length; index++) {
-          const block_id = data.content[index], block: TBlock = this.getCachedData(block_id);
-          let should_add = typeof arg === "function" ? await arg(block, index) : true;
-          if (should_add) blocks.push(this.createClass(block.type, block_id))
-          if (!multiple && blocks.length === 1) break;
-        }
-      }
-      return blocks;
-    } else
-      throw new Error(error("This page doesnot have any content"));
+    return this.getItems(arg as any, multiple, "content", (block: any) => this.createClass(block.type, block.id))
   }
 
   async getBlock(arg: string | Predicate<TBlock>) {
@@ -126,7 +105,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
-    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
+    const data = this.getCachedData<IPage>(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
     if (data.content) {
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
@@ -140,7 +119,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
       } else if (typeof arg === "function") {
         for (let index = 0; index < data.content.length; index++) {
           const block_id = data.content[index];
-          const block = this.getCachedData(block_id);
+          const block = this.getCachedData<TBlock>(block_id);
           if (block.parent_id === data.id && await arg(block, index))
             ids.push(block_id);
           if (!multiple && ids.length === 1) break;
@@ -165,7 +144,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    * Add/remove this page from the favourite list
    */
   async toggleFavourite() {
-    const data = this.getCachedData();
+    const data = this.getCachedData<IPage>();
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {
       if (space_view.space_id === data.space_id) {
@@ -316,9 +295,7 @@ class Page<T extends IPage | IRootPage> extends Block<T, IPageInput> {
    */
   // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
-    const data = this.getCachedData(), operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
-
-    if (!data.content) data.content = []
+    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
 
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];

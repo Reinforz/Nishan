@@ -410,7 +410,7 @@ export interface ISpaceView extends Node {
   notify_mobile: true,
   sidebar_hidden_templates: string[],
   space_id: string,
-  visited_templated: string[],
+  visited_templates: string[],
   bookmarked_pages: string[],
 }
 

@@ -21,6 +21,7 @@ export default class Getters extends Cache {
     }
   };
   createTransaction: (operations: IOperation[]) => Request
+  BASE_NOTION_URL = "https://www.notion.so/api/v3"
 
   constructor({ token, interval, user_id, shard_id, space_id, cache }: {
     token: string,
@@ -60,7 +61,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           await axios.post(
-            'https://www.notion.so/api/v3/setPageNotificationsAsRead',
+            `${this.BASE_NOTION_URL}/setPageNotificationsAsRead`,
             arg,
             this.headers
           );
@@ -76,7 +77,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           await axios.post(
-            'https://www.notion.so/api/v3/setSpaceNotificationsAsRead',
+            `${this.BASE_NOTION_URL}/setSpaceNotificationsAsRead`,
             arg,
             this.headers
           );
@@ -92,7 +93,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getPageVisits',
+            `${this.BASE_NOTION_URL}/getPageVisits`,
             arg,
             this.headers
           ) as { data: GetPageVisitsResult };
@@ -109,7 +110,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getUserSharedPages',
+            `${this.BASE_NOTION_URL}/getUserSharedPages`,
             arg,
             this.headers
           ) as { data: GetUserSharedPagesResult };
@@ -128,7 +129,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getUserTasks',
+            `${this.BASE_NOTION_URL}/getUserTasks`,
             {},
             this.headers
           ) as { data: GetUserTasksResult };
@@ -145,7 +146,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getPublicPageData',
+            `${this.BASE_NOTION_URL}/getPublicPageData`,
             arg,
             this.headers
           ) as { data: GetPublicPageDataResult };
@@ -162,7 +163,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getPublicSpaceData',
+            `${this.BASE_NOTION_URL}/getPublicSpaceData`,
             arg,
             this.headers
           ) as { data: GetPublicSpaceDataResult };
@@ -179,7 +180,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getSubscriptionData',
+            `${this.BASE_NOTION_URL}/getSubscriptionData`,
             arg,
             this.headers
           ) as { data: GetSubscriptionDataResult };
@@ -197,7 +198,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/removeUsersFromSpace',
+            `${this.BASE_NOTION_URL}/removeUsersFromSpace`,
             arg,
             this.headers
           ) as { data: RemoveUsersFromSpaceResult };
@@ -215,7 +216,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/initializePageTemplate',
+            `${this.BASE_NOTION_URL}/initializePageTemplate`,
             arg,
             this.headers
           ) as { data: InitializePageTemplateResult };
@@ -233,7 +234,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/loadBlockSubtree',
+            `${this.BASE_NOTION_URL}/loadBlockSubtree`,
             arg,
             this.headers
           ) as { data: LoadBlockSubtreeResult };
@@ -251,7 +252,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getSpaces',
+            `${this.BASE_NOTION_URL}/getSpaces`,
             {},
             this.headers
           ) as { data: GetSpacesResult };
@@ -269,7 +270,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getGenericEmbedBlockData',
+            `${this.BASE_NOTION_URL}/getGenericEmbedBlockData`,
             arg,
             this.headers
           ) as { data: GetGenericEmbedBlockDataResult };
@@ -286,7 +287,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getUploadFileUrl',
+            `${this.BASE_NOTION_URL}/getUploadFileUrl`,
             arg,
             this.headers
           ) as { data: GetUploadFileUrlResult };
@@ -303,7 +304,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/getGoogleDriveAccounts',
+            `${this.BASE_NOTION_URL}/getGoogleDriveAccounts`,
             {},
             this.headers
           ) as { data: GetGoogleDriveAccountsResult };
@@ -320,7 +321,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data } = await axios.post(
-            'https://www.notion.so/api/v3/initializeGoogleDriveBlock',
+            `${this.BASE_NOTION_URL}/initializeGoogleDriveBlock`,
             arg,
             this.headers
           ) as { data: InitializeGoogleDriveBlockResult };
@@ -338,7 +339,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data, data: { recordMap } } = await axios.post(
-            'https://www.notion.so/api/v3/getBacklinksForBlock',
+            `${this.BASE_NOTION_URL}/getBacklinksForBlock`,
             { blockId },
             this.headers
           ) as { data: GetBackLinksForBlockResult };
@@ -356,7 +357,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           await axios.post(
-            'https://www.notion.so/api/v3/inviteGuestsToSpace',
+            `${this.BASE_NOTION_URL}/inviteGuestsToSpace`,
             arg,
             this.headers
           );
@@ -373,7 +374,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data: { value } } = await axios.post(
-            'https://www.notion.so/api/v3/findUser',
+            `${this.BASE_NOTION_URL}/findUser`,
             { email },
             this.headers
           ) as { data: FindUserResult };
@@ -390,7 +391,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data, data: { recordMap } } = await axios.post(
-            'https://www.notion.so/api/v3/createSpace',
+            `${this.BASE_NOTION_URL}/createSpace`,
             {
               ...params,
               planType: "personal",
@@ -416,7 +417,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data, data: { recordMap } } = await axios.post(
-            'https://www.notion.so/api/v3/syncRecordValues',
+            `${this.BASE_NOTION_URL}/syncRecordValues`,
             {
               requests
             },
@@ -436,7 +437,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const { data, data: { recordMap } } = await axios.post(
-            'https://www.notion.so/api/v3/queryCollection',
+            `${this.BASE_NOTION_URL}/queryCollection`,
             arg,
             this.headers
           ) as { data: QueryCollectionResult };
@@ -454,7 +455,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const res = await axios.post(
-            'https://www.notion.so/api/v3/loadUserContent', {}, this.headers
+            `${this.BASE_NOTION_URL}/loadUserContent`, {}, this.headers
           ) as { data: LoadUserContentResult };
           this.saveToCache(res.data.recordMap);
           resolve(res.data.recordMap);
@@ -485,7 +486,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const res = await axios.post(
-            'https://www.notion.so/api/v3/enqueueTask', {
+            `${this.BASE_NOTION_URL}/enqueueTask`, {
             task
           }, this.headers);
           resolve(res.data);
@@ -501,7 +502,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const res = await axios.post(
-            'https://www.notion.so/api/v3/loadPageChunk',
+            `${this.BASE_NOTION_URL}/loadPageChunk`,
             arg,
             this.headers
           ) as { data: LoadPageChunkResult };
@@ -519,7 +520,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           await axios.post(
-            'https://www.notion.so/api/v3/setBookmarkMetadata',
+            `${this.BASE_NOTION_URL}/setBookmarkMetadata`,
             arg,
             this.headers
           );
@@ -536,7 +537,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const res = await axios.post(
-            'https://www.notion.so/api/v3/getBacklinksForBlock',
+            `${this.BASE_NOTION_URL}/getBacklinksForBlock`,
             {
               blockId
             },
@@ -557,7 +558,7 @@ export default class Getters extends Cache {
       setTimeout(async () => {
         try {
           const res = await axios.post(
-            'https://www.notion.so/api/v3/getTasks',
+            `${this.BASE_NOTION_URL}/getTasks`,
             {
               taskIds
             },

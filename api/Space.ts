@@ -9,28 +9,17 @@ import { Operation, error, warn } from '../utils';
 
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, TCollectionViewBlock, UpdateCacheManuallyParam } from '../types';
 import DBArtifacts from '../mixins/DBArtifacts';
+import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent space of Notion
  * @noInheritDoc
  */
-class Space extends DBArtifacts(Data)<ISpace>{
+class Space extends DBArtifacts(GetItems(Data))<ISpace>{
   space_view?: ISpaceView;
 
   constructor(arg: NishanArg) {
     super({ ...arg, type: "space" });
-  }
-
-  async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][]) {
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: RootPage[] = [];
-    manual_res.forEach(manual_res => {
-      ops.push(...manual_res[0]);
-      sync_records.push(...manual_res[1]);
-      objects.push(manual_res[2]);
-    })
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return objects;
   }
 
   async createTRootPages(params: CreateTRootPagesParams[]) {
@@ -52,6 +41,7 @@ class Space extends DBArtifacts(Data)<ISpace>{
   }
 
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
+  // ? FIX:1:M Manual parameter doesnot work
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], manual: boolean = false) {
     const ops: IOperation[] = [],
       block_ids: [[string, TCollectionViewBlock], string, string[]][] = [],
@@ -155,47 +145,24 @@ class Space extends DBArtifacts(Data)<ISpace>{
     else return await this.returnArtifacts(manual_res)
   }
 
+  // ? FIX:1:M Remove explicit ISpace on this.getCachedData as its passed as type argument
+  // ? TD:1:M Remove any usage
   /**
    * Get pages from this space
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
   async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const pages: (RootPage | RootCollectionViewPage)[] = [];
-    const data = this.getCachedData() as ISpace;
-    for (let i = 0; i < data.pages.length; i++) {
-      const page_id = data.pages[i];
-      const page = this.cache.block.get(page_id) as TRootPage;
-      let should_add = false;
-      if (arg === undefined) should_add = true;
-      else if (Array.isArray(arg) && arg.includes(page_id)) should_add = true;
-      else if (typeof arg === 'function') should_add = await arg(page, i);
-
-      if (should_add && page) {
-        switch (page.type) {
-          case 'page':
-            pages.push(
-              new RootPage({
-                id: page.id,
-                ...this.getProps()
-              })
-            );
-            break;
-          case 'collection_view_page':
-            pages.push(
-              new RootCollectionViewPage({
-                id: page.id,
-                ...this.getProps()
-              })
-            );
-            break;
-        }
-
-        if (pages.length === 1 && multiple) break;
-      }
-    }
-    return pages;
-
+    const props = this.getProps();
+    return this.getItems(arg as any, multiple, "pages", async function (page: any) {
+      return page.type === "page" ? new RootPage({
+        id: page.id,
+        ...props
+      }) as any : new RootCollectionViewPage({
+        id: page.id,
+        ...props
+      }) as any
+    }) as any;
   }
 
   /**
@@ -204,8 +171,7 @@ class Space extends DBArtifacts(Data)<ISpace>{
    * @returns A page object matching the passed criteria
    */
   async getPage(arg: string | Predicate<TPage>) {
-    if (typeof arg === "string") return (await this.getPages([arg], true))[0];
-    else return (await this.getPages(arg, true))[0];
+    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 
   // ? FIX:2:E Array iteration and predicate fix 

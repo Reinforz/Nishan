@@ -1,13 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import Data from "../api/Data";
-import { IPage, ISpace, IRootPage, UpdateCacheManuallyParam, TCollectionViewBlock, CreateRootCollectionViewPageParams, Schema } from "../types";
+import { IPage, ISpace, IRootPage, UpdateCacheManuallyParam, TCollectionViewBlock, CreateRootCollectionViewPageParams, Schema, IOperation } from "../types";
 
 import Collection from "../api/Collection";
 import CollectionView from "../api/CollectionView";
 import CollectionViewPage from "../api/CollectionViewPage";
 import View from "../api/View";
 import { createViews } from "../utils";
+import RootPage from '../api/RootPage';
 
 type Constructor<E extends (IRootPage | IPage) | ISpace, T = Data<E>> = new (...args: any[]) => T;
 
@@ -47,6 +48,18 @@ export default function DBArtifacts<T extends (IRootPage | IPage) | ISpace, TBas
         })
       })
       return res
+    }
+
+    async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][]) {
+      const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: RootPage[] = [];
+      manual_res.forEach(manual_res => {
+        ops.push(...manual_res[0]);
+        sync_records.push(...manual_res[1]);
+        objects.push(manual_res[2]);
+      })
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(sync_records);
+      return objects;
     }
 
     createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {

@@ -10,7 +10,7 @@ import Block from './Block';
 import DBArtifacts from "../mixins/DBArtifacts";
 import GetItems from "../mixins/GetItems";
 
-import { error, Operation } from "../utils";
+import { Operation } from "../utils";
 
 import {
   NishanArg,
@@ -288,7 +288,7 @@ class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
   }
 }
 
-class DBPage<T extends IPage | IRootPage> extends DBArtifacts<IPage | IRootPage>(Page) {
+class DBPage extends DBArtifacts<IPage | IRootPage>(Page) {
   constructor(arg: NishanArg) {
     super(arg);
   }
@@ -435,39 +435,7 @@ export default class extends GetItems<IRootPage | IPage>(DBPage) {
    * @param arg array of ids or a predicate acting as a filter
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
-    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
-    if (data.content) {
-      if (Array.isArray(arg)) {
-        for (let index = 0; index < arg.length; index++) {
-          const id = arg[index];
-          if (data.content.includes(id))
-            ids.push(id);
-          else
-            throw new Error(error(`This page is not the parent of the block with id ${id}`))
-          if (!multiple && ids.length === 1) break;
-        }
-      } else if (typeof arg === "function") {
-        for (let index = 0; index < data.content.length; index++) {
-          const block_id = data.content[index];
-          const block = this.getCachedData<TBlock>(block_id);
-          if (block.parent_id === data.id && await arg(block, index))
-            ids.push(block_id);
-          if (!multiple && ids.length === 1) break;
-        }
-      }
-    };
-
-    ids.forEach(id => ops.push(Operation.block.update(id, [], {
-      alive: false,
-      last_edited_time: current_time
-    }), this.listRemoveOp(['content'], {
-      id
-    })));
-
-    ops.push(this.setOp(['last_edited_time'], current_time))
-    await this.saveTransactions(ops);
-    // TODO FIX:1:H Delete related data for example for collection_view delete the collection and the views from cache
-    ids.forEach(id => this.cache.block.delete(id));
+    await this.deleteItems(arg as any, multiple)
   }
 
   /**

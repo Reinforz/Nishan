@@ -341,26 +341,7 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param multiple whether or not multiple root pages should be deleted
    */
   async deleteTRootPages(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const data = this.getCachedData(),
-      current_time = Date.now(),
-      ops: IOperation[] = [],
-      is_array = Array.isArray(arg),
-      deleted_ids: string[] = [];
-    for (let index = 0; index < data.pages.length; index++) {
-      const id = data.pages[index];
-      const page = this.cache.block.get(id) as TRootPage;
-      const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
-      if (should_delete) {
-        ops.push(Operation.block.update(id, [], {
-          alive: false,
-          last_edited_time: current_time
-        }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
-        deleted_ids.push(id);
-      }
-      if (!multiple && ops.length === 1) break;
-    }
-    await this.saveTransactions(ops);
-    deleted_ids.forEach(deleted_id => this.cache.block.delete(deleted_id));
+    await this.deleteItems(arg as any, multiple)
   }
 
   /**

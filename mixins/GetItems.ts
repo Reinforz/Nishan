@@ -1,5 +1,6 @@
-import { ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
+import { IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
 import Data from "../api/Data";
+import { Operation } from "../utils";
 
 type Constructor<T extends TData, E = Data<T>> = new (...args: any[]) => E;
 
@@ -50,43 +51,56 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
 
     async traverseChildren(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (block: T, should_add: boolean) => Promise<void>) {
       await this.initializeCache();
-      let matched = 0;
+      const matched: T[] = [];
       const data = this.getCachedData(), container: string[] = data[this.path] as any ?? [];
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
           const block_id = arg[index], block = this.getCachedData(block_id);
           const should_add = container.includes(block_id);
           if (should_add) {
-            matched += 1;
+            matched.push(block)
             await cb(block, should_add);
           }
-          if (!multiple && matched === 1) break;
+          if (!multiple && matched.length === 1) break;
         }
       } else if (typeof arg === "function" || arg === undefined) {
         for (let index = 0; index < container.length; index++) {
           const block_id = container[index], block: T = this.getCachedData(block_id);
           const should_add = typeof arg === "function" ? await arg(block, index) : true;
           if (should_add) {
-            matched += 1;
+            matched.push(block)
             await cb(block, should_add);
           }
-          if (!multiple && matched === 1) break;
+          if (!multiple && matched.length === 1) break;
         }
       }
+      return matched;
     }
 
     async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (T: T) => Promise<T>) {
       const blocks: T[] = [];
-      await this.traverseChildren(arg, multiple, async function (block, should_add) {
-        if (should_add) blocks.push(await cb(block))
+      await this.traverseChildren(arg, multiple, async function (block, matched) {
+        if (matched) blocks.push(await cb(block))
       })
 
       return blocks;
     }
 
-    async deleteItems() {
-
+    async deleteItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true,) {
+      const ops: IOperation[] = [], current_time = Date.now(), _this = this;
+      const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
+        if (matched) {
+          ops.push(Operation.block.update(block.id, [], {
+            alive: false,
+            last_edited_time: current_time
+          }),
+            _this.listRemoveOp([_this.path as string], { id: block.id })
+          )
+        }
+      })
+      ops.push(this.setOp(["last_edited_time"], current_time));
+      await this.saveTransactions(ops);
+      blocks.forEach(blocks => this.cache.block.delete(blocks.id));
     }
   }
-
 }

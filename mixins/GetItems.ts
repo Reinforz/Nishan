@@ -35,7 +35,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
         } else if (this.type === "space") {
           container = (this.getCachedData() as ISpace).pages ?? [];
         } else if (this.type === "user_root")
-          container = (this.getCachedData() as IUserRoot).space_views ?? []
+          container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
 
         const non_cached: UpdateCacheManuallyParam = container.filter(info =>
           Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
@@ -48,26 +48,39 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       }
     }
 
-    async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (T: T) => Promise<T>) {
-      const data = this.getCachedData(), blocks: T[] = [], container: string[] = data[this.path] as any ?? [];
+    async traverseChildren(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (block: T, should_add: boolean) => Promise<void>) {
       await this.initializeCache();
-
+      let matched = 0;
+      const data = this.getCachedData(), container: string[] = data[this.path] as any ?? [];
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
           const block_id = arg[index], block = this.getCachedData(block_id);
-          let should_add = container.includes(block_id);
-          if (should_add)
-            blocks.push(await cb(block));
-          if (!multiple && blocks.length === 1) break;
+          const should_add = container.includes(block_id);
+          if (should_add) {
+            matched += 1;
+            await cb(block, should_add);
+          }
+          if (!multiple && matched === 1) break;
         }
       } else if (typeof arg === "function" || arg === undefined) {
         for (let index = 0; index < container.length; index++) {
           const block_id = container[index], block: T = this.getCachedData(block_id);
-          let should_add = typeof arg === "function" ? await arg(block, index) : true;
-          if (should_add) blocks.push(await cb(block))
-          if (!multiple && blocks.length === 1) break;
+          const should_add = typeof arg === "function" ? await arg(block, index) : true;
+          if (should_add) {
+            matched += 1;
+            await cb(block, should_add);
+          }
+          if (!multiple && matched === 1) break;
         }
       }
+    }
+
+    async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (T: T) => Promise<T>) {
+      const blocks: T[] = [];
+      await this.traverseChildren(arg, multiple, async function (block, should_add) {
+        if (should_add) blocks.push(await cb(block))
+      })
+
       return blocks;
     }
 

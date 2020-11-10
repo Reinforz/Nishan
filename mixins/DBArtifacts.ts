@@ -10,9 +10,9 @@ import View from "../api/View";
 import { createViews } from "../utils";
 import RootPage from '../api/RootPage';
 
-type Constructor<E extends (IRootPage | IPage) | ISpace, T = Data<E>> = new (...args: any[]) => T;
+type Constructor<T extends IRootPage | IPage | ISpace, E = Data<T>> = new (...args: any[]) => E;
 
-export default function DBArtifacts<T extends (IRootPage | IPage) | ISpace, TBase extends Constructor<T>>(Base: TBase) {
+export default function DBArtifacts<T extends IRootPage | IPage | ISpace>(Base: Constructor<T>) {
   return class DBArtifacts extends Base {
     constructor(...args: any[]) {
       super(args[0]);

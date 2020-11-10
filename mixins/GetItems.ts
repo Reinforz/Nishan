@@ -5,9 +5,9 @@ import {
 import { Predicate, TData, } from "../types";
 import Data from "../api/Data";
 
-type Constructor<E extends TData, T = Data<E>> = new (...args: any[]) => T;
+type Constructor<T extends TData, E = Data<T>> = new (...args: any[]) => E;
 
-export default function GetItems<T extends TData, TBase extends Constructor<T>>(Base: TBase) {
+export default function GetItems<T extends TData>(Base: Constructor<T>) {
   return class GetItems extends Base {
     constructor(...args: any[]) {
       super(args[0]);

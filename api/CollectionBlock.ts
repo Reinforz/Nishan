@@ -4,14 +4,15 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg, NishanArg, IOperation, Predicate, TView, TBlockInput, TCollectionBlock } from '../types';
+import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock } from '../types';
 import { createViews } from '../utils';
+import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
-class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
+class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
   init_cache: boolean = false;
   constructor(arg: NishanArg & { type: "block" }) {
     super({ ...arg });
@@ -57,16 +58,16 @@ class CollectionBlock extends Block<TCollectionBlock, TBlockInput> {
    */
   async fetchCollection() {
     const data = this.getCachedData();
-    const ICached_data = this.cache.collection.get((data as TCollectionBlock).collection_id);
+    const ICached_data = this.cache.collection.get(data.collection_id);
     if (ICached_data)
       return new Collection({
         ...this.getProps(),
-        id: (data as TCollectionBlock).collection_id,
+        id: data.collection_id,
       });
 
     return new Collection({
       ...this.getProps(),
-      id: (data as TCollectionBlock).collection_id,
+      id: data.collection_id,
     });
   }
 

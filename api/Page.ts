@@ -33,7 +33,7 @@ import {
  * @noInheritDoc
  */
 
-class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
+class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
   init_cache: boolean;
   constructor(arg: NishanArg) {
     super(arg);
@@ -53,19 +53,6 @@ class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
       });
       this.init_cache = true;
     }
-  }
-
-  /**
-   * Get all the blocks of the page as an object
-   * @returns An array of block object
-   */
-  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
-    await this.initializeCache();
-    return this.getItems(arg as any, multiple, "content", (block: any) => this.createClass(block.type, block.id))
-  }
-
-  async getBlock(arg: string | Predicate<TBlock>) {
-    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /* async upload() {
@@ -105,7 +92,7 @@ class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.initializeCache();
-    const data = this.getCachedData<IPage>(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), ids: string[] = [];
     if (data.content) {
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
@@ -144,7 +131,7 @@ class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
    * Add/remove this page from the favourite list
    */
   async toggleFavourite() {
-    const data = this.getCachedData<IPage>();
+    const data = this.getCachedData();
     let target_space_view: ISpaceView | null = null;
     for (let [, space_view] of this.cache.space_view) {
       if (space_view.space_id === data.space_id) {
@@ -365,7 +352,7 @@ class Page<T extends IPage | IRootPage> extends GetItems(Block)<T, IPageInput> {
   }
 }
 
-export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Page)<T>{
+class DBPage<T extends IPage | IRootPage> extends DBArtifacts<IPage | IRootPage>(Page) {
   constructor(arg: NishanArg) {
     super(arg);
   }
@@ -458,7 +445,7 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
    * @returns Returns the newly created full page db block object
    */
   async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
-    const data = this.getCachedData<IPage>();
+    const data = this.getCachedData();
     const { schema, properties, format, views } = this.createCollection(option, data.id);
 
     const view_ids = views.map((view) => view.id);
@@ -491,5 +478,23 @@ export default class DBPage<T extends IPage | IRootPage> extends DBArtifacts(Pag
     );
 
     return this.createDBArtifacts([[[data.id, "collection_view_page"], $collection_id, view_ids]]);
+  }
+}
+
+export default class extends GetItems<IRootPage | IPage>(DBPage) {
+  constructor(...args: any[]) {
+    super(args[0]);
+  }
+
+  /**
+   * Get all the blocks of the page as an object
+   * @returns An array of block object
+   */
+  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
+    return this.getItems(arg as any, multiple, "content", (block: any) => (this as any).createClass(block.type, block.id))
+  }
+
+  async getBlock(arg: string | Predicate<TBlock>) {
+    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 }

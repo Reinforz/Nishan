@@ -18,7 +18,7 @@ import View from './View';
  * A class to represent space of Notion
  * @noInheritDoc
  */
-class Space extends DBArtifacts(GetItems(Data))<ISpace>{
+class Space extends DBArtifacts<ISpace>(Data) {
   space_view?: ISpaceView;
 
   constructor(arg: NishanArg) {
@@ -157,35 +157,6 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
     else return await this.returnArtifacts(manual_res)
   }
 
-  // ? FIX:1:M Remove explicit ISpace on this.getCachedData as its passed as type argument
-  // ? TD:1:M Remove any usage
-  /**
-   * Get pages from this space
-   * @param arg criteria to filter pages by
-   * @returns An array of pages object matching the passed criteria
-   */
-  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const props = this.getProps();
-    return this.getItems(arg as any, multiple, "pages", async function (page: any) {
-      return page.type === "page" ? new RootPage({
-        id: page.id,
-        ...props
-      }) as any : new RootCollectionViewPage({
-        id: page.id,
-        ...props
-      }) as any
-    }) as any;
-  }
-
-  /**
-   * Get a single page from this space
-   * @param arg criteria to filter pages by
-   * @returns A page object matching the passed criteria
-   */
-  async getPage(arg: string | Predicate<TPage>) {
-    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
-  }
-
   // ? FIX:2:E Array iteration and predicate fix 
   /**
    * Delete multiple root_pages or root_collection_view_pages
@@ -193,7 +164,7 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
    * @param multiple whether or not multiple root pages should be deleted
    */
   async deleteTRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
-    const data = this.getCachedData() as ISpace,
+    const data = this.getCachedData(),
       current_time = Date.now(),
       ops: IOperation[] = [],
       is_array = Array.isArray(arg),
@@ -230,7 +201,7 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
-    const data = this.getCachedData() as ISpace, ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
       const [id, opts] = arg[index];
       block_ids.push(id);
@@ -272,7 +243,7 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
   }
 
   async toggleFavourites(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const target_space_view = this.spaceView, data = this.getCachedData() as ISpace, ops: IOperation[] = [];
+    const target_space_view = this.spaceView, data = this.getCachedData(), ops: IOperation[] = [];
     if (target_space_view) {
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
@@ -329,7 +300,7 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
    * @param userIds ids of the user to remove from the workspace
    */
   async removeUsers(userIds: string[]) {
-    const data = this.getCachedData() as ISpace;
+    const data = this.getCachedData();
     await this.removeUsersFromSpace({
       removePagePermissions: true,
       revokeUserTokens: false,
@@ -366,4 +337,37 @@ class Space extends DBArtifacts(GetItems(Data))<ISpace>{
   }
 }
 
-export default Space;
+export default class GetSpace extends GetItems<ISpace>(Space) {
+  constructor(...args: any[]) {
+    super(args[0]);
+  }
+
+  // ? FIX:1:M Remove explicit ISpace on this.getCachedData as its passed as type argument
+  // ? TD:1:M Remove any usage
+  /**
+   * Get pages from this space
+   * @param arg criteria to filter pages by
+   * @returns An array of pages object matching the passed criteria
+   */
+  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
+    const props = this.getProps();
+    return this.getItems(arg as any, multiple, "pages", async function (page: any) {
+      return page.type === "page" ? new RootPage({
+        id: page.id,
+        ...props
+      }) as any : new RootCollectionViewPage({
+        id: page.id,
+        ...props
+      }) as any
+    }) as any;
+  }
+
+  /**
+   * Get a single page from this space
+   * @param arg criteria to filter pages by
+   * @returns A page object matching the passed criteria
+   */
+  async getPage(arg: string | Predicate<TPage>) {
+    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
+  }
+}

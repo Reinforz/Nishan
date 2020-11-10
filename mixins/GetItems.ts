@@ -6,10 +6,21 @@ type Constructor<T extends TData, E = Data<T>> = new (...args: any[]) => E;
 export default function GetItems<T extends TData>(Base: Constructor<T>) {
   return class GetItems extends Base {
     init_cache: boolean;
+    path: keyof T = "" as any;
 
     constructor(...args: any[]) {
       super(args[0]);
       this.init_cache = false;
+      if (this.type === "block") {
+        const data = this.getCachedData() as TBlock;
+        if (data.type === "page")
+          this.path = "content" as any
+        else if (data.type === "collection_view" || data.type === "collection_view_page")
+          this.path = "view_ids" as any
+      } else if (this.type === "space")
+        this.path = "pages" as any
+      else if (this.type === "user_root")
+        this.path = "space_views" as any
     }
 
     async initializeCache() {
@@ -37,8 +48,8 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       }
     }
 
-    async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, path: keyof T, cb: (T: T) => Promise<T>) {
-      const data = this.getCachedData(), blocks: T[] = [], container: string[] = data[path] as any ?? [];
+    async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (T: T) => Promise<T>) {
+      const data = this.getCachedData(), blocks: T[] = [], container: string[] = data[this.path] as any ?? [];
       await this.initializeCache();
 
       if (Array.isArray(arg)) {
@@ -59,5 +70,10 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       }
       return blocks;
     }
+
+    async deleteItems() {
+
+    }
   }
+
 }

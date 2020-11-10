@@ -157,43 +157,6 @@ class Space extends DBArtifacts<ISpace>(Data) {
     else return await this.returnArtifacts(manual_res)
   }
 
-  // ? FIX:2:E Array iteration and predicate fix 
-  /**
-   * Delete multiple root_pages or root_collection_view_pages
-   * @param arg Criteria to filter the pages to be deleted
-   * @param multiple whether or not multiple root pages should be deleted
-   */
-  async deleteTRootPages(arg: string[] | Predicate<IRootPage>, multiple: boolean = true) {
-    const data = this.getCachedData(),
-      current_time = Date.now(),
-      ops: IOperation[] = [],
-      is_array = Array.isArray(arg),
-      deleted_ids: string[] = [];
-    for (let index = 0; index < data.pages.length; index++) {
-      const id = data.pages[index];
-      const page = this.cache.block.get(id) as IRootPage;
-      const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
-      if (should_delete) {
-        ops.push(Operation.block.update(id, [], {
-          alive: false,
-          last_edited_time: current_time
-        }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
-        deleted_ids.push(id);
-      }
-      if (!multiple && ops.length === 1) break;
-    }
-    await this.saveTransactions(ops);
-    deleted_ids.forEach(deleted_id => this.cache.block.delete(deleted_id));
-  }
-
-  /**
-   * Delete a single root page from the space
-   * @param arg Criteria to filter the page to be deleted
-   */
-  async deleteTRootPage(arg: string | Predicate<IRootPage>): Promise<void> {
-    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
-  }
-
   // ? FEAT:1:H Update cache and class state
   /**
    * Update multiple root pages located in the space
@@ -351,7 +314,7 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    */
   async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
     const props = this.getProps();
-    return this.getItems(arg as any, multiple, "pages", async function (page: any) {
+    return this.getItems(arg as any, multiple, async function (page: any) {
       return page.type === "page" ? new RootPage({
         id: page.id,
         ...props
@@ -370,4 +333,42 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
   async getPage(arg: string | Predicate<TPage>) {
     return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
   }
+
+  // ? FIX:2:E Array iteration and predicate fix 
+  /**
+   * Delete multiple root_pages or root_collection_view_pages
+   * @param arg Criteria to filter the pages to be deleted
+   * @param multiple whether or not multiple root pages should be deleted
+   */
+  async deleteTRootPages(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
+    const data = this.getCachedData(),
+      current_time = Date.now(),
+      ops: IOperation[] = [],
+      is_array = Array.isArray(arg),
+      deleted_ids: string[] = [];
+    for (let index = 0; index < data.pages.length; index++) {
+      const id = data.pages[index];
+      const page = this.cache.block.get(id) as TRootPage;
+      const should_delete = is_array ? (arg as string[]).includes(id) : typeof arg === "function" ? await arg(page, index) : false;
+      if (should_delete) {
+        ops.push(Operation.block.update(id, [], {
+          alive: false,
+          last_edited_time: current_time
+        }), this.listRemoveOp(['pages'], { id }), this.setOp(['last_edited_time'], current_time));
+        deleted_ids.push(id);
+      }
+      if (!multiple && ops.length === 1) break;
+    }
+    await this.saveTransactions(ops);
+    deleted_ids.forEach(deleted_id => this.cache.block.delete(deleted_id));
+  }
+
+  /**
+   * Delete a single root page from the space
+   * @param arg Criteria to filter the page to be deleted
+   */
+  async deleteTRootPage(arg: string | Predicate<TRootPage>): Promise<void> {
+    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
+  }
+
 }

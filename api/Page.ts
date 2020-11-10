@@ -475,7 +475,7 @@ export default class extends GetItems<IRootPage | IPage>(DBPage) {
    * @returns An array of block object
    */
   async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
-    return this.getItems(arg as any, multiple, "content", (block: any) => (this as any).createClass(block.type, block.id))
+    return this.getItems(arg as any, multiple, (block: any) => (this as any).createClass(block.type, block.id))
   }
 
   async getBlock(arg: string | Predicate<TBlock>) {

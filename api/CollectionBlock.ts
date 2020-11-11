@@ -63,6 +63,7 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
     });
   }
 
+
   /**
    * Get a single view present in the collection block
    * @param arg string representating id or a predicate function passed each element and index
@@ -75,25 +76,14 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
    * Get all the views associated with the collection block
    * @returns An array of view objects of the collectionblock
    */
-  async getViews(arg: undefined | string[] | Predicate<TView>, multiple: boolean = true) {
-    await this.initializeCache();
-    const data = this.getCachedData(), views: View[] = [];
-    if (Array.isArray(arg)) {
-      for (let index = 0; index < arg.length; index++) {
-        const view_id = arg[index];
-        let should_add = data.view_ids.includes(view_id);
-        if (should_add) views.push(new View({ ...this.getProps(), id: view_id }));
-        if (!multiple && views.length === 1) break;
-      }
-    } else if (typeof arg === "function" || arg === undefined) {
-      for (let index = 0; index < data.view_ids.length; index++) {
-        const view_id = data.view_ids[index], view = this.getCachedData<TView>(view_id);
-        let should_add = typeof arg === "function" ? await arg(view, index) : true;
-        if (should_add) views.push(new View({ id: view_id, ...this.getProps() }))
-        if (!multiple && views.length === 1) break;
-      }
-    }
-    return views;
+  async getViews(arg: undefined | string[] | Predicate<TView>, multiple: boolean = true): Promise<View[]> {
+    const props = this.getProps();
+    return this.getItems<TView>(arg, multiple, async function (view) {
+      return new View({
+        id: view.id,
+        ...props
+      })
+    })
   }
 }
 

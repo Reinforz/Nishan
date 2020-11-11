@@ -4,7 +4,8 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg } from "../types";
+import Page from './Page';
 
 /**
  * A class to represent collection of Notion
@@ -34,25 +35,37 @@ class Collection extends Data<ICollection> {
    * Create a template for the collection
    * @param opts Object for configuring template options
    */
-  async createTemplate(opts: Omit<Partial<IPageInput>, "type">) {
-    const data = this.getCachedData();
-    const { properties = {}, format = {} } = opts;
-    const $template_id = uuidv4();
-    await this.saveTransactions([
-      Operation.block.set($template_id, [], {
+  async createTemplate(opt: Omit<Partial<IPageInput>, "type">) {
+    return (await this.createTemplates([opt]))[0]
+  }
+
+  async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: number | BlockRepostionArg })[]) {
+    const ops: IOperation[] = [], template_ids: string[] = [];
+    for (let index = 0; index < ops.length; index++) {
+      const opt = opts[index],
+        { properties = {}, format = {} } = opt,
+        $template_id = uuidv4();
+      const block_list_op = this.addToChildArray($template_id, opt.position);
+      template_ids.push($template_id);
+      ops.push(Operation.block.set($template_id, [], {
         type: 'page',
         id: $template_id,
         version: 1,
         is_template: true,
-        parent_id: data.id,
+        parent_id: this.id,
         parent_table: 'collection',
         alive: true,
         properties,
         format
-      }),
-      this.listAfterOp(['template_pages'], { id: $template_id })
-    ]);
+      }), block_list_op);
+    }
 
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(template_ids);
+    return template_ids.map(template_id => new Page({
+      ...this.getProps(),
+      id: template_id,
+    }))
   }
 
   // ? TD:2:H Better TS Support rather than using any

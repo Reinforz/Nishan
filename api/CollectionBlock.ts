@@ -56,7 +56,7 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
    * Fetch the corresponding collection of the collection block using the collection_id
    * @returns The corresponding collection object
    */
-  async fetchCollection() {
+  async getCollection() {
     const data = this.getCachedData();
     const ICached_data = this.cache.collection.get(data.collection_id);
     if (ICached_data)

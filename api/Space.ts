@@ -312,7 +312,7 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true) {
+  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<TRootPage[]> {
     const props = this.getProps();
     return this.getItems(arg as any, multiple, async function (page: any) {
       return page.type === "page" ? new RootPage({
@@ -330,7 +330,7 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getPage(arg: string | Predicate<TPage>) {
+  async getPage(arg: string | Predicate<TPage>): Promise<TRootPage> {
     return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 

@@ -101,6 +101,8 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
   async deleteView(arg: string | Predicate<TView>) {
     return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
   }
+
+  // ? FEAT:1:H Create updateView(s) methods, take help from view.updateView method
 }
 
 export default CollectionBlock;

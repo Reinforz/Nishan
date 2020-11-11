@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import Data from './Data';
+import UserRoot from "./UserRoot"
 
 import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, Predicate } from '../types';
 import { Operation } from '../utils';
@@ -17,6 +18,28 @@ class NotionUser extends Data<INotionUser> {
   }
 
   /**
+   * Get the current logged in user settings
+   * @returns Returns the logged in UserSettings object
+   */
+  getUserSettings() {
+    const user_settings = this.cache.user_settings.get(this.user_id);
+    if (user_settings)
+      return new UserSettings({
+        ...this.getProps(),
+        id: user_settings.id,
+      });
+  }
+
+  getUserRoot() {
+    const notion_user = this.cache.user_root.get(this.id);
+    if (notion_user)
+      return new UserRoot({
+        ...this.getProps(),
+        id: this.id
+      })
+  }
+
+  /**
    * Update the notion user
    * @param opt `UpdatableNotionUserParam`
    */
@@ -30,19 +53,6 @@ class NotionUser extends Data<INotionUser> {
       op
     ]);
     update();
-  }
-
-  /**
-   * Get the current logged in user settings
-   * @returns Returns the logged in UserSettings object
-   */
-  async getUserSettings() {
-    const user_settings = this.cache.user_settings.get(this.user_id);
-    if (user_settings)
-      return new UserSettings({
-        ...this.getProps(),
-        id: user_settings.id,
-      });
   }
 
   /**
@@ -131,12 +141,6 @@ class NotionUser extends Data<INotionUser> {
         parent_table: 'space',
         alive: true,
         permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
-        created_by_id: this.user_id,
-        created_by_table: 'notion_user',
-        created_time: Date.now(),
-        last_edited_time: Date.now(),
-        last_edited_by_table: 'notion_user',
-        last_edited_by_id: this.user_id,
         properties: {
           title: [[name]]
         }

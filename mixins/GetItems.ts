@@ -1,4 +1,4 @@
-import { ICollection, IOperation, ISpace, ISpaceView, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
+import { ICollection, IOperation, ISpace, ISpaceView, IUserRoot, Predicate, TBlock, TData, TDataType, UpdateCacheManuallyParam, } from "../types";
 import Data from "../api/Data";
 import { Operation } from "../utils";
 
@@ -84,7 +84,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       const ops: IOperation[] = [], current_time = Date.now(), _this = this;
       const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
         if (matched) {
-          ops.push(Operation.block.update(block.id, [], {
+          ops.push(Operation[_this.child_type as TDataType].update(block.id, [], {
             alive: false,
             last_edited_time: current_time
           }),
@@ -92,9 +92,11 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
           )
         }
       })
-      ops.push(this.setOp(["last_edited_time"], current_time));
-      await this.saveTransactions(ops);
-      blocks.forEach(blocks => this.cache.block.delete(blocks.id));
+      if (ops.length !== 0) {
+        ops.push(this.setOp(["last_edited_time"], current_time));
+        await this.saveTransactions(ops);
+        blocks.forEach(blocks => this.cache.block.delete(blocks.id));
+      }
     }
   }
 }

@@ -17,6 +17,26 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
     super({ ...arg });
   }
 
+  /**
+   * Fetch the corresponding collection of the collection block using the collection_id
+   * @returns The corresponding collection object
+   */
+  async getCollection() {
+    await this.initializeCache();
+    const data = this.getCachedData();
+    const ICached_data = this.cache.collection.get(data.collection_id);
+    if (ICached_data)
+      return new Collection({
+        ...this.getProps(),
+        id: data.collection_id,
+      });
+
+    return new Collection({
+      ...this.getProps(),
+      id: data.collection_id,
+    });
+  }
+
   // TODO RF:1:H Same view options as Page.createLinkedDBContent
   /**
    * Create a new view for the collection block
@@ -44,27 +64,6 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
   }
 
   /**
-   * Fetch the corresponding collection of the collection block using the collection_id
-   * @returns The corresponding collection object
-   */
-  async getCollection() {
-    await this.initializeCache();
-    const data = this.getCachedData();
-    const ICached_data = this.cache.collection.get(data.collection_id);
-    if (ICached_data)
-      return new Collection({
-        ...this.getProps(),
-        id: data.collection_id,
-      });
-
-    return new Collection({
-      ...this.getProps(),
-      id: data.collection_id,
-    });
-  }
-
-
-  /**
    * Get a single view present in the collection block
    * @param arg string representating id or a predicate function passed each element and index
    */
@@ -84,6 +83,23 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
         ...props
       })
     })
+  }
+
+  /**
+   * Delete multiple root_pages or root_collection_view_pages
+   * @param arg Criteria to filter the pages to be deleted
+   * @param multiple whether or not multiple root pages should be deleted
+   */
+  async deleteViews(arg: string[] | Predicate<TView>, multiple: boolean = true) {
+    await this.deleteItems<TView>(arg as any, multiple)
+  }
+
+  /**
+   * Delete a single root page from the space
+   * @param arg Criteria to filter the page to be deleted
+   */
+  async deleteView(arg: string | Predicate<TView>) {
+    return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
   }
 }
 

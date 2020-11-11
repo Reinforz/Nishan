@@ -434,7 +434,7 @@ export default class extends GetItems<IRootPage | IPage>(DBPage) {
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
+  async deleteBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.deleteItems<TBlock>(arg, multiple)
   }
 

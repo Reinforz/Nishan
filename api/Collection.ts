@@ -31,7 +31,6 @@ class Collection extends GetItems<ICollection>(Data) {
     update();
   }
 
-  // ? FEAT:1:E Return a page object
   /**
    * Create a template for the collection
    * @param opts Object for configuring template options
@@ -40,6 +39,10 @@ class Collection extends GetItems<ICollection>(Data) {
     return (await this.createTemplates([opt]))[0]
   }
 
+  /**
+   * Create multiple templates for the collection
+   * @param opts Array of Objects for configuring template options
+   */
   async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: number | BlockRepostionArg })[]) {
     const ops: IOperation[] = [], template_ids: string[] = [];
 
@@ -70,6 +73,12 @@ class Collection extends GetItems<ICollection>(Data) {
     }))
   }
 
+  /**
+   * Get multiple template pages of the collection
+   * @param arg string of ids or a predicate function
+   * @param multiple whether multiple or single item is targeted
+   * @returns An array of template pages object
+   */
   async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true): Promise<Page[]> {
     const _this = this;
     return this.getItems<IPage>(arg as any, multiple, async function (page) {
@@ -80,8 +89,30 @@ class Collection extends GetItems<ICollection>(Data) {
     })
   }
 
+  /**
+   * Get a single template page of the collection
+   * @param arg string id or a predicate function
+   * @returns Template page object
+   */
   async getTemplate(arg: string | Predicate<IPage>) {
     return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  /**
+   * Delete a single template page from the collection
+   * @param arg string id or a predicate function
+   */
+  async deleteTemplate(arg: string | Predicate<IPage>) {
+    return await this.deleteTemplates(typeof arg === "string" ? [arg] : arg, false);
+  }
+
+  /**
+   * Delete multiple template pages from the collection
+   * @param arg string of ids or a predicate function
+   * @param multiple whether multiple or single item is targeted
+   */
+  async deleteTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true) {
+    await this.deleteItems<IPage>(arg, multiple)
   }
 
   // ? TD:2:H Better TS Support rather than using any

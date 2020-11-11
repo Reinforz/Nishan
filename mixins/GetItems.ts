@@ -48,6 +48,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       await this.initializeCache();
       const matched: Q[] = [];
       const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
+
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
           const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as Q;

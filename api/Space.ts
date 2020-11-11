@@ -163,7 +163,7 @@ class Space extends DBArtifacts<ISpace>(Data) {
    * @param arg Array of tuple, id and object to configure each root page
    * @param multiple whether multiple rootpages should be deleted
    */
-  async updateRootPages(arg: [string, Omit<IPageInput, "type">][], multiple: boolean = true) {
+  async updateRootPages(arg: [string, Omit<IPageInput, "type">][]) {
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
       const [id, opts] = arg[index];
@@ -172,7 +172,6 @@ class Space extends DBArtifacts<ISpace>(Data) {
         ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
       else
         throw new Error(error(`Space:${data.id} is not the parent of RootPage:${id}`));
-      if (!multiple && ops.length === 1) break;
     }
     await this.saveTransactions(ops);
     await this.updateCacheManually(block_ids);
@@ -184,7 +183,7 @@ class Space extends DBArtifacts<ISpace>(Data) {
    * @param opt object to configure root page
    */
   async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
-    await this.updateRootPages([[id, opt]], false);
+    await this.updateRootPages([[id, opt]]);
   }
 
   // ? FEAT:1:M Update space permissions

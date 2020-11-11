@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Operation } from '../utils';
+import { error, Operation } from '../utils';
 
 import Data from "./Data";
 
@@ -71,6 +71,24 @@ class Collection extends GetItems<ICollection>(Data) {
       ...this.getProps(),
       id: template_id,
     }))
+  }
+
+  async updateTemplates(arg: [string, Omit<IPageInput, "type">][]) {
+    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
+    for (let index = 0; index < arg.length; index++) {
+      const [id, opts] = arg[index];
+      block_ids.push(id);
+      if (data.template_pages && data.template_pages.includes(id))
+        ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
+      else
+        throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
+    }
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(block_ids);
+  }
+
+  async updateTemplate(id: string, opt: Omit<IPageInput, "type">) {
+    await this.updateTemplates([[id, opt]]);
   }
 
   /**

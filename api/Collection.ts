@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, /* IPage, Predicate */ } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, /* IPage, Predicate */ } from "../types";
 import Page from './Page';
 import GetItems from '../mixins/GetItems';
 
@@ -70,16 +70,19 @@ class Collection extends GetItems<ICollection>(Data) {
     }))
   }
 
-  /* async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true) : Promise<Page[]>{
+  async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true): Promise<Page[]> {
     const _this = this;
-    return this.getItems(arg as any, multiple, async function (page: IPage){
+    return this.getItems<IPage>(arg as any, multiple, async function (page) {
       return new Page({
         ..._this.getProps(),
         id: page.id
       }) as any
     })
-  } */
+  }
 
+  async getTemplate(arg: string | Predicate<IPage>) {
+    return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
 
   // ? TD:2:H Better TS Support rather than using any
   /**

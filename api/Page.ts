@@ -445,11 +445,11 @@ export default class extends GetItems<IRootPage | IPage>(DBPage) {
   async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
     const _this = this as any;
     return this.getItems<TBlock>(arg, multiple, async function (block) {
-      _this.createClass(block.type, block.id)
+      return _this.createClass(block.type, block.id);
     })
   }
 
   async getBlock(arg: string | Predicate<TBlock>) {
-    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0]
+    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 }

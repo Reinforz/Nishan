@@ -330,8 +330,8 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getPage(arg: string | Predicate<TPage>): Promise<RootPage | RootCollectionViewPage> {
-    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
+  async getPage(arg: string | Predicate<TPage>) {
+    return (await this.getPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**

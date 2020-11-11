@@ -1,4 +1,4 @@
-import { ICollection, IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
+import { ICollection, IOperation, ISpace, ISpaceView, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
 import Data from "../api/Data";
 import { Operation } from "../utils";
 
@@ -30,6 +30,9 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
           container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
         else if (this.type === "collection")
           container = (this.getCachedData() as ICollection).template_pages ?? []
+        else if (this.type === "space_view")
+          container = (this.getCachedData() as ISpaceView).bookmarked_pages ?? []
+
         const non_cached: UpdateCacheManuallyParam = container.filter(info =>
           !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
         );

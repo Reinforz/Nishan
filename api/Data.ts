@@ -17,7 +17,7 @@ export default class Data<T extends TData> extends Getters {
   setOp: (path: string[], args: Args) => IOperation;
   listRemoveOp: (path: string[], args: Args) => IOperation;
   child_path: keyof T = "" as any;
-  child_type: TDataType = "" as any;
+  child_type: TDataType = "block" as any;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -31,26 +31,22 @@ export default class Data<T extends TData> extends Getters {
 
     if (this.type === "block") {
       const data = this.getCachedData() as TBlock;
-      if (data.type === "page") {
-        this.child_type = "block";
+      if (data.type === "page")
         this.child_path = "content" as any
-      }
       else if (data.type === "collection_view" || data.type === "collection_view_page") {
         this.child_path = "view_ids" as any
         this.child_type = "collection_view"
       }
-    } else if (this.type === "space") {
+    } else if (this.type === "space")
       this.child_path = "pages" as any;
-      this.child_type = "block";
-    }
     else if (this.type === "user_root") {
       this.child_path = "space_views" as any;
       this.child_type = "space_view"
     }
-    else if (this.type === "collection") {
+    else if (this.type === "collection")
       this.child_path = "template_pages" as any;
-      this.child_type = "block"
-    }
+    else if (this.type === "space_view")
+      this.child_path = "bookmarked_pages" as any;
   }
 
   /**

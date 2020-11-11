@@ -5,9 +5,9 @@ import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
 
-import { Operation, error, warn } from '../utils';
+import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IRootPage, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam } from '../types';
 import DBArtifacts from '../mixins/DBArtifacts';
 import GetItems from '../mixins/GetItems';
 import CollectionViewPage from './CollectionViewPage';
@@ -205,56 +205,18 @@ class Space extends DBArtifacts<ISpace>(Data) {
     update();
   }
 
-  async toggleFavourites(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    const target_space_view = this.spaceView, data = this.getCachedData(), ops: IOperation[] = [];
-    if (target_space_view) {
-      if (Array.isArray(arg)) {
-        for (let index = 0; index < arg.length; index++) {
-          const page_id = arg[index];
-          if (data.pages.includes(page_id)) {
-            const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-            ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
-              id: page_id
-            }))
-          } else
-            warn(`Space:${this.id} doesnot contain Page:${page_id}`)
-          if (!multiple && ops.length === 1) break;
-        }
-      } else if (typeof arg === "function") {
-        for (let index = 0; index < data.pages.length; index++) {
-          const page_id = data.pages[index];
-          const page = this.getCachedData<IRootPage>(page_id);
-          if (page.parent_id === this.id && await arg(page, index)) {
-            const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-            ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
-              id: page_id
-            }))
-          }
-          if (!multiple && ops.length === 1) break;
-        }
-      }
-    }
-    await this.saveTransactions(ops);
-    target_space_view && await this.updateCacheManually([[target_space_view.id, "space_view"]]);
-  }
-
-  async toggleFavourite(arg: string | Predicate<TRootPage>) {
-    return await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
-  }
-
   /**
    * Delete the current workspace
    */
   async delete() {
-    const data = this.getCachedData();
     await this.enqueueTask({
       eventName: 'deleteSpace',
       request:
       {
-        spaceId: data.id
+        spaceId: this.id
       }
     });
-    this.cache.space.delete(data.id);
+    this.cache.space.delete(this.id);
   }
 
   // ? FEAT:1:M Empty userids for all user, a predicate
@@ -305,14 +267,12 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
     super(args[0]);
   }
 
-  // ? FIX:1:M Remove explicit ISpace on this.getCachedData as its passed as type argument
-  // ? TD:1:M Remove any usage
   /**
    * Get pages from this space
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
+  async getTRootPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
     const props = this.getProps();
     return this.getItems<TRootPage>(arg, multiple, async function (page) {
       return page.type === "collection_view_page" ? new CollectionViewPage({
@@ -330,8 +290,8 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getPage(arg: string | Predicate<TPage>) {
-    return (await this.getPages(typeof arg === "string" ? [arg] : arg, false))[0]
+  async getTRootPage(arg: string | Predicate<TPage>) {
+    return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**
@@ -350,5 +310,4 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
   async deleteTRootPage(arg: string | Predicate<TRootPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
-
 }

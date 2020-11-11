@@ -4,14 +4,15 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, /* IPage, Predicate */ } from "../types";
 import Page from './Page';
+import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent collection of Notion
  * @noInheritDoc
  */
-class Collection extends Data<ICollection> {
+class Collection extends GetItems<ICollection>(Data) {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "collection" });
   }
@@ -69,6 +70,17 @@ class Collection extends Data<ICollection> {
     }))
   }
 
+  /* async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true) : Promise<Page[]>{
+    const _this = this;
+    return this.getItems(arg as any, multiple, async function (page: IPage){
+      return new Page({
+        ..._this.getProps(),
+        id: page.id
+      }) as any
+    })
+  } */
+
+
   // ? TD:2:H Better TS Support rather than using any
   /**
    * Add rows of data to the collection block
@@ -76,7 +88,6 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async addRows(rows: { format: any, properties: any }[]) {
-    const Page = require('./Page');
     const page_ids: string[] = [];
     const ops: IOperation[] = [];
     rows.map(({ format, properties }) => {

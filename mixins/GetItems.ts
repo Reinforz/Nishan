@@ -1,4 +1,4 @@
-import { IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
+import { ICollection, IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
 import Data from "../api/Data";
 import { Operation } from "../utils";
 
@@ -28,6 +28,8 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
           container = (this.getCachedData() as ISpace).pages ?? [];
         } else if (this.type === "user_root")
           container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
+        else if (this.type === "collection")
+          container = (this.getCachedData() as ICollection).template_pages ?? []
         const non_cached: UpdateCacheManuallyParam = container.filter(info =>
           !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
         );
@@ -39,13 +41,13 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       }
     }
 
-    async traverseChildren(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (block: T, should_add: boolean) => Promise<void>) {
+    async traverseChildren<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
       await this.initializeCache();
-      const matched: T[] = [];
+      const matched: Q[] = [];
       const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
-          const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as T;
+          const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as Q;
           const should_add = container.includes(block_id);
           if (should_add) {
             matched.push(block)
@@ -55,7 +57,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
         }
       } else if (typeof arg === "function" || arg === undefined) {
         for (let index = 0; index < container.length; index++) {
-          const block_id = container[index], block = this.cache[this.child_type].get(block_id) as T;
+          const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
           const should_add = typeof arg === "function" ? await arg(block, index) : true;
           if (should_add) {
             matched.push(block)
@@ -67,17 +69,15 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
       return matched;
     }
 
-    async getItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (T: T) => Promise<T>) {
-      const blocks: T[] = [];
-      await this.traverseChildren(arg, multiple, async function (block, matched) {
+    async getItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>) {
+      const blocks: any[] = [];
+      await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
         if (matched) blocks.push(await cb(block))
       })
-
       return blocks;
     }
 
-    async deleteItems(arg: undefined | string[] | Predicate<T>, multiple: boolean = true,) {
-      await this.initializeCache();
+    async deleteItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true,) {
       const ops: IOperation[] = [], current_time = Date.now(), _this = this;
       const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
         if (matched) {

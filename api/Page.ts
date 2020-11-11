@@ -435,15 +435,18 @@ export default class extends GetItems<IRootPage | IPage>(DBPage) {
    * @param arg array of ids or a predicate acting as a filter
    */
   async deleteBlocks(arg: string[] | Predicate<TBlock>, multiple: boolean = true) {
-    await this.deleteItems(arg as any, multiple)
+    await this.deleteItems<TBlock>(arg, multiple)
   }
 
   /**
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
-    return this.getItems(arg as any, multiple, (block: any) => (this as any).createClass(block.type, block.id))
+  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
+    const _this = this as any;
+    return this.getItems<TBlock>(arg, multiple, async function (block) {
+      _this.createClass(block.type, block.id)
+    })
   }
 
   async getBlock(arg: string | Predicate<TBlock>) {

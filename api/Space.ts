@@ -312,17 +312,17 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<TRootPage[]> {
+  async getPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
     const props = this.getProps();
-    return this.getItems(arg as any, multiple, async function (page: any) {
-      return page.type === "page" ? new RootPage({
+    return this.getItems<TRootPage>(arg, multiple, async function (page) {
+      return page.type === "collection_view_page" ? new CollectionViewPage({
         id: page.id,
         ...props
-      }) as any : new RootCollectionViewPage({
+      }) : new RootPage({
         id: page.id,
         ...props
-      }) as any
-    }) as any;
+      })
+    });
   }
 
   /**
@@ -330,25 +330,24 @@ export default class GetSpace extends GetItems<ISpace>(Space) {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getPage(arg: string | Predicate<TPage>): Promise<TRootPage> {
+  async getPage(arg: string | Predicate<TPage>): Promise<RootPage | RootCollectionViewPage> {
     return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 
-  // ? FIX:2:E Array iteration and predicate fix 
   /**
    * Delete multiple root_pages or root_collection_view_pages
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
   async deleteTRootPages(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
-    await this.deleteItems(arg as any, multiple)
+    await this.deleteItems<TRootPage>(arg as any, multiple)
   }
 
   /**
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg: string | Predicate<TRootPage>): Promise<void> {
+  async deleteTRootPage(arg: string | Predicate<TRootPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 

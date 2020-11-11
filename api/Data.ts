@@ -16,6 +16,8 @@ export default class Data<T extends TData> extends Getters {
   updateOp: (path: string[], args: Args) => IOperation;
   setOp: (path: string[], args: Args) => IOperation;
   listRemoveOp: (path: string[], args: Args) => IOperation;
+  child_path: keyof T = "" as any;
+  child_type: TDataType = "" as any;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -26,6 +28,29 @@ export default class Data<T extends TData> extends Getters {
     this.updateOp = Operation[arg.type].update.bind(this, this.id)
     this.setOp = Operation[arg.type].set.bind(this, this.id)
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
+
+    if (this.type === "block") {
+      const data = this.getCachedData() as TBlock;
+      if (data.type === "page") {
+        this.child_type = "block";
+        this.child_path = "content" as any
+      }
+      else if (data.type === "collection_view" || data.type === "collection_view_page") {
+        this.child_path = "view_ids" as any
+        this.child_type = "collection_view"
+      }
+    } else if (this.type === "space") {
+      this.child_path = "pages" as any;
+      this.child_type = "block";
+    }
+    else if (this.type === "user_root") {
+      this.child_path = "space_views" as any;
+      this.child_type = "space_view"
+    }
+    else if (this.type === "collection") {
+      this.child_path = "template_pages" as any;
+      this.child_type = "block"
+    }
   }
 
   /**
@@ -69,64 +94,33 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  addToChildArray($block_id: string, arg: number | BlockRepostionArg | undefined) {
-    const data = this.getCachedData() as any;
-    let parent_id: string = "";
-    let path: "pages" | "view_ids" | "content" | "space_views" = "pages";
-    let parent_type: "space" | "block" | "user_root" = "block";
-    switch (this.type) {
-      case "block":
-        parent_type = data.parent_table;
-        parent_id = data.parent_id;
-        switch (parent_type) {
-          case "block":
-            path = "content";
-            break;
-          case "space":
-            path = "pages";
-            break;
-        }
-        break;
-      case "space_view":
-        parent_type = "user_root";
-        path = "space_views";
-        parent_id = this.user_id
-        break;
-      case "collection_view":
-        parent_type = "block"
-        path = "view_ids"
-        parent_id = data.parent_id
-        break;
-      case "space":
-        parent_type = "space";
-        path = "pages"
-        parent_id = this.id;
-    }
-    const parent_data = this.cache[parent_type].get(parent_id) as any;
-    parent_data[path] = parent_data[path] ?? [];
-    const cached_container = parent_data[path];
+  addToChildArray(child_id: string, position: number | BlockRepostionArg | undefined) {
+    const data = this.getCachedData();
+    if (!data[this.child_path]) data[this.child_path] = [] as any;
+
+    const container: string[] = data[this.child_path] as any;
 
     let where: "before" | "after" = "before", id: string = '';
 
-    if (arg !== undefined) {
-      if (typeof arg === "number") {
-        id = parent_data[path]?.[arg] ?? '';
-        where = parent_data[path].indexOf($block_id) > arg ? "before" : "after";
-        cached_container.splice(arg, 0, $block_id);
+    if (position !== undefined) {
+      if (typeof position === "number") {
+        id = container?.[position] ?? '';
+        where = container.indexOf(child_id) > position ? "before" : "after";
+        container.splice(position, 0, child_id);
       } else {
-        where = arg.position, id = arg.id;
-        cached_container.splice(cached_container.indexOf(arg.id) + (arg.position === "before" ? -1 : 1), 0, $block_id);
+        where = position.position, id = position.id;
+        container.splice(container.indexOf(position.id) + (position.position === "before" ? -1 : 1), 0, child_id);
       }
 
-      return (Operation[parent_type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](parent_id, [path], {
+      return (Operation[this.type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](this.id, [this.child_path as string], {
         [where]: id,
-        id: $block_id
+        id: child_id
       }) as IOperation
     } else {
-      cached_container.push($block_id);
-      return Operation[parent_type].listAfter(parent_id, [path], {
+      container.push(child_id);
+      return Operation[this.type].listAfter(this.id, [this.child_path as string], {
         after: '',
-        id: $block_id
+        id: child_id
       }) as IOperation;
     }
   }

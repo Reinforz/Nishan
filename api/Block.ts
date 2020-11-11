@@ -159,12 +159,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   createClass(type: TBlockType, id: string): any {
-    const Page = require("./Page");
-    const CollectionView = require("./CollectionView");
+    const Page = require("./Page").default;
+    const CollectionView = require("./CollectionView").default;
+
     const obj = {
       id,
-      ...this.getProps(),
-      type: "block" as "block"
+      ...this.getProps()
     };
 
     switch (type) {

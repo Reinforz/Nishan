@@ -41,7 +41,8 @@ class Collection extends Data<ICollection> {
 
   async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: number | BlockRepostionArg })[]) {
     const ops: IOperation[] = [], template_ids: string[] = [];
-    for (let index = 0; index < ops.length; index++) {
+
+    for (let index = 0; index < opts.length; index++) {
       const opt = opts[index],
         { properties = {}, format = {} } = opt,
         $template_id = uuidv4();

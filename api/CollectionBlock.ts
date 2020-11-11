@@ -4,7 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { BlockRepostionArg, UpdateCacheManuallyParam, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock } from '../types';
+import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock } from '../types';
 import { createViews } from '../utils';
 import GetItems from '../mixins/GetItems';
 
@@ -13,17 +13,8 @@ import GetItems from '../mixins/GetItems';
  * @noInheritDoc
  */
 class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
-  init_cache: boolean = false;
   constructor(arg: NishanArg & { type: "block" }) {
     super({ ...arg });
-  }
-
-  async initializeCache() {
-    if (!this.init_cache) {
-      const data = this.getCachedData();
-      await this.updateCacheManually([...data.view_ids.map(view_id => [view_id, "collection_view"]), [data.collection_id, "collection"]] as UpdateCacheManuallyParam)
-      this.init_cache = true;
-    }
   }
 
   // TODO RF:1:H Same view options as Page.createLinkedDBContent
@@ -57,6 +48,7 @@ class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
    * @returns The corresponding collection object
    */
   async getCollection() {
+    await this.initializeCache();
     const data = this.getCachedData();
     const ICached_data = this.cache.collection.get(data.collection_id);
     if (ICached_data)

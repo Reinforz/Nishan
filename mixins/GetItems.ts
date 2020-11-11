@@ -1,4 +1,4 @@
-import { IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, TDataType, UpdateCacheManuallyParam, } from "../types";
+import { IOperation, ISpace, IUserRoot, Predicate, TBlock, TData, UpdateCacheManuallyParam, } from "../types";
 import Data from "../api/Data";
 import { Operation } from "../utils";
 
@@ -7,30 +7,10 @@ type Constructor<T extends TData, E = Data<T>> = new (...args: any[]) => E;
 export default function GetItems<T extends TData>(Base: Constructor<T>) {
   return class GetItems extends Base {
     init_cache: boolean;
-    path: keyof T = "" as any;
-    child_type: TDataType = "" as any;
 
     constructor(...args: any[]) {
       super(args[0]);
       this.init_cache = false;
-      if (this.type === "block") {
-        const data = this.getCachedData() as TBlock;
-        if (data.type === "page") {
-          this.child_type = "block";
-          this.path = "content" as any
-        }
-        else if (data.type === "collection_view" || data.type === "collection_view_page") {
-          this.path = "view_ids" as any
-          this.child_type = "collection_view"
-        }
-      } else if (this.type === "space") {
-        this.path = "pages" as any;
-        this.child_type = "block";
-      }
-      else if (this.type === "user_root") {
-        this.path = "space_views" as any;
-        this.child_type = "space_view"
-      }
     }
 
     async initializeCache() {
@@ -40,13 +20,14 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
           const data = this.getCachedData() as TBlock;
           if (data.type === "page")
             container = data.content ?? [];
-          if (data.type === "collection_view" || data.type === "collection_view_page")
+          if (data.type === "collection_view" || data.type === "collection_view_page") {
             container = data.view_ids.map((view_id) => [view_id, "collection_view"]) ?? []
+            container.push([data.collection_id, "collection"])
+          }
         } else if (this.type === "space") {
           container = (this.getCachedData() as ISpace).pages ?? [];
         } else if (this.type === "user_root")
           container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
-
         const non_cached: UpdateCacheManuallyParam = container.filter(info =>
           !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
         );
@@ -61,7 +42,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
     async traverseChildren(arg: undefined | string[] | Predicate<T>, multiple: boolean = true, cb: (block: T, should_add: boolean) => Promise<void>) {
       await this.initializeCache();
       const matched: T[] = [];
-      const data = this.getCachedData(), container: string[] = data[this.path] as any ?? [];
+      const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
       if (Array.isArray(arg)) {
         for (let index = 0; index < arg.length; index++) {
           const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as T;
@@ -104,7 +85,7 @@ export default function GetItems<T extends TData>(Base: Constructor<T>) {
             alive: false,
             last_edited_time: current_time
           }),
-            _this.listRemoveOp([_this.path as string], { id: block.id })
+            _this.listRemoveOp([_this.child_path as string], { id: block.id })
           )
         }
       })

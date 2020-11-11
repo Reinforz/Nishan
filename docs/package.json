@@ -3,7 +3,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "deploy": "npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.66",

@@ -131,33 +131,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   /**
-   * Create a google drive content as a block
-   * @param fileId id of the file to link in the block
-   * @param position `Position` interface
-   * @returns Newly created drive content block
-   */
-  async createDriveContent(fileId: string, position?: number | BlockRepostionArg) {
-    const {
-      accounts
-    } = await this.getGoogleDriveAccounts();
-    const block = await this.createContent({
-      type: "drive",
-      position
-    });
-    await this.initializeGoogleDriveBlock({
-      blockId: block.id,
-      fileId,
-      token: accounts[0].token
-    });
-    await this.updateCacheManually([block.id]);
-
-    return new Block({
-      id: block.id,
-      ...this.getProps()
-    });
-  }
-
-  /**
    * Create a template block content
    * @param factory `IFactoryInput` interface
    * @param position number or `BlockRepostionArg` interface
@@ -220,7 +193,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
     const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
-
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
@@ -238,16 +210,33 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         format,
         properties,
         type,
-        position
+        position,
+        file_id
       } = content;
 
       const block_list_op = this.addToChildArray($block_id, position);
 
-      if (type === "bookmark")
+      if (type === "bookmark") {
         bookmarks.push({
           blockId: $block_id,
           url: (properties as WebBookmarkProps).link[0][0]
         })
+        await this.setBookmarkMetadata({
+          blockId: $block_id,
+          url: (properties as WebBookmarkProps).link[0][0]
+        });
+      }
+
+      else if (type === "drive") {
+        const {
+          accounts
+        } = await this.getGoogleDriveAccounts();
+        await this.initializeGoogleDriveBlock({
+          blockId: $block_id,
+          fileId: file_id as string,
+          token: accounts[0].token
+        });
+      }
 
       operations.push(this.createBlock({
         $block_id,
@@ -257,12 +246,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       }),
         block_list_op
       );
-
-      if (type === "bookmark")
-        await this.setBookmarkMetadata({
-          blockId: $block_id,
-          url: (properties as WebBookmarkProps).link[0][0]
-        });
 
       blocks.push(this.createClass(type, $block_id));
 
@@ -412,6 +395,22 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   /**
+   * Get all the blocks of the page as an object
+   * @returns An array of block object
+   */
+  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
+    await this.initializeCache();
+    const _this = this as any;
+    return this.getItems<TBlock>(arg, multiple, async function (block) {
+      return _this.createClass(block.type, block.id);
+    })
+  }
+
+  async getBlock(arg: string | Predicate<TBlock>) {
+    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
+  }
+
+  /**
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
@@ -425,21 +424,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    */
   async deleteBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
     await this.deleteItems<TBlock>(arg, multiple)
-  }
-
-  /**
-   * Get all the blocks of the page as an object
-   * @returns An array of block object
-   */
-  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
-    const _this = this as any;
-    return this.getItems<TBlock>(arg, multiple, async function (block) {
-      return _this.createClass(block.type, block.id);
-    })
-  }
-
-  async getBlock(arg: string | Predicate<TBlock>) {
-    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
   async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {

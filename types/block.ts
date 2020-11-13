@@ -226,6 +226,7 @@ export interface IDriveInput {
   type: 'drive',
   properties?: {},
   format?: {},
+  file_id: string
 }
 
 export interface ITweetInput {

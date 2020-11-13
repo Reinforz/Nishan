@@ -51,7 +51,6 @@ export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, Upd
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
 export type PageCreateContentParam = TBlockInput & {
-  file_id?: string,
   position?: number | BlockRepostionArg
 }
 

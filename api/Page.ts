@@ -22,7 +22,7 @@ import {
   UserViewArg,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -192,11 +192,10 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    */
   // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
-    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], $block_ids: string[] = [], blocks: Block<TBlock, TBlockInput>[] = [];
+    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], block_infos: [TBlockType, string][] = [];
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
-      $block_ids.push($block_id);
 
       if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
         content.format = (await this.getGenericEmbedBlockData({
@@ -211,8 +210,9 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         properties,
         type,
         position,
-        file_id
       } = content;
+
+      block_infos.push([type, $block_id]);
 
       const block_list_op = this.addToChildArray($block_id, position);
 
@@ -233,7 +233,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         } = await this.getGoogleDriveAccounts();
         await this.initializeGoogleDriveBlock({
           blockId: $block_id,
-          fileId: file_id as string,
+          fileId: (content as IDriveInput).file_id as string,
           token: accounts[0].token
         });
       }
@@ -246,20 +246,13 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       }),
         block_list_op
       );
-
-      blocks.push(this.createClass(type, $block_id));
-
-      if (content.file_id && type.match(/image|audio|video/)) operations.push(Operation.block.listAfter($block_id, ['file_ids'], {
-        id: content.file_id
-      }));
     }
 
     await this.saveTransactions(operations);
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
-    await this.updateCacheManually($block_ids);
-
-    return blocks;
+    await this.updateCacheManually(block_infos.map(block_info => block_info[1]));
+    return block_infos.map(block_info => this.createClass(block_info[0], block_info[1]))
   }
 
   /**

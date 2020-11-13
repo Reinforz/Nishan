@@ -1,13 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, Predicate, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, Schema, TCollectionViewBlock } from "../types";
+import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, Predicate, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, Schema } from "../types";
 import { Operation, error, createViews } from "../utils";
-import Collection from './Collection';
-import CollectionView from './CollectionView';
-import CollectionViewPage from './CollectionViewPage';
 import Getters from "./Getters";
-import RootPage from './RootPage';
-import View from './View';
 
 /**
  * A class to update and control data specific stuffs
@@ -240,49 +235,7 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {
-    const update_tables: UpdateCacheManuallyParam = [];
-    args.forEach(arg => {
-      update_tables.push(arg[0][0]);
-      update_tables.push([arg[1], "collection"]);
-      arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
-    })
 
-    await this.updateCacheManually(update_tables);
-
-    const res: {
-      block: CollectionView | CollectionViewPage,
-      collection: Collection,
-      collection_views: View[]
-    }[] = [];
-
-    args.forEach(arg => {
-      res.push({
-        block: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
-          ...this.getProps(),
-          id: arg[0][0]
-        }),
-        collection: new Collection({
-          id: arg[1],
-          ...this.getProps()
-        }),
-        collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
-      })
-    })
-    return res
-  }
-
-  async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][]) {
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: RootPage[] = [];
-    manual_res.forEach(manual_res => {
-      ops.push(...manual_res[0]);
-      sync_records.push(...manual_res[1]);
-      objects.push(manual_res[2]);
-    })
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return objects;
-  }
 
   createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
     const { properties, format } = option;

@@ -122,8 +122,6 @@ export default class Getters extends Cache {
     });
   }
 
-
-
   async getUserTasks(): Promise<GetUserTasksResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
@@ -191,7 +189,6 @@ export default class Getters extends Cache {
       }, this.interval)
     });
   }
-
 
   async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams): Promise<RemoveUsersFromSpaceResult> {
     return new Promise((resolve, reject) => {

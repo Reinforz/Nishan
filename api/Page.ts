@@ -22,8 +22,12 @@ import {
   UserViewArg,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam
 } from "../types";
+import Collection from "./Collection";
+import CollectionViewPage from "./CollectionViewPage";
+import CollectionView from "./CollectionView";
+import View from "./View";
 
 /**
  * A class to represent Page type block of Notion
@@ -436,5 +440,37 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
 
   async getBlock(arg: string | Predicate<TBlock>) {
     return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
+  }
+
+  async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {
+    const update_tables: UpdateCacheManuallyParam = [];
+    args.forEach(arg => {
+      update_tables.push(arg[0][0]);
+      update_tables.push([arg[1], "collection"]);
+      arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
+    })
+
+    await this.updateCacheManually(update_tables);
+
+    const res: {
+      block: CollectionView | CollectionViewPage,
+      collection: Collection,
+      collection_views: View[]
+    }[] = [];
+
+    args.forEach(arg => {
+      res.push({
+        block: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
+          ...this.getProps(),
+          id: arg[0][0]
+        }),
+        collection: new Collection({
+          id: arg[1],
+          ...this.getProps()
+        }),
+        collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
+      })
+    })
+    return res
   }
 }

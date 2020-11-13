@@ -8,7 +8,7 @@ export type Args = any /* string | { value: ValueArg } | { schema: Schema } | st
 export type TOperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore' | 'setPermissionItem'
 export type TOperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings' | 'user_root';
 export type TViewAggregationsAggregators = "count" | "unique" | "count_values" | "not_empty" | "empty" | "percent_empty" | "percent_not_empty";
-export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar';
+export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
 export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
@@ -184,7 +184,7 @@ export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
 
 /* Block Specific Format and Properties */
 
-export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView;
+export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
 export interface ITableView extends Node, ParentProps {
   name: string,
@@ -266,6 +266,23 @@ export interface ICalendarView extends Node, ParentProps {
   },
 }
 
+export interface ITimelineView extends Node, ParentProps {
+  type: 'timeline',
+  format: {
+    timeline_preference: {
+      centerTimestamp: number,
+      zoomLevel: "month"
+    },
+    timeline_properties: ViewFormatProperties[],
+    timeline_show_table: boolean,
+    timeline_table_properties: ViewFormatProperties[]
+  },
+  query2: {
+    timeline_by: TTimelineViewTimelineby,
+    aggregations: ViewAggregations[],
+  }
+}
+export type TTimelineViewTimelineby = "hours" | "day" | "week" | "bi_week" | "month" | "quarter" | "year"
 export interface ViewFormatProperties {
   width?: number,
   visible: boolean,
@@ -274,7 +291,7 @@ export interface ViewFormatProperties {
 
 export interface ViewAggregations {
   property: string,
-  // ? Get all aggregator values
+  // ? TD:1:H Create interfaces for each data type and associate the appropriate aggregator values with them
   aggregator: TViewAggregationsAggregators
 }
 

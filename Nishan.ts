@@ -5,7 +5,7 @@ import NotionUser from "./api/NotionUser";
 import { NishanArg, Predicate } from "./types/types";
 import { error } from "./utils/logs";
 import Cache from "./api/Cache";
-import { GetSpacesResult, INotionUser, ISpace } from './types/api';
+import { GetSpacesResult, INotionUser } from './types/api';
 
 class Nishan extends Cache {
   token: string;
@@ -43,34 +43,34 @@ class Nishan extends Cache {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getNotionUsers(arg: string[] | Predicate<INotionUser>, multiple: boolean = true) {
-    if (!this.init_cache) {
-      await this.initializeCache();
-      this.init_cache = true;
+  async getNotionUsers(arg: undefined | string[] | Predicate<INotionUser>, multiple: boolean = true) {
+    await this.initializeCache();
+    const users: NotionUser[] = [];
+    const common_props = {
+      token: this.token,
+      cache: this.cache,
+      interval: this.interval
     }
-    const users: NotionUser[] = [], is_arg_array = Array.isArray(arg), is_arg_function = typeof arg === "function";
-    let index = 0;
-    for (const [, user] of this.cache.notion_user) {
-      let should_add = false;
-      if (is_arg_array && (arg as string[]).includes(user.id)) should_add = true;
-      else if (is_arg_function) should_add = await (arg as Predicate<INotionUser>)(user, index);
-      index++
-      if (should_add) {
-        let space: ISpace | null = null;
-        for (let value of this.cache.space.values())
-          if (value.permissions.find((perm => perm.user_id === user.id))) space = value;
-        if (space)
-          users.push(new NotionUser({
-            id: user.id,
-            space_id: space.id,
-            shard_id: space.shard_id,
-            token: this.token,
-            user_id: user.id,
-            cache: this.cache,
-            interval: this.interval
-          }));
+
+    const notion_user_ids: string[] = [];
+
+    for (let [id] of this.cache.notion_user)
+      notion_user_ids.push(id)
+
+    if (Array.isArray(arg)) {
+      for (let index = 0; index < arg.length; index++) {
+        const id = arg[index], block = this.cache.notion_user.get(id);
+        const should_add = Boolean(block);
+        if (should_add && block) users.push(new NotionUser({ ...common_props, user_id: block.id, id: block.id, space_id: "0", shard_id: 0 }));
+        if (!multiple && users.length === 1) break;
       }
-      if (!multiple && users.length === 1) break;
+    } else if (typeof arg === "function" || arg === undefined) {
+      for (let index = 0; index < notion_user_ids.length; index++) {
+        const id = notion_user_ids[index], block = this.cache.notion_user.get(id) as INotionUser;
+        const should_add = typeof arg === "function" ? await arg(block, index) : true;
+        if (should_add && block) users.push(new NotionUser({ ...common_props, user_id: block.id, id: block.id, space_id: "0", shard_id: 0 }));
+        if (!multiple && users.length === 1) break;
+      }
     }
     return users;
   }

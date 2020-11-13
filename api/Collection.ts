@@ -141,7 +141,6 @@ class Collection extends GetItems<ICollection>(Data) {
     const page_ids: string[] = [];
     const ops: IOperation[] = [];
     rows.map(({ format, properties }) => {
-      const data = this.getCachedData();
       const $page_id = uuidv4();
       page_ids.push($page_id);
       ops.push(
@@ -151,7 +150,7 @@ class Collection extends GetItems<ICollection>(Data) {
           type: "page",
           properties,
           format,
-          parent_id: data.id,
+          parent_id: this.id,
           parent_table: 'collection',
         })
       );

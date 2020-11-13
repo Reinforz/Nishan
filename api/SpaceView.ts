@@ -3,13 +3,12 @@ import Data from './Data';
 import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, BlockRepostionArg, IOperation, IRootPage, Predicate, TRootPage } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
-import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent spaceview of Notion
  * @noInheritDoc
  */
-class SpaceView extends GetItems<ISpaceView>(Data) {
+class SpaceView extends Data<ISpaceView> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "space_view" });
   }

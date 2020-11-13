@@ -6,13 +6,12 @@ import View from './View';
 
 import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock } from '../types';
 import { createViews } from '../utils';
-import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
-class CollectionBlock extends GetItems<TCollectionBlock>(Block) {
+class CollectionBlock extends Block<TCollectionBlock, any> {
   constructor(arg: NishanArg & { type: "block" }) {
     super({ ...arg });
   }

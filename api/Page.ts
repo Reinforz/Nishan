@@ -7,9 +7,6 @@ import path from "path";
 
 import Block from './Block';
 
-import DBArtifacts from "../mixins/DBArtifacts";
-import GetItems from "../mixins/GetItems";
-
 import { Operation } from "../utils";
 
 import {
@@ -33,7 +30,7 @@ import {
  * @noInheritDoc
  */
 
-class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
+export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
   init_cache: boolean;
   constructor(arg: NishanArg) {
     super(arg);
@@ -286,12 +283,6 @@ class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
   async createContent(option: PageCreateContentParam) {
     return (await this.createContents([option]))[0];
   }
-}
-
-class DBPage extends DBArtifacts<IPage | IRootPage>(Page) {
-  constructor(arg: NishanArg) {
-    super(arg);
-  }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
   /**
@@ -414,12 +405,6 @@ class DBPage extends DBArtifacts<IPage | IRootPage>(Page) {
     );
 
     return this.createDBArtifacts([[[data.id, "collection_view_page"], $collection_id, view_ids]]);
-  }
-}
-
-export default class extends GetItems<IRootPage | IPage>(DBPage) {
-  constructor(...args: any[]) {
-    super(args[0]);
   }
 
   /**

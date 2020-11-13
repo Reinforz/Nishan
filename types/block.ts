@@ -180,6 +180,7 @@ export interface ITodoInput {
     block_color?: TFormatBlockColor
   }
 }
+// ? TD:2:M Add td for TCollectionBlockInput
 
 export type TBasicBlockInput = IPageInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
 // Advanced block input

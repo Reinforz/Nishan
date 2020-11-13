@@ -8,8 +8,6 @@ import SpaceView from "./SpaceView";
 import { Operation, error } from '../utils';
 
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam } from '../types';
-import DBArtifacts from '../mixins/DBArtifacts';
-import GetItems from '../mixins/GetItems';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 import View from './View';
@@ -18,7 +16,7 @@ import View from './View';
  * A class to represent space of Notion
  * @noInheritDoc
  */
-class Space extends DBArtifacts<ISpace>(Data) {
+export default class Space extends Data<ISpace> {
   space_view?: ISpaceView;
 
   constructor(arg: NishanArg) {
@@ -258,12 +256,6 @@ class Space extends DBArtifacts<ISpace>(Data) {
     this.updateCacheLocally({
       permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
     }, ["permissions"]);
-  }
-}
-
-export default class GetSpace extends GetItems<ISpace>(Space) {
-  constructor(...args: any[]) {
-    super(args[0]);
   }
 
   /**

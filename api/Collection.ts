@@ -6,13 +6,12 @@ import Data from "./Data";
 
 import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, /* IPage, Predicate */ } from "../types";
 import Page from './Page';
-import GetItems from '../mixins/GetItems';
 
 /**
  * A class to represent collection of Notion
  * @noInheritDoc
  */
-class Collection extends GetItems<ICollection>(Data) {
+class Collection extends Data<ICollection> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "collection" });
   }
@@ -158,7 +157,6 @@ class Collection extends GetItems<ICollection>(Data) {
     await this.saveTransactions(ops)
 
     return page_ids.map((page_id) => new Page({
-      type: "block",
       id: page_id,
       ...this.getProps()
     }))

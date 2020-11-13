@@ -1,7 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
 
-import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType } from "../types";
-import { Operation, error } from "../utils";
+import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, Predicate, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, Schema, TCollectionViewBlock } from "../types";
+import { Operation, error, createViews } from "../utils";
+import Collection from './Collection';
+import CollectionView from './CollectionView';
+import CollectionViewPage from './CollectionViewPage';
 import Getters from "./Getters";
+import RootPage from './RootPage';
+import View from './View';
 
 /**
  * A class to update and control data specific stuffs
@@ -18,6 +24,7 @@ export default class Data<T extends TData> extends Getters {
   listRemoveOp: (path: string[], args: Args) => IOperation;
   child_path: keyof T = "" as any;
   child_type: TDataType = "block" as any;
+  init_cache: boolean;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -28,6 +35,7 @@ export default class Data<T extends TData> extends Getters {
     this.updateOp = Operation[arg.type].update.bind(this, this.id)
     this.setOp = Operation[arg.type].set.bind(this, this.id)
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
+    this.init_cache = false;
 
     if (this.type === "block") {
       const data = this.getCachedData() as TBlock;
@@ -143,5 +151,174 @@ export default class Data<T extends TData> extends Getters {
         (_this as any).data[key] = data[key];
       })
     }] as [IOperation, (() => void)];
+  }
+
+  async initializeCache() {
+    if (!this.init_cache) {
+      let container: UpdateCacheManuallyParam = []
+      if (this.type === "block") {
+        const data = this.getCachedData() as TBlock;
+        if (data.type === "page")
+          container = data.content ?? [];
+        if (data.type === "collection_view" || data.type === "collection_view_page") {
+          container = data.view_ids.map((view_id) => [view_id, "collection_view"]) ?? []
+          container.push([data.collection_id, "collection"])
+        }
+      } else if (this.type === "space") {
+        container = (this.getCachedData() as ISpace).pages ?? [];
+      } else if (this.type === "user_root")
+        container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
+      else if (this.type === "collection")
+        container = (this.getCachedData() as ICollection).template_pages ?? []
+      else if (this.type === "space_view")
+        container = (this.getCachedData() as ISpaceView).bookmarked_pages ?? []
+
+      const non_cached: UpdateCacheManuallyParam = container.filter(info =>
+        !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
+      );
+
+      if (non_cached.length !== 0)
+        await this.updateCacheManually(non_cached);
+
+      this.init_cache = true;
+    }
+  }
+
+  async traverseChildren<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
+    await this.initializeCache();
+    const matched: Q[] = [];
+    const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
+
+    if (Array.isArray(arg)) {
+      for (let index = 0; index < arg.length; index++) {
+        const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as Q;
+        const should_add = container.includes(block_id);
+        if (should_add) {
+          matched.push(block)
+          await cb(block, should_add);
+        }
+        if (!multiple && matched.length === 1) break;
+      }
+    } else if (typeof arg === "function" || arg === undefined) {
+      for (let index = 0; index < container.length; index++) {
+        const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
+        const should_add = typeof arg === "function" ? await arg(block, index) : true;
+        if (should_add) {
+          matched.push(block)
+          await cb(block, should_add);
+        }
+        if (!multiple && matched.length === 1) break;
+      }
+    }
+    return matched;
+  }
+
+  async getItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>) {
+    const blocks: any[] = [];
+    await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
+      if (matched) blocks.push(await cb(block))
+    })
+    return blocks;
+  }
+
+  async deleteItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true,) {
+    const ops: IOperation[] = [], current_time = Date.now(), _this = this;
+    const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
+      if (matched) {
+        ops.push(Operation[_this.child_type as TDataType].update(block.id, [], {
+          alive: false,
+          last_edited_time: current_time
+        }),
+          _this.listRemoveOp([_this.child_path as string], { id: block.id })
+        )
+      }
+    })
+    if (ops.length !== 0) {
+      ops.push(this.setOp(["last_edited_time"], current_time));
+      await this.saveTransactions(ops);
+      blocks.forEach(blocks => this.cache.block.delete(blocks.id));
+    }
+  }
+
+  async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {
+    const update_tables: UpdateCacheManuallyParam = [];
+    args.forEach(arg => {
+      update_tables.push(arg[0][0]);
+      update_tables.push([arg[1], "collection"]);
+      arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
+    })
+
+    await this.updateCacheManually(update_tables);
+
+    const res: {
+      block: CollectionView | CollectionViewPage,
+      collection: Collection,
+      collection_views: View[]
+    }[] = [];
+
+    args.forEach(arg => {
+      res.push({
+        block: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
+          ...this.getProps(),
+          id: arg[0][0]
+        }),
+        collection: new Collection({
+          id: arg[1],
+          ...this.getProps()
+        }),
+        collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
+      })
+    })
+    return res
+  }
+
+  async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][]) {
+    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: RootPage[] = [];
+    manual_res.forEach(manual_res => {
+      ops.push(...manual_res[0]);
+      sync_records.push(...manual_res[1]);
+      objects.push(manual_res[2]);
+    })
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return objects;
+  }
+
+  createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
+    const { properties, format } = option;
+
+    if (!option.views) option.views = [{
+      aggregations: [
+        ['title', 'count']
+      ],
+      name: 'Default View',
+      type: 'table'
+    }];
+
+    if (!option.schema) option.schema = [
+      ['Name', 'title']
+    ];
+    const schema: Schema = {};
+
+    option.schema.forEach(opt => {
+      const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+      schema[schema_key] = {
+        name: opt[0],
+        type: opt[1],
+        ...(opt[2] ?? {})
+      };
+      if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
+        id: uuidv4(),
+        value,
+        color
+      }))
+    });
+
+    const views = option.views.map((view) => ({
+      ...view,
+      id: uuidv4()
+    }));
+
+    return { schema, views: createViews(views, parent_id), properties, format }
   }
 }

@@ -1,10 +1,9 @@
 import Data from "./Data";
 import { ISpaceView, IUserRoot, NishanArg, Predicate } from "../types";
 
-import GetItems from '../mixins/GetItems';
 import SpaceView from "./SpaceView";
 
-class UserRoot extends GetItems<IUserRoot>(Data) {
+class UserRoot extends Data<IUserRoot> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "user_root" });
   }

@@ -396,9 +396,14 @@ export interface ISpace extends CreateProps, LastEditedProps {
   name: string,
   pages: string[],
   permissions: IPermission[],
-  plan_type: "personal",
+  plan_type: TPlanType,
   shard_id: number,
-  version: number
+  version: number,
+  disable_public_access: boolean,
+  disable_guests: boolean,
+  disable_move_to_space: boolean,
+  disable_export: boolean,
+  domain: string,
 }
 
 export interface ISpaceView extends Node {

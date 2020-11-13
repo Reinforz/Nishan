@@ -25,6 +25,62 @@ class Space extends DBArtifacts<ISpace>(Data) {
     super({ ...arg, type: "space" });
   }
 
+  get spaceView() {
+    let target_space_view: ISpaceView | null = null;
+    for (let [, space_view] of this.cache.space_view) {
+      if (space_view.space_id === this.id) {
+        target_space_view = space_view;
+        break;
+      }
+    }
+    return target_space_view;
+  }
+
+  /**
+   * Get the space view associated with the space
+   * @returns The associated space view object
+   */
+  getSpaceView() {
+    const target_space_view = this.spaceView;
+    if (target_space_view)
+      return new SpaceView({
+        id: target_space_view.id,
+        ...this.getProps()
+      });
+  }
+
+  // ? FEAT:1:M Update space permissions
+  /**
+   * Update the space settings
+   * @param opt Properties of the space to update
+   */
+  async update(opt: SpaceUpdateParam) {
+    const [op, update] = this.updateCacheLocally(opt, ['icon',
+      'beta_enabled',
+      'last_edited_time',
+      'name']);
+
+    await this.saveTransactions([
+      op
+    ]);
+
+    update();
+  }
+
+  /**
+   * Delete the current workspace
+   */
+  async delete() {
+    await this.enqueueTask({
+      eventName: 'deleteSpace',
+      request:
+      {
+        spaceId: this.id
+      }
+    });
+    this.cache.space.delete(this.id);
+  }
+
   async createTRootPages(params: CreateTRootPagesParams[]) {
     const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
     for (let index = 0; index < params.length; index++) {
@@ -186,38 +242,6 @@ class Space extends DBArtifacts<ISpace>(Data) {
     await this.updateRootPages([[id, opt]]);
   }
 
-  // ? FEAT:1:M Update space permissions
-  /**
-   * Update the space settings
-   * @param opt Properties of the space to update
-   */
-  async update(opt: SpaceUpdateParam) {
-    const [op, update] = this.updateCacheLocally(opt, ['icon',
-      'beta_enabled',
-      'last_edited_time',
-      'name']);
-
-    await this.saveTransactions([
-      op
-    ]);
-
-    update();
-  }
-
-  /**
-   * Delete the current workspace
-   */
-  async delete() {
-    await this.enqueueTask({
-      eventName: 'deleteSpace',
-      request:
-      {
-        spaceId: this.id
-      }
-    });
-    this.cache.space.delete(this.id);
-  }
-
   // ? FEAT:1:M Empty userids for all user, a predicate
   /**
    * Remove multiple users from the current space
@@ -234,30 +258,6 @@ class Space extends DBArtifacts<ISpace>(Data) {
     this.updateCacheLocally({
       permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
     }, ["permissions"]);
-  }
-
-  get spaceView() {
-    let target_space_view: ISpaceView | null = null;
-    for (let [, space_view] of this.cache.space_view) {
-      if (space_view.space_id === this.id) {
-        target_space_view = space_view;
-        break;
-      }
-    }
-    return target_space_view;
-  }
-
-  /**
-   * Get the space view associated with the space
-   * @returns The associated space view object
-   */
-  getSpaceView() {
-    const target_space_view = this.spaceView;
-    if (target_space_view)
-      return new SpaceView({
-        id: target_space_view.id,
-        ...this.getProps()
-      });
   }
 }
 

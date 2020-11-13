@@ -17,8 +17,6 @@ class Collection extends GetItems<ICollection>(Data) {
     super({ ...arg, type: "collection" });
   }
 
-  // ? FIX:1:M Save to cache and utilize Data update
-
   /**
    * Update the collection
    * @param opt `CollectionUpdateParam`
@@ -37,6 +35,31 @@ class Collection extends GetItems<ICollection>(Data) {
    */
   async createTemplate(opt: Omit<Partial<IPageInput>, "type">) {
     return (await this.createTemplates([opt]))[0]
+  }
+
+  /**
+   * Get multiple template pages of the collection
+   * @param arg string of ids or a predicate function
+   * @param multiple whether multiple or single item is targeted
+   * @returns An array of template pages object
+   */
+  async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true): Promise<Page[]> {
+    const _this = this;
+    return this.getItems<IPage>(arg as any, multiple, async function (page) {
+      return new Page({
+        ..._this.getProps(),
+        id: page.id
+      }) as any
+    })
+  }
+
+  /**
+   * Get a single template page of the collection
+   * @param arg string id or a predicate function
+   * @returns Template page object
+   */
+  async getTemplate(arg: string | Predicate<IPage>) {
+    return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**
@@ -92,31 +115,6 @@ class Collection extends GetItems<ICollection>(Data) {
   }
 
   /**
-   * Get multiple template pages of the collection
-   * @param arg string of ids or a predicate function
-   * @param multiple whether multiple or single item is targeted
-   * @returns An array of template pages object
-   */
-  async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true): Promise<Page[]> {
-    const _this = this;
-    return this.getItems<IPage>(arg as any, multiple, async function (page) {
-      return new Page({
-        ..._this.getProps(),
-        id: page.id
-      }) as any
-    })
-  }
-
-  /**
-   * Get a single template page of the collection
-   * @param arg string id or a predicate function
-   * @returns Template page object
-   */
-  async getTemplate(arg: string | Predicate<IPage>) {
-    return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  /**
    * Delete a single template page from the collection
    * @param arg string id or a predicate function
    */
@@ -155,8 +153,7 @@ class Collection extends GetItems<ICollection>(Data) {
           format,
           parent_id: data.id,
           parent_table: 'collection',
-        }),
-        this.setOp(['last_edited_time'], Date.now())
+        })
       );
     });
     await this.saveTransactions(ops)

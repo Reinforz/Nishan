@@ -8,8 +8,8 @@ Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
 ## Contributors
 
-* Safwan Shaheer [github](https://github.com/Devorein) Author, Maintainer
-* Zayed Humayun [github](https://github.com/b1rkenspanner) Maintainer
+1. Safwan Shaheer [github](https://github.com/Devorein) Author, Maintainer
+
 
 ## NOTE
 

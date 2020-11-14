@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, Predicate } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, Predicate, FilterTypes } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -69,7 +69,7 @@ class NotionUser extends Data<INotionUser> {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(arg: undefined | Predicate<ISpace> | string[], multiple: boolean = true) {
+  async getSpaces(arg: FilterTypes<ISpace>, multiple: boolean = true) {
     const target_spaces: Space[] = [];
     let i = 0;
 

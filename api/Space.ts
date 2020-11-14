@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 import View from './View';
@@ -191,7 +191,7 @@ export default class Space extends Data<ISpace> {
     return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootPages(arg: undefined | string[] | Predicate<IRootPage>, multiple: boolean = true): Promise<RootPage[]> {
+  async getRootPages(arg: FilterTypes<IRootPage>, multiple: boolean = true): Promise<RootPage[]> {
     const props = this.getProps();
     return this.getItems<IRootPage>(arg, multiple, async function (page) {
       return page.type === "page" && new CollectionViewPage({
@@ -205,7 +205,7 @@ export default class Space extends Data<ISpace> {
     return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootCollectionViewPages(arg: undefined | string[] | Predicate<IRootCollectionViewPage>, multiple: boolean = true): Promise<RootCollectionViewPage[]> {
+  async getRootCollectionViewPages(arg: FilterTypes<IRootCollectionViewPage>, multiple: boolean = true): Promise<RootCollectionViewPage[]> {
     const props = this.getProps();
     return this.getItems<IRootCollectionViewPage>(arg, multiple, async function (page) {
       return page.type === "collection_view_page" && new CollectionViewPage({
@@ -220,7 +220,7 @@ export default class Space extends Data<ISpace> {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getTRootPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
+  async getTRootPages(arg: FilterTypes<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
     const props = this.getProps();
     return this.getItems<TRootPage>(arg, multiple, async function (page) {
       return page.type === "collection_view_page" ? new CollectionViewPage({

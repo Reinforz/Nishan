@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { ISpaceView, IUserRoot, NishanArg, Predicate } from "../types";
+import { FilterTypes, ISpaceView, IUserRoot, NishanArg, Predicate } from "../types";
 
 import SpaceView from "./SpaceView";
 
@@ -13,7 +13,7 @@ class UserRoot extends Data<IUserRoot> {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getSpaceViews(arg: undefined | string[] | Predicate<ISpaceView>, multiple: boolean = true): Promise<SpaceView[]> {
+  async getSpaceViews(arg: FilterTypes<ISpaceView>, multiple: boolean = true): Promise<SpaceView[]> {
     const props = this.getProps();
     return this.getItems<ISpaceView>(arg, multiple, async function (space_view) {
       return new SpaceView({

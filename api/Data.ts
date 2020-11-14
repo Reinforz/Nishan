@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, Predicate, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, Schema, INotionUser, IPermission, TPermissionRole, TRootPage } from "../types";
+import { NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, Schema, INotionUser, IPermission, TPermissionRole, TRootPage, FilterTypes } from "../types";
 import { Operation, error, createViews } from "../utils";
 import Getters from "./Getters";
 
@@ -186,7 +186,7 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  protected async traverseChildren<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
+  protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
     await this.initializeCache();
     await this.initializeChildData();
     const matched: Q[] = [];
@@ -216,7 +216,7 @@ export default class Data<T extends TData> extends Getters {
     return matched;
   }
 
-  protected async getItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>) {
+  protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>) {
     const blocks: any[] = [];
     await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
       if (matched) blocks.push(await cb(block))
@@ -224,7 +224,7 @@ export default class Data<T extends TData> extends Getters {
     return blocks;
   }
 
-  protected async deleteItems<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true,) {
+  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true,) {
     const ops: IOperation[] = [], current_time = Date.now(), _this = this;
     const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
       if (matched) {

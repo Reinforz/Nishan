@@ -4,7 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import View from './View';
 
-import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock } from '../types';
+import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock, FilterTypes } from '../types';
 import { createViews } from '../utils';
 
 /**
@@ -20,11 +20,10 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Fetch the corresponding collection of the collection block using the collection_id
    * @returns The corresponding collection object
    */
-  async getCollection(return_cached: boolean = false) {
+  async getCollection() {
     await this.initializeCache();
     const data = this.getCachedData();
-    const ICached_data = this.cache.collection.get(data.collection_id);
-    return return_cached ? ICached_data : new Collection({
+    return new Collection({
       ...this.getProps(),
       id: data.collection_id,
     });
@@ -68,7 +67,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Get all the views associated with the collection block
    * @returns An array of view objects of the collectionblock
    */
-  async getViews(arg: undefined | string[] | Predicate<TView>, multiple: boolean = true): Promise<View[]> {
+  async getViews(arg: FilterTypes<TView>, multiple: boolean = true): Promise<View[]> {
     const props = this.getProps();
     return this.getItems<TView>(arg, multiple, async function (view) {
       return new View({

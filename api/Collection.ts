@@ -4,7 +4,7 @@ import { error, Operation } from '../utils';
 
 import Data from "./Data";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, /* IPage, Predicate */ } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes, /* IPage, Predicate */ } from "../types";
 import Page from './Page';
 
 /**
@@ -42,7 +42,7 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    * @returns An array of template pages object
    */
-  async getTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true): Promise<Page[]> {
+  async getTemplates(arg: FilterTypes<IPage>, multiple: boolean = true): Promise<Page[]> {
     const _this = this;
     return this.getItems<IPage>(arg as any, multiple, async function (page) {
       return new Page({
@@ -126,7 +126,7 @@ class Collection extends Data<ICollection> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async deleteTemplates(arg: undefined | string[] | Predicate<IPage>, multiple: boolean = true) {
+  async deleteTemplates(arg: FilterTypes<IPage>, multiple: boolean = true) {
     await this.deleteItems<IPage>(arg, multiple)
   }
 
@@ -161,6 +161,10 @@ class Collection extends Data<ICollection> {
       ...this.getProps()
     }))
   }
+
+  /* async getSchemaProperties(arg: undefiend){
+
+  } */
 }
 
 export default Collection;

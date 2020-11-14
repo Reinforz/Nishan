@@ -1,6 +1,6 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
 import { ICollection, PageFormat, PageProps, TBlockInput } from "./block";
-import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, SchemaUnitType, TDataType } from "./types";
+import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, SchemaUnitType, TDataType, Predicate } from "./types";
 
 export interface UserViewArg {
   id?: string,
@@ -59,3 +59,5 @@ export type CreateTRootPagesParams = ({
 } & CreateRootPageArgs | {
   type: "collection_view_page"
 } & CreateRootCollectionViewPageParams)
+
+export type FilterTypes<T> = undefined | string[] | Predicate<T>

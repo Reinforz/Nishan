@@ -6,6 +6,7 @@ import { NishanArg, Predicate } from "./types/types";
 import { error } from "./utils/logs";
 import Cache from "./api/Cache";
 import { GetSpacesResult, INotionUser } from './types/api';
+import { FilterTypes } from "./types";
 
 class Nishan extends Cache {
   token: string;
@@ -43,7 +44,7 @@ class Nishan extends Cache {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getNotionUsers(arg: undefined | string[] | Predicate<INotionUser>, multiple: boolean = true) {
+  async getNotionUsers(arg: FilterTypes<INotionUser>, multiple: boolean = true) {
     await this.initializeCache();
     const users: NotionUser[] = [];
     const common_props = {

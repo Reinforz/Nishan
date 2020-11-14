@@ -22,7 +22,7 @@ import {
   UserViewArg,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -389,7 +389,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
+  async getBlocks(arg: FilterTypes<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
     await this.initializeCache();
     const _this = this as any;
     return this.getItems<TBlock>(arg, multiple, async function (block) {
@@ -413,7 +413,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(arg: undefined | string[] | Predicate<TBlock>, multiple: boolean = true) {
+  async deleteBlocks(arg: FilterTypes<TBlock>, multiple: boolean = true) {
     await this.deleteItems<TBlock>(arg, multiple)
   }
 

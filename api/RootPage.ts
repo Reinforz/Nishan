@@ -1,4 +1,3 @@
-import Permission from "../mixins/Permission";
 import Page from "./Page";
 
 import { IPage, NishanArg } from "../types";
@@ -8,7 +7,7 @@ import { IPage, NishanArg } from "../types";
  * @noInheritDoc
  */
 
-class RootPage extends Permission(Page as any)<IPage> {
+class RootPage extends Page<IPage> {
   constructor(arg: NishanArg) {
     super(arg);
   }

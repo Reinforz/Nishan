@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 import View from './View';
@@ -79,85 +79,66 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
-  async createTRootPages(params: CreateTRootPagesParams[]) {
-    const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
-    for (let index = 0; index < params.length; index++) {
-      const param = params[index];
-      manual_res.push([...await (param.type === "page" ? this.createRootPage(param, true) : this.createRootCollectionViewPage(param, true)) as [IOperation[], UpdateCacheManuallyParam, RootPage]]);
-    }
-    return await this.returnArtifacts(manual_res);
-  }
-
-  async createTRootPage(param: CreateTRootPagesParams) {
-    return (await this.createTRootPages([param]))[0]
-  }
-
-  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams, manual?: boolean) {
-    if (manual) return (await this.createRootCollectionViewPages([option], manual ?? false))
-    return (await this.createRootCollectionViewPages([option], manual ?? false))[0];
+  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
+    return (await this.createRootCollectionViewPages([option]))[0]
   }
 
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   // ? FIX:1:M Manual parameter doesnot work
-  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[], manual: boolean = false) {
-    const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
+  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
+    const ops: IOperation[] = [], objects: { block: RootCollectionViewPage, collection: Collection, collection_views: View[] }[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     for (let index = 0; index < options.length; index++) {
       const option = options[index], block_id = uuidv4(), collection_id = uuidv4(),
         { properties, format, schema, views } = this.createCollection(option, block_id),
-        gen_view_ids = views.map((view) => view.id), sync_records: UpdateCacheManuallyParam = [block_id, [collection_id, "collection"]];
-      gen_view_ids.forEach(gen_view_id => sync_records.push([gen_view_id, "collection_view"]));
-
-      manual_res.push([
-        [
-          Operation.block.update(block_id, [], {
-            type: 'page',
-            id: block_id,
-            permissions:
-              [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-            parent_id: this.id,
-            parent_table: 'space',
-            alive: true,
-            properties,
-            format,
-          }),
-          Operation.block.update(block_id, [], {
-            type: 'collection_view_page',
-            collection_id: collection_id,
-            view_ids: gen_view_ids,
-            properties: {},
-          }),
-          Operation.collection.update(collection_id, [], {
-            id: collection_id,
-            schema,
-            format: {
-              collection_page_properties: []
-            },
-            parent_id: block_id,
-            parent_table: 'block',
-            alive: true,
-            name: properties?.title
-          }),
-          this.addToChildArray(block_id, option.position),
-          ...views
-        ],
-        sync_records,
-        {
-          block: new CollectionViewPage({
-            ...this.getProps(),
-            id: block_id
-          }),
-          collection: new Collection({
-            id: collection_id,
-            ...this.getProps()
-          }),
-          collection_views: gen_view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
-        }
-      ])
+        gen_view_ids = views.map((view) => view.id), sync_record: UpdateCacheManuallyParam = [block_id, [collection_id, "collection"]];
+      gen_view_ids.forEach(gen_view_id => sync_record.push([gen_view_id, "collection_view"]));
+      ops.push(Operation.block.update(block_id, [], {
+        type: 'page',
+        id: block_id,
+        permissions:
+          [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+        parent_id: this.id,
+        parent_table: 'space',
+        alive: true,
+        properties,
+        format,
+      }),
+        Operation.block.update(block_id, [], {
+          type: 'collection_view_page',
+          collection_id: collection_id,
+          view_ids: gen_view_ids,
+          properties: {},
+        }),
+        Operation.collection.update(collection_id, [], {
+          id: collection_id,
+          schema,
+          format: {
+            collection_page_properties: []
+          },
+          parent_id: block_id,
+          parent_table: 'block',
+          alive: true,
+          name: properties?.title
+        }),
+        this.addToChildArray(block_id, option.position),
+        ...views);
+      sync_records.push(...sync_record)
+      objects.push({
+        block: new RootCollectionViewPage({
+          ...this.getProps(),
+          id: block_id
+        }),
+        collection: new Collection({
+          id: collection_id,
+          ...this.getProps()
+        }),
+        collection_views: gen_view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
+      })
     }
-
-    if (manual ?? false) return manual_res;
-    else return await this.returnArtifacts(manual_res)
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return objects;
   }
 
   // ? FEAT:1:M Batch rootpage creation
@@ -166,8 +147,8 @@ export default class Space extends Data<ISpace> {
    * @param opts format and properties for the root page
    * @return Newly created Root page object
    */
-  async createRootPage(opts: CreateRootPageArgs, manual?: boolean): Promise<RootPage | [IOperation[], UpdateCacheManuallyParam, RootPage]> {
-    return (await this.createRootPages([opts], manual ?? false))[0];
+  async createRootPage(opts: CreateRootPageArgs): Promise<RootPage> {
+    return (await this.createRootPages([opts]))[0];
   }
 
   /**
@@ -175,40 +156,35 @@ export default class Space extends Data<ISpace> {
    * @param opts array of format and properties for the root pages
    * @returns An array of newly created rootpage block objects
    */
-  async createRootPages(opts: CreateRootPageArgs[], manual?: boolean) {
-    const manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][] = [];
+  async createRootPages(opts: CreateRootPageArgs[]) {
+    const ops: IOperation[] = [], ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index],
         { position, properties = {}, format = {}, isPrivate = false } = opt,
         $block_id = uuidv4();
       const block_list_op = this.addToChildArray($block_id, position);
-      manual_res.push(
-        [
-          [
-            Operation.block.update($block_id, [], {
-              type: 'page',
-              id: $block_id,
-              version: 1,
-              permissions:
-                [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-              parent_id: this.id,
-              parent_table: 'space',
-              alive: true,
-              properties,
-              format,
-            }),
-            block_list_op
-          ],
-          [$block_id],
-          new RootPage({
-            ...this.getProps(),
-            id: $block_id
-          })
-        ]
-      );
+      ids.push($block_id);
+      ops.push(Operation.block.update($block_id, [], {
+        type: 'page',
+        id: $block_id,
+        version: 1,
+        permissions:
+          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+        parent_id: this.id,
+        parent_table: 'space',
+        alive: true,
+        properties,
+        format,
+      }),
+        block_list_op)
     };
-    if (manual ?? false) return manual_res;
-    else return await this.returnArtifacts(manual_res)
+
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(ids);
+    return ids.map(id => new RootPage({
+      ...this.getProps(),
+      id
+    }));
   }
 
   async getRootPage(arg: string | Predicate<IRootPage>): Promise<RootPage> {
@@ -330,8 +306,8 @@ export default class Space extends Data<ISpace> {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 
-  async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, RootPage][]) {
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: RootPage[] = [];
+  /* async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, (RootPage | {block: RootCollectionViewPage, collection: Collection, collection_views: View[]})][]) {
+    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: (RootPage | RootCollectionViewPage)[] = [];
     manual_res.forEach(manual_res => {
       ops.push(...manual_res[0]);
       sync_records.push(...manual_res[1]);
@@ -340,5 +316,5 @@ export default class Space extends Data<ISpace> {
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
     return objects;
-  }
+  } */
 }

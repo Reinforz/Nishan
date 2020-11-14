@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, CreateTRootPagesParams, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 import View from './View';
@@ -211,6 +211,61 @@ export default class Space extends Data<ISpace> {
     else return await this.returnArtifacts(manual_res)
   }
 
+  async getRootPage(arg: string | Predicate<IRootPage>): Promise<RootPage> {
+    return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  async getRootPages(arg: undefined | string[] | Predicate<IRootPage>, multiple: boolean = true): Promise<RootPage[]> {
+    const props = this.getProps();
+    return this.getItems<IRootPage>(arg, multiple, async function (page) {
+      return page.type === "page" && new CollectionViewPage({
+        id: page.id,
+        ...props
+      })
+    })
+  }
+
+  async getRootCollectionViewPage(arg: string | Predicate<IRootCollectionViewPage>): Promise<RootCollectionViewPage> {
+    return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  async getRootCollectionViewPages(arg: undefined | string[] | Predicate<IRootCollectionViewPage>, multiple: boolean = true): Promise<RootCollectionViewPage[]> {
+    const props = this.getProps();
+    return this.getItems<IRootCollectionViewPage>(arg, multiple, async function (page) {
+      return page.type === "collection_view_page" && new CollectionViewPage({
+        id: page.id,
+        ...props
+      })
+    })
+  }
+
+  /**
+   * Get pages from this space
+   * @param arg criteria to filter pages by
+   * @returns An array of pages object matching the passed criteria
+   */
+  async getTRootPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
+    const props = this.getProps();
+    return this.getItems<TRootPage>(arg, multiple, async function (page) {
+      return page.type === "collection_view_page" ? new CollectionViewPage({
+        id: page.id,
+        ...props
+      }) : new RootPage({
+        id: page.id,
+        ...props
+      })
+    });
+  }
+
+  /**
+   * Get a single page from this space
+   * @param arg criteria to filter pages by
+   * @returns A page object matching the passed criteria
+   */
+  async getTRootPage(arg: string | Predicate<TPage>) {
+    return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
   // ? FEAT:1:H Update cache and class state
   /**
    * Update multiple root pages located in the space
@@ -256,33 +311,6 @@ export default class Space extends Data<ISpace> {
     this.updateCacheLocally({
       permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
     }, ["permissions"]);
-  }
-
-  /**
-   * Get pages from this space
-   * @param arg criteria to filter pages by
-   * @returns An array of pages object matching the passed criteria
-   */
-  async getTRootPages(arg: undefined | string[] | Predicate<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
-    const props = this.getProps();
-    return this.getItems<TRootPage>(arg, multiple, async function (page) {
-      return page.type === "collection_view_page" ? new CollectionViewPage({
-        id: page.id,
-        ...props
-      }) : new RootPage({
-        id: page.id,
-        ...props
-      })
-    });
-  }
-
-  /**
-   * Get a single page from this space
-   * @param arg criteria to filter pages by
-   * @returns A page object matching the passed criteria
-   */
-  async getTRootPage(arg: string | Predicate<TPage>) {
-    return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**

@@ -182,7 +182,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         ...this.getProps()
       }))
     }
-
   }
 
   /**
@@ -320,7 +319,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @returns Newly created linkedDB block content object
    */
   async createLinkedDBContent(collection_id: string, user_views: UserViewArg[], position?: number | BlockRepostionArg) {
-    const data = this.getCachedData();
     const $content_id = uuidv4();
 
     const { views } = this.createCollection({ views: user_views }, $content_id);
@@ -334,7 +332,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           type: 'collection_view',
           collection_id,
           view_ids,
-          parent_id: data.id,
+          parent_id: this.id,
           parent_table: 'block',
           alive: true,
         }),
@@ -342,7 +340,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         ...views,
       ]
     );
-    return this.createDBArtifacts([[[data.id, "collection_view"], collection_id, view_ids]]);
+    return this.createDBArtifacts([[[this.id, "collection_view"], collection_id, view_ids]]);
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well

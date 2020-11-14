@@ -20,6 +20,7 @@ export default class Data<T extends TData> extends Getters {
   child_path: keyof T = "" as any;
   child_type: TDataType = "block" as any;
   init_cache: boolean;
+  init_child_data: boolean;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -31,25 +32,31 @@ export default class Data<T extends TData> extends Getters {
     this.setOp = Operation[arg.type].set.bind(this, this.id)
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
     this.init_cache = false;
+    this.init_child_data = false;
+  }
 
-    if (this.type === "block") {
-      const data = this.getCachedData() as TBlock;
-      if (data.type === "page")
-        this.child_path = "content" as any
-      else if (data.type === "collection_view" || data.type === "collection_view_page") {
-        this.child_path = "view_ids" as any
-        this.child_type = "collection_view"
+  initializeChildData() {
+    if (!this.init_child_data) {
+      if (this.type === "block") {
+        const data = this.getCachedData() as TBlock;
+        if (data.type === "page")
+          this.child_path = "content" as any
+        else if (data.type === "collection_view" || data.type === "collection_view_page") {
+          this.child_path = "view_ids" as any
+          this.child_type = "collection_view"
+        }
+      } else if (this.type === "space")
+        this.child_path = "pages" as any;
+      else if (this.type === "user_root") {
+        this.child_path = "space_views" as any;
+        this.child_type = "space_view"
       }
-    } else if (this.type === "space")
-      this.child_path = "pages" as any;
-    else if (this.type === "user_root") {
-      this.child_path = "space_views" as any;
-      this.child_type = "space_view"
+      else if (this.type === "collection")
+        this.child_path = "template_pages" as any;
+      else if (this.type === "space_view")
+        this.child_path = "bookmarked_pages" as any;
+      this.init_child_data = true;
     }
-    else if (this.type === "collection")
-      this.child_path = "template_pages" as any;
-    else if (this.type === "space_view")
-      this.child_path = "bookmarked_pages" as any;
   }
 
   /**
@@ -181,6 +188,7 @@ export default class Data<T extends TData> extends Getters {
 
   async traverseChildren<Q extends TData>(arg: undefined | string[] | Predicate<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
     await this.initializeCache();
+    await this.initializeChildData();
     const matched: Q[] = [];
     const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
 

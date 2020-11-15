@@ -163,10 +163,20 @@ class Collection extends Data<ICollection> {
     }))
   }
 
+  /**
+   * Create a new column in the collection schema
+   * @param arg Schema creation properties
+   * @returns A SchemaUnit object representing the column
+   */
   async createSchemaUnit(arg: TSchemaUnit) {
     return (await this.createSchemaUnits([arg]))[0]
   }
 
+  /**
+   * Create multiple new columns in the collection schema
+   * @param arg array of Schema creation properties
+   * @returns An array of SchemaUnit objects representing the columns
+   */
   async createSchemaUnits(args: TSchemaUnit[]) {
     const results: SchemaUnit[] = [], data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
@@ -180,10 +190,20 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
+  /**
+   * Return a single column from the collection schema
+   * @param arg schema_id string or predicate function
+   * @returns A SchemaUnit object representing the column
+   */
   async getSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {
     return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
+  /**
+   * Return multiple columns from the collection schema
+   * @param arg schema_id string array or predicate function
+   * @returns An array of SchemaUnit objects representing the columns
+   */
   async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
     const matched: SchemaUnit[] = [];
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
@@ -207,10 +227,20 @@ class Collection extends Data<ICollection> {
     return matched;
   }
 
+  /**
+   * Update and return a single column from the collection schema
+   * @param arg schema_id string and schema properties tuple
+   * @returns A SchemaUnit object representing the column
+   */
   async updateSchemaUnit(arg: [string, TSchemaUnit]) {
     return (await this.updateSchemaUnits([arg]))[0]
   }
 
+  /**
+   * Update and return multiple columns from the collection schema
+   * @param arg schema_id string and schema properties array of tuples
+   * @returns An array of SchemaUnit objects representing the columns
+   */
   async updateSchemaUnits(args: [string, TSchemaUnit][]) {
     const results: SchemaUnit[] = [], data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
@@ -224,10 +254,20 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
+  /**
+   * Delete a single column from the collection schema
+   * @param arg schema_id string or predicate function
+   * @returns A SchemaUnit object representing the column
+   */
   async deleteSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {
     return (await this.deleteSchemaUnits(typeof arg === "string" ? [arg] : arg, false));
   }
 
+  /**
+   * Delete multiple columns from the collection schema
+   * @param arg schema_id string array or predicate function
+   * @returns An array of SchemaUnit objects representing the columns
+   */
   async deleteSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
     const matched: string[] = []

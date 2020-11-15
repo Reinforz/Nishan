@@ -181,7 +181,7 @@ class Collection extends Data<ICollection> {
   }
 
   async getSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {
-    return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg))[0];
+    return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
   async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
@@ -222,6 +222,34 @@ class Collection extends Data<ICollection> {
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
     return results;
+  }
+
+  async deleteSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {
+    return (await this.deleteSchemaUnits(typeof arg === "string" ? [arg] : arg, false));
+  }
+
+  async deleteSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
+    const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
+    const matched: string[] = []
+    if (Array.isArray(arg)) {
+      for (let index = 0; index < arg.length; index++) {
+        const schema_id = arg[index];
+        const should_add = container.includes(schema_id);
+        if (should_add) matched.push(schema_id)
+        if (!multiple && matched.length === 1) break;
+      }
+    } else if (typeof arg === "function" || arg === undefined) {
+      for (let index = 0; index < container.length; index++) {
+        const should_add = typeof arg === "function" ? await arg({ ...data.schema[container[index]], key: container[index] }, index) : true;
+        if (should_add)
+          matched.push(container[index])
+        if (!multiple && matched.length === 1) break;
+      }
+    }
+
+    matched.forEach(id => delete data.schema[id]);
+    this.saveTransactions([this.updateOp([], { schema: data.schema })]);
+    this.updateCacheManually([this.id]);
   }
 }
 

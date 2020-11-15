@@ -1,6 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "./api";
-import { ICollection, PageFormat, PageProps, TBlockInput } from "./block";
-import { TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, SchemaUnitType, TDataType, Predicate } from "./types";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, Predicate } from "./";
 
 export interface UserViewArg {
   id?: string,
@@ -15,7 +13,7 @@ export interface UserViewArg {
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
   views?: UserViewArg[],
-  schema?: ([string, SchemaUnitType] | [string, SchemaUnitType, Record<string, any>])[]
+  schema?: ([string, TSchemaUnitType] | [string, TSchemaUnitType, Record<string, any>])[]
 }
 
 export interface CreateBlockArg {

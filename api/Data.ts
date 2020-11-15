@@ -267,12 +267,12 @@ export default class Data<T extends TData> extends Getters {
         name: opt[0],
         type: opt[1],
         ...(opt[2] ?? {})
-      };
-      if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
+      } as any;
+      /* if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
         id: uuidv4(),
         value,
         color
-      }))
+      })) */
     });
 
     const views = option.views.map((view) => ({

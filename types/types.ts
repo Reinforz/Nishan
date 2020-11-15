@@ -2,7 +2,6 @@ import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, 
 import { ICollection, ICollectionViewPage, IPage, IRootCollectionViewPage, IRootPage, TBlock } from "./block";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
-export type SchemaUnitType = 'multi_select' | 'select' | 'number' | 'title' | 'checkbox' | 'formula' | 'relation' | 'rollup' | 'text' | 'date' | 'person' | 'file' | 'url' | 'email' | 'phone' | 'created_time' | 'created_by' | 'last_edited_time' | 'last_edited_by'
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
 export type TOperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'keyedObjectListUpdate' | 'listAfter' | 'listRemove' | 'listBefore' | 'setPermissionItem'

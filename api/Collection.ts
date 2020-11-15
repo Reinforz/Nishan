@@ -206,6 +206,23 @@ class Collection extends Data<ICollection> {
     }
     return matched;
   }
+
+  async updateSchemaUnit(arg: [string, TSchemaUnit]) {
+    return (await this.updateSchemaUnits([arg]))[0]
+  }
+
+  async updateSchemaUnits(args: [string, TSchemaUnit][]) {
+    const results: SchemaUnit[] = [], data = this.getCachedData();
+    for (let index = 0; index < args.length; index++) {
+      const [schema_id, schema_data] = args[index];
+      if (!data.schema[schema_id]) error(`Collection:${this.id} does not contain SchemaUnit:${schema_id}`)
+      data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data };
+      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
+    }
+    this.saveTransactions([this.updateOp([], { schema: data.schema })])
+    this.updateCacheManually([this.id]);
+    return results;
+  }
 }
 
 export default Collection;

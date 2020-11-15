@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { error, Operation } from '../utils';
 
 import Data from "./Data";
+import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes, TSchemaUnit } from "../types";
 import Page from './Page';
 
 /**
@@ -162,9 +163,32 @@ class Collection extends Data<ICollection> {
     }))
   }
 
-  /* async getSchemaProperties(arg: FilterTypes<SchemaUnit>){
+  async getSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {
+    return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg))[0];
+  }
 
-  } */
+  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
+    const matched: SchemaUnit[] = [];
+    const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
+
+    if (Array.isArray(arg)) {
+      for (let index = 0; index < arg.length; index++) {
+        const schema_id = arg[index];
+        const should_add = container.includes(schema_id);
+        if (should_add)
+          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
+        if (!multiple && matched.length === 1) break;
+      }
+    } else if (typeof arg === "function" || arg === undefined) {
+      for (let index = 0; index < container.length; index++) {
+        const should_add = typeof arg === "function" ? await arg({ ...data.schema[container[index]], key: container[index] }, index) : true;
+        if (should_add)
+          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index] }))
+        if (!multiple && matched.length === 1) break;
+      }
+    }
+    return matched;
+  }
 }
 
 export default Collection;

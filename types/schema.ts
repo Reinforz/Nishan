@@ -74,11 +74,20 @@ export interface FormulaSchemaUnit extends SchemaUnit {
   type: "formula"
 }
 export interface RelationSchemaUnit extends SchemaUnit {
-  type: "relation"
+  type: "relation",
+  collection_id: string,
+  property: string,
 }
+
 export interface RollupSchemaUnit extends SchemaUnit {
-  type: "rollup"
+  type: "rollup",
+  collection_id: string,
+  property: string,
+  relation_property: string,
+  target_property: string,
+  target_property_type: TSchemaUnitType,
 }
+
 export interface CreatedTimeSchemaUnit extends SchemaUnit {
   type: "created_time"
 }

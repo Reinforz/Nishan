@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes, TSchemaUnit } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes, TSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -161,6 +161,23 @@ class Collection extends Data<ICollection> {
       id: page_id,
       ...this.getProps()
     }))
+  }
+
+  async createSchemaUnit(arg: TSchemaUnit) {
+    return (await this.createSchemaUnits([arg]))[0]
+  }
+
+  async createSchemaUnits(args: TSchemaUnit[]) {
+    const results: SchemaUnit[] = [], data = this.getCachedData();
+    for (let index = 0; index < args.length; index++) {
+      const arg = args[index];
+      const schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
+      data.schema[schema_id] = arg;
+      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
+    }
+    this.saveTransactions([this.updateOp([], { schema: data.schema })])
+    this.updateCacheManually([this.id]);
+    return results;
   }
 
   async getSchemaUnit(arg: string | Predicate<TSchemaUnit & { key: string }>) {

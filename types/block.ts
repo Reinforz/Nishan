@@ -1,5 +1,6 @@
 import { ISpace } from "./api";
-import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps, Schema } from "./types";
+import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps } from "./types";
+import { Schema } from "./schema";
 
 export interface PageProps {
   title: string[][],

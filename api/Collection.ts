@@ -4,7 +4,7 @@ import { error, Operation } from '../utils';
 
 import Data from "./Data";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes, /* IPage, Predicate */ } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, BlockRepostionArg, IPage, Predicate, FilterTypes } from "../types";
 import Page from './Page';
 
 /**
@@ -162,7 +162,7 @@ class Collection extends Data<ICollection> {
     }))
   }
 
-  /* async getSchemaProperties(arg: undefiend){
+  /* async getSchemaProperties(arg: FilterTypes<SchemaUnit>){
 
   } */
 }

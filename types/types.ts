@@ -111,20 +111,6 @@ export interface ValueArg {
   color: string
 };
 
-export interface SchemaUnit {
-  name: string,
-  type: SchemaUnitType,
-  options?: {
-    id: string,
-    value: string,
-    color: TTextColor
-  }[]
-}
-
-export interface Schema {
-  [key: string]: SchemaUnit
-};
-
 export interface Request {
   requestId: string,
   transactions: Transaction[]

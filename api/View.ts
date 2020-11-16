@@ -1,5 +1,6 @@
-import { BlockRepostionArg, FilterTypes, NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
+import { BlockRepostionArg, FilterTypes, NishanArg, Predicate, TView, ViewAggregations, ViewFormatProperties } from "../types";
 import Data from "./Data";
+import ViewSchemaUnit from "./ViewSchemaUnit";
 
 /**
  * A class to represent view of Notion
@@ -8,6 +9,10 @@ import Data from "./Data";
 class View extends Data<TView> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "collection_view" });
+  }
+
+  async reposition(arg: number | BlockRepostionArg) {
+    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
   }
 
   /**
@@ -59,12 +64,32 @@ class View extends Data<TView> {
     await this.saveTransactions([this.updateOp([], args)]);
   }
 
-  async reposition(arg: number | BlockRepostionArg) {
-    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
+  async getViewSchemaUnit(arg: string | Predicate<ViewFormatProperties>) {
+    return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getViewSchemaUnits(args: FilterTypes<ViewFormatProperties>) {
+  async getViewSchemaUnits(arg: FilterTypes<ViewFormatProperties>, multiple: boolean = true) {
+    const matched: ViewSchemaUnit[] = [];
+    const data = this.getCachedData(), container: ViewFormatProperties[] = data.format[`${data.type}_properties` as never] ?? [];
+    const schema_ids = container.map(data => data.property);
 
+    if (Array.isArray(arg)) {
+      for (let index = 0; index < arg.length; index++) {
+        const schema_id = arg[index];
+        const should_add = schema_ids.includes(schema_id);
+        if (should_add)
+          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_data: container.find(data => data.property === schema_id) as ViewFormatProperties }))
+        if (!multiple && matched.length === 1) break;
+      }
+    } else if (typeof arg === "function" || arg === undefined) {
+      for (let index = 0; index < container.length; index++) {
+        const should_add = typeof arg === "function" ? await arg(container[index], index) : true;
+        if (should_add)
+          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_data: container[index] }))
+        if (!multiple && matched.length === 1) break;
+      }
+    }
+    return matched;
   }
 }
 

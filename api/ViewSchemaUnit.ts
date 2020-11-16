@@ -1,4 +1,4 @@
-import Data from "../dist/api/Data";
+import Data from "./Data";
 import { TView, NishanArg, ViewFormatProperties } from "../types";
 
 /**

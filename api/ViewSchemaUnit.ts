@@ -7,19 +7,19 @@ import { TView, NishanArg, ViewFormatProperties } from "../types";
  */
 
 export default class ViewSchemaUnit extends Data<TView> {
-  schema_data: ViewFormatProperties;
+  schema_id: string;
 
-  constructor(arg: NishanArg & { schema_data: ViewFormatProperties }) {
+  constructor(arg: NishanArg & { schema_id: string }) {
     super({ ...arg, type: "collection_view" });
-    this.schema_data = arg.schema_data
+    this.schema_id = arg.schema_id
   }
 
   async update(arg: Partial<Omit<ViewFormatProperties, "property">>) {
-    const data = this.getCachedData();
+    const data = this.getCachedData(), container = data.format[`${data.type}_properties` as never] as ViewFormatProperties[];
     this.saveTransactions([this.updateOp([], {
       format: {
         ...data.format,
-        [`${data.type}_properties`]: (data.format[`${data.type}_properties` as never] as ViewFormatProperties[]).map(properties => properties.property === this.schema_data.property ? { ...properties, ...arg } : properties)
+        [`${data.type}_properties`]: container.map(properties => properties.property === this.schema_id ? { ...properties, ...arg } : properties)
       }
     })])
     this.updateCacheManually([this.id]);

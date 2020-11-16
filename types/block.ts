@@ -328,7 +328,7 @@ export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
 
-export type TCollectionBlock = ICollectionView | ICollectionViewPage;
+export type TCollectionBlock = IRootCollectionViewPage | ICollectionView | ICollectionView | ICollectionViewPage;
 
 export interface IText extends ITextInput, Block { }
 export interface ITodo extends ITodoInput, Block { }
@@ -389,7 +389,7 @@ export type TEmbedBlock = ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
 
 export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock;
 
-export type TParentType = IRootPage | ISpace;
+export type TParentType = IRootPage | ISpace | TCollectionBlock;
 
 export interface ICollection extends Node, ParentProps {
   description: string[][],

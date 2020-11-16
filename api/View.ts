@@ -1,4 +1,4 @@
-import { BlockRepostionArg, FilterTypes, NishanArg, Predicate, TView, ViewAggregations, ViewFormatProperties } from "../types";
+import { BlockRepostionArg, FilterTypes, ICollection, ISchemaUnit, NishanArg, Predicate, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../types";
 import Data from "./Data";
 import ViewSchemaUnit from "./ViewSchemaUnit";
 
@@ -70,6 +70,7 @@ class View extends Data<TView> {
 
   async getViewSchemaUnits(arg: FilterTypes<ViewFormatProperties>, multiple: boolean = true) {
     const matched: ViewSchemaUnit[] = [];
+    const collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
     const data = this.getCachedData(), container: ViewFormatProperties[] = data.format[`${data.type}_properties` as never] ?? [];
     const schema_ids = container.map(data => data.property);
 
@@ -78,14 +79,15 @@ class View extends Data<TView> {
         const schema_id = arg[index];
         const should_add = schema_ids.includes(schema_id);
         if (should_add)
-          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_data: container.find(data => data.property === schema_id) as ViewFormatProperties }))
+          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
         if (!multiple && matched.length === 1) break;
       }
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
-        const should_add = typeof arg === "function" ? await arg(container[index], index) : true;
+        const schema_unit = collection.schema[container[index].property] as ISchemaUnit;
+        const should_add = typeof arg === "function" ? await arg({ ...container[index], ...schema_unit }, index) : true;
         if (should_add)
-          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_data: container[index] }))
+          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index].property, }))
         if (!multiple && matched.length === 1) break;
       }
     }

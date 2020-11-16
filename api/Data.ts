@@ -243,8 +243,6 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-
-
   createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
     const { properties, format } = option;
 

@@ -1,4 +1,4 @@
-import { BlockRepostionArg, NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
+import { BlockRepostionArg, FilterTypes, NishanArg, TView, ViewAggregations, ViewFormatProperties } from "../types";
 import Data from "./Data";
 
 /**
@@ -61,6 +61,10 @@ class View extends Data<TView> {
 
   async reposition(arg: number | BlockRepostionArg) {
     await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
+  }
+
+  async getViewSchemaUnits(args: FilterTypes<ViewFormatProperties>) {
+
   }
 }
 

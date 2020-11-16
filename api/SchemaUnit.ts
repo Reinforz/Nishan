@@ -20,4 +20,11 @@ export default class SchemaUnit extends Data<ICollection> {
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
   }
+
+  async delete() {
+    const data = this.getCachedData();
+    delete data.schema[this.schema_id];
+    this.saveTransactions([this.updateOp([], { schema: data.schema })])
+    this.updateCacheManually([this.id]);
+  }
 }

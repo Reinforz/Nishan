@@ -29,7 +29,6 @@ export default class SchemaUnit extends Data<ICollection> {
     this.updateCacheManually([this.id]);
   }
 
-
   async duplicate(schema_id: string) {
     const data = this.getCachedData();
     const id = schema_id ?? shortid()

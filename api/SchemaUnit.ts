@@ -1,4 +1,4 @@
-import { ICollection, NishanArg } from "../types";
+import { ICollection, NishanArg, TSchemaUnit } from "../types";
 import Data from "./Data";
 
 /**
@@ -12,5 +12,12 @@ export default class SchemaUnit extends Data<ICollection> {
   constructor(arg: NishanArg & { schema_id: string }) {
     super({ ...arg, type: "collection" });
     this.schema_id = arg.schema_id
+  }
+
+  async update(arg: TSchemaUnit) {
+    const data = this.getCachedData();
+    data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg }
+    this.saveTransactions([this.updateOp([], { schema: data.schema })])
+    this.updateCacheManually([this.id]);
   }
 }

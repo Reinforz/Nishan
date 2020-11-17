@@ -96,6 +96,10 @@ class Collection extends Data<ICollection> {
     }))
   }
 
+  async updateTemplate(id: string, opt: Omit<IPageInput, "type">) {
+    await this.updateTemplates([[id, opt]]);
+  }
+
   async updateTemplates(arg: [string, Omit<IPageInput, "type">][]) {
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
@@ -108,10 +112,6 @@ class Collection extends Data<ICollection> {
     }
     await this.saveTransactions(ops);
     await this.updateCacheManually(block_ids);
-  }
-
-  async updateTemplate(id: string, opt: Omit<IPageInput, "type">) {
-    await this.updateTemplates([[id, opt]]);
   }
 
   /**

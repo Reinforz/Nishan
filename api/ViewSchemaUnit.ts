@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate } from "../types";
 
 /**
  * A class to represent a column schema of a collection and a view
@@ -49,13 +49,25 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async removeSort() {
-    const data = this.getCachedData();
-    const container = data?.query2?.sort ?? [];
+  async deleteSort(arg: Predicate<ViewSorts>) {
+    await this.deleteSorts(arg, false);
+  }
+
+  async deleteSorts(args: undefined | Predicate<ViewSorts>, multiple: boolean = true) {
+    const data = this.getCachedData(), container: ViewSorts[] = data.query2?.sort as any ?? [];
+    const left: ViewSorts[] = []
+    if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < container.length; index++) {
+        const should_add = container[index].property === this.schema_id && typeof args === "function" ? await args(container[index], index) : true;
+        if (!should_add) left.push(container[index])
+        if (!multiple && left.length === 1) break;
+      }
+    }
+
     this.saveTransactions([this.updateOp([], {
       query2: {
         ...data.query2,
-        sort: container.filter(sort => sort.property !== this.schema_id)
+        sort: left
       }
     })])
     this.updateCacheManually([this.id]);

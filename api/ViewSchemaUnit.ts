@@ -86,19 +86,22 @@ export default class ViewSchemaUnit extends Data<TView> {
 
   async deleteSorts(args: undefined | Predicate<ViewSorts>, multiple: boolean = true) {
     const data = this.getCachedData(), container: ViewSorts[] = data.query2?.sort as any ?? [];
-    const left: ViewSorts[] = []
+    let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.length; index++) {
-        const should_add = container[index].property === this.schema_id && typeof args === "function" ? await args(container[index], index) : true;
-        if (!should_add) left.push(container[index])
-        if (!multiple && left.length === 1) break;
+        const should_remove = container[index].property === this.schema_id && typeof args === "function" ? await args(container[index], index) : true;
+        if (should_remove) {
+          delete container[index];
+          total_deleted++;
+        }
+        if (!multiple && total_deleted === 1) break;
       }
     }
 
     this.saveTransactions([this.updateOp([], {
       query2: {
         ...data.query2,
-        sort: left
+        sort: container.filter(sort => sort)
       }
     })])
     this.updateCacheManually([this.id]);
@@ -156,6 +159,36 @@ export default class ViewSchemaUnit extends Data<TView> {
       query2: {
         ...data.query2,
         filter: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
+
+  async deleteFilter(arg: Predicate<ViewFilters>) {
+    await this.deleteFilters(arg, false)
+  }
+
+  async deleteFilters(args: undefined | Predicate<ViewFilters>, multiple: boolean = true) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
+    let total_deleted = 0;
+    if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < container.filters.length; index++) {
+        const should_remove = container.filters[index].property === this.schema_id && (typeof args === "function" ? await args(container.filters[index], index) : true);
+        if (should_remove) {
+          delete container.filters[index];
+          total_deleted++;
+        }
+        if (!multiple && total_deleted === 1) break;
+      }
+    }
+
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        filter: {
+          operator: "and",
+          filters: container.filters.filter(filter => filter)
+        }
       }
     })])
     this.updateCacheManually([this.id]);

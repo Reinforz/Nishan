@@ -102,6 +102,7 @@ export default class Data<T extends TData> extends Getters {
    */
   addToChildArray(child_id: string, position: number | BlockRepostionArg | undefined) {
     const data = this.getCachedData();
+    this.initializeChildData()
     if (!data[this.child_path]) data[this.child_path] = [] as any;
 
     const container: string[] = data[this.child_path] as any;

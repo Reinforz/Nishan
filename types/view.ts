@@ -99,6 +99,7 @@ export interface ITimelineView extends Node, ParentProps {
   },
   query2: {
     timeline_by: TTimelineViewTimelineby,
+    sort: ViewSorts[],
     aggregations: ViewAggregations[],
   }
 }

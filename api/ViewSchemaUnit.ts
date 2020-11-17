@@ -35,4 +35,18 @@ export default class ViewSchemaUnit extends Data<TView> {
     })])
     this.updateCacheManually([this.id]);
   }
+
+  async addSort(direction: "ascending" | "descending" = "ascending") {
+    const data = this.getCachedData();
+    const container = data?.query2?.sort ?? [];
+    container.push({ property: this.schema_id, direction })
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        sort: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
+
 }

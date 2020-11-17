@@ -41,9 +41,36 @@ export default class ViewSchemaUnit extends Data<TView> {
   }
 
   async createSorts(directions: ("ascending" | "descending")[]) {
-    const data = this.getCachedData();
-    const container = data?.query2?.sort ?? [];
+    const data = this.getCachedData(), container = data?.query2?.sort ?? [];
     directions.forEach(direction => container.push({ property: this.schema_id, direction }));
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        sort: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
+
+  async updateSort(arg: ((T: ViewSorts) => Promise<ViewSorts>)) {
+    await this.updateSorts(arg, false);
+  }
+
+  async updateSorts(args: ((T: ViewSorts) => Promise<ViewSorts>), multiple: boolean = true) {
+    const data = this.getCachedData(), container = data?.query2?.sort ?? [];
+    let matched = 0;
+    for (let index = 0; index < container.length; index++) {
+      const sort = container[index];
+      if (sort.property === this.schema_id) {
+        const res = await args(sort);
+        if (res) {
+          container[index] = res;
+          matched++;
+        }
+      }
+      if (!multiple && matched !== 0) break;
+    }
+
     this.saveTransactions([this.updateOp([], {
       query2: {
         ...data.query2,

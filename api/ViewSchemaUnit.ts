@@ -49,4 +49,16 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
+  async removeSort() {
+    const data = this.getCachedData();
+    const container = data?.query2?.sort ?? [];
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        sort: container.filter(sort => sort.property !== this.schema_id)
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
+
 }

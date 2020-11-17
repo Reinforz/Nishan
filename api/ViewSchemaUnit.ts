@@ -24,4 +24,15 @@ export default class ViewSchemaUnit extends Data<TView> {
     })])
     this.updateCacheManually([this.id]);
   }
+
+  async toggleHide(should_hide?: boolean) {
+    const data = this.getCachedData(), container = data.format[`${data.type}_properties` as never] as ViewFormatProperties[];
+    this.saveTransactions([this.updateOp([], {
+      format: {
+        ...data.format,
+        [`${data.type}_properties`]: container.map(properties => properties.property === this.schema_id ? { ...properties, visible: should_hide ?? (!properties.visible) } : properties)
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
 }

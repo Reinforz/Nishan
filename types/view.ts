@@ -27,6 +27,7 @@ export interface IListView extends Node, ParentProps {
     list_properties: ViewFormatProperties[]
   },
   query2?: {
+    aggregations?: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
       operator: "and",
@@ -66,6 +67,7 @@ export interface IGalleryView extends Node, ParentProps {
     gallery_properties: ViewFormatProperties[]
   },
   query2?: {
+    aggregations?: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
       operator: "and",
@@ -81,6 +83,7 @@ export interface ICalendarView extends Node, ParentProps {
     calendar_properties: ViewFormatProperties[]
   },
   query2?: {
+    aggregations?: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
       operator: "and",

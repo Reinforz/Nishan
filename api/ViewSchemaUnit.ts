@@ -1,5 +1,6 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters, TViewAggregationsAggregators } from "../types";
+import { warn } from "../utils";
 
 /**
  * A class to represent a column schema of a collection and a view
@@ -192,5 +193,21 @@ export default class ViewSchemaUnit extends Data<TView> {
       }
     })])
     this.updateCacheManually([this.id]);
+  }
+
+  async createAggregator(aggregator: TViewAggregationsAggregators) {
+    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
+    const does_already_contain = container.find(aggregator => aggregator.property === this.schema_id);
+    if (!does_already_contain) {
+      container.push({ property: this.schema_id, aggregator })
+      this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2,
+          aggregations: container
+        }
+      })])
+      this.updateCacheManually([this.id]);
+    } else
+      warn(`ViewSchemaUnit:${this.schema_id} already contains an aggregrator`)
   }
 }

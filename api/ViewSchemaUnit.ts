@@ -36,10 +36,14 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async addSort(direction: "ascending" | "descending" = "ascending") {
+  async createSort(direction: "ascending" | "descending" = "ascending") {
+    await this.createSorts([direction]);
+  }
+
+  async createSorts(directions: ("ascending" | "descending")[]) {
     const data = this.getCachedData();
     const container = data?.query2?.sort ?? [];
-    container.push({ property: this.schema_id, direction })
+    directions.forEach(direction => container.push({ property: this.schema_id, direction }));
     this.saveTransactions([this.updateOp([], {
       query2: {
         ...data.query2,

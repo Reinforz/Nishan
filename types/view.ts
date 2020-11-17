@@ -14,6 +14,7 @@ export interface ITableView extends Node, ParentProps {
     aggregations: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
+      operator: "and",
       filters: ViewFilters[]
     },
   },
@@ -28,6 +29,7 @@ export interface IListView extends Node, ParentProps {
   query2?: {
     sort: ViewSorts[],
     filter: {
+      operator: "and",
       filters: ViewFilters[]
     },
   },
@@ -47,6 +49,7 @@ export interface IBoardView extends Node, ParentProps {
     aggregations: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
+      operator: "and",
       filters: ViewFilters[]
     },
     group_by: string
@@ -65,6 +68,7 @@ export interface IGalleryView extends Node, ParentProps {
   query2?: {
     sort: ViewSorts[],
     filter: {
+      operator: "and",
       filters: ViewFilters[]
     },
   },
@@ -79,6 +83,7 @@ export interface ICalendarView extends Node, ParentProps {
   query2?: {
     sort: ViewSorts[],
     filter: {
+      operator: "and",
       filters: ViewFilters[]
     },
     calender_by: string
@@ -99,7 +104,11 @@ export interface ITimelineView extends Node, ParentProps {
   },
   query2: {
     timeline_by: TTimelineViewTimelineby,
-    sort: ViewSorts[],
+    sort?: ViewSorts[],
+    filter?: {
+      operator: "and",
+      filters: ViewFilters[]
+    },
     aggregations: ViewAggregations[],
   }
 }
@@ -123,6 +132,14 @@ export interface ViewSorts {
   direction: "ascending" | "descending"
 }
 
+// ? TD:1:H Create definitions for operator and type
 export interface ViewFilters {
-
+  property: string,
+  filter: {
+    operator: string,
+    value: {
+      type: string,
+      value: string
+    }
+  }
 }

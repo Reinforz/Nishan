@@ -1,10 +1,11 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, Predicate } from "./";
 
+export type UserViewFilterParams = [string, string, string, string]
 export interface UserViewArg {
   id?: string,
   sorts?: [string, number][],
   aggregations?: [string, TViewAggregationsAggregators][],
-  filters?: [string, string, string, string][],
+  filters?: UserViewFilterParams[],
   properties?: [string, boolean, number][],
   name: string,
   type: TViewType,

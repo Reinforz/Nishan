@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters } from "../types";
 
 /**
  * A class to represent a column schema of a collection and a view
@@ -104,4 +104,32 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
+  async createFilter(filter: [string, string, string]) {
+    await this.createFilters([filter])
+  }
+
+  async createFilters(filters: [string, string, string][]) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
+    if (!container.filters) container.filters = [] as ViewFilters[]
+
+    filters.forEach(filter => {
+      container.filters.push({
+        property: this.schema_id,
+        filter: {
+          operator: filter[0],
+          value: {
+            type: filter[1],
+            value: filter[2]
+          }
+        }
+      })
+    });
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        filter: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
 }

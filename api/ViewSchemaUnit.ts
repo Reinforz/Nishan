@@ -132,4 +132,32 @@ export default class ViewSchemaUnit extends Data<TView> {
     })])
     this.updateCacheManually([this.id]);
   }
+
+  async updateFilter(arg: ((T: ViewFilters) => Promise<ViewFilters>)) {
+    await this.updateFilters(arg, false);
+  }
+
+  async updateFilters(args: ((T: ViewFilters) => Promise<ViewFilters>), multiple: boolean = true) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
+    let matched = 0;
+    for (let index = 0; index < container.filters.length; index++) {
+      const filter = container.filters[index];
+      if (filter.property === this.schema_id) {
+        const res = await args(filter);
+        if (res) {
+          container.filters[index] = res;
+          matched++;
+        }
+      }
+      if (!multiple && matched !== 0) break;
+    }
+
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        filter: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
 }

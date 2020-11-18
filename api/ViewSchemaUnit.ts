@@ -210,4 +210,21 @@ export default class ViewSchemaUnit extends Data<TView> {
     } else
       warn(`ViewSchemaUnit:${this.schema_id} already contains an aggregrator`)
   }
+
+  async updateAggregrator(aggregator: TViewAggregationsAggregators) {
+    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
+    const target_aggregrator = container.find(aggregator => aggregator.property === this.schema_id) ?? { property: this.schema_id, aggregator: "count" };
+    if (!target_aggregrator)
+      container.push({ property: this.schema_id, aggregator })
+    else
+      target_aggregrator.aggregator = aggregator;
+
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        aggregations: container
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
 }

@@ -1,4 +1,4 @@
-import { ParentProps, TViewFormatCover, Node } from "./";
+import { ParentProps, TViewFormatCover, Node, ViewFilters } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
@@ -124,12 +124,12 @@ export interface ViewFormatProperties {
   property: string
 }
 
-export type TextViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
+export type StringViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
 
-export type NumericViewAggregationsAggregators = TextViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
-export type DateViewAggregationsAggregators = TextViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
+export type NumericViewAggregationsAggregators = StringViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
+export type DateViewAggregationsAggregators = StringViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
 export type BooleanViewAggregationsAggregators = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";
-export type TViewAggregationsAggregators = TextViewAggregationsAggregators | NumericViewAggregationsAggregators | BooleanViewAggregationsAggregators;
+export type TViewAggregationsAggregators = StringViewAggregationsAggregators | NumericViewAggregationsAggregators | BooleanViewAggregationsAggregators;
 
 export interface ViewAggregations {
   property: string,
@@ -141,14 +141,3 @@ export interface ViewSorts {
   direction: "ascending" | "descending"
 }
 
-// ? TD:1:H Create definitions for operator and type
-export interface ViewFilters {
-  property: string,
-  filter: {
-    operator: string,
-    value: {
-      type: string,
-      value: string
-    }
-  }
-}

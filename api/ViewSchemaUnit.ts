@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters, TViewAggregationsAggregators } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters, TViewAggregationsAggregators, TViewFiltersOperator } from "../types";
 import { warn } from "../utils";
 
 /**
@@ -108,11 +108,11 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async createFilter(filter: [string, string, string]) {
+  async createFilter(filter: [TViewFiltersOperator, string, string]) {
     await this.createFilters([filter])
   }
 
-  async createFilters(filters: [string, string, string][]) {
+  async createFilters(filters: [TViewFiltersOperator, string, string][]) {
     const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
     if (!container.filters) container.filters = [] as ViewFilters[]
 

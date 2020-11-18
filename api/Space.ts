@@ -147,9 +147,9 @@ export default class Space extends Data<ISpace> {
    * @param opts format and properties for the root page
    * @return Newly created Root page object
    */
-  /* async createRootPage(opts: CreateRootPageArgs): Promise<RootPage> {
+  async createRootPage(opts: CreateRootPageArgs): Promise<RootPage> {
     return (await this.createRootPages([opts]))[0];
-  } */
+  }
 
   /**
    * Create new pages using passed properties and formats

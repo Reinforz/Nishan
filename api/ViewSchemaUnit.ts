@@ -227,4 +227,15 @@ export default class ViewSchemaUnit extends Data<TView> {
     })])
     this.updateCacheManually([this.id]);
   }
+
+  async deleteAggregrator() {
+    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
+    this.saveTransactions([this.updateOp([], {
+      query2: {
+        ...data.query2,
+        aggregations: container.filter(aggregrator => aggregrator.property !== this.schema_id)
+      }
+    })])
+    this.updateCacheManually([this.id]);
+  }
 }

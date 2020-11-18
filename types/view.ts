@@ -1,4 +1,4 @@
-import { ParentProps, TViewFormatCover, TViewAggregationsAggregators, Node } from "./";
+import { ParentProps, TViewFormatCover, Node } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
@@ -124,11 +124,20 @@ export interface ViewFormatProperties {
   property: string
 }
 
+export type TextViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
+
+export type NumericViewAggregationsAggregators = TextViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
+export type DateViewAggregationsAggregators = TextViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
+export type BooleanViewAggregationsAggregators = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";
+export type TBasicViewAggregationsAggregators = TextViewAggregationsAggregators | NumericViewAggregationsAggregators | BooleanViewAggregationsAggregators
+export type TViewAggregationsAggregators = TBasicViewAggregationsAggregators;
+
 export interface ViewAggregations {
   property: string,
   // ? TD:1:H Create interfaces for each data type and associate the appropriate aggregator values with them
   aggregator: TViewAggregationsAggregators
 }
+
 
 export interface ViewSorts {
   property: string,

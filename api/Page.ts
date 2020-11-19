@@ -182,6 +182,41 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     }
   }
 
+  async createPageContent(arg: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">) {
+    return await this.createPageContents([arg])
+  }
+
+  async createPageContents(args: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">[]) {
+    const operations: IOperation[] = [], block_ids: string[] = [];
+    for (let index = 0; index < args.length; index++) {
+      const content = args[index];
+      const block_id = uuidv4();
+
+      const {
+        format,
+        properties,
+        position,
+      } = content;
+
+      block_ids.push(block_id);
+
+      const block_list_op = this.addToChildArray(block_id, position);
+
+      operations.push(this.createBlock({
+        $block_id: block_id,
+        type: "page",
+        properties,
+        format,
+      }),
+        block_list_op
+      );
+    }
+
+    await this.saveTransactions(operations);
+    await this.updateCacheManually(block_ids);
+    return block_ids.map(id => new Page({ ...this.getProps(), id }))
+  }
+
   /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content
@@ -388,7 +423,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @returns An array of block object
    */
   async getBlocks(arg: FilterTypes<TBlock>, multiple: boolean = true): Promise<Block<TBlock, TBlockInput>[]> {
-    await this.initializeCache();
     const _this = this as any;
     return this.getItems<TBlock>(arg, multiple, async function (block) {
       return _this.createClass(block.type, block.id);
@@ -403,8 +437,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return (await this.getPageBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getPageBlocks(arg: FilterTypes<IPage>, multiple: boolean = true): Promise<Page<IPage>[]> {
-    await this.initializeCache();
+  async getPageBlocks(arg: FilterTypes<IPage>, multiple: boolean = true): Promise<(Page<IPage> | undefined)[]> {
     const props = this.getProps()
     return this.getItems<IPage>(arg, multiple, async function (block) {
       return new Page({ ...props, id: block.id });

@@ -206,7 +206,7 @@ export default class Data<T extends TData> extends Getters {
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
         const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = (condition ? condition(block) : true) && typeof arg === "function" ? await arg(block, index) : true;
+        const should_add = (condition ? condition(block) : true) && (typeof arg === "function" ? await arg(block, index) : true);
         if (should_add) {
           matched.push(block)
           await cb(block, should_add);

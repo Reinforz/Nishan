@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, IViewFilters, TViewAggregationsAggregators, TViewFiltersOperator } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, IViewFilters, TViewAggregationsAggregators, TViewFiltersOperator, IViewFilter, TViewFiltersType } from "../types";
 import { warn } from "../utils";
 
 /**
@@ -108,25 +108,33 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async createFilter(filter: [TViewFiltersOperator, string, string]) {
+  async createFilter(filter: [TViewFiltersOperator, TViewFiltersType, string]) {
     await this.createFilters([filter])
   }
 
-  async createFilters(filters: [TViewFiltersOperator, string, string][]) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
+  async createFilters(filters: [TViewFiltersOperator, TViewFiltersType, string][]) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] } as IViewFilter;
     if (!container.filters) container.filters = [] as IViewFilters[]
 
     filters.forEach(filter => {
-      container.filters.push({
-        property: this.schema_id,
-        filter: {
-          operator: filter[0],
-          value: {
-            type: "exact",
-            value: filter[2]
+      if (filter[0] == "is_empty" || filter[0] == "is_not_empty")
+        container.filters.push({
+          property: this.schema_id,
+          filter: {
+            operator: filter[0],
           }
-        }
-      })
+        })
+      else
+        container.filters.push({
+          property: this.schema_id,
+          filter: {
+            operator: filter[0],
+            value: {
+              type: filter[1],
+              value: filter[2]
+            }
+          }
+        })
     });
     this.saveTransactions([this.updateOp([], {
       query2: {

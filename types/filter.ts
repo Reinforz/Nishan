@@ -22,29 +22,103 @@ export type TBasicViewFiltersOperator =
   EmailViewFiltersOperator |
   PhoneViewFiltersOperator;
 
-export type TViewFiltersOperator = TBasicViewFiltersOperator | "and" | "or";
-export interface IViewFilters<T extends TViewFiltersOperator = TViewFiltersOperator> {
+export type TAdvancedViewFiltersOperator = "";
+
+export type TViewFiltersOperator = TBasicViewFiltersOperator | TAdvancedViewFiltersOperator;
+
+/**
+ * Filters.filter.value.type 
+ */
+export type TextViewFiltersType = "exact";
+export type NumericViewFiltersType = "exact";
+export type EnumViewFiltersType = "exact";
+export type EnumsViewFiltersType = "exact";
+export type PersonViewFiltersType = "exact";
+export type FilesViewFiltersType = "exact";
+export type CheckboxViewFiltersType = "exact";
+export type UrlViewFiltersType = "exact";
+export type EmailViewFiltersType = "exact";
+export type PhoneViewFiltersType = "exact";
+
+export type TBasicViewFiltersType =
+  TextViewFiltersType |
+  NumericViewFiltersType |
+  EnumViewFiltersType |
+  EnumsViewFiltersType |
+  PersonViewFiltersType |
+  FilesViewFiltersType |
+  CheckboxViewFiltersType |
+  UrlViewFiltersType |
+  EmailViewFiltersType |
+  PhoneViewFiltersType;
+
+export type TAdvancedViewFiltersType = "exact";
+
+export type TViewFiltersType =
+  TBasicViewFiltersType | TAdvancedViewFiltersType;
+
+/**
+ * Filters.filter.value.value 
+ */
+export type TextViewFiltersValue = string;
+export type NumericViewFiltersValue = number;
+export type EnumViewFiltersValue = string
+export type EnumsViewFiltersValue = string
+
+export interface PersonViewFiltersValue {
+  id: string,
+  table: "notion_user"
+}
+export interface FilesViewFiltersValue { };
+
+export type CheckboxViewFiltersValue = boolean;
+export type UrlViewFiltersValue = string;
+export type EmailViewFiltersValue = string;
+export type PhoneViewFiltersValue = string;
+
+export type TBasicViewFiltersValue =
+  TextViewFiltersValue |
+  NumericViewFiltersValue |
+  EnumViewFiltersValue |
+  EnumsViewFiltersValue |
+  PersonViewFiltersValue |
+  FilesViewFiltersValue |
+  CheckboxViewFiltersValue |
+  UrlViewFiltersValue |
+  EmailViewFiltersValue |
+  PhoneViewFiltersValue;
+
+export type TAdvancedViewFiltersValue = "";
+
+export type TViewFiltersValue = TBasicViewFiltersValue | TAdvancedViewFiltersValue;
+
+export interface IViewFilter {
+  filters: IViewFilters[],
+  operator: "and" | "or"
+}
+
+export interface IViewFilters<O extends TViewFiltersOperator = Exclude<TViewFiltersOperator, "is_empty" | "is_not_empty">, V extends TViewFiltersValue = TViewFiltersValue, T extends TViewFiltersType = "exact"> {
   property: string,
-  filter: {
-    operator: T,
+  filter: { operator: EmptyViewFiltersOperator } | {
+    operator: O,
     value: {
-      type: "exact",
-      value: string
+      type: T,
+      value: V
     }
   }
 }
 
-export interface TextViewFilters extends IViewFilters<TextViewFiltersOperator> { };
-export interface NumericViewFilters extends IViewFilters<NumericViewFiltersOperator> { };
-export interface EnumViewFilters extends IViewFilters<EnumViewFiltersOperator> { };
-export interface EnumsViewFilters extends IViewFilters<EnumsViewFiltersOperator> { };
-export interface PersonViewFilters extends IViewFilters<PersonViewFiltersOperator> { };
-export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator> { };
-export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator> { };
-export interface CheckboxViewFilters extends IViewFilters<CheckboxViewFiltersOperator> { };
-export interface UrlViewFilters extends IViewFilters<UrlViewFiltersOperator> { };
-export interface EmailViewFilters extends IViewFilters<EmailViewFiltersOperator> { };
-export interface PhoneViewFilters extends IViewFilters<PhoneViewFiltersOperator> { };
+export interface TextViewFilters extends IViewFilters<TextViewFiltersOperator, TextViewFiltersValue> { };
+export interface NumericViewFilters extends IViewFilters<NumericViewFiltersOperator, NumericViewFiltersValue> { };
+export interface EnumViewFilters extends IViewFilters<EnumViewFiltersOperator, EnumViewFiltersValue> { };
+export interface EnumsViewFilters extends IViewFilters<EnumsViewFiltersOperator, EnumsViewFiltersValue> { };
+export interface PersonViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
+export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator, FilesViewFiltersValue> { };
+export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator, FilesViewFiltersValue> { };
+export interface CheckboxViewFilters extends IViewFilters<CheckboxViewFiltersOperator, CheckboxViewFiltersValue> { };
+export interface UrlViewFilters extends IViewFilters<UrlViewFiltersOperator, UrlViewFiltersValue> { };
+export interface EmailViewFilters extends IViewFilters<EmailViewFiltersOperator, EmailViewFiltersValue> { };
+export interface PhoneViewFilters extends IViewFilters<PhoneViewFiltersOperator, PhoneViewFiltersValue> { };
 
 export type TBasicViewFilters =
   TextViewFilters |

@@ -145,7 +145,7 @@ export type TAdvancedViewFiltersValue =
 export type TViewFiltersValue = TBasicViewFiltersValue | TAdvancedViewFiltersValue;
 
 export interface IViewFilter {
-  filters: IViewFilters[],
+  filters: (IViewFilters | IViewFilter)[],
   operator: "and" | "or"
 }
 

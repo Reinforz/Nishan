@@ -187,7 +187,7 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>) {
+  protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>, condition?: (Q: Q) => boolean) {
     await this.initializeCache();
     await this.initializeChildData();
     const matched: Q[] = [];
@@ -206,7 +206,7 @@ export default class Data<T extends TData> extends Getters {
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
         const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = typeof arg === "function" ? await arg(block, index) : true;
+        const should_add = (condition ? condition(block) : true) && typeof arg === "function" ? await arg(block, index) : true;
         if (should_add) {
           matched.push(block)
           await cb(block, should_add);
@@ -217,11 +217,11 @@ export default class Data<T extends TData> extends Getters {
     return matched;
   }
 
-  protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>) {
+  protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>, condition?: (Q: Q) => boolean) {
     const blocks: any[] = [];
     await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
       if (matched) blocks.push(await cb(block))
-    })
+    }, condition ?? (() => true))
     return blocks;
   }
 

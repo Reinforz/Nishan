@@ -187,32 +187,32 @@ export default class Space extends Data<ISpace> {
     }));
   }
 
-  async getRootPage(arg: string | Predicate<IRootPage>): Promise<RootPage> {
+  async getRootPage(arg: string | Predicate<IRootPage>): Promise<RootPage | undefined> {
     return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootPages(arg: FilterTypes<IRootPage>, multiple: boolean = true): Promise<RootPage[]> {
+  async getRootPages(arg: FilterTypes<IRootPage>, multiple: boolean = true): Promise<(RootPage | undefined)[]> {
     const props = this.getProps();
     return this.getItems<IRootPage>(arg, multiple, async function (page) {
-      return page.type === "page" && new CollectionViewPage({
+      return new RootPage({
         id: page.id,
         ...props
       })
-    })
+    }, (page => page.type === "page"))
   }
 
-  async getRootCollectionViewPage(arg: string | Predicate<IRootCollectionViewPage>): Promise<RootCollectionViewPage> {
+  async getRootCollectionViewPage(arg: string | Predicate<IRootCollectionViewPage>): Promise<RootCollectionViewPage | undefined> {
     return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootCollectionViewPages(arg: FilterTypes<IRootCollectionViewPage>, multiple: boolean = true): Promise<RootCollectionViewPage[]> {
+  async getRootCollectionViewPages(arg: FilterTypes<IRootCollectionViewPage>, multiple: boolean = true): Promise<(RootCollectionViewPage | undefined)[]> {
     const props = this.getProps();
     return this.getItems<IRootCollectionViewPage>(arg, multiple, async function (page) {
-      return page.type === "collection_view_page" && new CollectionViewPage({
+      return new CollectionViewPage({
         id: page.id,
         ...props
       })
-    })
+    }, (page) => page.type === "collection_view_page")
   }
 
   /**

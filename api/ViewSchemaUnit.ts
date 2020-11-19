@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, ViewFilters, TViewAggregationsAggregators, TViewFiltersOperator } from "../types";
+import { TView, NishanArg, ViewFormatProperties, ViewSorts, Predicate, IViewFilters, TViewAggregationsAggregators, TViewFiltersOperator } from "../types";
 import { warn } from "../utils";
 
 /**
@@ -113,8 +113,8 @@ export default class ViewSchemaUnit extends Data<TView> {
   }
 
   async createFilters(filters: [TViewFiltersOperator, string, string][]) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
-    if (!container.filters) container.filters = [] as ViewFilters[]
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
+    if (!container.filters) container.filters = [] as IViewFilters[]
 
     filters.forEach(filter => {
       container.filters.push({
@@ -122,7 +122,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         filter: {
           operator: filter[0],
           value: {
-            type: filter[1],
+            type: "exact",
             value: filter[2]
           }
         }
@@ -137,12 +137,12 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async updateFilter(arg: ((T: ViewFilters) => Promise<ViewFilters>)) {
+  async updateFilter(arg: ((T: IViewFilters) => Promise<IViewFilters>)) {
     await this.updateFilters(arg, false);
   }
 
-  async updateFilters(args: ((T: ViewFilters) => Promise<ViewFilters>), multiple: boolean = true) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
+  async updateFilters(args: ((T: IViewFilters) => Promise<IViewFilters>), multiple: boolean = true) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
     let matched = 0;
     for (let index = 0; index < container.filters.length; index++) {
       const filter = container.filters[index];
@@ -165,12 +165,12 @@ export default class ViewSchemaUnit extends Data<TView> {
     this.updateCacheManually([this.id]);
   }
 
-  async deleteFilter(arg: Predicate<ViewFilters>) {
+  async deleteFilter(arg: Predicate<IViewFilters>) {
     await this.deleteFilters(arg, false)
   }
 
-  async deleteFilters(args: undefined | Predicate<ViewFilters>, multiple: boolean = true) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as ViewFilters[] };
+  async deleteFilters(args: undefined | Predicate<IViewFilters>, multiple: boolean = true) {
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.filters.length; index++) {

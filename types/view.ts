@@ -1,4 +1,4 @@
-import { ParentProps, TViewFormatCover, Node, ViewFilters } from "./";
+import { ParentProps, TViewFormatCover, Node, IViewFilters } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
@@ -15,7 +15,7 @@ export interface ITableView extends Node, ParentProps {
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
   },
 }
@@ -31,7 +31,7 @@ export interface IListView extends Node, ParentProps {
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
   },
 }
@@ -51,7 +51,7 @@ export interface IBoardView extends Node, ParentProps {
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
     group_by: string
   },
@@ -71,7 +71,7 @@ export interface IGalleryView extends Node, ParentProps {
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
   },
 }
@@ -87,7 +87,7 @@ export interface ICalendarView extends Node, ParentProps {
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
     calender_by: string
   },
@@ -110,7 +110,7 @@ export interface ITimelineView extends Node, ParentProps {
     sort?: ViewSorts[],
     filter?: {
       operator: "and",
-      filters: ViewFilters[]
+      filters: IViewFilters[]
     },
     aggregations: ViewAggregations[],
   }

@@ -10,8 +10,8 @@ import Getters from "./Getters";
  */
 
 export default class Data<T extends TData> extends Getters {
-  protected id: string;
-  protected type: TDataType;
+  id: string;
+  type: TDataType;
   protected listBeforeOp: (path: string[], args: Args) => IOperation;
   protected listAfterOp: (path: string[], args: Args) => IOperation;
   protected updateOp: (path: string[], args: Args) => IOperation;

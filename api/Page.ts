@@ -19,10 +19,9 @@ import {
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
-  UserViewArg,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -183,7 +182,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   async createPageContent(arg: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">) {
-    return await this.createPageContents([arg])
+    return (await this.createPageContents([arg]))[0]
   }
 
   async createPageContents(args: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">[]) {
@@ -351,29 +350,62 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(collection_id: string, user_views: UserViewArg[], position?: number | BlockRepostionArg) {
-    const $content_id = uuidv4();
+  async createLinkedDBContent(collection_id: string, position?: number | BlockRepostionArg) {
+    return (await this.createLinkedDBContents([[collection_id, position]]))[0]
+  }
 
-    const { views } = this.createCollection({ views: user_views }, $content_id);
-    const view_ids = views.map((view) => view.id);
-    const block_list_op = this.addToChildArray($content_id, position);
-    await this.saveTransactions(
-      [
-        Operation.block.set($content_id, [], {
-          id: $content_id,
-          version: 1,
-          type: 'collection_view',
-          collection_id,
-          view_ids,
-          parent_id: this.id,
-          parent_table: 'block',
-          alive: true,
-        }),
-        block_list_op,
-        ...views,
-      ]
-    );
-    return this.createDBArtifacts([[[this.id, "collection_view"], collection_id, view_ids]]);
+  async createLinkedDBContents(args: [string, (number | BlockRepostionArg | undefined)][]) {
+    const ops: IOperation[] = [], content_ids: string[] = [];
+    for (let index = 0; index < args.length; index++) {
+      const arg = args[index];
+      const content_id = uuidv4(), view_id = uuidv4();
+      content_ids.push(content_id)
+      const block_list_op = this.addToChildArray(content_id, arg[1]);
+      const collection = this.cache.collection.get(arg[0]) as ICollection;
+
+      ops.push(Operation.block.set(content_id, [], {
+        id: content_id,
+        version: 1,
+        type: 'collection_view',
+        collection_id: arg[0],
+        view_ids: [view_id],
+        parent_id: this.id,
+        parent_table: 'block',
+        alive: true,
+      }), block_list_op, Operation.collection_view.set(view_id, [], {
+        id: view_id,
+        version: 0,
+        format: {
+          table_properties: Object.keys(collection.schema).map(schema_key => ({
+            visible: true,
+            property: schema_key,
+            width: 250
+          })),
+          table_wrap: true
+        },
+        query2: {
+          sort: [],
+          filter: {
+            operator: "and",
+            filters: []
+          },
+          aggregrations: []
+        },
+        type: "table",
+        name: "Default Table View",
+        page_sort: [],
+        parent_id: this.id,
+        parent_table: 'block',
+        alive: true
+      }))
+    }
+
+    await this.updateCacheManually(content_ids);
+    await this.saveTransactions(ops);
+    return content_ids.map(id => new CollectionView({
+      ...this.getProps(),
+      id
+    }))
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well

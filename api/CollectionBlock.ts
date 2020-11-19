@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Collection from './Collection';
 import Block from './Block';
-import View from './View';
+import View from './View/View';
 
 import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock, FilterTypes } from '../types';
 import { createViews } from '../utils';

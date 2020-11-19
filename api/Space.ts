@@ -10,7 +10,7 @@ import { Operation, error } from '../utils';
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, Predicate, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
-import View from './View';
+import View from './View/View';
 
 /**
  * A class to represent space of Notion

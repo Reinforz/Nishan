@@ -26,7 +26,7 @@ import {
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
-import View from "./View";
+import View from "./View/View";
 
 /**
  * A class to represent Page type block of Notion

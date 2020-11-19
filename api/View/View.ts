@@ -1,6 +1,6 @@
-import { BlockRepostionArg, FilterTypes, ICollection, ISchemaUnit, NishanArg, Predicate, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../types";
-import Data from "./Data";
-import ViewSchemaUnit from "./ViewSchemaUnit";
+import { BlockRepostionArg, FilterTypes, ICollection, ISchemaUnit, NishanArg, Predicate, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
+import Data from "../Data";
+import ViewSchemaUnit from "../ViewSchemaUnit";
 
 /**
  * A class to represent view of Notion

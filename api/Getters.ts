@@ -10,18 +10,18 @@ import { UpdateCacheManuallyParam, ICache, IOperation, Request, TDataType, Creat
  * @noInheritDoc
  */
 export default class Getters extends Cache {
-  token: string;
-  interval: number;
-  user_id: string;
-  space_id: string;
-  shard_id: number;
-  headers: {
+  protected token: string;
+  protected interval: number;
+  protected user_id: string;
+  protected space_id: string;
+  protected shard_id: number;
+  protected headers: {
     headers: {
       cookie: string
     }
   };
-  createTransaction: (operations: IOperation[]) => Request
-  BASE_NOTION_URL = "https://www.notion.so/api/v3"
+  protected createTransaction: (operations: IOperation[]) => Request
+  protected BASE_NOTION_URL = "https://www.notion.so/api/v3"
 
   constructor({ token, interval, user_id, shard_id, space_id, cache }: {
     token: string,
@@ -45,7 +45,7 @@ export default class Getters extends Cache {
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
-  getProps() {
+  protected getProps() {
     return {
       token: this.token,
       interval: this.interval,
@@ -56,7 +56,7 @@ export default class Getters extends Cache {
     }
   }
 
-  async setPageNotificationsAsRead(arg: SetPageNotificationsAsReadParams) {
+  protected async setPageNotificationsAsRead(arg: SetPageNotificationsAsReadParams) {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -72,7 +72,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async setSpaceNotificationsAsRead(arg: SetSpaceNotificationsAsReadParams) {
+  protected async setSpaceNotificationsAsRead(arg: SetSpaceNotificationsAsReadParams) {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -88,7 +88,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {
+  protected async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -105,7 +105,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getUserSharedPages(arg: GetUserSharedPagesParams): Promise<GetUserSharedPagesResult> {
+  protected async getUserSharedPages(arg: GetUserSharedPagesParams): Promise<GetUserSharedPagesResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -122,7 +122,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getUserTasks(): Promise<GetUserTasksResult> {
+  protected async getUserTasks(): Promise<GetUserTasksResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -139,7 +139,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getPublicPageData(arg: GetPublicPageDataParams): Promise<GetPublicPageDataResult> {
+  protected async getPublicPageData(arg: GetPublicPageDataParams): Promise<GetPublicPageDataResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -156,7 +156,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getPublicSpaceData(arg: GetPublicSpaceDataParams): Promise<GetPublicSpaceDataResult> {
+  protected async getPublicSpaceData(arg: GetPublicSpaceDataParams): Promise<GetPublicSpaceDataResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -173,7 +173,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async getSubscriptionData(arg: GetSubscriptionDataParams): Promise<GetSubscriptionDataResult> {
+  protected async getSubscriptionData(arg: GetSubscriptionDataParams): Promise<GetSubscriptionDataResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -190,7 +190,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams): Promise<RemoveUsersFromSpaceResult> {
+  protected async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams): Promise<RemoveUsersFromSpaceResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -208,7 +208,7 @@ export default class Getters extends Cache {
     });
   }
 
-  async initializePageTemplate(arg: InitializePageTemplateParams): Promise<InitializePageTemplateResult> {
+  protected async initializePageTemplate(arg: InitializePageTemplateParams): Promise<InitializePageTemplateResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -226,7 +226,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async loadBlockSubtree(arg: LoadBlockSubtreeParams): Promise<LoadBlockSubtreeResult> {
+  protected async loadBlockSubtree(arg: LoadBlockSubtreeParams): Promise<LoadBlockSubtreeResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -244,7 +244,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getAllSpaces(): Promise<GetSpacesResult> {
+  protected async getAllSpaces(): Promise<GetSpacesResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -262,7 +262,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams): Promise<GetGenericEmbedBlockDataResult> {
+  protected async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams): Promise<GetGenericEmbedBlockDataResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -279,7 +279,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getUploadFileUrl(arg: GetUploadFileUrlParams): Promise<GetUploadFileUrlResult> {
+  protected async getUploadFileUrl(arg: GetUploadFileUrlParams): Promise<GetUploadFileUrlResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -296,7 +296,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getGoogleDriveAccounts(): Promise<GetGoogleDriveAccountsResult> {
+  protected async getGoogleDriveAccounts(): Promise<GetGoogleDriveAccountsResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -313,7 +313,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams): Promise<InitializeGoogleDriveBlockResult> {
+  protected async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams): Promise<InitializeGoogleDriveBlockResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -331,7 +331,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
+  protected async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -349,7 +349,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async inviteGuestsToSpace(arg: InviteGuestsToSpaceParams): Promise<void> {
+  protected async inviteGuestsToSpace(arg: InviteGuestsToSpaceParams): Promise<void> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -366,7 +366,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async findUser(email: string): Promise<INotionUser> {
+  protected async findUser(email: string): Promise<INotionUser> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -383,7 +383,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async createSpace(params: Partial<CreateSpaceParams>): Promise<CreateSpaceResult> {
+  protected async createSpace(params: Partial<CreateSpaceParams>): Promise<CreateSpaceResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -409,7 +409,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async syncRecordValues(requests: SyncRecordValuesParams[]): Promise<SyncRecordValuesResult> {
+  protected async syncRecordValues(requests: SyncRecordValuesParams[]): Promise<SyncRecordValuesResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -429,7 +429,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async queryCollection(arg: QueryCollectionParams): Promise<QueryCollectionResult> {
+  protected async queryCollection(arg: QueryCollectionParams): Promise<QueryCollectionResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -447,7 +447,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async loadUserContent(): Promise<RecordMap> {
+  protected async loadUserContent(): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -463,7 +463,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
+  protected async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -478,7 +478,7 @@ export default class Getters extends Cache {
 
   // ? TD:2:M Add task typedef
   // ? TD:2:M Add EnqueueTaskResult interface
-  async enqueueTask(task: TEnqueueTaskParams): Promise<EnqueueTaskResult> {
+  protected async enqueueTask(task: TEnqueueTaskParams): Promise<EnqueueTaskResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -494,7 +494,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async loadPageChunk(arg: LoadPageChunkParams): Promise<RecordMap> {
+  protected async loadPageChunk(arg: LoadPageChunkParams): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -512,7 +512,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined> {
+  protected async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -529,7 +529,7 @@ export default class Getters extends Cache {
     })
   }
 
-  async getBackLinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
+  protected async getBackLinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -550,7 +550,7 @@ export default class Getters extends Cache {
   }
 
   // ? TD:2:H GetTaskResult interface
-  async getTasks(taskIds: string[]): Promise<any> {
+  protected async getTasks(taskIds: string[]): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

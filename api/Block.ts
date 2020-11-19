@@ -158,7 +158,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     return Operation.block.update($block_id, [], arg);
   }
 
-  createClass(type: TBlockType, id: string): any {
+  protected createClass(type: TBlockType, id: string): any {
     const Page = require("./Page").default;
     const CollectionView = require("./CollectionView").default;
 

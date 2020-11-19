@@ -10,17 +10,17 @@ import Getters from "./Getters";
  */
 
 export default class Data<T extends TData> extends Getters {
-  id: string;
-  type: TDataType;
-  listBeforeOp: (path: string[], args: Args) => IOperation;
-  listAfterOp: (path: string[], args: Args) => IOperation;
-  updateOp: (path: string[], args: Args) => IOperation;
-  setOp: (path: string[], args: Args) => IOperation;
-  listRemoveOp: (path: string[], args: Args) => IOperation;
-  child_path: keyof T = "" as any;
-  child_type: TDataType = "block" as any;
-  init_cache: boolean;
-  init_child_data: boolean;
+  protected id: string;
+  protected type: TDataType;
+  protected listBeforeOp: (path: string[], args: Args) => IOperation;
+  protected listAfterOp: (path: string[], args: Args) => IOperation;
+  protected updateOp: (path: string[], args: Args) => IOperation;
+  protected setOp: (path: string[], args: Args) => IOperation;
+  protected listRemoveOp: (path: string[], args: Args) => IOperation;
+  protected child_path: keyof T = "" as any;
+  protected child_type: TDataType = "block" as any;
+  #init_cache: boolean = false;
+  #init_child_data: boolean;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -31,12 +31,12 @@ export default class Data<T extends TData> extends Getters {
     this.updateOp = Operation[arg.type].update.bind(this, this.id)
     this.setOp = Operation[arg.type].set.bind(this, this.id)
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
-    this.init_cache = false;
-    this.init_child_data = false;
+    this.#init_cache = false;
+    this.#init_child_data = false;
   }
 
-  initializeChildData() {
-    if (!this.init_child_data) {
+  protected initializeChildData() {
+    if (!this.#init_child_data) {
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
         if (data.type === "page")
@@ -55,14 +55,14 @@ export default class Data<T extends TData> extends Getters {
         this.child_path = "template_pages" as any;
       else if (this.type === "space_view")
         this.child_path = "bookmarked_pages" as any;
-      this.init_child_data = true;
+      this.#init_child_data = true;
     }
   }
 
   /**
    * Get the parent of the current data
    */
-  getParent() {
+  protected getParent() {
     const data = this.getCachedData() as TBlock;
     if (this.type.match(/(space|block|collection)/) && data?.parent_id) {
       const parent = this.cache.block.get(data.parent_id) as TParentType;
@@ -90,7 +90,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Delete the cached data using the id
    */
-  deleteCachedData() {
+  protected deleteCachedData() {
     this.cache[this.type].delete(this.id);
   }
 
@@ -100,7 +100,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  addToChildArray(child_id: string, position: number | BlockRepostionArg | undefined) {
+  protected addToChildArray(child_id: string, position: number | BlockRepostionArg | undefined) {
     const data = this.getCachedData();
     this.initializeChildData()
     if (!data[this.child_path]) data[this.child_path] = [] as any;
@@ -137,7 +137,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @param keys 
    */
-  updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
+  protected updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
     const _this = this;
     const parent_data = this.getCachedData();
     const data = arg as T;
@@ -157,7 +157,7 @@ export default class Data<T extends TData> extends Getters {
   }
 
   protected async initializeCache() {
-    if (!this.init_cache) {
+    if (!this.#init_cache) {
       let container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
@@ -183,7 +183,7 @@ export default class Data<T extends TData> extends Getters {
       if (non_cached.length !== 0)
         await this.updateCacheManually(non_cached);
 
-      this.init_cache = true;
+      this.#init_cache = true;
     }
   }
 
@@ -244,7 +244,7 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
+  protected createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
     const { properties, format } = option;
 
     if (!option.views) option.views = [{

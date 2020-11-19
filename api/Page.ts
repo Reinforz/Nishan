@@ -35,10 +35,8 @@ import View from "./View";
  */
 
 export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
-  init_cache: boolean;
   constructor(arg: NishanArg) {
     super(arg);
-    this.init_cache = false;
   }
 
   /* async upload() {
@@ -409,8 +407,8 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     await this.initializeCache();
     const props = this.getProps()
     return this.getItems<IPage>(arg, multiple, async function (block) {
-      return block.type === "page" ? new Page({ ...props, id: block.id }) : undefined;
-    })
+      return new Page({ ...props, id: block.id });
+    }, (block) => block.type === "page")
   }
 
   /**

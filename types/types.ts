@@ -30,7 +30,6 @@ export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "r
 export type TTimeFormat = "H:mm" | "LT";
 export type TDateReminderUnit = "day" | "hour" | "minute";
 export type TDataType = keyof RecordMap;
-export type Predicate<T> = (T: T, index: number) => Promise<boolean>;
 export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 export type TPlanType = "personal";
 export type TCollectionViewBlock = "collection_view" | "collection_view_page";

@@ -4,7 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { View, TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, Predicate, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView } from '../types';
+import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType } from '../types';
 import { createViews } from '../utils';
 
 /**
@@ -97,7 +97,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     }, condition)
   }
 
-  async getTableView(arg: undefined | string | Predicate<ITableView>) {
+  async getTableView(arg: FilterType<ITableView>) {
     return (await this.getTableViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -105,7 +105,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<ITableView, TableView>(arg, multiple, (view) => view.type === "table")
   }
 
-  async getListView(arg: undefined | string | Predicate<IListView>) {
+  async getListView(arg: FilterType<IListView>) {
     return (await this.getListViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -113,7 +113,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IListView, ListView>(arg, multiple, (view) => view.type === "list")
   }
 
-  async getBoardView(arg: undefined | string | Predicate<IBoardView>) {
+  async getBoardView(arg: FilterType<IBoardView>) {
     return (await this.getBoardViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -121,7 +121,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IBoardView, BoardView>(arg, multiple, (view) => view.type === "board")
   }
 
-  async getGalleryView(arg: undefined | string | Predicate<IGalleryView>) {
+  async getGalleryView(arg: FilterType<IGalleryView>) {
     return (await this.getGalleryViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -129,7 +129,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IGalleryView, GalleryView>(arg, multiple, (view) => view.type === "gallery")
   }
 
-  async getCalendarView(arg: undefined | string | Predicate<ICalendarView>) {
+  async getCalendarView(arg: FilterType<ICalendarView>) {
     return (await this.getCalendarViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -137,7 +137,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<ICalendarView, CalendarView>(arg, multiple, (view) => view.type === "calendar")
   }
 
-  async getTimelineView(arg: undefined | string | Predicate<ITimelineView>) {
+  async getTimelineView(arg: FilterType<ITimelineView>) {
     return (await this.getTimelineViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -150,7 +150,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteViews(arg: string[] | Predicate<TView>, multiple: boolean = true) {
+  async deleteViews(arg: FilterTypes<TView>, multiple: boolean = true) {
     await this.deleteItems<TView>(arg as any, multiple)
   }
 
@@ -158,7 +158,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteView(arg: string | Predicate<TView>) {
+  async deleteView(arg: FilterType<TView>) {
     return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
   }
 

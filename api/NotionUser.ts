@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, Predicate, FilterTypes } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -60,10 +60,11 @@ class NotionUser extends Data<INotionUser> {
    * @param arg A predicate filter function or a string
    * @returns The obtained Space object
    */
-  async getSpace(arg: Predicate<ISpace> | string) {
+  async getSpace(arg: FilterType<ISpace>) {
     return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
+  // ? FIX:1:E Fix getSpaces to use [Data].traverseChildren method
   /**
    * Get multiple space objects on the user's account as an array
    * @param arg empty or A predicate function or a string array of ids

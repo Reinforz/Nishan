@@ -13,7 +13,6 @@ import {
   NishanArg,
   TExportType,
   IOperation,
-  Predicate,
   TGenericEmbedBlockType,
   BlockRepostionArg,
   CreateBlockArg,
@@ -21,7 +20,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -461,11 +460,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     })
   }
 
-  async getBlock(arg: string | Predicate<TBlock>) {
+  async getBlock(arg: FilterType<TBlock>) {
     return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getPageBlock(arg: string | Predicate<IPage>) {
+  async getPageBlock(arg: FilterType<IPage>) {
     return (await this.getPageBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
@@ -480,7 +479,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
-  async deleteBlock(arg: string | Predicate<TBlock>) {
+  async deleteBlock(arg: FilterType<TBlock>) {
     return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, false);
   }
 

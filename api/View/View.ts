@@ -1,4 +1,4 @@
-import { BlockRepostionArg, FilterTypes, ICollection, ISchemaUnit, NishanArg, Predicate, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
+import { BlockRepostionArg, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -64,7 +64,7 @@ class View extends Data<TView> {
     await this.saveTransactions([this.updateOp([], args)]);
   }
 
-  async getViewSchemaUnit(arg: string | Predicate<ViewFormatProperties>) {
+  async getViewSchemaUnit(arg: FilterType<ViewFormatProperties>) {
     return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 

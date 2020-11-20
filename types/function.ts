@@ -1,4 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, Predicate } from "./";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType } from "./";
 
 export type UserViewFilterParams = [string, string, string, string]
 export interface UserViewArg {
@@ -59,4 +59,6 @@ export type CreateTRootPagesParams = ({
   type: "collection_view_page"
 } & CreateRootCollectionViewPageParams)
 
+export type Predicate<T> = (T: T, index: number) => Promise<boolean>;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
+export type FilterType<T> = undefined | string | Predicate<T>

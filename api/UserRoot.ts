@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { FilterTypes, ISpaceView, IUserRoot, NishanArg, Predicate } from "../types";
+import { FilterType, FilterTypes, ISpaceView, IUserRoot, NishanArg } from "../types";
 
 import SpaceView from "./SpaceView";
 
@@ -28,7 +28,7 @@ class UserRoot extends Data<IUserRoot> {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getSpaceView(arg: string | Predicate<ISpaceView>) {
+  async getSpaceView(arg: FilterType<ISpaceView>) {
     return (await this.getSpaceViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 }

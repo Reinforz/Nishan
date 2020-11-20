@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, BlockRepostionArg, IOperation, IRootPage, Predicate, TRootPage } from '../types';
+import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, BlockRepostionArg, IOperation, IRootPage, TRootPage, FilterType, FilterTypes } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
 
@@ -58,7 +58,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async toggleFavourites(arg: string[] | Predicate<TRootPage>, multiple: boolean = true) {
+  async toggleFavourites(arg: FilterTypes<TRootPage>, multiple: boolean = true) {
     const target_space_view = this.getCachedData(), target_space = await this.getSpace(false) as ISpace, ops: IOperation[] = [];
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {
@@ -95,7 +95,7 @@ class SpaceView extends Data<ISpaceView> {
    * Toggle a single page from the bookmark list
    * @param arg id string or a predicate filter function
    */
-  async toggleFavourite(arg: string | Predicate<TRootPage>) {
+  async toggleFavourite(arg: FilterType<TRootPage>) {
     await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
   }
 }

@@ -2,11 +2,11 @@
 import axios from "axios";
 
 import NotionUser from "./api/NotionUser";
-import { NishanArg, Predicate } from "./types/types";
+import { NishanArg } from "./types/types";
 import { error } from "./utils/logs";
 import Cache from "./api/Cache";
 import { GetSpacesResult, INotionUser } from './types/api';
-import { FilterTypes } from "./types";
+import { FilterType, FilterTypes } from "./types";
 
 class Nishan extends Cache {
   token: string;
@@ -40,7 +40,7 @@ class Nishan extends Cache {
     }
   }
 
-  async getNotionUser(arg: string | Predicate<INotionUser>) {
+  async getNotionUser(arg: FilterType<INotionUser>) {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 

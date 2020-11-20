@@ -6,3 +6,5 @@ class TimelineView extends View {
     super({ ...arg });
   }
 }
+
+export default TimelineView;

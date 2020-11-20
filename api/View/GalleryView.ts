@@ -1,10 +1,10 @@
 import { NishanArg } from "../../types";
 import View from "./View";
 
-class CalendarView extends View {
+class GalleryView extends View {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }
 }
 
-export default CalendarView;
+export default GalleryView;

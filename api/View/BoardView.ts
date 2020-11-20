@@ -6,3 +6,5 @@ class BoardView extends View {
     super({ ...arg });
   }
 }
+
+export default BoardView;

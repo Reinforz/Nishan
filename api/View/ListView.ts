@@ -6,3 +6,5 @@ class ListView extends View {
     super({ ...arg });
   }
 }
+
+export default ListView;

@@ -13,9 +13,9 @@ class RootCollectionViewPage extends CollectionViewPage {
   }
 
   /**
-     * Share page to users with specific permissions
-     * @param args array of userid and role of user to share pages to
-     */
+   * Share page to users with specific permissions
+   * @param args array of userid and role of user to share pages to
+   */
   async addSharedUsers(args: [string, TPermissionRole][]) {
     const data = this.getCachedData() as TRootPage, notion_users: INotionUser[] = [];
     const permissionItems: IPermission[] = [];

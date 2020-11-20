@@ -6,3 +6,5 @@ class TableView extends View {
     super({ ...arg });
   }
 }
+
+export default TableView;

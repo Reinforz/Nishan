@@ -4,7 +4,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { View, TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { BlockRepostionArg, UserViewArg, NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType } from '../types';
+import { RepositionParams, UserViewArg, NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType } from '../types';
 import { createViews } from '../utils';
 
 /**
@@ -34,11 +34,11 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Create a new view for the collection block
    * @returns The newly created view object
    */
-  async createView(view: UserViewArg, position?: number | BlockRepostionArg) {
+  async createView(view: UserViewArg, position?: RepositionParams) {
     return (await this.createViews([{ view, position }]))[0]
   }
 
-  async createViews(params: { view: UserViewArg, position?: number | BlockRepostionArg }[], multiple: boolean = true) {
+  async createViews(params: { view: UserViewArg, position?: RepositionParams }[], multiple: boolean = true) {
     const ops: IOperation[] = [], view_ids: string[] = [];
 
     for (let index = 0; index < params.length; index++) {

@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, BlockRepostionArg, IOperation, IRootPage, TRootPage, FilterType, FilterTypes } from '../types';
+import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, RepositionParams, IOperation, IRootPage, TRootPage, FilterType, FilterTypes } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
 
@@ -13,7 +13,7 @@ class SpaceView extends Data<ISpaceView> {
     super({ ...arg, type: "space_view" });
   }
 
-  async reposition(arg: number | BlockRepostionArg) {
+  async reposition(arg: RepositionParams) {
     const op = this.addToChildArray(this.id, arg);
     await this.saveTransactions([op]);
   }

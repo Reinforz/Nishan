@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, BlockRepostionArg, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, FilterTypes } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, FilterTypes } from "../types";
 import { Operation, error, createViews } from "../utils";
 import Getters from "./Getters";
 
@@ -100,7 +100,7 @@ export default class Data<T extends TData> extends Getters {
    * @param arg 
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray(child_id: string, position: number | BlockRepostionArg | undefined) {
+  protected addToChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData();
     this.initializeChildData()
     if (!data[this.child_path]) data[this.child_path] = [] as any;

@@ -14,7 +14,7 @@ import {
   TExportType,
   IOperation,
   TGenericEmbedBlockType,
-  BlockRepostionArg,
+  RepositionParams,
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
@@ -129,10 +129,10 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   /**
    * Create a template block content
    * @param factory `IFactoryInput` interface
-   * @param position number or `BlockRepostionArg` interface
+   * @param position number or `RepositionParams` interface
    * @returns An object containing Newly created array of template content blocks and the template block itself
    */
-  async createTemplateContent(factory: IFactoryInput, position?: number | BlockRepostionArg) {
+  async createTemplateContent(factory: IFactoryInput, position?: RepositionParams) {
     const {
       format,
       properties,
@@ -180,11 +180,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     }
   }
 
-  async createPageContent(arg: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">) {
+  async createPageContent(arg: Omit<Partial<IPageInput & { position: RepositionParams }>, "type">) {
     return (await this.createPageContents([arg]))[0]
   }
 
-  async createPageContents(args: Omit<Partial<IPageInput & { position: number | BlockRepostionArg | undefined }>, "type">[]) {
+  async createPageContents(args: Omit<Partial<IPageInput & { position: RepositionParams }>, "type">[]) {
     const operations: IOperation[] = [], block_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
       const content = args[index];
@@ -349,11 +349,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(collection_id: string, position?: number | BlockRepostionArg) {
+  async createLinkedDBContent(collection_id: string, position?: RepositionParams) {
     return (await this.createLinkedDBContents([[collection_id, position]]))[0]
   }
 
-  async createLinkedDBContents(args: [string, (number | BlockRepostionArg | undefined)][]) {
+  async createLinkedDBContents(args: [string, RepositionParams][]) {
     const ops: IOperation[] = [], content_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];

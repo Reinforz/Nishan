@@ -23,13 +23,13 @@ export interface CreateBlockArg {
 
 export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange
 
-export interface BlockRepostionArg {
+export type RepositionParams = {
   id: string,
   position: "before" | "after"
-}
+} | number | undefined;
 
 export interface CreateRootPageArgs {
-  properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: number | BlockRepostionArg
+  properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: RepositionParams
 }
 
 export type UpdatableSpaceKeys = 'name' | 'beta_enabled' | 'icon';
@@ -50,7 +50,7 @@ export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, Upd
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
 export type PageCreateContentParam = TBlockInput & {
-  position?: number | BlockRepostionArg
+  position?: RepositionParams
 }
 
 export type CreateTRootPagesParams = ({

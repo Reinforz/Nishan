@@ -1,4 +1,4 @@
-import { BlockRepostionArg, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -11,7 +11,7 @@ class View extends Data<TView> {
     super({ ...arg, type: "collection_view" });
   }
 
-  async reposition(arg: number | BlockRepostionArg) {
+  async reposition(arg: RepositionParams) {
     await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
   }
 

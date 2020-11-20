@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, BlockRepostionArg } from "../types"
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -15,7 +15,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     super({ ...arg, type: "block" });
   }
 
-  async reposition(arg: number | BlockRepostionArg) {
+  async reposition(arg: RepositionParams) {
     await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
   }
 

@@ -1,5 +1,4 @@
-![Nishan Logo](https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/master/public/logo%4088px.png)
-<img height="100px" width="100px" src = "https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/36445ccb61a714b3961d74db4d3a739ef776cd23/public/Logo3%40100px.svg">
+<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/36445ccb61a714b3961d74db4d3a739ef776cd23/public/Logo3%40100px.svg">
 
 # Nishan
 

@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams } from '../types';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams } from '../types';
 import { createViews, Operation } from '../utils';
 
 const view_class = {
@@ -80,13 +80,13 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#createViews(params, "board")
   }
 
-  /* async createGalleryView(param: GalleryViewCreateParams) {
+  async createGalleryView(param: GalleryViewCreateParams) {
     return (await this.createGalleryViews([param]))[0]
   }
 
   async createGalleryViews(params: GalleryViewCreateParams[]): Promise<GalleryView[]> {
     return await this.#createViews(params, "gallery")
-  } */
+  }
 
   /**
    * Get all the views associated with the collection block

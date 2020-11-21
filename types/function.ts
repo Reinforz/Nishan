@@ -41,7 +41,10 @@ export interface BoardViewCreateParams extends Omit<TableViewCreateParams, "wrap
 }
 
 export interface GalleryViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
-  group_by: string,
+  cb: ViewCreateCbParams<Omit<ViewCreateCbReturn, "aggregations">>,
+  gallery_cover: TViewFormatCover,
+  gallery_cover_aspect: 'contain' | 'cover',
+  gallery_cover_size: 'small' | 'medium' | 'large',
 }
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {

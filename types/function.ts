@@ -1,4 +1,5 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType } from "./";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue } from "./";
+import { TSchemaUnit } from "./schema";
 
 export type UserViewFilterParams = [string, string, string, string]
 export interface UserViewArg {
@@ -10,6 +11,18 @@ export interface UserViewArg {
   name: string,
   type: TViewType,
   wrap?: boolean
+}
+
+export interface TableViewCreateParams {
+  cb: (T: TSchemaUnit & { key: string }) => {
+    sorts?: [("ascending" | "descending"), number],
+    aggregrations?: [TViewAggregationsAggregators, number],
+    filters?: [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number][],
+    properties?: [boolean, number, number]
+  },
+  wrap: boolean,
+  name: string,
+  position: RepositionParams
 }
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {

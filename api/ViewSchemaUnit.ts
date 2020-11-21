@@ -128,9 +128,9 @@ export default class ViewSchemaUnit extends Data<TView> {
         container.filters.push({
           property: this.schema_id,
           filter: {
-            operator: filter[0],
+            operator: filter[0] as any,
             value: {
-              type: filter[1],
+              type: filter[1] as any,
               value: filter[2]
             }
           }
@@ -153,7 +153,7 @@ export default class ViewSchemaUnit extends Data<TView> {
     const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
     let matched = 0;
     for (let index = 0; index < container.filters.length; index++) {
-      const filter = container.filters[index];
+      const filter = container.filters[index] as any;
       if (filter.property === this.schema_id) {
         const res = await args(filter);
         if (res) {
@@ -178,7 +178,7 @@ export default class ViewSchemaUnit extends Data<TView> {
   }
 
   async deleteFilters(args: undefined | Predicate<IViewFilters>, multiple: boolean = true) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
+    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] } as any;
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.filters.length; index++) {
@@ -196,7 +196,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         ...data.query2,
         filter: {
           operator: "and",
-          filters: container.filters.filter(filter => filter)
+          filters: container.filters.filter((filter: any) => filter)
         }
       }
     })])

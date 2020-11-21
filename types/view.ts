@@ -1,21 +1,22 @@
-import { ParentProps, TViewFormatCover, Node, IViewFilters } from "./";
+import { ParentProps, TViewFormatCover, Node, IViewFilters, TViewFilters } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
+export interface ITableViewFormat {
+  table_wrap: boolean,
+  table_properties: ViewFormatProperties[]
+}
 export interface ITableView extends Node, ParentProps {
   name: string,
   type: 'table',
   page_sort: string[],
-  format: {
-    table_wrap: boolean,
-    table_properties: ViewFormatProperties[]
-  },
+  format: ITableViewFormat,
   query2?: {
     aggregations: ViewAggregations[],
     sort: ViewSorts[],
     filter: {
       operator: "and",
-      filters: IViewFilters[]
+      filters: TViewFilters[]
     },
   },
 }
@@ -107,8 +108,8 @@ export interface ITimelineView extends Node, ParentProps {
   },
   query2: {
     timeline_by: TTimelineViewTimelineby,
-    sort?: ViewSorts[],
-    filter?: {
+    sort: ViewSorts[],
+    filter: {
       operator: "and",
       filters: IViewFilters[]
     },
@@ -126,6 +127,7 @@ export interface ViewFormatProperties {
 
 export type StringViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
 
+// ? TD:1:M Add all schema unit aggregrators on a separate file
 export type NumericViewAggregationsAggregators = StringViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
 export type DateViewAggregationsAggregators = StringViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
 export type BooleanViewAggregationsAggregators = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";

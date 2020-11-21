@@ -24,12 +24,12 @@ export default function (param: Partial<(TableViewCreateParams)>, schema_entries
         operator: "and",
         filters: [] as TViewFilters[]
       },
-      aggregrations: [] as ViewAggregations[]
+      aggregations: [] as ViewAggregations[]
     },
   }
 
   const properties = common_props.format[`${type}_properties`] as ViewFormatProperties[];
-  const { sort: sorts, filter: { filters }, aggregrations } = common_props.query2
+  const { sort: sorts, filter: { filters }, aggregations } = common_props.query2
 
   schema_entries.forEach(([key, value], index) => {
     const data = cb ? (cb({ ...value, key }) ?? {}) : {};
@@ -46,9 +46,9 @@ export default function (param: Partial<(TableViewCreateParams)>, schema_entries
       if (data?.sorts?.[1]) sorts.splice(data.sorts?.[1], 0, { property: key, direction: data.sorts?.[0] ?? "ascending" })
       else sorts.push({ property: key, direction: data.sorts?.[0] ?? "ascending" })
 
-    if (data.aggregrations)
-      if (data?.aggregrations?.[1]) aggregrations.splice(data.aggregrations?.[1], 0, { property: key, aggregator: data.aggregrations[0] ?? "count" })
-      else aggregrations.push({ property: key, aggregator: data.aggregrations[0] })
+    if (data.aggregations)
+      if (data?.aggregations?.[1]) aggregations.splice(data.aggregations?.[1], 0, { property: key, aggregator: data.aggregations[0] ?? "count" })
+      else aggregations.push({ property: key, aggregator: data.aggregations[0] })
 
     if (data.filters)
       data.filters.forEach(filter => {

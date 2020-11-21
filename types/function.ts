@@ -16,10 +16,10 @@ export interface UserViewArg {
 export interface TableViewCreateParams {
   cb: (T: TSchemaUnit & { key: string }) => {
     sorts?: [("ascending" | "descending"), number],
-    aggregrations?: [TViewAggregationsAggregators, number],
+    aggregations?: [TViewAggregationsAggregators, number],
     filters?: [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number][],
     properties?: [boolean, number, number]
-  },
+  } | undefined,
   wrap: boolean,
   name: string,
   position: RepositionParams

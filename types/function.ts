@@ -29,10 +29,13 @@ export interface TableViewCreateParams {
   position: RepositionParams
 }
 
-export interface ListViewCreateParams extends TableViewCreateParams {
+export interface ListViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
   cb: ViewCreateCbParams<Omit<ViewCreateCbReturn, "aggregations">>
 }
 
+export interface BoardViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
+  group_by: string,
+}
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
   views?: UserViewArg[],

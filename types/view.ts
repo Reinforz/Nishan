@@ -6,6 +6,7 @@ export interface ITableViewFormat {
   table_wrap: boolean,
   table_properties: ViewFormatProperties[]
 }
+
 export interface ITableView extends Node, ParentProps {
   name: string,
   type: 'table',

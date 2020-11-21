@@ -129,6 +129,38 @@ class View extends Data<TView> {
       await this.updateCacheManually([this.id]);
     }
   }
+
+  async deleteSort(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined) {
+    await this.deleteSorts(cb, false);
+  }
+
+  async deleteSorts(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    let total_deleted = 0;
+    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const schema_entries = new Map(Object.entries(collection.schema));
+
+    for (let index = 0; index < sorts.length; index++) {
+      const sort = sorts[index] as ViewSorts;
+      const schema = schema_entries.get(sort.property)
+      const should_delete = cb({ ...sort, ...schema } as any) ?? undefined;
+      if (should_delete) {
+        total_deleted++;
+        sorts.splice(index, 1)
+      }
+      if (!multiple && total_deleted === 1) break;
+    }
+
+    if (total_deleted) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
 }
 
 export default View;

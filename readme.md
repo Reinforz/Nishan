@@ -1,4 +1,4 @@
-![Nishan Logo](https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/master/public/Logo%40175px.png)
+![Nishan Logo](https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/master/public/logo%4088px.png)
 
 # Nishan
 

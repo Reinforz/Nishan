@@ -1,4 +1,4 @@
-import { ParentProps, TViewFormatCover, Node, IViewFilters, TViewFilters } from "./";
+import { ParentProps, TViewFormatCover, Node, IViewFilters, TViewFilters, ViewAggregations } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
@@ -123,19 +123,6 @@ export interface ViewFormatProperties {
   width?: number,
   visible: boolean,
   property: string
-}
-
-export type StringViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
-
-// ? TD:1:M Add all schema unit aggregrators on a separate file
-export type NumericViewAggregationsAggregators = StringViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
-export type DateViewAggregationsAggregators = StringViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
-export type BooleanViewAggregationsAggregators = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";
-export type TViewAggregationsAggregators = StringViewAggregationsAggregators | NumericViewAggregationsAggregators | BooleanViewAggregationsAggregators;
-
-export interface ViewAggregations {
-  property: string,
-  aggregator: TViewAggregationsAggregators
 }
 
 export interface ViewSorts {

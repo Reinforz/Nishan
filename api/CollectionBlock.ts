@@ -39,7 +39,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   // TODO RF:1:H Same view options as Page.createLinkedDBContent
   // ? FEAT:1:H Check which view supports what ie(filter, aggregration, sort, property reorder and toggle)
 
-  #createViews = async (params: (Partial<(TableViewCreateParams)>)[], type: TViewType) => {
+  #createViews = async (params: (Partial<(TableViewCreateParams | ListViewCreateParams)>)[], type: TViewType) => {
     const ops: IOperation[] = [], view_ids: string[] = [];
     const data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection;
     const schema_entries = Object.entries(collection.schema);

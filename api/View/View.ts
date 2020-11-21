@@ -1,4 +1,4 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -92,6 +92,41 @@ class View extends Data<TView> {
       }
     }
     return matched;
+  }
+
+  async createAggregation(cb: (T: TSchemaUnit & { key: string }) => TViewAggregationsAggregators | undefined) {
+    await this.createAggregations(cb, false)
+  }
+
+  async createAggregations(cb: (T: TSchemaUnit & { key: string }) => TViewAggregationsAggregators | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    if (!data.query2) data.query2 = { aggregations: [] as ViewAggregations[] } as any;
+    if (!data.query2?.aggregations) (data.query2 as any).aggregations = [] as ViewAggregations[];
+    let total_created = 0;
+    const aggregations = data.query2?.aggregations ?? [] as ViewAggregations[];
+    const schema_entries = Object.entries(collection.schema);
+    for (let index = 0; index < schema_entries.length; index++) {
+      const [key, schema] = schema_entries[index];
+      const aggregator = cb({ ...schema, key }) ?? undefined;
+      if (aggregator) {
+        total_created++;
+        aggregations.push({
+          property: key,
+          aggregator
+        })
+      }
+      if (!multiple && total_created === 1) break;
+    }
+
+    if (total_created) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
   }
 
   async createSort(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined) {

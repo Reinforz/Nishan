@@ -178,7 +178,7 @@ export default class ViewSchemaUnit extends Data<TView> {
   }
 
   async deleteFilters(args: undefined | Predicate<IViewFilters>, multiple: boolean = true) {
-    const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] } as any;
+    const data = this.getCachedData(), container = data.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] } as any;
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.filters.length; index++) {

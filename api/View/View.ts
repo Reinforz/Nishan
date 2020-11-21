@@ -1,4 +1,4 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -19,7 +19,7 @@ class View extends Data<TView> {
    * Update the current view
    * @param options Options to update the view
    */
-  // ? TD:1:M Convert the parameter as an interface
+  // ? TD:1:M Use the createViews method arg
   async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {
     const data = this.getCachedData();
     const { sorts = [], filters = [], properties = [], aggregations = [] } = options;
@@ -92,6 +92,42 @@ class View extends Data<TView> {
       }
     }
     return matched;
+  }
+
+  async createSort(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined) {
+    await this.createSorts(cb, false)
+  }
+
+  async createSorts(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
+    if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
+    let total_created = 0;
+    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const schema_entries = Object.entries(collection.schema);
+    for (let index = 0; index < schema_entries.length; index++) {
+      const [key, schema] = schema_entries[index];
+      const res = cb({ ...schema, key }) ?? undefined;
+      if (res) {
+        total_created++;
+        const [direction, position] = res;
+        sorts.splice(position ?? sorts.length, 0, {
+          property: key,
+          direction
+        })
+      }
+      if (!multiple && total_created === 1) break;
+    }
+
+    if (total_created) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
   }
 }
 

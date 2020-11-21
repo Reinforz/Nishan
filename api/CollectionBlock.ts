@@ -1,11 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ViewFormatProperties, ViewSorts, ViewAggregations, TViewFilters } from '../types';
-import { Operation } from '../utils';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection } from '../types';
+import { createViews, Operation } from '../utils';
 
 const view_class = {
   board: BoardView,
@@ -46,73 +44,9 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     const data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection;
     const schema_entries = Object.entries(collection.schema);
 
-    params.map(({ cb, wrap = true, name = `Default ${type}`, position }) => {
-      const view_id = uuidv4()
-      view_ids.push(view_id);
-
-      const common_props = {
-        id: view_id,
-        version: 0,
-        type,
-        name,
-        page_sort: [],
-        parent_id: this.id,
-        parent_table: 'block',
-        alive: true,
-        format: {
-          [`${type}_properties`]: Array(schema_entries.length).fill(null) as ViewFormatProperties[],
-          [`${type}_wrap`]: wrap
-        },
-        query2: {
-          sort: [] as ViewSorts[],
-          filter: {
-            operator: "and",
-            filters: [] as TViewFilters[]
-          },
-          aggregrations: [] as ViewAggregations[]
-        },
-      }
-
-      const properties = common_props.format[`${type}_properties`] as ViewFormatProperties[];
-      const { sort: sorts, filter: { filters }, aggregrations } = common_props.query2
-
-      schema_entries.forEach(([key, value], index) => {
-        const data = cb ? (cb({ ...value, key }) ?? {}) : {};
-        const custom_properties = {
-          property: key,
-          visible: data?.properties?.[0] ?? true,
-          width: data?.properties?.[1] ?? 250,
-        }
-        if (data?.properties?.[2]) properties.splice(data?.properties[2], 0, custom_properties)
-        else
-          properties[index] = custom_properties;
-
-        if (data.sorts)
-          if (data?.sorts?.[1]) sorts.splice(data.sorts?.[1], 0, { property: key, direction: data.sorts?.[0] ?? "ascending" })
-          else sorts.push({ property: key, direction: data.sorts?.[0] ?? "ascending" })
-
-        if (data.aggregrations)
-          if (data?.aggregrations?.[1]) aggregrations.splice(data.aggregrations?.[1], 0, { property: key, aggregator: data.aggregrations[0] ?? "count" })
-          else aggregrations.push({ property: key, aggregator: data.aggregrations[0] })
-
-        if (data.filters)
-          data.filters.forEach(filter => {
-            const custom_filter = {
-              property: key,
-              filter: {
-                operator: filter?.[0] as any,
-                value: {
-                  type: filter?.[1] as any,
-                  value: filter?.[2] as any
-                }
-              }
-            }
-            if (filter?.[3]) filters.splice(filter?.[3], 0, custom_filter)
-            else filters.push(custom_filter)
-          })
-      });
-
-      const block_list_op = this.addToChildArray(view_id, position);
+    params.map((param) => {
+      const [view_id, common_props] = createViews(param, schema_entries, type, this.id);
+      const block_list_op = this.addToChildArray(view_id, param.position);
       ops.push(block_list_op, Operation.collection_view.update(view_id as string, [], common_props));
     })
 

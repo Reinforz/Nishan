@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, FilterTypes } from "../types";
-import { Operation, error, createViews } from "../utils";
+import { Operation, error, createCustomViews } from "../utils";
 import Getters from "./Getters";
 
 /**
@@ -267,11 +267,7 @@ export default class Data<T extends TData> extends Getters {
         type: opt[1],
         ...(opt[2] ?? {})
       } as any;
-      /* if (schema[schema_key].options) schema[schema_key].options = (schema[schema_key] as any).options.map(([value, color]: [string, string]) => ({
-        id: uuidv4(),
-        value,
-        color
-      })) */
+
     });
 
     const views = option.views.map((view) => ({
@@ -279,6 +275,6 @@ export default class Data<T extends TData> extends Getters {
       id: uuidv4()
     }));
 
-    return { schema, views: createViews(views, parent_id), properties, format }
+    return { schema, views: createCustomViews(views, parent_id), properties, format }
   }
 }

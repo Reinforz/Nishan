@@ -1,50 +1,70 @@
-import { UserViewArg } from "../types/function";
-import Operation from "./chunk";
+import { v4 as uuidv4 } from 'uuid';
+import { TableViewCreateParams, TSchemaUnit, TViewFilters, TViewType, ViewAggregations, ViewFormatProperties, ViewSorts } from '../types';
 
-// ? TD: FilterType interface
-/**
- * 
- * @param views View Argument
- * @param parent_id id of the parent block
- */
-export default function createViews(views: UserViewArg[], parent_id: string) {
-  return views.map(({ id, aggregations = [], sorts = [], filters = [], properties = [], wrap = true, type = 'table', name = `Default ${type}` }) => Operation.collection_view.update(id as string, [], {
-    id,
+export default function (param: Partial<(TableViewCreateParams)>, schema_entries: [string, TSchemaUnit][], type: TViewType, parent_id: string) {
+  const view_id = uuidv4()
+  const { cb, wrap, name = `Default ${type}` } = param;
+
+  const common_props = {
+    id: view_id,
     version: 0,
     type,
     name,
-    format: {
-      [`${type}_properties`]: properties.map((key) => ({
-        visible: key[1] ?? true,
-        property: key[0],
-        width: key[2] ?? 250
-      })),
-      [`${type}_wrap`]: wrap
-    },
-    query2: {
-      sort: sorts.map((sort) => ({
-        property: sort[0],
-        direction: sort[1] === -1 ? 'ascending' : 'descending'
-      })),
-      filter: {
-        operator: "and",
-        filters: filters.map((filter: any) => ({
-          property: filter[0],
-          filter: {
-            operator: filter[1],
-            value: {
-              type: filter[2],
-              value: filter[3]
-            }
-          }
-        }))
-      },
-      aggregations: aggregations.map(aggregation => ({ property: aggregation[0], aggregator: aggregation[1] }))
-    },
     page_sort: [],
     parent_id,
     parent_table: 'block',
-    alive: true
-  })
-  )
-};
+    alive: true,
+    format: {
+      [`${type}_properties`]: Array(schema_entries.length).fill(null) as ViewFormatProperties[],
+      [`${type}_wrap`]: wrap
+    },
+    query2: {
+      sort: [] as ViewSorts[],
+      filter: {
+        operator: "and",
+        filters: [] as TViewFilters[]
+      },
+      aggregrations: [] as ViewAggregations[]
+    },
+  }
+
+  const properties = common_props.format[`${type}_properties`] as ViewFormatProperties[];
+  const { sort: sorts, filter: { filters }, aggregrations } = common_props.query2
+
+  schema_entries.forEach(([key, value], index) => {
+    const data = cb ? (cb({ ...value, key }) ?? {}) : {};
+    const custom_properties = {
+      property: key,
+      visible: data?.properties?.[0] ?? true,
+      width: data?.properties?.[1] ?? 250,
+    }
+    if (data?.properties?.[2]) properties.splice(data?.properties[2], 0, custom_properties)
+    else
+      properties[index] = custom_properties;
+
+    if (data.sorts)
+      if (data?.sorts?.[1]) sorts.splice(data.sorts?.[1], 0, { property: key, direction: data.sorts?.[0] ?? "ascending" })
+      else sorts.push({ property: key, direction: data.sorts?.[0] ?? "ascending" })
+
+    if (data.aggregrations)
+      if (data?.aggregrations?.[1]) aggregrations.splice(data.aggregrations?.[1], 0, { property: key, aggregator: data.aggregrations[0] ?? "count" })
+      else aggregrations.push({ property: key, aggregator: data.aggregrations[0] })
+
+    if (data.filters)
+      data.filters.forEach(filter => {
+        const custom_filter = {
+          property: key,
+          filter: {
+            operator: filter?.[0] as any,
+            value: {
+              type: filter?.[1] as any,
+              value: filter?.[2] as any
+            }
+          }
+        }
+        if (filter?.[3]) filters.splice(filter?.[3], 0, custom_filter)
+        else filters.push(custom_filter)
+      })
+  });
+  return [view_id, common_props] as [string, typeof common_props];
+}

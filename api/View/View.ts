@@ -165,6 +165,38 @@ class View extends Data<TView> {
     }
   }
 
+  async deleteAggregation(cb: (T: TSchemaUnit & ViewAggregations) => boolean | undefined) {
+    await this.deleteAggregations(cb, false);
+  }
+
+  async deleteAggregations(cb: (T: TSchemaUnit & ViewAggregations) => boolean | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    let total_deleted = 0;
+    const aggregations = data.query2?.aggregations ?? [] as ViewAggregations[];
+    const schema_entries = new Map(Object.entries(collection.schema));
+
+    for (let index = 0; index < aggregations.length; index++) {
+      const aggregation = aggregations[index] as ViewAggregations;
+      const schema = schema_entries.get(aggregation.property)
+      const should_delete = cb({ ...aggregation, ...schema } as any) ?? undefined;
+      if (should_delete) {
+        total_deleted++;
+        aggregations.splice(index, 1)
+      }
+      if (!multiple && total_deleted === 1) break;
+    }
+
+    if (total_deleted) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
+
   async createSort(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined) {
     await this.createSorts(cb, false)
   }

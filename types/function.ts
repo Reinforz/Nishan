@@ -1,4 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue } from "./";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover } from "./";
 import { TSchemaUnit } from "./schema";
 
 export type UserViewFilterParams = [string, string, string, string]
@@ -34,6 +34,13 @@ export interface ListViewCreateParams extends Omit<TableViewCreateParams, "wrap"
 }
 
 export interface BoardViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
+  group_by: string,
+  board_cover: TViewFormatCover,
+  board_cover_aspect: 'contain' | 'cover',
+  board_cover_size: 'small' | 'medium' | 'large',
+}
+
+export interface GalleryViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
   group_by: string,
 }
 

@@ -13,17 +13,26 @@ export interface UserViewArg {
   wrap?: boolean
 }
 
+export interface ViewCreateCbReturn {
+  sorts: [("ascending" | "descending"), number],
+  aggregations: [TViewAggregationsAggregators, number],
+  filters: [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number][],
+  properties: [boolean, number, number]
+}
+
+export type ViewCreateCbParams<I extends Partial<ViewCreateCbReturn> = Partial<ViewCreateCbReturn>> = (T: TSchemaUnit & { key: string }) => I;
+
 export interface TableViewCreateParams {
-  cb: (T: TSchemaUnit & { key: string }) => {
-    sorts?: [("ascending" | "descending"), number],
-    aggregations?: [TViewAggregationsAggregators, number],
-    filters?: [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number][],
-    properties?: [boolean, number, number]
-  } | undefined,
+  cb: ViewCreateCbParams,
   wrap: boolean,
   name: string,
   position: RepositionParams
 }
+
+export interface ListViewCreateParams extends TableViewCreateParams {
+  cb: ViewCreateCbParams<Omit<ViewCreateCbReturn, "aggregations">>
+}
+
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
   views?: UserViewArg[],

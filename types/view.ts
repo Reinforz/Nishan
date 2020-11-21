@@ -91,7 +91,7 @@ export interface ICalendarView extends Node, ParentProps {
       operator: "and",
       filters: IViewFilters[]
     },
-    calender_by: string
+    calendar_by: string
   },
 }
 

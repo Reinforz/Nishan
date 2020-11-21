@@ -47,6 +47,11 @@ export interface GalleryViewCreateParams extends Omit<TableViewCreateParams, "wr
   gallery_cover_size: 'small' | 'medium' | 'large',
 }
 
+export interface CalendarViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
+  group_by: string,
+  cb: ViewCreateCbParams<Omit<ViewCreateCbReturn, "aggregations">>,
+}
+
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
   views?: UserViewArg[],
   schema?: ([string, TSchemaUnitType] | [string, TSchemaUnitType, Record<string, any>])[]

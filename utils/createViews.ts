@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { BoardViewCreateParams, GalleryViewCreateParams, ListViewCreateParams, TableViewCreateParams, TSchemaUnit, TViewFilters, TViewType, ViewAggregations, ViewFormatProperties, ViewSorts } from '../types';
+import { BoardViewCreateParams, CalendarViewCreateParams, GalleryViewCreateParams, ListViewCreateParams, TableViewCreateParams, TSchemaUnit, TViewFilters, TViewType, ViewAggregations, ViewFormatProperties, ViewSorts } from '../types';
 
-export default function (param: Partial<(TableViewCreateParams | ListViewCreateParams | BoardViewCreateParams)>, schema_entries: [string, TSchemaUnit][], type: TViewType, parent_id: string) {
+export default function (param: Partial<(TableViewCreateParams | ListViewCreateParams | BoardViewCreateParams | CalendarViewCreateParams | GalleryViewCreateParams)>, schema_entries: [string, TSchemaUnit][], type: TViewType, parent_id: string) {
   const view_id = uuidv4()
   const { cb, name = `Default ${type}` } = param;
 
@@ -30,6 +30,7 @@ export default function (param: Partial<(TableViewCreateParams | ListViewCreateP
     case "table":
       common_props.format.table_wrap = (param as TableViewCreateParams).wrap ?? false;
       common_props.query2.aggregations = [] as ViewAggregations[];
+      break;
     case "board":
       const { group_by, board_cover = { type: "page_content" }, board_cover_aspect = 'contain', board_cover_size = 'medium' } = param as Partial<BoardViewCreateParams>;
       common_props.format = {
@@ -39,6 +40,7 @@ export default function (param: Partial<(TableViewCreateParams | ListViewCreateP
         board_cover_size
       }
       common_props.query2.group_by = group_by
+      break;
     case "gallery":
       const { gallery_cover = { type: "page_content" }, gallery_cover_aspect = 'contain', gallery_cover_size = 'medium' } = param as Partial<GalleryViewCreateParams>;
       common_props.format = {
@@ -47,6 +49,11 @@ export default function (param: Partial<(TableViewCreateParams | ListViewCreateP
         gallery_cover_aspect,
         gallery_cover_size
       }
+      break;
+    case "calendar":
+      common_props.query2.group_by = (param as Partial<CalendarViewCreateParams>).group_by
+      break;
+
   }
 
   const properties = common_props.format[`${type}_properties`] as ViewFormatProperties[];

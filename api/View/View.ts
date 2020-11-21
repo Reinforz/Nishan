@@ -130,6 +130,49 @@ class View extends Data<TView> {
     }
   }
 
+  async updateSort(cb: (T: TSchemaUnit & ViewSorts) => [TSortValue, number] | undefined) {
+    await this.updateSorts(cb, false);
+  }
+
+  async updateSorts(cb: (T: TSchemaUnit & ViewSorts) => [TSortValue, number] | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
+    if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
+    let total_updated = 0;
+    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const schema_entries = new Map(Object.entries(collection.schema));
+    for (let index = 0; index < sorts.length; index++) {
+      const sort = sorts[index], schema = schema_entries.get(sort.property);
+      const res = cb({ ...schema, ...sort } as any) ?? undefined;
+      if (res) {
+        total_updated++;
+        const [direction, position] = res;
+        if (position) {
+          sorts.splice(index, 1)
+          sorts.splice(position, 0, {
+            property: sort.property,
+            direction
+          })
+        }
+        else sorts[index] = {
+          property: sort.property,
+          direction
+        }
+      }
+      if (!multiple && total_updated === 1) break;
+    }
+
+    if (total_updated) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
+
   async deleteSort(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined) {
     await this.deleteSorts(cb, false);
   }

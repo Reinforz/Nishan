@@ -95,14 +95,15 @@ export interface ICalendarView extends Node, ParentProps {
   },
 }
 
+export interface ITimelineViewFormatPreference {
+  centerTimestamp: number,
+  zoomLevel: "month"
+}
 export interface ITimelineView extends Node, ParentProps {
   type: 'timeline',
   name: string,
   format: {
-    timeline_preference: {
-      centerTimestamp: number,
-      zoomLevel: "month"
-    },
+    timeline_preference: ITimelineViewFormatPreference,
     timeline_properties: ViewFormatProperties[],
     timeline_show_table: boolean,
     timeline_table_properties: ViewFormatProperties[]

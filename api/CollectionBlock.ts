@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams, CalendarViewCreateParams } from '../types';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams, CalendarViewCreateParams, TimelineViewCreateParams } from '../types';
 import { createViews, Operation } from '../utils';
 
 const view_class = {
@@ -93,7 +93,15 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createCalendarViews(params: CalendarViewCreateParams[]): Promise<CalendarView[]> {
-    return await this.#createViews(params, "gallery")
+    return await this.#createViews(params, "calendar")
+  }
+
+  async createTimelineView(param: TimelineViewCreateParams) {
+    return (await this.createTimelineViews([param]))[0]
+  }
+
+  async createTimelineViews(params: TimelineViewCreateParams[]): Promise<TimelineView[]> {
+    return await this.#createViews(params, "timeline")
   }
 
   /**

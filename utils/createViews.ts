@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { BoardViewCreateParams, CalendarViewCreateParams, GalleryViewCreateParams, ListViewCreateParams, TableViewCreateParams, TSchemaUnit, TViewFilters, TViewType, ViewAggregations, ViewFormatProperties, ViewSorts } from '../types';
+import { BoardViewCreateParams, CalendarViewCreateParams, GalleryViewCreateParams, ListViewCreateParams, TableViewCreateParams, TimelineViewCreateParams, TSchemaUnit, TViewFilters, TViewType, ViewAggregations, ViewFormatProperties, ViewSorts } from '../types';
 
 export default function (param: Partial<(TableViewCreateParams | ListViewCreateParams | BoardViewCreateParams | CalendarViewCreateParams | GalleryViewCreateParams)>, schema_entries: [string, TSchemaUnit][], type: TViewType, parent_id: string) {
   const view_id = uuidv4()
@@ -53,7 +53,15 @@ export default function (param: Partial<(TableViewCreateParams | ListViewCreateP
     case "calendar":
       common_props.query2.group_by = (param as Partial<CalendarViewCreateParams>).group_by
       break;
-
+    case "timeline":
+      const { timeline_preference = { centerTimestamp: 0, zoomLevel: "month" }, timeline_show_table = true, timeline_table_properties = common_props.format.table_properties, timeline_by = 'day' } = param as Partial<TimelineViewCreateParams>;
+      common_props.format = {
+        ...common_props.format,
+        timeline_preference,
+        timeline_show_table,
+        timeline_table_properties
+      }
+      common_props.query2.timeline_by = timeline_by
   }
 
   const properties = common_props.format[`${type}_properties`] as ViewFormatProperties[];

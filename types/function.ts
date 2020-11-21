@@ -1,4 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover } from "./";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference } from "./";
 import { TSchemaUnit } from "./schema";
 
 export type UserViewFilterParams = [string, string, string, string]
@@ -50,6 +50,13 @@ export interface GalleryViewCreateParams extends Omit<TableViewCreateParams, "wr
 export interface CalendarViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
   group_by: string,
   cb: ViewCreateCbParams<Omit<ViewCreateCbReturn, "aggregations">>,
+}
+
+export interface TimelineViewCreateParams extends Omit<TableViewCreateParams, "wrap"> {
+  timeline_by: TTimelineViewTimelineby,
+  timeline_show_table: boolean,
+  timeline_table_properties: ViewFormatProperties[],
+  timeline_preference: ITimelineViewFormatPreference,
 }
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {

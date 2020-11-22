@@ -7,7 +7,7 @@ import Data from "./Data";
  * @noInheritDoc
  */
 
-export default class SchemaUnit extends Data<ICollection> {
+export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection> {
   schema_id: string;
 
   constructor(arg: NishanArg & { schema_id: string }) {
@@ -15,7 +15,9 @@ export default class SchemaUnit extends Data<ICollection> {
     this.schema_id = arg.schema_id
   }
 
-  async update(arg: TSchemaUnit) {
+  // ? FEAT:1:M Change schema_id method
+
+  async update(arg: T) {
     const data = this.getCachedData();
     data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg }
     this.saveTransactions([this.updateOp([], { schema: data.schema })])

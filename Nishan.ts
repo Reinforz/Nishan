@@ -13,8 +13,8 @@ class Nishan extends Cache {
   interval: number;
   init_cache: boolean;
 
-  constructor(arg: Pick<NishanArg, "token" | "interval" | "cache">) {
-    super(arg.cache);
+  constructor(arg: Pick<NishanArg, "token" | "interval">) {
+    super();
     this.token = arg.token;
     this.interval = arg.interval || 500;
     this.init_cache = false;

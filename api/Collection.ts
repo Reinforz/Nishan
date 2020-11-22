@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -180,7 +180,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async createSchemaUnits(args: TSchemaUnit[]) {
-    const results: SchemaUnit[] = [], data = this.getCachedData();
+    const results: SchemaUnit<TSchemaUnit>[] = [], data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       const schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
@@ -206,9 +206,9 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean, type?: TSchemaUnitType) {
+  async getSchemaUnits(arg: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean, type?: TSchemaUnitType) {
     multiple = multiple ?? true;
-    const matched: SchemaUnit[] = [];
+    const matched: SchemaUnit<TSchemaUnit>[] = [];
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
 
     if (Array.isArray(arg)) {
@@ -221,14 +221,25 @@ class Collection extends Data<ICollection> {
       }
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
-        const schema = data.schema[container[index]]
+        const schema_id = container[index], schema = data.schema[container[index]];
         const should_add = (type ? schema.type === type : true) && typeof arg === "function" ? await arg({ ...schema, key: container[index] }, index) : true;
         if (should_add)
-          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index] }))
+          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
         if (!multiple && matched.length === 1) break;
       }
     }
     return matched;
+  }
+
+  // ? TD:2:M Fix arg as any type error
+
+  async getTextSchemaUnit(arg: FilterTypes<TextSchemaUnit & { key: string }>) {
+    return (await this.getSchemaUnits(arg as any, false, "text"))[0]
+  }
+
+  async getTextSchemaUnits(arg: FilterTypes<TextSchemaUnit & { key: string }>, multiple?: boolean) {
+    multiple = multiple ?? true;
+    return await this.getSchemaUnits(arg as any, multiple, "text")
   }
 
   /**
@@ -246,7 +257,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async updateSchemaUnits(args: [string, TSchemaUnit][]) {
-    const results: SchemaUnit[] = [], data = this.getCachedData();
+    const results: SchemaUnit<TSchemaUnit>[] = [], data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const [schema_id, schema_data] = args[index];
       if (!data.schema[schema_id]) error(`Collection:${this.id} does not contain SchemaUnit:${schema_id}`)

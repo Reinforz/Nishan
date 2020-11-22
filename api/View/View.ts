@@ -363,8 +363,7 @@ class View extends Data<TView> {
     const filters = data.query2?.filter.filters as IViewFilters[];
     const schema_entries = new Map(Object.entries(collection.schema));
     for (let index = 0; index < filters.length; index++) {
-      const filter = filters[index], schema = schema_entries.get(filter.property);
-      const res = cb({ ...schema, ...filter } as any) ?? undefined;
+      const filter = filters[index], schema = schema_entries.get(filter.property), res = cb({ ...schema, ...filter } as any) ?? undefined;
       if (res) {
         total_updated++;
         const [operator, type, value, position] = res;
@@ -397,6 +396,37 @@ class View extends Data<TView> {
     }
   }
 
+  async deleteFilter(cb: (T: TSchemaUnit & IViewFilters) => boolean | undefined) {
+    await this.deleteFilters(cb, false);
+  }
+
+  async deleteFilters(cb: (T: TSchemaUnit & IViewFilters) => boolean | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    let total_deleted = 0;
+    const filters = data.query2?.filter.filters as IViewFilters[],
+      schema_entries = new Map(Object.entries(collection.schema));
+
+    for (let index = 0; index < filters.length; index++) {
+      const filter = filters[index] as IViewFilters,
+        schema = schema_entries.get(filter.property),
+        should_delete = cb({ ...filter, ...schema } as any) ?? undefined;
+      if (should_delete) {
+        total_deleted++;
+        filters.splice(index, 1)
+      }
+      if (!multiple && total_deleted === 1) break;
+    }
+
+    if (total_deleted) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
 }
 
 export default View;

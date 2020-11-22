@@ -1,4 +1,4 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators, UserViewFilterParams, IViewFilters } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -104,7 +104,7 @@ class View extends Data<TView> {
     if (!data.query2) data.query2 = { aggregations: [] as ViewAggregations[] } as any;
     if (!data.query2?.aggregations) (data.query2 as any).aggregations = [] as ViewAggregations[];
     let total_created = 0;
-    const aggregations = data.query2?.aggregations ?? [] as ViewAggregations[];
+    const aggregations = data.query2?.aggregations as ViewAggregations[];
     const schema_entries = Object.entries(collection.schema);
     for (let index = 0; index < schema_entries.length; index++) {
       const [key, schema] = schema_entries[index];
@@ -139,7 +139,7 @@ class View extends Data<TView> {
     if (!data.query2) data.query2 = { aggregations: [] as ViewAggregations[] } as any;
     if (!data.query2?.aggregations) (data.query2 as any).aggregations = [] as ViewAggregations[];
     let total_updated = 0;
-    const aggregations = data.query2?.aggregations ?? [] as ViewAggregations[];
+    const aggregations = data.query2?.aggregations as ViewAggregations[];
     const schema_entries = new Map(Object.entries(collection.schema));
     for (let index = 0; index < aggregations.length; index++) {
       const aggregation = aggregations[index], schema = schema_entries.get(aggregation.property);
@@ -173,7 +173,7 @@ class View extends Data<TView> {
     multiple = multiple ?? true;
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
     let total_deleted = 0;
-    const aggregations = data.query2?.aggregations ?? [] as ViewAggregations[];
+    const aggregations = data.query2?.aggregations as ViewAggregations[];
     const schema_entries = new Map(Object.entries(collection.schema));
 
     for (let index = 0; index < aggregations.length; index++) {
@@ -207,7 +207,7 @@ class View extends Data<TView> {
     if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
     if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
     let total_created = 0;
-    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const sorts = data.query2?.sort as ViewSorts[];
     const schema_entries = Object.entries(collection.schema);
     for (let index = 0; index < schema_entries.length; index++) {
       const [key, schema] = schema_entries[index];
@@ -243,7 +243,7 @@ class View extends Data<TView> {
     if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
     if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
     let total_updated = 0;
-    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const sorts = data.query2?.sort as ViewSorts[];
     const schema_entries = new Map(Object.entries(collection.schema));
     for (let index = 0; index < sorts.length; index++) {
       const sort = sorts[index], schema = schema_entries.get(sort.property);
@@ -284,7 +284,7 @@ class View extends Data<TView> {
     multiple = multiple ?? true;
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
     let total_deleted = 0;
-    const sorts = data.query2?.sort ?? [] as ViewSorts[];
+    const sorts = data.query2?.sort as ViewSorts[];
     const schema_entries = new Map(Object.entries(collection.schema));
 
     for (let index = 0; index < sorts.length; index++) {
@@ -299,6 +299,48 @@ class View extends Data<TView> {
     }
 
     if (total_deleted) {
+      await this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
+
+  async createFilter(cb: (T: TSchemaUnit & { key: string }) => UserViewFilterParams | undefined) {
+    await this.createFilters(cb, false)
+  }
+
+  async createFilters(cb: (T: TSchemaUnit & { key: string }) => UserViewFilterParams | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    if (!data.query2) data.query2 = { filter: { operator: "and", filters: [] as IViewFilters[] } } as any;
+    if (!data.query2?.filter) (data.query2 as any).filter = { filters: [] as IViewFilters[] };
+    let total_created = 0;
+    const filters = data.query2?.filter.filters as IViewFilters[];
+    const schema_entries = Object.entries(collection.schema);
+    for (let index = 0; index < schema_entries.length; index++) {
+      const [key, schema] = schema_entries[index];
+      const res = cb({ ...schema, key }) ?? undefined;
+      if (res) {
+        total_created++;
+        const [operator, type, value, position] = res;
+        filters.splice(position ?? filters.length, 0, {
+          property: key,
+          filter: {
+            operator,
+            value: {
+              type,
+              value
+            }
+          } as any
+        })
+      }
+      if (!multiple && total_created === 1) break;
+    }
+
+    if (total_created) {
       await this.saveTransactions([this.updateOp([], {
         query2: {
           ...data.query2

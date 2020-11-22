@@ -192,6 +192,15 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
+  #createClass = (type: TSchemaUnitType, schema_id: string) => {
+    switch (type) {
+      case "text":
+        return new SchemaUnit<TextSchemaUnit>({ ...this.getProps(), id: this.id, schema_id })
+      default:
+        return new SchemaUnit<TextSchemaUnit>({ ...this.getProps(), id: this.id, schema_id })
+    }
+  }
+
   /**
    * Return a single column from the collection schema
    * @param arg schema_id string or predicate function
@@ -213,10 +222,10 @@ class Collection extends Data<ICollection> {
 
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {
-        const schema_id = arg[index];
-        const should_add = (type ? data.schema[schema_id].type === type : true) && container.includes(schema_id);
+        const schema_id = arg[index], schema = data.schema[schema_id];
+        const should_add = (type ? schema.type === type : true) && container.includes(schema_id);
         if (should_add)
-          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
+          matched.push(this.#createClass(schema.type, schema_id))
         if (!multiple && matched.length === 1) break;
       }
     } else if (typeof arg === "function" || arg === undefined) {
@@ -224,7 +233,7 @@ class Collection extends Data<ICollection> {
         const schema_id = container[index], schema = data.schema[container[index]];
         const should_add = (type ? schema.type === type : true) && typeof arg === "function" ? await arg({ ...schema, key: container[index] }, index) : true;
         if (should_add)
-          matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
+          matched.push(this.#createClass(schema.type, schema_id))
         if (!multiple && matched.length === 1) break;
       }
     }
@@ -237,7 +246,7 @@ class Collection extends Data<ICollection> {
     return (await this.getSchemaUnits(arg as any, false, "text"))[0]
   }
 
-  async getTextSchemaUnits(arg: FilterTypes<TextSchemaUnit & { key: string }>, multiple?: boolean) {
+  async getTextSchemaUnits(arg: FilterTypes<TextSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<TextSchemaUnit>[]> {
     multiple = multiple ?? true;
     return await this.getSchemaUnits(arg as any, multiple, "text")
   }

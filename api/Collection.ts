@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, } from "../types";
 import Page from './Page';
 
 /**
@@ -206,7 +206,7 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean) {
+  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean, type?: TSchemaUnitType) {
     multiple = multiple ?? true;
     const matched: SchemaUnit[] = [];
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
@@ -214,14 +214,15 @@ class Collection extends Data<ICollection> {
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {
         const schema_id = arg[index];
-        const should_add = container.includes(schema_id);
+        const should_add = (type ? data.schema[schema_id].type === type : true) && container.includes(schema_id);
         if (should_add)
           matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
         if (!multiple && matched.length === 1) break;
       }
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
-        const should_add = typeof arg === "function" ? await arg({ ...data.schema[container[index]], key: container[index] }, index) : true;
+        const schema = data.schema[container[index]]
+        const should_add = (type ? schema.type === type : true) && typeof arg === "function" ? await arg({ ...schema, key: container[index] }, index) : true;
         if (should_add)
           matched.push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index] }))
         if (!multiple && matched.length === 1) break;
@@ -229,8 +230,6 @@ class Collection extends Data<ICollection> {
     }
     return matched;
   }
-
-
 
   /**
    * Update and return a single column from the collection schema

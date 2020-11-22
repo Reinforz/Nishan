@@ -2,8 +2,6 @@ import axios from "axios";
 import {
   v4 as uuidv4
 } from 'uuid';
-import fs from "fs";
-import path from "path";
 
 import Block from './Block';
 
@@ -89,14 +87,13 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    */
   // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionBlock will also support it)
   async export(arg: {
-    dir: string,
     timeZone: string,
     recursive: boolean,
     exportType: TExportType
   }) {
     const data = this.getCachedData();
     const {
-      dir = "output", timeZone, recursive = true, exportType = "markdown"
+      timeZone, recursive = true, exportType = "markdown"
     } = arg || {};
     const {
       taskId
@@ -121,9 +118,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       responseType: 'arraybuffer'
     });
 
-    const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
+    return response.data;
 
-    fs.createWriteStream(fullpath).end(response.data);
+    /* const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
+
+    fs.createWriteStream(fullpath).end(response.data); */
   }
 
   /**

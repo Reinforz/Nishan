@@ -108,7 +108,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Get all the views associated with the collection block
    * @returns An array of view objects of the collectionblock
    */
-  #getViews = async<T extends TView, C extends (TableView | BoardView | ListView | CalendarView | TimelineView | GalleryView)>(arg: FilterTypes<T>, multiple: boolean = true, condition?: (Q: T) => boolean): Promise<C[]> => {
+  #getViews = async<T extends TView, C extends (TableView | BoardView | ListView | CalendarView | TimelineView | GalleryView)>(arg: FilterTypes<T>, multiple?: boolean, condition?: (Q: T) => boolean): Promise<C[]> => {
+    multiple = multiple ?? true;
     const props = this.getProps();
     return this.getItems<T>(arg, multiple, async function (view) {
       switch (view.type) {
@@ -150,7 +151,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getTableViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getTableViews(arg: FilterTypes<ITableView>, multiple: boolean = true): Promise<TableView[]> {
+  async getTableViews(arg: FilterTypes<ITableView>, multiple?: boolean): Promise<TableView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<ITableView, TableView>(arg, multiple, (view) => view.type === "table")
   }
 
@@ -158,7 +160,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getListViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getListViews(arg: FilterTypes<IListView>, multiple: boolean = true): Promise<ListView[]> {
+  async getListViews(arg: FilterTypes<IListView>, multiple?: boolean): Promise<ListView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<IListView, ListView>(arg, multiple, (view) => view.type === "list")
   }
 
@@ -166,7 +169,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getBoardViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getBoardViews(arg: FilterTypes<IBoardView>, multiple: boolean = true): Promise<TableView[]> {
+  async getBoardViews(arg: FilterTypes<IBoardView>, multiple?: boolean): Promise<TableView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<IBoardView, BoardView>(arg, multiple, (view) => view.type === "board")
   }
 
@@ -174,7 +178,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getGalleryViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getGalleryViews(arg: FilterTypes<IGalleryView>, multiple: boolean = true): Promise<GalleryView[]> {
+  async getGalleryViews(arg: FilterTypes<IGalleryView>, multiple?: boolean): Promise<GalleryView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<IGalleryView, GalleryView>(arg, multiple, (view) => view.type === "gallery")
   }
 
@@ -182,7 +187,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getCalendarViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getCalendarViews(arg: FilterTypes<ICalendarView>, multiple: boolean = true): Promise<CalendarView[]> {
+  async getCalendarViews(arg: FilterTypes<ICalendarView>, multiple?: boolean): Promise<CalendarView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<ICalendarView, CalendarView>(arg, multiple, (view) => view.type === "calendar")
   }
 
@@ -190,7 +196,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getTimelineViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getTimelineViews(arg: FilterTypes<ITimelineView>, multiple: boolean = true): Promise<TimelineView[]> {
+  async getTimelineViews(arg: FilterTypes<ITimelineView>, multiple?: boolean): Promise<TimelineView[]> {
+    multiple = multiple ?? true;
     return await this.#getViews<ITimelineView, TimelineView>(arg, multiple, (view) => view.type === "timeline")
   }
 
@@ -199,7 +206,8 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteViews(arg: FilterTypes<TView>, multiple: boolean = true) {
+  async deleteViews(arg: FilterTypes<TView>, multiple?: boolean) {
+    multiple = multiple ?? true;
     await this.deleteItems<TView>(arg as any, multiple)
   }
 

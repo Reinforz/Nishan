@@ -57,7 +57,8 @@ export default class ViewSchemaUnit extends Data<TView> {
     await this.updateSorts(arg, false);
   }
 
-  async updateSorts(args: ((T: ViewSorts) => Promise<ViewSorts>), multiple: boolean = true) {
+  async updateSorts(args: ((T: ViewSorts) => Promise<ViewSorts>), multiple?: boolean) {
+    multiple = multiple ?? true;
     const data = this.getCachedData(), container = data?.query2?.sort ?? [];
     let matched = 0;
     for (let index = 0; index < container.length; index++) {
@@ -85,7 +86,8 @@ export default class ViewSchemaUnit extends Data<TView> {
     await this.deleteSorts(arg, false);
   }
 
-  async deleteSorts(args: undefined | Predicate<ViewSorts>, multiple: boolean = true) {
+  async deleteSorts(args: undefined | Predicate<ViewSorts>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const data = this.getCachedData(), container: ViewSorts[] = data.query2?.sort as any ?? [];
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
@@ -149,7 +151,8 @@ export default class ViewSchemaUnit extends Data<TView> {
     await this.updateFilters(arg, false);
   }
 
-  async updateFilters(args: ((T: IViewFilters) => Promise<IViewFilters>), multiple: boolean = true) {
+  async updateFilters(args: ((T: IViewFilters) => Promise<IViewFilters>), multiple?: boolean) {
+    multiple = multiple ?? true;
     const data = this.getCachedData(), container = data?.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] };
     let matched = 0;
     for (let index = 0; index < container.filters.length; index++) {
@@ -177,7 +180,8 @@ export default class ViewSchemaUnit extends Data<TView> {
     await this.deleteFilters(arg, false)
   }
 
-  async deleteFilters(args: undefined | Predicate<IViewFilters>, multiple: boolean = true) {
+  async deleteFilters(args: undefined | Predicate<IViewFilters>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const data = this.getCachedData(), container = data.query2?.filter ?? { operator: "and", filters: [] as IViewFilters[] } as any;
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {

@@ -70,7 +70,8 @@ class NotionUser extends Data<INotionUser> {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(arg: FilterTypes<ISpace>, multiple: boolean = true) {
+  async getSpaces(arg: FilterTypes<ISpace>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const target_spaces: Space[] = [];
     let i = 0;
 

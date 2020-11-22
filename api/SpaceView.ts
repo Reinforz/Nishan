@@ -58,7 +58,8 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async toggleFavourites(arg: FilterTypes<TRootPage>, multiple: boolean = true) {
+  async toggleFavourites(arg: FilterTypes<TRootPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const target_space_view = this.getCachedData(), target_space = await this.getSpace(false) as ISpace, ops: IOperation[] = [];
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {

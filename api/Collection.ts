@@ -38,31 +38,6 @@ class Collection extends Data<ICollection> {
   }
 
   /**
-   * Get multiple template pages of the collection
-   * @param arg string of ids or a predicate function
-   * @param multiple whether multiple or single item is targeted
-   * @returns An array of template pages object
-   */
-  async getTemplates(arg: FilterTypes<IPage>, multiple: boolean = true): Promise<Page[]> {
-    const _this = this;
-    return this.getItems<IPage>(arg as any, multiple, async function (page) {
-      return new Page({
-        ..._this.getProps(),
-        id: page.id
-      }) as any
-    })
-  }
-
-  /**
-   * Get a single template page of the collection
-   * @param arg string id or a predicate function
-   * @returns Template page object
-   */
-  async getTemplate(arg: FilterType<IPage>) {
-    return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  /**
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
@@ -96,6 +71,32 @@ class Collection extends Data<ICollection> {
     }))
   }
 
+  /**
+   * Get a single template page of the collection
+   * @param arg string id or a predicate function
+   * @returns Template page object
+   */
+  async getTemplate(arg: FilterType<IPage>) {
+    return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  /**
+   * Get multiple template pages of the collection
+   * @param arg string of ids or a predicate function
+   * @param multiple whether multiple or single item is targeted
+   * @returns An array of template pages object
+   */
+  async getTemplates(arg: FilterTypes<IPage>, multiple?: boolean): Promise<Page[]> {
+    multiple = multiple ?? true;
+    const _this = this;
+    return this.getItems<IPage>(arg as any, multiple, async function (page) {
+      return new Page({
+        ..._this.getProps(),
+        id: page.id
+      }) as any
+    })
+  }
+
   async updateTemplate(id: string, opt: Omit<IPageInput, "type">) {
     await this.updateTemplates([[id, opt]]);
   }
@@ -127,7 +128,8 @@ class Collection extends Data<ICollection> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async deleteTemplates(arg: FilterTypes<IPage>, multiple: boolean = true) {
+  async deleteTemplates(arg: FilterTypes<IPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
     await this.deleteItems<IPage>(arg, multiple)
   }
 
@@ -204,7 +206,8 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
+  async getSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const matched: SchemaUnit[] = [];
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
 
@@ -226,6 +229,8 @@ class Collection extends Data<ICollection> {
     }
     return matched;
   }
+
+
 
   /**
    * Update and return a single column from the collection schema
@@ -268,7 +273,8 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async deleteSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple: boolean = true) {
+  async deleteSchemaUnits(arg: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
     const matched: string[] = []
     if (Array.isArray(arg)) {

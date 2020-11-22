@@ -68,7 +68,8 @@ class View extends Data<TView> {
     return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getViewSchemaUnits(arg: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple: boolean = true) {
+  async getViewSchemaUnits(arg: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple?: boolean) {
+    multiple = multiple ?? true;
     const matched: ViewSchemaUnit[] = [];
     const collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
     const data = this.getCachedData(), container: ViewFormatProperties[] = data.format[`${data.type}_properties` as never] ?? [];

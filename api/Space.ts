@@ -191,7 +191,8 @@ export default class Space extends Data<ISpace> {
     return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootPages(arg: FilterTypes<IRootPage>, multiple: boolean = true): Promise<(RootPage | undefined)[]> {
+  async getRootPages(arg: FilterTypes<IRootPage>, multiple?: boolean): Promise<(RootPage | undefined)[]> {
+    multiple = multiple ?? true;
     const props = this.getProps();
     return this.getItems<IRootPage>(arg, multiple, async function (page) {
       return new RootPage({
@@ -205,7 +206,8 @@ export default class Space extends Data<ISpace> {
     return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getRootCollectionViewPages(arg: FilterTypes<IRootCollectionViewPage>, multiple: boolean = true): Promise<(RootCollectionViewPage | undefined)[]> {
+  async getRootCollectionViewPages(arg: FilterTypes<IRootCollectionViewPage>, multiple?: boolean): Promise<(RootCollectionViewPage | undefined)[]> {
+    multiple = multiple ?? true;
     const props = this.getProps();
     return this.getItems<IRootCollectionViewPage>(arg, multiple, async function (page) {
       return new CollectionViewPage({
@@ -220,7 +222,8 @@ export default class Space extends Data<ISpace> {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getTRootPages(arg: FilterTypes<TRootPage>, multiple: boolean = true): Promise<(RootPage | RootCollectionViewPage)[]> {
+  async getTRootPages(arg: FilterTypes<TRootPage>, multiple?: boolean): Promise<(RootPage | RootCollectionViewPage)[]> {
+    multiple = multiple ?? true;
     const props = this.getProps();
     return this.getItems<TRootPage>(arg, multiple, async function (page) {
       return page.type === "collection_view_page" ? new CollectionViewPage({
@@ -294,7 +297,8 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteTRootPages(arg: FilterTypes<TRootPage>, multiple: boolean = true) {
+  async deleteTRootPages(arg: FilterTypes<TRootPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
     await this.deleteItems<TRootPage>(arg as any, multiple)
   }
 

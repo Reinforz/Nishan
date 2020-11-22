@@ -44,7 +44,8 @@ class Nishan extends Cache {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getNotionUsers(arg: FilterTypes<INotionUser>, multiple: boolean = true) {
+  async getNotionUsers(arg: FilterTypes<INotionUser>, multiple?: boolean) {
+    multiple = multiple ?? true;
     await this.initializeCache();
     const users: NotionUser[] = [];
     const common_props = {

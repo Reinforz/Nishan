@@ -16,6 +16,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
   }
 
   // ? FEAT:1:M Change schema_id method
+  // ? FEAT:1:H Change column datatype
 
   async update(arg: T) {
     const data = this.getCachedData();

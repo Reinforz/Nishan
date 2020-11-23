@@ -58,12 +58,12 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async toggleFavourites(arg: FilterTypes<TRootPage>, multiple?: boolean) {
+  async toggleFavourites(args?: FilterTypes<TRootPage>, multiple?: boolean) {
     multiple = multiple ?? true;
     const target_space_view = this.getCachedData(), target_space = await this.getSpace(false) as ISpace, ops: IOperation[] = [];
-    if (Array.isArray(arg)) {
-      for (let index = 0; index < arg.length; index++) {
-        const page_id = arg[index];
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const page_id = args[index];
         if (target_space.pages.includes(page_id)) {
           const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
           ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
@@ -72,11 +72,11 @@ class SpaceView extends Data<ISpaceView> {
         }
         if (!multiple && ops.length === 1) break;
       }
-    } else if (typeof arg === "function") {
+    } else if (typeof args === "function") {
       for (let index = 0; index < target_space.pages.length; index++) {
         const page_id = target_space.pages[index];
         const page = this.getCachedData<IRootPage>(page_id);
-        if (page.parent_id === target_space.id && await arg(page, index)) {
+        if (page.parent_id === target_space.id && await args(page, index)) {
           const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
           ops.push((is_bookmarked ? this.listRemoveOp : this.listBeforeOp)(["bookmarked_pages"], {
             id: page_id

@@ -68,25 +68,25 @@ class View extends Data<TView> {
     return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getViewSchemaUnits(arg: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple?: boolean) {
+  async getViewSchemaUnits(args?: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple?: boolean) {
     multiple = multiple ?? true;
     const matched: ViewSchemaUnit[] = [];
     const collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
     const data = this.getCachedData(), container: ViewFormatProperties[] = data.format[`${data.type}_properties` as never] ?? [];
     const schema_ids = container.map(data => data.property);
 
-    if (Array.isArray(arg)) {
-      for (let index = 0; index < arg.length; index++) {
-        const schema_id = arg[index];
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const schema_id = args[index];
         const should_add = schema_ids.includes(schema_id);
         if (should_add)
           matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
         if (!multiple && matched.length === 1) break;
       }
-    } else if (typeof arg === "function" || arg === undefined) {
+    } else if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.length; index++) {
         const schema_unit = collection.schema[container[index].property] as ISchemaUnit;
-        const should_add = typeof arg === "function" ? await arg({ ...container[index], ...schema_unit }, index) : true;
+        const should_add = typeof args === "function" ? await args({ ...container[index], ...schema_unit }, index) : true;
         if (should_add)
           matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index].property, }))
         if (!multiple && matched.length === 1) break;

@@ -13,10 +13,10 @@ class UserRoot extends Data<IUserRoot> {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getSpaceViews(arg: FilterTypes<ISpaceView>, multiple?: boolean): Promise<SpaceView[]> {
+  async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean): Promise<SpaceView[]> {
     multiple = multiple ?? true;
     const props = this.getProps();
-    return this.getItems<ISpaceView>(arg, multiple, async function (space_view) {
+    return this.getItems<ISpaceView>(args, multiple, async function (space_view) {
       return new SpaceView({
         id: space_view.id,
         ...props

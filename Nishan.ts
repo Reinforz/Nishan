@@ -44,7 +44,7 @@ class Nishan extends Cache {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getNotionUsers(arg: FilterTypes<INotionUser>, multiple?: boolean) {
+  async getNotionUsers(args?: FilterTypes<INotionUser>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.initializeCache();
     const users: NotionUser[] = [];
@@ -59,17 +59,17 @@ class Nishan extends Cache {
     for (let [id] of this.cache.notion_user)
       notion_user_ids.push(id)
 
-    if (Array.isArray(arg)) {
-      for (let index = 0; index < arg.length; index++) {
-        const id = arg[index], block = this.cache.notion_user.get(id);
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const id = args[index], block = this.cache.notion_user.get(id);
         const should_add = Boolean(block);
         if (should_add && block) users.push(new NotionUser({ ...common_props, user_id: block.id, id: block.id, space_id: "0", shard_id: 0 }));
         if (!multiple && users.length === 1) break;
       }
-    } else if (typeof arg === "function" || arg === undefined) {
+    } else if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < notion_user_ids.length; index++) {
         const id = notion_user_ids[index], block = this.cache.notion_user.get(id) as INotionUser;
-        const should_add = typeof arg === "function" ? await arg(block, index) : true;
+        const should_add = typeof args === "function" ? await args(block, index) : true;
         if (should_add && block) users.push(new NotionUser({ ...common_props, user_id: block.id, id: block.id, space_id: "0", shard_id: 0 }));
         if (!multiple && users.length === 1) break;
       }

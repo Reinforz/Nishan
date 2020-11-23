@@ -453,10 +453,10 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(arg: FilterTypes<TBlock>, multiple?: boolean): Promise<Block<TBlock, TBlockInput>[]> {
+  async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean): Promise<Block<TBlock, TBlockInput>[]> {
     multiple = multiple ?? true;
     const _this = this as any;
-    return this.getItems<TBlock>(arg, multiple, async function (block) {
+    return this.getItems<TBlock>(args, multiple, async function (block) {
       return _this.createClass(block.type, block.id);
     })
   }
@@ -469,10 +469,10 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return (await this.getPageBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getPageBlocks(arg: FilterTypes<IPage>, multiple?: boolean): Promise<(Page<IPage> | undefined)[]> {
+  async getPageBlocks(args?: FilterTypes<IPage>, multiple?: boolean): Promise<(Page<IPage> | undefined)[]> {
     multiple = multiple ?? true;
     const props = this.getProps()
-    return this.getItems<IPage>(arg, multiple, async function (block) {
+    return this.getItems<IPage>(args, multiple, async function (block) {
       return new Page({ ...props, id: block.id });
     }, (block) => block.type === "page")
   }
@@ -489,9 +489,9 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(arg: FilterTypes<TBlock>, multiple?: boolean) {
+  async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     multiple = multiple ?? true;
-    await this.deleteItems<TBlock>(arg, multiple)
+    await this.deleteItems<TBlock>(args, multiple)
   }
 
   async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {

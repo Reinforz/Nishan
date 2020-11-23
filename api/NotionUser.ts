@@ -70,19 +70,19 @@ class NotionUser extends Data<INotionUser> {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(arg: FilterTypes<ISpace>, multiple?: boolean) {
+  async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
     multiple = multiple ?? true;
     const target_spaces: Space[] = [];
     let i = 0;
 
     for (const [, space] of this.cache.space) {
       let should_add = false;
-      if (arg === undefined)
+      if (args === undefined)
         should_add = true;
-      else if (Array.isArray(arg) && arg.includes(space.id))
+      else if (Array.isArray(args) && args.includes(space.id))
         should_add = true;
-      else if (typeof arg === "function")
-        should_add = await arg(space, i);
+      else if (typeof args === "function")
+        should_add = await args(space, i);
 
       if (should_add) {
         target_spaces.push(new Space({

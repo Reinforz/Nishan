@@ -356,17 +356,17 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   async createLinkedDBContents(args: [string, RepositionParams][]) {
     const ops: IOperation[] = [], content_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index];
+      const [collection_id, position] = args[index];
       const content_id = uuidv4(), view_id = uuidv4();
       content_ids.push(content_id)
-      const block_list_op = this.addToChildArray(content_id, arg[1]);
-      const collection = this.cache.collection.get(arg[0]) as ICollection;
-
+      const block_list_op = this.addToChildArray(content_id, position);
+      const collection = this.cache.collection.get(collection_id) as ICollection;
+      this.updateCacheManually([collection_id, "collection"]);
       ops.push(Operation.block.set(content_id, [], {
         id: content_id,
         version: 1,
         type: 'collection_view',
-        collection_id: arg[0],
+        collection_id,
         view_ids: [view_id],
         parent_id: this.id,
         parent_table: 'block',
@@ -399,8 +399,8 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       }))
     }
 
-    await this.updateCacheManually(content_ids);
     await this.saveTransactions(ops);
+    await this.updateCacheManually(content_ids);
     return content_ids.map(id => new CollectionView({
       ...this.getProps(),
       id

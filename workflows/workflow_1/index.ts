@@ -1,10 +1,10 @@
 import Nishan from '../../Nishan';
 
-import "./env"
+import "../env"
 
 (async function () {
   const nishan = new Nishan({
-    token: process.env.NOTION_TOKEN,
+    token: process.env.NOTION_TOKEN as string,
     interval: 500
   });
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
@@ -31,6 +31,7 @@ import "./env"
         page_full_width: true
       }
     })
-    const collection_block = await page?.createLinkedDBContent(tasks_collection_id)
+    const collection_block = await page?.createLinkedDBContent(tasks_collection_id);
+    console.log(collection_block?.getCachedData());
   }
 }())

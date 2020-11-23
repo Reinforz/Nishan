@@ -147,7 +147,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     }, condition)
   }
 
-  async getTableView(arg: FilterType<ITableView>) {
+  async getTableView(arg?: FilterType<ITableView>) {
     return (await this.getTableViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -156,7 +156,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<ITableView, TableView>(arg, multiple, (view) => view.type === "table")
   }
 
-  async getListView(arg: FilterType<IListView>) {
+  async getListView(arg?: FilterType<IListView>) {
     return (await this.getListViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -165,7 +165,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IListView, ListView>(arg, multiple, (view) => view.type === "list")
   }
 
-  async getBoardView(arg: FilterType<IBoardView>) {
+  async getBoardView(arg?: FilterType<IBoardView>) {
     return (await this.getBoardViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -174,7 +174,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IBoardView, BoardView>(arg, multiple, (view) => view.type === "board")
   }
 
-  async getGalleryView(arg: FilterType<IGalleryView>) {
+  async getGalleryView(arg?: FilterType<IGalleryView>) {
     return (await this.getGalleryViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -183,7 +183,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<IGalleryView, GalleryView>(arg, multiple, (view) => view.type === "gallery")
   }
 
-  async getCalendarView(arg: FilterType<ICalendarView>) {
+  async getCalendarView(arg?: FilterType<ICalendarView>) {
     return (await this.getCalendarViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -192,7 +192,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return await this.#getViews<ICalendarView, CalendarView>(arg, multiple, (view) => view.type === "calendar")
   }
 
-  async getTimelineView(arg: FilterType<ITimelineView>) {
+  async getTimelineView(arg?: FilterType<ITimelineView>) {
     return (await this.getTimelineViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -215,7 +215,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteView(arg: FilterType<TView>) {
+  async deleteView(arg?: FilterType<TView>) {
     return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
   }
 

@@ -461,11 +461,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     })
   }
 
-  async getBlock(arg: FilterType<TBlock>) {
+  async getBlock(arg?: FilterType<TBlock>) {
     return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getPageBlock(arg: FilterType<IPage>) {
+  async getPageBlock(arg?: FilterType<IPage>) {
     return (await this.getPageBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
@@ -481,7 +481,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
-  async deleteBlock(arg: FilterType<TBlock>) {
+  async deleteBlock(arg?: FilterType<TBlock>) {
     return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, false);
   }
 

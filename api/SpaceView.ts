@@ -96,7 +96,7 @@ class SpaceView extends Data<ISpaceView> {
    * Toggle a single page from the bookmark list
    * @param arg id string or a predicate filter function
    */
-  async toggleFavourite(arg: FilterType<TRootPage>) {
+  async toggleFavourite(arg?: FilterType<TRootPage>) {
     await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
   }
 }

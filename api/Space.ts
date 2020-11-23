@@ -187,7 +187,7 @@ export default class Space extends Data<ISpace> {
     }));
   }
 
-  async getRootPage(arg: FilterType<IRootPage>): Promise<RootPage | undefined> {
+  async getRootPage(arg?: FilterType<IRootPage>): Promise<RootPage | undefined> {
     return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -202,7 +202,7 @@ export default class Space extends Data<ISpace> {
     }, (page => page.type === "page"))
   }
 
-  async getRootCollectionViewPage(arg: FilterType<IRootCollectionViewPage>): Promise<RootCollectionViewPage | undefined> {
+  async getRootCollectionViewPage(arg?: FilterType<IRootCollectionViewPage>): Promise<RootCollectionViewPage | undefined> {
     return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -241,7 +241,7 @@ export default class Space extends Data<ISpace> {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getTRootPage(arg: FilterType<TPage>) {
+  async getTRootPage(arg?: FilterType<TPage>) {
     return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -306,7 +306,7 @@ export default class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg: FilterType<TRootPage>) {
+  async deleteTRootPage(arg?: FilterType<TRootPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 

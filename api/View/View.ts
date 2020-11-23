@@ -64,7 +64,7 @@ class View extends Data<TView> {
     await this.saveTransactions([this.updateOp([], args)]);
   }
 
-  async getViewSchemaUnit(arg: FilterType<ViewFormatProperties>) {
+  async getViewSchemaUnit(arg?: FilterType<ViewFormatProperties>) {
     return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 

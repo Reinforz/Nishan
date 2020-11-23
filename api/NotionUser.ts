@@ -60,7 +60,7 @@ class NotionUser extends Data<INotionUser> {
    * @param arg A predicate filter function or a string
    * @returns The obtained Space object
    */
-  async getSpace(arg: FilterType<ISpace>) {
+  async getSpace(arg?: FilterType<ISpace>) {
     return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 

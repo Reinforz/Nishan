@@ -33,8 +33,11 @@ import "../env"
           page_full_width: true
         }
       })
-      const collection_block = await page?.createLinkedDBContent(tasks_collection_id);
-      console.log(collection_block?.getCachedData());
+      if (page) {
+        const collection_block = await page.createLinkedDBContent(tasks_collection_id);
+        const table_view = await collection_block.getTableView();
+        console.log(table_view.getCachedData());
+      }
     }
   }
 }())

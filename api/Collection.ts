@@ -76,7 +76,7 @@ class Collection extends Data<ICollection> {
    * @param arg string id or a predicate function
    * @returns Template page object
    */
-  async getTemplate(arg: FilterType<IPage>) {
+  async getTemplate(arg?: FilterType<IPage>) {
     return (await this.getTemplates(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -119,7 +119,7 @@ class Collection extends Data<ICollection> {
    * Delete a single template page from the collection
    * @param arg string id or a predicate function
    */
-  async deleteTemplate(arg: FilterType<IPage>) {
+  async deleteTemplate(arg?: FilterType<IPage>) {
     return await this.deleteTemplates(typeof arg === "string" ? [arg] : arg, false);
   }
 
@@ -243,7 +243,7 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async getSchemaUnit(arg: FilterType<TSchemaUnit & { key: string }>) {
+  async getSchemaUnit(arg?: FilterType<TSchemaUnit & { key: string }>) {
     return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
@@ -463,7 +463,7 @@ class Collection extends Data<ICollection> {
    * @param arg schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(arg: FilterType<TSchemaUnit & { key: string }>) {
+  async deleteSchemaUnit(arg?: FilterType<TSchemaUnit & { key: string }>) {
     return (await this.deleteSchemaUnits(typeof arg === "string" ? [arg] : arg, false));
   }
 

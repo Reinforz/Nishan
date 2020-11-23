@@ -40,7 +40,7 @@ class Nishan extends Cache {
     }
   }
 
-  async getNotionUser(arg: FilterType<INotionUser>) {
+  async getNotionUser(arg?: FilterType<INotionUser>) {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 

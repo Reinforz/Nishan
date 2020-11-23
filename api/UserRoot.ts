@@ -29,7 +29,7 @@ class UserRoot extends Data<IUserRoot> {
    * @param arg criteria to filter pages by
    * @returns A page object matching the passed criteria
    */
-  async getSpaceView(arg: FilterType<ISpaceView>) {
+  async getSpaceView(arg?: FilterType<ISpaceView>) {
     return (await this.getSpaceViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 }

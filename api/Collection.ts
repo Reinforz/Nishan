@@ -193,11 +193,48 @@ class Collection extends Data<ICollection> {
   }
 
   #createClass = (type: TSchemaUnitType, schema_id: string) => {
+    const arg = ({ ...this.getProps(), id: this.id, schema_id })
     switch (type) {
       case "text":
-        return new SchemaUnit<TextSchemaUnit>({ ...this.getProps(), id: this.id, schema_id })
+        return new SchemaUnit<TextSchemaUnit>(arg)
+      case "number":
+        return new SchemaUnit<NumberSchemaUnit>(arg)
+      case "select":
+        return new SchemaUnit<SelectSchemaUnit>(arg)
+      case "multi_select":
+        return new SchemaUnit<MultiSelectSchemaUnit>(arg)
+      case "title":
+        return new SchemaUnit<TitleSchemaUnit>(arg)
+      case "date":
+        return new SchemaUnit<DateSchemaUnit>(arg)
+      case "person":
+        return new SchemaUnit<PersonSchemaUnit>(arg)
+      case "file":
+        return new SchemaUnit<FileSchemaUnit>(arg)
+      case "checkbox":
+        return new SchemaUnit<CheckboxSchemaUnit>(arg)
+      case "url":
+        return new SchemaUnit<UrlSchemaUnit>(arg)
+      case "email":
+        return new SchemaUnit<EmailSchemaUnit>(arg)
+      case "phone_number":
+        return new SchemaUnit<PhoneNumberSchemaUnit>(arg)
+      case "formula":
+        return new SchemaUnit<FormulaSchemaUnit>(arg)
+      case "relation":
+        return new SchemaUnit<RelationSchemaUnit>(arg)
+      case "rollup":
+        return new SchemaUnit<RollupSchemaUnit>(arg)
+      case "created_time":
+        return new SchemaUnit<CreatedTimeSchemaUnit>(arg)
+      case "created_by":
+        return new SchemaUnit<CreatedBySchemaUnit>(arg)
+      case "last_edited_time":
+        return new SchemaUnit<LastEditedTimeSchemaUnit>(arg)
+      case "last_edited_by":
+        return new SchemaUnit<LastEditedBySchemaUnit>(arg)
       default:
-        return new SchemaUnit<TextSchemaUnit>({ ...this.getProps(), id: this.id, schema_id })
+        return new SchemaUnit<TextSchemaUnit>(arg)
     }
   }
 

@@ -6,3 +6,4 @@ feature.md
 /docs/docs/api
 .netlify
 /docs/build
+/workflows/env.ts

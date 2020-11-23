@@ -115,8 +115,8 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IPageInput {
   type: 'page',
-  properties: PageProps,
-  format: PageFormat
+  properties: Partial<PageProps>,
+  format: Partial<PageFormat>
 }
 
 export interface ICommonTextInput {

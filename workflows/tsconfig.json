@@ -10,24 +10,17 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
+    "outDir": "./",
     "watch": true,
-    "declaration": true,
-    "noUnusedLocals": true,
+    "declaration": false,
+    "noUnusedLocals": false,
     "incremental": false,
     "experimentalDecorators": true
   },
   "include": [
-    "./Nishan.ts"
+    "./*.ts"
   ],
   "exclude": [
-    "experiment",
-    "./node_modules",
-    "docs",
-    "workflows"
-  ],
-  "typedocOptions": {
-    "mode": "modules",
-    "out": "docs"
-  }
+    "evn.ts"
+  ]
 }

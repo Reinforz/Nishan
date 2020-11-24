@@ -393,7 +393,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         type: "table",
         name: "Default Table View",
         page_sort: [],
-        parent_id: this.id,
+        parent_id: content_id,
         parent_table: 'block',
         alive: true
       }))

@@ -36,7 +36,12 @@ import "../env"
       if (page) {
         const collection_block = await page.createLinkedDBContent(tasks_collection_id);
         const table_view = await collection_block.getTableView();
-        console.log(table_view.getCachedData());
+        await table_view.createFilters((schema) => schema.name === "On" ? ["date_is", "exact", {
+          start_date: `2020-11-0${index + 1}`,
+          type: "date"
+        }
+        ] : undefined)
+        await table_view.createSort((schema) => schema.name === "On" ? "ascending" : undefined)
       }
     }
   }

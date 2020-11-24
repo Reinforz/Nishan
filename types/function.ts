@@ -1,7 +1,7 @@
 import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference } from "./";
 import { TSchemaUnit } from "./schema";
 
-export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
+export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
 export interface UserViewArg {
   id?: string,
   sorts?: [string, number][],

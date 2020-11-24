@@ -41,7 +41,25 @@ import "../env"
           type: "date"
         }
         ] : undefined)
-        await table_view.createSort((schema) => schema.name === "On" ? "ascending" : undefined)
+        await table_view.createSort((schema) => schema.name === "On" ? ["ascending", 1] : undefined);
+
+        const schema_unit_props: any = new Map(Object.entries(
+          {
+            "On": [250, true, 0],
+            "Task": [350, true, 1],
+            "Purpose": [150, true, 2],
+            "Subject": [350, true, 3],
+            "Source": [150, true, 4],
+            "Goals": [350, true, 5],
+            "Steps": [50, true, 6],
+            "Created": [250, false, 7],
+            "Custom": [250, false, 8],
+          }
+        ));
+
+        await table_view.updateFormatProperties((schema) => {
+          return schema_unit_props.get(schema.name)
+        });
       }
     }
   }

@@ -67,7 +67,7 @@ class View extends Data<TView> {
   async getViewSchemaUnit(arg?: FilterType<ViewFormatProperties>) {
     return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
   }
-
+  // ? TD:1:M Use custom schemaunit interface to pass to SchemaUnit class
   async getViewSchemaUnits(args?: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple?: boolean) {
     multiple = multiple ?? true;
     const matched: ViewSchemaUnit[] = [];
@@ -434,6 +434,40 @@ class View extends Data<TView> {
       await this.saveTransactions([this.updateOp([], {
         query2: {
           ...data.query2
+        }
+      })]);
+      await this.updateCacheManually([this.id]);
+    }
+  }
+
+  async updateFormatProperty(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined) {
+    await this.updateFormatProperties(cb, false);
+  }
+
+  async updateFormatProperties(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    let total_effected = 0;
+    const properties = (data.format as any)[`${data.type}_properties`] as ViewFormatProperties[], updated_properties = [] as ViewFormatProperties[];
+    for (let index = 0; index < properties.length; index++) {
+      const property = properties[index], collection_property = collection.schema[property.property];
+      const updated_property = cb({ ...property, ...collection_property }),
+        position = updated_property?.[2]
+      const new_property = {
+        width: updated_property?.[0] ?? property.width,
+        property: property.property,
+        visible: updated_property?.[1] ?? property.visible
+      }
+      const _index = position ?? index;
+      updated_properties[_index] = new_property
+      total_effected++;
+      if (!multiple && total_effected === 1) break;
+    }
+    if (total_effected) {
+      await this.saveTransactions([this.updateOp([], {
+        format: {
+          ...data.format,
+          [`${data.type}_properties`]: updated_properties
         }
       })]);
       await this.updateCacheManually([this.id]);

@@ -6,6 +6,8 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
+Check out the [workflows](https://github.com/Nishan-Open-Source/Nishan/tree/master/workflows) folder for some examples that I personally use
+
 ## Contributors
 
 1. Safwan Shaheer [github](https://github.com/Devorein) Author, Maintainer

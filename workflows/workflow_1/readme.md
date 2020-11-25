@@ -12,16 +12,16 @@ This is a personal workflow thus might not be applicable for your specific use c
 
 [Pre Workflow View](./pre.png)
 
-<div><img width="100px" src="./pre.png"></div>
+<div><img width="500px" src="./pre.png"></div>
 
 [Post Page View](./post.png)
 
-<div><img width="100px" src="./post.png"></div>
+<div><img width="500px" src="./post.png"></div>
 
 [Post Terminal View](./post_terminal.png)
 
-<div><img width="100px" src="./post_terminal.png"></div>
+<div><img width="500px" src="./post_terminal.png"></div>
 
 [Inside Page View](./post_page.png)
 
-<div><img width="100px" src="./post_page.png"></div>
+<div><img width="500px" src="./post_page.png"></div>

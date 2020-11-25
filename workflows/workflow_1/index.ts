@@ -3,19 +3,28 @@ import colors from 'colors'
 import "../env"
 
 (async function () {
+  // Change the interval between each request to your desire, 
+  // but be warned this might result in a 502 Bad Gateway error
+  // for me 1000ms works fine
+
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
     interval: 1000
   });
+  // Get your own notion user and space 
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
   const space = await user.getSpace((space) => space.name === 'Developer');
+
+  // Make sure Monthly page exists as a root page
   const monthly_page = (await space.getRootPage((page) => {
     return page.properties.title[0][0] === 'Monthly';
   }));
 
+  // Make sure November page exists inside monthly page
   const november_db = await monthly_page?.getPageBlock(page => page.properties.title[0][0] === "November");
 
   for (let index = 1; index <= 30; index++) {
+    // Add your specific title and page_icon
     const page = await november_db?.createPageContent({
       properties: {
         title: [[`Day ${index}`]]
@@ -38,15 +47,20 @@ import "../env"
 
       const objfn = (name: string) => ({ name, format: [true, 100] as [boolean, number] })
 
+      // collection_id of all the collection corresponding to the collection_view_pages with the mentioned titles
       const collection_ids = [await getCollectionId("Daily"), await getCollectionId("Tasks"), await getCollectionId("Todo")];
 
+      // Add any sort of views you want
+      // A simple table works best for me
       await page?.createLinkedDBContents([{
         collection_id: collection_ids[0],
         views: [
           {
+            // You can modify the view type, name etc
             type: "table",
             name: "Table View",
             view: [
+              // This is the order the properties will be stored in the view
               {
                 name: "Date",
                 filter: [["string_is", "exact", date]],
@@ -79,6 +93,7 @@ import "../env"
             name: "Task Table",
             view: [
               {
+                // Add your specific sort, filter, format and aggregation
                 name: "On",
                 sort: "ascending",
                 filter: [["date_is", "exact", {

@@ -1,4 +1,4 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators, UserViewFilterParams, IViewFilters, TViewFilters } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators, UserViewFilterParams, IViewFilters, TViewFilters, ViewUpdateParam } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -20,7 +20,7 @@ class View extends Data<TView> {
    * @param options Options to update the view
    */
   // ? TD:1:M Use the createViews method arg
-  async update(options: ({ name: string } & Partial<{ sort: TSortValue, filter: UserViewFilterParams[], format: boolean | number | [boolean, number], aggregation: TViewAggregationsAggregators }>)[]) {
+  async update(options: ViewUpdateParam[]) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
     const name_map: Record<string, { key: string } & ISchemaUnit> = {};
     Object.entries(collection.schema).forEach(([key, schema]) => name_map[schema.name] = { key, ...schema })

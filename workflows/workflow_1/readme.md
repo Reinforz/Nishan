@@ -10,4 +10,7 @@ This is a personal workflow thus might not be applicable for your specific use c
   3. `Todo`: A db containing minor, ephemeral tasks for each day 
 2. This workflow accumulates those three `collection_view_page` as three linked db for each day of a month
 
-[Pre Workflow Condition](./pre.png)
+[Pre Workflow View](./pre.png)
+[Post Page View](./post.png)
+[Post Terminal View](./post_terminal.png)
+[Inside Page View](./post_page.png)

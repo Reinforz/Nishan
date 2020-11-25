@@ -1,4 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference } from "./";
+import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue } from "./";
 import { TSchemaUnit } from "./schema";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
@@ -109,3 +109,16 @@ export type CreateTRootPagesParams = ({
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
+
+export type SchemaManipParam = {
+  collection_id: string,
+  views: {
+    type: TViewType,
+    name: string,
+    view: ViewUpdateParam[],
+    position?: RepositionParams
+  }[],
+  position?: RepositionParams
+}
+
+export type ViewUpdateParam = { name: string } & Partial<{ sort: TSortValue, filter: UserViewFilterParams[], format: boolean | number | [boolean, number], aggregation: TViewAggregationsAggregators }>

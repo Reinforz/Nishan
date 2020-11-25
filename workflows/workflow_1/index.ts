@@ -12,10 +12,9 @@ import "../env"
     return page.properties.title[0][0] === 'Monthly';
   }));
 
-
   const november_db = await monthly_page?.getPageBlock(page => page.properties.title[0][0] === "November");
 
-  for (let index = 1; index <= 31; index++) {
+  for (let index = 1; index <= 1; index++) {
     const page = await november_db?.createPageContent({
       properties: {
         title: [[`Day ${index}`]]

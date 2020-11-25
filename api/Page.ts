@@ -408,6 +408,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
+  // ? RF:1:M Remove this.createCollection usage and opt for View.update for the views
   /**
    * Create a full page db content block
    * @param option Schema and the views of the newly created block

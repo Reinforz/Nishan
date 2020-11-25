@@ -1,4 +1,4 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators, UserViewFilterParams, IViewFilters } from "../../types";
+import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewAggregationsAggregators, UserViewFilterParams, IViewFilters, TViewFilters } from "../../types";
 import Data from "../Data";
 import ViewSchemaUnit from "../ViewSchemaUnit";
 
@@ -20,48 +20,70 @@ class View extends Data<TView> {
    * @param options Options to update the view
    */
   // ? TD:1:M Use the createViews method arg
-  async update(options: { sorts?: [string, 1 | -1][], filters?: [string, string, string, string][], properties?: ViewFormatProperties[], aggregations?: ViewAggregations[] } = {}) {
-    const data = this.getCachedData();
-    const { sorts = [], filters = [], properties = [], aggregations = [] } = options;
-    const args: any = {};
+  async update(options: ({ name: string } & Partial<{ sort: TSortValue, filter: UserViewFilterParams[], format: boolean | number | [boolean, number], aggregation: TViewAggregationsAggregators }>)[]) {
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
+    const name_map: Record<string, { key: string } & ISchemaUnit> = {};
+    Object.entries(collection.schema).forEach(([key, schema]) => name_map[schema.name] = { key, ...schema })
 
-    if (sorts && sorts.length !== 0) {
-      if (!args.query2) args.query2 = {};
-      args.query2.sort = sorts.map((sort) => ({
-        property: sort[0],
-        direction: sort[1] === -1 ? 'ascending' : 'descending'
-      }));
+    const sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[];
+
+    for (let index = 0; index < options.length; index++) {
+      const { name, format, sort, aggregation, filter } = options[index];
+      const { key } = name_map[name];
+
+      if (name) {
+        const property: ViewFormatProperties = {
+          property: key,
+        } as any;
+        if (typeof format === "boolean") property.visible = format;
+        else if (typeof format === "number") property.width = format;
+        else if (Array.isArray(format)) {
+          property.width = format?.[1] ?? 250
+          property.visible = format?.[0] ?? true;
+        }
+        if (sort) sorts.push({
+          property: key,
+          direction: sort
+        })
+
+        if (aggregation) aggregations.push({
+          property: key,
+          aggregator: aggregation
+        })
+
+        if (filter) {
+          filter.forEach(filter => {
+            const [operator, type, value] = filter;
+            filters.push({
+              property: key,
+              filter: {
+                operator,
+                value: {
+                  type,
+                  value
+                }
+              } as any
+            })
+          })
+        }
+        properties.push(property)
+      }
     }
 
-    if (aggregations && aggregations.length !== 0) {
-      if (!args.query2) args.query2 = {};
-      args.query2.aggregations = aggregations;
-    }
-
-    if (filters && filters.length !== 0) {
-      if (!args.query2) args.query2 = {};
-      args.query2.filter = {
-        operator: 'and',
-        filters: filters.map((filter) => ({
-          property: filter[0],
-          filter: {
-            operator: filter[1],
-            value: {
-              type: filter[2],
-              value: filter[3]
-            }
-          }
-        }))
-      };
-    }
-
-    if (properties && properties.length !== 0) {
-      args.format = { [`${data.type}_wrap`]: true };
-      args.format[`${data.type}_properties`] = properties;
-    }
-
-    // ? FIX:2:H Respect previous filters and sorts
-    await this.saveTransactions([this.updateOp([], args)]);
+    await this.saveTransactions([this.updateOp([], {
+      query2: {
+        sort: sorts,
+        filter: {
+          operator: "and",
+          filters
+        },
+        aggregations
+      },
+      format: {
+        [`${data.type}_properties`]: properties
+      }
+    })]);
+    await this.updateCacheManually([this.id]);
   }
 
   async getViewSchemaUnit(arg?: FilterType<ViewFormatProperties>) {

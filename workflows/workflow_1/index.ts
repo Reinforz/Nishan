@@ -23,7 +23,7 @@ import "../env"
   // Make sure November page exists inside monthly page
   const november_db = await monthly_page?.getPageBlock(page => page.properties.title[0][0] === "November");
 
-  for (let index = 1; index <= 30; index++) {
+  for (let index = 25; index <= 25; index++) {
     // Add your specific title and page_icon
     const page = await november_db?.createPageContent({
       properties: {

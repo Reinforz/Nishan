@@ -9,8 +9,6 @@ import { Operation, error } from '../utils';
 
 import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType } from '../types';
 import CollectionViewPage from './CollectionViewPage';
-import Collection from './Collection';
-import View from './View/View';
 
 /**
  * A class to represent space of Notion
@@ -86,7 +84,7 @@ export default class Space extends Data<ISpace> {
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
   // ? FIX:1:M Manual parameter doesnot work
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
-    const ops: IOperation[] = [], objects: { block: RootCollectionViewPage, collection: Collection, collection_views: View[] }[] = [], sync_records: UpdateCacheManuallyParam = [];
+    const ops: IOperation[] = [], root_collection_view_pages: RootCollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     for (let index = 0; index < options.length; index++) {
       const option = options[index], block_id = uuidv4(), collection_id = uuidv4(),
@@ -124,21 +122,14 @@ export default class Space extends Data<ISpace> {
         this.addToChildArray(block_id, option.position),
         ...views);
       sync_records.push(...sync_record)
-      objects.push({
-        block: new RootCollectionViewPage({
-          ...this.getProps(),
-          id: block_id
-        }),
-        collection: new Collection({
-          id: collection_id,
-          ...this.getProps()
-        }),
-        collection_views: gen_view_ids.map(view_id => new View({ id: view_id, ...this.getProps() }))
-      })
+      root_collection_view_pages.push(new RootCollectionViewPage({
+        ...this.getProps(),
+        id: block_id
+      }))
     }
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
-    return objects;
+    return root_collection_view_pages;
   }
 
   // ? FEAT:1:M Batch rootpage creation

@@ -59,9 +59,9 @@ export interface TimelineViewCreateParams extends Omit<TableViewCreateParams, "w
   timeline_preference: ITimelineViewFormatPreference,
 }
 
-export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs {
-  views?: UserViewArg[],
-  schema?: ([string, TSchemaUnitType] | [string, TSchemaUnitType, Record<string, any>])[]
+export type CreateCVPSchema = ([string, TSchemaUnitType] | [string, TSchemaUnitType, Record<string, any>]);
+export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs, SchemaManipParam {
+  schema: CreateCVPSchema[]
 }
 
 export interface CreateBlockArg {
@@ -76,7 +76,10 @@ export type RepositionParams = {
 } | number | undefined;
 
 export interface CreateRootPageArgs {
-  properties: Partial<PageProps>; format: Partial<PageFormat>; isPrivate?: boolean, position?: RepositionParams
+  properties: Partial<PageProps>,
+  format: Partial<PageFormat>,
+  isPrivate?: boolean,
+  position?: RepositionParams
 }
 
 export type UpdatableSpaceKeys = 'name' | 'beta_enabled' | 'icon';
@@ -110,15 +113,16 @@ export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 
+export interface SearchManipViewParam {
+  type: TViewType,
+  name: string,
+  view: ViewUpdateParam[],
+  position?: RepositionParams,
+  filter_operator?: "or" | "and"
+}
+
 export type SchemaManipParam = {
-  collection_id: string,
-  views: {
-    type: TViewType,
-    name: string,
-    view: ViewUpdateParam[],
-    position?: RepositionParams,
-    filter_operator?: "or" | "and"
-  }[],
+  views: SearchManipViewParam[],
   position?: RepositionParams
 }
 

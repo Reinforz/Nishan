@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, CreateRootCollectionViewPageParams, FilterTypes } from "../types";
-import { Operation, error, createCustomViews } from "../utils";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, SearchManipViewParam, CreateRootCollectionViewPageParams } from "../types";
+import { Operation, error } from "../utils";
 import Getters from "./Getters";
 
 /**
@@ -244,37 +244,113 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  protected createCollection(option: Partial<CreateRootCollectionViewPageParams>, parent_id: string) {
-    const { properties, format } = option;
+  protected createViews(schema: Schema, views: SearchManipViewParam[], collection_id: string, parent_id: string) {
+    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [];
 
-    if (!option.views) option.views = [{
-      aggregations: [
-        ['title', 'count']
-      ],
-      name: 'Default View',
-      type: 'table'
-    }];
+    Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }))
 
-    if (!option.schema) option.schema = [
-      ['Name', 'title']
-    ];
-    const schema: Schema = {};
+    for (let index = 0; index < views.length; index++) {
+      const { name, type, view, filter_operator = "and" } = views[index],
+        sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
+        view_id = uuidv4();
+      view_ids.push(view_id);
+      view.forEach(info => {
+        const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
+        if (property_info) {
+          const { key } = property_info;
+          const property: ViewFormatProperties = {
+            property: key,
+            visible: true,
+            width: 250
+          };
+          if (typeof format === "boolean") property.visible = format;
+          else if (typeof format === "number") property.width = format;
+          else if (Array.isArray(format)) {
+            property.width = format?.[1] ?? 250
+            property.visible = format?.[0] ?? true;
+          }
+          if (sort) sorts.push({
+            property: key,
+            direction: sort
+          })
 
-    option.schema.forEach(opt => {
+          if (aggregation) aggregations.push({
+            property: key,
+            aggregator: aggregation
+          })
+
+          if (filter) {
+            filter.forEach(filter => {
+              const [operator, type, value] = filter;
+              filters.push({
+                property: key,
+                filter: {
+                  operator,
+                  value: {
+                    type,
+                    value
+                  }
+                } as any
+              })
+            })
+          }
+          properties.push(property)
+        } else
+          throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
+      })
+
+      created_view_ops.push(Operation.collection_view.set(view_id, [], {
+        id: view_id,
+        version: 0,
+        type,
+        name,
+        page_sort: [],
+        parent_id,
+        parent_table: 'block',
+        alive: true,
+        format: {
+          [`${type}_properties`]: properties
+        },
+        query2: {
+          sort: sorts,
+          filter: {
+            operator: filter_operator,
+            filters
+          },
+          aggregations
+        },
+      }))
+    }
+
+    return [created_view_ops, view_ids] as [IOperation[], string[]];
+  }
+
+  protected createCollection(param: CreateRootCollectionViewPageParams, views: SearchManipViewParam[], parent_id: string) {
+    const schema: Schema = {}, collection_id = uuidv4();
+
+    param.schema.forEach(opt => {
       const schema_key = (opt[1] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
       schema[schema_key] = {
         name: opt[0],
         type: opt[1],
         ...(opt[2] ?? {})
       } as any;
-
     });
 
-    const views = option.views.map((view) => ({
-      ...view,
-      id: uuidv4()
+    const [created_view_ops, view_ids] = this.createViews(schema, views, collection_id, parent_id);
+    created_view_ops.unshift(Operation.collection.update(collection_id, [], {
+      id: collection_id,
+      schema,
+      format: {
+        collection_page_properties: []
+      },
+      icon: param.format.page_icon,
+      parent_id,
+      parent_table: 'block',
+      alive: true,
+      name: param.properties.title
     }));
 
-    return { schema, views: createCustomViews(views, parent_id), properties, format }
+    return [collection_id, created_view_ops, view_ids] as [string, Operation[], string[]]
   }
 }

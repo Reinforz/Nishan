@@ -18,7 +18,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, ISchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, ISchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, RecordMap
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -349,99 +349,17 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(arg: SchemaManipParam) {
+  async createLinkedDBContent(arg: (SchemaManipParam & { collection_id: string })) {
     return (await this.createLinkedDBContents([arg]))[0]
   }
 
-  async createLinkedDBContents(args: SchemaManipParam[]) {
+  async createLinkedDBContents(args: (SchemaManipParam & { collection_id: string })[]) {
     const ops: IOperation[] = [], content_ids: UpdateCacheManuallyParam = [];
     for (let index = 0; index < args.length; index++) {
       const { collection_id, views, position } = args[index],
         content_id = uuidv4(),
-        block_list_op = this.addToChildArray(content_id, position),
-        name_map: Map<string, { key: string } & ISchemaUnit> = new Map(),
         collection = this.cache.collection.get(collection_id) as ICollection,
-        created_view_ops: IOperation[] = [], view_ids: string[] = [];
-
-      Object.entries(collection.schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }))
-
-      this.updateCacheManually([collection_id, "collection"]);
-
-      content_ids.push(content_id);
-
-      for (let index = 0; index < views.length; index++) {
-        const { name, type, view, filter_operator = "and" } = views[index],
-          sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-          view_id = uuidv4();
-        content_ids.push([view_id, "collection_view"]);
-        view_ids.push(view_id);
-        view.forEach(info => {
-          const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
-          if (property_info) {
-            const { key } = property_info;
-            const property: ViewFormatProperties = {
-              property: key,
-              visible: true,
-              width: 250
-            };
-            if (typeof format === "boolean") property.visible = format;
-            else if (typeof format === "number") property.width = format;
-            else if (Array.isArray(format)) {
-              property.width = format?.[1] ?? 250
-              property.visible = format?.[0] ?? true;
-            }
-            if (sort) sorts.push({
-              property: key,
-              direction: sort
-            })
-
-            if (aggregation) aggregations.push({
-              property: key,
-              aggregator: aggregation
-            })
-
-            if (filter) {
-              filter.forEach(filter => {
-                const [operator, type, value] = filter;
-                filters.push({
-                  property: key,
-                  filter: {
-                    operator,
-                    value: {
-                      type,
-                      value
-                    }
-                  } as any
-                })
-              })
-            }
-            properties.push(property)
-          } else
-            throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
-        })
-
-        created_view_ops.push(Operation.collection_view.set(view_id, [], {
-          id: view_id,
-          version: 0,
-          type,
-          name,
-          page_sort: [],
-          parent_id: content_id,
-          parent_table: 'block',
-          alive: true,
-          format: {
-            [`${type}_properties`]: properties
-          },
-          query2: {
-            sort: sorts,
-            filter: {
-              operator: filter_operator,
-              filters
-            },
-            aggregations
-          },
-        }))
-      }
+        [created_view_ops, view_ids] = this.createViews(collection.schema, views, collection.id, content_id);
 
       ops.push(Operation.block.set(content_id, [], {
         id: content_id,
@@ -452,7 +370,9 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         parent_id: this.id,
         parent_table: 'block',
         alive: true,
-      }), block_list_op, ...created_view_ops)
+      }),
+        this.addToChildArray(content_id, position), ...created_view_ops);
+      content_ids.push(content_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]));
     }
 
     await this.saveTransactions(ops);

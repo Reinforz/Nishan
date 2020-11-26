@@ -325,7 +325,7 @@ export default class Data<T extends TData> extends Getters {
     return [created_view_ops, view_ids] as [IOperation[], string[]];
   }
 
-  protected createCollection(param: CreateRootCollectionViewPageParams, views: SearchManipViewParam[], parent_id: string) {
+  protected createCollection(param: CreateRootCollectionViewPageParams, parent_id: string) {
     const schema: Schema = {}, collection_id = uuidv4();
 
     param.schema.forEach(opt => {
@@ -337,7 +337,7 @@ export default class Data<T extends TData> extends Getters {
       } as any;
     });
 
-    const [created_view_ops, view_ids] = this.createViews(schema, views, collection_id, parent_id);
+    const [created_view_ops, view_ids] = this.createViews(schema, param.views, collection_id, parent_id);
     created_view_ops.unshift(Operation.collection.update(collection_id, [], {
       id: collection_id,
       schema,
@@ -351,6 +351,6 @@ export default class Data<T extends TData> extends Getters {
       name: param.properties.title
     }));
 
-    return [collection_id, created_view_ops, view_ids] as [string, Operation[], string[]]
+    return [collection_id, created_view_ops, view_ids] as [string, IOperation[], string[]]
   }
 }

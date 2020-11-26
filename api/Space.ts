@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 
 /**
@@ -82,20 +82,18 @@ export default class Space extends Data<ISpace> {
   }
 
   // ? RF:1:M Refactor to use Page.createCollectionViewPage method
-  // ? FIX:1:M Manual parameter doesnot work
   async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
     const ops: IOperation[] = [], root_collection_view_pages: RootCollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     for (let index = 0; index < options.length; index++) {
-      const option = options[index], block_id = uuidv4(), collection_id = uuidv4(),
-        { properties, format, schema, views } = this.createCollection(option, block_id),
-        gen_view_ids = views.map((view) => view.id), sync_record: UpdateCacheManuallyParam = [block_id, [collection_id, "collection"]];
-      gen_view_ids.forEach(gen_view_id => sync_record.push([gen_view_id, "collection_view"]));
+      const option = options[index];
+      const { properties, format, isPrivate } = option;
+      const block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
       ops.push(Operation.block.update(block_id, [], {
         type: 'page',
         id: block_id,
         permissions:
-          [{ type: option.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
         parent_id: this.id,
         parent_table: 'space',
         alive: true,
@@ -104,29 +102,21 @@ export default class Space extends Data<ISpace> {
       }),
         Operation.block.update(block_id, [], {
           type: 'collection_view_page',
-          collection_id: collection_id,
-          view_ids: gen_view_ids,
+          collection_id,
+          view_ids,
           properties: {},
         }),
-        Operation.collection.update(collection_id, [], {
-          id: collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          parent_id: block_id,
-          parent_table: 'block',
-          alive: true,
-          name: properties?.title
-        }),
+        ...create_view_ops,
         this.addToChildArray(block_id, option.position),
-        ...views);
-      sync_records.push(...sync_record)
+      );
+
+      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
       root_collection_view_pages.push(new RootCollectionViewPage({
         ...this.getProps(),
         id: block_id
       }))
     }
+
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
     return root_collection_view_pages;

@@ -5,7 +5,7 @@ import {
 
 import Block from './Block';
 
-import { Operation } from "../utils";
+import { error, Operation } from "../utils";
 
 import {
   NishanArg,
@@ -376,45 +376,48 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         content_ids.push([view_id, "collection_view"]);
         view_ids.push(view_id);
         view.forEach(info => {
-          const { format, sort, aggregation, filter, name } = info, { key } = name_map.get(name) as any,
-            property: ViewFormatProperties = {
+          const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
+          if (property_info) {
+            const { key } = property_info;
+            const property: ViewFormatProperties = {
               property: key,
               visible: true,
               width: 250
             };
-
-          if (typeof format === "boolean") property.visible = format;
-          else if (typeof format === "number") property.width = format;
-          else if (Array.isArray(format)) {
-            property.width = format?.[1] ?? 250
-            property.visible = format?.[0] ?? true;
-          }
-          if (sort) sorts.push({
-            property: key,
-            direction: sort
-          })
-
-          if (aggregation) aggregations.push({
-            property: key,
-            aggregator: aggregation
-          })
-
-          if (filter) {
-            filter.forEach(filter => {
-              const [operator, type, value] = filter;
-              filters.push({
-                property: key,
-                filter: {
-                  operator,
-                  value: {
-                    type,
-                    value
-                  }
-                } as any
-              })
+            if (typeof format === "boolean") property.visible = format;
+            else if (typeof format === "number") property.width = format;
+            else if (Array.isArray(format)) {
+              property.width = format?.[1] ?? 250
+              property.visible = format?.[0] ?? true;
+            }
+            if (sort) sorts.push({
+              property: key,
+              direction: sort
             })
-          }
-          properties.push(property)
+
+            if (aggregation) aggregations.push({
+              property: key,
+              aggregator: aggregation
+            })
+
+            if (filter) {
+              filter.forEach(filter => {
+                const [operator, type, value] = filter;
+                filters.push({
+                  property: key,
+                  filter: {
+                    operator,
+                    value: {
+                      type,
+                      value
+                    }
+                  } as any
+                })
+              })
+            }
+            properties.push(property)
+          } else
+            throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
         })
 
         created_view_ops.push(Operation.collection_view.set(view_id, [], {

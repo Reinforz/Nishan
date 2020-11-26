@@ -86,9 +86,9 @@ export default class Space extends Data<ISpace> {
     const ops: IOperation[] = [], root_collection_view_pages: RootCollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     for (let index = 0; index < options.length; index++) {
-      const option = options[index];
-      const { properties, format, isPrivate } = option;
-      const block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
+      const option = options[index],
+        { properties, format, isPrivate } = option,
+        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
       ops.push(Operation.block.update(block_id, [], {
         type: 'page',
         id: block_id,

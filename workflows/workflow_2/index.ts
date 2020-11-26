@@ -3,14 +3,14 @@ import "../env"
 import Space from '../../api/Space';
 
 async function createWebRootCVP(space: Space) {
-  const root_cvp = await space.createRootCollectionViewPage({
+  await space.createRootCollectionViewPage({
     properties: {
       title: [["Web 2.0"]]
     },
     format: {
       page_icon: "🌎"
     },
-    schema: [["Title", "title"]],
+    schema: [{ name: "Title", type: "title" }],
     views: [
       {
         type: "table",

@@ -1,5 +1,4 @@
-import { INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TSchemaUnitType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue } from "./";
-import { TSchemaUnit } from "./schema";
+import { TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue } from "./";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
 export interface UserViewArg {
@@ -59,9 +58,10 @@ export interface TimelineViewCreateParams extends Omit<TableViewCreateParams, "w
   timeline_preference: ITimelineViewFormatPreference,
 }
 
-export type CreateCVPSchema = ([string, TSchemaUnitType] | [string, TSchemaUnitType, Record<string, any>]);
+// ? TD:1:M All the schema type rather than Record Any
+
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs, SchemaManipParam {
-  schema: CreateCVPSchema[]
+  schema: TSchemaUnit[]
 }
 
 export interface CreateBlockArg {
@@ -96,7 +96,6 @@ export type UpdatableSpaceViewParam = Partial<Pick<ISpaceView, UpdatableSpaceVie
 
 export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
 export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
-
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
 export type PageCreateContentParam = TBlockInput & {

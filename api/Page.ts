@@ -18,7 +18,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, ISchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, RecordMap
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, ISchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, RecordMap, TDataType
 } from "../types";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -383,47 +383,43 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     }))
   }
 
+  async createFullPageDBContent(option: CreateRootCollectionViewPageParams) {
+    return (await this.createFullPageDBContents([option]))[0];
+  }
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
-  // ? RF:1:M Remove this.createCollection usage and opt for View.update for the views
   /**
    * Create a full page db content block
    * @param option Schema and the views of the newly created block
    * @returns Returns the newly created full page db block object
    */
-  async createFullPageDBContent(option: Partial<CreateRootCollectionViewPageParams>) {
-    const data = this.getCachedData();
-    const { schema, properties, format, views } = this.createCollection(option, data.id);
+  async createFullPageDBContents(options: CreateRootCollectionViewPageParams[]) {
+    const data = this.getCachedData(), ops: IOperation[] = [], collection_view_pages: CollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
 
-    const view_ids = views.map((view) => view.id);
-    const $collection_id = uuidv4();
+    for (let index = 0; index < options.length; index++) {
+      const option = options[index],
+        { properties, format } = option,
+        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
+      ops.push(Operation.block.update(block_id, [], {
+        id: data.id,
+        type: 'collection_view_page',
+        collection_id,
+        view_ids,
+        properties,
+        format,
+      }),
+        ...create_view_ops,
+        this.addToChildArray(block_id, option.position),
+      )
 
-    await this.saveTransactions(
-      [
-        this.updateOp([], {
-          id: data.id,
-          type: 'collection_view_page',
-          collection_id: $collection_id,
-          view_ids,
-          properties,
-          format,
-        }),
-        Operation.collection.update($collection_id, [], {
-          id: $collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          icon: data.format.page_icon,
-          parent_id: data.id,
-          parent_table: 'block',
-          alive: true,
-          name: data.properties.title
-        }),
-        ...views
-      ]
-    );
-
-    return this.createDBArtifacts([[[data.id, "collection_view_page"], $collection_id, view_ids]]);
+      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+      collection_view_pages.push(new CollectionViewPage({
+        ...this.getProps(),
+        id: block_id
+      }))
+    }
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return collection_view_pages;
   }
 
   /**
@@ -469,37 +465,5 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.deleteItems<TBlock>(args, multiple)
-  }
-
-  async createDBArtifacts(args: [[string, TCollectionViewBlock], string, string[]][]) {
-    const update_tables: UpdateCacheManuallyParam = [];
-    args.forEach(arg => {
-      update_tables.push(arg[0][0]);
-      update_tables.push([arg[1], "collection"]);
-      arg[2].forEach(view_id => update_tables.push([view_id, "collection_view"]));
-    })
-
-    await this.updateCacheManually(update_tables);
-
-    const res: {
-      block: CollectionView | CollectionViewPage,
-      collection: Collection,
-      collection_views: View[]
-    }[] = [];
-
-    args.forEach(arg => {
-      res.push({
-        block: new (arg[0][1] === "collection_view" ? CollectionView : CollectionViewPage)({
-          ...this.getProps(),
-          id: arg[0][0]
-        }),
-        collection: new Collection({
-          id: arg[1],
-          ...this.getProps()
-        }),
-        collection_views: arg[2].map(view_id => new View({ id: view_id, ...this.getProps() }))
-      })
-    })
-    return res
   }
 }

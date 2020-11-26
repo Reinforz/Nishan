@@ -370,12 +370,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       content_ids.push(content_id);
 
       for (let index = 0; index < views.length; index++) {
-        const { name, type, view } = views[index],
+        const { name, type, view, filter_operator = "and" } = views[index],
           sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
           view_id = uuidv4();
         content_ids.push([view_id, "collection_view"]);
         view_ids.push(view_id);
-
         view.forEach(info => {
           const { format, sort, aggregation, filter, name } = info, { key } = name_map.get(name) as any,
             property: ViewFormatProperties = {
@@ -433,7 +432,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           query2: {
             sort: sorts,
             filter: {
-              operator: "and",
+              operator: filter_operator,
               filters
             },
             aggregations

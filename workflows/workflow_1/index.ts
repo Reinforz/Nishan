@@ -23,7 +23,7 @@ import "../env"
   // Make sure November page exists inside monthly page
   const november_db = await monthly_page?.getPageBlock(page => page.properties.title[0][0] === "November");
 
-  for (let index = 1; index <= 30; index++) {
+  for (let index = 1; index <= 1; index++) {
     // Add your specific title and page_icon
     const page = await november_db?.createPageContent({
       properties: {
@@ -35,7 +35,7 @@ import "../env"
       }
     })
 
-    async function getCollectionId(title: string) {
+    async function getRootCVPCollectionId(title: string) {
       const collection_view_page = await space.getRootCollectionViewPage((collection_view_page) => {
         return space.cache.collection.get(collection_view_page.collection_id)?.name[0][0] === title
       })
@@ -48,7 +48,7 @@ import "../env"
       const objfn = (name: string) => ({ name, format: [true, 100] as [boolean, number] })
 
       // collection_id of all the collection corresponding to the collection_view_pages with the mentioned titles
-      const collection_ids = [await getCollectionId("Daily"), await getCollectionId("Tasks"), await getCollectionId("Todo")];
+      const collection_ids = [await getRootCVPCollectionId("Daily"), await getRootCVPCollectionId("Tasks"), await getRootCVPCollectionId("Todo"), await getRootCVPCollectionId("Articles")];
 
       // Add any sort of views you want
       // A simple table works best for me
@@ -167,6 +167,102 @@ import "../env"
                 name: "Created At",
                 format: false
               },
+            ]
+          }
+        ]
+      }, {
+        collection_id: collection_ids[3],
+        views: [
+          {
+            filter_operator: "or",
+            type: "table",
+            name: "Article Table",
+            view: [
+              {
+                name: "Title",
+                format: 250,
+                aggregation: "count",
+              },
+              {
+                name: "Urgency",
+                format: 50,
+                sort: "descending",
+                aggregation: "average"
+              },
+              {
+                name: "Completed",
+                format: 50,
+                aggregation: "percent_checked"
+              },
+              {
+                name: "Subject",
+                format: 150,
+                aggregation: "unique"
+              },
+              {
+                name: "Provider",
+                format: 150,
+                aggregation: "unique"
+              },
+              {
+                name: "Source",
+                format: 350,
+              },
+              {
+                name: "Priority",
+                format: 150,
+                aggregation: "unique"
+              },
+              {
+                name: "Status",
+                format: 150,
+                aggregation: "unique"
+              },
+              {
+                name: "Phase",
+                format: 150,
+                aggregation: "unique"
+              },
+              {
+                name: "Learn Date",
+                format: 150,
+                aggregation: "percent_not_empty",
+                filter: [["date_is", "exact", {
+                  type: "date",
+                  start_date: date
+                }]]
+              },
+              {
+                name: "Revise Date",
+                format: 150,
+                aggregation: "percent_not_empty",
+                filter: [["date_is", "exact", {
+                  type: "date",
+                  start_date: date
+                }]]
+              },
+              {
+                name: "Practice Date",
+                format: 150,
+                aggregation: "percent_not_empty",
+                filter: [["date_is", "exact", {
+                  type: "date",
+                  start_date: date
+                }]]
+              },
+              {
+                name: "Priority Counter",
+                format: false,
+              },
+              {
+                name: "Status Counter",
+                format: false,
+              },
+              {
+                name: "Phase Counter",
+                format: false,
+              },
+
             ]
           }
         ]

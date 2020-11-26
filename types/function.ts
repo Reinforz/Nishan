@@ -116,7 +116,8 @@ export type SchemaManipParam = {
     type: TViewType,
     name: string,
     view: ViewUpdateParam[],
-    position?: RepositionParams
+    position?: RepositionParams,
+    filter_operator?: "or" | "and"
   }[],
   position?: RepositionParams
 }

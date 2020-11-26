@@ -5,7 +5,7 @@ import {
 
 import Block from './Block';
 
-import { error, Operation } from "../utils";
+import { Operation } from "../utils";
 
 import {
   NishanArg,
@@ -18,12 +18,10 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, TCollectionViewBlock, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, ISchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, RecordMap, TDataType
+  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType
 } from "../types";
-import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
-import View from "./View/View";
 
 /**
  * A class to represent Page type block of Notion
@@ -300,44 +298,39 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param position 
    * @returns Returns the newly created inlinedb content block object
    */
-  async createInlineDBContent(options: Partial<CreateRootCollectionViewPageParams> = {}) {
-    const $collection_view_id = uuidv4(),
-      $collection_id = uuidv4();
+  async createInlineDBContents(options: CreateRootCollectionViewPageParams[]) {
+    const ops: IOperation[] = [], collection_view_pages: CollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
 
-    const { properties, format, schema, views } = this.createCollection(options, $collection_view_id);
+    for (let index = 0; index < options.length; index++) {
+      const option = options[index],
+        { properties, format } = option,
+        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
 
-    const view_ids = views.map((view) => view.id);
-    const block_list_op = this.addToChildArray($collection_view_id, options.position);
-    await this.saveTransactions(
-      [
-        Operation.block.update($collection_view_id, [], {
-          id: $collection_view_id,
-          properties,
-          format,
-          type: 'collection_view',
-          view_ids,
-          collection_id: $collection_id,
-          parent_id: this.id,
-          parent_table: "block",
-          alive: true,
-        }),
-        Operation.collection.update($collection_id, [], {
-          id: $collection_id,
-          schema,
-          format: {
-            collection_page_properties: []
-          },
-          parent_id: $collection_view_id,
-          parent_table: 'block',
-          alive: true,
-          name: properties?.title
-        }),
-        block_list_op,
-        ...views
-      ]
-    );
+      ops.push(Operation.block.update(block_id, [], {
+        id: block_id,
+        properties,
+        format,
+        type: 'collection_view',
+        view_ids,
+        collection_id,
+        parent_id: this.id,
+        parent_table: "block",
+        alive: true,
+      }),
+        ...create_view_ops,
+        this.addToChildArray(block_id, option.position),
+      )
+      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+      collection_view_pages.push(new CollectionViewPage({
+        ...this.getProps(),
+        id: block_id
+      }))
+    }
 
-    return this.createDBArtifacts([[[$collection_view_id, "collection_view"], $collection_id, view_ids]]);
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return collection_view_pages;
+
   }
 
   // ? FEAT:1:M Remove views argument so as to keep the original one?
@@ -386,6 +379,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   async createFullPageDBContent(option: CreateRootCollectionViewPageParams) {
     return (await this.createFullPageDBContents([option]))[0];
   }
+
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
   /**
    * Create a full page db content block

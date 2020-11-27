@@ -131,22 +131,26 @@ import "../env"
               {
                 name: "Todo",
                 format: [true, 300],
-                aggregation: "count"
+                aggregation: "count",
+                type: "title"
               },
               {
                 name: "Done",
                 format: false,
-                filter: [["checkbox_is", "exact", true]]
+                filter: [["checkbox_is", "exact", true]],
+                type: "checkbox"
               },
               {
                 name: "Priority",
                 format: [true, 150],
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Difficulty",
                 format: [true, 150],
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Completed At",
@@ -155,17 +159,20 @@ import "../env"
                 filter: [["date_is", "exact", {
                   start_date: date,
                   type: "date"
-                }]]
+                }]],
+                type: "date"
               },
               {
                 name: "Priority Order",
                 format: false,
-                sort: "descending"
+                sort: "descending",
+                type: "formula"
               },
               {
                 name: "Difficulty Order",
                 format: false,
-                sort: "descending"
+                sort: "descending",
+                type: "formula"
               }
             ]
           }
@@ -182,46 +189,55 @@ import "../env"
                 name: "Title",
                 format: 250,
                 aggregation: "count",
+                type: "title"
               },
               {
                 name: "Urgency",
                 format: 50,
                 sort: "descending",
-                aggregation: "average"
+                aggregation: "average",
+                type: "number"
               },
               {
                 name: "Completed",
                 format: 50,
-                aggregation: "percent_checked"
+                aggregation: "percent_checked",
+                type: "formula"
               },
               {
                 name: "Subject",
                 format: 150,
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "multi_select"
               },
               {
                 name: "Provider",
                 format: 150,
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Source",
                 format: 350,
+                type: "url"
               },
               {
                 name: "Priority",
                 format: 150,
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Status",
                 format: 150,
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Phase",
                 format: 150,
-                aggregation: "unique"
+                aggregation: "unique",
+                type: "select"
               },
               {
                 name: "Learn Date",
@@ -230,7 +246,8 @@ import "../env"
                 filter: [["date_is", "exact", {
                   type: "date",
                   start_date: date
-                }]]
+                }]],
+                type: "date"
               },
               {
                 name: "Revise Date",
@@ -239,7 +256,8 @@ import "../env"
                 filter: [["date_is", "exact", {
                   type: "date",
                   start_date: date
-                }]]
+                }]],
+                type: "date"
               },
               {
                 name: "Practice Date",
@@ -248,19 +266,23 @@ import "../env"
                 filter: [["date_is", "exact", {
                   type: "date",
                   start_date: date
-                }]]
+                }]],
+                type: "date"
               },
               {
                 name: "Priority Counter",
                 format: false,
+                type: "formula"
               },
               {
                 name: "Status Counter",
                 format: false,
+                type: "formula"
               },
               {
                 name: "Phase Counter",
                 format: false,
+                type: "formula"
               },
             ]
           }

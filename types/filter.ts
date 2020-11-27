@@ -4,93 +4,97 @@
 export type EmptyViewFiltersOperator = "is_empty" | "is_not_empty";
 
 export type TextViewFiltersOperator = "string_is" | "string_is_not" | "string_contains" | "string_does_not_contain" | "string_starts_with" | "string_ends_with" | EmptyViewFiltersOperator;
+export type TitleViewFiltersOperator = TextViewFiltersOperator;
 export type NumericViewFiltersOperator = "number_equals" | "number_does_not_equal" | "number_greater_than" | "number_less_than" | "number_greater_than_or_equal_to" | "number_less_than_or_equal_to" | EmptyViewFiltersOperator;
 export type EnumViewFiltersOperator = "enum_is" | "enum_is_not" | EmptyViewFiltersOperator;
 export type EnumsViewFiltersOperator = "enum_contains" | "enum_does_not_contain" | EmptyViewFiltersOperator;
 export type DateViewFiltersOperator = "date_is" | "date_is_before" | "date_is_after" | "date_is_on_or_before" | "date_is_on_or_after" | "date_is_within" | EmptyViewFiltersOperator;
 export type PersonViewFiltersOperator = "person_contains" | "person_does_not_contain" | EmptyViewFiltersOperator;
-export type FilesViewFiltersOperator = EmptyViewFiltersOperator;
+export type FileViewFiltersOperator = EmptyViewFiltersOperator;
 export type CheckboxViewFiltersOperator = "checkbox_is" | "checkbox_is_not";
 export type UrlViewFiltersOperator = TextViewFiltersOperator;
 export type EmailViewFiltersOperator = TextViewFiltersOperator;
 export type PhoneViewFiltersOperator = TextViewFiltersOperator;
 
-export type ForumlaViewFiltersOperator = TextViewFiltersOperator;
+export type FormulaViewFiltersOperator = TextViewFiltersOperator;
 export type RelationViewFiltersOperator = "relation_contains" | "relation_does_not_contain" | EmptyViewFiltersOperator;
 export type RollupViewFiltersOperator = undefined;
 export type CreatedTimeViewFiltersOperator = DateViewFiltersOperator;
 export type CreatedByViewFiltersOperator = PersonViewFiltersOperator;
-export type LastCreatedTimeViewFiltersOperator = DateViewFiltersOperator;
-export type LastCreatedByViewFiltersOperator = PersonViewFiltersOperator;
+export type LastEditedTimeViewFiltersOperator = DateViewFiltersOperator;
+export type LastEditedByViewFiltersOperator = PersonViewFiltersOperator;
 
 export type TBasicViewFiltersOperator =
   TextViewFiltersOperator |
+  TitleViewFiltersOperator |
   NumericViewFiltersOperator |
   EnumViewFiltersOperator |
   EnumsViewFiltersOperator |
   DateViewFiltersOperator |
   PersonViewFiltersOperator |
-  FilesViewFiltersOperator |
+  FileViewFiltersOperator |
   CheckboxViewFiltersOperator |
   UrlViewFiltersOperator |
   EmailViewFiltersOperator |
   PhoneViewFiltersOperator;
 
 export type TAdvancedViewFiltersOperator =
-  ForumlaViewFiltersOperator |
+  FormulaViewFiltersOperator |
   RelationViewFiltersOperator |
   RollupViewFiltersOperator |
   CreatedTimeViewFiltersOperator |
   CreatedByViewFiltersOperator |
-  LastCreatedTimeViewFiltersOperator |
-  LastCreatedByViewFiltersOperator;
+  LastEditedTimeViewFiltersOperator |
+  LastEditedByViewFiltersOperator;
 
 export type TViewFiltersOperator = TBasicViewFiltersOperator | TAdvancedViewFiltersOperator;
 
 /**
  * Filters.filter.value.type 
  */
+export type TitleViewFiltersType = "exact";
 export type TextViewFiltersType = "exact";
 export type NumericViewFiltersType = "exact";
 export type EnumViewFiltersType = "exact";
 export type EnumsViewFiltersType = "exact";
 export type DateViewFiltersType = "relative" | "exact";
 export type PersonViewFiltersType = "exact";
-export type FilesViewFiltersType = "exact";
+export type FileViewFiltersType = "exact";
 export type CheckboxViewFiltersType = "exact";
 export type UrlViewFiltersType = "exact";
 export type EmailViewFiltersType = "exact";
 export type PhoneViewFiltersType = "exact";
 
 export type TBasicViewFiltersType =
+  TitleViewFiltersType |
   TextViewFiltersType |
   NumericViewFiltersType |
   EnumViewFiltersType |
   EnumsViewFiltersType |
   DateViewFiltersType |
   PersonViewFiltersType |
-  FilesViewFiltersType |
+  FileViewFiltersType |
   CheckboxViewFiltersType |
   UrlViewFiltersType |
   EmailViewFiltersType |
   PhoneViewFiltersType;
 
-export type ForumlaViewFiltersType = "exact";
+export type FormulaViewFiltersType = "exact";
 export type RelationViewFiltersType = "exact";
 export type RollupViewFiltersType = undefined;
 export type CreatedTimeViewFiltersType = "exact" | "relative";
 export type CreatedByViewFiltersType = "exact";
-export type LastCreatedTimeViewFiltersType = "exact" | "relative";
-export type LastCreatedByViewFiltersType = "exact";
+export type LastEditedTimeViewFiltersType = "exact" | "relative";
+export type LastEditedByViewFiltersType = "exact";
 
 export type TAdvancedViewFiltersType =
-  ForumlaViewFiltersType |
+  FormulaViewFiltersType |
   RelationViewFiltersType |
   RollupViewFiltersType |
   CreatedTimeViewFiltersType |
   CreatedByViewFiltersType |
-  LastCreatedTimeViewFiltersType |
-  LastCreatedByViewFiltersType;
+  LastEditedTimeViewFiltersType |
+  LastEditedByViewFiltersType;
 
 export type TViewFiltersType =
   TBasicViewFiltersType | TAdvancedViewFiltersType;
@@ -98,50 +102,55 @@ export type TViewFiltersType =
 /**
  * Filters.filter.value.value 
  */
+export type TitleViewFiltersValue = string;
 export type TextViewFiltersValue = string;
 export type NumericViewFiltersValue = number;
 export type EnumViewFiltersValue = string
 export type EnumsViewFiltersValue = string
-export type DateViewFiltersValue = "today" | "tomorrow" | "yesterday" | "one_week_ago" | "one_week_from_now" | "one_month_ago" | "one_month_from_now";
+export type DateViewFiltersValue = "today" | "tomorrow" | "yesterday" | "one_week_ago" | "one_week_from_now" | "one_month_ago" | "one_month_from_now" | {
+  start_date: string,
+  type: "date"
+};
 export interface PersonViewFiltersValue {
   id: string,
   table: "notion_user"
 }
-export interface FilesViewFiltersValue { };
+export interface FileViewFiltersValue { };
 export type CheckboxViewFiltersValue = boolean;
 export type UrlViewFiltersValue = string;
 export type EmailViewFiltersValue = string;
 export type PhoneViewFiltersValue = string;
 
-export type ForumlaViewFiltersValue = string;
+export type FormulaViewFiltersValue = string;
 export type RelationViewFiltersValue = string;
 export type RollupViewFiltersValue = undefined;
 export type CreatedTimeViewFiltersValue = DateViewFiltersValue;
 export type CreatedByViewFiltersValue = PersonViewFiltersValue;
-export type LastCreatedTimeViewFiltersValue = DateViewFiltersValue;
-export type LastCreatedByViewFiltersValue = PersonViewFiltersValue;
+export type LastEditedTimeViewFiltersValue = DateViewFiltersValue;
+export type LastEditedByViewFiltersValue = PersonViewFiltersValue;
 
 export type TBasicViewFiltersValue =
+  TitleViewFiltersValue |
   TextViewFiltersValue |
   NumericViewFiltersValue |
   EnumViewFiltersValue |
   EnumsViewFiltersValue |
   DateViewFiltersValue |
   PersonViewFiltersValue |
-  FilesViewFiltersValue |
+  FileViewFiltersValue |
   CheckboxViewFiltersValue |
   UrlViewFiltersValue |
   EmailViewFiltersValue |
   PhoneViewFiltersValue;
 
 export type TAdvancedViewFiltersValue =
-  ForumlaViewFiltersValue |
+  FormulaViewFiltersValue |
   RelationViewFiltersValue |
   RollupViewFiltersValue |
   CreatedTimeViewFiltersValue |
   CreatedByViewFiltersValue |
-  LastCreatedTimeViewFiltersValue |
-  LastCreatedByViewFiltersValue;
+  LastEditedTimeViewFiltersValue |
+  LastEditedByViewFiltersValue;
 
 export type TViewFiltersValue = TBasicViewFiltersValue | TAdvancedViewFiltersValue;
 
@@ -180,8 +189,8 @@ export interface DateViewFilters {
 };
 
 export interface PersonViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
-export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator, FilesViewFiltersValue> { };
-export interface FilesViewFilters extends IViewFilters<FilesViewFiltersOperator, FilesViewFiltersValue> { };
+export interface FileViewFilters extends IViewFilters<FileViewFiltersOperator, FileViewFiltersValue> { };
+export interface FileViewFilters extends IViewFilters<FileViewFiltersOperator, FileViewFiltersValue> { };
 export interface CheckboxViewFilters extends IViewFilters<CheckboxViewFiltersOperator, CheckboxViewFiltersValue> { };
 export interface UrlViewFilters extends IViewFilters<UrlViewFiltersOperator, UrlViewFiltersValue> { };
 export interface EmailViewFilters extends IViewFilters<EmailViewFiltersOperator, EmailViewFiltersValue> { };
@@ -201,7 +210,7 @@ export interface CreatedTimeViewFilters {
   }
 };
 export interface CreatedByViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
-export interface LastCreatedTimeViewFilters {
+export interface LastEditedTimeViewFilters {
   property: string,
   filter: { operator: EmptyViewFiltersOperator } | {
     operator: "relative",
@@ -223,19 +232,19 @@ export type TBasicViewFilters =
   EnumsViewFilters |
   DateViewFilters |
   PersonViewFilters |
-  FilesViewFilters |
+  FileViewFilters |
   CheckboxViewFilters |
   UrlViewFilters |
   EmailViewFilters |
   PhoneViewFilters;
 
 export type TAdvancedViewFilters =
-  ForumlaViewFiltersValue |
+  FormulaViewFiltersValue |
   RelationViewFiltersValue |
   RollupViewFiltersValue |
   CreatedTimeViewFiltersValue |
   CreatedByViewFiltersValue |
-  LastCreatedTimeViewFiltersValue |
-  LastCreatedByViewFiltersValue;
+  LastEditedTimeViewFiltersValue |
+  LastEditedByViewFiltersValue;
 
 export type TViewFilters = TBasicViewFilters | TAdvancedViewFilters;

@@ -1,17 +1,6 @@
-import { TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, ForumlaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator } from "./";
-import { TSchemaUnitType } from "./schema";
+import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue } from "./";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
-export interface UserViewArg {
-  id?: string,
-  sorts?: [string, number][],
-  aggregations?: [string, TViewAggregationsAggregators][],
-  filters?: UserViewFilterParams[],
-  properties?: [string, boolean, number][],
-  name: string,
-  type: TViewType,
-  wrap?: boolean
-}
 
 export interface ViewCreateCbReturn {
   sorts: [("ascending" | "descending"), number],
@@ -97,6 +86,7 @@ export type UpdatableSpaceViewParam = Partial<Pick<ISpaceView, UpdatableSpaceVie
 
 export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
 export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
+
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
 export type PageCreateContentParam = TBlockInput & {
@@ -127,32 +117,32 @@ export type SchemaManipParam = {
 }
 
 // ? TD:1:H Add generic type for filter as well
-type ViewUpdateGenericParam<T extends TSchemaUnitType, A extends TViewAggregationsAggregators> = {
+interface ViewUpdateGenericParam<T extends TSchemaUnitType, FO extends TViewFiltersOperator, FT extends TViewFiltersType, FV extends TViewFiltersValue, A extends TViewAggregationsAggregators> {
   name: string,
   type: T,
   sort?: TSortValue | [TSortValue, number],
-  filter?: UserViewFilterParams[],
-  format?: undefined | boolean | number | [boolean, number],
+  format?: boolean | number | [boolean, number],
+  filter?: ([FO, FT, FV] | [FO, FT, FV, number])[],
   aggregation?: A
 }
 
 export type ViewUpdateParam =
-  ViewUpdateGenericParam<"text", TextViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"title", TitleViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"number", NumericViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"select", EnumViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"multi_select", EnumsViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"date", DateViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"person", PersonViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"file", FileViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"checkbox", CheckboxViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"url", UrlViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"email", EmailViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"phone_number", PhoneViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"formula", ForumlaViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"relation", RelationViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"rollup", RollupViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"created_time", CreatedTimeViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"created_by", CreatedByViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"last_edited_time", LastEditedTimeViewAggregationsAggregator> |
-  ViewUpdateGenericParam<"last_edited_by", LastEditedByViewAggregationsAggregator>;
+  ViewUpdateGenericParam<"text", TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, TextViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"title", TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, TitleViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"number", NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, NumericViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"select", EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, EnumViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"multi_select", EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumsViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"date", DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, DateViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"person", PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PersonViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"file", FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, FileViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"checkbox", CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CheckboxViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"url", UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, UrlViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"email", EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EmailViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"phone_number", PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, PhoneViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"formula", FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue, FormulaViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"relation", RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RelationViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"rollup", RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, RollupViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"created_time", CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, CreatedTimeViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"created_by", CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedByViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"last_edited_time", LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, LastEditedTimeViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"last_edited_by", LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedByViewAggregationsAggregator>;

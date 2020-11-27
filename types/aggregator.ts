@@ -32,7 +32,7 @@ export type TViewBasicAggregationsAggregators =
   EmailViewAggregationsAggregator |
   PhoneViewAggregationsAggregator;
 
-export type ForumlaViewAggregationsAggregator = StringViewAggregationsAggregators | CheckboxViewAggregationsAggregator | DateViewAggregationsAggregator;
+export type FormulaViewAggregationsAggregator = StringViewAggregationsAggregators | CheckboxViewAggregationsAggregator | DateViewAggregationsAggregator;
 export type RelationViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type RollupViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type CreatedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
@@ -41,7 +41,7 @@ export type LastEditedTimeViewAggregationsAggregator = DateViewAggregationsAggre
 export type LastEditedByViewAggregationsAggregator = StringViewAggregationsAggregators;
 
 export type TViewAdvancedAggregationsAggregators =
-  ForumlaViewAggregationsAggregator |
+  FormulaViewAggregationsAggregator |
   RelationViewAggregationsAggregator |
   RollupViewAggregationsAggregator |
   CreatedTimeViewAggregationsAggregator |

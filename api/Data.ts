@@ -287,9 +287,8 @@ export default class Data<T extends TData> extends Getters {
           })
 
           if (filter) {
-            filter.forEach(filter => {
-              const [operator, type, value] = filter;
-              filters.push({
+            filter.forEach(([operator, type, value, position]: any) => {
+              const filter_value = {
                 property: key,
                 filter: {
                   operator,
@@ -298,7 +297,9 @@ export default class Data<T extends TData> extends Getters {
                     value
                   }
                 } as any
-              })
+              }
+              if (position) filters.splice(position, 0, filter_value)
+              else filters.push(filter_value)
             })
           }
           properties.push(property)

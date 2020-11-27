@@ -126,10 +126,11 @@ export type SchemaManipParam = {
   position?: RepositionParams
 }
 
+// ? TD:1:H Add generic type for filter as well
 type ViewUpdateGenericParam<T extends TSchemaUnitType, A extends TViewAggregationsAggregators> = {
   name: string,
   type: T,
-  sort?: TSortValue,
+  sort?: TSortValue | [TSortValue, number],
   filter?: UserViewFilterParams[],
   format?: undefined | boolean | number | [boolean, number],
   aggregation?: A

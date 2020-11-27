@@ -25,17 +25,23 @@ async function createWebRootCVP(space: Space) {
         view: [{
           type: "text",
           name: "Title",
-          aggregation: "count"
+          sort: "ascending",
+          aggregation: "count",
+          format: 150
         }, {
           type: "number",
           name: "Competency",
+          format: 50,
           aggregation: "average",
         }, {
           type: "select",
           name: "Category",
+          sort: ["ascending", 0],
+          format: 200
         }, {
           type: "select",
-          name: "Language"
+          name: "Language",
+          format: 200
         }]
       }
     ]
@@ -58,7 +64,7 @@ async function createRows(root_cvp: RootCollectionViewPage) {
       }
     })
   });
-  await collection.createRows(items);
+  await collection.createPages(items);
 }
 
 async function main() {

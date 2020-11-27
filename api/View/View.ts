@@ -19,7 +19,7 @@ class View extends Data<TView> {
    * Update the current view
    * @param options Options to update the view
    */
-  // ? TD:1:M Use the createViews method arg
+  // ? TD:1:M Use the Data.createViews method
   async update(options: ViewUpdateParam[]) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
     const name_map: Record<string, { key: string } & ISchemaUnit> = {};

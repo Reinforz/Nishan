@@ -133,12 +133,16 @@ class Collection extends Data<ICollection> {
     await this.deleteItems<IPage>(args, multiple)
   }
 
+  async createPage(row: { format?: Partial<PageFormat>, properties: PageProps }) {
+    return (await this.createPages([row]))[0]
+  }
+
   /**
    * Add rows of data to the collection block
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createRows(rows: { format?: Partial<PageFormat>, properties: PageProps }[]) {
+  async createPages(rows: { format?: Partial<PageFormat>, properties: PageProps }[]) {
     const page_ids: string[] = [];
     const ops: IOperation[] = [];
     rows.map(({ format, properties }) => {
@@ -163,6 +167,11 @@ class Collection extends Data<ICollection> {
       id: page_id,
       ...this.getProps()
     }))
+  }
+
+  async readPages(args: FilterTypes<IPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
+
   }
 
   /**

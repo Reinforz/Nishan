@@ -269,10 +269,17 @@ export default class Data<T extends TData> extends Getters {
             property.width = format?.[1] ?? 250
             property.visible = format?.[0] ?? true;
           }
-          if (sort) sorts.push({
-            property: key,
-            direction: sort
-          })
+          if (sort) {
+            if (Array.isArray(sort))
+              sorts.splice(sort[1], 0, {
+                property: key,
+                direction: sort[0]
+              })
+            else sorts.push({
+              property: key,
+              direction: sort
+            })
+          }
 
           if (aggregation) aggregations.push({
             property: key,
@@ -320,6 +327,7 @@ export default class Data<T extends TData> extends Getters {
           aggregations
         },
       }))
+      console.log(sorts);
     }
 
     return [created_view_ops, view_ids] as [IOperation[], string[]];

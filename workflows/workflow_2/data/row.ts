@@ -67,11 +67,6 @@ const Items: Item[] = [
     image: "https://sdtimes.com/wp-content/uploads/2019/08/opengraph-icon-200x200.png"
   },
   {
-    category: "Language",
-    title: "PHP",
-    image: "https://pngimg.com/uploads/php/php_PNG12.png"
-  },
-  {
     category: "Tools",
     title: "NGinx",
     image: "https://linuxtips.us/wp-content/uploads/nginx-logo.png"
@@ -83,39 +78,9 @@ const Items: Item[] = [
   },
   {
     category: "Framework",
-    title: "Bootstrap",
-    image: "https://cdn.worldvectorlogo.com/logos/bootstrap-4.svg",
-    language: "CSS"
-  },
-  {
-    category: "Framework",
     title: "Tailwind",
     image: "https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png",
     language: "CSS"
-  },
-  {
-    category: "Framework",
-    title: "Svelte",
-    image: "https://seeklogo.com/images/S/svelte-logo-E3497608CB-seeklogo.com.png",
-    language: "Javascript"
-  },
-  {
-    category: "Framework",
-    title: "Ember",
-    image: "https://emberjs.com/images/brand/ember_Tomster-Lockup.png",
-    language: "Javascript"
-  },
-  {
-    category: "Framework",
-    title: "Angular",
-    image: "https://seeklogo.com/images/A/angular-logo-B76B1CDE98-seeklogo.com.png",
-    language: "Javascript"
-  },
-  {
-    category: "Framework",
-    title: "Vue",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/1200px-Vue.js_Logo_2.svg.png",
-    language: "Javascript"
   },
   {
     category: "Framework",
@@ -130,12 +95,6 @@ const Items: Item[] = [
     language: "Node"
   },
   {
-    category: "Framework",
-    title: "Laravel",
-    image: "https://cdn.freebiesupply.com/logos/large/2x/laravel-logo-png-transparent.png",
-    language: "PHP"
-  },
-  {
     category: "Technology",
     title: "JWT",
     image: "https://i0.wp.com/blog.fossasia.org/wp-content/uploads/2017/07/pic_logo.png?fit=500%2C500&ssl=1",
@@ -147,18 +106,8 @@ const Items: Item[] = [
   },
   {
     category: "Technology",
-    title: "BSON",
-    image: "https://repository-images.githubusercontent.com/134636353/78130c80-874c-11ea-8446-541627a96a2c"
-  },
-  {
-    category: "Technology",
     title: "JSON",
     image: "https://cdn.freebiesupply.com/logos/large/2x/json-logo-png-transparent.png"
-  },
-  {
-    category: "Technology",
-    title: "XML",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTrLbjdkjakc6rdm71zqSWqmIDsivzbOB8TKAUwt4rAFhb1EatG&usqp=CAU"
   },
   {
     category: "Technology",
@@ -179,21 +128,6 @@ const Items: Item[] = [
     category: "Technology",
     title: "Regex",
     image: "https://kasunkodagoda.gallerycdn.vsassets.io/extensions/kasunkodagoda/regex-match-replace/2.1.5/1567104415777/Microsoft.VisualStudio.Services.Icons.Default"
-  },
-  {
-    category: "Technology",
-    title: "Canvas",
-    image: "https://www.freepnglogos.com/uploads/html5-logo-png/html5-logo-html-canvas-logo-netgoblin-deviantart-20.png"
-  },
-  {
-    category: "Technology",
-    title: "Serverless",
-    image: "https://seeklogo.com/images/S/serverless-logo-314C5E0CB4-seeklogo.com.png"
-  },
-  {
-    category: "Technology",
-    title: "SSR",
-    image: ""
   },
   {
     category: "Library",
@@ -232,23 +166,8 @@ const Items: Item[] = [
   },
   {
     category: "Tools",
-    title: "Ansible",
-    image: "https://ronekins.files.wordpress.com/2017/01/ansible.png?w=640"
-  },
-  {
-    category: "Tools",
     title: "Kubernetes",
     image: "https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png"
-  },
-  {
-    category: "Tools",
-    title: "Jenkins",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Jenkins_logo.svg/1200px-Jenkins_logo.svg.png"
-  },
-  {
-    category: "Tools",
-    title: "Vagrant",
-    image: "https://www.datocms-assets.com/2885/1506457090-blog-vagrant-list.svg"
   },
   {
     category: "Tools",
@@ -283,25 +202,8 @@ const Items: Item[] = [
   },
   {
     category: "Tools",
-    title: "Pip",
-    image: "https://support.trustsource.io/hc/article_attachments/360017157514/python-pip-logo.png",
-    language: "Python"
-  },
-  {
-    category: "Tools",
-    title: "Gitkraken",
-    image: "https://user-images.githubusercontent.com/17736615/30980083-f7f8a860-a43c-11e7-939e-f6717a2210fe.png"
-  },
-  {
-    category: "Tools",
     title: "Git",
     image: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png"
-  },
-  {
-    category: "Tools",
-    title: "Gatsby",
-    language: "Javascript",
-    image: "https://cdn.auth0.com/blog/gatsby-react-webtask/logo.png"
   },
   {
     category: "Tools",

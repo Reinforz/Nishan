@@ -2,10 +2,11 @@ import Nishan from '../../Nishan';
 import "../env"
 import Space from '../../api/Space';
 import Options from "./data/options";
+import RootCollectionViewPage from '../../api/RootCollectionViewPage';
 
 // This method creates the root collection_view_page containing all the relevant stuffs
 async function createWebRootCVP(space: Space) {
-  await space.createRootCollectionViewPage({
+  return await space.createRootCollectionViewPage({
     properties: {
       title: [["Web 2.0"]]
     },
@@ -37,6 +38,10 @@ async function createWebRootCVP(space: Space) {
   })
 }
 
+async function createRows(root_cvp: RootCollectionViewPage) {
+
+}
+
 async function main() {
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
@@ -47,7 +52,8 @@ async function main() {
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
   const space = await user.getSpace((space) => space.name === 'Developer');
 
-  await createWebRootCVP(space);
+  const root_cvp = await createWebRootCVP(space);
+  await createRows(root_cvp)
 }
 
 main();

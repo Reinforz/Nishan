@@ -1,6 +1,7 @@
 import Nishan from '../../Nishan';
 import "../env"
 import Space from '../../api/Space';
+import { LanguageOptions } from "./data/options";
 
 // This method creates the root collection_view_page containing all the relevant stuffs
 async function createWebRootCVP(space: Space) {
@@ -11,7 +12,7 @@ async function createWebRootCVP(space: Space) {
     format: {
       page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg"
     },
-    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "select", options: [] }, { name: "Language", type: "select", options: [] }],
+    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "select", options: [] }, { name: "Language", type: "select", options: LanguageOptions }],
     views: [
       {
         type: "table",

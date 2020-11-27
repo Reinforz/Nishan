@@ -1,4 +1,5 @@
-import { TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue } from "./";
+import { TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, ForumlaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator } from "./";
+import { TSchemaUnitType } from "./schema";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
 export interface UserViewArg {
@@ -125,4 +126,32 @@ export type SchemaManipParam = {
   position?: RepositionParams
 }
 
-export type ViewUpdateParam = { name: string } & Partial<{ sort: TSortValue, filter: UserViewFilterParams[], format: boolean | number | [boolean, number], aggregation: TViewAggregationsAggregators }>
+type ViewUpdateGenericParam<T extends TSchemaUnitType, A extends TViewAggregationsAggregators> = {
+  name: string,
+  type: T,
+  sort?: TSortValue,
+  filter?: UserViewFilterParams[],
+  format?: undefined | boolean | number | [boolean, number],
+  aggregation?: A
+}
+
+export type ViewUpdateParam =
+  ViewUpdateGenericParam<"text", TextViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"title", TitleViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"number", NumericViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"select", EnumViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"multi_select", EnumsViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"date", DateViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"person", PersonViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"file", FileViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"checkbox", CheckboxViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"url", UrlViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"email", EmailViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"phone_number", PhoneViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"formula", ForumlaViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"relation", RelationViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"rollup", RollupViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"created_time", CreatedTimeViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"created_by", CreatedByViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"last_edited_time", LastEditedTimeViewAggregationsAggregator> |
+  ViewUpdateGenericParam<"last_edited_by", LastEditedByViewAggregationsAggregator>;

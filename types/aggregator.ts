@@ -5,26 +5,28 @@ export interface ViewAggregations {
   aggregator: TViewAggregationsAggregators
 }
 
+export type TitleViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type TextViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type NumericViewAggregationsAggregator = StringViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
 export type EnumViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type EnumsViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type DateViewAggregationsAggregator = StringViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
 export type PersonViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type FilesViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type FileViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type CheckboxViewAggregationsAggregator = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";;
 export type UrlViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type EmailViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type PhoneViewAggregationsAggregator = StringViewAggregationsAggregators;
 
 export type TViewBasicAggregationsAggregators =
+  TitleViewAggregationsAggregator |
   TextViewAggregationsAggregator |
   NumericViewAggregationsAggregator |
   EnumViewAggregationsAggregator |
   EnumsViewAggregationsAggregator |
   DateViewAggregationsAggregator |
   PersonViewAggregationsAggregator |
-  FilesViewAggregationsAggregator |
+  FileViewAggregationsAggregator |
   CheckboxViewAggregationsAggregator |
   UrlViewAggregationsAggregator |
   EmailViewAggregationsAggregator |
@@ -35,8 +37,8 @@ export type RelationViewAggregationsAggregator = StringViewAggregationsAggregato
 export type RollupViewAggregationsAggregator = StringViewAggregationsAggregators;
 export type CreatedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
 export type CreatedByViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type LastCreatedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
-export type LastCreatedByViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type LastEditedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
+export type LastEditedByViewAggregationsAggregator = StringViewAggregationsAggregators;
 
 export type TViewAdvancedAggregationsAggregators =
   ForumlaViewAggregationsAggregator |
@@ -44,7 +46,7 @@ export type TViewAdvancedAggregationsAggregators =
   RollupViewAggregationsAggregator |
   CreatedTimeViewAggregationsAggregator |
   CreatedByViewAggregationsAggregator |
-  LastCreatedTimeViewAggregationsAggregator |
-  LastCreatedByViewAggregationsAggregator;
+  LastEditedTimeViewAggregationsAggregator |
+  LastEditedByViewAggregationsAggregator;
 
 export type TViewAggregationsAggregators = TViewBasicAggregationsAggregators | TViewAdvancedAggregationsAggregators;

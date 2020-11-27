@@ -17,14 +17,18 @@ async function createWebRootCVP(space: Space) {
         type: "table",
         name: "Overview",
         view: [{
+          type: "text",
           name: "Title",
           aggregation: "count"
         }, {
+          type: "number",
           name: "Competency",
           aggregation: "average",
         }, {
+          type: "select",
           name: "Category",
         }, {
+          type: "select",
           name: "Language"
         }]
       }

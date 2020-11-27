@@ -45,7 +45,7 @@ import "../env"
     if (page) {
       const date = `2020-11-${index < 10 ? "0" + index : index}`;
 
-      const objfn = (name: string) => ({ name, format: [true, 100] as [boolean, number] })
+      const objfn = (name: string) => ({ name, type: "checkbox" as const, format: [true, 100] as [boolean, number] })
 
       // collection_id of all the collection corresponding to the collection_view_pages with the mentioned titles
       const collection_ids = [await getRootCVPCollectionId("Daily"), await getRootCVPCollectionId("Tasks"), await getRootCVPCollectionId("Todo"), await getRootCVPCollectionId("Articles")];
@@ -62,6 +62,7 @@ import "../env"
             view: [
               // This is the order the properties will be stored in the view
               {
+                type: "title",
                 name: "Date",
                 filter: [["string_is", "exact", date]],
                 format: [true, 150],
@@ -79,6 +80,7 @@ import "../env"
               objfn("Stackshare"),
               objfn("Percentage"),
               {
+                type: "number",
                 name: "Total",
                 format: false
               }
@@ -94,6 +96,7 @@ import "../env"
             view: [
               {
                 // Add your specific sort, filter, format and aggregation
+                type: "date",
                 name: "On",
                 sort: "ascending",
                 filter: [["date_is", "exact", {
@@ -103,17 +106,18 @@ import "../env"
                 format: [true, 250]
               },
               {
+                type: "title",
                 name: "Task",
                 format: [true, 250],
                 aggregation: "count"
               },
-              { name: "Purpose", format: [true, 150], aggregation: "unique" },
-              { name: "Subject", format: [true, 350], aggregation: "unique" },
-              { name: "Source", format: [true, 150], aggregation: "unique" },
-              { name: "Goals", format: [true, 300] },
-              { name: "Steps", format: [true, 50], aggregation: "sum" },
-              { name: "Created", format: false },
-              { name: "Custom", format: false },
+              { name: "Purpose", type: "select", format: [true, 150], aggregation: "unique" },
+              { name: "Subject", type: "select", format: [true, 350], aggregation: "unique" },
+              { name: "Source", type: "select", format: [true, 150], aggregation: "unique" },
+              { name: "Goals", type: "relation", format: [true, 300] },
+              { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
+              { name: "Created", type: "created_time", format: false },
+              { name: "Custom", type: "formula", format: false },
             ]
           }
         ]

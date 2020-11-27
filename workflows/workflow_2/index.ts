@@ -1,8 +1,12 @@
 import Nishan from '../../Nishan';
-import "../env"
 import Space from '../../api/Space';
-import Options from "./data/options";
 import RootCollectionViewPage from '../../api/RootCollectionViewPage';
+
+import "../env"
+
+import Options from "./data/options";
+import rows from "./data/row";
+import { PageFormat, PageProps } from '../../types';
 
 // This method creates the root collection_view_page containing all the relevant stuffs
 async function createWebRootCVP(space: Space) {
@@ -39,7 +43,22 @@ async function createWebRootCVP(space: Space) {
 }
 
 async function createRows(root_cvp: RootCollectionViewPage) {
-
+  const collection = await root_cvp.getCollection();
+  const items: { format?: Partial<PageFormat>, properties: PageProps }[] = [];
+  rows.forEach(({ language, image, title, category }) => {
+    items.push({
+      format: {
+        page_icon: image,
+        page_full_width: true,
+      },
+      properties: {
+        title: [[title]],
+        category: [[category]],
+        language: [[language ?? ""]],
+      }
+    })
+  });
+  await collection.createRows(items);
 }
 
 async function main() {

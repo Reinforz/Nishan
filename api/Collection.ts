@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, NumberSchemaUnit, SelectSchemaUnit, MultiSelectSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, PersonSchemaUnit, TitleSchemaUnit, EmailSchemaUnit, PhoneNumberSchemaUnit, UrlSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, NumberSchemaUnit, SelectSchemaUnit, MultiSelectSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, PersonSchemaUnit, TitleSchemaUnit, EmailSchemaUnit, PhoneNumberSchemaUnit, UrlSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, PageProps, PageFormat, } from "../types";
 import Page from './Page';
 
 /**
@@ -133,22 +133,21 @@ class Collection extends Data<ICollection> {
     await this.deleteItems<IPage>(args, multiple)
   }
 
-  // ? TD:2:H Better TS Support rather than using any
   /**
    * Add rows of data to the collection block
    * @param rows
    * @returns An array of newly created page objects
    */
-  async addRows(rows: { format: any, properties: any }[]) {
+  async createRows(rows: { format?: Partial<PageFormat>, properties: PageProps }[]) {
     const page_ids: string[] = [];
     const ops: IOperation[] = [];
     rows.map(({ format, properties }) => {
-      const $page_id = uuidv4();
-      page_ids.push($page_id);
+      const page_id = uuidv4();
+      page_ids.push(page_id);
       ops.push(
-        Operation.block.update($page_id, [], {
+        Operation.block.update(page_id, [], {
           alive: true,
-          $block_id: $page_id,
+          id: page_id,
           type: "page",
           properties,
           format,
@@ -158,6 +157,7 @@ class Collection extends Data<ICollection> {
       );
     });
     await this.saveTransactions(ops)
+    await this.updateCacheManually(page_ids)
 
     return page_ids.map((page_id) => new Page({
       id: page_id,

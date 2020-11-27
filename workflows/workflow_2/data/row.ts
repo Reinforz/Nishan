@@ -11,7 +11,8 @@ const Items: Item[] = [
   {
     category: "Language",
     title: "Typescript",
-    image: "https://miro.medium.com/max/816/1*mn6bOs7s6Qbao15PMNRyOA.png"
+    image: "https://miro.medium.com/max/816/1*mn6bOs7s6Qbao15PMNRyOA.png",
+    language: "Javascript"
   },
   {
     category: "Library",
@@ -67,11 +68,6 @@ const Items: Item[] = [
   },
   {
     category: "Language",
-    title: "Ruby",
-    image: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Ruby_logo.png"
-  },
-  {
-    category: "Language",
     title: "PHP",
     image: "https://pngimg.com/uploads/php/php_PNG12.png"
   },
@@ -79,11 +75,6 @@ const Items: Item[] = [
     category: "Tools",
     title: "NGinx",
     image: "https://linuxtips.us/wp-content/uploads/nginx-logo.png"
-  },
-  {
-    category: "Tools",
-    title: "Apache HTTP",
-    image: "https://lh3.googleusercontent.com/proxy/8RYqZO37eBKkDAy1eH272pZw5iDAqEWB6B68x7wtONJWxk9d_pMVsCIvTq8qDVX3mPq4Vyg4S2TKffgAGaW97hWCmksUmmxxIQR0ZfYCouNEaGk13C-7m7LNnpnm_XA_"
   },
   {
     category: "Language",
@@ -143,12 +134,6 @@ const Items: Item[] = [
     title: "Laravel",
     image: "https://cdn.freebiesupply.com/logos/large/2x/laravel-logo-png-transparent.png",
     language: "PHP"
-  },
-  {
-    category: "Framework",
-    title: "Ruby On Rails",
-    image: "https://avatars.githubusercontent.com/u/4223",
-    language: "Ruby"
   },
   {
     category: "Technology",
@@ -211,11 +196,6 @@ const Items: Item[] = [
     image: ""
   },
   {
-    category: "Technology",
-    title: "WebGL",
-    image: "https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg"
-  },
-  {
     category: "Library",
     title: "Babel",
     image: "https://user-images.githubusercontent.com/56288/58110630-8a3c1080-7bb5-11e9-8f16-afa391dc4223.jpg",
@@ -225,12 +205,6 @@ const Items: Item[] = [
     category: "Library",
     title: "ESLint",
     image: "https://eslint.org/assets/img/favicon.512x512.png",
-    language: "Javascript"
-  },
-  {
-    category: "Library",
-    title: "Gulp",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Gulp.js_Logo.svg/1200px-Gulp.js_Logo.svg.png",
     language: "Javascript"
   },
   {
@@ -288,18 +262,8 @@ const Items: Item[] = [
   },
   {
     category: "Tools",
-    title: "Atom",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Atom_editor_logo.svg/1200px-Atom_editor_logo.svg.png"
-  },
-  {
-    category: "Tools",
-    title: "Travis CI",
-    image: "https://cdn.freebiesupply.com/logos/thumbs/2x/travis-ci-logo.png"
-  },
-  {
-    category: "Tools",
-    title: "Circle CI",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Circleci-icon-logo.svg/1200px-Circleci-icon-logo.svg.png"
+    title: "Github Actions",
+    image: "https://miro.medium.com/max/300/0*EOBenMCWMDaPdeJL.png"
   },
   {
     category: "Tools",
@@ -313,26 +277,9 @@ const Items: Item[] = [
   },
   {
     category: "Tools",
-    title: "Insomnia",
-    image: "https://icons.iconarchive.com/icons/papirus-team/papirus-apps/512/insomnia-icon.png"
-  },
-  {
-    category: "Tools",
     title: "NPM",
     image: "https://cdn.worldvectorlogo.com/logos/npm-2.svg",
     language: "Javascript"
-  },
-  {
-    category: "Tools",
-    title: "Composer",
-    image: "https://cdn.worldvectorlogo.com/logos/composer.svg",
-    language: "PHP"
-  },
-  {
-    category: "Tools",
-    title: "RubyGems",
-    image: "https://seeklogo.com/images/R/rubygems-logo-1AD43C5504-seeklogo.com.png",
-    language: "Ruby"
   },
   {
     category: "Tools",
@@ -358,26 +305,8 @@ const Items: Item[] = [
   },
   {
     category: "Tools",
-    title: "Hugo",
-    language: "Go",
-    image: "https://sdtimes.com/wp-content/uploads/2018/02/golang.sh_-490x490.png"
-  },
-  {
-    category: "Tools",
-    title: "Jekyll",
-    language: "Ruby",
-    image: "https://cdn.iconscout.com/icon/free/png-512/jekyll-283293.png"
-  },
-  {
-    category: "Tools",
     title: "Github",
     image: "https://cdn0.iconfinder.com/data/icons/octicons/1024/mark-github-512.png"
-  },
-  {
-    category: "Database",
-    title: "MySQL",
-    language: "SQL",
-    image: "https://download.logo.wine/logo/MySQL/MySQL-Logo.wine.png"
   },
   {
     category: "Database",

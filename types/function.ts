@@ -99,7 +99,7 @@ export type CreateTRootPagesParams = ({
   type: "collection_view_page"
 } & CreateRootCollectionViewPageParams)
 
-export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean;
+export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 

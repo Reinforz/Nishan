@@ -34,7 +34,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 
   async duplicate() {
     const data = this.getCachedData(),
-      id = shortid()
+      id = shortid();
     data.schema[id] = data.schema[this.schema_id];
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);

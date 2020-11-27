@@ -169,10 +169,10 @@ class Collection extends Data<ICollection> {
     }))
   }
 
-  async readPages(args: FilterTypes<IPage>, multiple?: boolean) {
+  /* async readPages(args: FilterTypes<IPage>, multiple?: boolean) {
     multiple = multiple ?? true;
 
-  }
+  } */
 
   /**
    * Create a new column in the collection schema

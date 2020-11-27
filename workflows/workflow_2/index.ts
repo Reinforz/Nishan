@@ -7,6 +7,7 @@ import "../env"
 import Options from "./data/options";
 import rows from "./data/row";
 import { PageFormat, PageProps } from '../../types';
+import Page from '../../api/Page';
 
 // This method creates the root collection_view_page containing all the relevant stuffs
 async function createWebRootCVP(space: Space) {
@@ -64,7 +65,57 @@ async function createRows(root_cvp: RootCollectionViewPage) {
       }
     })
   });
-  await collection.createPages(items);
+  return await collection.createPages(items);
+}
+
+async function createContent(space: Space, pages: Page[]) {
+  type root_cvp_titles_type = "Tasks" | "Articles" | "Reading List" | "Course List" | "Goals";
+
+  const root_cvp_titles = ["Tasks", "Articles", "Reading List", "Course List", "Goals"] as root_cvp_titles_type[];
+
+  const collection_ids: Record<root_cvp_titles_type, string> = {} as any;
+
+  await space.getRootCollectionViewPage((collection_view_page) => {
+    const collection = space.cache.collection.get(collection_view_page.collection_id);
+    if (collection) {
+      const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
+      if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
+    }
+  })
+
+  for (let index = 0; index < pages.length; index++) {
+    const page = pages[index];
+    await page.createLinkedDBContents([{
+      collection_id: collection_ids.Tasks,
+      views: [
+        {
+          type: "table",
+          name: "Task Table",
+          view: [
+            {
+              type: "date",
+              name: "On",
+              sort: "descending",
+              format: [true, 250]
+            },
+            {
+              type: "title",
+              name: "Task",
+              format: [true, 250],
+              aggregation: "count"
+            },
+            { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
+            { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
+            { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
+            { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
+            { name: "Created", type: "created_time", format: false },
+            { name: "Custom", type: "formula", format: false },
+            { name: "Subject", type: "multi_select", format: false, aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
+          ]
+        }
+      ]
+    }])
+  }
 }
 
 async function main() {
@@ -78,7 +129,8 @@ async function main() {
   const space = await user.getSpace((space) => space.name === 'Developer');
 
   const root_cvp = await createWebRootCVP(space);
-  await createRows(root_cvp)
+  const pages = await createRows(root_cvp);
+  await createContent(space, pages);
 }
 
 main();

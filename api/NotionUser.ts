@@ -82,7 +82,7 @@ class NotionUser extends Data<INotionUser> {
       else if (Array.isArray(args) && args.includes(space.id))
         should_add = true;
       else if (typeof args === "function")
-        should_add = await args(space, i);
+        should_add = await args(space, i) as boolean;
 
       if (should_add) {
         target_spaces.push(new Space({

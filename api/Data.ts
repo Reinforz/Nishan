@@ -328,7 +328,6 @@ export default class Data<T extends TData> extends Getters {
           aggregations
         },
       }))
-      console.log(sorts);
     }
 
     return [created_view_ops, view_ids] as [IOperation[], string[]];

@@ -41,7 +41,7 @@ class View extends Data<TView> {
           property.width = format?.[1] ?? 250
           property.visible = format?.[0] ?? true;
         }
-        if (sort) sorts.push({
+        if (sort) (sorts as any).push({
           property: key,
           direction: sort
         })
@@ -52,7 +52,7 @@ class View extends Data<TView> {
         })
 
         if (filter) {
-          filter.forEach(filter => {
+          filter.forEach((filter: any) => {
             const [operator, type, value] = filter;
             filters.push({
               property: key,

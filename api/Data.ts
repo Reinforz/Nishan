@@ -329,10 +329,7 @@ export default class Data<T extends TData> extends Getters {
     const schema: Schema = {}, collection_id = uuidv4();
 
     param.schema.forEach(opt => {
-      const schema_key = (opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
-      schema[schema_key] = {
-        ...opt
-      };
+      schema[(opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_')] = opt
     });
 
     const [created_view_ops, view_ids] = this.createViews(schema, param.views, collection_id, parent_id);

@@ -11,11 +11,9 @@ export interface ISchemaUnit {
 }
 
 export interface SelectOption {
-  options: {
-    id: string,
-    value: string,
-    color: TTextColor
-  }[]
+  id: string,
+  value: string,
+  color: TTextColor
 }
 
 /* Basic Schema Units */
@@ -30,12 +28,12 @@ export interface NumberSchemaUnit extends ISchemaUnit {
 
 export interface SelectSchemaUnit extends ISchemaUnit {
   type: "select",
-  options: SelectOption
+  options: SelectOption[]
 }
 
 export interface MultiSelectSchemaUnit extends ISchemaUnit {
   type: "multi_select",
-  options: SelectOption
+  options: SelectOption[]
 }
 
 export interface TitleSchemaUnit extends ISchemaUnit {

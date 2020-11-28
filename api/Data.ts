@@ -247,22 +247,25 @@ export default class Data<T extends TData> extends Getters {
   protected createViews(schema: Schema, views: SearchManipViewParam[], collection_id: string, parent_id: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [];
 
-    Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }))
+    Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
 
     for (let index = 0; index < views.length; index++) {
       const { name, type, view, filter_operator = "and" } = views[index],
         sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
         view_id = uuidv4();
       view_ids.push(view_id);
+      const included_units: string[] = [];
+
       view.forEach(info => {
         const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
         if (property_info) {
-          const { key } = property_info;
-          const property: ViewFormatProperties = {
-            property: key,
-            visible: true,
-            width: 250
-          };
+          const { key } = property_info,
+            property: ViewFormatProperties = {
+              property: key,
+              visible: true,
+              width: 250
+            };
+          included_units.push(key);
           if (typeof format === "boolean") property.visible = format;
           else if (typeof format === "number") property.width = format;
           else if (Array.isArray(format)) {
@@ -305,6 +308,15 @@ export default class Data<T extends TData> extends Getters {
           properties.push(property)
         } else
           throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
+      })
+
+      const non_included_units = Object.keys(schema).filter(key => !included_units.includes(key));
+
+      non_included_units.forEach(property => {
+        properties.push({
+          property,
+          visible: false
+        })
       })
 
       created_view_ops.push(Operation.collection_view.set(view_id, [], {

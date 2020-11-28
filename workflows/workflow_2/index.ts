@@ -85,36 +85,84 @@ async function createContent(space: Space, pages: Page[]) {
 
   for (let index = 0; index < pages.length; index++) {
     const page = pages[index];
-    await page.createLinkedDBContents([{
-      collection_id: collection_ids.Tasks,
-      views: [
-        {
-          type: "table",
-          name: "Task Table",
-          view: [
-            {
-              type: "date",
-              name: "On",
-              sort: "descending",
-              format: [true, 250]
-            },
-            {
-              type: "title",
-              name: "Task",
-              format: [true, 250],
-              aggregation: "count"
-            },
-            { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
-            { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
-            { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
-            { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
-            { name: "Created", type: "created_time", format: false },
-            { name: "Custom", type: "formula", format: false },
-            { name: "Subject", type: "multi_select", format: false, aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
-          ]
-        }
-      ]
-    }])
+    await page.createLinkedDBContents([
+      {
+        collection_id: collection_ids.Articles,
+        views: [
+          {
+            type: "table",
+            name: "Article Table",
+            view: [
+              {
+                type: "title",
+                name: "Title",
+                aggregation: "count"
+              },
+              {
+                type: "formula",
+                name: "Urgency",
+                sort: "ascending",
+                format: 50
+              },
+              {
+                type: "checkbox",
+                name: "Completed",
+                format: 100,
+                aggregation: "percent_checked"
+              },
+              {
+                type: "multi_select",
+                name: "Subject",
+                format: 200,
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              {
+                type: "select",
+                name: "Provider",
+                aggregation: "unique",
+                format: 150
+              },
+              {
+                type: "url",
+                name: "Source",
+                format: 300
+              },
+              ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })),
+              ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Date`, format: 150, aggregation: "percent_not_empty", })),
+            ]
+          }
+        ]
+      },
+      {
+        collection_id: collection_ids.Tasks,
+        views: [
+          {
+            type: "table",
+            name: "Task Table",
+            view: [
+              {
+                type: "date",
+                name: "On",
+                sort: "descending",
+                format: [true, 250]
+              },
+              {
+                type: "title",
+                name: "Task",
+                format: [true, 250],
+                aggregation: "count"
+              },
+              { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
+              { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
+              { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
+              { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
+              { name: "Created", type: "created_time", format: false },
+              { name: "Custom", type: "formula", format: false },
+              { name: "Subject", type: "multi_select", format: false, aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
+            ]
+          }
+        ]
+      }])
   }
 }
 

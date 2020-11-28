@@ -14,7 +14,7 @@ const Items: Item[] = [
     image: "https://miro.medium.com/max/816/1*mn6bOs7s6Qbao15PMNRyOA.png",
     language: "Javascript"
   },
-  {
+  /* {
     category: "Library",
     title: "React",
     image: "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png",
@@ -215,7 +215,7 @@ const Items: Item[] = [
     title: "PostgreSQL",
     language: "SQL",
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png"
-  }
+  } */
 ]
 
 export default Items

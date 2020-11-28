@@ -211,7 +211,7 @@ async function createContent(space: Space, pages: Page[]) {
                 format: 300
               },
               ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })),
-              ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Date`, format: 150, aggregation: "percent_not_empty", })),
+              ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })),
             ]
           }
         ]
@@ -246,6 +246,41 @@ async function createContent(space: Space, pages: Page[]) {
           }
         ]
       },
+      {
+        collection_id: collection_ids["Course List"],
+        views: [
+          {
+            type: "gallery",
+            name: "Completing Courses",
+            view: [
+              {
+                type: "title",
+                name: "Name",
+                sort: "ascending"
+              },
+              {
+                type: "text",
+                name: "Instructor"
+              },
+              {
+                type: "multi_select",
+                name: "Topics",
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              ...["Status", "Phase", "Priority"].map((name) => ({
+                name,
+                type: "select",
+              } as const)),
+              {
+                type: "formula",
+                sort: ["descending", 0],
+                format: false,
+                name: "Urgency",
+              }
+            ]
+          }
+        ]
+      }
     ])
   }
 }

@@ -1,22 +1,22 @@
-export type StringViewAggregationsAggregators = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
+export type StringViewAggregationsAggregator = "none" | "count" | "count_values" | "unique" | "empty" | "not_empty" | "percent_empty" | "percent_not_empty";
 
 export interface ViewAggregations {
   property: string,
   aggregator: TViewAggregationsAggregators
 }
 
-export type TitleViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type TextViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type NumericViewAggregationsAggregator = StringViewAggregationsAggregators | "sum" | "average" | "median" | "min" | "max" | "range";
-export type EnumViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type EnumsViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type DateViewAggregationsAggregator = StringViewAggregationsAggregators | "earliest_date" | "latest_date" | "date_range";
-export type PersonViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type FileViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type TitleViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type TextViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type NumericViewAggregationsAggregator = StringViewAggregationsAggregator | "sum" | "average" | "median" | "min" | "max" | "range";
+export type EnumViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type EnumsViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type DateViewAggregationsAggregator = StringViewAggregationsAggregator | "earliest_date" | "latest_date" | "date_range";
+export type PersonViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type FileViewAggregationsAggregator = StringViewAggregationsAggregator;
 export type CheckboxViewAggregationsAggregator = "none" | "count_all" | "checked" | "unchecked" | "percent_checked" | "percent_unchecked";;
-export type UrlViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type EmailViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type PhoneViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type UrlViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type EmailViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type PhoneViewAggregationsAggregator = StringViewAggregationsAggregator;
 
 export type TViewBasicAggregationsAggregators =
   TitleViewAggregationsAggregator |
@@ -32,13 +32,13 @@ export type TViewBasicAggregationsAggregators =
   EmailViewAggregationsAggregator |
   PhoneViewAggregationsAggregator;
 
-export type FormulaViewAggregationsAggregator = StringViewAggregationsAggregators | CheckboxViewAggregationsAggregator | DateViewAggregationsAggregator;
-export type RelationViewAggregationsAggregator = StringViewAggregationsAggregators;
-export type RollupViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type FormulaViewAggregationsAggregator = NumericViewAggregationsAggregator | StringViewAggregationsAggregator | CheckboxViewAggregationsAggregator | DateViewAggregationsAggregator;
+export type RelationViewAggregationsAggregator = StringViewAggregationsAggregator;
+export type RollupViewAggregationsAggregator = NumericViewAggregationsAggregator;
 export type CreatedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
-export type CreatedByViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type CreatedByViewAggregationsAggregator = StringViewAggregationsAggregator;
 export type LastEditedTimeViewAggregationsAggregator = DateViewAggregationsAggregator;
-export type LastEditedByViewAggregationsAggregator = StringViewAggregationsAggregators;
+export type LastEditedByViewAggregationsAggregator = StringViewAggregationsAggregator;
 
 export type TViewAdvancedAggregationsAggregators =
   FormulaViewAggregationsAggregator |

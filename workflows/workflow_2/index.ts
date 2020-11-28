@@ -87,6 +87,89 @@ async function createContent(space: Space, pages: Page[]) {
     const page = pages[index];
     await page.createLinkedDBContents([
       {
+        collection_id: collection_ids.Goals,
+        views: [
+          {
+            type: "table",
+            name: "Current Goals",
+            view: [
+              {
+                type: "date",
+                name: "Created",
+                format: 200
+              },
+              {
+                type: "date",
+                name: "Completed At",
+                format: 200
+              },
+              {
+                type: "formula",
+                name: "Progress",
+                format: 50,
+                aggregation: "average",
+              },
+              {
+                type: "title",
+                name: "Goal",
+                aggregation: "count",
+                format: 300
+              },
+              {
+                type: "multi_select",
+                name: "Purpose",
+                aggregation: "unique",
+                format: 100
+              },
+              {
+                type: "multi_select",
+                name: "Subject",
+                aggregation: "unique",
+                format: 100,
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              {
+                type: "multi_select",
+                name: "Source",
+                aggregation: "unique",
+                format: 100
+              },
+              {
+                type: "select",
+                name: "Status",
+                format: 150,
+                filter: [["enum_is", "exact", "Completing"]]
+              },
+              {
+                type: "rollup",
+                name: "Total Tasks",
+                format: 100,
+                aggregation: "sum",
+              },
+              {
+                type: "rollup",
+                name: "Completed",
+                format: 100,
+                aggregation: "sum"
+              },
+              {
+                type: "number",
+                name: "Steps",
+                format: 100,
+                aggregation: "sum"
+              },
+              {
+                type: "number",
+                name: "Progress",
+                sort: "descending",
+                format: false,
+                filter: [["number_does_not_equal", "exact", 100]]
+              },
+            ]
+          }
+        ]
+      },
+      {
         collection_id: collection_ids.Articles,
         views: [
           {
@@ -162,7 +245,8 @@ async function createContent(space: Space, pages: Page[]) {
             ]
           }
         ]
-      }])
+      },
+    ])
   }
 }
 

@@ -135,7 +135,7 @@ export interface CalendarSearchManipViewParam extends SearchManipViewParam {
 }
 
 export interface TimelineSearchManipViewParam extends SearchManipViewParam, Partial<Omit<ITimelineViewFormat, "timeline_properties" | "timeline_table_properties">> {
-  type: "calendar",
+  type: "timeline",
   timeline_by: TTimelineViewTimelineby
 }
 

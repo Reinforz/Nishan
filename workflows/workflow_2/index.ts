@@ -86,7 +86,7 @@ async function createContent(space: Space, pages: Page[]) {
   for (let index = 0; index < pages.length; index++) {
     const page = pages[index];
     await page.createLinkedDBContents([
-      /* {
+      {
         collection_id: collection_ids.Goals,
         views: [
           {
@@ -245,7 +245,7 @@ async function createContent(space: Space, pages: Page[]) {
             ]
           }
         ]
-      }, */
+      },
       {
         collection_id: collection_ids["Course List"],
         views: [

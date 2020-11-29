@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam } from "../types";
 import { Operation, error } from "../utils";
 import Getters from "./Getters";
 
@@ -259,13 +259,41 @@ export default class Data<T extends TData> extends Getters {
             filters
           },
           aggregations
-        }, format = {
+        } as any, format = {
           [`${type}_properties`]: properties
         } as any;
 
       view_ids.push(view_id);
 
-
+      switch (type) {
+        case "table":
+          const table_view = views[index] as TableSearchManipViewParam, table_format = format as ITableViewFormat;
+          table_format.table_wrap = table_view.table_wrap ?? true;
+          break;
+        case "board":
+          const board_view = views[index] as BoardSearchManipViewParam, board_format = format as IBoardViewFormat;
+          board_format.board_cover = board_view.board_cover ?? { type: "page_cover" };
+          board_format.board_cover_aspect = board_view.board_cover_aspect;
+          board_format.board_cover_size = board_view.board_cover_size;
+          board_format.board_groups2 = board_view.board_groups2 as any;
+          break;
+        case "gallery":
+          const gallery_view = views[index] as GallerySearchManipViewParam, gallery_format = format as IGalleryViewFormat;
+          if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.key as string }
+          else gallery_format.gallery_cover = gallery_view.gallery_cover
+          gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
+          gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
+          break;
+        case "calendar":
+          const calender_view = views[index] as CalendarSearchManipViewParam, calendar_query2 = query2 as ICalendarViewQuery2;
+          calendar_query2.calendar_by = calender_view.calendar_by;
+          break;
+        case "timeline":
+          const timeline_view = views[index] as TimelineSearchManipViewParam, timeline_format = format as ITimelineViewFormat;
+          timeline_format.timeline_preference = timeline_view.timeline_preference ?? { centerTimestamp: 1, zoomLevel: "month" }
+          timeline_format.timeline_show_table = timeline_view.timeline_show_table ?? true;
+          break;
+      }
 
       view.forEach(info => {
         const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);

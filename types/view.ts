@@ -41,8 +41,8 @@ export interface IBoardViewFormat {
   board_cover: TViewFormatCover,
   board_cover_aspect?: 'contain' | 'cover',
   board_cover_size?: 'small' | 'medium' | 'large',
-  board_properties: ViewFormatProperties[],
   board_groups2: { hidden: boolean, property: string, value: { type: "select" | "multi_select", value: string } }[]
+  board_properties: ViewFormatProperties[],
 }
 
 export type IBoardViewQuery2 = IViewQuery2 & {

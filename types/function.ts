@@ -139,8 +139,10 @@ export interface TimelineSearchManipViewParam extends SearchManipViewParam, Part
   timeline_by: TTimelineViewTimelineby
 }
 
+export type TSearchManipViewParam = TableSearchManipViewParam | ListSearchManipViewParam | BoardSearchManipViewParam | GallerySearchManipViewParam | CalendarSearchManipViewParam | TimelineSearchManipViewParam
+
 export type SchemaManipParam = {
-  views: (TableSearchManipViewParam | ListSearchManipViewParam | BoardSearchManipViewParam | GallerySearchManipViewParam | CalendarSearchManipViewParam)[],
+  views: TSearchManipViewParam[],
   position?: RepositionParams
 }
 

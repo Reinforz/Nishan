@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, SearchManipViewParam, CreateRootCollectionViewPageParams } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat } from "../types";
 import { Operation, error } from "../utils";
 import Getters from "./Getters";
 
@@ -244,7 +244,7 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  protected createViews(schema: Schema, views: SearchManipViewParam[], collection_id: string, parent_id: string) {
+  protected createViews(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [];
 
     Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
@@ -252,9 +252,20 @@ export default class Data<T extends TData> extends Getters {
     for (let index = 0; index < views.length; index++) {
       const { name, type, view, filter_operator = "and" } = views[index],
         sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-        view_id = uuidv4();
+        view_id = uuidv4(), included_units: string[] = [], query2 = {
+          sort: sorts,
+          filter: {
+            operator: filter_operator,
+            filters
+          },
+          aggregations
+        }, format = {
+          [`${type}_properties`]: properties
+        } as any;
+
       view_ids.push(view_id);
-      const included_units: string[] = [];
+
+
 
       view.forEach(info => {
         const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
@@ -328,17 +339,8 @@ export default class Data<T extends TData> extends Getters {
         parent_id,
         parent_table: 'block',
         alive: true,
-        format: {
-          [`${type}_properties`]: properties
-        },
-        query2: {
-          sort: sorts,
-          filter: {
-            operator: filter_operator,
-            filters
-          },
-          aggregations
-        },
+        format,
+        query2,
       }))
     }
 

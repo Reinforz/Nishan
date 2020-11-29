@@ -208,7 +208,8 @@ export default class ViewSchemaUnit extends Data<TView> {
   }
 
   async createAggregator(aggregator: TViewAggregationsAggregators) {
-    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
+    const data = this.getCachedData();
+    const container = data?.query2?.aggregations ?? [];
     const does_already_contain = container.find(aggregator => aggregator.property === this.schema_id);
     if (!does_already_contain) {
       container.push({ property: this.schema_id, aggregator })

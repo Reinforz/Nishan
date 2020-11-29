@@ -196,33 +196,9 @@ export interface UrlViewFilters extends IViewFilters<UrlViewFiltersOperator, Url
 export interface EmailViewFilters extends IViewFilters<EmailViewFiltersOperator, EmailViewFiltersValue> { };
 export interface PhoneViewFilters extends IViewFilters<PhoneViewFiltersOperator, PhoneViewFiltersValue> { };
 
-export interface CreatedTimeViewFilters {
-  property: string,
-  filter: { operator: EmptyViewFiltersOperator } | {
-    operator: "relative",
-    value: DateViewFiltersValue
-  } | {
-    operator: "exact",
-    value: {
-      start_date: string,
-      type: "date"
-    }
-  }
-};
+export interface CreatedTimeViewFilters extends DateViewFilters { };
 export interface CreatedByViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
-export interface LastEditedTimeViewFilters {
-  property: string,
-  filter: { operator: EmptyViewFiltersOperator } | {
-    operator: "relative",
-    value: DateViewFiltersValue
-  } | {
-    operator: "exact",
-    value: {
-      start_date: string,
-      type: "date"
-    }
-  }
-};
+export interface LastEditedTimeViewFilters extends DateViewFilters { }
 export interface EditedByViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
 
 export type TBasicViewFilters =

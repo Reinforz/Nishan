@@ -1,4 +1,4 @@
-import { ParentProps, TViewFormatCover, Node, IViewFilters, TViewFilters, ViewAggregations } from "./";
+import { ParentProps, TViewFormatCover, Node, TViewFilters, ViewAggregations } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
@@ -7,19 +7,21 @@ export interface ITableViewFormat {
   table_properties: ViewFormatProperties[]
 }
 
+export interface IViewQuery2 {
+  aggregations: ViewAggregations[],
+  sort: ViewSorts[],
+  filter: {
+    operator: "and",
+    filters: TViewFilters[]
+  }
+}
+
 export interface ITableView extends Node, ParentProps {
   name: string,
   type: 'table',
   page_sort: string[],
   format: ITableViewFormat,
-  query2?: {
-    aggregations: ViewAggregations[],
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: TViewFilters[]
-    },
-  },
+  query2?: IViewQuery2,
 }
 
 export interface IListView extends Node, ParentProps {
@@ -28,54 +30,38 @@ export interface IListView extends Node, ParentProps {
   format: {
     list_properties: ViewFormatProperties[]
   },
-  query2?: {
-    aggregations?: ViewAggregations[],
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: IViewFilters[]
-    },
-  },
+  query2?: Omit<IViewQuery2, "aggregations">,
+}
+
+export interface IBoardViewFormat {
+  board_cover: TViewFormatCover,
+  board_cover_aspect?: 'contain' | 'cover',
+  board_cover_size?: 'small' | 'medium' | 'large',
+  board_properties: ViewFormatProperties[],
+  board_groups2: { hidden: boolean, property: string, value: { type: "select" | "multi_select", value: string } }[]
 }
 
 export interface IBoardView extends Node, ParentProps {
   type: 'board',
   name: string,
-  format: {
-    board_cover: TViewFormatCover,
-    board_cover_aspect?: 'contain' | 'cover',
-    board_cover_size?: 'small' | 'medium' | 'large',
-    board_properties: ViewFormatProperties[],
-    board_groups2: { hidden: boolean, property: string, value: { type: "select" | "multi_select", value: string } }[]
-  },
-  query2?: {
-    aggregations: ViewAggregations[],
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: IViewFilters[]
-    },
+  format: IBoardViewFormat,
+  query2?: IViewQuery2 & {
     group_by: string
   },
+}
+
+export interface IGalleryViewFormat {
+  gallery_cover?: TViewFormatCover,
+  gallery_cover_aspect?: 'contain' | 'cover',
+  gallery_cover_size?: 'small' | 'medium' | 'large',
+  gallery_properties: ViewFormatProperties[]
 }
 
 export interface IGalleryView extends Node, ParentProps {
   type: 'gallery',
   name: string,
-  format: {
-    gallery_cover?: TViewFormatCover,
-    gallery_cover_aspect?: 'contain' | 'cover',
-    gallery_cover_size?: 'small' | 'medium' | 'large',
-    gallery_properties: ViewFormatProperties[]
-  },
-  query2?: {
-    aggregations?: ViewAggregations[],
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: IViewFilters[]
-    },
-  },
+  format: IGalleryViewFormat,
+  query2?: Omit<IViewQuery2, "aggregations">,
 }
 
 export interface ICalendarView extends Node, ParentProps {
@@ -84,13 +70,7 @@ export interface ICalendarView extends Node, ParentProps {
   format: {
     calendar_properties: ViewFormatProperties[]
   },
-  query2?: {
-    aggregations?: ViewAggregations[],
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: IViewFilters[]
-    },
+  query2?: Omit<IViewQuery2, "aggregations"> & {
     calendar_by: string
   },
 }
@@ -99,23 +79,19 @@ export interface ITimelineViewFormatPreference {
   centerTimestamp: number,
   zoomLevel: "month"
 }
+
+export interface ITimelineViewFormat {
+  timeline_preference: ITimelineViewFormatPreference,
+  timeline_properties: ViewFormatProperties[],
+  timeline_show_table: boolean,
+  timeline_table_properties: ViewFormatProperties[]
+}
 export interface ITimelineView extends Node, ParentProps {
   type: 'timeline',
   name: string,
-  format: {
-    timeline_preference: ITimelineViewFormatPreference,
-    timeline_properties: ViewFormatProperties[],
-    timeline_show_table: boolean,
-    timeline_table_properties: ViewFormatProperties[]
-  },
-  query2: {
+  format: ITimelineViewFormat,
+  query2: IViewQuery2 & {
     timeline_by: TTimelineViewTimelineby,
-    sort: ViewSorts[],
-    filter: {
-      operator: "and",
-      filters: IViewFilters[]
-    },
-    aggregations: ViewAggregations[],
   }
 }
 

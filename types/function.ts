@@ -112,7 +112,7 @@ export interface SearchManipViewParam {
 }
 
 export type SchemaManipParam = {
-  views: SearchManipViewParam[],
+  views: (SearchManipViewParam)[],
   position?: RepositionParams
 }
 

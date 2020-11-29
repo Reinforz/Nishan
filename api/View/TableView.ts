@@ -1,7 +1,7 @@
 import { ITableView, NishanArg } from "../../types";
-import View from "./View";
+import Aggregator from "./Aggregator";
 
-class TableView extends View<ITableView> {
+class TableView extends Aggregator<ITableView> {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }

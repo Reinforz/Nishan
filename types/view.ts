@@ -2,11 +2,6 @@ import { ParentProps, TViewFormatCover, Node, TViewFilters, ViewAggregations } f
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 
-export interface ITableViewFormat {
-  table_wrap: boolean,
-  table_properties: ViewFormatProperties[]
-}
-
 export interface IViewQuery2 {
   aggregations: ViewAggregations[],
   sort: ViewSorts[],
@@ -14,6 +9,11 @@ export interface IViewQuery2 {
     operator: "and",
     filters: TViewFilters[]
   }
+}
+
+export interface ITableViewFormat {
+  table_wrap: boolean,
+  table_properties: ViewFormatProperties[]
 }
 
 export interface ITableView extends Node, ParentProps {

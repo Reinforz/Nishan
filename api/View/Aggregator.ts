@@ -1,4 +1,4 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, TViewType, ViewAggregations } from "../../types";
+import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, ViewAggregations } from "../../types";
 import View from "./View";
 
 class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View<T> {

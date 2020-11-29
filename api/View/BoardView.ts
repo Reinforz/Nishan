@@ -1,7 +1,7 @@
 import { IBoardView, NishanArg } from "../../types";
-import View from "./View";
+import Aggregator from "./Aggregator";
 
-class BoardView extends View<IBoardView> {
+class BoardView extends Aggregator<IBoardView> {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }

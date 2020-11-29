@@ -1,4 +1,5 @@
-import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue } from "./";
+import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue, ITableViewFormat } from "./";
+import { IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat } from "./view";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
 
@@ -111,8 +112,35 @@ export interface SearchManipViewParam {
   filter_operator?: "or" | "and"
 }
 
+export interface TableSearchManipViewParam extends SearchManipViewParam, Partial<Omit<ITableViewFormat, "table_properties">> {
+  type: "table",
+}
+
+export interface ListSearchManipViewParam extends SearchManipViewParam {
+  type: "list"
+}
+
+export interface BoardSearchManipViewParam extends SearchManipViewParam, Partial<Omit<IBoardViewFormat, "board_properties">> {
+  type: "board",
+  group_by: string
+}
+
+export interface GallerySearchManipViewParam extends SearchManipViewParam, Partial<Omit<IGalleryViewFormat, "gallery_properties">> {
+  type: "gallery",
+}
+
+export interface CalendarSearchManipViewParam extends SearchManipViewParam {
+  type: "calendar",
+  calendar_by: string
+}
+
+export interface TimelineSearchManipViewParam extends SearchManipViewParam, Partial<Omit<ITimelineViewFormat, "timeline_properties" | "timeline_table_properties">> {
+  type: "calendar",
+  timeline_by: TTimelineViewTimelineby
+}
+
 export type SchemaManipParam = {
-  views: (SearchManipViewParam)[],
+  views: (TableSearchManipViewParam | ListSearchManipViewParam | BoardSearchManipViewParam | GallerySearchManipViewParam | CalendarSearchManipViewParam)[],
   position?: RepositionParams
 }
 

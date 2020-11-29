@@ -1,7 +1,7 @@
 import { ITimelineView, NishanArg } from "../../types";
-import View from "./View";
+import Aggregator from "./Aggregator";
 
-class TimelineView extends View<ITimelineView> {
+class TimelineView extends Aggregator<ITimelineView> {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }

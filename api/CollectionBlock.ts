@@ -61,7 +61,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createTableViews(params: TableViewCreateParams[]): Promise<TableView[]> {
-    return await this.#createViews(params, "table")
+    return (await this.#createViews(params, "table") as TableView[])
   }
 
   async createListView(param: ListViewCreateParams) {
@@ -69,7 +69,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createListViews(params: ListViewCreateParams[]): Promise<ListView[]> {
-    return await this.#createViews(params, "list")
+    return (await this.#createViews(params, "list") as ListView[])
   }
 
   async createBoardView(param: BoardViewCreateParams) {
@@ -77,7 +77,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createBoardViews(params: BoardViewCreateParams[]): Promise<BoardView[]> {
-    return await this.#createViews(params, "board")
+    return (await this.#createViews(params, "board") as BoardView[])
   }
 
   async createGalleryView(param: GalleryViewCreateParams) {
@@ -85,7 +85,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createGalleryViews(params: GalleryViewCreateParams[]): Promise<GalleryView[]> {
-    return await this.#createViews(params, "gallery")
+    return (await this.#createViews(params, "gallery") as GalleryView[])
   }
 
   async createCalendarView(param: CalendarViewCreateParams) {
@@ -93,7 +93,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createCalendarViews(params: CalendarViewCreateParams[]): Promise<CalendarView[]> {
-    return await this.#createViews(params, "calendar")
+    return (await this.#createViews(params, "calendar") as CalendarView[])
   }
 
   async createTimelineView(param: TimelineViewCreateParams) {
@@ -101,7 +101,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createTimelineViews(params: TimelineViewCreateParams[]): Promise<TimelineView[]> {
-    return await this.#createViews(params, "timeline")
+    return (await this.#createViews(params, "timeline") as TimelineView[])
   }
 
   /**
@@ -169,7 +169,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     return (await this.getBoardViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  async getBoardViews(args?: FilterTypes<IBoardView>, multiple?: boolean): Promise<TableView[]> {
+  async getBoardViews(args?: FilterTypes<IBoardView>, multiple?: boolean): Promise<BoardView[]> {
     multiple = multiple ?? true;
     return await this.#getViews<IBoardView, BoardView>(args, multiple, (view) => view.type === "board")
   }

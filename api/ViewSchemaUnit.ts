@@ -209,10 +209,33 @@ export default class ViewSchemaUnit extends Data<TView> {
 
   async createAggregator(aggregator: TViewAggregationsAggregators) {
     const data = this.getCachedData();
-    const container = data?.query2?.aggregations ?? [];
-    const does_already_contain = container.find(aggregator => aggregator.property === this.schema_id);
-    if (!does_already_contain) {
-      container.push({ property: this.schema_id, aggregator })
+    if (data.type === "table" || data.type === "board" || data.type === "timeline") {
+      const container = data?.query2?.aggregations ?? [],
+        does_already_contain = container.find(aggregator => aggregator.property === this.schema_id);
+      if (!does_already_contain) {
+        container.push({ property: this.schema_id, aggregator })
+        this.saveTransactions([this.updateOp([], {
+          query2: {
+            ...data.query2,
+            aggregations: container
+          }
+        })])
+        this.updateCacheManually([this.id]);
+      } else
+        warn(`ViewSchemaUnit:${this.schema_id} already contains an aggregrator`)
+    }
+  }
+
+  async updateAggregrator(aggregator: TViewAggregationsAggregators) {
+    const data = this.getCachedData();
+    if (data.type === "table" || data.type === "board" || data.type === "timeline") {
+      const container = data?.query2?.aggregations ?? [],
+        target_aggregrator = container.find(aggregator => aggregator.property === this.schema_id) ?? { property: this.schema_id, aggregator: "count" };
+      if (!target_aggregrator)
+        container.push({ property: this.schema_id, aggregator })
+      else
+        target_aggregrator.aggregator = aggregator;
+
       this.saveTransactions([this.updateOp([], {
         query2: {
           ...data.query2,
@@ -220,35 +243,20 @@ export default class ViewSchemaUnit extends Data<TView> {
         }
       })])
       this.updateCacheManually([this.id]);
-    } else
-      warn(`ViewSchemaUnit:${this.schema_id} already contains an aggregrator`)
-  }
-
-  async updateAggregrator(aggregator: TViewAggregationsAggregators) {
-    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
-    const target_aggregrator = container.find(aggregator => aggregator.property === this.schema_id) ?? { property: this.schema_id, aggregator: "count" };
-    if (!target_aggregrator)
-      container.push({ property: this.schema_id, aggregator })
-    else
-      target_aggregrator.aggregator = aggregator;
-
-    this.saveTransactions([this.updateOp([], {
-      query2: {
-        ...data.query2,
-        aggregations: container
-      }
-    })])
-    this.updateCacheManually([this.id]);
+    }
   }
 
   async deleteAggregrator() {
-    const data = this.getCachedData(), container = data?.query2?.aggregations ?? [];
-    this.saveTransactions([this.updateOp([], {
-      query2: {
-        ...data.query2,
-        aggregations: container.filter(aggregrator => aggregrator.property !== this.schema_id)
-      }
-    })])
-    this.updateCacheManually([this.id]);
+    const data = this.getCachedData();
+    if (data.type === "table" || data.type === "board" || data.type === "timeline") {
+      const container = data?.query2?.aggregations ?? [];
+      this.saveTransactions([this.updateOp([], {
+        query2: {
+          ...data.query2,
+          aggregations: container.filter(aggregrator => aggregrator.property !== this.schema_id)
+        }
+      })])
+      this.updateCacheManually([this.id]);
+    }
   }
 }

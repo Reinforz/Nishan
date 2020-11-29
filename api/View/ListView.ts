@@ -1,7 +1,7 @@
-import { NishanArg } from "../../types";
+import { IListView, NishanArg } from "../../types";
 import View from "./View";
 
-class ListView extends View {
+class ListView extends View<IListView> {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }

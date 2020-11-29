@@ -1,7 +1,7 @@
-import { NishanArg } from "../../types";
+import { ICalendarView, NishanArg } from "../../types";
 import View from "./View";
 
-class CalendarView extends View {
+class CalendarView extends View<ICalendarView> {
   constructor(arg: NishanArg) {
     super({ ...arg });
   }

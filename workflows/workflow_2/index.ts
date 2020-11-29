@@ -1,3 +1,5 @@
+import colors from "colors"
+
 import Nishan from '../../Nishan';
 import Space from '../../api/Space';
 import RootCollectionViewPage from '../../api/RootCollectionViewPage';
@@ -101,7 +103,7 @@ async function createContent(space: Space, pages: Page[]) {
               {
                 type: "date",
                 name: "Completed At",
-                format: 200
+                format: 150
               },
               {
                 type: "formula",
@@ -165,6 +167,86 @@ async function createContent(space: Space, pages: Page[]) {
                 format: false,
                 filter: [["number_does_not_equal", "exact", 100]]
               },
+            ]
+          }
+        ]
+      },
+      {
+        collection_id: collection_ids["Course List"],
+        views: [
+          {
+            type: "gallery",
+            name: "Completing Courses",
+            gallery_cover: { property: "Cover", type: "property" },
+            view: [
+              {
+                type: "title",
+                name: "Name",
+                sort: "ascending"
+              },
+              {
+                type: "text",
+                name: "Instructor"
+              },
+              {
+                type: "select",
+                name: "Publisher"
+              },
+              {
+                type: "multi_select",
+                name: "Topics",
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              ...["Status", "Phase", "Priority"].map((name) => ({
+                name,
+                type: "select",
+              } as const)),
+              {
+                type: "formula",
+                sort: ["descending", 0],
+                format: false,
+                name: "Urgency",
+              }
+            ]
+          }
+        ]
+      },
+      {
+        collection_id: collection_ids["Reading List"],
+        views: [
+          {
+            type: "gallery",
+            name: "Completing EBooks",
+            gallery_cover: { property: "Cover", type: "property" },
+            view: [
+              {
+                type: "title",
+                name: "Name",
+                sort: "ascending"
+              },
+              {
+                type: "text",
+                name: "Instructor"
+              },
+              {
+                type: "select",
+                name: "Publisher"
+              },
+              {
+                type: "multi_select",
+                name: "Topics",
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              ...["Status", "Phase", "Priority"].map((name) => ({
+                name,
+                type: "select",
+              } as const)),
+              {
+                type: "formula",
+                sort: ["descending", 0],
+                format: false,
+                name: "Urgency",
+              }
             ]
           }
         ]
@@ -246,43 +328,8 @@ async function createContent(space: Space, pages: Page[]) {
           }
         ]
       },
-      {
-        collection_id: collection_ids["Course List"],
-        views: [
-          {
-            type: "gallery",
-            name: "Completing Courses",
-            gallery_cover: { property: "Cover", type: "property" },
-            view: [
-              {
-                type: "title",
-                name: "Name",
-                sort: "ascending"
-              },
-              {
-                type: "text",
-                name: "Instructor"
-              },
-              {
-                type: "multi_select",
-                name: "Topics",
-                filter: [["enum_contains", "exact", rows[index].title]]
-              },
-              ...["Status", "Phase", "Priority"].map((name) => ({
-                name,
-                type: "select",
-              } as const)),
-              {
-                type: "formula",
-                sort: ["descending", 0],
-                format: false,
-                name: "Urgency",
-              }
-            ]
-          }
-        ]
-      }
     ])
+    console.log(colors.bold.green(rows[index].title));
   }
 }
 

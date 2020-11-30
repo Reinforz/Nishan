@@ -38,11 +38,12 @@ const Nishan = require("./dist");
 (async(){
   const nishan = new Nishan({
     token: /* Paste your copied token here */,
-    timeout: 500 /* Timeout between each request */
+    timeout: 500 /* Timeout between each request */,
+    logger: undefined // undefined or a cb function that is passed method, subject and the subject id
   });
-  const user = await nishan.getUser((user)=>user.given_name === "Devon");
-  const space = await user.init((space)=>space.name === "My Notion");
-  const page = await space.getPage((page)=>page.name === "My Page");
+  const user = await nishan.getNotionUser((user)=>user.given_name === "Devon");
+  const space = await user.getSpace((space)=>space.name === "My Notion");
+  const page = await space.getRootPage((page)=>page.properties.title[0][0] === "My Page");
   await page.delete();
 })()
 ```

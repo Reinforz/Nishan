@@ -19,10 +19,10 @@
   },
   "include": [
     "./Nishan.ts",
-    "workflows"
+    "workflows",
+    "experiment"
   ],
   "exclude": [
-    "experiment",
     "./node_modules",
     "docs",
   ],

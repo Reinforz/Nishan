@@ -22,7 +22,7 @@ class Nishan extends Cache {
     } || arg.logger;
   }
 
-  async initializeCache() {
+  #initializeCache = async () => {
     if (!this.init_cache) {
       try {
         const { data } = await axios.post(
@@ -33,7 +33,7 @@ class Nishan extends Cache {
               cookie: `token_v2=${this.token}`
             }
           }
-        ) as { data: GetSpacesResult };
+        ) as { data: GetSpacesResult }
         Object.values(data).forEach(data => this.saveToCache(data));
         this.init_cache = true;
       } catch (err) {
@@ -42,13 +42,21 @@ class Nishan extends Cache {
     }
   }
 
+  /**
+   * Get `INotionUser` and return `NotionUser` by the `args` param
+   * @param args An string id, a predicate passed the INotionUser or undefined to indicate everything
+   */
   async getNotionUser(arg?: FilterType<INotionUser>) {
     return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
+  /**
+   * Get `INotionUser[]` and return `NotionUser[]` by the `args` param
+   * @param args An array of string ids, a predicate passed the INotionUser or undefined to indicate everything
+   */
   async getNotionUsers(args?: FilterTypes<INotionUser>, multiple?: boolean) {
     multiple = multiple ?? true;
-    await this.initializeCache();
+    await this.#initializeCache();
     const user_ids: string[] = [];
     const common_props = {
       token: this.token,

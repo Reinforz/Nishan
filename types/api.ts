@@ -1,6 +1,7 @@
 
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
-import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole } from "./";
+import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
+import { ViewAggregations } from "./aggregator";
 
 export interface SetPageNotificationsAsReadParams {
   navigableBlockId: string,
@@ -178,7 +179,11 @@ export interface SetBookmarkMetadataParams {
 export interface QueryCollectionParams {
   collectionId: string,
   collectionViewId: string,
-  query: {},
+  query: {
+    filter?: IViewFilter,
+    sort?: ViewSorts[],
+    aggregations?: ViewAggregations[]
+  },
   loader: {
     limit: number,
     searchQuery: string,

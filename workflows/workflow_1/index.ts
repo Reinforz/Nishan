@@ -18,7 +18,7 @@ import "../env"
 
   // Make sure Monthly page exists as a root page
   const monthly_page = (await space.getRootPage((page) => {
-    return page.properties.title[0][0] === 'Monthly';
+    return page.properties.title[0][0] === 'Monthly'
   }));
 
   // Make sure November page exists inside monthly page

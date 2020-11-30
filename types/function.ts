@@ -101,6 +101,7 @@ export type CreateTRootPagesParams = ({
 } & CreateRootCollectionViewPageParams)
 
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void;
+// An array of id strings, a predicate passed the type or undefined to indicate all
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 

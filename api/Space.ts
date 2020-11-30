@@ -290,16 +290,4 @@ export default class Space extends Data<ISpace> {
   async deleteTRootPage(arg?: FilterType<TRootPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
-
-  /* async returnArtifacts(manual_res: [IOperation[], UpdateCacheManuallyParam, (RootPage | {block: RootCollectionViewPage, collection: Collection, collection_views: View[]})][]) {
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], objects: (RootPage | RootCollectionViewPage)[] = [];
-    manual_res.forEach(manual_res => {
-      ops.push(...manual_res[0]);
-      sync_records.push(...manual_res[1]);
-      objects.push(manual_res[2]);
-    })
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return objects;
-  } */
 }

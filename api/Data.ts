@@ -171,8 +171,18 @@ export default class Data<T extends TData> extends Getters {
         container = (this.getCachedData() as ISpace).pages ?? [];
       } else if (this.type === "user_root")
         container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
-      else if (this.type === "collection")
+      else if (this.type === "collection") {
         container = (this.getCachedData() as ICollection).template_pages ?? []
+        await this.queryCollection({
+          collectionId: this.id,
+          collectionViewId: "",
+          query: {},
+          loader: {
+            type: "table",
+            loadContentCover: true
+          }
+        })
+      }
       else if (this.type === "space_view")
         container = (this.getCachedData() as ISpaceView).bookmarked_pages ?? []
 

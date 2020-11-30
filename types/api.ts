@@ -185,9 +185,10 @@ export interface QueryCollectionParams {
     aggregations?: ViewAggregations[]
   },
   loader: {
-    limit: number,
-    searchQuery: string,
-    type: 'table'
+    limit?: number,
+    searchQuery?: string,
+    type: 'table',
+    loadContentCover: boolean
   }
 }
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import Cache from "./Cache";
 
 import { createTransaction, error } from "../utils";
-import { UpdateCacheManuallyParam, ICache, IOperation, Request, TDataType, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, SetSpaceNotificationsAsReadParams, SetPageNotificationsAsReadParams } from "../types";
+import { UpdateCacheManuallyParam, IOperation, Request, TDataType, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, SetSpaceNotificationsAsReadParams, SetPageNotificationsAsReadParams, Logger, NishanArg } from "../types";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -21,16 +21,10 @@ export default class Getters extends Cache {
     }
   };
   protected createTransaction: (operations: IOperation[]) => Request
-  protected BASE_NOTION_URL = "https://www.notion.so/api/v3"
+  protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
+  logger: Logger;
 
-  constructor({ token, interval, user_id, shard_id, space_id, cache }: {
-    token: string,
-    user_id: string,
-    shard_id: number;
-    space_id: string;
-    interval?: number,
-    cache?: ICache
-  }) {
+  constructor({ logger, token, interval, user_id, shard_id, space_id, cache }: NishanArg) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;
@@ -43,6 +37,9 @@ export default class Getters extends Cache {
     this.shard_id = shard_id;
     this.space_id = space_id;
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
+    this.logger = function (method, subject, id) {
+      console.log(`${method} ${subject}:${id}`);
+    } || logger;
   }
 
   protected getProps() {
@@ -53,6 +50,7 @@ export default class Getters extends Cache {
       shard_id: this.shard_id,
       space_id: this.space_id,
       cache: this.cache,
+      logger: this.logger
     }
   }
 

@@ -193,6 +193,7 @@ export interface ICache {
   user_settings: Map<string, IUserSettings>,
 }
 
+export type Logger = undefined | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: "NotionUser" | "View" | "Block" | "Space", id: string) => void)
 export interface NishanArg {
   token: string,
   interval: number,
@@ -200,5 +201,6 @@ export interface NishanArg {
   shard_id: number,
   space_id: string,
   cache: ICache,
-  id: string
+  id: string,
+  logger: Logger
 }

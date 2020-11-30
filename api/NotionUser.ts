@@ -92,7 +92,8 @@ class NotionUser extends Data<INotionUser> {
           cache: this.cache,
           user_id: space.permissions[0].user_id,
           shard_id: space.shard_id,
-          space_id: space.id
+          space_id: space.id,
+          logger: this.logger
         }))
       }
 

@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import colors from "colors";
 
 import NotionUser from "./api/NotionUser";
 import { error } from "./utils/logs";
@@ -18,7 +19,7 @@ class Nishan extends Cache {
     this.interval = arg.interval || 500;
     this.init_cache = false;
     this.logger = function (method, subject, id) {
-      console.log(`${method} ${subject}:${id}`);
+      console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     } || arg.logger;
   }
 

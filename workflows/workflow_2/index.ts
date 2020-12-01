@@ -98,14 +98,9 @@ async function createContent(space: Space, pages: Page[]) {
                 format: 200
               },
               {
-                type: "date",
-                name: "Completed At",
-                format: 150
-              },
-              {
                 type: "formula",
                 name: "Progress",
-                format: 50,
+                format: 100,
                 aggregation: "average",
               },
               {
@@ -124,7 +119,7 @@ async function createContent(space: Space, pages: Page[]) {
                 type: "multi_select",
                 name: "Subject",
                 aggregation: "unique",
-                format: 100,
+                format: 250,
                 filter: [["enum_contains", "exact", rows[index].title]]
               },
               {
@@ -132,12 +127,6 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Source",
                 aggregation: "unique",
                 format: 100
-              },
-              {
-                type: "select",
-                name: "Status",
-                format: 150,
-                filter: [["enum_is", "exact", "Completing"]]
               },
               {
                 type: "rollup",
@@ -158,11 +147,83 @@ async function createContent(space: Space, pages: Page[]) {
                 aggregation: "sum"
               },
               {
+                type: "select",
+                name: "Status",
+                format: false,
+                filter: [["enum_is", "exact", "Completing"]]
+              },
+              {
                 type: "number",
                 name: "Progress",
                 sort: "descending",
                 format: false,
                 filter: [["number_does_not_equal", "exact", 100]]
+              },
+            ]
+          },
+          {
+            type: "table",
+            name: "Completed Goals",
+            view: [
+              {
+                type: "date",
+                name: "Created",
+                format: 200
+              },
+              {
+                type: "date",
+                name: "Completed At",
+                format: 150
+              },
+              {
+                type: "title",
+                name: "Goal",
+                aggregation: "count",
+                format: 300
+              },
+              {
+                type: "multi_select",
+                name: "Purpose",
+                aggregation: "unique",
+                format: 100
+              },
+              {
+                type: "multi_select",
+                name: "Subject",
+                aggregation: "unique",
+                format: 250,
+                filter: [["enum_contains", "exact", rows[index].title]]
+              },
+              {
+                type: "multi_select",
+                name: "Source",
+                aggregation: "unique",
+                format: 100
+              },
+              {
+                type: "rollup",
+                name: "Total Tasks",
+                format: 100,
+                aggregation: "sum",
+              },
+              {
+                type: "number",
+                name: "Steps",
+                format: 100,
+                aggregation: "sum"
+              },
+              {
+                type: "select",
+                name: "Status",
+                format: false,
+                filter: [["enum_is", "exact", "Completed"]]
+              },
+              {
+                type: "number",
+                name: "Progress",
+                sort: "descending",
+                format: false,
+                filter: [["number_equals", "exact", 100]]
               },
             ]
           }

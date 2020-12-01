@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam, IOperation, UpdateCacheManuallyParam } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -111,65 +111,67 @@ class NotionUser extends Data<INotionUser> {
   * @returns Newly created Space object
   */
   async createWorkSpace(opt: SpaceModifyParam) {
-    const { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt;
+    return await this.createWorkSpaces([opt]);
+  };
 
-    const $block_id = uuidv4();
-    const $space_view_id = uuidv4();
-
-    const { spaceId: space_id } = await this.createSpace({ name, icon });
-
-    await this.saveTransactions([
-      Operation.space.update(space_id, [], {
-        disable_public_access,
-        disable_export,
-        disable_guests,
-        disable_move_to_space,
-        beta_enabled,
-        invite_link_enabled,
-        domain
-      }),
-      Operation.user_settings.update(this.user_id, ['settings'], {
-        persona: 'personal', type: 'personal'
-      }),
-      Operation.space_view.set($space_view_id, [], {
-        created_getting_started: false,
-        created_onboarding_templates: false,
-        space_id,
-        notify_mobile: true,
-        notify_desktop: true,
-        notify_email: true,
-        parent_id: this.user_id,
-        parent_table: 'user_root',
-        alive: true,
-        joined: true,
-        id: $space_view_id,
-        version: 1,
-        visited_templates: [],
-        sidebar_hidden_templates: [],
-      }),
-      Operation.block.update($block_id, [], {
-        type: 'page',
-        id: $block_id,
-        version: 1,
-        parent_id: space_id,
-        parent_table: 'space',
-        alive: true,
-        permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
-        properties: {
-          title: [[name]]
-        }
-      }),
-      Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-      Operation.space.listAfter(space_id, ['pages'], { id: $block_id }),
-    ]);
-    await this.updateCacheManually([[space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
-    this.logger && this.logger(`CREATE`, 'Space', space_id);
-
-    return new Space({
+  async createWorkSpaces(opts: SpaceModifyParam[]) {
+    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], space_ids: string[] = [];
+    for (let index = 0; index < opts.length; index++) {
+      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
+      space_ids.push(space_id);
+      ops.push(
+        Operation.space.update(space_id, [], {
+          disable_public_access,
+          disable_export,
+          disable_guests,
+          disable_move_to_space,
+          beta_enabled,
+          invite_link_enabled,
+          domain
+        }),
+        Operation.user_settings.update(this.user_id, ['settings'], {
+          persona: 'personal', type: 'personal'
+        }),
+        Operation.space_view.set($space_view_id, [], {
+          created_getting_started: false,
+          created_onboarding_templates: false,
+          space_id,
+          notify_mobile: true,
+          notify_desktop: true,
+          notify_email: true,
+          parent_id: this.user_id,
+          parent_table: 'user_root',
+          alive: true,
+          joined: true,
+          id: $space_view_id,
+          version: 1,
+          visited_templates: [],
+          sidebar_hidden_templates: [],
+        }),
+        Operation.block.update(page_id, [], {
+          type: 'page',
+          id: page_id,
+          version: 1,
+          parent_id: space_id,
+          parent_table: 'space',
+          alive: true,
+          permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
+          properties: {
+            title: [[name]]
+          }
+        }),
+        Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
+        Operation.space.listAfter(space_id, ['pages'], { id: page_id }));
+      sync_records.push([space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], page_id)
+      this.logger && this.logger(`CREATE`, 'Space', space_id);
+    }
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return space_ids.map(space_id => new Space({
       id: space_id,
       ...this.getProps()
-    })
-  };
+    }))
+  }
 }
 
 export default NotionUser;

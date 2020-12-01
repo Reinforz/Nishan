@@ -77,12 +77,9 @@ async function createContent(space: Space, pages: Page[]) {
 
   const collection_ids: Record<root_cvp_titles_type, string> = {} as any;
 
-  await space.getRootCollectionViewPage((collection_view_page) => {
-    const collection = space.cache.collection.get(collection_view_page.collection_id);
-    if (collection) {
-      const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
-      if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
-    }
+  await space.getRootCollections((collection) => {
+    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
+    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
   })
 
   for (let index = 0; index < pages.length; index++) {
@@ -319,11 +316,11 @@ async function createContent(space: Space, pages: Page[]) {
               },
               { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
               { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
+              { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
               { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
               { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
               { name: "Created", type: "created_time", format: false },
               { name: "Custom", type: "formula", format: false },
-              { name: "Subject", type: "multi_select", format: false, aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
             ]
           }
         ]

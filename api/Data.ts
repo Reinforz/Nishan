@@ -199,7 +199,7 @@ export default class Data<T extends TData> extends Getters {
 
   protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>, condition?: (Q: Q) => boolean) {
     await this.initializeCache();
-    await this.initializeChildData();
+    this.initializeChildData();
     const matched: Q[] = [];
     const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
 

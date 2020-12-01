@@ -7,8 +7,9 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection } from '../types';
 import CollectionViewPage from './CollectionViewPage';
+import Collection from './Collection';
 
 /**
  * A class to represent space of Notion
@@ -196,6 +197,36 @@ export default class Space extends Data<ISpace> {
         ...props
       })
     }, (page) => page.type === "collection_view_page")
+  }
+
+  async getRootCollection(arg: FilterType<ICollection>) {
+    return await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true)
+  }
+
+  async getRootCollections(args: FilterTypes<ICollection>, multiple?: boolean) {
+    multiple = multiple ?? true;
+    await this.initializeCache();
+    this.initializeChildData();
+    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TRootPage)).filter((cvp) => cvp.type === "collection_view_page") as IRootCollectionViewPage[]).map(cvp => cvp.collection_id);
+
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const collection_id = args[index];
+        const should_add = collection_ids.includes(collection_id);
+        if (should_add)
+          collections.push(new Collection({ ...this.getProps(), id: collection_id }))
+        if (!multiple && collections.length === 1) break;
+      }
+    } else if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < collection_ids.length; index++) {
+        const collection_id = collection_ids[index], collection = this.cache.collection.get(collection_id) as ICollection;
+        const should_add = (typeof args === "function" ? await args(collection, index) : true);
+        if (should_add)
+          collections.push(new Collection({ ...this.getProps(), id: collection_id }))
+        if (!multiple && collections.length === 1) break;
+      }
+    }
+    return collections;
   }
 
   /**

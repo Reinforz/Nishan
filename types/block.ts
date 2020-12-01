@@ -223,6 +223,12 @@ export interface IBreadcrumbInput {
 export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationInput | ITOCInput;
 
 // Embed block input
+export interface IEmbedInput {
+  type: "embed",
+  properties: MediaProps,
+  format: MediaFormat,
+}
+
 export interface IDriveInput {
   type: 'drive',
   properties?: {},
@@ -273,7 +279,7 @@ export interface IFigmaInput {
   format: MediaFormat,
 }
 
-export type TEmbedBlockInput = IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
+export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
 
 export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput;
 // -----------------
@@ -381,11 +387,12 @@ export interface IDrive extends Block, IDriveInput {
   }
 }
 export interface ITweet extends Block, ITweetInput { }
+export interface IEmbed extends Block, IEmbedInput { }
 export interface ICodepen extends Block, ICodepenInput { }
 export interface IMaps extends Block, IMapsInput { }
 export interface IFigma extends Block, IFigmaInput { }
 
-export type TEmbedBlock = ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
+export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
 
 export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock;
 

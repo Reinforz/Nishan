@@ -242,7 +242,16 @@ export interface CreateSpaceResult {
 }
 
 export interface QueryCollectionResult {
-  recordMap: RecordMap
+  result: {
+    aggregationResults: {
+      type: "number",
+      value: number
+    }[],
+    blockIds: string[],
+    total: number,
+    type: "table"
+  }
+  recordMap: Pick<RecordMap, "collection" | "space" | "collection_view" | "block">
 }
 
 export interface LoadUserContentResult {

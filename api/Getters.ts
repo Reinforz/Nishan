@@ -1,4 +1,5 @@
 import axios from "axios";
+import colors from "colors";
 
 import Cache from "./Cache";
 
@@ -38,7 +39,7 @@ export default class Getters extends Cache {
     this.space_id = space_id;
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
     this.logger = function (method, subject, id) {
-      console.log(`${method} ${subject}:${id}`);
+      console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     } || logger;
   }
 

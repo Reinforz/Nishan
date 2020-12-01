@@ -272,9 +272,13 @@ async function createContent(space: Space, pages: Page[]) {
       {
         collection_id: collection_ids["Reading List"],
         views: [
+          ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
+          ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
+          ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
+        ].map(([status, phase]) => (
           {
             type: "gallery",
-            name: "Completing EBooks",
+            name: `${status} ${phase} EBooks`,
             gallery_cover: { property: "Cover", type: "property" },
             view: [
               {
@@ -295,10 +299,22 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Topics",
                 filter: [["enum_contains", "exact", rows[index].title]]
               },
-              ...["Status", "Phase", "Priority"].map((name) => ({
-                name,
+              {
+                name: "Status",
                 type: "select",
-              } as const)),
+                format: false,
+                filter: [["enum_is", "exact", status as any]]
+              },
+              {
+                name: "Phase",
+                type: "select",
+                format: false,
+                filter: [["enum_is", "exact", phase as any]]
+              },
+              {
+                name: "Priority",
+                type: "select",
+              },
               {
                 type: "formula",
                 sort: ["descending", 0],
@@ -306,8 +322,8 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Urgency",
               }
             ]
-          }
-        ]
+          })
+        )
       },
       {
         collection_id: collection_ids.Articles,

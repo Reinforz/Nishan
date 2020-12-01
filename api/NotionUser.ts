@@ -52,6 +52,7 @@ class NotionUser extends Data<INotionUser> {
     await this.saveTransactions([
       op
     ]);
+    this.logger && this.logger(`UPDATE`, 'NotionUser', this.id);
     update();
   }
 
@@ -95,6 +96,7 @@ class NotionUser extends Data<INotionUser> {
           space_id: space.id,
           logger: this.logger
         }))
+        this.logger && this.logger(`READ`, 'Space', space.id);
       }
 
       if (!multiple && spaces.length === 1) break;
@@ -161,6 +163,8 @@ class NotionUser extends Data<INotionUser> {
       Operation.space.listAfter(space_id, ['pages'], { id: $block_id }),
     ]);
     await this.updateCacheManually([[space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
+    this.logger && this.logger(`CREATE`, 'Space', space_id);
+
     return new Space({
       id: space_id,
       ...this.getProps()

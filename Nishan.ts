@@ -87,7 +87,7 @@ class Nishan extends Cache {
       }
     }
     return user_ids.map(user_id => {
-      this.logger && this.logger(`READ`, 'NotionUser', user_id)
+      this.logger && this.logger(`READ`, 'NotionUser', user_id);
       return new NotionUser({ ...common_props, user_id: user_id, id: user_id, space_id: "0", shard_id: 0 })
     });
   }

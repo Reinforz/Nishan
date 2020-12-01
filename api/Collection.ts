@@ -133,36 +133,6 @@ class Collection extends Data<ICollection> {
     await this.deleteItems<IPage>(args, multiple)
   }
 
-  async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const matched: Page[] = [];
-    await this.initializeCache();
-
-    const page_ids: string[] = [];
-    for (let [_, page] of this.cache.block) {
-      if (page.type === "page" && page.parent_id === this.id) page_ids.push(page.id)
-    }
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const id = args[index];
-        const should_add = page_ids.includes(id);
-        if (should_add)
-          matched.push(new Page({ ...this.getProps(), id }))
-        if (!multiple && matched.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < page_ids.length; index++) {
-        const page_id = page_ids[index],
-          page = this.cache.block.get(page_id) as IPage;
-        const should_add = typeof args === "function" ? await args(page, index) : true;
-        if (should_add)
-          matched.push(new Page({ ...this.getProps(), id: page_id, }))
-        if (!multiple && matched.length === 1) break;
-      }
-    }
-    return matched;
-  }
-
   async createPage(row: { format?: Partial<PageFormat>, properties: PageProps }) {
     return (await this.createPages([row]))[0]
   }
@@ -199,10 +169,37 @@ class Collection extends Data<ICollection> {
     }))
   }
 
-  /* async readPages(args: FilterTypes<IPage>, multiple?: boolean) {
-    multiple = multiple ?? true;
+  async getPage(arg: FilterType<IPage>) {
+    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
+  }
 
-  } */
+  async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const matched: Page[] = [], page_ids: string[] = [];
+    await this.initializeCache();
+    for (let [_, page] of this.cache.block)
+      if (page.type === "page" && page.parent_id === this.id) page_ids.push(page.id)
+
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const id = args[index];
+        const should_add = page_ids.includes(id);
+        if (should_add)
+          matched.push(new Page({ ...this.getProps(), id }))
+        if (!multiple && matched.length === 1) break;
+      }
+    } else if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < page_ids.length; index++) {
+        const page_id = page_ids[index],
+          page = this.cache.block.get(page_id) as IPage;
+        const should_add = typeof args === "function" ? await args(page, index) : true;
+        if (should_add)
+          matched.push(new Page({ ...this.getProps(), id: page_id, }))
+        if (!multiple && matched.length === 1) break;
+      }
+    }
+    return matched;
+  }
 
   /**
    * Create a new column in the collection schema

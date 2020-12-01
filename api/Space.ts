@@ -200,7 +200,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootCollection(arg: FilterType<ICollection>) {
-    return await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true)
+    return (await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 
   async getRootCollections(args: FilterTypes<ICollection>, multiple?: boolean) {

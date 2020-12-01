@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceUpdateParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
@@ -51,8 +51,8 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  async update(opt: SpaceUpdateParam) {
-    const [op, update] = this.updateCacheLocally(opt, ['icon',
+  async update(opt: SpaceModifyParam) {
+    const [op, update] = this.updateCacheLocally(opt, ['icon', "disable_move_to_space", "disable_export", "disable_guests", "disable_public_access", "domain", "invite_link_enabled",
       'beta_enabled',
       'last_edited_time',
       'name']);

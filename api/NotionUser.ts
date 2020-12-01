@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -60,7 +60,7 @@ class NotionUser extends Data<INotionUser> {
    * @param arg A predicate filter function or a string
    * @returns The obtained Space object
    */
-  async getSpace(arg?: FilterType<ISpace>) {
+  async getSpace(arg: FilterType<ISpace>) {
     return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
@@ -70,9 +70,9 @@ class NotionUser extends Data<INotionUser> {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
+  async getSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const target_spaces: Space[] = [];
+    const spaces: Space[] = [];
     let i = 0;
 
     for (const [, space] of this.cache.space) {
@@ -85,7 +85,7 @@ class NotionUser extends Data<INotionUser> {
         should_add = await args(space, i) as boolean;
 
       if (should_add) {
-        target_spaces.push(new Space({
+        spaces.push(new Space({
           id: space.id,
           interval: this.interval,
           token: this.token,
@@ -97,10 +97,10 @@ class NotionUser extends Data<INotionUser> {
         }))
       }
 
-      if (!multiple && target_spaces.length === 1) break;
+      if (!multiple && spaces.length === 1) break;
       i++;
     }
-    return target_spaces;
+    return spaces;
   }
 
   /**
@@ -108,22 +108,31 @@ class NotionUser extends Data<INotionUser> {
   * @param opt Object for configuring the Space options
   * @returns Newly created Space object
   */
-  async createWorkSpace(opt: Partial<Pick<ISpace, "name" | "icon">>) {
-    const { name = "Workspace", icon = "" } = opt;
+  async createWorkSpace(opt: SpaceModifyParam) {
+    const { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt;
 
     const $block_id = uuidv4();
     const $space_view_id = uuidv4();
 
-    const { spaceId: $space_id } = await this.createSpace({ name, icon });
+    const { spaceId: space_id } = await this.createSpace({ name, icon });
 
     await this.saveTransactions([
+      Operation.space.update(space_id, [], {
+        disable_public_access,
+        disable_export,
+        disable_guests,
+        disable_move_to_space,
+        beta_enabled,
+        invite_link_enabled,
+        domain
+      }),
       Operation.user_settings.update(this.user_id, ['settings'], {
         persona: 'personal', type: 'personal'
       }),
       Operation.space_view.set($space_view_id, [], {
         created_getting_started: false,
         created_onboarding_templates: false,
-        space_id: $space_id,
+        space_id,
         notify_mobile: true,
         notify_desktop: true,
         notify_email: true,
@@ -133,14 +142,14 @@ class NotionUser extends Data<INotionUser> {
         joined: true,
         id: $space_view_id,
         version: 1,
-        visited_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
-        sidebar_hidden_templates: ["7e89f436-7aac-4f66-b0a6-6e65ec868d2a"],
+        visited_templates: [],
+        sidebar_hidden_templates: [],
       }),
       Operation.block.update($block_id, [], {
         type: 'page',
         id: $block_id,
         version: 1,
-        parent_id: $space_id,
+        parent_id: space_id,
         parent_table: 'space',
         alive: true,
         permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
@@ -149,16 +158,13 @@ class NotionUser extends Data<INotionUser> {
         }
       }),
       Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-      Operation.space.listAfter($space_id, ['pages'], { id: $block_id }),
+      Operation.space.listAfter(space_id, ['pages'], { id: $block_id }),
     ]);
-    await this.updateCacheManually([[$space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
-    const space = this.cache.space.get($space_id);
-    if (space) {
-      return new Space({
-        id: space.id,
-        ...this.getProps()
-      })
-    };
+    await this.updateCacheManually([[space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], $block_id]);
+    return new Space({
+      id: space_id,
+      ...this.getProps()
+    })
   };
 }
 

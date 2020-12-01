@@ -73,8 +73,15 @@ export interface CreateRootPageArgs {
   position?: RepositionParams
 }
 
-export type UpdatableSpaceKeys = 'name' | 'beta_enabled' | 'icon';
-export type SpaceUpdateParam = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
+export type ModifiableSpaceKeys = "name" | "icon" |
+  "disable_public_access" |
+  "disable_guests" |
+  "disable_move_to_space" |
+  "disable_export" |
+  "domain" |
+  "invite_link_enabled" |
+  "beta_enabled";
+export type SpaceModifyParam = Partial<Pick<ISpace, ModifiableSpaceKeys>>;
 
 export type UpdatableCollectionKeys = "name" | "icon" | "description";
 export type UpdatableCollectionUpdateParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
@@ -101,7 +108,6 @@ export type CreateTRootPagesParams = ({
 } & CreateRootCollectionViewPageParams)
 
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void;
-// An array of id strings, a predicate passed the type or undefined to indicate all
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 

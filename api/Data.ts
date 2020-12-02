@@ -399,7 +399,7 @@ export default class Data<T extends TData> extends Getters {
       format: {
         collection_page_properties: []
       },
-      icon: param.format.page_icon,
+      icon: param?.format?.page_icon ?? "",
       parent_id,
       parent_table: 'block',
       alive: true,

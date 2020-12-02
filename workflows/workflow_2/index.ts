@@ -340,7 +340,7 @@ async function createContent(space: Space, pages: Page[]) {
             ]
           })
         )
-      },
+      } as any,
       {
         collection_id: collection_ids.Articles,
         views: [

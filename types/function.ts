@@ -52,7 +52,7 @@ export interface TimelineViewCreateParams extends Omit<TableViewCreateParams, "w
 // ? TD:1:M All the schema type rather than Record Any
 
 export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs, SchemaManipParam {
-  schema: TSchemaUnit[]
+  schema: [TSchemaUnit, ...TSchemaUnit[]]
 }
 
 export interface CreateBlockArg {
@@ -67,8 +67,8 @@ export type RepositionParams = {
 } | number | undefined;
 
 export interface CreateRootPageArgs {
-  properties: Partial<PageProps>,
-  format: Partial<PageFormat>,
+  properties: PageProps,
+  format?: Partial<PageFormat>,
   isPrivate?: boolean,
   position?: RepositionParams
 }
@@ -97,7 +97,7 @@ export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, Upd
 
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
-export type PageCreateContentParam = Pick<TBlockInput, "type"> & Partial<Omit<TBlockInput, "type">> & {
+export type PageCreateContentParam = TBlockInput & {
   position?: RepositionParams
 }
 
@@ -149,7 +149,7 @@ export interface TimelineSearchManipViewParam extends SearchManipViewParam, Part
 export type TSearchManipViewParam = TableSearchManipViewParam | ListSearchManipViewParam | BoardSearchManipViewParam | GallerySearchManipViewParam | CalendarSearchManipViewParam | TimelineSearchManipViewParam
 
 export type SchemaManipParam = {
-  views: TSearchManipViewParam[],
+  views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
   position?: RepositionParams
 }
 

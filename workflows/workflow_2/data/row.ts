@@ -14,7 +14,7 @@ const Items: Item[] = [
     image: "https://miro.medium.com/max/816/1*mn6bOs7s6Qbao15PMNRyOA.png",
     language: "Javascript"
   },
-  /* {
+  {
     category: "Library",
     title: "React",
     image: "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png",
@@ -28,23 +28,24 @@ const Items: Item[] = [
   {
     category: "Language",
     title: "Sass",
-    image: "https://sass-lang.com/assets/img/logos/logo-b6e1ef6e.svg"
+    image: "https://sass-lang.com/assets/img/logos/logo-b6e1ef6e.svg",
+    language: "CSS"
   },
   {
     category: "Language",
     title: "Dart",
     image: "https://cdn-images-1.medium.com/max/1200/1*knHF_qpxdtS8h0Z8EeqowA.png",
-    language: "Dart"
   },
   {
     category: "Language",
     title: "Node",
-    image: "https://seeklogo.com/images/N/nodejs-logo-FBE122E377-seeklogo.com.png"
+    image: "https://seeklogo.com/images/N/nodejs-logo-FBE122E377-seeklogo.com.png",
+    language: "Javascript"
   },
   {
     category: "Language",
     title: "Go",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0oElC31fXBNSwZ2hKCa_3Oa1VEmmSIUlAfwxfa8N42mbXTZbK&usqp=CAU"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ0oElC31fXBNSwZ2hKCa_3Oa1VEmmSIUlAfwxfa8N42mbXTZbK&usqp=CAU",
   },
   {
     category: "Language",
@@ -74,7 +75,8 @@ const Items: Item[] = [
   {
     category: "Language",
     title: "Pug",
-    image: "https://camo.githubusercontent.com/a43de8ca816e78b1c2666f7696f449b2eeddbeca/68747470733a2f2f63646e2e7261776769742e636f6d2f7075676a732f7075672d6c6f676f2f656563343336636565386664396431373236643738333963626539396431663639343639326330632f5356472f7075672d66696e616c2d6c6f676f2d5f2d636f6c6f75722d3132382e737667"
+    image: "https://camo.githubusercontent.com/a43de8ca816e78b1c2666f7696f449b2eeddbeca/68747470733a2f2f63646e2e7261776769742e636f6d2f7075676a732f7075672d6c6f676f2f656563343336636565386664396431373236643738333963626539396431663639343639326330632f5356472f7075672d66696e616c2d6c6f676f2d5f2d636f6c6f75722d3132382e737667",
+    language: "HTML"
   },
   {
     category: "Framework",
@@ -215,7 +217,7 @@ const Items: Item[] = [
     title: "PostgreSQL",
     language: "SQL",
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png"
-  } */
+  }
 ]
 
 export default Items

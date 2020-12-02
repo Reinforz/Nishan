@@ -419,7 +419,7 @@ async function createContent(space: Space, pages: Page[]) {
         ]
       },
     ])
-    console.log(colors.bold.green(rows[index].title));
+    console.log(colors.bold.green(rows[index].title) + " completed");
   }
 }
 
@@ -427,7 +427,7 @@ async function main() {
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
     interval: 1000,
-    logger: undefined
+    logger: () => { }
   });
 
   // Get your own notion user and space

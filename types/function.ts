@@ -97,7 +97,7 @@ export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, Upd
 
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 
-export type PageCreateContentParam = TBlockInput & {
+export type PageCreateContentParam = Pick<TBlockInput, "type"> & Partial<Omit<TBlockInput, "type">> & {
   position?: RepositionParams
 }
 

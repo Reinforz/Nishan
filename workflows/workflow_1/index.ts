@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import Nishan from '../../Nishan';
+import { TSearchManipViewParam } from "../../types";
 import { status, phase, priority, subject } from '../data';
 
 import "../env"
@@ -39,7 +40,7 @@ import "../env"
         options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
       },
       {
-        type: "multi_select",
+        type: "select",
         name: "Provider",
         options: []
       },
@@ -85,65 +86,80 @@ import "../env"
       {
         type: "formula",
         name: "Phase Counter",
+      },
+      {
+        type: "checkbox",
+        name: "Learned",
+      },
+      {
+        type: "checkbox",
+        name: "Revised",
+      },
+      {
+        type: "checkbox",
+        name: "Practiced",
       }
     ],
     views: [
-      {
-        name: "Left Articles",
-        type: "table",
-        view: [
-          {
-            type: "title",
-            format: 300,
-            name: "Title"
-          },
-          {
-            type: "formula",
-            name: "Urgency",
-            sort: "descending"
-          },
-          {
-            type: "formula",
-            name: "Completed"
-          },
-          {
-            type: "multi_select",
-            name: "Subject"
-          },
-          {
-            type: "multi_select",
-            name: "Provider"
-          },
-          {
-            type: "url",
-            name: "Source"
-          },
-          {
-            type: "select",
-            name: "Priority",
-          },
-          {
-            type: "select",
-            name: "Status",
-          },
-          {
-            type: "select",
-            name: "Phase",
-          },
-          {
-            type: "date",
-            name: "Learn Range",
-          },
-          {
-            type: "date",
-            name: "Revise Range",
-          },
-          {
-            type: "date",
-            name: "Practice Range",
-          },
-        ]
-      }
-    ]
+      ...[
+        ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
+        ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
+        ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
+      ].map(([status, phase]) => {
+        return {
+          name: `${status} ${phase} Articles`,
+          type: "table",
+          view: [
+            {
+              type: "title",
+              format: 300,
+              name: "Title",
+              sort: 'ascending'
+            },
+            {
+              type: "formula",
+              name: "Urgency",
+              sort: ["descending", 0],
+              format: 50
+            },
+            {
+              type: "formula",
+              name: "Completed",
+              format: 50
+            },
+            {
+              type: "multi_select",
+              name: "Subject",
+              format: 150
+            },
+            {
+              type: "select",
+              name: "Provider",
+              format: 100
+            },
+            {
+              type: "url",
+              name: "Source"
+            },
+            {
+              type: "select",
+              name: "Priority",
+              format: 100
+            },
+            {
+              type: "select",
+              name: "Status",
+              format: 100,
+              filter: [["enum_is", "exact", status]]
+            },
+            {
+              type: "select",
+              name: "Phase",
+              format: 100,
+              filter: [["enum_is", "exact", phase]]
+            },
+          ]
+        } as TSearchManipViewParam
+      }) as [TSearchManipViewParam, ...TSearchManipViewParam[]]]
   }])
 }())

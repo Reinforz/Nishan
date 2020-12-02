@@ -114,7 +114,7 @@ export type FilterType<T> = undefined | string | Predicate<T>
 export interface SearchManipViewParam {
   type: TViewType,
   name: string,
-  view: ViewUpdateParam[],
+  view: [ViewUpdateParam, ...ViewUpdateParam[]],
   position?: RepositionParams,
   filter_operator?: "or" | "and"
 }

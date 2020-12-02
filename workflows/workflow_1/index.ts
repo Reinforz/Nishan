@@ -1,7 +1,6 @@
 import Nishan from '../../Nishan';
-import {
-  v4 as uuidv4
-} from 'uuid';
+import priority from '../data/priority';
+
 import "../env"
 
 (async function () {
@@ -47,23 +46,7 @@ import "../env"
     {
       type: "select",
       name: "Priority",
-      options: [
-        {
-          id: uuidv4(),
-          color: "red",
-          value: "High"
-        },
-        {
-          id: uuidv4(),
-          color: "yellow",
-          value: "Medium"
-        },
-        {
-          id: uuidv4(),
-          color: "green",
-          value: "Low"
-        }
-      ]
+      options: priority
     }],
     views: [
       {

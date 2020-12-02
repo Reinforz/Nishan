@@ -1,4 +1,5 @@
 import colors from "colors"
+import { v4 as uuidv4 } from "uuid";
 
 import Nishan from '../../Nishan';
 import Space from '../../api/Space';
@@ -6,8 +7,7 @@ import RootCollectionViewPage from '../../api/RootCollectionViewPage';
 
 import "../env"
 
-import Options from "./data/options";
-import rows from "./data/row";
+import { fors, categories, subject } from "../data";
 import { PageFormat, PageProps } from '../../types';
 import Page from '../../api/Page';
 
@@ -20,7 +20,7 @@ async function createWebRootCVP(space: Space) {
     format: {
       page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg"
     },
-    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "select", options: Options.category }, { name: "Language", type: "select", options: Options.language }],
+    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "select", options: categories.map(([value, color]) => ({ value, color, id: uuidv4() })) }, { name: "For", type: "select", options: fors.map(([value, color]) => ({ value, color, id: uuidv4() })) }],
     views: [
       {
         type: "table",
@@ -54,7 +54,7 @@ async function createWebRootCVP(space: Space) {
 async function createRows(root_cvp: RootCollectionViewPage) {
   const collection = await root_cvp.getCollection();
   const items: { format?: Partial<PageFormat>, properties: PageProps }[] = [];
-  rows.forEach(({ language, image, title, category }) => {
+  subject.forEach(({ for: _for, image, title, category }) => {
     items.push({
       format: {
         page_icon: image,
@@ -63,7 +63,7 @@ async function createRows(root_cvp: RootCollectionViewPage) {
       properties: {
         title: [[title]],
         category: [[category]],
-        language: [[language ?? ""]],
+        for: [[_for ?? ""]],
       }
     })
   });
@@ -120,7 +120,7 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Subject",
                 aggregation: "unique",
                 format: 250,
-                filter: [["enum_contains", "exact", rows[index].title]]
+                filter: [["enum_contains", "exact", subject[index].title]]
               },
               {
                 type: "multi_select",
@@ -192,7 +192,7 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Subject",
                 aggregation: "unique",
                 format: 250,
-                filter: [["enum_contains", "exact", rows[index].title]]
+                filter: [["enum_contains", "exact", subject[index].title]]
               },
               {
                 type: "multi_select",
@@ -257,7 +257,7 @@ async function createContent(space: Space, pages: Page[]) {
               {
                 type: "multi_select",
                 name: "Topics",
-                filter: [["enum_contains", "exact", rows[index].title]]
+                filter: [["enum_contains", "exact", subject[index].title]]
               },
               {
                 name: "Status",
@@ -313,7 +313,7 @@ async function createContent(space: Space, pages: Page[]) {
               {
                 type: "multi_select",
                 name: "Topics",
-                filter: [["enum_contains", "exact", rows[index].title]]
+                filter: [["enum_contains", "exact", subject[index].title]]
               },
               {
                 name: "Status",
@@ -369,7 +369,7 @@ async function createContent(space: Space, pages: Page[]) {
                 type: "multi_select",
                 name: "Subject",
                 format: 200,
-                filter: [["enum_contains", "exact", rows[index].title]]
+                filter: [["enum_contains", "exact", subject[index].title]]
               },
               {
                 type: "select",
@@ -409,7 +409,7 @@ async function createContent(space: Space, pages: Page[]) {
               },
               { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
               { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
-              { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", rows[index].title]] },
+              { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", subject[index].title]] },
               { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
               { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
               { name: "Created", type: "created_time", format: false },
@@ -419,7 +419,7 @@ async function createContent(space: Space, pages: Page[]) {
         ]
       },
     ])
-    console.log(colors.bold.green(rows[index].title) + " completed");
+    console.log(colors.bold.green(subject[index].title) + " completed");
   }
 }
 

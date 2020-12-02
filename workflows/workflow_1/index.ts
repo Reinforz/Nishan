@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 import Nishan from '../../Nishan';
-import priority from '../data/priority';
-import status from '../data/status';
-import phase from '../data/phase';
+import { status, phase, priority, subject } from '../data';
 
 import "../env"
 
@@ -36,7 +36,7 @@ import "../env"
       {
         type: "multi_select",
         name: "Subject",
-        options: []
+        options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
       },
       {
         type: "multi_select",
@@ -99,7 +99,8 @@ import "../env"
           },
           {
             type: "formula",
-            name: "Urgency"
+            name: "Urgency",
+            sort: "descending"
           },
           {
             type: "formula",
@@ -120,7 +121,27 @@ import "../env"
           {
             type: "select",
             name: "Priority",
-          }
+          },
+          {
+            type: "select",
+            name: "Status",
+          },
+          {
+            type: "select",
+            name: "Phase",
+          },
+          {
+            type: "date",
+            name: "Learn Range",
+          },
+          {
+            type: "date",
+            name: "Revise Range",
+          },
+          {
+            type: "date",
+            name: "Practice Range",
+          },
         ]
       }
     ]

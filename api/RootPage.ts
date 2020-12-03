@@ -14,9 +14,18 @@ class RootPage extends Page<IPage> {
   }
 
   /**
-     * Share page to users with specific permissions
-     * @param args array of userid and role of user to share pages to
-     */
+   * Share the current page with the user
+   * @param email email of the user to add
+   * @param role Role of the added user
+   */
+  async addSharedUser(email: string, role: TPermissionRole) {
+    return (await this.addSharedUsers([[email, role]]))?.[0]
+  }
+
+  /**
+   * Share page to users with specific permissions
+   * @param args array of userid and role of user to share pages to
+   */
   async addSharedUsers(args: [string, TPermissionRole][]) {
     const data = this.getCachedData() as TRootPage, notion_users: INotionUser[] = [];
     const permissionItems: IPermission[] = [];
@@ -39,15 +48,6 @@ class RootPage extends Page<IPage> {
     });
     await this.updateCacheManually([this.id, [data.space_id, "space"]]);
     return notion_users;
-  }
-
-  /**
-   * Share the current page with the user
-   * @param email email of the user to add
-   * @param role Role of the added user
-   */
-  async addSharedUser(email: string, role: TPermissionRole) {
-    return (await this.addSharedUsers([[email, role]]))?.[0]
   }
 
   /**

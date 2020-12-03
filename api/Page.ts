@@ -213,6 +213,15 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   /**
+   * Create content for a page 
+   * @param options Options for modifying the content during creation
+   * @returns Newly created block content object
+   */
+  async createContent(option: PageCreateContentParam) {
+    return (await this.createContents([option]))[0];
+  }
+
+  /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
@@ -282,13 +291,8 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return block_infos.map(block_info => this.createClass(block_info[0], block_info[1]))
   }
 
-  /**
-   * Create content for a page 
-   * @param options Options for modifying the content during creation
-   * @returns Newly created block content object
-   */
-  async createContent(option: PageCreateContentParam) {
-    return (await this.createContents([option]))[0];
+  async createInlineDBContent(option: CreateRootCollectionViewPageParams) {
+    return (await this.createInlineDBContents([option]))[0]
   }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages

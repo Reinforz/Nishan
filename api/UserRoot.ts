@@ -9,6 +9,15 @@ class UserRoot extends Data<IUserRoot> {
   }
 
   /**
+   * Get a single space view from the user root
+   * @param arg criteria to filter pages by
+   * @returns A page object matching the passed criteria
+   */
+  async getSpaceView(arg?: FilterType<ISpaceView>) {
+    return (await this.getSpaceViews(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  /**
    * Get multiple Space views from the user root
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
@@ -22,15 +31,6 @@ class UserRoot extends Data<IUserRoot> {
         ...props
       })
     });
-  }
-
-  /**
-   * Get a single space view from the user root
-   * @param arg criteria to filter pages by
-   * @returns A page object matching the passed criteria
-   */
-  async getSpaceView(arg?: FilterType<ISpaceView>) {
-    return (await this.getSpaceViews(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 }
 

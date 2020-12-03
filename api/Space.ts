@@ -199,11 +199,11 @@ export default class Space extends Data<ISpace> {
     }, (page) => page.type === "collection_view_page")
   }
 
-  async getRootCollection(arg: FilterType<ICollection>) {
+  async getRootCollection(arg?: FilterType<ICollection>) {
     return (await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 
-  async getRootCollections(args: FilterTypes<ICollection>, multiple?: boolean) {
+  async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.initializeCache();
     this.initializeChildData();

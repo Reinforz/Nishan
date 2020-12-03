@@ -54,6 +54,14 @@ class SpaceView extends Data<ISpaceView> {
   }
 
   /**
+  * Toggle a single page from the bookmark list
+  * @param arg id string or a predicate filter function
+  */
+  async toggleFavourite(arg?: FilterType<TRootPage>) {
+    await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
+  }
+
+  /**
    * Toggle multiple pages from the bookmark list
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
@@ -90,14 +98,6 @@ class SpaceView extends Data<ISpaceView> {
       await this.saveTransactions(ops);
       await this.updateCacheManually([[target_space_view.id, "space_view"]]);
     }
-  }
-
-  /**
-   * Toggle a single page from the bookmark list
-   * @param arg id string or a predicate filter function
-   */
-  async toggleFavourite(arg?: FilterType<TRootPage>) {
-    await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
   }
 }
 

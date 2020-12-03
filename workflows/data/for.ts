@@ -9,7 +9,9 @@ export type TFor =
   "SQL" |
   "React" |
   "Typescript" |
-  "Markdown";
+  "GraphQL" |
+  "Markdown" |
+  "MongoDB";
 
 export const fors: [TFor, TTextColor][] = [
   ["Javascript", "yellow"],
@@ -20,5 +22,7 @@ export const fors: [TFor, TTextColor][] = [
   ["SQL", "purple"],
   ["React", "blue"],
   ["Typescript", "blue"],
+  ["GraphQL", "pink"],
   ["Markdown", "default"],
-]
+  ["MongoDB", "green"],
+].sort((a, b) => a[0] > b[0] ? 1 : -1) as [TFor, TTextColor][] 

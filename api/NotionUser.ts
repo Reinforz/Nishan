@@ -23,20 +23,25 @@ class NotionUser extends Data<INotionUser> {
    */
   getUserSettings() {
     const user_settings = this.cache.user_settings.get(this.user_id);
-    if (user_settings)
+    if (user_settings) {
+      this.logger && this.logger('READ', 'UserSettings', user_settings.id)
       return new UserSettings({
         ...this.getProps(),
         id: user_settings.id,
       });
+    }
   }
 
   getUserRoot() {
     const notion_user = this.cache.user_root.get(this.id);
-    if (notion_user)
+    if (notion_user) {
+      this.logger && this.logger('READ', 'UserRoot', notion_user.id)
       return new UserRoot({
         ...this.getProps(),
         id: this.id
       })
+    }
+
   }
 
   /**

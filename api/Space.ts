@@ -39,11 +39,13 @@ export default class Space extends Data<ISpace> {
    */
   getSpaceView() {
     const target_space_view = this.spaceView;
-    if (target_space_view)
+    if (target_space_view) {
+      this.logger && this.logger("READ", "SpaceView", target_space_view.id)
       return new SpaceView({
         id: target_space_view.id,
         ...this.getProps()
       });
+    }
   }
 
   // ? FEAT:1:M Update space permissions
@@ -60,7 +62,7 @@ export default class Space extends Data<ISpace> {
     await this.saveTransactions([
       op
     ]);
-
+    this.logger && this.logger("UPDATE", "Space", this.id);
     update();
   }
 
@@ -75,6 +77,7 @@ export default class Space extends Data<ISpace> {
         spaceId: this.id
       }
     });
+    this.logger && this.logger("DELETE", "Space", this.id);
     this.cache.space.delete(this.id);
   }
 

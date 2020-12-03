@@ -1,10 +1,23 @@
 import { TTextColor } from "../../types";
 
 export type TCategory =
+  "Design System" |
+  "HTTP" |
+  "Animation" |
+  "Transpiler" |
+  "Linter" |
+  "SSG" |
+  "SSR" |
+  "Microservices" |
+  "State Management" |
+  "Shell Scripting" |
+  "Testing" |
   "Runtime" |
   "Database" |
   "Server" |
+  "PAAS" |
   "Superset" |
+  "API Testing" |
   "Pre-processor" |
   "ORM" |
   "Framework" |
@@ -17,24 +30,52 @@ export type TCategory =
   "Template Engine" |
   "Editor" |
   "Stack" |
-  "Doc Generator";
+  "Doc Generator" |
+  "Version Control" |
+  "CD" |
+  "Markup" |
+  "Orchestration" |
+  "Cloud Platform" |
+  "Load Balancer" |
+  "Reverse Proxy" |
+  "CI";
 
 export const categories: [TCategory, TTextColor][] = [
-  ["Runtime", "default"],
-  ["Database", "default"],
-  ["Server", "default"],
-  ["Superset", "default"],
-  ["Pre-processor", "default"],
-  ["ORM", "default"],
-  ["Framework", "default"],
-  ["Package Manager", "default"],
-  ["Language", "default"],
-  ["Tools", "default"],
-  ["Library", "default"],
-  ["Technology", "default"],
-  ["Bundler", "default"],
-  ["Template Engine", "default"],
-  ["Editor", "default"],
-  ["Stack", "default"],
-  ["Doc Generator", "default"],
-]
+  "Animation",
+  "Bundler",
+  "CD",
+  "CI",
+  "Cloud Platform",
+  "Database",
+  "Design System",
+  "Doc Generator",
+  "Editor",
+  "Framework",
+  "HTTP",
+  "Language",
+  "Library",
+  "Linter",
+  "Load Balancer",
+  "Markup",
+  "Microservices",
+  "Orchestration",
+  "ORM",
+  "Package Manager",
+  "PAAS",
+  "Pre-processor",
+  "API Testing",
+  "Reverse Proxy",
+  "Runtime",
+  "Shell Scripting",
+  "SSG",
+  "SSR",
+  "Stack",
+  "State Management",
+  "Superset",
+  "Technology",
+  "Template Engine",
+  "Testing",
+  "Tools",
+  "Transpiler",
+  "Version Control"
+].map((category) => [category, "default"] as [TCategory, TTextColor]) 

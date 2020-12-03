@@ -62,8 +62,8 @@ async function createRows(root_cvp: RootCollectionViewPage) {
       },
       properties: {
         title: [[title]],
-        category: [[category]],
-        for: [[_for ?? ""]],
+        category: [[category.join(",")]],
+        for: [[_for?.join(",") ?? ""]],
       }
     })
   });
@@ -427,7 +427,6 @@ async function main() {
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
     interval: 1000,
-    logger: () => { }
   });
 
   // Get your own notion user and space

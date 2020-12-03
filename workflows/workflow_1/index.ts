@@ -10,7 +10,6 @@ import "../env"
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
     interval: 1000,
-    logger: undefined
   });
 
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');

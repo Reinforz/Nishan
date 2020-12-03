@@ -18,7 +18,8 @@ export default class Getters extends Cache {
   protected shard_id: number;
   protected headers: {
     headers: {
-      cookie: string
+      cookie: string,
+      ["x-notion-active-user-header"]: string
     }
   };
   protected createTransaction: (operations: IOperation[]) => Request
@@ -32,7 +33,8 @@ export default class Getters extends Cache {
     this.user_id = user_id;
     this.headers = {
       headers: {
-        cookie: `token_v2=${token}`
+        cookie: `token_v2=${token}`,
+        ["x-notion-active-user-header"]: user_id
       }
     };
     this.shard_id = shard_id;

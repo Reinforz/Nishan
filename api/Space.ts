@@ -142,7 +142,9 @@ export default class Space extends Data<ISpace> {
     const ops: IOperation[] = [], ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index],
-        { position, properties = {}, format = {}, isPrivate = false } = opt,
+        { position, properties = {
+          title: [["Demo Page"]]
+        }, format = {}, isPrivate = false } = opt,
         $block_id = uuidv4();
       const block_list_op = this.addToChildArray($block_id, position);
       ids.push($block_id);

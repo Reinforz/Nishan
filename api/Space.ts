@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
+import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
@@ -152,6 +152,24 @@ export default class Space extends Data<ISpace> {
     return trootpage_map;
   }
 
+  async getTRootPages(args?: FilterTypes<IRootPage | IRootCollectionViewPage>, multiple?: boolean) {
+    multiple = multiple ?? true;
+    const props = this.getProps(), trootpage_map: { collection_view_page: RootCollectionViewPage[], page: RootPage[] } = { collection_view_page: [], page: [] };
+    await this.getItems<IRootPage | IRootCollectionViewPage>(args, multiple, async function (page) {
+      if (page.type === "page")
+        trootpage_map.page.push(new RootPage({
+          id: page.id,
+          ...props
+        }))
+      else if (page.type === "collection_view_page")
+        trootpage_map.collection_view_page.push(new RootCollectionViewPage({
+          id: page.id,
+          ...props
+        }))
+    });
+    return trootpage_map;
+  }
+
   async getRootPage(arg?: FilterType<IRootPage>): Promise<RootPage | undefined> {
     return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
@@ -210,34 +228,6 @@ export default class Space extends Data<ISpace> {
       }
     }
     return collections;
-  }
-
-  /**
-   * Get pages from this space
-   * @param arg criteria to filter pages by
-   * @returns An array of pages object matching the passed criteria
-   */
-  async getTRootPages(args?: FilterTypes<TRootPage>, multiple?: boolean): Promise<(RootPage | RootCollectionViewPage)[]> {
-    multiple = multiple ?? true;
-    const props = this.getProps();
-    return this.getItems<TRootPage>(args, multiple, async function (page) {
-      return page.type === "collection_view_page" ? new CollectionViewPage({
-        id: page.id,
-        ...props
-      }) : new RootPage({
-        id: page.id,
-        ...props
-      })
-    });
-  }
-
-  /**
-   * Get a single page from this space
-   * @param arg criteria to filter pages by
-   * @returns A page object matching the passed criteria
-   */
-  async getTRootPage(arg?: FilterType<TPage>) {
-    return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**

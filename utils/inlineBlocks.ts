@@ -174,6 +174,11 @@ class chunk extends Colors {
     this.text[this.text.length - 1][1].push(["h", color]);
     return new chunk(this.text);
   }
+
+  linkTo(url: string) {
+    this.text[this.text.length - 1][1].push(["a", url]);
+    return new chunk(this.text);
+  }
 }
 
 export function inlineText(title: string) {

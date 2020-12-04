@@ -81,6 +81,14 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
+  async createTRootPage(option: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))) {
+    const troot_map = await this.createTRootPages([option]);
+    return {
+      collection_view_page: troot_map.collection_view_page[0],
+      page: troot_map.page[0],
+    }
+  }
+
   async createTRootPages(options: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))[]) {
     const ops: IOperation[] = [], trootpage_map: { collection_view_page: RootCollectionViewPage[], page: RootPage[] } = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
     for (let index = 0; index < options.length; index++) {
@@ -231,7 +239,6 @@ export default class Space extends Data<ISpace> {
   async getTRootPage(arg?: FilterType<TPage>) {
     return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
-
 
   /**
    * Update a singular root page in the space

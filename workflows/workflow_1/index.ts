@@ -15,7 +15,8 @@ import "../env"
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
   const space = await user.getSpace((space) => space.name === 'Developer');
 
-  await space?.createRootCollectionViewPages([{
+  await space?.createTRootPages([{
+    type: "collection_view_page",
     properties: {
       title: [["Articles_"]]
     },

@@ -97,7 +97,7 @@ export default class Data<T extends TData> extends Getters {
   /**
    * Adds the passed block id in the child container array of parent
    * @param $block_id id of the block to add
-   * @param arg 
+   * @param arg
    * @returns created Operation and a function to update the cache and the class data
    */
   protected addToChildArray(child_id: string, position: RepositionParams) {
@@ -134,8 +134,8 @@ export default class Data<T extends TData> extends Getters {
 
   /**
    * Update the cache of the data using only the passed keys
-   * @param arg 
-   * @param keys 
+   * @param arg
+   * @param keys
    */
   protected updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
     const _this = this;
@@ -206,7 +206,7 @@ export default class Data<T extends TData> extends Getters {
     if (Array.isArray(arg)) {
       for (let index = 0; index < arg.length; index++) {
         const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = container.includes(block_id);
+        const should_add = block && container.includes(block_id);
         if (should_add) {
           matched.push(block)
           await cb(block, should_add);
@@ -216,7 +216,7 @@ export default class Data<T extends TData> extends Getters {
     } else if (typeof arg === "function" || arg === undefined) {
       for (let index = 0; index < container.length; index++) {
         const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = (condition ? condition(block) : true) && (typeof arg === "function" ? await arg(block, index) : true);
+        const should_add = block && (condition ? condition(block) : true) && (typeof arg === "function" ? await arg(block, index) : true);
         if (should_add) {
           matched.push(block)
           await cb(block, should_add);

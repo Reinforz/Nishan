@@ -178,7 +178,7 @@ class Collection extends Data<ICollection> {
     const matched: Page[] = [], page_ids: string[] = [];
     await this.initializeCache();
     for (let [_, page] of this.cache.block)
-      if (page.type === "page" && page.parent_id === this.id) page_ids.push(page.id)
+      if (page?.type === "page" && page.parent_id === this.id) page_ids.push(page.id)
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {

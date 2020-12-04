@@ -275,7 +275,7 @@ export default class Space extends Data<ISpace> {
     multiple = multiple ?? true;
     await this.initializeCache();
     this.initializeChildData();
-    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TRootPage)).filter((cvp) => cvp.type === "collection_view_page") as IRootCollectionViewPage[]).map(cvp => cvp.collection_id);
+    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TRootPage)).filter((cvp) => cvp?.type === "collection_view_page") as IRootCollectionViewPage[]).map(cvp => cvp.collection_id);
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {

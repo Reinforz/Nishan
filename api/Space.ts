@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection } from '../types';
+import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
@@ -79,6 +79,69 @@ export default class Space extends Data<ISpace> {
     });
     this.logger && this.logger("DELETE", "Space", this.id);
     this.cache.space.delete(this.id);
+  }
+
+  async createTRootPages(options: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))[]) {
+    const ops: IOperation[] = [], trootpage_map: { collection_view_page: RootCollectionViewPage[], page: RootPage[] } = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
+    for (let index = 0; index < options.length; index++) {
+      const option = options[index],
+        { type, properties, format, isPrivate, position } = option,
+        block_id = uuidv4();
+
+      if (type === "page") {
+        const block_list_op = this.addToChildArray(block_id, position);
+        sync_records.push(block_id);
+        trootpage_map.page.push(new RootPage({
+          id: block_id,
+          ...this.getProps()
+        }));
+        ops.push(Operation.block.update(block_id, [], {
+          type: 'page',
+          id: block_id,
+          version: 1,
+          permissions:
+            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          parent_id: this.id,
+          parent_table: 'space',
+          alive: true,
+          properties,
+          format,
+        }),
+          block_list_op)
+      } else if (type === "collection_view_page") {
+        const [collection_id, create_view_ops, view_ids] = this.createCollection(option as CreateRootCollectionViewPageParams, block_id);
+        ops.push(Operation.block.update(block_id, [], {
+          type: 'page',
+          id: block_id,
+          permissions:
+            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+          parent_id: this.id,
+          parent_table: 'space',
+          alive: true,
+          properties,
+          format,
+        }),
+          Operation.block.update(block_id, [], {
+            type: 'collection_view_page',
+            collection_id,
+            view_ids,
+            properties: {},
+          }),
+          ...create_view_ops,
+          this.addToChildArray(block_id, option.position),
+        );
+
+        sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+        trootpage_map.collection_view_page.push(new RootCollectionViewPage({
+          ...this.getProps(),
+          id: block_id
+        }))
+      }
+    }
+
+    await this.saveTransactions(ops);
+    await this.updateCacheManually(sync_records);
+    return trootpage_map;
   }
 
   async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
@@ -262,7 +325,16 @@ export default class Space extends Data<ISpace> {
     return (await this.getTRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  // ? FEAT:1:H Update cache and class state
+
+  /**
+   * Update a singular root page in the space
+   * @param id id of the root page to update
+   * @param opt object to configure root page
+   */
+  async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
+    await this.updateRootPages([[id, opt]]);
+  }
+
   /**
    * Update multiple root pages located in the space
    * @param arg Array of tuple, id and object to configure each root page
@@ -280,15 +352,6 @@ export default class Space extends Data<ISpace> {
     }
     await this.saveTransactions(ops);
     await this.updateCacheManually(block_ids);
-  }
-
-  /**
-   * Update a singular root page in the space
-   * @param id id of the root page to update
-   * @param opt object to configure root page
-   */
-  async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
-    await this.updateRootPages([[id, opt]]);
   }
 
   // ? FEAT:1:M Empty userids for all user, a predicate
@@ -310,20 +373,20 @@ export default class Space extends Data<ISpace> {
   }
 
   /**
-   * Delete multiple root_pages or root_collection_view_pages
+   * Delete a single root page from the space
+   * @param arg Criteria to filter the page to be deleted
+   */
+  async deleteTRootPage(arg?: FilterType<TRootPage>) {
+    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
+  }
+
+  /**
+   * Delete multiple root_pages or root_collection_view_pages from the space
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
   async deleteTRootPages(args?: FilterTypes<TRootPage>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.deleteItems<TRootPage>(args, multiple)
-  }
-
-  /**
-   * Delete a single root page from the space
-   * @param arg Criteria to filter the page to be deleted
-   */
-  async deleteTRootPage(arg?: FilterType<TRootPage>) {
-    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 }

@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, CreateRootPageArgs, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
+import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TPage, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
@@ -142,99 +142,6 @@ export default class Space extends Data<ISpace> {
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
     return trootpage_map;
-  }
-
-  async createRootCollectionViewPage(option: CreateRootCollectionViewPageParams) {
-    return (await this.createRootCollectionViewPages([option]))[0]
-  }
-
-  // ? RF:1:M Refactor to use Page.createCollectionViewPage method
-  async createRootCollectionViewPages(options: CreateRootCollectionViewPageParams[]) {
-    const ops: IOperation[] = [], root_collection_view_pages: RootCollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
-
-    for (let index = 0; index < options.length; index++) {
-      const option = options[index],
-        { properties, format, isPrivate } = option,
-        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
-      ops.push(Operation.block.update(block_id, [], {
-        type: 'page',
-        id: block_id,
-        permissions:
-          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.id,
-        parent_table: 'space',
-        alive: true,
-        properties,
-        format,
-      }),
-        Operation.block.update(block_id, [], {
-          type: 'collection_view_page',
-          collection_id,
-          view_ids,
-          properties: {},
-        }),
-        ...create_view_ops,
-        this.addToChildArray(block_id, option.position),
-      );
-
-      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
-      root_collection_view_pages.push(new RootCollectionViewPage({
-        ...this.getProps(),
-        id: block_id
-      }))
-    }
-
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return root_collection_view_pages;
-  }
-
-  // ? FEAT:1:M Batch rootpage creation
-  /**
-   * Create a new page using passed properties and formats
-   * @param opts format and properties for the root page
-   * @return Newly created Root page object
-   */
-  async createRootPage(opts: CreateRootPageArgs): Promise<RootPage> {
-    return (await this.createRootPages([opts]))[0];
-  }
-
-  /**
-   * Create new pages using passed properties and formats
-   * @param opts array of format and properties for the root pages
-   * @returns An array of newly created rootpage block objects
-   */
-  async createRootPages(opts: CreateRootPageArgs[]) {
-    const ops: IOperation[] = [], ids: string[] = [];
-    for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index],
-        { position, properties = {
-          title: [["Demo Page"]]
-        }, format = {}, isPrivate = false } = opt,
-        $block_id = uuidv4();
-      const block_list_op = this.addToChildArray($block_id, position);
-      ids.push($block_id);
-      ops.push(Operation.block.update($block_id, [], {
-        type: 'page',
-        id: $block_id,
-        version: 1,
-        permissions:
-          [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-        parent_id: this.id,
-        parent_table: 'space',
-        alive: true,
-        properties,
-        format,
-      }),
-        block_list_op)
-    };
-
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(ids);
-    return ids.map(id => new RootPage({
-      ...this.getProps(),
-      id
-    }));
   }
 
   async getRootPage(arg?: FilterType<IRootPage>): Promise<RootPage | undefined> {

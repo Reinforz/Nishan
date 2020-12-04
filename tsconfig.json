@@ -11,8 +11,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "watch": true,
+    "watch": false,
     "declaration": true,
+    "sourceMap": true,
     "noUnusedLocals": true,
     "incremental": false,
     "experimentalDecorators": true

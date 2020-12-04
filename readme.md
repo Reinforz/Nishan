@@ -11,6 +11,7 @@ Check out the [workflows](https://github.com/Nishan-Open-Source/Nishan/tree/mast
 ## Contributors
 
 1. Safwan Shaheer [github](https://github.com/Devorein) Author, Maintainer
+2. Matt Casey [github](https://github.com/mattcasey) Contributor
 
 
 ## NOTE

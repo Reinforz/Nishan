@@ -193,7 +193,7 @@ export interface ICache {
   user_settings: Map<string, IUserSettings>,
 }
 
-export type Logger = false | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "CollectionView" | "CollectionViewPage" | "Collection" | "SpaceView", id: string) => void)
+export type Logger = false | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "RootPage" | "RowPage" | "SchemaUnit" | "NestedPage" | "CollectionView" | "CollectionViewPage" | "Collection" | "SpaceView", id: string) => void)
 export interface NishanArg {
   token: string,
   interval: number,

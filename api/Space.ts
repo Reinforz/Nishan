@@ -258,24 +258,6 @@ export default class Space extends Data<ISpace> {
     await this.updateCacheManually(block_ids);
   }
 
-  // ? FEAT:1:M Empty userids for all user, a predicate
-  /**
-   * Remove multiple users from the current space
-   * @param userIds ids of the user to remove from the workspace
-   */
-  async removeUsers(userIds: string[]) {
-    const data = this.getCachedData();
-    await this.removeUsersFromSpace({
-      removePagePermissions: true,
-      revokeUserTokens: false,
-      spaceId: data?.id,
-      userIds
-    });
-    this.updateCacheLocally({
-      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
-    }, ["permissions"]);
-  }
-
   /**
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
@@ -292,5 +274,24 @@ export default class Space extends Data<ISpace> {
   async deleteTRootPages(args?: FilterTypes<TRootPage>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.deleteItems<TRootPage>(args, multiple)
+  }
+
+  // ? FEAT:1:M Empty userids for all user, a predicate
+
+  /**
+   * Remove multiple users from the current space
+   * @param userIds ids of the user to remove from the workspace
+   */
+  async removeUsers(userIds: string[]) {
+    const data = this.getCachedData();
+    await this.removeUsersFromSpace({
+      removePagePermissions: true,
+      revokeUserTokens: false,
+      spaceId: data?.id,
+      userIds
+    });
+    this.updateCacheLocally({
+      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
+    }, ["permissions"]);
   }
 }

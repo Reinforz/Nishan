@@ -16,6 +16,7 @@ class SpaceView extends Data<ISpaceView> {
   async reposition(arg: RepositionParams) {
     const op = this.addToChildArray(this.id, arg);
     await this.saveTransactions([op]);
+    this.logger && this.logger("UPDATE", "SpaceView", this.id);
   }
 
   /**
@@ -29,6 +30,7 @@ class SpaceView extends Data<ISpaceView> {
     await this.saveTransactions([
       op
     ]);
+    this.logger && this.logger("UPDATE", "SpaceView", this.id);
     update();
   }
 
@@ -38,18 +40,20 @@ class SpaceView extends Data<ISpaceView> {
    */
   async getSpace(return_object: boolean = true) {
     const data = this.getCachedData();
-    let target_space: ISpace | null = null;
+    let target_space: ISpace = null as any;
     for (let [, space] of this.cache.space) {
       if (data && space.id === data.space_id) {
         target_space = space;
         break;
       }
     }
-    if (return_object)
+    if (return_object) {
+      this.logger && this.logger("READ", "Space", target_space.id);
       return new Space({
         id: (target_space as any).id,
         ...this.getProps()
       });
+    }
     else return target_space
   }
 
@@ -77,6 +81,7 @@ class SpaceView extends Data<ISpaceView> {
           ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
             id: page_id
           }))
+          this.logger && this.logger("UPDATE", "RootPage", page_id);
         }
         if (!multiple && ops.length === 1) break;
       }
@@ -88,7 +93,8 @@ class SpaceView extends Data<ISpaceView> {
           const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
           ops.push((is_bookmarked ? this.listRemoveOp : this.listBeforeOp)(["bookmarked_pages"], {
             id: page_id
-          }))
+          }));
+          this.logger && this.logger("UPDATE", "RootPage", page_id);
         }
         if (!multiple && ops.length === 1) break;
       }

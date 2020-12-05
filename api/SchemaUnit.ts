@@ -23,6 +23,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
     data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg }
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
+    this.logger && this.logger("UPDATE", "SchemaUnit", this.id);
   }
 
   async delete() {
@@ -30,6 +31,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
     delete data.schema[this.schema_id];
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
+    this.logger && this.logger("DELETE", "SchemaUnit", this.id);
   }
 
   async duplicate() {
@@ -38,5 +40,6 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
     data.schema[id] = data.schema[this.schema_id];
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
+    this.logger && this.logger("CREATE", "SchemaUnit", id);
   }
 }

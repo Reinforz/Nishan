@@ -24,8 +24,9 @@ class UserRoot extends Data<IUserRoot> {
    */
   async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean): Promise<SpaceView[]> {
     multiple = multiple ?? true;
-    const props = this.getProps();
+    const props = this.getProps(), logger = this.logger;
     return this.getItems<ISpaceView>(args, multiple, async function (space_view) {
+      logger && logger("READ", "SpaceView", space_view.id)
       return new SpaceView({
         id: space_view.id,
         ...props

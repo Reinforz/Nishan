@@ -28,6 +28,8 @@ class UserSettings extends Data<IUserSettings> {
       op
     ]);
 
+    this.logger && this.logger("UPDATE", "UserSettings", this.id)
+
     update();
   }
 }

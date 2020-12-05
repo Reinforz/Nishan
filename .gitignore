@@ -7,3 +7,7 @@ feature.md
 .netlify
 /docs/build
 /workflows/env.ts
+**/*.tgz
+
+# OSX files
+.DS_Store

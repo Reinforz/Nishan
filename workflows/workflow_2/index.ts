@@ -13,7 +13,7 @@ import Page from '../../api/Page';
 
 // This method creates the root collection_view_page containing all the relevant stuffs
 async function createWebRootCVP(space: Space) {
-  return await space.createTRootPage({
+  return await space.createTRootPages([{
     type: "collection_view_page",
     properties: {
       title: [["Web 2.0"]]
@@ -49,7 +49,7 @@ async function createWebRootCVP(space: Space) {
         }]
       }
     ]
-  })
+  }])
 }
 
 async function createRows(root_cvp: RootCollectionViewPage) {
@@ -435,7 +435,7 @@ async function main() {
   const space = await user.getSpace((space) => space.name === 'Developer');
 
   const root_cvp = await createWebRootCVP(space);
-  const pages = await createRows(root_cvp.collection_view_page);
+  const pages = await createRows(root_cvp.collection_view_page[0]);
   await createContent(space, pages);
 }
 

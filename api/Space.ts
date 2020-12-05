@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams } from '../types';
+import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams, ITRootPage } from '../types';
 import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
@@ -81,16 +81,8 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
-  async createTRootPage(option: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))) {
-    const troot_map = await this.createTRootPages([option]);
-    return {
-      collection_view_page: troot_map.collection_view_page[0],
-      page: troot_map.page[0],
-    }
-  }
-
   async createTRootPages(options: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))[]) {
-    const ops: IOperation[] = [], trootpage_map: { collection_view_page: RootCollectionViewPage[], page: RootPage[] } = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
+    const ops: IOperation[] = [], trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index],
         { type, properties, format, isPrivate, position } = option,
@@ -154,18 +146,22 @@ export default class Space extends Data<ISpace> {
 
   async getTRootPages(args?: FilterTypes<IRootPage | IRootCollectionViewPage>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const props = this.getProps(), trootpage_map: { collection_view_page: RootCollectionViewPage[], page: RootPage[] } = { collection_view_page: [], page: [] };
+    const props = this.getProps(), trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, logger = this.logger;
     await this.getItems<IRootPage | IRootCollectionViewPage>(args, multiple, async function (page) {
-      if (page.type === "page")
+      if (page.type === "page") {
+        logger && logger("READ", "RootPage", page.id);
         trootpage_map.page.push(new RootPage({
           id: page.id,
           ...props
         }))
-      else if (page.type === "collection_view_page")
+      }
+      else if (page.type === "collection_view_page") {
+        logger && logger("READ", "RootCollectionViewPage", page.id);
         trootpage_map.collection_view_page.push(new RootCollectionViewPage({
           id: page.id,
           ...props
         }))
+      }
     });
     return trootpage_map;
   }

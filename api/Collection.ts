@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, NumberSchemaUnit, SelectSchemaUnit, MultiSelectSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, PersonSchemaUnit, TitleSchemaUnit, EmailSchemaUnit, PhoneNumberSchemaUnit, UrlSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, PageProps, PageFormat, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, NumberSchemaUnit, SelectSchemaUnit, MultiSelectSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, PersonSchemaUnit, TitleSchemaUnit, EmailSchemaUnit, PhoneNumberSchemaUnit, UrlSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, PageProps, PageFormat, ITSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -275,196 +275,51 @@ class Collection extends Data<ICollection> {
   }
 
   /**
-   * Return a single column from the collection schema
-   * @param args schema_id string or predicate function
-   * @returns A SchemaUnit object representing the column
-   */
-  async getSchemaUnit(args?: FilterType<TSchemaUnit & { key: string }>) {
-    return (await this.getSchemaUnits(typeof args === "string" ? [args] : args, false))[0];
-  }
-
-  /**
    * Return multiple columns from the collection schema
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean, type?: TSchemaUnitType) {
+  async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const matched: SchemaUnit<TSchemaUnit>[] = [];
+    const schema_unit_map: ITSchemaUnit = {
+      text: [],
+      number: [],
+      select: [],
+      multi_select: [],
+      title: [],
+      date: [],
+      person: [],
+      file: [],
+      checkbox: [],
+      url: [],
+      email: [],
+      phone_number: [],
+      formula: [],
+      relation: [],
+      rollup: [],
+      created_time: [],
+      created_by: [],
+      last_edited_time: [],
+      last_edited_by: []
+    };
+
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
-        const schema_id = args[index], schema = data.schema[schema_id];
-        const should_add = (type ? schema.type === type : true) && container.includes(schema_id);
+        const schema_id = args[index], schema = data.schema[schema_id],
+          should_add = container.includes(schema_id);
         if (should_add)
-          matched.push(this.#createClass(schema.type, schema_id))
-        if (!multiple && matched.length === 1) break;
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
       }
     } else if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.length; index++) {
-        const schema_id = container[index], schema = data.schema[container[index]];
-        const should_add = (type ? schema.type === type : true) && (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
+        const schema_id = container[index], schema = data.schema[container[index]], should_add = (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
         if (should_add)
-          matched.push(this.#createClass(schema.type, schema_id))
-        if (!multiple && matched.length === 1) break;
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
       }
     }
-    return matched;
-  }
-
-  // ? TD:2:M Fix args as any type error
-
-  async getTextSchemaUnit(args?: FilterType<TextSchemaUnit & { key: string }>) {
-    return (await this.getTextSchemaUnits(args as any, false))[0]
-  }
-
-  async getTextSchemaUnits(args?: FilterTypes<TextSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<TextSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "text")
-  }
-
-  async getNumberSchemaUnit(args?: FilterType<NumberSchemaUnit & { key: string }>) {
-    return (await this.getNumberSchemaUnits(args as any, false))[0]
-  }
-
-  async getNumberSchemaUnits(args?: FilterTypes<NumberSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<NumberSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "number")
-  }
-
-  async getSelectSchemaUnit(args?: FilterType<SelectSchemaUnit & { key: string }>) {
-    return (await this.getSelectSchemaUnits(args as any, false))[0]
-  }
-
-  async getSelectSchemaUnits(args?: FilterTypes<SelectSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<SelectSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "select")
-  }
-
-  async getMultiSelectSchemaUnit(args?: FilterType<MultiSelectSchemaUnit & { key: string }>) {
-    return (await this.getMultiSelectSchemaUnits(args as any, false))[0]
-  }
-
-  async getMultiSelectSchemaUnits(args?: FilterTypes<MultiSelectSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<MultiSelectSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "multi_select")
-  }
-
-  async getTitleSchemaUnit(args?: FilterType<TitleSchemaUnit & { key: string }>) {
-    return (await this.getTitleSchemaUnits(args as any, false))[0]
-  }
-
-  async getTitleSchemaUnits(args?: FilterTypes<TitleSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<TitleSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "title")
-  }
-
-  async getDateSchemaUnit(args?: FilterType<DateSchemaUnit & { key: string }>) {
-    return (await this.getDateSchemaUnits(args as any, false))[0]
-  }
-
-  async getDateSchemaUnits(args?: FilterTypes<DateSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<DateSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "date")
-  }
-
-  async getPersonSchemaUnit(args?: FilterType<PersonSchemaUnit & { key: string }>) {
-    return (await this.getPersonSchemaUnits(args as any, false))[0]
-  }
-
-  async getPersonSchemaUnits(args?: FilterTypes<PersonSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<PersonSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "person")
-  }
-
-  async getFileSchemaUnit(args?: FilterType<FileSchemaUnit & { key: string }>) {
-    return (await this.getFileSchemaUnits(args as any, false))[0]
-  }
-
-  async getFileSchemaUnits(args?: FilterTypes<FileSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<FileSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "file")
-  }
-
-  async getCheckboxSchemaUnit(args?: FilterType<CheckboxSchemaUnit & { key: string }>) {
-    return (await this.getCheckboxSchemaUnits(args as any, false))[0]
-  }
-
-  async getCheckboxSchemaUnits(args?: FilterTypes<CheckboxSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<CheckboxSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "checkbox")
-  }
-
-  async getUrlSchemaUnit(args?: FilterType<UrlSchemaUnit & { key: string }>) {
-    return (await this.getUrlSchemaUnits(args as any, false))[0]
-  }
-
-  async getUrlSchemaUnits(args?: FilterTypes<UrlSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<UrlSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "url")
-  }
-
-  async getEmailSchemaUnit(args?: FilterType<EmailSchemaUnit & { key: string }>) {
-    return (await this.getEmailSchemaUnits(args as any, false))[0]
-  }
-
-  async getEmailSchemaUnits(args?: FilterTypes<EmailSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<EmailSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "email")
-  }
-
-  async getPhoneNumberSchemaUnit(args?: FilterType<PhoneNumberSchemaUnit & { key: string }>) {
-    return (await this.getPhoneNumberSchemaUnits(args as any, false))[0]
-  }
-
-  async getPhoneNumberSchemaUnits(args?: FilterTypes<PhoneNumberSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<PhoneNumberSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "phone_number")
-  }
-
-  async getFormulaSchemaUnit(args?: FilterType<FormulaSchemaUnit & { key: string }>) {
-    return (await this.getFormulaSchemaUnits(args as any, false))[0]
-  }
-
-  async getFormulaSchemaUnits(args?: FilterTypes<FormulaSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<FormulaSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "formula")
-  }
-
-  async getRelationSchemaUnit(args?: FilterType<RelationSchemaUnit & { key: string }>) {
-    return (await this.getRelationSchemaUnits(args as any, false))[0]
-  }
-
-  async getRelationSchemaUnits(args?: FilterTypes<RelationSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<RelationSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "relation")
-  }
-
-  async getRollupSchemaUnit(args?: FilterType<RollupSchemaUnit & { key: string }>) {
-    return (await this.getRollupSchemaUnits(args as any, false))[0]
-  }
-
-  async getRollupSchemaUnits(args?: FilterTypes<RollupSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<RollupSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "rollup")
-  }
-
-  async getCreatedTimeSchemaUnit(args?: FilterType<CreatedTimeSchemaUnit & { key: string }>) {
-    return (await this.getCreatedTimeSchemaUnits(args as any, false))[0]
-  }
-
-  async getCreatedTimeSchemaUnits(args?: FilterTypes<CreatedTimeSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<CreatedTimeSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "created_time")
-  }
-
-  async getCreatedBySchemaUnit(args?: FilterType<CreatedBySchemaUnit & { key: string }>) {
-    return (await this.getCreatedBySchemaUnits(args as any, false))[0]
-  }
-
-  async getCreatedBySchemaUnits(args?: FilterTypes<CreatedBySchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<CreatedBySchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "created_by")
-  }
-
-  async getLastEditedTimeSchemaUnit(args?: FilterType<LastEditedTimeSchemaUnit & { key: string }>) {
-    return (await this.getLastEditedTimeSchemaUnits(args as any, false))[0]
-  }
-
-  async getLastEditedTimeSchemaUnits(args?: FilterTypes<LastEditedTimeSchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<LastEditedTimeSchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "last_edited_time")
-  }
-
-  async getLastEditedBySchemaUnit(args?: FilterType<LastEditedBySchemaUnit & { key: string }>) {
-    return (await this.getLastEditedBySchemaUnits(args as any, false))[0]
-  }
-
-  async getLastEditedBySchemaUnits(args?: FilterTypes<LastEditedBySchemaUnit & { key: string }>, multiple?: boolean): Promise<SchemaUnit<LastEditedBySchemaUnit>[]> {
-    return await this.getSchemaUnits(args as any, multiple ?? true, "last_edited_by")
+    return schema_unit_map;
   }
 
   /**

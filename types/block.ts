@@ -1,5 +1,5 @@
 import { ISpace } from "./api";
-import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, Block, TPermissionRole, IPermission, ParentProps } from "./types";
+import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, TPermissionRole, IPermission, ParentProps } from "./types";
 import { Schema } from "./schema";
 
 export interface PageProps {
@@ -71,7 +71,7 @@ export interface TodoProps {
 }
 // -----------------
 
-// Media Block Input
+// Media IBlock Input
 export interface IMediaInput {
   properties: MediaProps,
   format: MediaFormat,
@@ -111,7 +111,7 @@ export interface IFileInput {
 
 export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput;
 
-// Basic Block Input
+// Basic IBlock Input
 
 export interface IPageInput {
   type: 'page',
@@ -291,18 +291,18 @@ export interface IPublicPermission {
   allow_duplicate: boolean
 }
 
-// Media Block Types
-export interface IVideo extends Block, IVideoInput { };
-export interface IAudio extends Block, IAudioInput { };
-export interface IImage extends Block, IImageInput { };
-export interface IWebBookmark extends Block, IWebBookmarkInput { };
-export interface ICode extends Block, ICodeInput { };
-export interface IFile extends Block, IFileInput { };
+// Media IBlock Types
+export interface IVideo extends IBlock, IVideoInput { };
+export interface IAudio extends IBlock, IAudioInput { };
+export interface IImage extends IBlock, IImageInput { };
+export interface IWebBookmark extends IBlock, IWebBookmarkInput { };
+export interface ICode extends IBlock, ICodeInput { };
+export interface IFile extends IBlock, IFileInput { };
 
 export type TMediaBlock = IVideo | IAudio | IImage | IWebBookmark | ICode | IFile;
 
-// Basic Block Types
-export interface IPage extends Block {
+// Basic IBlock Types
+export interface IPage extends IBlock {
   properties: PageProps,
   type: 'page',
   content: string[],
@@ -319,7 +319,7 @@ export interface IRootCollectionViewPage extends ICollectionViewPage {
   permissions: (IPermission | IPublicPermission)[]
 }
 
-export interface ICollectionBlock extends Block {
+export interface ICollectionBlock extends IBlock {
   view_ids: string[],
   collection_id: string,
   type: 'collection_view' | 'collection_view_page',
@@ -337,25 +337,25 @@ export interface ICollectionViewPage extends ICollectionBlock {
 
 export type TCollectionBlock = IRootCollectionViewPage | ICollectionView | ICollectionView | ICollectionViewPage;
 
-export interface IText extends ITextInput, Block { }
-export interface ITodo extends ITodoInput, Block { }
-export interface IHeader extends IHeaderInput, Block { }
-export interface ISubHeader extends ISubHeaderInput, Block { }
-export interface ISubSubHeader extends ISubSubHeaderInput, Block { }
-export interface IBulletedList extends IBulletedListInput, Block { }
-export interface INumberedList extends INumberedListInput, Block { }
-export interface IToggle extends IToggleInput, Block { }
-export interface IQuote extends IQuoteInput, Block { }
-export interface IDivider extends IDividerInput, Block { }
-export interface ICallout extends ICalloutInput, Block { }
+export interface IText extends ITextInput, IBlock { }
+export interface ITodo extends ITodoInput, IBlock { }
+export interface IHeader extends IHeaderInput, IBlock { }
+export interface ISubHeader extends ISubHeaderInput, IBlock { }
+export interface ISubSubHeader extends ISubSubHeaderInput, IBlock { }
+export interface IBulletedList extends IBulletedListInput, IBlock { }
+export interface INumberedList extends INumberedListInput, IBlock { }
+export interface IToggle extends IToggleInput, IBlock { }
+export interface IQuote extends IQuoteInput, IBlock { }
+export interface IDivider extends IDividerInput, IBlock { }
+export interface ICallout extends ICalloutInput, IBlock { }
 
 export type TBasicBlock = IText | ITodo | IHeader | ISubHeader | ISubSubHeader | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IPage | IRootPage | TCollectionBlock;
 
 // Advanced block types
-export interface ITOC extends ITOCInput, Block { };
-export interface IEquation extends IEquationInput, Block { };
-export interface IBreadcrumb extends IBreadcrumbInput, Block { };
-export interface IFactory extends Block {
+export interface ITOC extends ITOCInput, IBlock { };
+export interface IEquation extends IEquationInput, IBlock { };
+export interface IBreadcrumb extends IBreadcrumbInput, IBlock { };
+export interface IFactory extends IBlock {
   type: 'factory',
   properties: {
     title: string[][]
@@ -369,8 +369,8 @@ export interface IFactory extends Block {
 export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;
 
 // Embeds Type
-export interface IGist extends Block, IGistInput { }
-export interface IDrive extends Block, IDriveInput {
+export interface IGist extends IBlock, IGistInput { }
+export interface IDrive extends IBlock, IDriveInput {
   format: {
     drive_properties: {
       file_id: string,
@@ -387,11 +387,11 @@ export interface IDrive extends Block, IDriveInput {
     }
   }
 }
-export interface ITweet extends Block, ITweetInput { }
-export interface IEmbed extends Block, IEmbedInput { }
-export interface ICodepen extends Block, ICodepenInput { }
-export interface IMaps extends Block, IMapsInput { }
-export interface IFigma extends Block, IFigmaInput { }
+export interface ITweet extends IBlock, ITweetInput { }
+export interface IEmbed extends IBlock, IEmbedInput { }
+export interface ICodepen extends IBlock, ICodepenInput { }
+export interface IMaps extends IBlock, IMapsInput { }
+export interface IFigma extends IBlock, IFigmaInput { }
 
 export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
 

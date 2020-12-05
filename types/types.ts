@@ -159,7 +159,7 @@ export interface LastEditedProps {
   last_edited_time: number,
 }
 
-export interface Block extends Node, ParentProps, CreateProps, LastEditedProps {
+export interface IBlock extends Node, ParentProps, CreateProps, LastEditedProps {
   permission: IPermission[],
   shard_id: number,
   space_id: string,

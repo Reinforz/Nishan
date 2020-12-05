@@ -1,0 +1,13 @@
+# Node files
+node_modules
+package-lock.json
+
+# source files
+*.ts
+/api
+/docs
+/public
+/types
+/utils
+/workflows
+/.github

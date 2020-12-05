@@ -30,6 +30,7 @@ export interface MediaFormat {
   block_page_width?: boolean,
   block_preserve_scale?: boolean,
   block_width?: number,
+  block_height?: number,
   display_source: string
 }
 

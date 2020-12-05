@@ -169,7 +169,7 @@ class Collection extends Data<ICollection> {
     }))
   }
 
-  async getPage(arg: FilterType<IPage>) {
+  async getPage(arg?: FilterType<IPage>) {
     return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
   }
 

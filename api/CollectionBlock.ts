@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, ITableView, IListView, IBoardView, IGalleryView, ITimelineView, ICalendarView, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams, CalendarViewCreateParams, TimelineViewCreateParams } from '../types';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams, CalendarViewCreateParams, TimelineViewCreateParams, ITView } from '../types';
 import { createViews, Operation } from '../utils';
 
 const view_class = {
@@ -108,97 +108,32 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    * Get all the views associated with the collection block
    * @returns An array of view objects of the collectionblock
    */
-  #getViews = async<T extends TView, C extends (TableView | BoardView | ListView | CalendarView | TimelineView | GalleryView)>(args?: FilterTypes<T>, multiple?: boolean, condition?: (Q: T) => boolean): Promise<C[]> => {
+  async getViews(args?: FilterTypes<TView>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const props = this.getProps();
-    return this.getItems<T>(args, multiple, async function (view) {
-      switch (view.type) {
-        case "table":
-          return new TableView({
-            id: view.id,
-            ...props
-          })
-        case "board":
-          return new BoardView({
-            id: view.id,
-            ...props
-          })
-        case "list":
-          return new ListView({
-            id: view.id,
-            ...props
-          })
-        case "calendar":
-          return new CalendarView({
-            id: view.id,
-            ...props
-          })
-        case "timeline":
-          return new TimelineView({
-            id: view.id,
-            ...props
-          })
-        case "gallery":
-          return new GalleryView({
-            id: view.id,
-            ...props
-          })
-      }
-    }, condition)
-  }
+    const props = this.getProps(), view_map: ITView = {
+      table: [],
+      board: [],
+      list: [],
+      calendar: [],
+      timeline: [],
+      gallery: [],
+    }, view_class_map = {
+      table: TableView,
+      gallery: GalleryView,
+      list: ListView,
+      board: BoardView,
+      timeline: TimelineView,
+      calendar: CalendarView
+    };
 
-  async getTableView(arg?: FilterType<ITableView>) {
-    return (await this.getTableViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getTableViews(args?: FilterTypes<ITableView>, multiple?: boolean): Promise<TableView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<ITableView, TableView>(args, multiple, (view) => view.type === "table")
-  }
-
-  async getListView(arg?: FilterType<IListView>) {
-    return (await this.getListViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getListViews(args?: FilterTypes<IListView>, multiple?: boolean): Promise<ListView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<IListView, ListView>(args, multiple, (view) => view.type === "list")
-  }
-
-  async getBoardView(arg?: FilterType<IBoardView>) {
-    return (await this.getBoardViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getBoardViews(args?: FilterTypes<IBoardView>, multiple?: boolean): Promise<BoardView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<IBoardView, BoardView>(args, multiple, (view) => view.type === "board")
-  }
-
-  async getGalleryView(arg?: FilterType<IGalleryView>) {
-    return (await this.getGalleryViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getGalleryViews(args?: FilterTypes<IGalleryView>, multiple?: boolean): Promise<GalleryView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<IGalleryView, GalleryView>(args, multiple, (view) => view.type === "gallery")
-  }
-
-  async getCalendarView(arg?: FilterType<ICalendarView>) {
-    return (await this.getCalendarViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getCalendarViews(args?: FilterTypes<ICalendarView>, multiple?: boolean): Promise<CalendarView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<ICalendarView, CalendarView>(args, multiple, (view) => view.type === "calendar")
-  }
-
-  async getTimelineView(arg?: FilterType<ITimelineView>) {
-    return (await this.getTimelineViews(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getTimelineViews(args?: FilterTypes<ITimelineView>, multiple?: boolean): Promise<TimelineView[]> {
-    multiple = multiple ?? true;
-    return await this.#getViews<ITimelineView, TimelineView>(args, multiple, (view) => view.type === "timeline")
+    await this.getItems<TView>(args, multiple, async function (view) {
+      console.log(view.type);
+      view_map[view.type].push(new view_class_map[view.type]({
+        id: view.id,
+        ...props
+      }) as any)
+    })
+    return view_map;
   }
 
   /**

@@ -309,14 +309,18 @@ class Collection extends Data<ICollection> {
       for (let index = 0; index < args.length; index++) {
         const schema_id = args[index], schema = data.schema[schema_id],
           should_add = container.includes(schema_id);
-        if (should_add)
+        if (should_add) {
           schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
+          this.logger && this.logger("READ", "SchemaUnit", schema_id)
+        }
       }
     } else if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.length; index++) {
         const schema_id = container[index], schema = data.schema[container[index]], should_add = (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
-        if (should_add)
+        if (should_add) {
           schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
+          this.logger && this.logger("READ", "SchemaUnit", schema_id)
+        }
       }
     }
     return schema_unit_map;

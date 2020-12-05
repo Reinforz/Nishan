@@ -19,7 +19,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
   // ? FEAT:1:H Change column datatype
 
   async update(arg: T) {
-    const data = this.getCachedData();
+    const data = super.getCachedData();
     data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg }
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
@@ -27,7 +27,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
   }
 
   async delete() {
-    const data = this.getCachedData();
+    const data = super.getCachedData();
     delete data.schema[this.schema_id];
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
@@ -35,11 +35,16 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
   }
 
   async duplicate() {
-    const data = this.getCachedData(),
+    const data = super.getCachedData(),
       id = shortid();
     data.schema[id] = data.schema[this.schema_id];
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
     this.logger && this.logger("CREATE", "SchemaUnit", id);
+  }
+
+  getCachedChildData() {
+    const data = super.getCachedData();
+    return data.schema[this.schema_id];
   }
 }

@@ -1,4 +1,4 @@
-import { RootCollectionViewPage, RootPage, SchemaUnit } from "../api";
+import { BoardView, CalendarView, GalleryView, ListView, RootCollectionViewPage, RootPage, SchemaUnit, TableView, TimelineView } from "../api";
 import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit } from "./";
 import { IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat } from "./view";
 
@@ -164,8 +164,8 @@ interface ViewUpdateGenericParam<T extends TSchemaUnitType, FO extends TViewFilt
   aggregation?: A
 }
 
-export type ITRootPage = { collection_view_page: RootCollectionViewPage[], page: RootPage[] };
-export type ITSchemaUnit = {
+export interface ITRootPage { collection_view_page: RootCollectionViewPage[], page: RootPage[] };
+export interface ITSchemaUnit {
   text: SchemaUnit<TextSchemaUnit>[],
   number: SchemaUnit<NumberSchemaUnit>[],
   select: SchemaUnit<SelectSchemaUnit>[],
@@ -185,6 +185,15 @@ export type ITSchemaUnit = {
   created_by: SchemaUnit<CreatedBySchemaUnit>[],
   last_edited_time: SchemaUnit<LastEditedTimeSchemaUnit>[],
   last_edited_by: SchemaUnit<LastEditedBySchemaUnit>[],
+}
+
+export interface ITView {
+  table: TableView[],
+  gallery: GalleryView[],
+  list: ListView[],
+  board: BoardView[],
+  timeline: TimelineView[],
+  calendar: CalendarView[],
 }
 
 export type ViewUpdateParam =

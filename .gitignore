@@ -7,6 +7,7 @@ feature.md
 .netlify
 /docs/build
 /workflows/env.ts
+nishan-1.0.0.tgz
 
 # OSX files
 .DS_Store

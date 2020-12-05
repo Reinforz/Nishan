@@ -1,9 +1,11 @@
 # Node files
 node_modules
 package-lock.json
+nishan-1.0.0.tgz
 
 # source files
 *.ts
+!*.d.ts
 /api
 /docs
 /public

@@ -8,7 +8,6 @@ import SpaceView from "./SpaceView";
 import { Operation, error } from '../utils';
 
 import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams, ITRootPage } from '../types';
-import CollectionViewPage from './CollectionViewPage';
 import Collection from './Collection';
 
 /**
@@ -144,6 +143,10 @@ export default class Space extends Data<ISpace> {
     return trootpage_map;
   }
 
+  async getTRootPage(args?: FilterTypes<IRootPage | IRootCollectionViewPage>) {
+    return await this.getTRootPages(args, false)
+  }
+
   async getTRootPages(args?: FilterTypes<IRootPage | IRootCollectionViewPage>, multiple?: boolean) {
     multiple = multiple ?? true;
     const props = this.getProps(), trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, logger = this.logger;
@@ -164,36 +167,6 @@ export default class Space extends Data<ISpace> {
       }
     });
     return trootpage_map;
-  }
-
-  async getRootPage(arg?: FilterType<IRootPage>): Promise<RootPage | undefined> {
-    return (await this.getRootPages(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getRootPages(args?: FilterTypes<IRootPage>, multiple?: boolean): Promise<(RootPage | undefined)[]> {
-    multiple = multiple ?? true;
-    const props = this.getProps();
-    return this.getItems<IRootPage>(args, multiple, async function (page) {
-      return new RootPage({
-        id: page.id,
-        ...props
-      })
-    }, (page => page.type === "page"))
-  }
-
-  async getRootCollectionViewPage(arg?: FilterType<IRootCollectionViewPage>): Promise<RootCollectionViewPage | undefined> {
-    return (await this.getRootCollectionViewPages(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  async getRootCollectionViewPages(args?: FilterTypes<IRootCollectionViewPage>, multiple?: boolean): Promise<(RootCollectionViewPage | undefined)[]> {
-    multiple = multiple ?? true;
-    const props = this.getProps();
-    return this.getItems<IRootCollectionViewPage>(args, multiple, async function (page) {
-      return new CollectionViewPage({
-        id: page.id,
-        ...props
-      })
-    }, (page) => page.type === "collection_view_page")
   }
 
   async getRootCollection(arg?: FilterType<ICollection>) {

@@ -436,18 +436,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
   }
 
-  async getPageBlock(arg?: FilterType<IPage>) {
-    return (await this.getPageBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
-  }
-
-  async getPageBlocks(args?: FilterTypes<IPage>, multiple?: boolean): Promise<(Page<IPage> | undefined)[]> {
-    multiple = multiple ?? true;
-    const props = this.getProps()
-    return this.getItems<IPage>(args, multiple, async function (block) {
-      return new Page({ ...props, id: block.id });
-    }, (block) => block.type === "page")
-  }
-
   /**
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter

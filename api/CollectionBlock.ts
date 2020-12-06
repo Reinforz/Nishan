@@ -14,6 +14,17 @@ const view_class = {
   calendar: CalendarView,
 }
 
+const getViewMap = () => {
+  return {
+    board: [],
+    gallery: [],
+    list: [],
+    timeline: [],
+    table: [],
+    calendar: [],
+  } as ITView;
+}
+
 /**
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
@@ -37,14 +48,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createViews(params: [TSearchManipViewParam, ...TSearchManipViewParam[]]) {
-    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map: ITView = {
-      board: [],
-      gallery: [],
-      list: [],
-      timeline: [],
-      table: [],
-      calendar: [],
-    };
+    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map = getViewMap();
     ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_infos.map(view_info => view_info[0])] }));
     await this.saveTransactions(ops);
     await this.updateCacheManually(view_infos.map(view_info => [view_info[0], "collection_view"]));
@@ -58,14 +62,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    */
   async getViews(args?: FilterTypes<TView>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const props = this.getProps(), view_map: ITView = {
-      table: [],
-      board: [],
-      list: [],
-      calendar: [],
-      timeline: [],
-      gallery: [],
-    }, logger = this.logger;
+    const props = this.getProps(), view_map = getViewMap(), logger = this.logger;
 
     await this.getItems<TView>(args, multiple, async function (view) {
       logger && logger("READ", "View", view.id);

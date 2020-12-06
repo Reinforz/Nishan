@@ -1,0 +1,14 @@
+# Node files
+package-lock.json
+**/*.tgz
+
+# source files
+**/*.ts
+!**/*.d.ts
+/api
+/docs
+/public
+/types
+/utils
+/workflows
+/.github

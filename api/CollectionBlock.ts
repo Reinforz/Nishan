@@ -2,8 +2,8 @@ import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, TableViewCreateParams, TViewType, ICollection, ListViewCreateParams, BoardViewCreateParams, GalleryViewCreateParams, CalendarViewCreateParams, TimelineViewCreateParams, ITView } from '../types';
-import { createViews, Operation } from '../utils';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, ICollection, ITView, TSearchManipViewParam } from '../types';
+import { Operation } from '../utils';
 
 const view_class = {
   board: BoardView,
@@ -36,72 +36,20 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
     });
   }
 
-  // TODO RF:1:H Same view options as Page.createLinkedDBContent
-  // ? FEAT:1:H Check which view supports what ie(filter, aggregration, sort, property reorder and toggle)
-
-  #createViews = async (params: (Partial<(TableViewCreateParams | ListViewCreateParams | BoardViewCreateParams)>)[], type: TViewType) => {
-    const ops: IOperation[] = [], view_ids: string[] = [];
-    const data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection;
-    const schema_entries = Object.entries(collection.schema);
-
-    params.map((param) => {
-      const [view_id, common_props] = createViews(param, schema_entries, type, this.id);
-      const block_list_op = this.addToChildArray(view_id, param.position);
-      ops.push(block_list_op, Operation.collection_view.update(view_id as string, [], common_props));
-    })
-
+  async createViews(params: [TSearchManipViewParam, ...TSearchManipViewParam[]]) {
+    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map: ITView = {
+      board: [],
+      gallery: [],
+      list: [],
+      timeline: [],
+      table: [],
+      calendar: [],
+    };
+    ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_infos.map(view_info => view_info[0])] }));
     await this.saveTransactions(ops);
-    await this.updateCacheManually(view_ids.map(view_id => [view_id, "collection_view"]));
-
-    return view_ids.map(view_id => new view_class[type]({ id: view_id, ...this.getProps() }))
-  }
-
-  async createTableView(param: TableViewCreateParams) {
-    return (await this.createTableViews([param]))[0]
-  }
-
-  async createTableViews(params: TableViewCreateParams[]): Promise<TableView[]> {
-    return (await this.#createViews(params, "table") as TableView[])
-  }
-
-  async createListView(param: ListViewCreateParams) {
-    return (await this.createListViews([param]))[0]
-  }
-
-  async createListViews(params: ListViewCreateParams[]): Promise<ListView[]> {
-    return (await this.#createViews(params, "list") as ListView[])
-  }
-
-  async createBoardView(param: BoardViewCreateParams) {
-    return (await this.createBoardViews([param]))[0]
-  }
-
-  async createBoardViews(params: BoardViewCreateParams[]): Promise<BoardView[]> {
-    return (await this.#createViews(params, "board") as BoardView[])
-  }
-
-  async createGalleryView(param: GalleryViewCreateParams) {
-    return (await this.createGalleryViews([param]))[0]
-  }
-
-  async createGalleryViews(params: GalleryViewCreateParams[]): Promise<GalleryView[]> {
-    return (await this.#createViews(params, "gallery") as GalleryView[])
-  }
-
-  async createCalendarView(param: CalendarViewCreateParams) {
-    return (await this.createCalendarViews([param]))[0]
-  }
-
-  async createCalendarViews(params: CalendarViewCreateParams[]): Promise<CalendarView[]> {
-    return (await this.#createViews(params, "calendar") as CalendarView[])
-  }
-
-  async createTimelineView(param: TimelineViewCreateParams) {
-    return (await this.createTimelineViews([param]))[0]
-  }
-
-  async createTimelineViews(params: TimelineViewCreateParams[]): Promise<TimelineView[]> {
-    return (await this.#createViews(params, "timeline") as TimelineView[])
+    await this.updateCacheManually(view_infos.map(view_info => [view_info[0], "collection_view"]));
+    view_infos.map(view_info => view_map[view_info[1]].push(new view_class[view_info[1]]({ id: view_info[0], ...this.getProps() }) as any));
+    return view_map;
   }
 
   /**
@@ -117,18 +65,11 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
       calendar: [],
       timeline: [],
       gallery: [],
-    }, view_class_map = {
-      table: TableView,
-      gallery: GalleryView,
-      list: ListView,
-      board: BoardView,
-      timeline: TimelineView,
-      calendar: CalendarView
-    };
+    }, logger = this.logger;
 
     await this.getItems<TView>(args, multiple, async function (view) {
-      console.log(view.type);
-      view_map[view.type].push(new view_class_map[view.type]({
+      logger && logger("READ", "View", view.id);
+      view_map[view.type].push(new view_class[view.type]({
         id: view.id,
         ...props
       }) as any)

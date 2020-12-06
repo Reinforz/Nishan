@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType } from "../types";
 import { Operation, error } from "../utils";
 import Getters from "./Getters";
 
@@ -254,8 +254,8 @@ export default class Data<T extends TData> extends Getters {
     }
   }
 
-  protected createViews(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
-    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [];
+  protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
+    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_infos: [string, TViewType][] = [];
 
     Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
 
@@ -273,7 +273,7 @@ export default class Data<T extends TData> extends Getters {
           [`${type}_properties`]: properties
         } as any;
 
-      view_ids.push(view_id);
+      view_infos.push([view_id, type]);
 
       switch (type) {
         case "table":
@@ -382,7 +382,7 @@ export default class Data<T extends TData> extends Getters {
       }))
     }
 
-    return [created_view_ops, view_ids] as [IOperation[], string[]];
+    return [created_view_ops, view_infos] as [IOperation[], [string, TViewType][]];
   }
 
   protected createCollection(param: CreateRootCollectionViewPageParams, parent_id: string) {
@@ -392,7 +392,7 @@ export default class Data<T extends TData> extends Getters {
       schema[(opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_')] = opt
     });
 
-    const [created_view_ops, view_ids] = this.createViews(schema, param.views, collection_id, parent_id);
+    const [created_view_ops, view_infos] = this.createViewsUtils(schema, param.views, collection_id, parent_id);
     created_view_ops.unshift(Operation.collection.update(collection_id, [], {
       id: collection_id,
       schema,
@@ -406,6 +406,6 @@ export default class Data<T extends TData> extends Getters {
       name: param.properties.title
     }));
 
-    return [collection_id, created_view_ops, view_ids] as [string, IOperation[], string[]]
+    return [collection_id, created_view_ops, view_infos] as [string, IOperation[], [string, TViewType][]]
   }
 }

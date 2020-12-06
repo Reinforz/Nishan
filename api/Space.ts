@@ -109,7 +109,7 @@ export default class Space extends Data<ISpace> {
         }),
           block_list_op)
       } else if (type === "collection_view_page") {
-        const [collection_id, create_view_ops, view_ids] = this.createCollection(option as CreateRootCollectionViewPageParams, block_id);
+        const [collection_id, create_view_ops, view_infos] = this.createCollection(option as CreateRootCollectionViewPageParams, block_id);
         ops.push(Operation.block.update(block_id, [], {
           type: 'page',
           id: block_id,
@@ -124,14 +124,14 @@ export default class Space extends Data<ISpace> {
           Operation.block.update(block_id, [], {
             type: 'collection_view_page',
             collection_id,
-            view_ids,
+            view_ids: view_infos.map(view_info => view_info[0]),
             properties: {},
           }),
           ...create_view_ops,
           this.addToChildArray(block_id, option.position),
         );
 
-        sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+        sync_records.push(block_id, [collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
         trootpage_map.collection_view_page.push(new RootCollectionViewPage({
           ...this.getProps(),
           id: block_id

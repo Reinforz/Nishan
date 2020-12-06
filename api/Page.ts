@@ -308,14 +308,14 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     for (let index = 0; index < options.length; index++) {
       const option = options[index],
         { properties, format } = option,
-        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
+        block_id = uuidv4(), [collection_id, create_view_ops, view_info] = this.createCollection(option, block_id);
 
       ops.push(Operation.block.update(block_id, [], {
         id: block_id,
         properties,
         format,
         type: 'collection_view',
-        view_ids,
+        view_ids: view_info.map(view_info => view_info[0]),
         collection_id,
         parent_id: this.id,
         parent_table: "block",
@@ -324,7 +324,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         ...create_view_ops,
         this.addToChildArray(block_id, option.position),
       )
-      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+      sync_records.push(block_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
       collection_view_pages.push(new CollectionViewPage({
         ...this.getProps(),
         id: block_id
@@ -356,20 +356,20 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       const { collection_id, views, position } = args[index],
         content_id = uuidv4(),
         collection = this.cache.collection.get(collection_id) as ICollection,
-        [created_view_ops, view_ids] = this.createViews(collection.schema, views, collection.id, content_id);
+        [created_view_ops, view_info] = this.createViewsUtils(collection.schema, views, collection.id, content_id);
 
       ops.push(Operation.block.set(content_id, [], {
         id: content_id,
         version: 1,
         type: 'collection_view',
         collection_id,
-        view_ids,
+        view_ids: view_info.map(view_info => view_info[0]),
         parent_id: this.id,
         parent_table: 'block',
         alive: true,
       }),
         this.addToChildArray(content_id, position), ...created_view_ops);
-      content_ids.push(content_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]));
+      content_ids.push(content_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
     }
 
     await this.saveTransactions(ops);
@@ -396,12 +396,12 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     for (let index = 0; index < options.length; index++) {
       const option = options[index],
         { properties, format } = option,
-        block_id = uuidv4(), [collection_id, create_view_ops, view_ids] = this.createCollection(option, block_id);
+        block_id = uuidv4(), [collection_id, create_view_ops, view_info] = this.createCollection(option, block_id);
       ops.push(Operation.block.update(block_id, [], {
         id: data.id,
         type: 'collection_view_page',
         collection_id,
-        view_ids,
+        view_ids: view_info.map(view_info => view_info[0]),
         properties,
         format,
       }),
@@ -409,7 +409,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         this.addToChildArray(block_id, option.position),
       )
 
-      sync_records.push(block_id, [collection_id, "collection"], ...view_ids.map(view_id => [view_id, "collection_view"] as [string, TDataType]))
+      sync_records.push(block_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
       collection_view_pages.push(new CollectionViewPage({
         ...this.getProps(),
         id: block_id

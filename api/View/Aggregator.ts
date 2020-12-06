@@ -1,6 +1,10 @@
 import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, ViewAggregations } from "../../types";
 import View from "./View";
 
+/**
+ * A class to represent the aggregrator methods for views that supports it
+ * @noInheritDoc
+ */
 class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View<T> {
   constructor(arg: NishanArg) {
     super({ ...arg });

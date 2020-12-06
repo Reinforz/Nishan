@@ -21,7 +21,7 @@ import "../env"
   }));
 
   // Make sure November page exists inside monthly page
-  const november_db = await monthly_page.page[0].getPageBlock(page => page.properties.title[0][0] === "November");
+  const november_db = (await monthly_page.page[0].getBlock(block => block.type === "page" && block.properties.title[0][0] === "November")).page[0];
 
   for (let index = 25; index <= 25; index++) {
     // Add your specific title and page_icon
@@ -36,10 +36,10 @@ import "../env"
     })
 
     async function getRootCVPCollectionId(title: string) {
-      const collection_view_page = await space.getRootCollectionViewPage((collection_view_page) => {
-        return space.cache.collection.get(collection_view_page.collection_id)?.name[0][0] === title
-      })
-      return (await collection_view_page?.getCollection())?.id as string;
+      const collection_view_page = (await space.getTRootPage((collection_view_page) => {
+        return collection_view_page.type === "collection_view_page" && space.cache.collection.get(collection_view_page.collection_id)?.name[0][0] === title
+      })).collection_view_page[0]
+      return (await collection_view_page.getCollection())?.id as string;
     }
 
     if (page) {

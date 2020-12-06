@@ -204,8 +204,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         return new Block<IFactory, IFactoryInput>(obj);
       case "page":
         return new Page(obj);
-      case "text":
-        return new Block<IText, ITextInput>(obj);
       case "to_do":
         return new Block<ITodo, ITodoInput>(obj);
       case "header":
@@ -226,12 +224,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         return new Block<IDivider, IDividerInput>(obj);
       case "callout":
         return new Block<ICallout, ICalloutInput>(obj);
-      case "toggle":
-        return new Block<IToggle, IToggleInput>(obj);
-      case "sub_sub_header":
-        return new Block<ISubHeader, ISubHeaderInput>(obj);
-      case "drive":
-        return new Block<IDrive, IDriveInput>(obj);
+
       case "collection_view":
         return new CollectionView(obj)
       default:

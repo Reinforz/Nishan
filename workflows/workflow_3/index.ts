@@ -16,12 +16,12 @@ import "../env"
   const space = await user.getSpace((space) => space.name === 'Developer');
 
   // Make sure Monthly page exists as a root page
-  const monthly_page = (await space.getRootPage((page) => {
-    return page.properties.title[0][0] === 'Monthly'
+  const monthly_page = (await space.getTRootPages((page) => {
+    return page.type === "page" && page.properties.title[0][0] === 'Monthly'
   }));
 
   // Make sure November page exists inside monthly page
-  const november_db = await monthly_page?.getPageBlock(page => page.properties.title[0][0] === "November");
+  const november_db = await monthly_page.page[0].getPageBlock(page => page.properties.title[0][0] === "November");
 
   for (let index = 25; index <= 25; index++) {
     // Add your specific title and page_icon

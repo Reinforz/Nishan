@@ -18,10 +18,46 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, TBlockInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType
+  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
+
+const createBlockMap = () => {
+  return {
+    collection_view_page: [],
+    embed: [],
+    video: [],
+    audio: [],
+    image: [],
+    bookmark: [],
+    code: [],
+    file: [],
+    tweet: [],
+    gist: [],
+    codepen: [],
+    maps: [],
+    figma: [],
+    drive: [],
+    text: [],
+    table_of_contents: [],
+    equation: [],
+    breadcrumb: [],
+    factory: [],
+    page: [],
+    to_do: [],
+    header: [],
+    sub_header: [],
+    sub_sub_header: [],
+    bulleted_list: [],
+    numbered_list: [],
+    toggle: [],
+    quote: [],
+    divider: [],
+    callout: [],
+    collection_view: [],
+  } as ITBlock
+}
 
 /**
  * A class to represent Page type block of Notion
@@ -420,20 +456,21 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return collection_view_pages;
   }
 
+  async getBlock(arg?: FilterType<TBlock>) {
+    return await this.getBlocks(typeof arg === "string" ? [arg] : arg, false);
+  }
+
   /**
    * Get all the blocks of the page as an object
    * @returns An array of block object
    */
-  async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean): Promise<Block<TBlock, TBlockInput>[]> {
+  async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const _this = this as any;
-    return this.getItems<TBlock>(args, multiple, async function (block) {
-      return _this.createClass(block.type, block.id);
+    const _this = this, block_map = createBlockMap();
+    await this.getItems<TBlock>(args, multiple, async function (block) {
+      block_map[block.type].push(_this.createClass(block.type, block.id) as any)
     })
-  }
-
-  async getBlock(arg?: FilterType<TBlock>) {
-    return (await this.getBlocks(typeof arg === "string" ? [arg] : arg, false))[0];
+    return block_map;
   }
 
   /**

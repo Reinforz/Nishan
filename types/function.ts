@@ -1,5 +1,6 @@
-import { BoardView, CalendarView, GalleryView, ListView, RootCollectionViewPage, RootPage, SchemaUnit, TableView, TimelineView } from "../api";
-import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit } from "./";
+import { Block, BoardView, CalendarView, CollectionView, CollectionViewPage, GalleryView, ListView, Page, RootCollectionViewPage, RootPage, SchemaUnit, TableView, TimelineView } from "../api";
+import { TSchemaUnitType, TSchemaUnit, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, PageFormat, PageProps, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewAggregationsAggregators, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TViewFormatCover, TTimelineViewTimelineby, ViewFormatProperties, ITimelineViewFormatPreference, TSortValue, TextViewAggregationsAggregator, NumericViewAggregationsAggregator, EmailViewAggregationsAggregator, CheckboxViewAggregationsAggregator, DateViewAggregationsAggregator, EnumsViewAggregationsAggregator, EnumViewAggregationsAggregator, PersonViewAggregationsAggregator, PhoneViewAggregationsAggregator, UrlViewAggregationsAggregator, FileViewAggregationsAggregator, CreatedByViewAggregationsAggregator, CreatedTimeViewAggregationsAggregator, FormulaViewAggregationsAggregator, LastEditedByViewAggregationsAggregator, LastEditedTimeViewAggregationsAggregator, RelationViewAggregationsAggregator, RollupViewAggregationsAggregator, TitleViewAggregationsAggregator, CheckboxViewFiltersOperator, CheckboxViewFiltersType, CheckboxViewFiltersValue, CreatedByViewFiltersOperator, CreatedByViewFiltersType, CreatedByViewFiltersValue, CreatedTimeViewFiltersOperator, CreatedTimeViewFiltersType, CreatedTimeViewFiltersValue, DateViewFiltersOperator, DateViewFiltersType, DateViewFiltersValue, EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue, EnumsViewFiltersOperator, EnumsViewFiltersType, EnumsViewFiltersValue, EnumViewFiltersOperator, EnumViewFiltersType, EnumViewFiltersValue, NumericViewFiltersOperator, NumericViewFiltersType, NumericViewFiltersValue, PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue, PhoneViewFiltersOperator, PhoneViewFiltersType, PhoneViewFiltersValue, RelationViewFiltersOperator, RelationViewFiltersType, RelationViewFiltersValue, RollupViewFiltersOperator, RollupViewFiltersType, RollupViewFiltersValue, TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue, UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue, TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue, FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue, LastEditedByViewFiltersOperator, LastEditedByViewFiltersType, LastEditedByViewFiltersValue, LastEditedTimeViewFiltersOperator, LastEditedTimeViewFiltersType, LastEditedTimeViewFiltersValue, FormulaViewFiltersOperator, FormulaViewFiltersType, FormulaViewFiltersValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit, IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput } from "./";
+import { IEmbed, IEmbedInput } from "./block";
 import { IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat } from "./view";
 
 export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
@@ -165,6 +166,7 @@ interface ViewUpdateGenericParam<T extends TSchemaUnitType, FO extends TViewFilt
 }
 
 export interface ITRootPage { collection_view_page: RootCollectionViewPage[], page: RootPage[] };
+
 export interface ITSchemaUnit {
   text: SchemaUnit<TextSchemaUnit>[],
   number: SchemaUnit<NumberSchemaUnit>[],
@@ -194,6 +196,40 @@ export interface ITView {
   board: BoardView[],
   timeline: TimelineView[],
   calendar: CalendarView[],
+}
+
+export interface ITBlock {
+  embed: Block<IEmbed, IEmbedInput>[],
+  video: Block<IVideo, IVideoInput>[];
+  audio: Block<IAudio, IAudioInput>[];
+  image: Block<IImage, IImageInput>[];
+  bookmark: Block<IWebBookmark, IWebBookmarkInput>[];
+  code: Block<ICode, ICodeInput>[];
+  file: Block<IFile, IFileInput>[];
+  tweet: Block<ITweet, ITweetInput>[];
+  gist: Block<IGist, IGistInput>[];
+  codepen: Block<ICodepen, ICodepenInput>[];
+  maps: Block<IMaps, IMapsInput>[];
+  figma: Block<IFigma, IFigmaInput>[];
+  drive: Block<IDrive, IDriveInput>[];
+  text: Block<IText, ITextInput>[];
+  table_of_contents: Block<ITOC, ITOCInput>[];
+  equation: Block<IEquation, IEquationInput>[];
+  breadcrumb: Block<IBreadcrumb, IBreadcrumbInput>[];
+  factory: Block<IFactory, IFactoryInput>[];
+  page: Page[];
+  to_do: Block<ITodo, ITodoInput>[];
+  header: Block<IHeader, IHeaderInput>[];
+  sub_header: Block<ISubHeader, ISubHeaderInput>[];
+  sub_sub_header: Block<ISubHeader, ISubHeaderInput>[];
+  bulleted_list: Block<IBulletedList, IBulletedListInput>[];
+  numbered_list: Block<INumberedList, INumberedListInput>[];
+  toggle: Block<IToggle, IToggleInput>[];
+  quote: Block<IQuote, IQuoteInput>[];
+  divider: Block<IDivider, IDividerInput>[];
+  callout: Block<ICallout, ICalloutInput>[];
+  collection_view: CollectionView[],
+  collection_view_page: CollectionViewPage[],
 }
 
 export type ViewUpdateParam =

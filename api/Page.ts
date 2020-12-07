@@ -18,13 +18,14 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock
+  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock, ILinkedDBInput
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
 
 const createBlockMap = () => {
   return {
+    linked_db: [],
     collection_view_page: [],
     embed: [],
     video: [],
@@ -286,6 +287,29 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           ...this.getProps(),
           id: $block_id
         }))
+      } else if (type === "linked_db") {
+        const { collection_id, views, position } = content as ILinkedDBInput,
+          content_id = uuidv4(),
+          collection = this.cache.collection.get(collection_id) as ICollection,
+          [created_view_ops, view_info] = this.createViewsUtils(collection.schema, views, collection.id, content_id);
+
+        ops.push(Operation.block.set(content_id, [], {
+          id: content_id,
+          version: 1,
+          type: 'collection_view',
+          collection_id,
+          view_ids: view_info.map(view_info => view_info[0]),
+          parent_id: this.id,
+          parent_table: 'block',
+          alive: true,
+        }),
+          this.addToChildArray(content_id, position), ...created_view_ops);
+        sync_records.push(content_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
+        block_map[type].push(new CollectionView({
+          ...this.getProps(),
+          id: $block_id
+        })
+        )
       }
 
       else {

@@ -199,6 +199,7 @@ export interface ITView {
 }
 
 export interface ITBlock {
+  linked_db: CollectionView[],
   embed: Block<IEmbed, IEmbedInput>[],
   video: Block<IVideo, IVideoInput>[];
   audio: Block<IAudio, IAudioInput>[];

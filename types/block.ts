@@ -1,7 +1,7 @@
 import { ISpace } from "./api";
 import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, TPermissionRole, IPermission, ParentProps } from "./types";
 import { Schema } from "./schema";
-import { CreateRootCollectionViewPageParams } from ".";
+import { CreateRootCollectionViewPageParams, SchemaManipParam } from ".";
 
 export interface PageProps {
   title: string[][],
@@ -78,6 +78,13 @@ export interface ICollectionInput extends CreateRootCollectionViewPageParams {
 
 export interface ICollectionViewPageInput extends CreateRootCollectionViewPageParams {
   type: "collection_view_page"
+}
+
+export interface ILinkedDBInput extends SchemaManipParam {
+  type: "linked_db",
+  collection_id: string,
+  properties?: {},
+  format?: {}
 }
 
 export type TCollectionBlockInput = ICollectionInput | ICollectionViewPageInput;
@@ -295,7 +302,7 @@ export interface IFigmaInput {
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
 
-export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput;
+export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput | ILinkedDBInput;
 // -----------------
 
 export interface IPublicPermission {

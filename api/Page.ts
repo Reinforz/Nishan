@@ -213,41 +213,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     }
   }
 
-  async createPageContent(arg: Omit<Partial<IPageInput & { position: RepositionParams }>, "type">) {
-    return (await this.createPageContents([arg]))[0]
-  }
-
-  async createPageContents(args: Omit<Partial<IPageInput & { position: RepositionParams }>, "type">[]) {
-    const operations: IOperation[] = [], block_ids: string[] = [];
-    for (let index = 0; index < args.length; index++) {
-      const content = args[index];
-      const block_id = uuidv4();
-
-      const {
-        format,
-        properties,
-        position,
-      } = content;
-
-      block_ids.push(block_id);
-
-      const block_list_op = this.addToChildArray(block_id, position);
-
-      operations.push(this.createBlock({
-        $block_id: block_id,
-        type: "page",
-        properties,
-        format,
-      }),
-        block_list_op
-      );
-    }
-
-    await this.saveTransactions(operations);
-    await this.updateCacheManually(block_ids);
-    return block_ids.map(id => new Page({ ...this.getProps(), id }))
-  }
-
   /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content

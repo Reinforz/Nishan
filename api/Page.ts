@@ -18,7 +18,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock, ILinkedDBInput
+  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";

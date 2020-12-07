@@ -85,8 +85,9 @@ async function createContent(space: Space, pages: Page[]) {
 
   for (let index = 0; index < pages.length; index++) {
     const page = pages[index];
-    await page.createLinkedDBContents([
+    await page.createContents([
       {
+        type: "linked_db",
         collection_id: collection_ids.Goals,
         views: [
           {
@@ -231,8 +232,9 @@ async function createContent(space: Space, pages: Page[]) {
         ]
       },
       {
+        type: "linked_db",
         collection_id: collection_ids["Course List"],
-        views: [
+        views: ([
           ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
           ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
           ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
@@ -283,10 +285,11 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Urgency",
               }
             ]
-          })
+          })) as any
         )
       },
       {
+        type: "linked_db",
         collection_id: collection_ids["Reading List"],
         views: [
           ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
@@ -341,8 +344,9 @@ async function createContent(space: Space, pages: Page[]) {
             ]
           })
         )
-      } as any,
+      },
       {
+        type: "linked_db",
         collection_id: collection_ids.Articles,
         views: [
           {
@@ -383,13 +387,14 @@ async function createContent(space: Space, pages: Page[]) {
                 name: "Source",
                 format: 300
               },
-              ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })),
-              ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })),
+              ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })) as any,
+              ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })) as any,
             ]
           }
         ]
       },
       {
+        type: "linked_db",
         collection_id: collection_ids.Tasks,
         views: [
           {

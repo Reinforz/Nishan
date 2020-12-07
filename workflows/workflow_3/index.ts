@@ -25,7 +25,8 @@ import "../env"
 
   for (let index = 25; index <= 25; index++) {
     // Add your specific title and page_icon
-    const page = await november_db?.createPageContent({
+    const page = (await november_db?.createContents([{
+      type: "page",
       properties: {
         title: [[`Day ${index}`]]
       },
@@ -33,7 +34,7 @@ import "../env"
         page_icon: "☝️",
         page_full_width: true
       }
-    })
+    }])).page[0]
 
     async function getRootCVPCollectionId(title: string) {
       const collection_view_page = (await space.getTRootPage((collection_view_page) => {
@@ -52,7 +53,8 @@ import "../env"
 
       // Add any sort of views you want
       // A simple table works best for me
-      await page?.createLinkedDBContents([{
+      await page.createContents([{
+        type: "linked_db",
         collection_id: collection_ids[0],
         views: [
           {
@@ -88,6 +90,7 @@ import "../env"
           }
         ]
       }, {
+        type: "linked_db",
         collection_id: collection_ids[1],
         views: [
           {
@@ -122,6 +125,7 @@ import "../env"
           }
         ]
       }, {
+        type: "linked_db",
         collection_id: collection_ids[2],
         views: [
           {
@@ -178,6 +182,7 @@ import "../env"
           }
         ]
       }, {
+        type: "linked_db",
         collection_id: collection_ids[3],
         views: [
           {

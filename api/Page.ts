@@ -333,44 +333,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     return block_map;
   }
 
-  /**
-   * Create a linked db content block
-   * @param collection_id Id of the collectionblock to link with
-   * @param views views of the newly created content block
-   * @param position `Position` interface
-   * @returns Newly created linkedDB block content object
-   */
-
-  async createLinkedDBContents(args: (SchemaManipParam & { collection_id: string })[]) {
-    const ops: IOperation[] = [], content_ids: UpdateCacheManuallyParam = [];
-    for (let index = 0; index < args.length; index++) {
-      const { collection_id, views, position } = args[index],
-        content_id = uuidv4(),
-        collection = this.cache.collection.get(collection_id) as ICollection,
-        [created_view_ops, view_info] = this.createViewsUtils(collection.schema, views, collection.id, content_id);
-
-      ops.push(Operation.block.set(content_id, [], {
-        id: content_id,
-        version: 1,
-        type: 'collection_view',
-        collection_id,
-        view_ids: view_info.map(view_info => view_info[0]),
-        parent_id: this.id,
-        parent_table: 'block',
-        alive: true,
-      }),
-        this.addToChildArray(content_id, position), ...created_view_ops);
-      content_ids.push(content_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
-    }
-
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(content_ids);
-    return content_ids.filter(content_id => typeof content_id === "string").map(id => new CollectionView({
-      ...this.getProps(),
-      id: id as string
-    }))
-  }
-
   async getBlock(arg?: FilterType<TBlock>) {
     return await this.getBlocks(typeof arg === "string" ? [arg] : arg, false);
   }

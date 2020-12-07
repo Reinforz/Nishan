@@ -18,7 +18,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, TBlockType, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock
+  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, SchemaManipParam, RecordMap, TDataType, ITBlock
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
@@ -249,22 +249,12 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   }
 
   /**
-   * Create content for a page 
-   * @param options Options for modifying the content during creation
-   * @returns Newly created block content object
-   */
-  async createContent(option: PageCreateContentParam) {
-    return (await this.createContents([option]))[0];
-  }
-
-  /**
    * Batch add multiple block as contents
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-  // TODO FEAT:1:H Connect with other custom content creation methods
   async createContents(contents: PageCreateContentParam[]) {
-    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], block_infos: [TBlockType, string][] = [];
+    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], block_ids: string[] = [], block_map = createBlockMap();
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
@@ -284,9 +274,9 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         position,
       } = content;
 
-      block_infos.push([type, $block_id]);
+      block_map[type].push(this.createClass(type, $block_id));
 
-      const block_list_op = this.addToChildArray($block_id, position);
+      block_ids.push($block_id);
 
       if (type === "bookmark") {
         bookmarks.push({
@@ -316,19 +306,15 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         properties,
         format,
       }),
-        block_list_op
+        this.addToChildArray($block_id, position)
       );
     }
 
     await this.saveTransactions(operations);
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
-    await this.updateCacheManually(block_infos.map(block_info => block_info[1]));
-    return block_infos.map(block_info => this.createClass(block_info[0], block_info[1]))
-  }
-
-  async createInlineDBContent(option: CreateRootCollectionViewPageParams) {
-    return (await this.createInlineDBContents([option]))[0]
+    await this.updateCacheManually(block_ids);
+    return block_map;
   }
 
   // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
@@ -370,11 +356,8 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
     return collection_view_pages;
-
   }
 
-  // ? FEAT:1:M Remove views argument so as to keep the original one?
-  // ? FEAT:1:H Iterate through each schema_unit to add specific filter, aggregation and sorts
   /**
    * Create a linked db content block
    * @param collection_id Id of the collectionblock to link with
@@ -382,9 +365,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param position `Position` interface
    * @returns Newly created linkedDB block content object
    */
-  async createLinkedDBContent(arg: (SchemaManipParam & { collection_id: string })) {
-    return (await this.createLinkedDBContents([arg]))[0]
-  }
 
   async createLinkedDBContents(args: (SchemaManipParam & { collection_id: string })[]) {
     const ops: IOperation[] = [], content_ids: UpdateCacheManuallyParam = [];
@@ -414,10 +394,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       ...this.getProps(),
       id: id as string
     }))
-  }
-
-  async createFullPageDBContent(option: CreateRootCollectionViewPageParams) {
-    return (await this.createFullPageDBContents([option]))[0];
   }
 
   // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well

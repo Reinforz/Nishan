@@ -101,7 +101,7 @@ export interface IWebBookmarkInput {
 export interface ICodeInput {
   type: 'code',
   properties: CodeProps,
-  format: CodeFormat
+  format?: CodeFormat
 }
 
 export interface IFileInput {

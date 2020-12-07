@@ -12,13 +12,12 @@ import {
   TExportType,
   IOperation,
   TGenericEmbedBlockType,
-  RepositionParams,
   CreateBlockArg,
   CreateRootCollectionViewPageParams,
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, IFactoryInput, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput
+  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
@@ -154,64 +153,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     });
 
     return response.data;
-
-    /* const fullpath = path.resolve(process.cwd(), dir, 'export.zip');
-
-    fs.createWriteStream(fullpath).end(response.data); */
-  }
-
-  /**
-   * Create a template block content
-   * @param factory `IFactoryInput` interface
-   * @param position number or `RepositionParams` interface
-   * @returns An object containing Newly created array of template content blocks and the template block itself
-   */
-  async createTemplateContent(factory: IFactoryInput, position?: RepositionParams) {
-    const {
-      format,
-      properties,
-      type
-    } = factory;
-    const $block_id = uuidv4();
-    const content_blocks = (factory.contents.map(content => ({
-      ...content,
-      $block_id: uuidv4()
-    })) as CreateBlockArg[]).map(content => {
-      const obj = this.createBlock(content);
-      obj.args.parent_id = $block_id;
-      return obj;
-    });
-
-    const content_block_ids = content_blocks.map(content_block => content_block.id);
-    const block_list_op = this.addToChildArray($block_id, position);
-    await this.saveTransactions(
-      [
-        this.createBlock({
-          $block_id,
-          type,
-          properties,
-          format
-        }),
-        ...content_block_ids.map(content_block_id => Operation.block.listAfter($block_id, ['content'], {
-          after: '',
-          id: content_block_id
-        })),
-        block_list_op,
-        ...content_blocks
-      ]
-    );
-    await this.updateCacheManually([$block_id]);
-
-    return {
-      template: new Block({
-        id: $block_id,
-        ...this.getProps()
-      }),
-      contents: content_block_ids.map(content_block_id => new Block({
-        id: content_block_id,
-        ...this.getProps()
-      }))
-    }
   }
 
   /**
@@ -287,7 +228,45 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           ...this.getProps(),
           id: $block_id
         }))
-      } else if (type === "linked_db") {
+      } else if (type === "factory") {
+        const content_blocks = (contents.map(content => ({
+          ...content,
+          $block_id: uuidv4()
+        })) as CreateBlockArg[]).map(content => {
+          const obj = this.createBlock(content);
+          obj.args.parent_id = $block_id;
+          return obj;
+        });
+
+        const content_block_ids = content_blocks.map(content_block => content_block.id);
+        ops.push(
+          this.createBlock({
+            $block_id,
+            type,
+            properties,
+            format
+          }),
+          ...content_block_ids.map(content_block_id => Operation.block.listAfter($block_id, ['content'], {
+            after: '',
+            id: content_block_id
+          })),
+          this.addToChildArray($block_id, position),
+          ...content_blocks
+        );
+        sync_records.push($block_id);
+        block_map.factory.push(new Block({
+          id: $block_id,
+          ...this.getProps()
+        }))
+        // ? FEAT:1:M Return the contents of the template
+        /* return {
+          template: ,
+          contents: content_block_ids.map(content_block_id => new Block({
+            id: content_block_id,
+            ...this.getProps()
+          })) */
+      }
+      else if (type === "linked_db") {
         const { collection_id, views, position } = content as ILinkedDBInput,
           content_id = uuidv4(),
           collection = this.cache.collection.get(collection_id) as ICollection,

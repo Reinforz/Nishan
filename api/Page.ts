@@ -219,7 +219,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @returns Array of newly created block content objects
    */
   async createContents(contents: PageCreateContentParam[]) {
-    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
+    const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
@@ -238,10 +238,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         type,
         position,
       } = content;
-
-      block_map[type].push(this.createClass(type, $block_id));
-
-      sync_records.push($block_id);
 
       if (type === "bookmark") {
         bookmarks.push({
@@ -265,17 +261,45 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         });
       }
 
-      operations.push(this.createBlock({
-        $block_id,
-        type,
-        properties,
-        format,
-      }),
-        this.addToChildArray($block_id, position)
-      );
+      if (type === "collection_view_page") {
+        const [collection_id, create_view_ops, view_info] = this.createCollection(content as CreateRootCollectionViewPageParams, this.id);
+        ops.push(Operation.block.update($block_id, [], {
+          id: $block_id,
+          type: 'collection_view_page',
+          collection_id,
+          view_ids: view_info.map(view_info => view_info[0]),
+          properties,
+          format,
+          parent_id: this.id,
+          parent_table: 'block',
+          alive: true,
+        }),
+          ...create_view_ops,
+          this.addToChildArray($block_id, position),
+        )
+
+        sync_records.push([collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
+        block_map.collection_view_page.push(new CollectionViewPage({
+          ...this.getProps(),
+          id: $block_id
+        }))
+      }
+
+      else {
+        ops.push(this.createBlock({
+          $block_id,
+          type,
+          properties,
+          format,
+        }),
+          this.addToChildArray($block_id, position)
+        );
+        sync_records.push($block_id);
+        block_map[type].push(this.createClass(type, $block_id));
+      }
     }
 
-    await this.saveTransactions(operations);
+    await this.saveTransactions(ops);
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
     await this.updateCacheManually(sync_records);

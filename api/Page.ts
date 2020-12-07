@@ -17,10 +17,21 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput
+  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput, ITView, ITCollectionBlock
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
+import Collection from "./Collection";
+import { BoardView, GalleryView, ListView, TimelineView, TableView, CalendarView } from ".";
+
+const view_class = {
+  board: BoardView,
+  gallery: GalleryView,
+  list: ListView,
+  timeline: TimelineView,
+  table: TableView,
+  calendar: CalendarView,
+}
 
 const createBlockMap = () => {
   return {
@@ -57,6 +68,17 @@ const createBlockMap = () => {
     callout: [],
     collection_view: [],
   } as ITBlock
+}
+
+const createViewMap = () => {
+  return {
+    board: [],
+    gallery: [],
+    list: [],
+    timeline: [],
+    table: [],
+    calendar: [],
+  } as ITView;
 }
 
 /**
@@ -204,12 +226,12 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       }
 
       if (type === "collection_view_page" || type === "collection_view") {
-        const [collection_id, create_view_ops, view_info] = this.createCollection(content as CreateRootCollectionViewPageParams, $block_id);
+        const [collection_id, create_view_ops, view_infos] = this.createCollection(content as CreateRootCollectionViewPageParams, $block_id);
         ops.push(Operation.block.update($block_id, [], {
           id: $block_id,
           type,
           collection_id,
-          view_ids: view_info.map(view_info => view_info[0]),
+          view_ids: view_infos.map(view_info => view_info[0]),
           properties,
           format,
           parent_id: this.id,
@@ -220,14 +242,28 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           this.addToChildArray($block_id, position),
         )
 
-        sync_records.push([collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-        block_map[type].push(type === "collection_view" ? new CollectionView({
+        const collectionblock_map: ITCollectionBlock = {
+          block: type === "collection_view" ? new CollectionView({
+            ...this.getProps(),
+            id: $block_id
+          }) : new CollectionViewPage({
+            ...this.getProps(),
+            id: $block_id
+          }),
+          collection: new Collection({
+            id: collection_id,
+            ...this.getProps()
+          }),
+          views: createViewMap()
+        }
+
+        view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
           ...this.getProps(),
-          id: $block_id
-        }) : new CollectionViewPage({
-          ...this.getProps(),
-          id: $block_id
-        }))
+          id: view_id
+        }) as any))
+
+        sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
+        block_map[type].push(collectionblock_map)
       } else if (type === "factory") {
         const content_blocks = (contents.map(content => ({
           ...content,
@@ -270,25 +306,38 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         const { collection_id, views, position } = content as ILinkedDBInput,
           content_id = uuidv4(),
           collection = this.cache.collection.get(collection_id) as ICollection,
-          [created_view_ops, view_info] = this.createViewsUtils(collection.schema, views, collection.id, content_id);
+          [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, views, collection.id, content_id);
 
         ops.push(Operation.block.set(content_id, [], {
           id: content_id,
           version: 1,
           type: 'collection_view',
           collection_id,
-          view_ids: view_info.map(view_info => view_info[0]),
+          view_ids: view_infos.map(view_info => view_info[0]),
           parent_id: this.id,
           parent_table: 'block',
           alive: true,
         }),
           this.addToChildArray(content_id, position), ...created_view_ops);
-        sync_records.push(content_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
-        block_map[type].push(new CollectionView({
+        sync_records.push(content_id, [collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
+        const collectionblock_map: ITCollectionBlock = {
+          block: new CollectionView({
+            ...this.getProps(),
+            id: $block_id
+          }),
+          collection: new Collection({
+            id: collection_id,
+            ...this.getProps()
+          }),
+          views: createViewMap()
+        }
+
+        view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
           ...this.getProps(),
-          id: $block_id
-        })
-        )
+          id: view_id
+        }) as any))
+
+        block_map[type].push(collectionblock_map)
       }
 
       else {

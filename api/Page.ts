@@ -261,11 +261,11 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         });
       }
 
-      if (type === "collection_view_page") {
-        const [collection_id, create_view_ops, view_info] = this.createCollection(content as CreateRootCollectionViewPageParams, this.id);
+      if (type === "collection_view_page" || type === "collection_view") {
+        const [collection_id, create_view_ops, view_info] = this.createCollection(content as CreateRootCollectionViewPageParams, $block_id);
         ops.push(Operation.block.update($block_id, [], {
           id: $block_id,
-          type: 'collection_view_page',
+          type,
           collection_id,
           view_ids: view_info.map(view_info => view_info[0]),
           properties,
@@ -279,7 +279,10 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         )
 
         sync_records.push([collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-        block_map.collection_view_page.push(new CollectionViewPage({
+        block_map[type].push(type === "collection_view" ? new CollectionView({
+          ...this.getProps(),
+          id: $block_id
+        }) : new CollectionViewPage({
           ...this.getProps(),
           id: $block_id
         }))
@@ -304,48 +307,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       await this.setBookmarkMetadata(bookmark)
     await this.updateCacheManually(sync_records);
     return block_map;
-  }
-
-  // ? FIX:1:M addToChildArray in this method should have the view_ids path rather than content or pages
-  /**
-   * Creates an inline database block inside current page
-   * @param options Views of the newly created inline db block
-   * @param position 
-   * @returns Returns the newly created inlinedb content block object
-   */
-  async createInlineDBContents(options: CreateRootCollectionViewPageParams[]) {
-    const ops: IOperation[] = [], collection_view_pages: CollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
-
-    for (let index = 0; index < options.length; index++) {
-      const option = options[index],
-        { properties, format } = option,
-        block_id = uuidv4(), [collection_id, create_view_ops, view_info] = this.createCollection(option, block_id);
-
-      ops.push(Operation.block.update(block_id, [], {
-        id: block_id,
-        properties,
-        format,
-        type: 'collection_view',
-        view_ids: view_info.map(view_info => view_info[0]),
-        collection_id,
-        parent_id: this.id,
-        parent_table: "block",
-        alive: true,
-      }),
-        ...create_view_ops,
-        this.addToChildArray(block_id, option.position),
-      )
-
-      sync_records.push(block_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-      collection_view_pages.push(new CollectionViewPage({
-        ...this.getProps(),
-        id: block_id
-      }))
-    }
-
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return collection_view_pages;
   }
 
   /**

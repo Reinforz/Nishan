@@ -1,6 +1,7 @@
 import { ISpace } from "./api";
 import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, TPermissionRole, IPermission, ParentProps } from "./types";
 import { Schema } from "./schema";
+import { CreateRootCollectionViewPageParams } from ".";
 
 export interface PageProps {
   title: string[][],
@@ -70,6 +71,17 @@ export interface TodoProps {
   title: string[][],
   checked: ("Yes" | "No")[][]
 }
+
+export interface ICollectionInput extends CreateRootCollectionViewPageParams {
+  type: "collection_view"
+}
+
+export interface ICollectionViewPageInput extends CreateRootCollectionViewPageParams {
+  type: "collection_view_page"
+}
+
+export type TCollectionBlockInput = ICollectionInput | ICollectionViewPageInput;
+
 // -----------------
 
 // Media IBlock Input
@@ -283,7 +295,7 @@ export interface IFigmaInput {
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
 
-export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput;
+export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput;
 // -----------------
 
 export interface IPublicPermission {
@@ -336,7 +348,7 @@ export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
 }
 
-export type TCollectionBlock = IRootCollectionViewPage | ICollectionView | ICollectionView | ICollectionViewPage;
+export type TCollectionBlock = IRootCollectionViewPage | ICollectionView | ICollectionViewPage;
 
 export interface IText extends ITextInput, IBlock { }
 export interface ITodo extends ITodoInput, IBlock { }

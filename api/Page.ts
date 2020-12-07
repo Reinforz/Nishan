@@ -219,7 +219,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @returns Array of newly created block content objects
    */
   async createContents(contents: PageCreateContentParam[]) {
-    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], block_ids: string[] = [], block_map = createBlockMap();
+    const operations: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
@@ -241,7 +241,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
 
       block_map[type].push(this.createClass(type, $block_id));
 
-      block_ids.push($block_id);
+      sync_records.push($block_id);
 
       if (type === "bookmark") {
         bookmarks.push({
@@ -278,7 +278,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     await this.saveTransactions(operations);
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
-    await this.updateCacheManually(block_ids);
+    await this.updateCacheManually(sync_records);
     return block_map;
   }
 
@@ -311,6 +311,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
         ...create_view_ops,
         this.addToChildArray(block_id, option.position),
       )
+
       sync_records.push(block_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
       collection_view_pages.push(new CollectionViewPage({
         ...this.getProps(),

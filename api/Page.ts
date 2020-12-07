@@ -17,7 +17,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITBlock, ILinkedDBInput, ITView, ITCollectionBlock
+  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ILinkedDBInput, ITView, ITCollectionBlock
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
@@ -31,43 +31,6 @@ const view_class = {
   timeline: TimelineView,
   table: TableView,
   calendar: CalendarView,
-}
-
-const createBlockMap = () => {
-  return {
-    linked_db: [],
-    collection_view_page: [],
-    embed: [],
-    video: [],
-    audio: [],
-    image: [],
-    bookmark: [],
-    code: [],
-    file: [],
-    tweet: [],
-    gist: [],
-    codepen: [],
-    maps: [],
-    figma: [],
-    drive: [],
-    text: [],
-    table_of_contents: [],
-    equation: [],
-    breadcrumb: [],
-    factory: [],
-    page: [],
-    to_do: [],
-    header: [],
-    sub_header: [],
-    sub_sub_header: [],
-    bulleted_list: [],
-    numbered_list: [],
-    toggle: [],
-    quote: [],
-    divider: [],
-    callout: [],
-    collection_view: [],
-  } as ITBlock
 }
 
 const createViewMap = () => {
@@ -183,7 +146,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @returns Array of newly created block content objects
    */
   async createContents(contents: PageCreateContentParam[]) {
-    const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
+    const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index];
       const $block_id = uuidv4();
@@ -371,7 +334,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const _this = this, block_map = createBlockMap();
+    const _this = this, block_map = this.createBlockMap();
     await this.getItems<TBlock>(args, multiple, async function (block) {
       block_map[block.type].push(_this.createClass(block.type, block.id) as any)
     })

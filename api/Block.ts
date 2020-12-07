@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams } from "../types"
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, ITBlock, IOperation, UpdateCacheManuallyParam } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -13,6 +13,43 @@ import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBul
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "block" });
+  }
+
+  protected createBlockMap = () => {
+    return {
+      linked_db: [],
+      collection_view_page: [],
+      embed: [],
+      video: [],
+      audio: [],
+      image: [],
+      bookmark: [],
+      code: [],
+      file: [],
+      tweet: [],
+      gist: [],
+      codepen: [],
+      maps: [],
+      figma: [],
+      drive: [],
+      text: [],
+      table_of_contents: [],
+      equation: [],
+      breadcrumb: [],
+      factory: [],
+      page: [],
+      to_do: [],
+      header: [],
+      sub_header: [],
+      sub_sub_header: [],
+      bulleted_list: [],
+      numbered_list: [],
+      toggle: [],
+      quote: [],
+      divider: [],
+      callout: [],
+      collection_view: [],
+    } as ITBlock
   }
 
   async reposition(arg: RepositionParams) {
@@ -25,11 +62,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns The duplicated block object
    */
 
-  async duplicate() {
-    const data = this.getCachedData();
-    const $gen_block_id = uuidv4();
-    await this.saveTransactions(
-      [
+  async duplicate(times?: number) {
+    times = times ?? 1;
+    const block_map = this.createBlockMap(), data = this.getCachedData(), ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
+    for (let index = 0; index < times; index++) {
+      const $gen_block_id = uuidv4();
+      sync_records.push($gen_block_id);
+      ops.push(
         Operation.block.update($gen_block_id, [], {
           id: $gen_block_id,
           type: "copy_indicator",
@@ -40,22 +79,22 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         Operation.block.listAfter(data.parent_id, ['content'], {
           after: data.id,
           id: $gen_block_id
-        }),
-      ]
-    );
+        }))
 
-    await this.enqueueTask({
-      eventName: 'duplicateBlock',
-      request: {
-        sourceBlockId: data.id,
-        targetBlockId: $gen_block_id,
-        addCopyName: true
-      }
-    });
+      await this.enqueueTask({
+        eventName: 'duplicateBlock',
+        request: {
+          sourceBlockId: data.id,
+          targetBlockId: $gen_block_id,
+          addCopyName: true
+        }
+      });
+      block_map[data.type].push(this.createClass(data.type, $gen_block_id));
+    }
 
-    await this.updateCacheManually([$gen_block_id, data.parent_id])
-
-    return this.createClass(data.type, $gen_block_id);
+    await this.saveTransactions(ops);
+    await this.updateCacheManually([...sync_records, data.parent_id])
+    return block_map;
   }
 
   /**

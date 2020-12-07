@@ -386,42 +386,6 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     }))
   }
 
-  // ? RF:1:M Utilize a util method for Space.createRootCollectionViewPage as well
-  /**
-   * Create a full page db content block
-   * @param option Schema and the views of the newly created block
-   * @returns Returns the newly created full page db block object
-   */
-  async createFullPageDBContents(options: CreateRootCollectionViewPageParams[]) {
-    const data = this.getCachedData(), ops: IOperation[] = [], collection_view_pages: CollectionViewPage[] = [], sync_records: UpdateCacheManuallyParam = [];
-
-    for (let index = 0; index < options.length; index++) {
-      const option = options[index],
-        { properties, format } = option,
-        block_id = uuidv4(), [collection_id, create_view_ops, view_info] = this.createCollection(option, block_id);
-      ops.push(Operation.block.update(block_id, [], {
-        id: data.id,
-        type: 'collection_view_page',
-        collection_id,
-        view_ids: view_info.map(view_info => view_info[0]),
-        properties,
-        format,
-      }),
-        ...create_view_ops,
-        this.addToChildArray(block_id, option.position),
-      )
-
-      sync_records.push(block_id, [collection_id, "collection"], ...view_info.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-      collection_view_pages.push(new CollectionViewPage({
-        ...this.getProps(),
-        id: block_id
-      }))
-    }
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
-    return collection_view_pages;
-  }
-
   async getBlock(arg?: FilterType<TBlock>) {
     return await this.getBlocks(typeof arg === "string" ? [arg] : arg, false);
   }

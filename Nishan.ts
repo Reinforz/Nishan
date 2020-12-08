@@ -90,6 +90,20 @@ class Nishan extends Cache {
       return new NotionUser({ ...common_props, user_id: user_id, id: user_id, space_id: "0", shard_id: 0 })
     });
   }
+
+  /* async getPagesById(ids: string[]){
+    const ops: IOperation[] = [], pages: Page[] = [],sync_records: UpdateCacheManuallyParam = [];
+    for (let index = 0; index < ids.length; index++) {
+      const id = ids[index];
+      sync_records.push(id);
+      
+    }
+
+    await this.updateCacheManually()
+
+    return pages;
+
+  } */
 }
 
 export default Nishan;

@@ -3,90 +3,40 @@ import colors from "colors";
 
 import Cache from "./Cache";
 
-import { createTransaction, error } from "../utils";
-import { UpdateCacheManuallyParam, IOperation, Request, TDataType, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, InviteGuestsToSpaceParams, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, RemoveUsersFromSpaceParams, RemoveUsersFromSpaceResult, SetBookmarkMetadataParams, SyncRecordValuesParams, SyncRecordValuesResult, TEnqueueTaskParams, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, SetSpaceNotificationsAsReadParams, SetPageNotificationsAsReadParams, Logger, NishanArg } from "../types";
+import { error } from "../utils";
+import { UpdateCacheManuallyParam, TDataType, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SyncRecordValuesParams, SyncRecordValuesResult, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, Logger, NishanArg } from "../types";
 
 /**
  * A class containing all the api endpoints of Notion
  * @noInheritDoc
  */
-export default class Getters extends Cache {
+export default class Queries extends Cache {
   protected token: string;
   protected interval: number;
-  protected user_id: string;
-  protected space_id: string;
-  protected shard_id: number;
   protected headers: {
     headers: {
       cookie: string,
       ["x-notion-active-user-header"]: string
     }
   };
-  protected createTransaction: (operations: IOperation[]) => Request
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
-  logger: Logger;
+  protected logger: Logger;
+  protected user_id: string;
 
-  constructor({ logger, token, interval, user_id, shard_id, space_id, cache }: NishanArg) {
+  constructor({ logger, token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id" | "id">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;
-    this.user_id = user_id;
     this.headers = {
       headers: {
         cookie: `token_v2=${token}`,
         ["x-notion-active-user-header"]: user_id
-      }
+      } as any
     };
-    this.shard_id = shard_id;
-    this.space_id = space_id;
-    this.createTransaction = createTransaction.bind(this, shard_id, space_id);
+    this.user_id = user_id;
     this.logger = function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     } || logger;
-  }
-
-  protected getProps() {
-    return {
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache,
-      logger: this.logger
-    }
-  }
-
-  protected async setPageNotificationsAsRead(arg: SetPageNotificationsAsReadParams) {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          await axios.post(
-            `${this.BASE_NOTION_URL}/setPageNotificationsAsRead`,
-            arg,
-            this.headers
-          );
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
-  }
-
-  protected async setSpaceNotificationsAsRead(arg: SetSpaceNotificationsAsReadParams) {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          await axios.post(
-            `${this.BASE_NOTION_URL}/setSpaceNotificationsAsRead`,
-            arg,
-            this.headers
-          );
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
   }
 
   protected async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {
@@ -183,24 +133,6 @@ export default class Getters extends Cache {
             arg,
             this.headers
           ) as { data: GetSubscriptionDataResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
-  }
-
-  protected async removeUsersFromSpace(arg: RemoveUsersFromSpaceParams): Promise<RemoveUsersFromSpaceResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/removeUsersFromSpace`,
-            arg,
-            this.headers
-          ) as { data: RemoveUsersFromSpaceResult };
-          this.saveToCache(data.recordMap);
           resolve(data);
         } catch (err) {
           reject(error(err.response.data))
@@ -350,23 +282,6 @@ export default class Getters extends Cache {
     })
   }
 
-  protected async inviteGuestsToSpace(arg: InviteGuestsToSpaceParams): Promise<void> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          await axios.post(
-            `${this.BASE_NOTION_URL}/inviteGuestsToSpace`,
-            arg,
-            this.headers
-          );
-          resolve()
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
-  }
-
   protected async findUser(email: string): Promise<INotionUser> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
@@ -377,32 +292,6 @@ export default class Getters extends Cache {
             this.headers
           ) as { data: FindUserResult };
           resolve(value.value)
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
-  }
-
-  protected async createSpace(params: Partial<CreateSpaceParams>): Promise<CreateSpaceResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data, data: { recordMap } } = await axios.post(
-            `${this.BASE_NOTION_URL}/createSpace`,
-            {
-              ...params,
-              planType: "personal",
-              initialUseCases: []
-            },
-            {
-              headers: {
-                cookie: `token_v2=${this.token};notion_user_id=${this.user_id};`
-              }
-            }
-          ) as { data: CreateSpaceResult };
-          this.saveToCache(recordMap);
-          resolve(data);
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -464,37 +353,6 @@ export default class Getters extends Cache {
     })
   }
 
-  protected async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
-          resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data));
-        }
-      }, this.interval)
-    })
-  }
-
-  // ? TD:2:M Add task typedef
-  // ? TD:2:M Add EnqueueTaskResult interface
-  protected async enqueueTask(task: TEnqueueTaskParams): Promise<EnqueueTaskResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            `${this.BASE_NOTION_URL}/enqueueTask`, {
-            task
-          }, this.headers);
-          resolve(res.data);
-        } catch (err) {
-          reject(error(err.response.data));
-        }
-      }, this.interval)
-    })
-  }
-
   protected async loadPageChunk(arg: LoadPageChunkParams): Promise<RecordMap> {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
@@ -506,23 +364,6 @@ export default class Getters extends Cache {
           ) as { data: LoadPageChunkResult };
           this.saveToCache(res.data.recordMap);
           resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      })
-    })
-  }
-
-  protected async setBookmarkMetadata(arg: SetBookmarkMetadataParams): Promise<undefined> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          await axios.post(
-            `${this.BASE_NOTION_URL}/setBookmarkMetadata`,
-            arg,
-            this.headers
-          );
-          resolve(undefined);
         } catch (err) {
           reject(error(err.response.data))
         }

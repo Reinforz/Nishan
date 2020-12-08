@@ -2,14 +2,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType } from "../types";
 import { Operation, error } from "../utils";
-import Getters from "./Getters";
+import Mutations from "./Mutations";
 
 /**
  * A class to update and control data specific stuffs
  * @noInheritDoc
  */
 
-export default class Data<T extends TData> extends Getters {
+export default class Data<T extends TData> extends Mutations {
   id: string;
   type: TDataType;
   protected listBeforeOp: (path: string[], args: Args) => IOperation;

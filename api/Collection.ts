@@ -113,6 +113,7 @@ class Collection extends Data<ICollection> {
     }
     await this.saveTransactions(ops);
     await this.updateCacheManually(block_ids);
+    return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
   /**

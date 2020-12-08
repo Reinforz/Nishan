@@ -7,6 +7,7 @@ import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, 
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
+import Page from './Page';
 
 /**
  * A class to represent NotionUser of Notion
@@ -176,6 +177,20 @@ class NotionUser extends Data<INotionUser> {
       id: space_id,
       ...this.getProps()
     }))
+  }
+
+  // ? FEAT:1:M Add deleteSpaces methods
+
+  async getPagesById(ids: string[]) {
+    const pages: Page[] = [], sync_records: UpdateCacheManuallyParam = [];
+    for (let index = 0; index < ids.length; index++) {
+      const id = ids[index];
+      sync_records.push(id);
+      pages.push(new Page({ ...this.getProps(), id }))
+    }
+
+    await this.updateCacheManually(sync_records);
+    return pages;
   }
 }
 

@@ -3,11 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam, IOperation, UpdateCacheManuallyParam } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam, IOperation, UpdateCacheManuallyParam, TPage, ITPage } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
+import CollectionViewPage from './CollectionViewPage';
 
 /**
  * A class to represent NotionUser of Notion
@@ -181,16 +182,24 @@ class NotionUser extends Data<INotionUser> {
 
   // ? FEAT:1:M Add deleteSpaces methods
 
-  async getPagesById(ids: string[]) {
-    const pages: Page[] = [], sync_records: UpdateCacheManuallyParam = [];
+  async getTPagesById(ids: string[]) {
+    const tpage_map: ITPage = { page: [], collection_view_page: [] }, tpage_content_ids: string[] = [];
+
+    await this.updateCacheManually(ids);
+
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index];
-      sync_records.push(id);
-      pages.push(new Page({ ...this.getProps(), id }))
+      const page = this.cache.block.get(id) as TPage;
+      if (page.type === "page") {
+        tpage_map.page.push(new Page({ ...this.getProps(), id: page.id }))
+        tpage_content_ids.push(...page.content);
+      } else
+        tpage_map.collection_view_page.push(new CollectionViewPage({ ...this.getProps(), id: page.id }));
     }
 
-    await this.updateCacheManually(sync_records);
-    return pages;
+    if (tpage_content_ids.length)
+      await this.updateCacheManually(tpage_content_ids);
+    return tpage_map;
   }
 }
 

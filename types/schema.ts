@@ -106,6 +106,28 @@ export type TAdvancedSchemaUnit = FormulaSchemaUnit | RelationSchemaUnit | Rollu
 
 export type TSchemaUnit = TBasicSchemaUnit | TAdvancedSchemaUnit;
 
+export type MSchemaUnit = {
+  text: TextSchemaUnit,
+  number: NumberSchemaUnit,
+  select: SelectSchemaUnit,
+  multi_select: MultiSelectSchemaUnit,
+  title: TitleSchemaUnit,
+  date: DateSchemaUnit,
+  person: PersonSchemaUnit,
+  file: FileSchemaUnit,
+  checkbox: CheckboxSchemaUnit,
+  url: UrlSchemaUnit,
+  email: EmailSchemaUnit,
+  phone_number: PhoneNumberSchemaUnit,
+  formula: FormulaSchemaUnit,
+  relation: RelationSchemaUnit,
+  rollup: RollupSchemaUnit,
+  created_time: CreatedTimeSchemaUnit,
+  created_by: CreatedBySchemaUnit,
+  last_edited_time: LastEditedTimeSchemaUnit,
+  last_edited_by: LastEditedBySchemaUnit,
+}
+
 export interface Schema {
   [key: string]: TSchemaUnit
 };

@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, NumberSchemaUnit, SelectSchemaUnit, MultiSelectSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, PersonSchemaUnit, TitleSchemaUnit, EmailSchemaUnit, PhoneNumberSchemaUnit, UrlSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, PageProps, PageFormat, ITSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, PageProps, PageFormat, ITSchemaUnit, MSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -232,43 +232,43 @@ class Collection extends Data<ICollection> {
     const args = ({ ...this.getProps(), id: this.id, schema_id })
     switch (type) {
       case "text":
-        return new SchemaUnit<TextSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["text"]>(args)
       case "number":
-        return new SchemaUnit<NumberSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["number"]>(args)
       case "select":
-        return new SchemaUnit<SelectSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["select"]>(args)
       case "multi_select":
-        return new SchemaUnit<MultiSelectSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["multi_select"]>(args)
       case "title":
-        return new SchemaUnit<TitleSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["title"]>(args)
       case "date":
-        return new SchemaUnit<DateSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["date"]>(args)
       case "person":
-        return new SchemaUnit<PersonSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["person"]>(args)
       case "file":
-        return new SchemaUnit<FileSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["file"]>(args)
       case "checkbox":
-        return new SchemaUnit<CheckboxSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["checkbox"]>(args)
       case "url":
-        return new SchemaUnit<UrlSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["url"]>(args)
       case "email":
-        return new SchemaUnit<EmailSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["email"]>(args)
       case "phone_number":
-        return new SchemaUnit<PhoneNumberSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["phone_number"]>(args)
       case "formula":
-        return new SchemaUnit<FormulaSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["formula"]>(args)
       case "relation":
-        return new SchemaUnit<RelationSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["relation"]>(args)
       case "rollup":
-        return new SchemaUnit<RollupSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["rollup"]>(args)
       case "created_time":
-        return new SchemaUnit<CreatedTimeSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["created_time"]>(args)
       case "created_by":
-        return new SchemaUnit<CreatedBySchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["created_by"]>(args)
       case "last_edited_time":
-        return new SchemaUnit<LastEditedTimeSchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["last_edited_time"]>(args)
       case "last_edited_by":
-        return new SchemaUnit<LastEditedBySchemaUnit>(args)
+        return new SchemaUnit<MSchemaUnit["last_edited_by"]>(args)
       default:
         return new SchemaUnit<TextSchemaUnit>(args)
     }

@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, PageProps, PageFormat, ITSchemaUnit, MSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, PageProps, PageFormat, MSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -282,29 +282,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const schema_unit_map: ITSchemaUnit = {
-      text: [],
-      number: [],
-      select: [],
-      multi_select: [],
-      title: [],
-      date: [],
-      person: [],
-      file: [],
-      checkbox: [],
-      url: [],
-      email: [],
-      phone_number: [],
-      formula: [],
-      relation: [],
-      rollup: [],
-      created_time: [],
-      created_by: [],
-      last_edited_time: [],
-      last_edited_by: []
-    };
-
-    const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
+    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {

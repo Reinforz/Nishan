@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Block from './Block';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, ICollection, ITView, TSearchManipViewParam } from '../types';
+import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, ICollection, TSearchManipViewParam } from '../types';
 import { Operation } from '../utils';
 
 const view_class = {
@@ -12,17 +12,6 @@ const view_class = {
   timeline: TimelineView,
   table: TableView,
   calendar: CalendarView,
-}
-
-const createViewMap = () => {
-  return {
-    board: [],
-    gallery: [],
-    list: [],
-    timeline: [],
-    table: [],
-    calendar: [],
-  } as ITView;
 }
 
 /**
@@ -48,7 +37,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
   }
 
   async createViews(params: [TSearchManipViewParam, ...TSearchManipViewParam[]]) {
-    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map = createViewMap();
+    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map = this.createViewMap();
     ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_infos.map(view_info => view_info[0])] }));
     await this.saveTransactions(ops);
     await this.updateCacheManually(view_infos.map(view_info => [view_info[0], "collection_view"]));
@@ -62,7 +51,7 @@ class CollectionBlock extends Block<TCollectionBlock, any> {
    */
   async getViews(args?: FilterTypes<TView>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const props = this.getProps(), view_map = createViewMap(), logger = this.logger;
+    const props = this.getProps(), view_map = this.createViewMap(), logger = this.logger;
 
     await this.getItems<TView>(args, multiple, async function (view) {
       logger && logger("READ", "View", view.id);

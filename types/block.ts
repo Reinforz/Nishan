@@ -137,7 +137,7 @@ export interface IPageInput {
   type: 'page',
   properties: PageProps,
   format?: Partial<PageFormat>,
-  isPrivate?: boolean
+  isPrivate?: boolean,
 }
 
 export interface ICommonTextInput {

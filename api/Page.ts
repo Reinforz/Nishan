@@ -17,7 +17,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ILinkedDBInput, ITView, ITCollectionBlock
+  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ILinkedDBInput, ITCollectionBlock
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
@@ -31,17 +31,6 @@ const view_class = {
   timeline: TimelineView,
   table: TableView,
   calendar: CalendarView,
-}
-
-const createViewMap = () => {
-  return {
-    board: [],
-    gallery: [],
-    list: [],
-    timeline: [],
-    table: [],
-    calendar: [],
-  } as ITView;
 }
 
 /**
@@ -217,7 +206,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
             id: collection_id,
             ...this.getProps()
           }),
-          views: createViewMap()
+          views: this.createViewMap()
         }
 
         view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
@@ -292,7 +281,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
             id: collection_id,
             ...this.getProps()
           }),
-          views: createViewMap()
+          views: this.createViewMap()
         }
 
         view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({

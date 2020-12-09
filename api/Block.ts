@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, ITBlock, IOperation, UpdateCacheManuallyParam } from "../types"
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, IOperation, UpdateCacheManuallyParam } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -13,43 +13,6 @@ import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBul
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "block" });
-  }
-
-  protected createBlockMap = () => {
-    return {
-      linked_db: [],
-      collection_view_page: [],
-      embed: [],
-      video: [],
-      audio: [],
-      image: [],
-      bookmark: [],
-      code: [],
-      file: [],
-      tweet: [],
-      gist: [],
-      codepen: [],
-      maps: [],
-      figma: [],
-      drive: [],
-      text: [],
-      table_of_contents: [],
-      equation: [],
-      breadcrumb: [],
-      factory: [],
-      page: [],
-      to_do: [],
-      header: [],
-      sub_header: [],
-      sub_sub_header: [],
-      bulleted_list: [],
-      numbered_list: [],
-      toggle: [],
-      quote: [],
-      divider: [],
-      callout: [],
-      collection_view: [],
-    } as ITBlock
   }
 
   async reposition(arg: RepositionParams) {

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, CreateRootCollectionViewPageParams, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit } from "../types";
 import { Operation, error } from "../utils";
 import Mutations from "./Mutations";
 
@@ -408,4 +408,77 @@ export default class Data<T extends TData> extends Mutations {
 
     return [collection_id, created_view_ops, view_infos] as [string, IOperation[], [string, TViewType][]]
   }
+
+  protected createBlockMap = () => {
+    return {
+      linked_db: [],
+      collection_view_page: [],
+      embed: [],
+      video: [],
+      audio: [],
+      image: [],
+      bookmark: [],
+      code: [],
+      file: [],
+      tweet: [],
+      gist: [],
+      codepen: [],
+      maps: [],
+      figma: [],
+      drive: [],
+      text: [],
+      table_of_contents: [],
+      equation: [],
+      breadcrumb: [],
+      factory: [],
+      page: [],
+      to_do: [],
+      header: [],
+      sub_header: [],
+      sub_sub_header: [],
+      bulleted_list: [],
+      numbered_list: [],
+      toggle: [],
+      quote: [],
+      divider: [],
+      callout: [],
+      collection_view: [],
+    } as ITBlock
+  }
+
+  protected createViewMap() {
+    return {
+      board: [],
+      gallery: [],
+      list: [],
+      timeline: [],
+      table: [],
+      calendar: [],
+    } as ITView;
+  }
+
+  protected createSchemaUnitMap() {
+    return {
+      text: [],
+      number: [],
+      select: [],
+      multi_select: [],
+      title: [],
+      date: [],
+      person: [],
+      file: [],
+      checkbox: [],
+      url: [],
+      email: [],
+      phone_number: [],
+      formula: [],
+      relation: [],
+      rollup: [],
+      created_time: [],
+      created_by: [],
+      last_edited_time: [],
+      last_edited_by: []
+    } as ITSchemaUnit
+  }
+
 }

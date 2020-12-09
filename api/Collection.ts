@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, TextSchemaUnit, PageProps, PageFormat, MSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, PageProps, PageFormat, MSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -15,6 +15,11 @@ import Page from './Page';
 class Collection extends Data<ICollection> {
   constructor(args: NishanArg) {
     super({ ...args, type: "collection" });
+  }
+
+  #createClass = (type: TSchemaUnitType, schema_id: string) => {
+    const args = ({ ...this.getProps(), id: this.id, schema_id })
+    return new SchemaUnit<MSchemaUnit[typeof type]>(args)
   }
 
   /**
@@ -229,52 +234,6 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
-  #createClass = (type: TSchemaUnitType, schema_id: string) => {
-    const args = ({ ...this.getProps(), id: this.id, schema_id })
-    switch (type) {
-      case "text":
-        return new SchemaUnit<MSchemaUnit[typeof type]>(args)
-      case "number":
-        return new SchemaUnit<MSchemaUnit["number"]>(args)
-      case "select":
-        return new SchemaUnit<MSchemaUnit["select"]>(args)
-      case "multi_select":
-        return new SchemaUnit<MSchemaUnit["multi_select"]>(args)
-      case "title":
-        return new SchemaUnit<MSchemaUnit["title"]>(args)
-      case "date":
-        return new SchemaUnit<MSchemaUnit["date"]>(args)
-      case "person":
-        return new SchemaUnit<MSchemaUnit["person"]>(args)
-      case "file":
-        return new SchemaUnit<MSchemaUnit["file"]>(args)
-      case "checkbox":
-        return new SchemaUnit<MSchemaUnit["checkbox"]>(args)
-      case "url":
-        return new SchemaUnit<MSchemaUnit["url"]>(args)
-      case "email":
-        return new SchemaUnit<MSchemaUnit["email"]>(args)
-      case "phone_number":
-        return new SchemaUnit<MSchemaUnit["phone_number"]>(args)
-      case "formula":
-        return new SchemaUnit<MSchemaUnit["formula"]>(args)
-      case "relation":
-        return new SchemaUnit<MSchemaUnit["relation"]>(args)
-      case "rollup":
-        return new SchemaUnit<MSchemaUnit["rollup"]>(args)
-      case "created_time":
-        return new SchemaUnit<MSchemaUnit["created_time"]>(args)
-      case "created_by":
-        return new SchemaUnit<MSchemaUnit["created_by"]>(args)
-      case "last_edited_time":
-        return new SchemaUnit<MSchemaUnit["last_edited_time"]>(args)
-      case "last_edited_by":
-        return new SchemaUnit<MSchemaUnit["last_edited_by"]>(args)
-      default:
-        return new SchemaUnit<TextSchemaUnit>(args)
-    }
-  }
-
   /**
    * Return multiple columns from the collection schema
    * @param args schema_id string array or predicate function
@@ -289,7 +248,7 @@ class Collection extends Data<ICollection> {
         const schema_id = args[index], schema = data.schema[schema_id],
           should_add = container.includes(schema_id);
         if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
           this.logger && this.logger("READ", "SchemaUnit", schema_id)
         }
       }
@@ -297,7 +256,7 @@ class Collection extends Data<ICollection> {
       for (let index = 0; index < container.length; index++) {
         const schema_id = container[index], schema = data.schema[container[index]], should_add = (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
         if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id) as any)
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
           this.logger && this.logger("READ", "SchemaUnit", schema_id)
         }
       }

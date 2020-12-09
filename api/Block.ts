@@ -233,7 +233,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       case "collection_view":
       case "collection_view_page":
         const cv = this.cache.block.get(id) as ICollectionView;
-        await this.updateCacheManually(cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]))
+        await this.updateCacheIfNotPresent(cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]))
         const data = {
           block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
           collection: new Collection({ ...obj, id: cv.collection_id }),

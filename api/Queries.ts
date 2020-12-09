@@ -419,4 +419,14 @@ export default class Queries extends Cache {
     })
     await this.syncRecordValues(sync_record_values);
   }
+
+  async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {
+    const sync_record_values: SyncRecordValuesParams[] = [];
+    arg.forEach((arg: string | [string, TDataType]) => {
+      if (Array.isArray(arg) && !this.cache[arg[1]].get(arg[0])) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
+      else if (typeof arg === "string" && !this.cache.block.get(arg)) sync_record_values.push({ id: arg, table: "block", version: 0 })
+    })
+    if (sync_record_values.length)
+      await this.syncRecordValues(sync_record_values);
+  }
 }

@@ -294,7 +294,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           this.addToChildArray($block_id, position)
         );
         sync_records.push($block_id);
-        block_map[type].push(this.createClass(content.type, $block_id));
+        block_map[type].push(await this.createClass(content.type, $block_id));
       }
     }
 
@@ -317,7 +317,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
     multiple = multiple ?? true;
     const _this = this, block_map = this.createBlockMap();
     await this.getItems<TBlock>(args, multiple, async function (block) {
-      block_map[block.type].push(_this.createClass(block.type, block.id) as any)
+      block_map[block.type].push(await _this.createClass(block.type, block.id))
     })
     return block_map;
   }

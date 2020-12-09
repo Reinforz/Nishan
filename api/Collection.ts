@@ -233,7 +233,7 @@ class Collection extends Data<ICollection> {
     const args = ({ ...this.getProps(), id: this.id, schema_id })
     switch (type) {
       case "text":
-        return new SchemaUnit<MSchemaUnit["text"]>(args)
+        return new SchemaUnit<MSchemaUnit[typeof type]>(args)
       case "number":
         return new SchemaUnit<MSchemaUnit["number"]>(args)
       case "select":

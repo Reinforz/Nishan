@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, IOperation, UpdateCacheManuallyParam } from "../types"
+import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, IOperation, UpdateCacheManuallyParam, ICollectionView, TView, RecordMap } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -52,7 +52,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
           addCopyName: true
         }
       });
-      block_map[data.type].push(this.createClass(data.type, $gen_block_id));
+      block_map[data.type].push(await this.createClass(data.type, $gen_block_id));
     }
 
     await this.saveTransactions(ops);
@@ -160,9 +160,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     return Operation.block.update($block_id, [], arg);
   }
 
-  protected createClass(type: TBlockType, id: string): any {
+  protected async createClass(type: TBlockType, id: string): Promise<any> {
     const Page = require("./Page").default;
     const CollectionView = require("./CollectionView").default;
+    const CollectionViewPage = require('./CollectionViewPage').default;
+    const Collection = require("./Collection").default;
+    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
+    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
     const obj = {
       id,
@@ -226,9 +230,22 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         return new Block<IDivider, IDividerInput>(obj);
       case "callout":
         return new Block<ICallout, ICalloutInput>(obj);
-
       case "collection_view":
-        return new CollectionView(obj)
+      case "collection_view_page":
+        const cv = this.cache.block.get(id) as ICollectionView;
+        await this.updateCacheManually(cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]))
+        const data = {
+          block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
+          collection: new Collection({ ...obj, id: cv.collection_id }),
+          views: this.createViewMap()
+        }
+
+        cv.view_ids.forEach((view_id) => {
+          const view = this.cache.collection_view.get(view_id) as TView;
+          data.views[view.type].push(new view_classes[view.type]({ ...obj, id: view_id }) as any)
+        })
+
+        return data;
       default:
         return new Page(obj);
     }

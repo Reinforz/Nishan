@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, SpaceModifyParam, IOperation, UpdateCacheManuallyParam, TPage, ITPage } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -117,11 +117,11 @@ class NotionUser extends Data<INotionUser> {
   * @param opt Object for configuring the Space options
   * @returns Newly created Space object
   */
-  async createWorkSpace(opt: SpaceModifyParam) {
+  async createWorkSpace(opt: UpdatableSpaceParams) {
     return await this.createWorkSpaces([opt]);
   };
 
-  async createWorkSpaces(opts: SpaceModifyParam[]) {
+  async createWorkSpaces(opts: UpdatableSpaceParams[]) {
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], space_ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });

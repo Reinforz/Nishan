@@ -65,7 +65,7 @@ export type RepositionParams = {
   position: "before" | "after"
 } | number | undefined;
 
-export type ModifiableSpaceKeys = "name" | "icon" |
+export type UpdatableSpaceKeys = "name" | "icon" |
   "disable_public_access" |
   "disable_guests" |
   "disable_move_to_space" |
@@ -73,7 +73,8 @@ export type ModifiableSpaceKeys = "name" | "icon" |
   "domain" |
   "invite_link_enabled" |
   "beta_enabled";
-export type SpaceModifyParam = Partial<Pick<ISpace, ModifiableSpaceKeys>>;
+
+export type UpdatableSpaceParams = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
 
 export type UpdatableCollectionKeys = "name" | "icon" | "description";
 export type UpdatableCollectionUpdateParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;

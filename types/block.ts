@@ -94,7 +94,7 @@ export type TCollectionBlockInput = ICollectionInput | ICollectionViewPageInput;
 // Media IBlock Input
 export interface IMediaInput {
   properties: MediaProps,
-  format: MediaFormat,
+  format?: MediaFormat,
   file_ids: string[]
 }
 
@@ -113,7 +113,7 @@ export interface IAudioInput extends IMediaInput {
 export interface IWebBookmarkInput {
   type: 'bookmark',
   properties: WebBookmarkProps,
-  format: WebBookmarkFormat
+  format?: WebBookmarkFormat
 }
 
 // Basic block input
@@ -126,7 +126,7 @@ export interface ICodeInput {
 export interface IFileInput {
   type: 'file',
   properties: FileProps,
-  format: FileFormat
+  format?: FileFormat
 }
 
 export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput;
@@ -189,7 +189,7 @@ export interface IDividerInput {
 
 export interface ICalloutInput extends ICommonTextInput {
   type: 'callout',
-  format: {
+  format?: {
     page_icon: string,
     block_color?: TFormatBlockColor
   }
@@ -198,7 +198,7 @@ export interface ICalloutInput extends ICommonTextInput {
 export interface ITodoInput {
   type: 'to_do',
   properties: TodoProps,
-  format: {
+  format?: {
     block_color?: TFormatBlockColor
   }
 }
@@ -208,7 +208,7 @@ export type TBasicBlockInput = IPageInput | ITodoInput | ICalloutInput | IDivide
 // Advanced block input
 export interface ITOCInput {
   type: 'table_of_contents',
-  format: {
+  format?: {
     block_color?: TFormatBlockColor
   },
   properties?: {}
@@ -219,7 +219,7 @@ export interface IEquationInput {
   properties: {
     title: string[][]
   },
-  format: {
+  format?: {
     block_color?: TFormatBlockColor
   }
 }
@@ -229,7 +229,7 @@ export interface IFactoryInput {
   properties: {
     title: string[][]
   },
-  format: {
+  format?: {
     block_color?: TFormatBlockColor
   },
   contents: TBlockInput[]
@@ -238,7 +238,7 @@ export interface IFactoryInput {
 export interface IBreadcrumbInput {
   type: 'breadcrumb',
   properties?: {},
-  format: {},
+  format?: {},
 }
 
 export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationInput | ITOCInput;
@@ -247,7 +247,7 @@ export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationIn
 export interface IEmbedInput {
   type: "embed",
   properties: MediaProps,
-  format: MediaFormat,
+  format?: MediaFormat,
 }
 
 export interface IDriveInput {
@@ -270,7 +270,7 @@ export interface ICodepenInput {
   properties: {
     source: string[][]
   },
-  format: MediaFormat,
+  format?: MediaFormat,
 }
 
 export interface IMapsInput {
@@ -278,7 +278,7 @@ export interface IMapsInput {
   properties: {
     source: string[][]
   },
-  format: MediaFormat,
+  format?: MediaFormat,
 }
 
 export interface IGistInput {
@@ -297,7 +297,7 @@ export interface IFigmaInput {
   properties: {
     source: string[][]
   },
-  format: MediaFormat,
+  format?: MediaFormat,
 }
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
@@ -326,7 +326,7 @@ export interface IPage extends IBlock {
   properties: PageProps,
   type: 'page',
   content: string[],
-  format: PageFormat,
+  format?: PageFormat,
   is_template?: boolean,
   file_ids?: string[]
 }
@@ -380,7 +380,7 @@ export interface IFactory extends IBlock {
   properties: {
     title: string[][]
   },
-  format: {
+  format?: {
     block_color?: TFormatBlockColor
   },
   contents: string[]

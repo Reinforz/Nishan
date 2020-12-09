@@ -443,6 +443,7 @@ export default class Data<T extends TData> extends Mutations {
       divider: [],
       callout: [],
       collection_view: [],
+      link_to_page: []
     } as ITBlock
   }
 

@@ -59,7 +59,7 @@ export interface CreateRootCollectionViewPageParams extends CreateRootPageArgs, 
 }
 
 export interface CreateBlockArg {
-  parent_table?: "block" | "collection" | "space", $block_id: string, type: TBlockType | "copy_indicator", properties?: any, format?: any, parent_id?: string
+  parent_table?: "block" | "collection" | "space", $block_id: string, type: TBlockType, properties?: any, format?: any, parent_id?: string
 }
 
 export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange
@@ -203,7 +203,9 @@ export interface ITView {
   calendar: CalendarView[],
 }
 
+// ? TD:1:M Add link_to_page block tds
 export interface ITBlock {
+  link_to_page: Block<any, any>[],
   embed: Block<IEmbed, IEmbedInput>[],
   video: Block<IVideo, IVideoInput>[];
   audio: Block<IAudio, IAudioInput>[];
@@ -221,7 +223,10 @@ export interface ITBlock {
   table_of_contents: Block<ITOC, ITOCInput>[];
   equation: Block<IEquation, IEquationInput>[];
   breadcrumb: Block<IBreadcrumb, IBreadcrumbInput>[];
-  factory: Block<IFactory, IFactoryInput>[];
+  factory: {
+    block: Block<IFactory, IFactoryInput>,
+    contents: ITBlock
+  }[];
   page: Page[];
   to_do: Block<ITodo, ITodoInput>[];
   header: Block<IHeader, IHeaderInput>[];

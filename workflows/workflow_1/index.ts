@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Nishan from '../../Nishan';
 import { TSearchManipViewParam } from "../../types";
-import { status, phase, priority, subject } from '../data';
+import { status, phase, priority, subject, difficulty } from '../data';
 
 import "../env"
 
@@ -51,17 +51,17 @@ import "../env"
       {
         type: "select",
         name: "Priority",
-        options: priority
+        options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
       },
       {
         type: "select",
         name: "Status",
-        options: status
+        options: status.map((status) => ({ ...status, id: uuidv4() }))
       },
       {
         type: "select",
         name: "Phase",
-        options: phase
+        options: phase.map((phase) => ({ ...phase, id: uuidv4() }))
       },
       {
         type: "date",
@@ -161,5 +161,89 @@ import "../env"
           ]
         } as TSearchManipViewParam
       }) as [TSearchManipViewParam, ...TSearchManipViewParam[]]]
-  }])
+  }, {
+    type: "collection_view_page",
+    properties: {
+      title: [["Todo_"]]
+    },
+    format: {
+      page_full_width: true,
+      page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg"
+    },
+    schema: [
+      {
+        type: "title",
+        name: "Todo"
+      },
+      {
+        type: "checkbox",
+        name: "Done"
+      },
+      {
+        type: "select",
+        name: "Priority",
+        options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
+      },
+      {
+        type: "select",
+        name: "Difficulty",
+        options: difficulty.map((difficulty) => ({ ...difficulty, id: uuidv4() }))
+      },
+      {
+        type: "formula",
+        name: "Priority Counter",
+      },
+      {
+        type: "formula",
+        name: "Difficulty Counter",
+      },
+      {
+        type: "date",
+        name: "Completed At",
+      },
+    ],
+    views: [
+      {
+        name: "Todo",
+        type: "table",
+        view: [
+          {
+            type: "title",
+            format: 350,
+            name: "Todo",
+          },
+          {
+            type: "checkbox",
+            name: "Done",
+            format: 100,
+            filter: [["checkbox_is", "exact", false]]
+          },
+          {
+            type: "select",
+            name: "Priority",
+          },
+          {
+            type: "select",
+            name: "Difficulty",
+          },
+          {
+            type: "date",
+            name: "Completed At",
+          },
+          {
+            type: "formula",
+            name: "Priority Counter",
+            sort: "descending",
+            format: false
+          },
+          {
+            type: "formula",
+            name: "Difficulty Counter",
+            sort: "ascending",
+            format: false
+          },
+        ]
+      }
+    ]
+  }]);
 }())

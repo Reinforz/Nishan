@@ -1,14 +1,15 @@
+
 import { SelectOption } from '../../types';
 
 export default [{
   color: "red",
-  value: "To Complete"
+  value: "Hard"
 },
 {
   color: "yellow",
-  value: "Completing"
+  value: "Medium"
 },
 {
   color: "green",
-  value: "Completed"
+  value: "Easy"
 }] as (Omit<SelectOption, "id">)[]

@@ -16,7 +16,7 @@ const arr: Item[] = [
     color: "default",
     title: "Apollo",
     category: ["Stack"],
-    for: ["Javascript", "GraphQL"],
+    for: ["Javascript", "Graphql"],
     image: "https://seeklogo.com/images/A/apollo-logo-DC7DD3C444-seeklogo.com.png"
   },
   {
@@ -106,9 +106,9 @@ const arr: Item[] = [
   },
   {
     color: "pink",
-    title: "GraphQL",
+    title: "Graphql",
     category: ["Language", "Technology"],
-    image: "https://i0.wp.com/blog.knoldus.com/wp-content/uploads/2019/06/graphql.png?fit=600%2C600&ssl=1"
+    image: "https://i0.wp.com/blog.knoldus.com/wp-content/uploads/2019/06/Graphql.png?fit=600%2C600&ssl=1"
   },
   {
     color: "orange",
@@ -184,15 +184,15 @@ const arr: Item[] = [
   {
     category: ["Database"],
     color: "green",
-    title: "MongoDB",
-    image: "https://1000logos.net/wp-content/uploads/2020/08/MongoDB-Emblem.jpg"
+    title: "Mongodb",
+    image: "https://1000logos.net/wp-content/uploads/2020/08/Mongodb-Emblem.jpg"
   },
   {
     image: "https://opencollective-production.s3-us-west-1.amazonaws.com/7a00cdd0-fae4-11e7-ae09-7f36f712693a.png",
     category: ["ORM", "Library"],
     color: "default",
     title: "Mongoose",
-    for: ["MongoDB", "Javascript"]
+    for: ["Mongodb", "Javascript"]
   },
   {
     color: "green",
@@ -347,8 +347,8 @@ const arr: Item[] = [
   },
   {
     color: "pink",
-    title: "Typegraphql",
-    image: "https://typegraphql.com/img/logo.png",
+    title: "TypeGraphql",
+    image: "https://Typegraphql.com/img/logo.png",
     for: ["Typescript"],
     category: ["Library"]
   },
@@ -400,7 +400,7 @@ const arr: Item[] = [
   },
   {
     color: "blue",
-    title: "yarn",
+    title: "Yarn",
     category: ["Package Manager"],
     image: "https://seeklogo.com/images/Y/yarn-logo-F5E7A65FA2-seeklogo.com.png"
   }

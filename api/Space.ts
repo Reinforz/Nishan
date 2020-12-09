@@ -7,7 +7,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { CreateRootCollectionViewPageParams, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams, ITRootPage } from '../types';
+import { ICollectionViewPageInput, SpaceModifyParam, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams, ITRootPage } from '../types';
 import Collection from './Collection';
 
 /**
@@ -80,7 +80,7 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
-  async createTRootPages(options: ((CreateRootCollectionViewPageParams & { type: "collection_view_page" }) | (IPageInput & { position?: RepositionParams }))[]) {
+  async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[]) {
     const ops: IOperation[] = [], trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
     for (let index = 0; index < options.length; index++) {
       const option = options[index],
@@ -108,7 +108,7 @@ export default class Space extends Data<ISpace> {
         }),
           block_list_op)
       } else if (type === "collection_view_page") {
-        const [collection_id, create_view_ops, view_infos] = this.createCollection(option as CreateRootCollectionViewPageParams, block_id);
+        const [collection_id, create_view_ops, view_infos] = this.createCollection(option as ICollectionViewPageInput, block_id);
         ops.push(Operation.block.update(block_id, [], {
           type: 'page',
           id: block_id,

@@ -13,11 +13,10 @@ import {
   IOperation,
   TGenericEmbedBlockType,
   CreateBlockArg,
-  CreateRootCollectionViewPageParams,
   PageCreateContentParam,
   ISpaceView,
   SetBookmarkMetadataParams,
-  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ILinkedDBInput, ITCollectionBlock, IFactory, IFactoryInput
+  IRootPage, WebBookmarkProps, IPage, TBlock, IPageInput, UpdateCacheManuallyParam, IDriveInput, FilterTypes, ICollection, FilterType, RecordMap, TDataType, ITCollectionBlock, IFactory, IFactoryInput, ICollectionBlockInput
 } from "../types";
 import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
@@ -178,7 +177,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
       }
 
       if (type === "collection_view_page" || type === "collection_view") {
-        const [collection_id, create_view_ops, view_infos] = this.createCollection(content as CreateRootCollectionViewPageParams, $block_id);
+        const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
         ops.push(Operation.block.update($block_id, [], {
           id: $block_id,
           type,
@@ -248,8 +247,8 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           }), contents: factory_contents_map
         })
       }
-      else if (type === "linked_db") {
-        const { collection_id, views, position } = content as ILinkedDBInput,
+      else if (content.type === "linked_db") {
+        const { collection_id, views, position } = content,
           collection = this.cache.collection.get(collection_id) as ICollection,
           [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
 
@@ -282,20 +281,20 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           id: view_id
         }) as any))
 
-        block_map[type].push(collectionblock_map)
+        block_map[content.type].push(collectionblock_map)
       }
 
       else {
         ops.push(this.createBlock({
           $block_id,
-          type,
+          type: content.type,
           properties,
           format,
         }),
           this.addToChildArray($block_id, position)
         );
         sync_records.push($block_id);
-        block_map[type].push(this.createClass(type, $block_id));
+        block_map[type].push(this.createClass(content.type, $block_id));
       }
     }
 

@@ -1,7 +1,7 @@
 import { ISpace } from "./api";
 import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, TPermissionRole, IPermission, ParentProps } from "./types";
-import { Schema } from "./schema";
-import { CreateRootCollectionViewPageParams, SchemaManipParam } from ".";
+import { Schema, TSchemaUnit } from "./schema";
+import { TSearchManipViewParam } from ".";
 
 export interface PageProps {
   title: string[][],
@@ -72,22 +72,31 @@ export interface TodoProps {
   checked: ("Yes" | "No")[][]
 }
 
-export interface ICollectionInput extends CreateRootCollectionViewPageParams {
-  type: "collection_view"
+export interface ICollectionBlockInput {
+  views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
+  schema: [TSchemaUnit, ...TSchemaUnit[]],
+  properties: PageProps,
+  format?: Partial<PageFormat>,
 }
 
-export interface ICollectionViewPageInput extends CreateRootCollectionViewPageParams {
-  type: "collection_view_page"
+export interface ICollectionViewInput extends ICollectionBlockInput {
+  type: "collection_view",
 }
 
-export interface ILinkedDBInput extends SchemaManipParam {
+export interface ICollectionViewPageInput extends ICollectionBlockInput {
+  type: "collection_view_page",
+  isPrivate?: boolean
+}
+
+export interface ILinkedDBInput {
   type: "linked_db",
   collection_id: string,
   properties?: {},
-  format?: {}
+  format?: {},
+  views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
 }
 
-export type TCollectionBlockInput = ICollectionInput | ICollectionViewPageInput;
+export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageInput | ILinkedDBInput;
 
 // -----------------
 
@@ -302,7 +311,7 @@ export interface IFigmaInput {
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
 
-export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput | ILinkedDBInput;
+export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput;
 // -----------------
 
 export interface IPublicPermission {

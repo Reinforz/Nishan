@@ -135,172 +135,187 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    */
   async createContents(contents: PageCreateContentParam[]) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
-    for (let index = 0; index < contents.length; index++) {
-      const content = contents[index], $block_id = uuidv4();
-      sync_records.push($block_id);
 
-      if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
-        content.format = (await this.getGenericEmbedBlockData({
-          pageWidth: 500,
-          source: (content.properties as any).source[0][0] as string,
-          type: content.type as TGenericEmbedBlockType
-        })).format;
-      };
+    const traverse = async (contents: PageCreateContentParam[], parent_id: string) => {
+      for (let index = 0; index < contents.length; index++) {
+        const content = contents[index], $block_id = uuidv4();
+        sync_records.push($block_id);
+        if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
+          content.format = (await this.getGenericEmbedBlockData({
+            pageWidth: 500,
+            source: (content.properties as any).source[0][0] as string,
+            type: content.type as TGenericEmbedBlockType
+          })).format;
+        };
 
-      const {
-        format,
-        properties,
-        type,
-        position,
-      } = content;
-
-      if (type === "bookmark") {
-        bookmarks.push({
-          blockId: $block_id,
-          url: (properties as WebBookmarkProps).link[0][0]
-        })
-        await this.setBookmarkMetadata({
-          blockId: $block_id,
-          url: (properties as WebBookmarkProps).link[0][0]
-        });
-      }
-
-      else if (type === "drive") {
         const {
-          accounts
-        } = await this.getGoogleDriveAccounts();
-        await this.initializeGoogleDriveBlock({
-          blockId: $block_id,
-          fileId: (content as IDriveInput).file_id as string,
-          token: accounts[0].token
-        });
-      }
-
-      if (type === "collection_view_page" || type === "collection_view") {
-        const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
-        ops.push(Operation.block.update($block_id, [], {
-          id: $block_id,
-          type,
-          collection_id,
-          view_ids: view_infos.map(view_info => view_info[0]),
-          properties,
           format,
-          parent_id: this.id,
-          parent_table: 'block',
-          alive: true,
-        }),
-          ...create_view_ops,
-          this.addToChildArray($block_id, position),
-        )
+          properties,
+          type,
+        } = content;
 
-        const collectionblock_map: ITCollectionBlock = {
-          block: type === "collection_view" ? new CollectionView({
-            ...this.getProps(),
-            id: $block_id
-          }) : new CollectionViewPage({
-            ...this.getProps(),
-            id: $block_id
-          }),
-          collection: new Collection({
-            id: collection_id,
-            ...this.getProps()
-          }),
-          views: this.createViewMap()
+        if (type === "bookmark") {
+          bookmarks.push({
+            blockId: $block_id,
+            url: (properties as WebBookmarkProps).link[0][0]
+          })
+          await this.setBookmarkMetadata({
+            blockId: $block_id,
+            url: (properties as WebBookmarkProps).link[0][0]
+          });
         }
 
-        view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
-          ...this.getProps(),
-          id: view_id
-        }) as any))
+        else if (type === "drive") {
+          const {
+            accounts
+          } = await this.getGoogleDriveAccounts();
+          await this.initializeGoogleDriveBlock({
+            blockId: $block_id,
+            fileId: (content as IDriveInput).file_id as string,
+            token: accounts[0].token
+          });
+        }
 
-        sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-        block_map[type].push(collectionblock_map)
-      } else if (content.type === "factory") {
-        const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
-          ...content,
-          $block_id: uuidv4()
-        })) as CreateBlockArg[]).map(content => {
-          const obj = this.createBlock({ ...content, parent_id: $block_id });
-          factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
-          sync_records.push(content.$block_id)
-          content_ids.push(content.$block_id);
-          return obj;
-        });
-        ops.push(
-          Operation.block.update($block_id, [], {
+        if (type === "collection_view_page" || type === "collection_view") {
+          const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
+          ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
+            type,
+            collection_id,
+            view_ids: view_infos.map(view_info => view_info[0]),
             properties,
             format,
-            type,
-            parent_id: this.id,
-            parent_table: "block",
+            parent_id,
+            parent_table: 'block',
             alive: true,
-            content: content_ids
           }),
-          this.addToChildArray($block_id, position),
-          ...content_blocks_ops
-        );
-        block_map.factory.push({
-          block: new Block<IFactory, IFactoryInput>({
-            id: $block_id,
-            ...this.getProps()
-          }), contents: factory_contents_map
-        })
-      }
-      else if (content.type === "linked_db") {
-        const { collection_id, views, position } = content,
-          collection = this.cache.collection.get(collection_id) as ICollection,
-          [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
+            ...create_view_ops,
+          )
 
-        ops.push(Operation.block.set($block_id, [], {
-          id: $block_id,
-          version: 1,
-          type: 'collection_view',
-          collection_id,
-          view_ids: view_infos.map(view_info => view_info[0]),
-          parent_id: this.id,
-          parent_table: 'block',
-          alive: true,
-        }),
-          this.addToChildArray($block_id, position), ...created_view_ops);
-        sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
-        const collectionblock_map: ITCollectionBlock = {
-          block: new CollectionView({
+          const collectionblock_map: ITCollectionBlock = {
+            block: type === "collection_view" ? new CollectionView({
+              ...this.getProps(),
+              id: $block_id
+            }) : new CollectionViewPage({
+              ...this.getProps(),
+              id: $block_id
+            }),
+            collection: new Collection({
+              id: collection_id,
+              ...this.getProps()
+            }),
+            views: this.createViewMap()
+          }
+
+          view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
             ...this.getProps(),
-            id: $block_id
+            id: view_id
+          }) as any))
+
+          sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
+          block_map[type].push(collectionblock_map)
+        } else if (content.type === "factory") {
+          const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
+            ...content,
+            $block_id: uuidv4()
+          })) as CreateBlockArg[]).map(content => {
+            const obj = this.createBlock({ ...content, parent_id: $block_id });
+            factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
+            sync_records.push(content.$block_id)
+            content_ids.push(content.$block_id);
+            return obj;
+          });
+          ops.push(
+            Operation.block.update($block_id, [], {
+              id: $block_id,
+              properties,
+              format,
+              type,
+              parent_id,
+              parent_table: "block",
+              alive: true,
+              content: content_ids
+            }),
+            ...content_blocks_ops
+          );
+          block_map.factory.push({
+            block: new Block<IFactory, IFactoryInput>({
+              id: $block_id,
+              ...this.getProps()
+            }), contents: factory_contents_map
+          })
+        }
+        else if (content.type === "linked_db") {
+          const { collection_id, views } = content,
+            collection = this.cache.collection.get(collection_id) as ICollection,
+            [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
+
+          ops.push(Operation.block.set($block_id, [], {
+            id: $block_id,
+            version: 1,
+            type: 'collection_view',
+            collection_id,
+            view_ids: view_infos.map(view_info => view_info[0]),
+            parent_id,
+            parent_table: 'block',
+            alive: true,
           }),
-          collection: new Collection({
-            id: collection_id,
-            ...this.getProps()
-          }),
-          views: this.createViewMap()
+            ...created_view_ops);
+          sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
+          const collectionblock_map: ITCollectionBlock = {
+            block: new CollectionView({
+              ...this.getProps(),
+              id: $block_id
+            }),
+            collection: new Collection({
+              id: collection_id,
+              ...this.getProps()
+            }),
+            views: this.createViewMap()
+          }
+
+          view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
+            ...this.getProps(),
+            id: view_id
+          }) as any))
+
+          block_map[content.type].push(collectionblock_map)
         }
 
-        view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_class[view_type]({
-          ...this.getProps(),
-          id: view_id
-        }) as any))
+        else if (content.type === "page") {
+          if (content.contents)
+            await traverse(content.contents, $block_id);
+          ops.push(Operation.block.update($block_id, [], {
+            id: $block_id,
+            properties,
+            format: {},
+            type,
+            parent_id,
+            parent_table: "block",
+            alive: true,
+          }))
+        }
 
-        block_map[content.type].push(collectionblock_map)
-      }
+        else {
+          ops.push(this.createBlock({
+            $block_id,
+            type: content.type,
+            properties,
+            format,
+            parent_id
+          }));
+          block_map[type].push(await this.createClass(content.type, $block_id));
+        }
 
-      else {
-        ops.push(this.createBlock({
-          $block_id,
-          type: content.type,
-          properties,
-          format,
-        }),
-          this.addToChildArray($block_id, position)
-        );
-        sync_records.push($block_id);
-        block_map[type].push(await this.createClass(content.type, $block_id));
+        ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: $block_id }))
       }
     }
 
-    await this.saveTransactions(ops);
+    await traverse(contents, this.id);
+
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)
+    await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
     return block_map;
   }

@@ -86,7 +86,6 @@ export default class Space extends Data<ISpace> {
       const option = options[index],
         { type, properties, format, isPrivate, position } = option,
         block_id = uuidv4();
-
       if (type === "page") {
         const block_list_op = this.addToChildArray(block_id, position);
         sync_records.push(block_id);

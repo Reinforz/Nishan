@@ -147,6 +147,7 @@ export interface IPageInput {
   properties: PageProps,
   format?: Partial<PageFormat>,
   isPrivate?: boolean,
+  contents?: TBlockInput[]
 }
 
 export interface ICommonTextInput {

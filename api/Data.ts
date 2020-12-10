@@ -116,7 +116,7 @@ export default class Data<T extends TData> extends Mutations {
 
     const container: string[] = data[this.child_path] as any;
 
-    return this.#addToChildArrayUtil({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: (data as any).type })
+    return this.#addToChildArrayUtil({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: this.type })
   }
 
   #addToChildArrayUtil = (arg: { child_id: string, position: RepositionParams, container: string[], child_path: string, parent_type: TOperationTable, parent_id: string }) => {

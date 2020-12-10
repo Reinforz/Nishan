@@ -136,10 +136,12 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
   async createContents(contents: PageCreateContentParam[]) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
 
-    const traverse = async (contents: PageCreateContentParam[], parent_id: string) => {
+    const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) => {
       for (let index = 0; index < contents.length; index++) {
         const content = contents[index], $block_id = uuidv4();
         sync_records.push($block_id);
+        content.type = content.type ?? 'page';
+
         if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
           content.format = (await this.getGenericEmbedBlockData({
             pageWidth: 500,
@@ -176,7 +178,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           });
         }
 
-        if (type === "collection_view_page" || type === "collection_view") {
+        if (content.type === "collection_view_page" || content.type === "collection_view") {
           const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
@@ -186,7 +188,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
             properties,
             format,
             parent_id,
-            parent_table: 'block',
+            parent_table,
             alive: true,
           }),
             ...create_view_ops,
@@ -213,7 +215,9 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
           }) as any))
 
           sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-          block_map[type].push(collectionblock_map)
+          block_map[type].push(collectionblock_map as any);
+          if (content.rows)
+            await traverse(content.rows as any, collection_id, "collection")
         } else if (content.type === "factory") {
           const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
             ...content,
@@ -232,7 +236,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
               format,
               type,
               parent_id,
-              parent_table: "block",
+              parent_table,
               alive: true,
               content: content_ids
             }),
@@ -257,7 +261,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
             collection_id,
             view_ids: view_infos.map(view_info => view_info[0]),
             parent_id,
-            parent_table: 'block',
+            parent_table,
             alive: true,
           }),
             ...created_view_ops);
@@ -284,34 +288,37 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
 
         else if (content.type === "page") {
           if (content.contents)
-            await traverse(content.contents, $block_id);
+            await traverse(content.contents, $block_id, "block");
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
             properties,
             format: {},
             type,
             parent_id,
-            parent_table: "block",
+            parent_table,
             alive: true,
           }))
-        }
-
-        else {
-          ops.push(this.createBlock({
-            $block_id,
-            type: content.type,
-            properties,
-            format,
-            parent_id
-          }));
           block_map[type].push(await this.createClass(content.type, $block_id));
         }
 
-        ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: $block_id }))
+        else {
+          ops.push(Operation.block.update($block_id, [], {
+            id: $block_id,
+            properties,
+            format: {},
+            type,
+            parent_id,
+            parent_table,
+            alive: true,
+          }));
+          block_map[type].push(await this.createClass(content.type, $block_id));
+        }
+        if (parent_table === "block")
+          ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: $block_id }))
       }
     }
 
-    await traverse(contents, this.id);
+    await traverse(contents, this.id, "block");
 
     for (let bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark)

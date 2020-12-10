@@ -77,6 +77,7 @@ export interface ICollectionBlockInput {
   schema: [TSchemaUnit, ...TSchemaUnit[]],
   properties: PageProps,
   format?: Partial<PageFormat>,
+  rows?: Omit<IPageInput, "type">[]
 }
 
 export interface ICollectionViewInput extends ICollectionBlockInput {

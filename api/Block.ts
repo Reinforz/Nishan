@@ -4,7 +4,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, TBlockType, RepositionParams, IOperation, UpdateCacheManuallyParam, ICollectionView, TView, RecordMap } from "../types"
+import { TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, RepositionParams, IOperation, UpdateCacheManuallyParam } from "../types"
 
 /**
  * A class to represent block of Notion
@@ -166,97 +166,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       last_edited_by_table: 'notion_user',
     };
     return Operation.block.update($block_id, [], arg);
-  }
-
-  protected async createClass(type: TBlockType, id: string): Promise<any> {
-    const Page = require("./Page").default;
-    const CollectionView = require("./CollectionView").default;
-    const CollectionViewPage = require('./CollectionViewPage').default;
-    const Collection = require("./Collection").default;
-    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
-    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
-
-    const obj = {
-      id,
-      ...this.getProps()
-    };
-
-    switch (type) {
-      case "video":
-        return new Block<IVideo, IVideoInput>(obj);
-      case "audio":
-        return new Block<IAudio, IAudioInput>(obj);
-      case "image":
-        return new Block<IImage, IImageInput>(obj);
-      case "bookmark":
-        return new Block<IWebBookmark, IWebBookmarkInput>(obj);
-      case "code":
-        return new Block<ICode, ICodeInput>(obj);
-      case "file":
-        return new Block<IFile, IFileInput>(obj);
-      case "tweet":
-        return new Block<ITweet, ITweetInput>(obj);
-      case "gist":
-        return new Block<IGist, IGistInput>(obj);
-      case "codepen":
-        return new Block<ICodepen, ICodepenInput>(obj);
-      case "maps":
-        return new Block<IMaps, IMapsInput>(obj);
-      case "figma":
-        return new Block<IFigma, IFigmaInput>(obj);
-      case "drive":
-        return new Block<IDrive, IDriveInput>(obj);
-      case "text":
-        return new Block<IText, ITextInput>(obj);
-      case "table_of_contents":
-        return new Block<ITOC, ITOCInput>(obj);
-      case "equation":
-        return new Block<IEquation, IEquationInput>(obj);
-      case "breadcrumb":
-        return new Block<IBreadcrumb, IBreadcrumbInput>(obj);
-      case "factory":
-        return new Block<IFactory, IFactoryInput>(obj);
-      case "page":
-        return new Page(obj);
-      case "to_do":
-        return new Block<ITodo, ITodoInput>(obj);
-      case "header":
-        return new Block<IHeader, IHeaderInput>(obj);
-      case "sub_header":
-        return new Block<ISubHeader, ISubHeaderInput>(obj);
-      case "sub_sub_header":
-        return new Block<ISubHeader, ISubHeaderInput>(obj);
-      case "bulleted_list":
-        return new Block<IBulletedList, IBulletedListInput>(obj);
-      case "numbered_list":
-        return new Block<INumberedList, INumberedListInput>(obj);
-      case "toggle":
-        return new Block<IToggle, IToggleInput>(obj);
-      case "quote":
-        return new Block<IQuote, IQuoteInput>(obj);
-      case "divider":
-        return new Block<IDivider, IDividerInput>(obj);
-      case "callout":
-        return new Block<ICallout, ICalloutInput>(obj);
-      case "collection_view":
-      case "collection_view_page":
-        const cv = this.cache.block.get(id) as ICollectionView;
-        await this.updateCacheIfNotPresent([[cv.collection_id, "collection"], ...cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap])])
-        const data = {
-          block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
-          collection: new Collection({ ...obj, id: cv.collection_id }),
-          views: this.createViewMap()
-        }
-
-        cv.view_ids.forEach((view_id) => {
-          const view = this.cache.collection_view.get(view_id) as TView;
-          data.views[view.type].push(new view_classes[view.type]({ ...obj, id: view_id }) as any)
-        })
-
-        return data;
-      default:
-        return new Page(obj);
-    }
   }
 }
 

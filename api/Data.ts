@@ -737,7 +737,7 @@ export default class Data<T extends TData> extends Mutations {
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
             properties,
-            format: {},
+            format,
             type,
             parent_id,
             parent_table,
@@ -751,7 +751,7 @@ export default class Data<T extends TData> extends Mutations {
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
             properties,
-            format: {},
+            format,
             type,
             parent_id,
             parent_table,

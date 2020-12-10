@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable } from "../types";
 import { Operation, error } from "../utils";
 import Mutations from "./Mutations";
 
@@ -34,26 +34,35 @@ export default class Data<T extends TData> extends Mutations {
     this.#init_child_data = false;
   }
 
+  #detectChildData = (type: TDataType, id: string) => {
+    let child_type: TDataType = 'block', child_path: string = '';
+    const data = this.cache[type].get(id) as TBlock;
+    if (type === "block") {
+      if (data.type === "page")
+        child_path = "content" as any
+      else if (data.type === "collection_view" || data.type === "collection_view_page") {
+        child_path = "view_ids" as any
+        child_type = "collection_view"
+      }
+    } else if (type === "space")
+      child_path = "pages" as any;
+    else if (type === "user_root") {
+      child_path = "space_views" as any;
+      child_type = "space_view"
+    }
+    else if (type === "collection")
+      child_path = "template_pages" as any;
+    else if (type === "space_view")
+      child_path = "bookmarked_pages" as any;
+
+    return [child_path, child_type] as [string, TDataType]
+  }
+
   protected initializeChildData() {
     if (!this.#init_child_data) {
-      if (this.type === "block") {
-        const data = this.getCachedData() as TBlock;
-        if (data.type === "page")
-          this.child_path = "content" as any
-        else if (data.type === "collection_view" || data.type === "collection_view_page") {
-          this.child_path = "view_ids" as any
-          this.child_type = "collection_view"
-        }
-      } else if (this.type === "space")
-        this.child_path = "pages" as any;
-      else if (this.type === "user_root") {
-        this.child_path = "space_views" as any;
-        this.child_type = "space_view"
-      }
-      else if (this.type === "collection")
-        this.child_path = "template_pages" as any;
-      else if (this.type === "space_view")
-        this.child_path = "bookmarked_pages" as any;
+      const [child_path, child_type] = this.#detectChildData(this.type, this.id);
+      this.child_path = child_path as any;
+      this.child_type = child_type as any;
       this.#init_child_data = true;
     }
   }
@@ -101,14 +110,19 @@ export default class Data<T extends TData> extends Mutations {
    */
   protected addToChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData();
-    this.initializeChildData()
+    this.initializeChildData();
+
     if (!data[this.child_path]) data[this.child_path] = [] as any;
 
     const container: string[] = data[this.child_path] as any;
 
-    let where: "before" | "after" = "before", id: string = '';
+    return this.#addToChildArrayUtil({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: (data as any).type })
+  }
 
+  #addToChildArrayUtil = (arg: { child_id: string, position: RepositionParams, container: string[], child_path: string, parent_type: TOperationTable, parent_id: string }) => {
+    const { child_id, position, container, child_path, parent_type, parent_id } = arg;
     if (position !== undefined) {
+      let where: "before" | "after" = "before", id: string = '';
       if (typeof position === "number") {
         id = container?.[position] ?? '';
         where = container.indexOf(child_id) > position ? "before" : "after";
@@ -118,17 +132,24 @@ export default class Data<T extends TData> extends Mutations {
         container.splice(container.indexOf(position.id) + (position.position === "before" ? -1 : 1), 0, child_id);
       }
 
-      return (Operation[this.type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](this.id, [this.child_path as string], {
+      return (Operation[parent_type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](parent_id, [child_path], {
         [where]: id,
         id: child_id
       }) as IOperation
     } else {
       container.push(child_id);
-      return Operation[this.type].listAfter(this.id, [this.child_path as string], {
+      return Operation[parent_type].listAfter(parent_id, [child_path], {
         after: '',
         id: child_id
       }) as IOperation;
     }
+  }
+
+  protected addToParentChildArray(child_id: string, position: RepositionParams) {
+    const data = this.getCachedData() as any, parent = (this.cache as any)[data.parent_table].get(data.parent_id),
+      child_path = this.#detectChildData(data.parent_table, parent.id)[0], container: string[] = parent[child_path] as any;
+
+    return this.#addToChildArrayUtil({ child_id, position, container, child_path, parent_id: data.parent_id, parent_type: data.parent_table })
   }
 
   /**
@@ -199,6 +220,7 @@ export default class Data<T extends TData> extends Mutations {
   protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>, condition?: (Q: Q) => boolean) {
     await this.initializeCache();
     this.initializeChildData();
+
     const matched: Q[] = [];
     const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
 

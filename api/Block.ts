@@ -25,33 +25,41 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns The duplicated block object
    */
 
-  async duplicate(times?: number) {
+  async duplicate(times?: number, positions?: RepositionParams[]) {
     times = times ?? 1;
     const block_map = this.createBlockMap(), data = this.getCachedData(), ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     for (let index = 0; index < times; index++) {
       const $gen_block_id = uuidv4();
       sync_records.push($gen_block_id);
-      ops.push(
-        Operation.block.update($gen_block_id, [], {
-          id: $gen_block_id,
-          type: "copy_indicator",
-          parent_id: data.parent_id,
-          parent_table: "block",
-          alive: true,
-        }),
-        Operation.block.listAfter(data.parent_id, ['content'], {
-          after: data.id,
-          id: $gen_block_id
-        }))
+      if (data.type === "collection_view" || data.type === "collection_view_page") {
+        ops.push(
+          Operation.block.update($gen_block_id, [], {
+            id: $gen_block_id,
+            type: "copy_indicator",
+            parent_id: data.parent_id,
+            parent_table: "block",
+            alive: true,
+          })
+        )
+        await this.enqueueTask({
+          eventName: 'duplicateBlock',
+          request: {
+            sourceBlockId: data.id,
+            targetBlockId: $gen_block_id,
+            addCopyName: true
+          }
+        });
+      } else {
+        ops.push(
+          Operation.block.update($gen_block_id, [], {
+            ...data,
+            id: $gen_block_id,
+            copied_from: data.id,
+          }),
+          this.addToParentChildArray($gen_block_id, positions ? positions[index] : undefined)
+        )
+      }
 
-      await this.enqueueTask({
-        eventName: 'duplicateBlock',
-        request: {
-          sourceBlockId: data.id,
-          targetBlockId: $gen_block_id,
-          addCopyName: true
-        }
-      });
       block_map[data.type].push(await this.createClass(data.type, $gen_block_id));
     }
 
@@ -233,7 +241,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       case "collection_view":
       case "collection_view_page":
         const cv = this.cache.block.get(id) as ICollectionView;
-        await this.updateCacheIfNotPresent(cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap]))
+        await this.updateCacheIfNotPresent([[cv.collection_id, "collection"], ...cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap])])
         const data = {
           block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
           collection: new Collection({ ...obj, id: cv.collection_id }),

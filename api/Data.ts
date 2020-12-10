@@ -623,7 +623,7 @@ export default class Data<T extends TData> extends Mutations {
 
         if (content.type === "collection_view_page" || content.type === "collection_view") {
           const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
-          ops.push(Operation.block.update($block_id, [], {
+          const args: any = {
             id: $block_id,
             type,
             collection_id,
@@ -633,9 +633,12 @@ export default class Data<T extends TData> extends Mutations {
             parent_id,
             parent_table,
             alive: true,
-          }),
-            ...create_view_ops,
-          )
+          };
+
+          if (content.type === "collection_view_page") args.permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+            ops.push(Operation.block.update($block_id, [], args),
+              ...create_view_ops,
+            )
 
           const collectionblock_map: ITCollectionBlock = {
             block: type === "collection_view" ? new CollectionView({
@@ -739,6 +742,7 @@ export default class Data<T extends TData> extends Mutations {
             parent_id,
             parent_table,
             alive: true,
+            permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
           }))
           block_map[type].push(await this.createClass(content.type, $block_id));
         }
@@ -757,6 +761,8 @@ export default class Data<T extends TData> extends Mutations {
         }
         if (parent_table === "block")
           ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: $block_id }))
+        else if (parent_table === "space")
+          ops.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: $block_id }))
       }
     }
 

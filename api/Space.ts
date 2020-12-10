@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import Data from './Data';
 import RootPage from "./RootPage";
 import RootCollectionViewPage from './RootCollectionViewPage';
@@ -7,7 +5,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, UpdateCacheManuallyParam, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, TDataType, ICollection, RepositionParams, ITRootPage } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, ICollection, RepositionParams, ITRootPage } from '../types';
 import Collection from './Collection';
 
 /**
@@ -81,65 +79,10 @@ export default class Space extends Data<ISpace> {
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[]) {
-    const ops: IOperation[] = [], trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, sync_records: UpdateCacheManuallyParam = [];
-    for (let index = 0; index < options.length; index++) {
-      const option = options[index],
-        { type, properties, format, isPrivate, position } = option,
-        block_id = uuidv4();
-      if (type === "page") {
-        const block_list_op = this.addToChildArray(block_id, position);
-        sync_records.push(block_id);
-        trootpage_map.page.push(new RootPage({
-          id: block_id,
-          ...this.getProps()
-        }));
-        ops.push(Operation.block.update(block_id, [], {
-          type: 'page',
-          id: block_id,
-          version: 1,
-          permissions:
-            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-          parent_id: this.id,
-          parent_table: 'space',
-          alive: true,
-          properties,
-          format,
-        }),
-          block_list_op)
-      } else if (type === "collection_view_page") {
-        const [collection_id, create_view_ops, view_infos] = this.createCollection(option as ICollectionViewPageInput, block_id);
-        ops.push(Operation.block.update(block_id, [], {
-          type: 'page',
-          id: block_id,
-          permissions:
-            [{ type: isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
-          parent_id: this.id,
-          parent_table: 'space',
-          alive: true,
-          properties,
-          format,
-        }),
-          Operation.block.update(block_id, [], {
-            type: 'collection_view_page',
-            collection_id,
-            view_ids: view_infos.map(view_info => view_info[0]),
-            properties: {},
-          }),
-          ...create_view_ops,
-          this.addToChildArray(block_id, option.position),
-        );
-
-        sync_records.push(block_id, [collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
-        trootpage_map.collection_view_page.push(new RootCollectionViewPage({
-          ...this.getProps(),
-          id: block_id
-        }))
-      }
-    }
-
+    const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space")
     await this.saveTransactions(ops);
     await this.updateCacheManually(sync_records);
-    return trootpage_map;
+    return block_map;
   }
 
   async getTRootPage(args?: FilterTypes<IRootPage | IRootCollectionViewPage>) {

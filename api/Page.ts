@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import Block from './Block';
-
 import { Operation } from "../utils";
 
 import {
@@ -9,15 +7,16 @@ import {
   TExportType,
   PageCreateContentParam,
   ISpaceView,
-  IRootPage, IPage, TBlock, IPageInput, FilterTypes, FilterType
+  IPage, TBlock, FilterTypes, FilterType
 } from "../types";
+import Permissions from "./Permissions";
 
 /**
  * A class to represent Page type block of Notion
  * @noInheritDoc
  */
 
-export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, IPageInput> {
+export default class Page extends Permissions<IPage> {
   constructor(arg: NishanArg) {
     super(arg);
   }

@@ -4,7 +4,6 @@ import CollectionViewPage from "./CollectionViewPage";
 import CollectionView from "./CollectionView";
 import NotionUser from "./NotionUser";
 import Page from "./Page";
-import RootPage from "./RootPage";
 import UserSettings from "./UserSettings";
 import UserRoot from "./UserRoot";
 import SpaceView from "./SpaceView";
@@ -21,7 +20,6 @@ export {
   CollectionView,
   NotionUser,
   Page,
-  RootPage,
   UserSettings,
   UserRoot,
   SpaceView,

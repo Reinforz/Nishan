@@ -1,5 +1,4 @@
 import Data from './Data';
-import RootPage from "./RootPage";
 import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
@@ -7,6 +6,7 @@ import { Operation, error } from '../utils';
 import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, ICollection, RepositionParams, ITRootPage } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
+import Page from './Page';
 
 /**
  * A class to represent space of Notion
@@ -95,7 +95,7 @@ export default class Space extends Data<ISpace> {
     await this.getItems<IRootPage | IRootCollectionViewPage>(args, multiple, async function (page) {
       if (page.type === "page") {
         logger && logger("READ", "RootPage", page.id);
-        trootpage_map.page.push(new RootPage({
+        trootpage_map.page.push(new Page({
           id: page.id,
           ...props
         }))

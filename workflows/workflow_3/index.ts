@@ -25,7 +25,7 @@ import "../env"
 
   for (let index = 25; index <= 25; index++) {
     // Add your specific title and page_icon
-    const page = (await november_db?.createContents([{
+    const page = (await november_db?.createBlocks([{
       type: "page",
       properties: {
         title: [[`Day ${index}`]]
@@ -53,7 +53,7 @@ import "../env"
 
       // Add any sort of views you want
       // A simple table works best for me
-      await page.createContents([{
+      await page.createBlocks([{
         type: "linked_db",
         collection_id: collection_ids[0],
         views: [

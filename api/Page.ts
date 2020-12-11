@@ -113,7 +113,7 @@ export default class Page<T extends IPage | IRootPage = IPage> extends Block<T, 
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-  async createContents(contents: PageCreateContentParam[]) {
+  async createBlocks(contents: PageCreateContentParam[]) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(contents, this.id, "block");
 
     for (let bookmark of bookmarks)

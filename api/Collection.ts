@@ -5,7 +5,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, PageProps, PageFormat, MSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionUpdateParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -139,40 +139,17 @@ class Collection extends Data<ICollection> {
     await this.deleteItems<IPage>(args, multiple)
   }
 
-  async createPage(row: { format?: Partial<PageFormat>, properties: PageProps }) {
-    return (await this.createPages([row]))[0]
-  }
-
   /**
    * Add rows of data to the collection block
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: { format?: Partial<PageFormat>, properties: PageProps }[]) {
-    const page_ids: string[] = [];
-    const ops: IOperation[] = [];
-    rows.map(({ format, properties }) => {
-      const page_id = uuidv4();
-      page_ids.push(page_id);
-      ops.push(
-        Operation.block.update(page_id, [], {
-          alive: true,
-          id: page_id,
-          type: "page",
-          properties,
-          format,
-          parent_id: this.id,
-          parent_table: 'collection',
-        })
-      );
-    });
-    await this.saveTransactions(ops)
-    await this.updateCacheManually(page_ids)
+  async createPages(rows: Omit<IPageInput, "type">[]) {
+    const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows as any, this.id, "collection")
 
-    return page_ids.map((page_id) => new Page({
-      id: page_id,
-      ...this.getProps()
-    }))
+    await this.saveTransactions(ops)
+    await this.updateCacheManually(sync_records)
+    return block_map
   }
 
   async getPage(arg?: FilterType<IPage>) {

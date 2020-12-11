@@ -339,14 +339,7 @@ export interface IPage extends IBlock {
   content: string[],
   format?: PageFormat,
   is_template?: boolean,
-  file_ids?: string[]
-}
-
-export interface IRootPage extends IPage {
-  permissions: (IPermission | IPublicPermission)[]
-}
-
-export interface IRootCollectionViewPage extends ICollectionViewPage {
+  file_ids?: string[],
   permissions: (IPermission | IPublicPermission)[]
 }
 
@@ -364,9 +357,10 @@ export interface ICollectionView extends ICollectionBlock {
 
 export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
+  permissions: (IPermission | IPublicPermission)[]
 }
 
-export type TCollectionBlock = IRootCollectionViewPage | ICollectionView | ICollectionViewPage;
+export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 export interface IText extends ITextInput, IBlock { }
 export interface ITodo extends ITodoInput, IBlock { }
@@ -380,7 +374,7 @@ export interface IQuote extends IQuoteInput, IBlock { }
 export interface IDivider extends IDividerInput, IBlock { }
 export interface ICallout extends ICalloutInput, IBlock { }
 
-export type TBasicBlock = IText | ITodo | IHeader | ISubHeader | ISubSubHeader | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IPage | IRootPage | TCollectionBlock;
+export type TBasicBlock = IText | ITodo | IHeader | ISubHeader | ISubSubHeader | IBulletedList | INumberedList | IToggle | IQuote | IDivider | ICallout | IPage | TCollectionBlock;
 
 // Advanced block types
 export interface ITOC extends ITOCInput, IBlock { };
@@ -429,7 +423,7 @@ export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive |
 
 export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock;
 
-export type TParentType = IRootPage | ISpace | TCollectionBlock;
+export type TParentType = IPage | ISpace | ICollectionViewPage;
 
 export interface ICollection extends Node, ParentProps {
   description: string[][],

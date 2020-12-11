@@ -1,6 +1,6 @@
 import { TView } from ".";
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
-import { ICollection, ICollectionViewPage, IPage, IRootCollectionViewPage, IRootPage, TBlock } from "./block";
+import { ICollection, ICollectionViewPage, IPage, TBlock } from "./block";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type Entity = BlockData | SpaceData | CollectionData;
@@ -22,8 +22,7 @@ export type TTaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
 export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader' | 'none';
 export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
-export type TPage = IPage | IRootPage | ICollectionViewPage;
-export type TRootPage = IRootPage | IRootCollectionViewPage;
+export type TPage = IPage | ICollectionViewPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
 export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
 export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "relative";
@@ -193,7 +192,7 @@ export interface ICache {
   user_settings: Map<string, IUserSettings>,
 }
 
-export type Logger = false | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "RootPage" | "RowPage" | "SchemaUnit" | "NestedPage" | "CollectionView" | "RootCollectionViewPage" | "CollectionViewPage" | "Collection" | "SpaceView", id: string) => void)
+export type Logger = false | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "SchemaUnit" | "Page" | "CollectionView" | "CollectionViewPage" | "Collection" | "SpaceView", id: string) => void)
 export interface NishanArg {
   token: string,
   interval: number,

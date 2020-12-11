@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, ICollection, RepositionParams, ITRootPage } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -85,16 +85,16 @@ export default class Space extends Data<ISpace> {
     return block_map;
   }
 
-  async getTRootPage(args?: FilterTypes<IRootPage | IRootCollectionViewPage>) {
+  async getTRootPage(args?: FilterTypes<IPage | ICollectionViewPage>) {
     return await this.getTRootPages(args, false)
   }
 
-  async getTRootPages(args?: FilterTypes<IRootPage | IRootCollectionViewPage>, multiple?: boolean) {
+  async getTRootPages(args?: FilterTypes<IPage | ICollectionViewPage>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const props = this.getProps(), trootpage_map: ITRootPage = { collection_view_page: [], page: [] }, logger = this.logger;
-    await this.getItems<IRootPage | IRootCollectionViewPage>(args, multiple, async function (page) {
+    const props = this.getProps(), trootpage_map: ITPage = { collection_view_page: [], page: [] }, logger = this.logger;
+    await this.getItems<IPage | ICollectionViewPage>(args, multiple, async function (page) {
       if (page.type === "page") {
-        logger && logger("READ", "RootPage", page.id);
+        logger && logger("READ", "Page", page.id);
         trootpage_map.page.push(new Page({
           id: page.id,
           ...props
@@ -119,7 +119,7 @@ export default class Space extends Data<ISpace> {
     multiple = multiple ?? true;
     await this.initializeCache();
     this.initializeChildData();
-    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TRootPage)).filter((cvp) => cvp?.type === "collection_view_page") as IRootCollectionViewPage[]).map(cvp => cvp.collection_id);
+    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TPage)).filter((cvp) => cvp?.type === "collection_view_page") as ICollectionViewPage[]).map(cvp => cvp.collection_id);
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
@@ -173,7 +173,7 @@ export default class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg?: FilterType<TRootPage>) {
+  async deleteTRootPage(arg?: FilterType<TPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
   }
 
@@ -182,9 +182,9 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteTRootPages(args?: FilterTypes<TRootPage>, multiple?: boolean) {
+  async deleteTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
     multiple = multiple ?? true;
-    await this.deleteItems<TRootPage>(args, multiple)
+    await this.deleteItems<TPage>(args, multiple)
   }
 
   // ? FEAT:1:M Empty userids for all user, a predicate

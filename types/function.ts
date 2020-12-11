@@ -99,7 +99,6 @@ interface ViewUpdateGenericParam<T extends TSchemaUnitType, FO extends TViewFilt
   aggregation?: A
 }
 
-export interface ITRootPage { collection_view_page: CollectionViewPage[], page: Page[] };
 export interface ITPage {
   collection_view_page: CollectionViewPage[],
   page: Page[]

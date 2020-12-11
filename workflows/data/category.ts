@@ -17,7 +17,7 @@ export type TCategory =
   "Server" |
   "PAAS" |
   "Superset" |
-  "API Testing" |
+  "Api Testing" |
   "Pre-processor" |
   "ORM" |
   "Framework" |
@@ -63,7 +63,7 @@ export const categories: [TCategory, TTextColor][] = [
   "Package Manager",
   "PAAS",
   "Pre-processor",
-  "API Testing",
+  "Api Testing",
   "Reverse Proxy",
   "Runtime",
   "Shell Scripting",
@@ -78,4 +78,4 @@ export const categories: [TCategory, TTextColor][] = [
   "Tools",
   "Transpiler",
   "Version Control"
-].map((category) => [category, "default"] as [TCategory, TTextColor]) 
+].sort((a, b) => a > b ? 1 : -1).map((category) => [category, "default"] as [TCategory, TTextColor])

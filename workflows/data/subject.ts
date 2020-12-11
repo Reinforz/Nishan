@@ -17,7 +17,7 @@ const arr: Item[] = [
     title: "Apollo",
     category: ["Stack"],
     for: ["Javascript", "Graphql"],
-    image: "https://seeklogo.com/images/A/apollo-logo-DC7DD3C444-seeklogo.com.png"
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr1w9Ilaaf8biboeSSLvyQLfi7ncvCpGIi6g&usqp=CAU"
   },
   {
     color: "default",
@@ -63,7 +63,7 @@ const arr: Item[] = [
     category: ["Linter", "Library"],
     for: ["Javascript"],
     color: "blue",
-    title: "ESLint"
+    title: "Eslint"
   },
   {
     color: "gray",
@@ -108,7 +108,7 @@ const arr: Item[] = [
     color: "pink",
     title: "Graphql",
     category: ["Language", "Technology"],
-    image: "https://i0.wp.com/blog.knoldus.com/wp-content/uploads/2019/06/Graphql.png?fit=600%2C600&ssl=1"
+    image: "https://wildgoosechase.net/wp-content/uploads/2019/02/graphql-logo-on-black.png"
   },
   {
     color: "orange",
@@ -119,7 +119,7 @@ const arr: Item[] = [
   {
     color: "purple",
     title: "Heroku",
-    image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.crunchbase.com%2Forganization%2Fheroku&psig=AOvVaw11u9e1x1vmoLz-QKP7u_Gs&ust=1607009535401000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDa0pjPr-0CFQAAAAAdAAAAABAD",
+    image: "https://dailysmarty-production.s3.amazonaws.com/uploads/post/img/509/heroku-logo.jpg",
     category: ["Cloud Platform", "Tools"]
   },
   {
@@ -182,10 +182,17 @@ const arr: Item[] = [
     image: "https://opencollective-production.s3.us-west-1.amazonaws.com/ada636e0-395b-11ea-8ab7-b3f0317bbc7c.png"
   },
   {
+    color: "blue",
+    title: "Ant Design",
+    for: ["React"],
+    category: ["Design System", "Framework"],
+    image: "https://miro.medium.com/max/1005/1*tM0oP1Wx5NJwcJW0yZcWLg.jpeg"
+  },
+  {
     category: ["Database"],
     color: "green",
     title: "Mongodb",
-    image: "https://1000logos.net/wp-content/uploads/2020/08/Mongodb-Emblem.jpg"
+    image: "https://i.dlpng.com/static/png/5403741-mongodb-png-dlpngcom-mongodb-png-399_468_preview.png"
   },
   {
     image: "https://opencollective-production.s3-us-west-1.amazonaws.com/7a00cdd0-fae4-11e7-ae09-7f36f712693a.png",
@@ -197,7 +204,7 @@ const arr: Item[] = [
   {
     color: "green",
     category: ["Reverse Proxy", "Load Balancer", "Server"],
-    title: "NGinx",
+    title: "Nginx",
     image: "https://linuxtips.us/wp-content/uploads/nginx-logo.png"
   },
   {
@@ -212,6 +219,12 @@ const arr: Item[] = [
     title: "Netlify",
     category: ["Cloud Platform", "Tools"],
     image: "https://www.netlify.com/img/press/logos/logomark.png"
+  },
+  {
+    color: "green",
+    title: "Vercel",
+    category: ["Cloud Platform", "Tools"],
+    image: "https://i.pinimg.com/originals/c4/35/6c/c4356cd5454d06585e0a46066b555172.png"
   },
   {
     color: "gray",
@@ -242,13 +255,13 @@ const arr: Item[] = [
   },
   {
     color: "blue",
-    title: "PostgreSQL",
+    title: "Postgresql",
     for: ["SQL"],
     category: ["Database"],
     image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png"
   },
   {
-    category: ["API Testing", "Tools"],
+    category: ["Api Testing", "Tools"],
     color: "orange",
     title: "Postman",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQwqKK2UfH60mxJjus8X3-Fa3WMnlQY3QwPi-424bq6DlRkTBR&usqp=CAU"
@@ -262,7 +275,7 @@ const arr: Item[] = [
   {
     color: "default",
     title: "Prisma",
-    image: "https://cdn.worldvectorlogo.com/logos/prisma-2.svg",
+    image: "https://images.g2crowd.com/uploads/product/image/large_detail/large_detail_765dd3891d3e6fabe76d21c159f56360/prisma-io.jpg",
     for: ["Javascript"],
     category: ["ORM"]
   },
@@ -347,9 +360,16 @@ const arr: Item[] = [
   },
   {
     color: "pink",
-    title: "TypeGraphql",
+    title: "Typegraphql",
     image: "https://Typegraphql.com/img/logo.png",
-    for: ["Typescript"],
+    for: ["Typescript", "Graphql"],
+    category: ["Library"]
+  },
+  {
+    color: "pink",
+    title: "Graphql Codegen",
+    image: "https://graphql-code-generator.com/img/gql-codegen-icon.svg",
+    for: ["Typescript", "Graphql"],
     category: ["Library"]
   },
   {
@@ -368,7 +388,7 @@ const arr: Item[] = [
   },
   {
     color: "blue",
-    title: "VSCode",
+    title: "Vscode",
     category: ["Editor", "Tools"],
     image: "https://user-images.githubusercontent.com/674621/71187801-14e60a80-2280-11ea-94c9-e56576f76baf.png"
   },
@@ -406,4 +426,4 @@ const arr: Item[] = [
   }
 ];
 
-export default arr;
+export default arr.sort((a, b) => a.title > b.title ? 1 : -1);

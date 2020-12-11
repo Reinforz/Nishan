@@ -74,7 +74,7 @@ export interface TodoProps {
 
 export interface ICollectionBlockInput {
   views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
-  schema: [TSchemaUnit, ...TSchemaUnit[]],
+  schema: TSchemaUnit[],
   properties: PageProps,
   format?: Partial<PageFormat>,
   rows?: Omit<IPageInput, "type">[]
@@ -94,7 +94,7 @@ export interface ILinkedDBInput {
   collection_id: string,
   properties?: {},
   format?: {},
-  views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
+  views: TSearchManipViewParam[],
 }
 
 export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageInput | ILinkedDBInput;

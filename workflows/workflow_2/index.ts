@@ -5,13 +5,13 @@ import Nishan from '../../Nishan';
 import "../env"
 
 import { fors, categories, subject } from "../data";
-import { IPageInput } from '../../types';
+import { ILinkedDBInput, IPageInput } from '../../types';
 
 
 async function main() {
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
-    interval: 1000,
+    interval: 500,
   });
 
   // Get your own notion user and space
@@ -23,48 +23,68 @@ async function main() {
 
   const collection_ids: Record<root_cvp_titles_type, string> = {} as any;
 
-  await space.getRootCollections((collection) => {
-    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
-    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
-  })
+  function createLinkedDB(key: root_cvp_titles_type, _for: "EBooks" | "Courses", title: string) {
+    return {
+      type: "linked_db",
+      collection_id: collection_ids[key],
+      views: [
+        ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
+        ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
+        ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
+      ].map(([status, phase]) => (
+        {
+          type: "gallery",
+          name: `${status} ${phase} ${_for}`,
+          gallery_cover: { property: "Cover", type: "property" },
+          view: [
+            {
+              type: "title",
+              name: "Name",
+              sort: "ascending"
+            },
+            {
+              type: "text",
+              name: "Instructor"
+            },
+            {
+              type: "select",
+              name: "Publisher"
+            },
+            {
+              type: "multi_select",
+              name: "Subject",
+              filter: [["enum_contains", "exact", title]]
+            },
+            {
+              name: "Status",
+              type: "select",
+              format: false,
+              filter: [["enum_is", "exact", status as any]]
+            },
+            {
+              name: "Phase",
+              type: "select",
+              format: false,
+              filter: [["enum_is", "exact", phase as any]]
+            },
+            {
+              name: "Priority",
+              type: "select",
+            },
+            {
+              type: "formula",
+              sort: ["descending", 0],
+              format: false,
+              name: "Urgency",
+            }
+          ]
+        })
+      )
+    } as ILinkedDBInput
+  }
 
-  await space.createTRootPages([{
-    type: "collection_view_page",
-    properties: {
-      title: [["Web 3.0"]]
-    },
-    format: {
-      page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg"
-    },
-    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "multi_select", options: categories.map(([value, color]) => ({ value, color, id: uuidv4() })) }, { name: "For", type: "multi_select", options: fors.map(([value, color]) => ({ value, color, id: uuidv4() })) }],
-    views: [
-      {
-        type: "table",
-        name: "Overview",
-        view: [{
-          type: "text",
-          name: "Title",
-          sort: ["ascending", 0],
-          aggregation: "count",
-          format: 150
-        }, {
-          type: "number",
-          name: "Competency",
-          format: 50,
-          aggregation: "average",
-        }, {
-          type: "multi_select",
-          name: "Category",
-          sort: "ascending",
-          format: 200
-        }, {
-          type: "multi_select",
-          name: "For",
-          format: 200
-        }]
-      }
-    ],
-    rows: subject.slice(0, 10).map(({ for: _for, image, title, category }) => (
+  function returnSubjectSlice(start: number, end: number) {
+    return subject.slice(start, end).map(({ for: _for, image, title, category }) => (
       {
         format: {
           page_icon: image,
@@ -221,120 +241,8 @@ async function main() {
               }
             ]
           },
-          {
-            type: "linked_db",
-            collection_id: collection_ids["Course List"],
-            views: ([
-              ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
-              ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
-              ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
-            ].map(([status, phase]) => (
-              {
-                type: "gallery",
-                name: `${status} ${phase} Courses`,
-                gallery_cover: { property: "Cover", type: "property" },
-                view: [
-                  {
-                    type: "title",
-                    name: "Name",
-                    sort: "ascending"
-                  },
-                  {
-                    type: "text",
-                    name: "Instructor"
-                  },
-                  {
-                    type: "select",
-                    name: "Publisher"
-                  },
-                  {
-                    type: "multi_select",
-                    name: "Subject",
-                    filter: [["enum_contains", "exact", title]]
-                  },
-                  {
-                    name: "Status",
-                    type: "select",
-                    format: false,
-                    filter: [["enum_is", "exact", status as any]]
-                  },
-                  {
-                    name: "Phase",
-                    type: "select",
-                    format: false,
-                    filter: [["enum_is", "exact", phase as any]]
-                  },
-                  {
-                    name: "Priority",
-                    type: "select",
-                  },
-                  {
-                    type: "formula",
-                    sort: ["descending", 0],
-                    format: false,
-                    name: "Urgency",
-                  }
-                ]
-              })) as any
-            )
-          },
-          {
-            type: "linked_db",
-            collection_id: collection_ids["Reading List"],
-            views: [
-              ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
-              ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
-              ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
-            ].map(([status, phase]) => (
-              {
-                type: "gallery",
-                name: `${status} ${phase} EBooks`,
-                gallery_cover: { property: "Cover", type: "property" },
-                view: [
-                  {
-                    type: "title",
-                    name: "Name",
-                    sort: "ascending"
-                  },
-                  {
-                    type: "text",
-                    name: "Instructor"
-                  },
-                  {
-                    type: "select",
-                    name: "Publisher"
-                  },
-                  {
-                    type: "multi_select",
-                    name: "Subject",
-                    filter: [["enum_contains", "exact", title]]
-                  },
-                  {
-                    name: "Status",
-                    type: "select",
-                    format: false,
-                    filter: [["enum_is", "exact", status as any]]
-                  },
-                  {
-                    name: "Phase",
-                    type: "select",
-                    format: false,
-                    filter: [["enum_is", "exact", phase as any]]
-                  },
-                  {
-                    name: "Priority",
-                    type: "select",
-                  },
-                  {
-                    type: "formula",
-                    sort: ["descending", 0],
-                    format: false,
-                    name: "Urgency",
-                  }
-                ]
-              })
-            )
-          },
+          createLinkedDB("Course List", "Courses", title),
+          createLinkedDB("Reading List", "EBooks", title),
           {
             type: "linked_db",
             collection_id: collection_ids.Articles,
@@ -416,6 +324,57 @@ async function main() {
           },
         ]
       } as Omit<IPageInput, "type">))
+  }
+
+  await space.getRootCollections((collection) => {
+    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
+    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
+  })
+
+  const { collection_view_page } = await space.createTRootPages([{
+    type: "collection_view_page",
+    properties: {
+      title: [["Web 3.0"]]
+    },
+    format: {
+      page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg"
+    },
+    schema: [{ name: "Title", type: "title" }, { name: "Competency", type: "number" }, { name: "Category", type: "multi_select", options: categories.map(([value, color]) => ({ value, color, id: uuidv4() })) }, { name: "For", type: "multi_select", options: fors.map(([value, color]) => ({ value, color, id: uuidv4() })) }],
+    views: [
+      {
+        type: "table",
+        name: "Overview",
+        view: [{
+          type: "text",
+          name: "Title",
+          sort: ["ascending", 0],
+          aggregation: "count",
+          format: 250
+        }, {
+          type: "number",
+          name: "Competency",
+          format: 50,
+          aggregation: "average",
+        }, {
+          type: "multi_select",
+          name: "Category",
+          sort: "ascending",
+          format: 200
+        }, {
+          type: "multi_select",
+          name: "For",
+          format: 200
+        }]
+      }
+    ]
   }])
+
+  const tota_batch = Math.floor(subject.length / 10);
+
+  for (let index = 0; index <= tota_batch; index++) {
+    const start = (10 * index) + 1, end = start + 9;
+    await collection_view_page[0].collection.createPages(returnSubjectSlice(start, end));
+    console.log(`Deployed batch ${index + 1}`);
+  }
 }
 main();

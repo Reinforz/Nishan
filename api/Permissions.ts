@@ -1,13 +1,8 @@
-import { error } from 'console';
-import { INotionUser } from '../types';
-import { IOperation, IPermission, NishanArg, TPermissionRole, TRootPage } from '../types/types';
-import CollectionViewPage from './CollectionViewPage';
+import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation } from "../types"
+import { error } from "../utils";
+import Block from "./Block";
 
-/**
- * A class to represent collectionviewpage of Notion at the root level
- * @noInheritDoc
- */
-class RootCollectionViewPage extends CollectionViewPage {
+export default class Permissions<T extends (ICollectionViewPage | IPage)> extends Block<T, any>{
   constructor(arg: NishanArg) {
     super(arg);
   }
@@ -17,7 +12,7 @@ class RootCollectionViewPage extends CollectionViewPage {
    * @param args array of userid and role of user to share pages to
    */
   async addSharedUsers(args: [string, TPermissionRole][]) {
-    const data = this.getCachedData() as TRootPage, notion_users: INotionUser[] = [];
+    const data = this.getCachedData(), notion_users: INotionUser[] = [];
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
@@ -63,7 +58,7 @@ class RootCollectionViewPage extends CollectionViewPage {
    * @param args array of array [id of the user, role type for the user]
    */
   async updateSharedUsers(args: [string, TPermissionRole][]) {
-    const data = this.getCachedData() as TRootPage, ops: IOperation[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [];
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       ops.push({
@@ -95,5 +90,3 @@ class RootCollectionViewPage extends CollectionViewPage {
     return await this.updateSharedUsers(ids.map(id => [id, "none"]));
   }
 }
-
-export default RootCollectionViewPage;

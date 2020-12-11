@@ -1,8 +1,8 @@
 import Collection from './Collection';
-import Block from './Block';
+import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, TCollectionBlock, FilterTypes, FilterType, ICollection, TSearchManipViewParam } from '../types';
+import { NishanArg, IOperation, TView, FilterTypes, FilterType, ICollection, TSearchManipViewParam, ICollectionViewPage } from '../types';
 import { Operation } from '../utils';
 
 const view_class = {
@@ -18,7 +18,7 @@ const view_class = {
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
-class CollectionBlock extends Block<TCollectionBlock, any> {
+class CollectionBlock extends Permissions<ICollectionViewPage> {
   constructor(arg: NishanArg & { type: "block" }) {
     super({ ...arg });
   }

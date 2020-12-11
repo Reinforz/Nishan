@@ -1,12 +1,12 @@
 import Data from './Data';
 import RootPage from "./RootPage";
-import RootCollectionViewPage from './RootCollectionViewPage';
 import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
 import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, TRootPage, IRootCollectionViewPage, IRootPage, FilterTypes, FilterType, ICollection, RepositionParams, ITRootPage } from '../types';
 import Collection from './Collection';
+import CollectionViewPage from './CollectionViewPage';
 
 /**
  * A class to represent space of Notion
@@ -101,8 +101,8 @@ export default class Space extends Data<ISpace> {
         }))
       }
       else if (page.type === "collection_view_page") {
-        logger && logger("READ", "RootCollectionViewPage", page.id);
-        trootpage_map.collection_view_page.push(new RootCollectionViewPage({
+        logger && logger("READ", "CollectionViewPage", page.id);
+        trootpage_map.collection_view_page.push(new CollectionViewPage({
           id: page.id,
           ...props
         }))

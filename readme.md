@@ -1,4 +1,4 @@
-<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/36445ccb61a714b3961d74db4d3a739ef776cd23/public/Logo3%40100px.svg">
+<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/36445ccb61a714b3961d74db4d3a739ef776cd23/public/Logo.svg">
 
 # Nishan
 
@@ -16,6 +16,7 @@ Check out the [workflows](https://github.com/Nishan-Open-Source/Nishan/tree/mast
 
 ## NOTE
 
-Right now this repo is yet to be published as a package, but that is definitely on the roadmap.
+1. Right now this repo is yet to be published as a package on npm, but that is definitely on the roadmap.
+2. The documentation still needs a lot of love, so please stay patient as I am trying my best.
 
 Feel free to submit a pull request or open a new issue, contributions are more than welcome !!!

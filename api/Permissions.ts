@@ -1,4 +1,4 @@
-import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole, IPublicPermission } from "../types"
+import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole, IPublicPermission, TSpacePermissionRole } from "../types"
 import { error, Operation } from "../utils";
 import Block from "./Block";
 
@@ -115,6 +115,22 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       type: "public_permission",
       role: "none"
     })])
+    await this.updateCacheManually([this.id])
+  }
+
+  async updateSpacePermission(role: TSpacePermissionRole) {
+    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+      type: "space_permission",
+      role,
+    })]);
+    await this.updateCacheManually([this.id])
+  }
+
+  async removeSpacePermission() {
+    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+      type: "space_permission",
+      role: "none",
+    })]);
     await this.updateCacheManually([this.id])
   }
 }

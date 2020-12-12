@@ -22,16 +22,11 @@ export type TTaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
 export type TPage = IPage | ICollectionViewPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
-export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
-export type TDateFormat = "YYYY/MM/DD" | "ll" | "MM/DD/YYYY" | "DD/MM/YYYY" | "relative";
-export type TTimeFormat = "H:mm" | "LT";
-export type TDateReminderUnit = "day" | "hour" | "minute";
 export type TDataType = keyof RecordMap;
 export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 export type TPlanType = "personal";
 export type TCollectionViewBlock = "collection_view" | "collection_view_page";
 export type TSortValue = "ascending" | "descending";
-
 export interface GoogleDriveFileUser {
   displayName: string,
   emailAddress: string,
@@ -62,43 +57,6 @@ export interface Account {
   accountId: string,
   accountName: string,
   token: Token
-}
-
-export interface IDateReminder {
-  time?: string,
-  unit: TDateReminderUnit,
-  value: number
-}
-
-export interface Date {
-  date_format: TDateFormat,
-  type: TDateType,
-  start_date: string,
-  time_format: TTimeFormat,
-  reminder: IDateReminder
-}
-
-export interface IDate extends Date {
-  type: "date",
-}
-
-export interface IDateTime extends Date {
-  type: "datetime",
-  start_time: string,
-  time_zone: string,
-}
-
-export interface IDateTimeRange extends Date {
-  type: "datetimerange",
-  end_date: string,
-  start_time: string,
-  end_time: string,
-  time_zone: string,
-}
-
-export interface IDateRange extends Date {
-  type: "daterange",
-  end_date: string
 }
 
 export interface ValueArg {

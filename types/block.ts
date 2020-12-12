@@ -17,7 +17,11 @@ export interface PageFormat {
   block_locked: boolean,
   page_cover: string,
   page_cover_position: number,
-  block_color?: TFormatBlockColor
+  block_color?: TFormatBlockColor,
+  page_section_visibility: {
+    backlinks: "section_show" | "section_hide" | "section_collapsed",
+    comments: "section_hide" | "section_show"
+  }
 }
 
 export interface MediaProps {
@@ -264,7 +268,21 @@ export interface IEmbedInput {
 export interface IDriveInput {
   type: 'drive',
   properties?: {},
-  format?: {},
+  format?: {
+    drive_properties: {
+      file_id: string,
+      icon: string,
+      modified_time: number,
+      title: string,
+      trashed: boolean,
+      url: string,
+      user_name: string,
+    },
+    drive_status: {
+      authed: boolean,
+      last_fetched: number
+    }
+  },
   file_id: string
 }
 
@@ -390,21 +408,7 @@ export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;
 // Embeds Type
 export interface IGist extends IBlock, IGistInput { }
 export interface IDrive extends IBlock, IDriveInput {
-  format: {
-    drive_properties: {
-      file_id: string,
-      icon: string,
-      modified_time: number,
-      title: string,
-      trashed: boolean,
-      url: string,
-      user_name: string,
-    },
-    drive_status: {
-      authed: boolean,
-      last_fetched: number
-    }
-  }
+
 }
 
 export interface ITweet extends IBlock, ITweetInput { }

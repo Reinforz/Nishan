@@ -17,10 +17,13 @@ export interface IUserPermission {
   user_id: string,
 }
 
-export interface IPublicPermission {
+export interface IPublicPermissionOptions {
+  allow_search_engine_indexing: boolean
+  allow_duplicate: boolean
+}
+export interface IPublicPermission extends IPublicPermissionOptions {
   type: 'public_permisison',
   role: TPublicPermissionRole,
-  allow_duplicates: boolean
 }
 
 export interface ISpacePermission {

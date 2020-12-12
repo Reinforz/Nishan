@@ -1,4 +1,4 @@
-import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation } from "../types"
+import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole } from "../types"
 import { error, Operation } from "../utils";
 import Block from "./Block";
 
@@ -90,12 +90,15 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
     return await this.updateSharedUsers(ids.map(id => [id, "none"]));
   }
 
-  async addPublicPermission(role: TPermissionRole) {
+  async addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
     const data = await this.getCachedData();
     await this.saveTransactions([Operation.block.setPermissionItem(data.id, ["permissions"], {
       type: "public_permission",
-      role
+      role,
+      ...(options ?? {})
     })])
     await this.updateCacheManually([this.id])
   }
+
+
 }

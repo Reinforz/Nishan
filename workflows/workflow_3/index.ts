@@ -3,13 +3,13 @@ import "../env"
 
 (async function () {
   // Change the interval between each request to your desire, 
-  // but be warned this might result in a 502 Bad Gateway error
-  // for me 1000ms works fine
+  // but be warned this might result in a 502 Bad Gateway error if too low
 
   const nishan = new Nishan({
     token: process.env.NOTION_TOKEN as string,
-    interval: 1000,
+    interval: 500,
   });
+
   // Get your own notion user and space 
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
   const space = await user.getSpace((space) => space.name === 'Developer');

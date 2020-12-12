@@ -86,7 +86,11 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPage(args?: FilterTypes<IPage | ICollectionViewPage>) {
-    return await this.getTRootPages(args, false)
+    const troot_page = await this.getTRootPages(args, false);
+    return {
+      page: troot_page.page[0],
+      collection_view_page: troot_page.collection_view_page[0]
+    }
   }
 
   async getTRootPages(args?: FilterTypes<IPage | ICollectionViewPage>, multiple?: boolean) {

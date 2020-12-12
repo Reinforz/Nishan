@@ -164,6 +164,14 @@ export interface ICommonTextInput {
   }
 }
 
+
+export interface ILinkToPageInput {
+  type: "link_to_page",
+  page_id: string,
+  format?: {},
+  properties?: {}
+}
+
 export interface ITextInput extends ICommonTextInput {
   type: 'text'
 }
@@ -219,7 +227,7 @@ export interface ITodoInput {
 }
 // ? TD:2:M Add td for TCollectionBlockInput
 
-export type TBasicBlockInput = IPageInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
+export type TBasicBlockInput = ILinkToPageInput | IPageInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
 // Advanced block input
 export interface ITOCInput {
   type: 'table_of_contents',

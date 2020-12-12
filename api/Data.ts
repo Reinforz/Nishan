@@ -730,7 +730,6 @@ export default class Data<T extends TData> extends Mutations {
 
           block_map[content.type].push(collectionblock_map)
         }
-
         else if (content.type === "page") {
           if (content.contents)
             await traverse(content.contents, $block_id, "block");
@@ -747,7 +746,7 @@ export default class Data<T extends TData> extends Mutations {
           block_map[type].push(await this.createClass(content.type, $block_id));
         }
 
-        else {
+        else if (content.type !== "link_to_page") {
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
             properties,
@@ -759,10 +758,13 @@ export default class Data<T extends TData> extends Mutations {
           }));
           block_map[type].push(await this.createClass(content.type, $block_id));
         }
+
+        const content_id = content.type === "link_to_page" ? content.page_id : $block_id;
+
         if (parent_table === "block")
-          ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: $block_id }))
+          ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: content_id }))
         else if (parent_table === "space")
-          ops.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: $block_id }))
+          ops.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: content_id }))
       }
     }
 

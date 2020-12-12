@@ -1,4 +1,4 @@
-import { TView } from ".";
+import { IPermission, TView } from ".";
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
 import { ICollection, ICollectionViewPage, IPage, TBlock } from "./block";
 
@@ -20,8 +20,6 @@ export type TFormatBlockColor = TTextColor | TBGColor;
 export type TExportType = "markdown" | "pdf" | "html";
 export type TTaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
-export type TPermissionRole = 'editor' | 'read_and_write' | 'comment_only' | 'reader' | 'none';
-export type TPermissionType = 'user_permission' | 'space_permission' | 'public_permission';
 export type TPage = IPage | ICollectionViewPage;
 export type TCodeLanguage = "ABAP" | "Arduino" | "Bash" | "BASIC" | "C" | "Clojure" | "CoffeeScript" | "C++" | "C#" | "CSS" | "Dart" | "Diff" | "Docker" | "Elixir" | "Elm" | "Erlang" | "Flow" | "Fortran" | "F#" | "Gherkin" | "GLSL" | "Go" | "GraphQL" | "Groovy" | "Haskell" | "HTML" | "Java" | "JavaScript" | "JSON" | "Kotlin" | "LaTeX" | "Less" | "Lisp" | "LiveScript" | "Lua" | "Makefile" | "Markdown" | "Markup" | "MATLAB" | "Nix" | "Objective-C" | "OCaml" | "Pascal" | "Perl" | "PHP" | "Plain Text" | "PowerShell" | "Prolog" | "Python" | "R" | "Reason" | "Ruby" | "Rust" | "Sass" | "Scala" | "Scheme" | "Scss" | "Shell" | "SQL" | "Swift" | "TypeScript" | "VB.Net" | "Verilog" | "VHDL" | "Visual Basic" | "WebAssembly" | "XML" | "YAML";
 export type TDateType = "date" | "datetimerange" | "datetime" | "daterange";
@@ -128,12 +126,6 @@ export interface IOperation {
   path: string[],
   args: Args
 };
-
-export interface IPermission {
-  role: TPermissionRole,
-  type: TPermissionType,
-  user_id: string,
-}
 
 export interface Node {
   alive: boolean,

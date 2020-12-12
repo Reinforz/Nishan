@@ -1,7 +1,7 @@
 import { ISpace } from "./api";
-import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, TPermissionRole, IPermission, ParentProps } from "./types";
+import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, ParentProps } from "./types";
 import { Schema, TSchemaUnit } from "./schema";
-import { TSearchManipViewParam } from ".";
+import { IPermission, TPermissionRole, TSearchManipViewParam } from ".";
 
 export interface PageProps {
   title: string[][],
@@ -316,12 +316,6 @@ export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepen
 export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput;
 // -----------------
 
-export interface IPublicPermission {
-  type: 'public_permission',
-  role: TPermissionRole,
-  allow_duplicate: boolean
-}
-
 // Media IBlock Types
 export interface IVideo extends IBlock, IVideoInput { };
 export interface IAudio extends IBlock, IAudioInput { };
@@ -340,7 +334,7 @@ export interface IPage extends IBlock {
   format?: PageFormat,
   is_template?: boolean,
   file_ids?: string[],
-  permissions: (IPermission | IPublicPermission)[]
+  permissions: IPermission[]
 }
 
 export interface ICollectionBlock extends IBlock {
@@ -357,7 +351,7 @@ export interface ICollectionView extends ICollectionBlock {
 
 export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page',
-  permissions: (IPermission | IPublicPermission)[]
+  permissions: IPermission[]
 }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;

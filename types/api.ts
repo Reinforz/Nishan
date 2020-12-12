@@ -2,6 +2,7 @@
 import { IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat } from "./block";
 import { TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
 import { ViewAggregations } from "./aggregator";
+import { ISpacePermission } from "./permissions";
 
 export interface SetPageNotificationsAsReadParams {
   navigableBlockId: string,
@@ -410,7 +411,7 @@ export interface ISpace extends CreateProps, LastEditedProps {
   invite_link_enabled: boolean,
   name: string,
   pages: string[],
-  permissions: IPermission[],
+  permissions: ISpacePermission[],
   plan_type: TPlanType,
   shard_id: number,
   version: number,

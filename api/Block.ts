@@ -147,7 +147,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types
-  createBlock({ $block_id, type, properties = {}, format = {}, parent_id, parent_table = 'block' }: CreateBlockArg) {
+  protected createBlock({ $block_id, type, properties = {}, format = {}, parent_id, parent_table = 'block' }: CreateBlockArg) {
     const data = this.getCachedData();
     const current_time = Date.now();
     const arg: any = {

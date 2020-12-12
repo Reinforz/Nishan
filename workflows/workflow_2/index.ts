@@ -17,11 +17,17 @@ async function main() {
   // Get your own notion user and space
   const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
   const space = await user.getSpace((space) => space.name === 'Developer');
+
   type root_cvp_titles_type = "Tasks" | "Articles" | "Reading List" | "Course List" | "Goals";
 
   const root_cvp_titles = ["Tasks", "Articles", "Reading List", "Course List", "Goals"] as root_cvp_titles_type[];
 
   const collection_ids: Record<root_cvp_titles_type, string> = {} as any;
+
+  await space.getRootCollections((collection) => {
+    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
+    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
+  })
 
   function createLinkedDB(key: root_cvp_titles_type, _for: "EBooks" | "Courses", title: string) {
     return {
@@ -325,11 +331,6 @@ async function main() {
         ]
       } as Omit<IPageInput, "type">))
   }
-
-  await space.getRootCollections((collection) => {
-    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
-    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
-  })
 
   const { collection_view_page } = await space.createTRootPages([{
     type: "collection_view_page",

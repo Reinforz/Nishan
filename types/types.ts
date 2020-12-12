@@ -1,4 +1,4 @@
-import { IPermission, TView } from ".";
+import { TView } from ".";
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
 import { ICollection, ICollectionViewPage, IPage, TBlock } from "./block";
 
@@ -151,7 +151,6 @@ export interface LastEditedProps {
 }
 
 export interface IBlock extends Node, ParentProps, CreateProps, LastEditedProps {
-  permission: IPermission[],
   shard_id: number,
   space_id: string,
   collection_id?: string,

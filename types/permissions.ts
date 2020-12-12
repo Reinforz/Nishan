@@ -22,7 +22,7 @@ export interface IPublicPermissionOptions {
   allow_duplicate: boolean
 }
 export interface IPublicPermission extends IPublicPermissionOptions {
-  type: 'public_permisison',
+  type: 'public_permission',
   role: TPublicPermissionRole,
 }
 

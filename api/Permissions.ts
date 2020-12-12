@@ -99,6 +99,17 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
     await this.updateCacheManually([this.id])
   }
 
+  async updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
+    const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission;
+    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+      ...(permission ?? {}),
+      type: "public_permission",
+      role,
+      ...(options ?? {})
+    })])
+    await this.updateCacheManually([this.id])
+  }
+
   async removePublicPermission() {
     await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",

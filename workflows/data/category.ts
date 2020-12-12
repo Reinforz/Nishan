@@ -1,50 +1,13 @@
 import { TTextColor } from "../../types";
+import { ElementType } from "./utils";
 
-export type TCategory =
-  "Design System" |
-  "HTTP" |
-  "Animation" |
-  "Transpiler" |
-  "Linter" |
-  "SSG" |
-  "SSR" |
-  "Microservices" |
-  "State Management" |
-  "Shell Scripting" |
-  "Testing" |
-  "Runtime" |
-  "Database" |
-  "Server" |
-  "PAAS" |
-  "Superset" |
-  "Api Testing" |
-  "Pre-processor" |
-  "ORM" |
-  "Framework" |
-  "Package Manager" |
-  "Language" |
-  "Tools" |
-  "Library" |
-  "Technology" |
-  "Bundler" |
-  "Template Engine" |
-  "Editor" |
-  "Stack" |
-  "Doc Generator" |
-  "Version Control" |
-  "CD" |
-  "Markup" |
-  "Orchestration" |
-  "Cloud Platform" |
-  "Load Balancer" |
-  "Reverse Proxy" |
-  "CI";
-
-export const categories: [TCategory, TTextColor][] = [
+const category = [
   "Animation",
   "Bundler",
   "CD",
   "CI",
+  "Component Prototyping",
+  "Dbaas",
   "Cloud Platform",
   "Database",
   "Design System",
@@ -66,6 +29,7 @@ export const categories: [TCategory, TTextColor][] = [
   "Api Testing",
   "Reverse Proxy",
   "Runtime",
+  "Server",
   "Shell Scripting",
   "SSG",
   "SSR",
@@ -77,5 +41,10 @@ export const categories: [TCategory, TTextColor][] = [
   "Testing",
   "Tools",
   "Transpiler",
+  "Serverless",
   "Version Control"
-].sort((a, b) => a > b ? 1 : -1).map((category) => [category, "default"] as [TCategory, TTextColor])
+] as const;
+
+export type TCategory = ElementType<typeof category>;
+
+export const categories = category.map((category: TCategory) => [category, "default"]).sort((a, b) => a[0] > b[0] ? 1 : -1) as [TCategory, TTextColor][]

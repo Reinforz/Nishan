@@ -195,6 +195,18 @@ const arr: Item[] = [
     image: "https://i.dlpng.com/static/png/5403741-mongodb-png-dlpngcom-mongodb-png-399_468_preview.png"
   },
   {
+    category: ["Dbaas"],
+    color: "green",
+    title: "Mongodb Atlas",
+    image: "https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/128809035/original/117787e8d664b2ddffeb04f250c3d812eaa18305/create-a-mongodb-atlas-database-for-you.png"
+  },
+  {
+    category: ["Serverless"],
+    color: "orange",
+    title: "AWS Lambda",
+    image: "https://digital.ai/sites/default/files/pictures/styles/maxwidth_300/public/pt_logos/aws-lambda.png?itok=JdNE6Vyd"
+  },
+  {
     image: "https://opencollective-production.s3-us-west-1.amazonaws.com/7a00cdd0-fae4-11e7-ae09-7f36f712693a.png",
     category: ["ORM", "Library"],
     color: "default",
@@ -213,6 +225,13 @@ const arr: Item[] = [
     image: "https://authy.com/wp-content/uploads/npm-logo.png",
     category: ["Package Manager"],
     for: ["Javascript"]
+  },
+  {
+    color: "pink",
+    title: "Storybook",
+    image: "https://seeklogo.com/images/S/stoybook-logo-38E692E3FE-seeklogo.com.png",
+    category: ["Component Prototyping", "Library"],
+    for: ["Javascript", "React"]
   },
   {
     color: "green",
@@ -377,7 +396,14 @@ const arr: Item[] = [
     title: "Typeorm",
     image: "https://avatars2.githubusercontent.com/u/20165699?s=400&v=4",
     for: ["Javascript"],
-    category: ["ORM"]
+    category: ["ORM", "Library"]
+  },
+  {
+    color: "blue",
+    title: "Mikroorm",
+    image: "https://pbs.twimg.com/profile_images/1224965320307363840/cwfkFaY3_400x400.jpg",
+    for: ["Typescript", "Node"],
+    category: ["ORM", "Library"]
   },
   {
     color: "blue",

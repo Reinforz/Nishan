@@ -64,6 +64,14 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
   }
 
   /**
+   * Delete a single root page from the space
+   * @param arg Criteria to filter the page to be deleted
+   */
+  async deleteView(arg?: FilterType<TView>) {
+    return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
+  }
+
+  /**
    * Delete multiple root_pages or root_collection_view_pages
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
@@ -71,14 +79,6 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
   async deleteViews(args?: FilterTypes<TView>, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.deleteItems<TView>(args, multiple)
-  }
-
-  /**
-   * Delete a single root page from the space
-   * @param arg Criteria to filter the page to be deleted
-   */
-  async deleteView(arg?: FilterType<TView>) {
-    return await this.deleteViews(typeof arg === "string" ? [arg] : arg, false);
   }
 
   // ? FEAT:1:H Create updateView(s) methods, take help from view.updateView method

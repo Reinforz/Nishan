@@ -1,6 +1,5 @@
-import { TView } from ".";
+import { ICollection, ICollectionViewPage, IPage, TBlock, TView } from ".";
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
-import { ICollection, ICollectionViewPage, IPage, TBlock } from "./block";
 
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
@@ -8,9 +7,6 @@ export type TOperationCommand = 'set' | 'update' | 'keyedObjectListAfter' | 'key
 export type TOperationTable = 'space' | 'collection_view' | 'collection' | 'collection_view_page' | 'page' | 'block' | 'space_view' | 'notion_user' | 'user_settings' | 'user_root';
 export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
 export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property', property: string };
-export type TTextColor = 'default' | 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | "pink" | 'red';
-export type TBGColor = 'default_background' | 'gray_background' | 'brown_background' | 'orange_background' | 'yellow_background' | 'teal_background' | 'blue_background' | 'purple_background' | "pink_background" | 'red_background';
-export type TFormatBlockColor = TTextColor | TBGColor;
 export type TExportType = "markdown" | "pdf" | "html";
 export type TTaskType = "deleteSpace" | "exportBlock" | "duplicateBlock";
 export type TLocale = 'en-US' | 'ko-KR';
@@ -21,6 +17,7 @@ export type TCreditType = "web_login" | "desktop_login" | "mobile_login";
 export type TPlanType = "personal";
 export type TCollectionViewBlock = "collection_view" | "collection_view_page";
 export type TSortValue = "ascending" | "descending";
+
 export interface GoogleDriveFileUser {
   displayName: string,
   emailAddress: string,

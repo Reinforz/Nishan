@@ -1,5 +1,4 @@
-import { InlineDateArg } from "../types/function";
-import { TFormatBlockColor } from "../types/types";
+import { TFormatBlockColor, InlineDateArg } from "../types";
 
 export function inlineDate(arg: InlineDateArg) {
   const text: [[string, any[][]]] = [["‣", [["d", arg]]]];

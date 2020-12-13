@@ -4,6 +4,7 @@ import shortid from "./shortid";
 
 export * from "./inlineBlocks";
 export * from "./logs";
+export * from "./uuid";
 
 export {
   Operation,

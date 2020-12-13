@@ -1,5 +1,6 @@
 import Nishan from '../../Nishan';
 import "../env"
+import { v4 as uuidv4 } from "uuid";
 
 (async function () {
   // Change the interval between each request to your desire, 
@@ -31,6 +32,7 @@ import "../env"
   }));
 
   const objfn = (name: string) => ({ name, type: "checkbox" as const, format: [true, 100] as [boolean, number] })
+  const uuids = Array(31).fill(null).map(() => uuidv4())
 
   await monthly_page.createBlocks([
     {
@@ -43,9 +45,11 @@ import "../env"
         page_icon: "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0002/7590/brand.gif?itok=UMmhpECE"
       },
       contents: Array(31).fill(null).map((_, i) => {
+        const previous_id = uuids[i === 0 ? 30 : i - 1], next_id = uuids[i === 30 ? 0 : i + 1];
         i += 1;
         const date = `2020-12-${i < 10 ? "0" + i : i}`;
         return {
+          id: uuids[i - 1],
           type: "page",
           properties: {
             title: [[`Day ${i}`]]
@@ -54,246 +58,255 @@ import "../env"
             page_icon: "☝️",
             page_full_width: true
           },
-          contents: [{
-            type: "linked_db",
-            collection_id: collection_ids["Daily"],
-            views: [
-              {
-                // You can modify the view type, name etc
-                type: "table",
-                name: "Table View",
-                view: [
-                  // This is the order the properties will be stored in the view
-                  {
-                    type: "title",
-                    name: "Date",
-                    filter: [["string_is", "exact", date]],
-                    format: [true, 150],
-                  },
-                  objfn("Github"),
-                  objfn("GMail"),
-                  objfn("Twitter"),
-                  objfn("Codepen"),
-                  objfn("Youtube"),
-                  objfn("Reddit"),
-                  objfn("Stack Overflow"),
-                  objfn("Hashnode"),
-                  objfn("Dev.to"),
-                  objfn("Medium"),
-                  objfn("Stackshare"),
-                  objfn("Percentage"),
-                  {
-                    type: "number",
-                    name: "Total",
-                    format: false
-                  }
-                ]
-              }
-            ]
-          }, {
-            type: "linked_db",
-            collection_id: collection_ids["Tasks"],
-            views: [
-              {
-                type: "table",
-                name: "Task Table",
-                view: [
-                  {
-                    // Add your specific sort, filter, format and aggregation
-                    type: "date",
-                    name: "On",
-                    sort: "ascending",
-                    filter: [["date_is", "exact", {
-                      start_date: date,
+          contents: [
+            {
+              type: "link_to_page",
+              page_id: previous_id
+            },
+            {
+              type: "link_to_page",
+              page_id: next_id
+            },
+            {
+              type: "linked_db",
+              collection_id: collection_ids["Daily"],
+              views: [
+                {
+                  // You can modify the view type, name etc
+                  type: "table",
+                  name: "Table View",
+                  view: [
+                    // This is the order the properties will be stored in the view
+                    {
+                      type: "title",
+                      name: "Date",
+                      filter: [["string_is", "exact", date]],
+                      format: [true, 150],
+                    },
+                    objfn("Github"),
+                    objfn("GMail"),
+                    objfn("Twitter"),
+                    objfn("Codepen"),
+                    objfn("Youtube"),
+                    objfn("Reddit"),
+                    objfn("Stack Overflow"),
+                    objfn("Hashnode"),
+                    objfn("Dev.to"),
+                    objfn("Medium"),
+                    objfn("Stackshare"),
+                    objfn("Percentage"),
+                    {
+                      type: "number",
+                      name: "Total",
+                      format: false
+                    }
+                  ]
+                }
+              ]
+            }, {
+              type: "linked_db",
+              collection_id: collection_ids["Tasks"],
+              views: [
+                {
+                  type: "table",
+                  name: "Task Table",
+                  view: [
+                    {
+                      // Add your specific sort, filter, format and aggregation
+                      type: "date",
+                      name: "On",
+                      sort: "ascending",
+                      filter: [["date_is", "exact", {
+                        start_date: date,
+                        type: "date"
+                      }]],
+                      format: [true, 250]
+                    },
+                    {
+                      type: "title",
+                      name: "Task",
+                      format: [true, 250],
+                      aggregation: "count"
+                    },
+                    { name: "Purpose", type: "select", format: [true, 150], aggregation: "unique" },
+                    { name: "Subject", type: "select", format: [true, 350], aggregation: "unique" },
+                    { name: "Source", type: "select", format: [true, 150], aggregation: "unique" },
+                    { name: "Goals", type: "relation", format: [true, 300] },
+                    { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
+                    { name: "Created", type: "created_time", format: false },
+                    { name: "Custom", type: "formula", format: false },
+                  ]
+                }
+              ]
+            }, {
+              type: "linked_db",
+              collection_id: collection_ids["Todo"],
+              views: [
+                {
+                  type: "table",
+                  name: "Table View",
+                  view: [
+                    {
+                      name: "Todo",
+                      format: [true, 300],
+                      aggregation: "count",
+                      type: "title"
+                    },
+                    {
+                      name: "Done",
+                      format: false,
+                      filter: [["checkbox_is", "exact", true]],
+                      type: "checkbox"
+                    },
+                    {
+                      name: "Priority",
+                      format: [true, 150],
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Difficulty",
+                      format: [true, 150],
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Completed At",
+                      format: false,
+                      sort: "descending",
+                      filter: [["date_is", "exact", {
+                        start_date: date,
+                        type: "date"
+                      }]],
                       type: "date"
-                    }]],
-                    format: [true, 250]
-                  },
-                  {
-                    type: "title",
-                    name: "Task",
-                    format: [true, 250],
-                    aggregation: "count"
-                  },
-                  { name: "Purpose", type: "select", format: [true, 150], aggregation: "unique" },
-                  { name: "Subject", type: "select", format: [true, 350], aggregation: "unique" },
-                  { name: "Source", type: "select", format: [true, 150], aggregation: "unique" },
-                  { name: "Goals", type: "relation", format: [true, 300] },
-                  { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
-                  { name: "Created", type: "created_time", format: false },
-                  { name: "Custom", type: "formula", format: false },
-                ]
-              }
-            ]
-          }, {
-            type: "linked_db",
-            collection_id: collection_ids["Todo"],
-            views: [
-              {
-                type: "table",
-                name: "Table View",
-                view: [
-                  {
-                    name: "Todo",
-                    format: [true, 300],
-                    aggregation: "count",
-                    type: "title"
-                  },
-                  {
-                    name: "Done",
-                    format: false,
-                    filter: [["checkbox_is", "exact", true]],
-                    type: "checkbox"
-                  },
-                  {
-                    name: "Priority",
-                    format: [true, 150],
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Difficulty",
-                    format: [true, 150],
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Completed At",
-                    format: false,
-                    sort: "descending",
-                    filter: [["date_is", "exact", {
-                      start_date: date,
+                    },
+                    {
+                      name: "Priority Order",
+                      format: false,
+                      sort: "descending",
+                      type: "formula"
+                    },
+                    {
+                      name: "Difficulty Order",
+                      format: false,
+                      sort: "descending",
+                      type: "formula"
+                    }
+                  ]
+                }
+              ]
+            }, {
+              type: "linked_db",
+              collection_id: collection_ids["Articles"],
+              views: [
+                {
+                  filter_operator: "or",
+                  type: "table",
+                  name: "Article Table",
+                  view: [
+                    {
+                      name: "Title",
+                      format: 250,
+                      aggregation: "count",
+                      type: "title"
+                    },
+                    {
+                      name: "Urgency",
+                      format: 50,
+                      sort: "descending",
+                      aggregation: "average",
+                      type: "number"
+                    },
+                    {
+                      name: "Completed",
+                      format: 50,
+                      aggregation: "percent_checked",
+                      type: "formula"
+                    },
+                    {
+                      name: "Subject",
+                      format: 150,
+                      aggregation: "unique",
+                      type: "multi_select"
+                    },
+                    {
+                      name: "Provider",
+                      format: 150,
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Source",
+                      format: 350,
+                      type: "url"
+                    },
+                    {
+                      name: "Priority",
+                      format: 150,
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Status",
+                      format: 150,
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Phase",
+                      format: 150,
+                      aggregation: "unique",
+                      type: "select"
+                    },
+                    {
+                      name: "Learn Range",
+                      format: 150,
+                      aggregation: "percent_not_empty",
+                      filter: [["date_is", "exact", {
+                        type: "date",
+                        start_date: date
+                      }]],
                       type: "date"
-                    }]],
-                    type: "date"
-                  },
-                  {
-                    name: "Priority Order",
-                    format: false,
-                    sort: "descending",
-                    type: "formula"
-                  },
-                  {
-                    name: "Difficulty Order",
-                    format: false,
-                    sort: "descending",
-                    type: "formula"
-                  }
-                ]
-              }
-            ]
-          }, {
-            type: "linked_db",
-            collection_id: collection_ids["Articles"],
-            views: [
-              {
-                filter_operator: "or",
-                type: "table",
-                name: "Article Table",
-                view: [
-                  {
-                    name: "Title",
-                    format: 250,
-                    aggregation: "count",
-                    type: "title"
-                  },
-                  {
-                    name: "Urgency",
-                    format: 50,
-                    sort: "descending",
-                    aggregation: "average",
-                    type: "number"
-                  },
-                  {
-                    name: "Completed",
-                    format: 50,
-                    aggregation: "percent_checked",
-                    type: "formula"
-                  },
-                  {
-                    name: "Subject",
-                    format: 150,
-                    aggregation: "unique",
-                    type: "multi_select"
-                  },
-                  {
-                    name: "Provider",
-                    format: 150,
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Source",
-                    format: 350,
-                    type: "url"
-                  },
-                  {
-                    name: "Priority",
-                    format: 150,
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Status",
-                    format: 150,
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Phase",
-                    format: 150,
-                    aggregation: "unique",
-                    type: "select"
-                  },
-                  {
-                    name: "Learn Range",
-                    format: 150,
-                    aggregation: "percent_not_empty",
-                    filter: [["date_is", "exact", {
-                      type: "date",
-                      start_date: date
-                    }]],
-                    type: "date"
-                  },
-                  {
-                    name: "Revise Range",
-                    format: 150,
-                    aggregation: "percent_not_empty",
-                    filter: [["date_is", "exact", {
-                      type: "date",
-                      start_date: date
-                    }]],
-                    type: "date"
-                  },
-                  {
-                    name: "Practice Range",
-                    format: 150,
-                    aggregation: "percent_not_empty",
-                    filter: [["date_is", "exact", {
-                      type: "date",
-                      start_date: date
-                    }]],
-                    type: "date"
-                  },
-                  {
-                    name: "Priority Counter",
-                    format: false,
-                    type: "formula"
-                  },
-                  {
-                    name: "Status Counter",
-                    format: false,
-                    type: "formula"
-                  },
-                  {
-                    name: "Phase Counter",
-                    format: false,
-                    type: "formula"
-                  },
-                ]
-              }
-            ]
-          }]
+                    },
+                    {
+                      name: "Revise Range",
+                      format: 150,
+                      aggregation: "percent_not_empty",
+                      filter: [["date_is", "exact", {
+                        type: "date",
+                        start_date: date
+                      }]],
+                      type: "date"
+                    },
+                    {
+                      name: "Practice Range",
+                      format: 150,
+                      aggregation: "percent_not_empty",
+                      filter: [["date_is", "exact", {
+                        type: "date",
+                        start_date: date
+                      }]],
+                      type: "date"
+                    },
+                    {
+                      name: "Priority Counter",
+                      format: false,
+                      type: "formula"
+                    },
+                    {
+                      name: "Status Counter",
+                      format: false,
+                      type: "formula"
+                    },
+                    {
+                      name: "Phase Counter",
+                      format: false,
+                      type: "formula"
+                    },
+                  ]
+                }
+              ]
+            }]
         }
       })
     }

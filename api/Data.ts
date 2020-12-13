@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView } from "../types";
-import { Operation, error } from "../utils";
+import { validateUUID, Operation, error, warn } from "../utils";
 import Mutations from "./Mutations";
 
 /**
@@ -581,7 +581,7 @@ export default class Data<T extends TData> extends Mutations {
 
     const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) => {
       for (let index = 0; index < contents.length; index++) {
-        const content = contents[index], $block_id = uuidv4();
+        const content = contents[index], $block_id = content.id ? validateUUID(content.id) ? content.id : warn("Invalid uuid provided") && uuidv4() : uuidv4();
         sync_records.push($block_id);
         content.type = content.type ?? 'page';
 

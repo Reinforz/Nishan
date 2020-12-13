@@ -1,7 +1,4 @@
-import { ISpace } from "./api";
-import { TCreditType, Node, TFormatBlockColor, TCodeLanguage, IBlock, ParentProps } from "./types";
-import { Schema, TSchemaUnit } from "./schema";
-import { IPermission, TPermissionRole, TSearchManipViewParam } from ".";
+import { ISpace, TCreditType, TFormatBlockColor, TCodeLanguage, IBlock, LastEditedProps, Schema, TSchemaUnit, IPermission, TPermissionRole, TSearchManipViewParam, Node, ParentProps, CreateProps, SpaceShardProps } from ".";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
@@ -372,6 +369,15 @@ export interface IPage extends IBlock {
   permissions: IPermission[]
 }
 
+export interface IColumnFormat {
+  format: {
+    column_ratio: 0.5
+  }
+}
+export interface IColumn extends Node, ParentProps, CreateProps, LastEditedProps, IColumnFormat, SpaceShardProps {
+  content: string[],
+  type: "column"
+}
 export interface ICollectionBlock extends IBlock {
   view_ids: string[],
   collection_id: string,

@@ -102,6 +102,12 @@ export interface LastEditedProps {
   last_edited_time: number,
 }
 
+export interface SpaceShardProps {
+  shard_id: number
+  space_id: string
+}
+// TD:1:M Remove IBlock extends usage in other types, IBlock contains collection_id and view_ids that are not available in other portions 
+
 export interface IBlock extends Node, ParentProps, CreateProps, LastEditedProps {
   shard_id: number,
   space_id: string,

@@ -93,17 +93,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param type `TBasicBlockType` basic block types
    */
   async convertTo(type: TBasicBlockType) {
-    const data = this.getCachedData();
+    const data = this.getCachedData() as any;
     await this.saveTransactions([
       this.updateOp([], { type })
     ]);
 
-    const cached_value = this.cache.block.get(data.id);
-    if (cached_value) {
-      data.type = type;
-      cached_value.type = type;
-      this.cache.block.set(data.id, cached_value);
-    }
+    data.type = type;
     await this.updateCacheManually([data.id]);
   }
 

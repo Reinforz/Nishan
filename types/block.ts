@@ -2,10 +2,12 @@ import { ISpace, TCreditType, TFormatBlockColor, TCodeLanguage, IBlock, LastEdit
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
-export type TBasicBlockType = 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout';
+export type TBasicBlockType = 'page' | 'text' | 'header' | 'sub_header' | 'sub_sub_header' | 'to_do' | 'bulleted_list' | 'numbered_list' | 'toggle' | 'quote' | 'divider' | 'callout' | 'link_to_page';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
 export type TEmbedsBlockType = 'embed' | 'drive' | TGenericEmbedBlockType;
-export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | 'page' | 'collection_view_page' | 'collection_view' | 'link_to_page' | 'linked_db';
+export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
+export type TColumnBlockType = 'column_list' | 'column';
+export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | TCollectionBlockType;
 
 export interface PageProps {
   title: string[][],
@@ -32,6 +34,7 @@ interface IInput {
   id?: string,
   type: TBlockType
 }
+
 export interface MediaProps {
   source: string[][],
   caption?: string[][]
@@ -378,6 +381,12 @@ export interface IColumn extends Node, ParentProps, CreateProps, LastEditedProps
   content: string[],
   type: "column"
 }
+
+export interface IColumnList extends Node, ParentProps, CreateProps, LastEditedProps, SpaceShardProps {
+  content: string[],
+  type: "column_list"
+}
+
 export interface ICollectionBlock extends IBlock {
   view_ids: string[],
   collection_id: string,

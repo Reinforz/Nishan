@@ -12,7 +12,7 @@ class View<T extends TView> extends Data<T> {
   }
 
   async reposition(arg: RepositionParams) {
-    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
+    await this.saveTransactions([this.addToChildArray(this.id, arg)]);
   }
 
   /**
@@ -41,9 +41,9 @@ class View<T extends TView> extends Data<T> {
           property.width = format?.[1] ?? 250
           property.visible = format?.[0] ?? true;
         }
-        if (sort) (sorts as any).push({
+        if (sort) sorts.push({
           property: key,
-          direction: sort
+          direction: sort as any
         })
 
         if (aggregation) aggregations.push({

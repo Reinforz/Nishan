@@ -1,8 +1,8 @@
-import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole, IPublicPermission, TSpacePermissionRole } from "../types"
+import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole, IPublicPermission, TSpacePermissionRole, IPageInput, ICollectionViewPageInput } from "../types"
 import { error, Operation } from "../utils";
 import Block from "./Block";
 
-export default class Permissions<T extends (ICollectionViewPage | IPage)> extends Block<T, any>{
+export default class Permissions<T extends (ICollectionViewPage | IPage)> extends Block<T, ICollectionViewPageInput | IPageInput>{
   constructor(arg: NishanArg) {
     super(arg);
   }

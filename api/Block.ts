@@ -16,7 +16,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   }
 
   async reposition(arg: RepositionParams) {
-    await this.saveTransactions([this.addToChildArray(this.id, arg) as any]);
+    await this.saveTransactions([this.addToChildArray(this.id, arg)]);
   }
 
   // ? FEAT:1:M Take a position arg

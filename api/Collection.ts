@@ -94,11 +94,11 @@ class Collection extends Data<ICollection> {
   async getTemplates(args?: FilterTypes<IPage>, multiple?: boolean): Promise<Page[]> {
     multiple = multiple ?? true;
     const _this = this;
-    return this.getItems<IPage>(args as any, multiple, async function (page) {
+    return this.getItems<IPage>(args, multiple, async function (page) {
       return new Page({
         ..._this.getProps(),
         id: page.id
-      }) as any
+      })
     })
   }
 
@@ -218,7 +218,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
+    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
@@ -284,7 +284,7 @@ class Collection extends Data<ICollection> {
    */
   async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const data = this.getCachedData(), container: string[] = Object.keys(data.schema) as any ?? [];
+    const data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
     const matched: string[] = []
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {

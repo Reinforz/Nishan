@@ -31,7 +31,7 @@ export default class Queries extends Cache {
       headers: {
         cookie: `token_v2=${token}`,
         ["x-notion-active-user-header"]: user_id
-      } as any
+      }
     };
     this.user_id = user_id;
     this.logger = function (method, subject, id) {

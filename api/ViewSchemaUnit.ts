@@ -88,7 +88,7 @@ export default class ViewSchemaUnit extends Data<TView> {
 
   async deleteSorts(args: undefined | Predicate<ViewSorts>, multiple?: boolean) {
     multiple = multiple ?? true;
-    const data = this.getCachedData(), container: ViewSorts[] = data.query2?.sort as any ?? [];
+    const data = this.getCachedData(), container: ViewSorts[] = data.query2?.sort ?? [];
     let total_deleted = 0;
     if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < container.length; index++) {

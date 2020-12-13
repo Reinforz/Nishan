@@ -50,7 +50,7 @@ class SpaceView extends Data<ISpaceView> {
     if (return_object) {
       this.logger && this.logger("READ", "Space", target_space.id);
       return new Space({
-        id: (target_space as any).id,
+        id: target_space.id,
         ...this.getProps()
       });
     }

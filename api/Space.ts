@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage, INotionUser } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -208,5 +208,24 @@ export default class Space extends Data<ISpace> {
     this.updateCacheLocally({
       permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
     }, ["permissions"]);
+  }
+
+  async addMembers(emails: string[]) {
+    const ops: IOperation[] = [], notion_users: INotionUser[] = []
+    for (let i = 0; i < emails.length; i++) {
+      const notion_user = await this.findUser(emails[i]);
+      if (!notion_user) error(`User does not have a notion account`);
+      else
+        ops.push({
+          args: { role: "editor", type: "user_permission", user_id: notion_user.id },
+          command: "setPermissionItem",
+          id: this.id,
+          path: ["permissions"],
+          table: "space"
+        });
+      notion_users.push(notion_user)
+    }
+
+    await this.saveTransactions(ops);
   }
 }

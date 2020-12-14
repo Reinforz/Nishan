@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage, INotionUser } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -210,14 +210,14 @@ export default class Space extends Data<ISpace> {
     }, ["permissions"]);
   }
 
-  async addMembers(emails: string[]) {
+  async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
-    for (let i = 0; i < emails.length; i++) {
-      const notion_user = await this.findUser(emails[i]);
+    for (let i = 0; i < infos.length; i++) {
+      const [email, role] = infos[i], notion_user = await this.findUser(email);
       if (!notion_user) error(`User does not have a notion account`);
       else
         ops.push({
-          args: { role: "editor", type: "user_permission", user_id: notion_user.id },
+          args: { role, type: "user_permission", user_id: notion_user.id },
           command: "setPermissionItem",
           id: this.id,
           path: ["permissions"],
@@ -227,5 +227,6 @@ export default class Space extends Data<ISpace> {
     }
 
     await this.saveTransactions(ops);
+    return notion_users;
   }
 }

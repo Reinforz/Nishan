@@ -3,7 +3,7 @@ export type TPermissionType = 'user_permission' | 'space_permission' | 'public_p
 export type TPublicPermissionRole = 'read_and_write' | 'comment_only' | 'reader' | 'none'
 export type TUserPermissionRole = 'editor' | TPublicPermissionRole;
 export type TSpacePermissionRole = 'editor' | TPublicPermissionRole;
-
+export type TSpaceMemberPermissionRole = "read_and_write" | "editor" | "none";
 export type TPermissionRole =
   TPublicPermissionRole |
   TUserPermissionRole |

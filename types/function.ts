@@ -51,6 +51,7 @@ export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 
 export interface SearchManipViewParam {
+  id?: string,
   type: TViewType,
   name: string,
   view: [ViewUpdateParam, ...ViewUpdateParam[]],

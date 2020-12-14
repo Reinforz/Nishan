@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { error, Operation } from '../utils';
 
 import Data from "./Data";
@@ -52,7 +50,7 @@ class Collection extends Data<ICollection> {
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index],
         { properties = {}, format = {} } = opt,
-        $template_id = uuidv4();
+        $template_id = this.generateId(opt.id);
       const block_list_op = this.addToChildArray($template_id, opt.position);
       template_ids.push($template_id);
       ops.push(Operation.block.set($template_id, [], {

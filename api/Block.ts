@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { Operation } from '../utils';
 
 import Data from "./Data";
@@ -25,11 +23,11 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns The duplicated block object
    */
 
-  async duplicate(times?: number, positions?: RepositionParams[]) {
+  async duplicate(infos: { position: RepositionParams, id?: string }[], times?: number) {
     times = times ?? 1;
     const block_map = this.createBlockMap(), data = this.getCachedData(), ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     for (let index = 0; index < times; index++) {
-      const $gen_block_id = uuidv4();
+      const { position, id } = infos[index], $gen_block_id = this.generateId(id);
       sync_records.push($gen_block_id);
       if (data.type === "collection_view" || data.type === "collection_view_page") {
         ops.push(
@@ -56,7 +54,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
             id: $gen_block_id,
             copied_from: data.id,
           }),
-          this.addToParentChildArray($gen_block_id, positions ? positions[index] : undefined)
+          this.addToParentChildArray($gen_block_id, position)
         )
       }
 

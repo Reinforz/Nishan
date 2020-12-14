@@ -281,9 +281,9 @@ export default class Data<T extends TData> extends Mutations {
     Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
 
     for (let index = 0; index < views.length; index++) {
-      const { name, type, view, filter_operator = "and" } = views[index],
+      const { id, name, type, view, filter_operator = "and" } = views[index],
         sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-        view_id = uuidv4(), included_units: string[] = [], query2 = {
+        view_id = this.generateId(id), included_units: string[] = [], query2 = {
           sort: sorts,
           filter: {
             operator: filter_operator,
@@ -407,7 +407,7 @@ export default class Data<T extends TData> extends Mutations {
   }
 
   protected createCollection(param: ICollectionBlockInput, parent_id: string) {
-    const schema: Schema = {}, collection_id = uuidv4();
+    const schema: Schema = {}, collection_id = this.generateId(param.id);
 
     param.schema.forEach(opt => {
       schema[(opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_')] = opt
@@ -570,6 +570,10 @@ export default class Data<T extends TData> extends Mutations {
     }
   }
 
+  generateId(id: string | undefined) {
+    return id ? validateUUID(id) ? id : warn("Invalid uuid provided") && uuidv4() : uuidv4()
+  }
+
   async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
 
@@ -584,7 +588,7 @@ export default class Data<T extends TData> extends Mutations {
     const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
       parent_content_id = parent_content_id ?? parent_id;
       for (let index = 0; index < contents.length; index++) {
-        const content = contents[index], $block_id = content.id ? validateUUID(content.id) ? content.id : warn("Invalid uuid provided") && uuidv4() : uuidv4();
+        const content = contents[index], $block_id = this.generateId(content.id);
         sync_records.push($block_id);
         content.type = content.type ?? 'page';
 
@@ -670,7 +674,7 @@ export default class Data<T extends TData> extends Mutations {
         } else if (content.type === "factory") {
           const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
             ...content,
-            $block_id: uuidv4()
+            $block_id: this.generateId(content.id)
           })) as CreateBlockArg[]).map(content => {
             factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
             sync_records.push(content.$block_id)

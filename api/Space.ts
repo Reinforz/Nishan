@@ -191,25 +191,6 @@ export default class Space extends Data<ISpace> {
     await this.deleteItems<TPage>(args, multiple)
   }
 
-  // ? FEAT:1:M Empty userids for all user, a predicate
-
-  /**
-   * Remove multiple users from the current space
-   * @param userIds ids of the user to remove from the workspace
-   */
-  async removeUsers(userIds: string[]) {
-    const data = this.getCachedData();
-    await this.removeUsersFromSpace({
-      removePagePermissions: true,
-      revokeUserTokens: false,
-      spaceId: data?.id,
-      userIds
-    });
-    this.updateCacheLocally({
-      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
-    }, ["permissions"]);
-  }
-
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
     for (let i = 0; i < infos.length; i++) {
@@ -225,8 +206,27 @@ export default class Space extends Data<ISpace> {
         });
       notion_users.push(notion_user)
     }
-
+    await this.updateCacheManually([this.id])
     await this.saveTransactions(ops);
     return notion_users;
+  }
+
+  // ? FEAT:1:M Empty userids for all user, a predicate
+
+  /**
+   * Remove multiple users from the current space
+   * @param userIds ids of the user to remove from the workspace
+   */
+  async removeUsers(userIds: string[]) {
+    const data = this.getCachedData();
+    await this.removeUsersFromSpace({
+      removePagePermissions: true,
+      revokeUserTokens: false,
+      spaceId: data.id,
+      userIds
+    });
+    this.updateCacheLocally({
+      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
+    }, ["permissions"]);
   }
 }

@@ -188,7 +188,9 @@ export default class Data<T extends TData> extends Mutations {
           container.push([data.collection_id, "collection"])
         }
       } else if (this.type === "space") {
-        container = (this.getCachedData() as ISpace).pages ?? [];
+        const space = this.getCachedData() as ISpace;
+        container = space.pages ?? [];
+        space.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
       } else if (this.type === "user_root")
         container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
       else if (this.type === "collection") {

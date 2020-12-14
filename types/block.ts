@@ -7,28 +7,7 @@ export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 
 export type TEmbedsBlockType = 'embed' | 'drive' | TGenericEmbedBlockType;
 export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
 export type TColumnBlockType = 'column_list' | 'column';
-export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | TCollectionBlockType;
-
-export interface PageProps {
-  title: string[][],
-  [k: string]: string[][]
-}
-
-export interface PageFormat {
-  page_icon: string,
-  page_font: string,
-  page_full_width: boolean,
-  page_small_text: boolean,
-  block_locked_by: string,
-  block_locked: boolean,
-  page_cover: string,
-  page_cover_position: number,
-  block_color?: TFormatBlockColor,
-  page_section_visibility: {
-    backlinks: "section_show" | "section_hide" | "section_collapsed",
-    comments: "section_hide" | "section_show"
-  }
-}
+export type TBlockType = TEmbedsBlockType | TMediaBlockType | TBasicBlockType | TAdvancedBlockType | TCollectionBlockType | TColumnBlockType;
 
 interface IInput {
   id?: string,
@@ -158,6 +137,12 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 // Basic IBlock Input
 
+export interface IColumnListInput extends IInput {
+  type: "column_list",
+  properties?: {},
+  format?: {},
+  contents: TBlockInput
+}
 export interface IPageInput extends IInput {
   type: 'page',
   properties: PageProps,
@@ -348,7 +333,7 @@ export interface IFigmaInput extends IInput {
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;
 
-export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput;
+export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput | IColumnListInput;
 // -----------------
 
 // Media IBlock Types
@@ -362,6 +347,27 @@ export interface IFile extends IBlock, Omit<IFileInput, "id"> { };
 export type TMediaBlock = IVideo | IAudio | IImage | IWebBookmark | ICode | IFile;
 
 // Basic IBlock Types
+export interface PageProps {
+  title: string[][],
+  [k: string]: string[][]
+}
+
+export interface PageFormat {
+  page_icon: string,
+  page_font: string,
+  page_full_width: boolean,
+  page_small_text: boolean,
+  block_locked_by: string,
+  block_locked: boolean,
+  page_cover: string,
+  page_cover_position: number,
+  block_color?: TFormatBlockColor,
+  page_section_visibility: {
+    backlinks: "section_show" | "section_hide" | "section_collapsed",
+    comments: "section_hide" | "section_show"
+  }
+}
+
 export interface IPage extends IBlock {
   properties: PageProps,
   type: 'page',
@@ -379,12 +385,15 @@ export interface IColumnFormat {
 }
 export interface IColumn extends Node, ParentProps, CreateProps, LastEditedProps, IColumnFormat, SpaceShardProps {
   content: string[],
-  type: "column"
+  type: "column",
+  properties?: {}
 }
 
 export interface IColumnList extends Node, ParentProps, CreateProps, LastEditedProps, SpaceShardProps {
   content: string[],
-  type: "column_list"
+  type: "column_list",
+  format?: {},
+  properties?: {}
 }
 
 export interface ICollectionBlock extends IBlock {
@@ -448,7 +457,7 @@ export interface IFigma extends IBlock, Omit<IFigmaInput, "id"> { }
 
 export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
 
-export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock;
+export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock | IColumnList | IColumn;
 
 export type TParentType = IPage | ISpace | ICollectionViewPage;
 

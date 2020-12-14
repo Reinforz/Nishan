@@ -464,7 +464,9 @@ export default class Data<T extends TData> extends Mutations {
       divider: [],
       callout: [],
       collection_view: [],
-      link_to_page: []
+      link_to_page: [],
+      column_list: [],
+      column: []
     } as ITBlock
   }
 

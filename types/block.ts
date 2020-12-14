@@ -141,7 +141,7 @@ export interface IColumnListInput extends IInput {
   type: "column_list",
   properties?: {},
   format?: {},
-  contents: TBlockInput
+  contents: TBlockInput[]
 }
 export interface IPageInput extends IInput {
   type: 'page',

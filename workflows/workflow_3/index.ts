@@ -1,4 +1,4 @@
-import Nishan from '../../Nishan';
+import Nishan, { TBlockInput } from '../../Nishan';
 import "../env"
 import { v4 as uuidv4 } from "uuid";
 
@@ -60,12 +60,17 @@ import { v4 as uuidv4 } from "uuid";
           },
           contents: [
             {
-              type: "link_to_page",
-              page_id: previous_id
-            },
-            {
-              type: "link_to_page",
-              page_id: next_id
+              type: "column_list",
+              contents: [
+                {
+                  type: "link_to_page",
+                  page_id: previous_id
+                },
+                {
+                  type: "link_to_page",
+                  page_id: next_id
+                },
+              ]
             },
             {
               type: "linked_db",
@@ -307,7 +312,7 @@ import { v4 as uuidv4 } from "uuid";
                 }
               ]
             }]
-        }
+        } as TBlockInput
       })
     }
   ]);

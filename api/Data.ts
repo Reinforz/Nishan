@@ -581,7 +581,8 @@ export default class Data<T extends TData> extends Mutations {
 
     const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
-    const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) => {
+    const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
+      parent_content_id = parent_content_id ?? parent_id;
       for (let index = 0; index < contents.length; index++) {
         const content = contents[index], $block_id = content.id ? validateUUID(content.id) ? content.id : warn("Invalid uuid provided") && uuidv4() : uuidv4();
         sync_records.push($block_id);
@@ -747,7 +748,34 @@ export default class Data<T extends TData> extends Mutations {
           }))
           block_map[type].push(await this.createClass(content.type, $block_id));
         }
+        else if (content.type === "column_list") {
+          const { contents } = content;
+          ops.push(Operation.block.set($block_id, [], {
+            id: $block_id,
+            parent_id,
+            parent_table,
+            alive: true,
+            version: 1,
+            type: "column_list",
+          }));
 
+          for (let index = 0; index < contents.length; index++) {
+            const column_id = uuidv4();
+            ops.push(Operation.block.set(column_id, [], {
+              id: column_id,
+              parent_id: $block_id,
+              parent_table: "block",
+              alive: true,
+              type: "column",
+              version: 1,
+              format: {
+                column_ratio: 1 / contents.length
+              }
+            }), Operation.block.listAfter($block_id, ['content'], { after: '', id: column_id }));
+            sync_records.push(column_id);
+            await traverse([contents[index]], this.id, "block", column_id)
+          }
+        }
         else if (content.type !== "link_to_page") {
           ops.push(Operation.block.update($block_id, [], {
             id: $block_id,
@@ -764,9 +792,9 @@ export default class Data<T extends TData> extends Mutations {
         const content_id = content.type === "link_to_page" ? content.page_id : $block_id;
 
         if (parent_table === "block")
-          ops.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: content_id }))
+          ops.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
         else if (parent_table === "space")
-          ops.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: content_id }))
+          ops.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
       }
     }
 

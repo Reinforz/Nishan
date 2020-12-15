@@ -79,13 +79,8 @@ export default class Space extends Data<ISpace> {
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[], execute?: boolean) {
-    execute = execute ?? this.defaultExecutionState;
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space");
-    if (execute) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually(sync_records);
-    } else
-      this.pushOperationSyncRecords(ops, sync_records)
+    await this.executeUtil(ops, sync_records, execute);
     return block_map;
   }
 
@@ -199,8 +194,7 @@ export default class Space extends Data<ISpace> {
     await this.deleteItems<TPage>(args, multiple)
   }
 
-  async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: Boolean) {
-    execute = execute ?? this.defaultExecutionState;
+  async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: boolean) {
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], notion_user = await this.findUser(email);
@@ -217,12 +211,7 @@ export default class Space extends Data<ISpace> {
       this.logger && this.logger("UPDATE", "Space", this.id)
     }
 
-    if (execute) {
-      await this.updateCacheManually([this.id])
-      await this.saveTransactions(ops);
-    } else
-      this.pushOperationSyncRecords(ops, [this.id])
-
+    await this.executeUtil(ops, [this.id], execute);
     return notion_users;
   }
 

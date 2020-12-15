@@ -46,7 +46,6 @@ class Collection extends Data<ICollection> {
    * @param opts Array of Objects for configuring template options
    */
   async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: RepositionParams })[], execute?: boolean) {
-    execute = execute ?? this.defaultExecutionState;
     const ops: IOperation[] = [], template_ids: string[] = [];
 
     for (let index = 0; index < opts.length; index++) {
@@ -69,11 +68,7 @@ class Collection extends Data<ICollection> {
       this.logger && this.logger("CREATE", "Page", $template_id)
     }
 
-    if (execute) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually(template_ids);
-    } else
-      this.pushOperationSyncRecords(ops, template_ids);
+    await this.executeUtil(ops, template_ids, execute);
 
     return template_ids.map(template_id => new Page({
       ...this.getProps(),
@@ -112,7 +107,6 @@ class Collection extends Data<ICollection> {
   }
 
   async updateTemplates(args: [string, Omit<IPageInput, "type">][], execute?: boolean) {
-    execute = execute ?? this.defaultExecutionState;
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
       const [id, opts] = args[index];
@@ -124,11 +118,8 @@ class Collection extends Data<ICollection> {
       else
         throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
     }
-    if (execute) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually(block_ids);
-    } else
-      this.pushOperationSyncRecords(ops, block_ids)
+
+    await this.executeUtil(ops, block_ids, execute);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -156,15 +147,8 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async createPages(rows: Omit<IPageInput, "type">[], execute?: boolean) {
-    execute = execute ?? this.defaultExecutionState;
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows as any, this.id, "collection")
-
-    if (execute) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually(sync_records);
-    } else
-      this.pushOperationSyncRecords(ops, sync_records)
-
+    await this.executeUtil(ops, sync_records, execute);
     return block_map
   }
 

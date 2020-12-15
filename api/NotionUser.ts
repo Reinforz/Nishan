@@ -80,6 +80,7 @@ class NotionUser extends Data<INotionUser> {
    */
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
     multiple = multiple ?? true;
+
     const spaces: Space[] = [];
     let i = 0;
 
@@ -101,7 +102,8 @@ class NotionUser extends Data<INotionUser> {
           user_id: this.user_id,
           shard_id: space.shard_id,
           space_id: space.id,
-          logger: this.logger
+          logger: this.logger,
+          defaultExecutionState: this.defaultExecutionState
         }))
         this.logger && this.logger(`READ`, 'Space', space.id);
       }

@@ -46,7 +46,7 @@ class Collection extends Data<ICollection> {
    * @param opts Array of Objects for configuring template options
    */
   async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: RepositionParams })[], execute?: boolean) {
-    execute = execute ?? true;
+    execute = execute ?? this.defaultExecutionState;
     const ops: IOperation[] = [], template_ids: string[] = [];
 
     for (let index = 0; index < opts.length; index++) {
@@ -112,7 +112,7 @@ class Collection extends Data<ICollection> {
   }
 
   async updateTemplates(args: [string, Omit<IPageInput, "type">][], execute?: boolean) {
-    execute = execute ?? true;
+    execute = execute ?? this.defaultExecutionState;
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
       const [id, opts] = args[index];
@@ -156,7 +156,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async createPages(rows: Omit<IPageInput, "type">[], execute?: boolean) {
-    execute = execute ?? true;
+    execute = execute ?? this.defaultExecutionState;
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows as any, this.id, "collection")
 
     if (execute) {

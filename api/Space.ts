@@ -79,7 +79,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[], execute?: boolean) {
-    execute = execute ?? true;
+    execute = execute ?? this.defaultExecutionState;
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space");
     if (execute) {
       await this.saveTransactions(ops);
@@ -200,7 +200,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: Boolean) {
-    execute = execute ?? true;
+    execute = execute ?? this.defaultExecutionState;
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], notion_user = await this.findUser(email);

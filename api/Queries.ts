@@ -22,8 +22,9 @@ export default class Queries extends Cache {
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
   protected logger: Logger;
   protected user_id: string;
+  protected defaultExecutionState: boolean;
 
-  constructor({ logger, token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id" | "id">) {
+  constructor({ logger, token, interval, user_id, cache, defaultExecutionState }: Omit<NishanArg, "shard_id" | "space_id" | "id">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;
@@ -37,6 +38,7 @@ export default class Queries extends Cache {
     this.logger = function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     } || logger;
+    this.defaultExecutionState = defaultExecutionState ?? true;
   }
 
   protected async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {

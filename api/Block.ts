@@ -23,10 +23,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns The duplicated block object
    */
 
-  async duplicate(infos: { position: RepositionParams, id?: string }[], times?: number) {
-    times = times ?? 1;
+  async duplicate(infos: { position: RepositionParams, id?: string }[], execute?: boolean) {
     const block_map = this.createBlockMap(), data = this.getCachedData(), ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
-    for (let index = 0; index < times; index++) {
+    for (let index = 0; index < infos.length; index++) {
       const { position, id } = infos[index], $gen_block_id = this.generateId(id);
       sync_records.push($gen_block_id);
       if (data.type === "collection_view" || data.type === "collection_view_page") {
@@ -56,13 +55,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
           }),
           this.addToParentChildArray($gen_block_id, position)
         )
+        this.logger && this.logger("CREATE", "Block", $gen_block_id)
       }
 
       block_map[data.type].push(await this.createClass(data.type, $gen_block_id));
     }
-
-    await this.saveTransactions(ops);
-    await this.updateCacheManually([...sync_records, data.parent_id])
+    await this.executeUtil(ops, [...sync_records, data.parent_id], execute);
     return block_map;
   }
 
@@ -70,73 +68,67 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Update a block's properties and format
    * @param args Block update format and properties options
    */
-  async update(args: Partial<A>) {
+  async update(args: Partial<A>, execute?: boolean) {
     const data = this.getCachedData();
 
     const { format = data.format, properties = data.properties } = args;
-    await this.saveTransactions(
-      [
-        this.updateOp([], {
-          properties,
-          format,
-          last_edited_time: Date.now()
-        }),
-      ]
-    )
-    await this.updateCacheManually([data.id]);
+
+    this.logger && this.logger("UPDATE", "Block", data.id);
+
+    await this.executeUtil([
+      this.updateOp([], {
+        properties,
+        format,
+        last_edited_time: Date.now()
+      }),
+    ], [data.id], execute)
   }
 
   /**
    * Convert the current block to a different basic block
    * @param type `TBasicBlockType` basic block types
    */
-  async convertTo(type: TBasicBlockType) {
+  async convertTo(type: TBasicBlockType, execute?: boolean) {
     const data = this.getCachedData() as any;
-    await this.saveTransactions([
-      this.updateOp([], { type })
-    ]);
-
     data.type = type;
-    await this.updateCacheManually([data.id]);
+    this.logger && this.logger("UPDATE", "Block", data.id);
+    await this.executeUtil([
+      this.updateOp([], { type })
+    ], [data.id], execute)
   }
 
   /**
    * Delete the current block
    */
-  async delete() {
+  async delete(execute?: boolean) {
     const data = this.getCachedData();
     const current_time = Date.now();
     const is_root_page = data.parent_table === "space" && data.type === "page";
-    await this.saveTransactions(
-      [
-        this.updateOp([], {
-          alive: false,
-          last_edited_time: current_time
-        }),
-        is_root_page ? Operation.space.listRemove(data.space_id, ['pages'], { id: data.id }) : Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
-        is_root_page ? Operation.space.set(data.space_id, ['last_edited_time'], current_time) : Operation.block.set(data.parent_id, ['last_edited_time'], current_time)
-      ]
-    );
-    this.cache.block.delete(this.id);
+
+    await this.executeUtil([
+      this.updateOp([], {
+        alive: false,
+        last_edited_time: current_time
+      }),
+      is_root_page ? Operation.space.listRemove(data.space_id, ['pages'], { id: data.id }) : Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
+      is_root_page ? Operation.space.set(data.space_id, ['last_edited_time'], current_time) : Operation.block.set(data.parent_id, ['last_edited_time'], current_time)
+    ], [this.id], execute)
   }
 
   /**
    * Transfer a block from one parent page to another page
    * @param new_parent_id Id of the new parent page
    */
-  async transfer(new_parent_id: string) {
+  async transfer(new_parent_id: string, execute?: boolean) {
     const data = this.getCachedData();
     const current_time = Date.now();
-    await this.saveTransactions(
-      [
-        this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
-        Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
-        Operation.block.listAfter(new_parent_id, ['content'], { after: '', id: data.id }),
-        Operation.block.set(data.parent_id, ['last_edited_time'], current_time),
-        Operation.block.set(new_parent_id, ['last_edited_time'], current_time)
-      ]
-    )
-    await this.updateCacheManually([this.id, data.parent_id, new_parent_id]);
+    await this.executeUtil([
+      this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
+      Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
+      Operation.block.listAfter(new_parent_id, ['content'], { after: '', id: data.id }),
+      Operation.block.set(data.parent_id, ['last_edited_time'], current_time),
+      Operation.block.set(new_parent_id, ['last_edited_time'], current_time)
+    ], [this.id, data.parent_id, new_parent_id], execute)
   }
 
   // ? TD:1:H Add type definition propertoes and format for specific block types

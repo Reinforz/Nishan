@@ -124,7 +124,7 @@ export default class Mutations extends Queries {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const res = await axios.post("https://www.notion.so/api/v3/saveTransactions", this.createTransaction(Operations), this.headers);
+          const res = await axios.post(`${this.BASE_NOTION_URL}/saveTransactions`, this.createTransaction(Operations), this.headers);
           resolve(res.data.recordMap);
         } catch (err) {
           reject(error(err.response.data));

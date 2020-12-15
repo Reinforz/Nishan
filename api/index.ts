@@ -10,6 +10,7 @@ import SpaceView from "./SpaceView";
 import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
 import ViewSchemaUnit from "./ViewSchemaUnit";
+import Operations from "./Operations";
 
 export * from "./View";
 
@@ -26,4 +27,5 @@ export {
   Space,
   SchemaUnit,
   ViewSchemaUnit,
+  Operations
 }

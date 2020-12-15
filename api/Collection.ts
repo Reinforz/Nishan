@@ -32,6 +32,7 @@ class Collection extends Data<ICollection> {
     update();
   }
 
+  // ? FEAT:1:H Add ability to pass child contents while creating templates
   /**
    * Create a template for the collection
    * @param opts Object for configuring template options
@@ -44,7 +45,8 @@ class Collection extends Data<ICollection> {
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: RepositionParams })[]) {
+  async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: RepositionParams })[], execute?: boolean) {
+    execute = execute ?? true;
     const ops: IOperation[] = [], template_ids: string[] = [];
 
     for (let index = 0; index < opts.length; index++) {
@@ -64,10 +66,15 @@ class Collection extends Data<ICollection> {
         properties,
         format
       }), block_list_op);
+      this.logger && this.logger("CREATE", "Page", $template_id)
     }
 
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(template_ids);
+    if (execute) {
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(template_ids);
+    } else
+      this.pushOperationSyncRecords(ops, template_ids);
+
     return template_ids.map(template_id => new Page({
       ...this.getProps(),
       id: template_id,
@@ -104,18 +111,24 @@ class Collection extends Data<ICollection> {
     await this.updateTemplates([[id, opt]]);
   }
 
-  async updateTemplates(args: [string, Omit<IPageInput, "type">][]) {
+  async updateTemplates(args: [string, Omit<IPageInput, "type">][], execute?: boolean) {
+    execute = execute ?? true;
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < args.length; index++) {
       const [id, opts] = args[index];
       block_ids.push(id);
-      if (data.template_pages && data.template_pages.includes(id))
+      if (data.template_pages && data.template_pages.includes(id)) {
         ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
+        this.logger && this.logger("UPDATE", "Page", id)
+      }
       else
         throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
     }
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(block_ids);
+    if (execute) {
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(block_ids);
+    } else
+      this.pushOperationSyncRecords(ops, block_ids)
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -142,11 +155,16 @@ class Collection extends Data<ICollection> {
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: Omit<IPageInput, "type">[]) {
+  async createPages(rows: Omit<IPageInput, "type">[], execute?: boolean) {
+    execute = execute ?? true;
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows as any, this.id, "collection")
 
-    await this.saveTransactions(ops)
-    await this.updateCacheManually(sync_records)
+    if (execute) {
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(sync_records);
+    } else
+      this.pushOperationSyncRecords(ops, sync_records)
+
     return block_map
   }
 
@@ -163,10 +181,12 @@ class Collection extends Data<ICollection> {
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
-        const id = args[index];
-        const should_add = page_ids.includes(id);
-        if (should_add)
-          matched.push(new Page({ ...this.getProps(), id }))
+        const page_id = args[index];
+        const should_add = page_ids.includes(page_id);
+        if (should_add) {
+          matched.push(new Page({ ...this.getProps(), id: page_id }))
+          this.logger && this.logger("READ", "Page", page_id)
+        }
         if (!multiple && matched.length === 1) break;
       }
     } else if (typeof args === "function" || args === undefined) {
@@ -174,8 +194,10 @@ class Collection extends Data<ICollection> {
         const page_id = page_ids[index],
           page = this.cache.block.get(page_id) as IPage;
         const should_add = typeof args === "function" ? await args(page, index) : true;
-        if (should_add)
+        if (should_add) {
           matched.push(new Page({ ...this.getProps(), id: page_id, }))
+          this.logger && this.logger("READ", "Page", page_id)
+        }
         if (!multiple && matched.length === 1) break;
       }
     }

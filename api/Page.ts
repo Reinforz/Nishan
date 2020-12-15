@@ -112,13 +112,18 @@ export default class Page extends Permissions<IPage> {
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-  async createBlocks(contents: PageCreateContentParam[]) {
+  async createBlocks(contents: PageCreateContentParam[], execute?: boolean) {
+    execute = execute ?? true;
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(contents, this.id, "block");
 
     for (let bookmark of bookmarks)
-      await this.setBookmarkMetadata(bookmark)
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
+      await this.setBookmarkMetadata(bookmark);
+
+    if (execute) {
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(sync_records);
+    } else
+      this.pushOperationSyncRecords(ops, sync_records);
     return block_map;
   }
 

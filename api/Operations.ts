@@ -31,4 +31,12 @@ export default class Operations extends Mutations {
     this.#sync_records = [];
   }
 
+  showOperationStack() {
+    return this.#stack
+  }
+
+  showSyncRecordsStack() {
+    return this.#sync_records
+  }
+
 }

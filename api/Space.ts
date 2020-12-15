@@ -78,10 +78,14 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
-  async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[]) {
-    const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space")
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
+  async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[], execute?: boolean) {
+    execute = execute ?? true;
+    const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space");
+    if (execute) {
+      await this.saveTransactions(ops);
+      await this.updateCacheManually(sync_records);
+    } else
+      this.pushOperationSyncRecords(ops, sync_records)
     return block_map;
   }
 
@@ -129,16 +133,20 @@ export default class Space extends Data<ISpace> {
       for (let index = 0; index < args.length; index++) {
         const collection_id = args[index];
         const should_add = collection_ids.includes(collection_id);
-        if (should_add)
+        if (should_add) {
           collections.push(new Collection({ ...this.getProps(), id: collection_id }))
+          this.logger && this.logger("READ", "Collection", collection_id);
+        }
         if (!multiple && collections.length === 1) break;
       }
     } else if (typeof args === "function" || args === undefined) {
       for (let index = 0; index < collection_ids.length; index++) {
         const collection_id = collection_ids[index], collection = this.cache.collection.get(collection_id) as ICollection;
         const should_add = (typeof args === "function" ? await args(collection, index) : true);
-        if (should_add)
+        if (should_add) {
           collections.push(new Collection({ ...this.getProps(), id: collection_id }))
+          this.logger && this.logger("READ", "Collection", collection_id);
+        }
         if (!multiple && collections.length === 1) break;
       }
     }
@@ -191,7 +199,8 @@ export default class Space extends Data<ISpace> {
     await this.deleteItems<TPage>(args, multiple)
   }
 
-  async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
+  async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: Boolean) {
+    execute = execute ?? true;
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], notion_user = await this.findUser(email);
@@ -205,9 +214,15 @@ export default class Space extends Data<ISpace> {
           table: "space"
         });
       notion_users.push(notion_user)
+      this.logger && this.logger("UPDATE", "Space", this.id)
     }
-    await this.updateCacheManually([this.id])
-    await this.saveTransactions(ops);
+
+    if (execute) {
+      await this.updateCacheManually([this.id])
+      await this.saveTransactions(ops);
+    } else
+      this.pushOperationSyncRecords(ops, [this.id])
+
     return notion_users;
   }
 

@@ -1,4 +1,4 @@
-import { ICollection, NishanArg, TSchemaUnit } from "../types";
+import { ICollection, NishanArg, SelectOption, TSchemaUnit } from "../types";
 import { shortid } from "../utils";
 import Data from "./Data";
 
@@ -9,12 +9,16 @@ import Data from "./Data";
 
 export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection> {
   name: string;
+  options?: SelectOption[];
   schema_id: string;
 
-  constructor(arg: NishanArg & { name: string, schema_id: string }) {
+  constructor(arg: NishanArg & { name: string, options?: SelectOption[], schema_id: string }) {
     super({ ...arg, type: "collection" });
     this.schema_id = arg.schema_id;
     this.name = arg.name;
+    if (arg.options) {
+      this.options = arg.options;
+    }
   }
 
   // ? FEAT:1:M Change schema_id method

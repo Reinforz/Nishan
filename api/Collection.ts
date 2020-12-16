@@ -112,7 +112,6 @@ class Collection extends Data<ICollection> {
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    await this.initializeCache();
     const page_ids: string[] = [];
     for (let [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
@@ -125,13 +124,31 @@ class Collection extends Data<ICollection> {
   }
 
   async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    await this.initializeCache();
     const page_ids: string[] = [];
     for (let [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
 
     const block_ids = await this.updateItems<IPage, Omit<IPageInput, "type">>(args, page_ids, "Page", execute, multiple);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
+  }
+
+  async deletePage(args?: FilterType<IPage>, execute?: boolean) {
+    return await this.deletePages(typeof args === "string" ? [args] : args, execute, false);
+  }
+
+  /**
+   * Delete multiple template pages from the collection
+   * @param args string of ids or a predicate function
+   * @param multiple whether multiple or single item is targeted
+   */
+  async deletePages(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
+    multiple = multiple ?? true;
+    await this.initializeCache();
+    const page_ids: string[] = [];
+    for (let [_, page] of this.cache.block)
+      if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
+
+    await this.deleteCustomItems<IPage>(page_ids, "Page", args, execute, multiple)
   }
 
   /**

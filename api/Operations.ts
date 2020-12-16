@@ -1,4 +1,5 @@
 import { IOperation, NishanArg, UpdateCacheManuallyParam } from "../types";
+import { warn } from "../utils";
 
 import Mutations from "./Mutations";
 
@@ -27,10 +28,18 @@ export default class Operations extends Mutations {
   }
 
   async executeOperation() {
-    await this.saveTransactions(this.#stack);
-    await this.updateCacheManually(this.#sync_records)
-    this.#stack = [];
-    this.#sync_records = [];
+    if (this.#stack.length === 0)
+      warn(`The operation stack is empty`)
+    else {
+      await this.saveTransactions(this.#stack);
+      this.#stack = [];
+    }
+    if (this.#sync_records.length === 0)
+      warn(`The sync_record stack is empty`)
+    else {
+      await this.updateCacheManually(this.#sync_records)
+      this.#sync_records = [];
+    }
   }
 
   showOperationStack() {

@@ -258,7 +258,7 @@ export default class Data<T extends TData> extends Operations {
     return blocks;
   }
 
-  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true,) {
+  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true) {
     const ops: IOperation[] = [], current_time = Date.now(), _this = this;
     const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
       if (matched) {
@@ -275,6 +275,44 @@ export default class Data<T extends TData> extends Operations {
       await this.saveTransactions(ops);
       blocks.forEach(blocks => this.cache.block.delete(blocks.id));
     }
+  }
+
+  protected async deleteCustomItems<C extends TData>(items: string[], child_type: TSubjectType, args?: FilterTypes<C>, execute?: boolean, multiple?: boolean) {
+    multiple = multiple ?? true;
+    await this.initializeCache();
+    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
+
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const block_id = args[index], should_add = items.includes(block_id);
+        if (should_add) {
+          ops.push(Operation.block.update(block_id, [], {
+            alive: false,
+            last_edited_time: Date.now()
+          }))
+          sync_records.push(block_id);
+          this.logger && this.logger("DELETE", child_type, block_id)
+        }
+        if (!multiple && sync_records.length === 1) break;
+      }
+    } else if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < items.length; index++) {
+        const block_id = items[index],
+          block = this.cache.block.get(block_id) as C;
+        const should_add = typeof args === "function" ? await args(block, index) : true;
+        if (should_add) {
+          ops.push(Operation.block.update(block_id, [], {
+            alive: false,
+            last_edited_time: Date.now()
+          }))
+          sync_records.push(block_id);
+          this.logger && this.logger("DELETE", child_type, block_id)
+        }
+        if (!multiple && sync_records.length === 1) break;
+      }
+    }
+
+    await this.executeUtil(ops, sync_records, execute)
   }
 
   async getCustomItems<T extends TData>(items: string[], child_type: TSubjectType, args?: FilterTypes<T>, multiple?: boolean) {

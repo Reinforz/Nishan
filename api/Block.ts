@@ -13,14 +13,22 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     super({ ...arg, type: "block" });
   }
 
-  async reposition(arg: RepositionParams) {
-    await this.saveTransactions([this.addToChildArray(this.id, arg)]);
+  /**
+   * Reposition the current block within its parent block
+   * @param arg number or the specific position to reposition the current block
+   * @param execute Boolean to indicate whether to execute the operation or add it for batching
+   */
+
+  async reposition(arg: RepositionParams, execute?: boolean) {
+    const data = this.getCachedData();
+    await this.executeUtil([this.addToChildArray(this.id, arg)], [data.id, data.parent_id], execute);
   }
 
-  // ? FEAT:1:M Take a position arg
   /**
    * Duplicate the current block
-   * @returns The duplicated block object
+   * @param infos Array of objects containing information regarding the position and id of the duplicated block
+   * @param execute Boolean to indicate whether to execute the operation or add it for batching 
+   * @returns A block map 
    */
 
   async duplicate(infos: { position: RepositionParams, id?: string }[], execute?: boolean) {
@@ -46,6 +54,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
             addCopyName: true
           }
         });
+        this.logger && this.logger("CREATE", "Block", $gen_block_id)
       } else {
         ops.push(
           Operation.block.update($gen_block_id, [], {
@@ -60,6 +69,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
       block_map[data.type].push(await this.createClass(data.type, $gen_block_id));
     }
+
     await this.executeUtil(ops, [...sync_records, data.parent_id], execute);
     return block_map;
   }

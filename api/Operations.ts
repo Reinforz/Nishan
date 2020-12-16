@@ -20,8 +20,10 @@ export default class Operations extends Mutations {
   }
 
   pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
-    this.pushSyncRecords(sync_records)
-    this.pushOperations(operations)
+    if (sync_records.length !== 0)
+      this.pushSyncRecords(sync_records)
+    if (operations.length !== 0)
+      this.pushOperations(operations)
   }
 
   async executeOperation() {
@@ -42,8 +44,10 @@ export default class Operations extends Mutations {
   protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam, execute?: boolean) {
     execute = execute ?? this.defaultExecutionState;
     if (execute) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually(sync_records);
+      if (ops.length !== 0)
+        await this.saveTransactions(ops);
+      if (sync_records.length !== 0)
+        await this.updateCacheManually(sync_records);
     } else
       this.pushOperationSyncRecords(ops, sync_records);
   }

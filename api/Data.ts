@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -275,6 +275,38 @@ export default class Data<T extends TData> extends Operations {
       await this.saveTransactions(ops);
       blocks.forEach(blocks => this.cache.block.delete(blocks.id));
     }
+  }
+
+  async updateItems<P extends TData, T1 extends TData, T2>(args: UpdateTypes<T1, T2>, key: keyof P, execute?: boolean) {
+    await this.initializeCache();
+    const data = this.getCachedData() as P, ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const [id, block] = args[index];
+        block_ids.push(id);
+        if (data[key] && (data[key] as any).includes(id)) {
+          ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
+          sync_records.push(id);
+          this.logger && this.logger("UPDATE", "Page", id)
+        } else
+          throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
+      }
+    }
+    else if (typeof args === "function") {
+      if (data[key]) {
+        for (let index = 0; index < (data[key] as any).length; index++) {
+          const block_id = (data[key] as any)[index], updated_value = await args(this.cache.block.get(block_id) as T1, index);
+          block_ids.push(block_id)
+          if (updated_value) {
+            ops.push(Operation.block.update(updated_value.id, [], { ...updated_value, last_edited_time: current_time }));
+            sync_records.push(updated_value.id);
+            this.logger && this.logger("UPDATE", "Page", updated_value.id)
+          }
+        }
+      }
+    }
+    await this.executeUtil(ops, block_ids, execute);
+    return block_ids;
   }
 
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {

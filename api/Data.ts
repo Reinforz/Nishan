@@ -341,6 +341,38 @@ export default class Data<T extends TData> extends Operations {
     return blocks;
   }
 
+  async updateCustomItems<T1 extends TData, T2>(args: UpdateTypes<T1, T2>, items: string[], child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
+    multiple = multiple ?? true;
+    await this.initializeCache();
+    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const [id, block] = args[index];
+        block_ids.push(id);
+        if (items.includes(id)) {
+          ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
+          sync_records.push(id);
+          this.logger && this.logger("UPDATE", child_type, id);
+          if (block_ids.length === 1 && multiple) break;
+        }
+      }
+    }
+    else if (typeof args === "function") {
+      for (let index = 0; index < items.length; index++) {
+        const block_id = items[index], block = this.cache.block.get(block_id) as T1, updated_value = await args(block, index);
+        block_ids.push(block_id)
+        if (updated_value) {
+          ops.push(Operation.block.update(block_id, [], { ...block, ...updated_value, last_edited_time: current_time, last_edited_by: this.user_id }));
+          sync_records.push(block_id);
+          this.logger && this.logger("UPDATE", child_type, block_id);
+          if (block_ids.length === 1 && multiple) break;
+        }
+      }
+    }
+    await this.executeUtil(ops, block_ids, execute);
+    return block_ids;
+  }
+
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_infos: [string, TViewType][] = [];
 

@@ -119,6 +119,20 @@ class Collection extends Data<ICollection> {
     return (await this.getCustomItems<IPage>(page_ids, "Page", args, multiple)).map((page) => new Page({ ...this.getProps(), id: page.id }));
   }
 
+  async updatePage(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
+    return (await this.updatePages(typeof args === "function" ? args : [args], execute, false))[0]
+  }
+
+  async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
+    await this.initializeCache();
+    const page_ids: string[] = [];
+    for (let [_, page] of this.cache.block)
+      if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
+
+    const block_ids = await this.updateCustomItems<IPage, Omit<IPageInput, "type">>(args, page_ids, "Page", execute, multiple);
+    return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
+  }
+
   /**
    * Create a new column in the collection schema
    * @param args Schema creation properties

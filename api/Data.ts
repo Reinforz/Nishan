@@ -277,7 +277,8 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  async updateItems<P extends TData, T1 extends TData, T2>(args: UpdateTypes<T1, T2>, key: keyof P, execute?: boolean) {
+  async updateItems<P extends TData, T1 extends TData, T2>(args: UpdateTypes<T1, T2>, key: keyof P, execute?: boolean, multiple?: boolean) {
+    multiple = multiple ?? true;
     await this.initializeCache();
     const data = this.getCachedData() as P, ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
     if (Array.isArray(args)) {
@@ -287,7 +288,8 @@ export default class Data<T extends TData> extends Operations {
         if (data[key] && (data[key] as any).includes(id)) {
           ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
           sync_records.push(id);
-          this.logger && this.logger("UPDATE", "Page", id)
+          this.logger && this.logger("UPDATE", "Page", id);
+          if (block_ids.length === 1 && multiple) break;
         } else
           throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
       }
@@ -295,12 +297,13 @@ export default class Data<T extends TData> extends Operations {
     else if (typeof args === "function") {
       if (data[key]) {
         for (let index = 0; index < (data[key] as any).length; index++) {
-          const block_id = (data[key] as any)[index], updated_value = await args(this.cache.block.get(block_id) as T1, index);
+          const block_id = (data[key] as any)[index], block = this.cache.block.get(block_id) as T1, updated_value = await args(block, index);
           block_ids.push(block_id)
           if (updated_value) {
-            ops.push(Operation.block.update(updated_value.id, [], { ...updated_value, last_edited_time: current_time }));
-            sync_records.push(updated_value.id);
-            this.logger && this.logger("UPDATE", "Page", updated_value.id)
+            ops.push(Operation.block.update(block_id, [], { ...block, ...updated_value, last_edited_time: current_time, last_edited_by: this.user_id }));
+            sync_records.push(block_id);
+            this.logger && this.logger("UPDATE", "Page", block_id);
+            if (block_ids.length === 1 && multiple) break;
           }
         }
       }

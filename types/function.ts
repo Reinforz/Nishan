@@ -49,7 +49,8 @@ export type PageCreateContentParam = TBlockInput & {
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
-export type UpdateTypes<T1, T2> = [string, T2][] | ((T: T1, index: number) => Promise<T1> | T1 | void | null | undefined);
+export type UpdateTypes<T1, T2> = [string, T2][] | ((T: T1, index: number) => Promise<T2> | T2 | void | null | undefined);
+export type UpdateType<T1, T2> = [string, T2] | ((T: T1, index: number) => Promise<T2> | T2 | void | null | undefined);
 
 export interface SearchManipViewParam {
   id?: string,

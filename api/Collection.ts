@@ -3,7 +3,7 @@ import { error } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, UpdateTypes, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, UpdateTypes, UpdateType, } from "../types";
 import Page from './Page';
 
 /**
@@ -68,8 +68,12 @@ class Collection extends Data<ICollection> {
     })
   }
 
-  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
-    const block_ids = await this.updateItems<ICollection, IPage, Omit<IPageInput, "type">>(args, "template_pages", execute);
+  async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
+    return (await this.updateTemplates(typeof args === "function" ? args : [args], execute ?? true, false))[0]
+  }
+
+  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
+    const block_ids = await this.updateItems<ICollection, IPage, Omit<IPageInput, "type">>(args, "template_pages", execute, multiple);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 

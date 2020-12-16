@@ -73,7 +73,7 @@ class Collection extends Data<ICollection> {
   }
 
   async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    const block_ids = await this.updateItems<ICollection, IPage, Omit<IPageInput, "type">>(args, "template_pages", execute, multiple);
+    const block_ids = await this.updateItems<ICollection, IPage, Omit<IPageInput, "type">>(args, "template_pages", "Page", execute, multiple);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -107,39 +107,16 @@ class Collection extends Data<ICollection> {
   }
 
   async getPage(arg?: FilterType<IPage>) {
-    return (await this.getPages(typeof arg === "string" ? [arg] : arg, true))[0]
+    return (await this.getPages(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const matched: Page[] = [], page_ids: string[] = [];
     await this.initializeCache();
+    const page_ids: string[] = [];
     for (let [_, page] of this.cache.block)
-      if (page?.type === "page" && page.parent_id === this.id) page_ids.push(page.id)
+      if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
 
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const page_id = args[index];
-        const should_add = page_ids.includes(page_id);
-        if (should_add) {
-          matched.push(new Page({ ...this.getProps(), id: page_id }))
-          this.logger && this.logger("READ", "Page", page_id)
-        }
-        if (!multiple && matched.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < page_ids.length; index++) {
-        const page_id = page_ids[index],
-          page = this.cache.block.get(page_id) as IPage;
-        const should_add = typeof args === "function" ? await args(page, index) : true;
-        if (should_add) {
-          matched.push(new Page({ ...this.getProps(), id: page_id, }))
-          this.logger && this.logger("READ", "Page", page_id)
-        }
-        if (!multiple && matched.length === 1) break;
-      }
-    }
-    return matched;
+    return (await this.getCustomItems<IPage>(page_ids, "Page", args, multiple)).map((page) => new Page({ ...this.getProps(), id: page.id }));
   }
 
   /**

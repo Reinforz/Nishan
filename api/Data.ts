@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -277,7 +277,7 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  async updateItems<P extends TData, T1 extends TData, T2>(args: UpdateTypes<T1, T2>, key: keyof P, execute?: boolean, multiple?: boolean) {
+  async updateItems<P extends TData, T1 extends TData, T2>(args: UpdateTypes<T1, T2>, key: keyof P, child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.initializeCache();
     const data = this.getCachedData() as P, ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
@@ -288,7 +288,7 @@ export default class Data<T extends TData> extends Operations {
         if (data[key] && (data[key] as any).includes(id)) {
           ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
           sync_records.push(id);
-          this.logger && this.logger("UPDATE", "Page", id);
+          this.logger && this.logger("UPDATE", child_type, id);
           if (block_ids.length === 1 && multiple) break;
         } else
           throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
@@ -302,7 +302,7 @@ export default class Data<T extends TData> extends Operations {
           if (updated_value) {
             ops.push(Operation.block.update(block_id, [], { ...block, ...updated_value, last_edited_time: current_time, last_edited_by: this.user_id }));
             sync_records.push(block_id);
-            this.logger && this.logger("UPDATE", "Page", block_id);
+            this.logger && this.logger("UPDATE", child_type, block_id);
             if (block_ids.length === 1 && multiple) break;
           }
         }
@@ -310,6 +310,35 @@ export default class Data<T extends TData> extends Operations {
     }
     await this.executeUtil(ops, block_ids, execute);
     return block_ids;
+  }
+
+  async getCustomItems<T extends TData>(items: string[], child_type: TSubjectType, args?: FilterTypes<T>, multiple?: boolean) {
+    multiple = multiple ?? true;
+    await this.initializeCache();
+    const blocks: T[] = [];
+
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const block_id = args[index], should_add = items.includes(block_id), block = this.cache.block.get(block_id) as T;
+        if (should_add) {
+          blocks.push(block);
+          this.logger && this.logger("READ", child_type, block_id)
+        }
+        if (!multiple && blocks.length === 1) break;
+      }
+    } else if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < items.length; index++) {
+        const block_id = items[index],
+          block = this.cache.block.get(block_id) as T;
+        const should_add = typeof args === "function" ? await args(block, index) : true;
+        if (should_add) {
+          blocks.push(block);
+          this.logger && this.logger("READ", child_type, block_id)
+        }
+        if (!multiple && blocks.length === 1) break;
+      }
+    }
+    return blocks;
   }
 
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {

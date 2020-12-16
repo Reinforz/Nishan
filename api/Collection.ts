@@ -3,7 +3,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IOperation, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IOperation, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, UpdateTypes, UpdateCacheManuallyParam, } from "../types";
 import Page from './Page';
 
 /**
@@ -68,21 +68,33 @@ class Collection extends Data<ICollection> {
     })
   }
 
-  async updateTemplate(id: string, opt: Omit<IPageInput, "type">) {
-    await this.updateTemplates([[id, opt]]);
-  }
+  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
+    const data = this.getCachedData(), ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
+    console.log(data);
 
-  async updateTemplates(args: [string, Omit<IPageInput, "type">][], execute?: boolean) {
-    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
-    for (let index = 0; index < args.length; index++) {
-      const [id, opts] = args[index];
-      block_ids.push(id);
-      if (data.template_pages && data.template_pages.includes(id)) {
-        ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
-        this.logger && this.logger("UPDATE", "Page", id)
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const [id, block] = args[index];
+        block_ids.push(id);
+        if (data.template_pages && data.template_pages.includes(id)) {
+          ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
+          sync_records.push(id);
+          this.logger && this.logger("UPDATE", "Page", id)
+        } else
+          throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
       }
-      else
-        throw new Error(error(`Collection:${data.id} is not the parent of Template Page:${id}`));
+    }
+    else if (typeof args === "function") {
+      if (data.template_pages) {
+        for (let index = 0; index < data.template_pages.length; index++) {
+          const block = data.template_pages[index], updated_value = await args(this.cache.block.get(block) as IPage, index);
+          if (updated_value) {
+            ops.push(Operation.block.update(updated_value.id, [], { ...updated_value, last_edited_time: current_time }));
+            sync_records.push(updated_value.id);
+            this.logger && this.logger("UPDATE", "Page", updated_value.id)
+          }
+        }
+      }
     }
 
     await this.executeUtil(ops, block_ids, execute);

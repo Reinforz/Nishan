@@ -15,8 +15,8 @@ class Collection extends Data<ICollection> {
     super({ ...args, type: "collection" });
   }
 
-  #createClass = (type: TSchemaUnitType, schema_id: string) => {
-    const args = ({ ...this.getProps(), id: this.id, schema_id })
+  #createClass = (type: TSchemaUnitType, schema_name: string, schema_id: string) => {
+    const args = ({ ...this.getProps(), id: this.id, name: schema_name, schema_id })
     return new SchemaUnit<MSchemaUnit[typeof type]>(args)
   }
 
@@ -208,7 +208,7 @@ class Collection extends Data<ICollection> {
       const arg = args[index];
       const schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
       data.schema[schema_id] = arg;
-      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
+      results.push(new SchemaUnit({ name: arg.name, schema_id, ...this.getProps(), id: this.id }))
     }
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);
@@ -229,7 +229,7 @@ class Collection extends Data<ICollection> {
         const schema_id = args[index], schema = data.schema[schema_id],
           should_add = container.includes(schema_id);
         if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema.name, schema_id))
           this.logger && this.logger("READ", "SchemaUnit", schema_id)
         }
       }
@@ -237,7 +237,7 @@ class Collection extends Data<ICollection> {
       for (let index = 0; index < container.length; index++) {
         const schema_id = container[index], schema = data.schema[container[index]], should_add = (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
         if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
+          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema.name, schema_id))
           this.logger && this.logger("READ", "SchemaUnit", schema_id)
         }
       }
@@ -265,7 +265,7 @@ class Collection extends Data<ICollection> {
       const [schema_id, schema_data] = args[index];
       if (!data.schema[schema_id]) error(`Collection:${this.id} does not contain SchemaUnit:${schema_id}`)
       data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data };
-      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
+      results.push(new SchemaUnit({ name: schema_data.name, schema_id, ...this.getProps(), id: this.id }))
     }
     this.saveTransactions([this.updateOp([], { schema: data.schema })])
     this.updateCacheManually([this.id]);

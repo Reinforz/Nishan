@@ -8,11 +8,13 @@ import Data from "./Data";
  */
 
 export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection> {
+  name: string;
   schema_id: string;
 
-  constructor(arg: NishanArg & { schema_id: string }) {
+  constructor(arg: NishanArg & { name: string, schema_id: string }) {
     super({ ...arg, type: "collection" });
-    this.schema_id = arg.schema_id
+    this.schema_id = arg.schema_id;
+    this.name = arg.name;
   }
 
   // ? FEAT:1:M Change schema_id method

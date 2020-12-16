@@ -69,11 +69,12 @@ class Collection extends Data<ICollection> {
   }
 
   async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
-    return (await this.updateTemplates(typeof args === "function" ? args : [args], execute ?? true, false))[0]
+    return (await this.updateTemplates(typeof args === "function" ? args : [args], execute, false))[0]
   }
 
   async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    const block_ids = await this.updateItems<ICollection, IPage, Omit<IPageInput, "type">>(args, "template_pages", "Page", execute, multiple);
+    const data = this.getCachedData();
+    const block_ids = await this.updateItems<IPage, Omit<IPageInput, "type">>(args, data?.template_pages ?? [], "Page", execute, multiple);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -129,7 +130,7 @@ class Collection extends Data<ICollection> {
     for (let [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
 
-    const block_ids = await this.updateCustomItems<IPage, Omit<IPageInput, "type">>(args, page_ids, "Page", execute, multiple);
+    const block_ids = await this.updateItems<IPage, Omit<IPageInput, "type">>(args, page_ids, "Page", execute, multiple);
     return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 

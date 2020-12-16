@@ -743,6 +743,7 @@ export default class Data<T extends TData> extends Operations {
           if (content.contents)
             await traverse(content.contents, $block_id, "block");
           ops.push(Operation.block.update($block_id, [], {
+            is_template: parent_table === "collection",
             id: $block_id,
             properties,
             format,
@@ -801,6 +802,8 @@ export default class Data<T extends TData> extends Operations {
           ops.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
         else if (parent_table === "space")
           ops.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
+        else if (parent_table === "collection")
+          ops.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
       }
     }
 

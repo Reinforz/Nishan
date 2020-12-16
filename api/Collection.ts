@@ -3,7 +3,7 @@ import { error, Operation } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IOperation, RepositionParams, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IOperation, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, } from "../types";
 import Page from './Page';
 
 /**
@@ -32,48 +32,14 @@ class Collection extends Data<ICollection> {
     update();
   }
 
-  // ? FEAT:1:H Add ability to pass child contents while creating templates
-  /**
-   * Create a template for the collection
-   * @param opts Object for configuring template options
-   */
-  async createTemplate(opt: Omit<Partial<IPageInput>, "type">) {
-    return (await this.createTemplates([opt]))[0]
-  }
-
   /**
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(opts: (Omit<Partial<IPageInput>, "type"> & { position?: RepositionParams })[], execute?: boolean) {
-    const ops: IOperation[] = [], template_ids: string[] = [];
-
-    for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index],
-        { properties = {}, format = {} } = opt,
-        $template_id = this.generateId(opt.id);
-      const block_list_op = this.addToChildArray($template_id, opt.position);
-      template_ids.push($template_id);
-      ops.push(Operation.block.set($template_id, [], {
-        type: 'page',
-        id: $template_id,
-        version: 1,
-        is_template: true,
-        parent_id: this.id,
-        parent_table: 'collection',
-        alive: true,
-        properties,
-        format
-      }), block_list_op);
-      this.logger && this.logger("CREATE", "Page", $template_id)
-    }
-
-    await this.executeUtil(ops, template_ids, execute);
-
-    return template_ids.map(template_id => new Page({
-      ...this.getProps(),
-      id: template_id,
-    }))
+  async createTemplates(opts: (Omit<Partial<IPageInput>, "type">)[], execute?: boolean) {
+    const [ops, sync_records, block_map] = await this.nestedContentPopulate(opts as any, this.id, "collection");
+    await this.executeUtil(ops, sync_records, execute);
+    return block_map;
   }
 
   /**

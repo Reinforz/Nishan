@@ -1,4 +1,4 @@
-import { error } from '../utils';
+import { error, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -144,29 +144,23 @@ class Collection extends Data<ICollection> {
   }
 
   /**
-   * Create a new column in the collection schema
-   * @param args Schema creation properties
-   * @returns A SchemaUnit object representing the column
-   */
-  async createSchemaUnit(args: TSchemaUnit) {
-    return (await this.createSchemaUnits([args]))[0]
-  }
-
-  /**
    * Create multiple new columns in the collection schema
    * @param args array of Schema creation properties
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async createSchemaUnits(args: TSchemaUnit[]) {
-    const results: SchemaUnit<TSchemaUnit>[] = [], data = this.getCachedData();
+  async createSchemaUnits(args: TSchemaUnit[], execute?: boolean) {
+    const results = this.createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index];
-      const schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
-      data.schema[schema_id] = arg;
-      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
-    }
-    this.saveTransactions([this.updateOp([], { schema: data.schema })])
-    this.updateCacheManually([this.id]);
+      const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
+      if (!data.schema[schema_id]) {
+        data.schema[schema_id] = arg;
+        results[arg.type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
+        this.logger && this.logger("CREATE", "SchemaUnit", schema_id);
+      } else
+        warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
+    };
+
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute);
     return results;
   }
 

@@ -3,7 +3,7 @@ import { error, warn } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, TSchemaUnitType, MSchemaUnit, UpdateTypes, UpdateType, } from "../types";
+import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, } from "../types";
 import Page from './Page';
 
 /**
@@ -13,11 +13,6 @@ import Page from './Page';
 class Collection extends Data<ICollection> {
   constructor(args: NishanArg) {
     super({ ...args, type: "collection" });
-  }
-
-  #createClass = (type: TSchemaUnitType, schema_id: string) => {
-    const args = ({ ...this.getProps(), id: this.id, schema_id })
-    return new SchemaUnit<MSchemaUnit[typeof type]>(args)
   }
 
   #getRowPages = () => {
@@ -117,7 +112,7 @@ class Collection extends Data<ICollection> {
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    return (await this.getCustomItems<IPage>(this.#getRowPages(), "Page", args, multiple)).map((page) => new Page({ ...this.getProps(), id: page.id }));
+    return (await this.getCustomItems<IPage>(this.#getRowPages(), "Page", (id) => this.cache.block.get(id) as IPage, args, multiple)).map((id) => new Page({ ...this.getProps(), id }));
   }
 
   async updatePage(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
@@ -170,27 +165,8 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
-    multiple = multiple ?? true;
     const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const schema_id = args[index], schema = data.schema[schema_id],
-          should_add = container.includes(schema_id);
-        if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
-          this.logger && this.logger("READ", "SchemaUnit", schema_id)
-        }
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < container.length; index++) {
-        const schema_id = container[index], schema = data.schema[container[index]], should_add = (typeof args === "function" ? await args({ ...schema, key: container[index] }, index) : true);
-        if (should_add) {
-          schema_unit_map[schema.type].push(this.#createClass(schema.type, schema_id))
-          this.logger && this.logger("READ", "SchemaUnit", schema_id)
-        }
-      }
-    }
+    (await this.getCustomItems<TSchemaUnit & { key: string }>(container, "SchemaUnit", (schema_id) => ({ ...data.schema[schema_id], key: schema_id }), args, multiple)).map(schema_id => schema_unit_map[data.schema[schema_id].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }) as any))
     return schema_unit_map;
   }
 

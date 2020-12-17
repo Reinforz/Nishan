@@ -83,8 +83,8 @@ class Collection extends Data<ICollection> {
    * Delete a single template page from the collection
    * @param args string id or a predicate function
    */
-  async deleteTemplate(args?: FilterType<IPage>) {
-    return await this.deleteTemplates(typeof args === "string" ? [args] : args, false);
+  async deleteTemplate(args?: FilterType<IPage>, execute?: boolean) {
+    return await this.deleteTemplates(typeof args === "string" ? [args] : args, execute, false);
   }
 
   /**
@@ -92,9 +92,10 @@ class Collection extends Data<ICollection> {
    * @param args string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async deleteTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
+  async deleteTemplates(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
-    await this.deleteItems<IPage>(args, multiple)
+    await this.initializeCache();
+    await this.deleteItems<IPage>(args, execute, multiple)
   }
 
   /**
@@ -106,7 +107,7 @@ class Collection extends Data<ICollection> {
     rows = rows.map((row) => ({ ...row, is_template: false }));
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows as any, this.id, "collection")
     await this.executeUtil(ops, sync_records, execute);
-    return block_map
+    return block_map;
   }
 
   async getPage(arg?: FilterType<IPage>) {

@@ -258,10 +258,11 @@ export default class Data<T extends TData> extends Operations {
     return blocks;
   }
 
-  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true) {
-    const ops: IOperation[] = [], current_time = Date.now(), _this = this;
-    const blocks = await this.traverseChildren(arg, multiple, async function (block, matched) {
+  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, execute?: boolean, multiple?: boolean) {
+    const ops: IOperation[] = [], current_time = Date.now(), sync_records: UpdateCacheManuallyParam = [], _this = this;
+    await this.traverseChildren(arg, multiple, async function (block, matched) {
       if (matched) {
+        sync_records.push(block.id);
         ops.push(Operation[_this.child_type as TDataType].update(block.id, [], {
           alive: false,
           last_edited_time: current_time
@@ -272,9 +273,10 @@ export default class Data<T extends TData> extends Operations {
     })
     if (ops.length !== 0) {
       ops.push(this.setOp(["last_edited_time"], current_time));
-      await this.saveTransactions(ops);
-      blocks.forEach(blocks => this.cache.block.delete(blocks.id));
+      sync_records.push(this.id);
     }
+
+    await this.executeUtil(ops, sync_records, execute)
   }
 
   protected async deleteCustomItems<C extends TData>(items: string[], child_type: TSubjectType, args?: FilterTypes<C>, execute?: boolean, multiple?: boolean) {

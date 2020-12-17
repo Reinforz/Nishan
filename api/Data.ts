@@ -271,6 +271,7 @@ export default class Data<T extends TData> extends Operations {
         )
       }
     })
+
     if (ops.length !== 0) {
       ops.push(this.setOp(["last_edited_time"], current_time));
       sync_records.push(this.id);

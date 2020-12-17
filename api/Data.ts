@@ -250,6 +250,29 @@ export default class Data<T extends TData> extends Operations {
     return matched;
   }
 
+  protected async updateIterate<RD, TD>(args: UpdateTypes<TD, RD>, child_ids: string[], multiple: boolean, transform: ((id: string) => TD), cb: (id: string, data: RD) => void) {
+    let matched = 0;
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const [child_id, updated_data] = args[index], matches = child_ids.includes(child_id);
+        if (matches) {
+          cb(child_id, updated_data);
+          matched++;
+        }
+        if (!multiple && matched >= 1) break;
+      }
+    } else {
+      for (let index = 0; index < child_ids.length; index++) {
+        const child_id = child_ids[index], child_data = transform(child_id), updated_data = await args(child_data, index);
+        if (updated_data) {
+          cb(child_id, updated_data);
+          matched++;
+        }
+        if (!multiple && matched >= 1) break;
+      }
+    }
+  }
+
   protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>, condition?: (Q: Q) => boolean) {
     const blocks: any[] = [];
     await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
@@ -345,7 +368,7 @@ export default class Data<T extends TData> extends Operations {
     return block_ids;
   }
 
-  async updateItems<T1 extends TData, T2>(args: UpdateTypes<T1, T2>, items: string[], child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
+  async updateItems<T1 extends (TData | TSchemaUnit), T2>(args: UpdateTypes<T1, T2>, items: string[], child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.initializeCache();
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], current_time = Date.now(), block_ids: string[] = [];
@@ -354,7 +377,7 @@ export default class Data<T extends TData> extends Operations {
         const [id, block] = args[index];
         block_ids.push(id);
         if (items.includes(id)) {
-          ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time }));
+          ops.push(Operation.block.update(id, [], { ...block, last_edited_time: current_time, last_edited_by: this.user_id }));
           sync_records.push(id);
           this.logger && this.logger("UPDATE", child_type, id);
           if (block_ids.length === 1 && multiple) break;

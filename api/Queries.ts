@@ -36,7 +36,7 @@ export default class Queries extends Cache {
     };
     this.user_id = user_id;
     this.logger = function (method, subject, id) {
-      console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
+      console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
     } || logger;
     this.defaultExecutionState = defaultExecutionState ?? true;
   }

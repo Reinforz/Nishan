@@ -1,4 +1,4 @@
-import { error, warn } from '../utils';
+import { warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -120,8 +120,7 @@ class Collection extends Data<ICollection> {
   }
 
   async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    const block_ids = await this.updateItems<IPage, Omit<IPageInput, "type">>(args, this.#getRowPages(), "Page", execute, multiple);
-    return block_ids.map(block_id => new Page({ ...this.getProps(), id: block_id }));
+    return (await this.updateItems<IPage, Omit<IPageInput, "type">>(args, this.#getRowPages(), "Page", execute, multiple)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
   async deletePage(args?: FilterType<IPage>, execute?: boolean) {
@@ -159,6 +158,10 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
+  async getSchemaUnit(arg?: FilterType<(TSchemaUnit & { key: string })>) {
+    return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))
+  }
+
   /**
    * Return multiple columns from the collection schema
    * @param args schema_id string array or predicate function
@@ -175,8 +178,8 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties tuple
    * @returns A SchemaUnit object representing the column
    */
-  async updateSchemaUnit(args: [string, TSchemaUnit]) {
-    return (await this.updateSchemaUnits([args]))[0]
+  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean) {
+    return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], execute, false))
   }
 
   /**
@@ -184,16 +187,16 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties array of tuples
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async updateSchemaUnits(args: [string, TSchemaUnit][]) {
-    const results: SchemaUnit<TSchemaUnit>[] = [], data = this.getCachedData();
-    for (let index = 0; index < args.length; index++) {
-      const [schema_id, schema_data] = args[index];
-      if (!data.schema[schema_id]) error(`Collection:${this.id} does not contain SchemaUnit:${schema_id}`)
-      data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data };
-      results.push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }))
-    }
-    this.saveTransactions([this.updateOp([], { schema: data.schema })])
-    this.updateCacheManually([this.id]);
+  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
+    const results = this.createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
+    await this.updateIterate<Partial<TSchemaUnit>, TSchemaUnit & { key: string }>(args, schema_ids, multiple ?? true, (schema_id) => {
+      return { ...data.schema[schema_id], key: schema_id }
+    }, (schema_id, schema_data) => {
+      data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data } as TSchemaUnit;
+      results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
+    });
+
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute)
     return results;
   }
 

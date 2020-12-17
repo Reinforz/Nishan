@@ -46,7 +46,7 @@ export type PageCreateContentParam = TBlockInput & {
   position?: RepositionParams
 }
 
-export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void;
+export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void | null | undefined;
 export type FilterTypes<T> = undefined | string[] | Predicate<T>
 export type FilterType<T> = undefined | string | Predicate<T>
 export type UpdateTypes<T1, T2> = [string, T2][] | ((T: T1, index: number) => Promise<T2> | T2 | void | null | undefined);

@@ -27,8 +27,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   /**
    * Duplicate the current block
    * @param infos Array of objects containing information regarding the position and id of the duplicated block
-   * @param execute Boolean to indicate whether to execute the operation or add it for batching 
-   * @returns A block map 
+   * @param execute Boolean to indicate whether to execute the operation or add it for batching
+   * @returns A block map
    */
 
   async duplicate(infos: { position: RepositionParams, id?: string }[], execute?: boolean) {

@@ -273,6 +273,29 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
+  protected async filterIterate<RD>(args: FilterTypes<RD>, child_ids: string[], multiple: boolean, transform: ((id: string) => RD), cb: (id: string, data: RD) => void) {
+    let matched = 0;
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const child_id = args[index], matches = child_ids.includes(child_id), child_data = transform(child_id);
+        if (matches) {
+          cb(child_id, child_data);
+          matched++;
+        }
+        if (!multiple && matched >= 1) break;
+      }
+    } else {
+      for (let index = 0; index < child_ids.length; index++) {
+        const child_id = child_ids[index], child_data = transform(child_id), matches = args ? args(child_data, index) : true;
+        if (matches) {
+          cb(child_id, child_data);
+          matched++;
+        }
+        if (!multiple && matched >= 1) break;
+      }
+    }
+  }
+
   protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>, condition?: (Q: Q) => boolean) {
     const blocks: any[] = [];
     await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {

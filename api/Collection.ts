@@ -205,8 +205,8 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { key: string }>) {
-    return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, false));
+  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { key: string }>, execute?: boolean) {
+    return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, execute, false));
   }
 
   /**
@@ -214,29 +214,15 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { key: string }>, multiple?: boolean) {
+  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { key: string }>, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
-    const matched: string[] = []
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const schema_id = args[index];
-        const should_add = container.includes(schema_id);
-        if (should_add) matched.push(schema_id)
-        if (!multiple && matched.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < container.length; index++) {
-        const should_add = typeof args === "function" ? await args({ ...data.schema[container[index]], key: container[index] }, index) : true;
-        if (should_add)
-          matched.push(container[index])
-        if (!multiple && matched.length === 1) break;
-      }
-    }
-
-    matched.forEach(id => delete data.schema[id]);
-    this.saveTransactions([this.updateOp([], { schema: data.schema })]);
-    this.updateCacheManually([this.id]);
+    await this.filterIterate<TSchemaUnit & { key: string }>(args, container, multiple ?? true, (child_id) => {
+      return { ...data.schema[child_id], key: child_id }
+    }, (id) => {
+      delete data.schema[id]
+    });
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute)
   }
 }
 

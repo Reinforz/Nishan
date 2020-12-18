@@ -87,7 +87,13 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    */
   async deleteTemplates(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
-    await this.deleteItems<IPage>(args, execute, multiple)
+    await this.deleteIterate<IPage>(args, {
+      execute, multiple,
+      child_ids: this.getCachedData()?.template_pages ?? [],
+      child_type: "block",
+      subject_type: "Page",
+      child_path: "template_pages",
+    }, (child_id) => this.cache.block.get(child_id) as IPage)
   }
 
   /**
@@ -127,8 +133,9 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    */
   async deletePages(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
-    await this.initializeCache();
-    await this.deleteCustomItems<IPage>(this.#getRowPages(), "Page", args, execute, multiple)
+    await this.deleteIterate<IPage>(args, {
+      child_ids: this.#getRowPages(), subject_type: "Page", child_type: "block", execute, multiple
+    }, (child_id) => this.cache.block.get(child_id) as IPage);
   }
 
   /**

@@ -9,6 +9,9 @@ import Operations from "./Operations";
  */
 
 interface UpdateIterateOptions { child_ids: string[], child_type?: TDataType, subject_type: TSubjectType, execute?: boolean, multiple?: boolean };
+interface DeleteIterateOptions<T> extends UpdateIterateOptions {
+  child_path?: keyof T
+}
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
@@ -251,6 +254,49 @@ export default class Data<T extends TData> extends Operations {
     return matched;
   }
 
+  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD), cb?: (id: string, data: TD) => void) {
+    await this.initializeCache();
+    const { child_ids, child_type, subject_type, child_path, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
+    const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const child_id = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
+        if (matches) {
+          cb && cb(child_id, child_data);
+          if (child_type) {
+            ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
+            if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
+            sync_records.push([child_id, child_type])
+          }
+          this.logger && this.logger("DELETE", subject_type, child_id)
+          matched_ids.push(child_id);
+        }
+        if (!multiple && matched_ids.length === 1) break;
+      }
+    } else {
+      for (let index = 0; index < child_ids.length; index++) {
+        const child_id = child_ids[index], child_data = transform(child_id), matches = args ? await args(child_data, index) : true;
+        if (matches) {
+          cb && cb(child_id, child_data);
+          if (child_type) {
+            ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
+            if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
+            sync_records.push([child_id, child_type])
+          }
+          this.logger && this.logger("DELETE", subject_type, child_id)
+          matched_ids.push(child_id);
+        }
+        if (!multiple && matched_ids.length === 1) break;
+      }
+    }
+    if (ops.length !== 0) {
+      ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
+      sync_records.push(this.id);
+    }
+    await this.executeUtil(ops, sync_records, execute);
+    return matched_ids;
+  }
+
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions, transform: ((id: string) => TD), cb?: (id: string, data: RD) => void) {
     await this.initializeCache();
     const { child_ids, child_type, subject_type, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
@@ -344,44 +390,6 @@ export default class Data<T extends TData> extends Operations {
     if (ops.length !== 0) {
       ops.push(this.setOp(["last_edited_time"], current_time));
       sync_records.push(this.id);
-    }
-
-    await this.executeUtil(ops, sync_records, execute)
-  }
-
-  protected async deleteCustomItems<C extends TData>(items: string[], child_type: TSubjectType, args?: FilterTypes<C>, execute?: boolean, multiple?: boolean) {
-    multiple = multiple ?? true;
-    await this.initializeCache();
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const block_id = args[index], should_add = items.includes(block_id);
-        if (should_add) {
-          ops.push(Operation.block.update(block_id, [], {
-            alive: false,
-            last_edited_time: Date.now()
-          }))
-          sync_records.push(block_id);
-          this.logger && this.logger("DELETE", child_type, block_id)
-        }
-        if (!multiple && sync_records.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < items.length; index++) {
-        const block_id = items[index],
-          block = this.cache.block.get(block_id) as C;
-        const should_add = typeof args === "function" ? await args(block, index) : true;
-        if (should_add) {
-          ops.push(Operation.block.update(block_id, [], {
-            alive: false,
-            last_edited_time: Date.now()
-          }))
-          sync_records.push(block_id);
-          this.logger && this.logger("DELETE", child_type, block_id)
-        }
-        if (!multiple && sync_records.length === 1) break;
-      }
     }
 
     await this.executeUtil(ops, sync_records, execute)

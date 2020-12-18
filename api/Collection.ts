@@ -60,7 +60,11 @@ class Collection extends Data<ICollection> {
    * @returns An array of template pages object
    */
   async getTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
-    return (await this.filterIterate<IPage>(args, this.getCachedData()?.template_pages ?? [], multiple ?? true, "Page", (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
+    return (await this.getIterate<IPage>(args, {
+      child_ids: this.getCachedData()?.template_pages ?? [],
+      multiple,
+      subject_type: "Page"
+    }, (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
   }
 
   async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean) {
@@ -69,7 +73,11 @@ class Collection extends Data<ICollection> {
 
   async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean, multiple?: boolean) {
     return (await this.updateIterate<IPage, Omit<IPageInput, "type">>(args, {
-      child_ids: this.getCachedData()?.template_pages ?? [], multiple, execute, child_type: "block", subject_type: "Page"
+      child_ids: this.getCachedData()?.template_pages ?? [],
+      multiple,
+      execute,
+      child_type: "block",
+      subject_type: "Page"
     }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -218,7 +226,11 @@ class Collection extends Data<ICollection> {
   async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { key: string }>, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     const data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
-    await this.filterIterate<TSchemaUnit & { key: string }>(args, container, multiple ?? true, "SchemaUnit", (child_id) => {
+    await this.getIterate<TSchemaUnit & { key: string }>(args, {
+      child_ids: container,
+      multiple,
+      subject_type: "SchemaUnit"
+    }, (child_id) => {
       return { ...data.schema[child_id], key: child_id }
     }, (id) => {
       delete data.schema[id]

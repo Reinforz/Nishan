@@ -8,10 +8,19 @@ import Operations from "./Operations";
  * @noInheritDoc
  */
 
-interface UpdateIterateOptions { child_ids: string[], child_type?: TDataType, subject_type: TSubjectType, execute?: boolean, multiple?: boolean };
+interface CommonIterateOptions {
+  child_ids: string[],
+  subject_type: TSubjectType,
+  multiple?: boolean
+}
+
+interface UpdateIterateOptions extends CommonIterateOptions { child_type?: TDataType, execute?: boolean };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions {
   child_path?: keyof T
 }
+
+interface GetIterateOptions extends CommonIterateOptions { }
+
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
@@ -338,15 +347,15 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async filterIterate<RD>(args: FilterTypes<RD>, child_ids: string[], multiple: boolean, child_type: TSubjectType, transform: ((id: string) => RD), cb?: (id: string, data: RD) => void) {
+  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions, transform: ((id: string) => RD), cb?: (id: string, data: RD) => void) {
     await this.initializeCache();
-    const matched_ids: string[] = [];
+    const matched_ids: string[] = [], { child_ids, subject_type, multiple = true } = options;
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
         const child_id = args[index], matches = child_ids.includes(child_id), child_data = transform(child_id);
         if (matches) {
           cb && cb(child_id, child_data);
-          this.logger && this.logger("READ", child_type, child_id)
+          this.logger && this.logger("READ", subject_type, child_id)
           matched_ids.push(child_id);
         }
         if (!multiple && matched_ids.length === 1) break;
@@ -356,7 +365,7 @@ export default class Data<T extends TData> extends Operations {
         const child_id = child_ids[index], child_data = transform(child_id), matches = args ? args(child_data, index) : true;
         if (matches) {
           cb && cb(child_id, child_data);
-          this.logger && this.logger("READ", child_type, child_id)
+          this.logger && this.logger("READ", subject_type, child_id)
           matched_ids.push(child_id);
         }
         if (!multiple && matched_ids.length === 1) break;

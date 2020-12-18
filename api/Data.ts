@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, TSchemaUnit } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, TSchemaUnit, ITPage } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -45,6 +45,10 @@ export default class Data<T extends TData> extends Operations {
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
     this.#init_cache = false;
     this.#init_child_data = false;
+  }
+
+  protected createTRootPageMap() {
+    return { collection_view_page: [], page: [] } as ITPage;
   }
 
   #detectChildData = (type: TDataType, id: string) => {
@@ -191,23 +195,23 @@ export default class Data<T extends TData> extends Operations {
 
   protected async initializeCache() {
     if (!this.#init_cache) {
-      let container: UpdateCacheManuallyParam = []
+      const container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
         if (data.type === "page")
-          container = data.content ?? [];
+          container.push(...data.content);
         if (data.type === "collection_view" || data.type === "collection_view_page") {
-          container = data.view_ids.map((view_id) => [view_id, "collection_view"]) ?? []
+          data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
           container.push([data.collection_id, "collection"])
         }
       } else if (this.type === "space") {
         const space = this.getCachedData() as ISpace;
-        container = space.pages ?? [];
+        container.push(...space.pages);
         space.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
       } else if (this.type === "user_root")
-        container = (this.getCachedData() as IUserRoot).space_views.map((space_view => [space_view, "space_view"])) ?? []
+        (this.getCachedData() as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"]))) ?? []
       else if (this.type === "collection") {
-        container = (this.getCachedData() as ICollection).template_pages ?? []
+        container.push(...((this.getCachedData() as ICollection).template_pages ?? []))
         await this.queryCollection({
           collectionId: this.id,
           collectionViewId: "",
@@ -219,7 +223,7 @@ export default class Data<T extends TData> extends Operations {
         })
       }
       else if (this.type === "space_view")
-        container = (this.getCachedData() as ISpaceView).bookmarked_pages ?? []
+        container.push(...(this.getCachedData() as ISpaceView).bookmarked_pages ?? [])
 
       const non_cached: UpdateCacheManuallyParam = container.filter(info =>
         !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
@@ -347,13 +351,16 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions, transform: ((id: string) => RD), cb?: (id: string, data: RD) => void) {
+  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void) {
     await this.initializeCache();
     const matched_ids: string[] = [], { child_ids, subject_type, multiple = true } = options;
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
         const child_id = args[index], matches = child_ids.includes(child_id), child_data = transform(child_id);
-        if (matches) {
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+        else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
+
+        if (child_data && matches) {
           cb && cb(child_id, child_data);
           this.logger && this.logger("READ", subject_type, child_id)
           matched_ids.push(child_id);
@@ -362,11 +369,15 @@ export default class Data<T extends TData> extends Operations {
       }
     } else {
       for (let index = 0; index < child_ids.length; index++) {
-        const child_id = child_ids[index], child_data = transform(child_id), matches = args ? args(child_data, index) : true;
-        if (matches) {
-          cb && cb(child_id, child_data);
-          this.logger && this.logger("READ", subject_type, child_id)
-          matched_ids.push(child_id);
+        const child_id = child_ids[index], child_data = transform(child_id);
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`)
+        else {
+          const matches = args ? args(child_data, index) : true;
+          if (child_data && matches) {
+            cb && cb(child_id, child_data);
+            this.logger && this.logger("READ", subject_type, child_id)
+            matched_ids.push(child_id);
+          }
         }
         if (!multiple && matched_ids.length === 1) break;
       }

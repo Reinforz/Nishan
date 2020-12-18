@@ -132,10 +132,9 @@ export default class Page extends Permissions<IPage> {
    * @returns An array of block object
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const _this = this, block_map = this.createBlockMap();
-    await this.getItems<TBlock>(args, multiple, async function (block) {
-      block_map[block.type].push(await _this.createClass(block.type, block.id))
+    const block_map = this.createBlockMap();
+    await this.getIterate<TBlock>(args, { multiple, child_ids: this.getCachedData().content, subject_type: "Block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
+      block_map[block.type].push(await this.createClass(block.type, block.id))
     })
     return block_map;
   }

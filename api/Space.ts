@@ -3,10 +3,15 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, ITPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
+
+const trootpage_class = {
+  page: Page,
+  collection_view_page: CollectionViewPage
+}
 
 /**
  * A class to represent space of Notion
@@ -92,24 +97,13 @@ export default class Space extends Data<ISpace> {
     }
   }
 
-  async getTRootPages(args?: FilterTypes<IPage | ICollectionViewPage>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const props = this.getProps(), trootpage_map: ITPage = { collection_view_page: [], page: [] }, logger = this.logger;
-    await this.getItems<IPage | ICollectionViewPage>(args, multiple, async function (page) {
-      if (page.type === "page") {
-        logger && logger("READ", "Page", page.id);
-        trootpage_map.page.push(new Page({
-          id: page.id,
-          ...props
-        }))
-      }
-      else if (page.type === "collection_view_page") {
-        logger && logger("READ", "CollectionViewPage", page.id);
-        trootpage_map.collection_view_page.push(new CollectionViewPage({
-          id: page.id,
-          ...props
-        }))
-      }
+  async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
+    const trootpage_map = this.createTRootPageMap(), props = this.getProps();
+    await this.getIterate<TPage>(args, { multiple, child_ids: this.getCachedData().pages, subject_type: "Page" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
+      trootpage_map[page.type].push(new trootpage_class[page.type]({
+        id: page.id,
+        ...props
+      }) as any)
     });
     return trootpage_map;
   }

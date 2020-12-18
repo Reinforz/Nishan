@@ -22,16 +22,8 @@ class UserRoot extends Data<IUserRoot> {
    * @param arg criteria to filter pages by
    * @returns An array of pages object matching the passed criteria
    */
-  async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean): Promise<SpaceView[]> {
-    multiple = multiple ?? true;
-    const props = this.getProps(), logger = this.logger;
-    return this.getItems<ISpaceView>(args, multiple, async function (space_view) {
-      logger && logger("READ", "SpaceView", space_view.id)
-      return new SpaceView({
-        id: space_view.id,
-        ...props
-      })
-    });
+  async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean) {
+    return (await this.getIterate<ISpaceView>(args, { multiple, subject_type: "SpaceView", child_ids: this.getCachedData().space_views }, (space_id) => this.cache.space_view.get(space_id))).map(id => new SpaceView({ ...this.getProps(), id }));
   }
 }
 

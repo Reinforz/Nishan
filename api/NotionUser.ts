@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -35,15 +35,12 @@ class NotionUser extends Data<INotionUser> {
   }
 
   getUserRoot() {
-    const notion_user = this.cache.user_root.get(this.id);
-    if (notion_user) {
-      this.logger && this.logger('READ', 'UserRoot', notion_user.id)
-      return new UserRoot({
-        ...this.getProps(),
-        id: this.id
-      })
-    }
-
+    const notion_user = this.cache.user_root.get(this.id) as IUserRoot;
+    this.logger && this.logger('READ', 'UserRoot', notion_user.id)
+    return new UserRoot({
+      ...this.getProps(),
+      id: this.id
+    })
   }
 
   /**

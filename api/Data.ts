@@ -404,33 +404,6 @@ export default class Data<T extends TData> extends Operations {
     await this.executeUtil(ops, sync_records, execute)
   }
 
-  async getCustomItems<T extends (TData | TSchemaUnit)>(items: string[], child_type: TSubjectType, transformer: (id: string) => T, args?: FilterTypes<T>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    await this.initializeCache();
-    const block_ids: string[] = [];
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const block_id = args[index], should_add = items.includes(block_id);
-        if (should_add) {
-          block_ids.push(block_id);
-          this.logger && this.logger("READ", child_type, block_id)
-        }
-        if (!multiple && block_ids.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < items.length; index++) {
-        const block_id = items[index], should_add = typeof args === "function" ? await args(transformer(block_id), index) : true;
-        if (should_add) {
-          block_ids.push(block_id);
-          this.logger && this.logger("READ", child_type, block_id)
-        }
-        if (!multiple && block_ids.length === 1) break;
-      }
-    }
-    return block_ids;
-  }
-
   async updateItems<T1 extends (TData | TSchemaUnit), T2>(args: UpdateTypes<T1, T2>, items: string[], child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     await this.initializeCache();

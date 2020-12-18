@@ -8,6 +8,7 @@ import Operations from "./Operations";
  * @noInheritDoc
  */
 
+interface UpdateIterateOptions { child_ids: string[], child_type?: TDataType, subject_type: TSubjectType, execute?: boolean, multiple?: boolean };
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
@@ -250,27 +251,45 @@ export default class Data<T extends TData> extends Operations {
     return matched;
   }
 
-  protected async updateIterate<RD, TD>(args: UpdateTypes<TD, RD>, child_ids: string[], multiple: boolean, transform: ((id: string) => TD), cb: (id: string, data: RD) => void) {
-    let matched = 0;
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions, transform: ((id: string) => TD), cb?: (id: string, data: RD) => void) {
+    await this.initializeCache();
+    const { child_ids, child_type, subject_type, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
+    const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
-        const [child_id, updated_data] = args[index], matches = child_ids.includes(child_id);
+        const [child_id, updated_data] = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
         if (matches) {
-          cb(child_id, updated_data);
-          matched++;
+          cb && cb(child_id, updated_data);
+          if (child_type) {
+            ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
+            sync_records.push([child_id, child_type])
+          }
+          this.logger && this.logger("UPDATE", subject_type, child_id)
+          matched_ids.push(child_id);
         }
-        if (!multiple && matched >= 1) break;
+        if (!multiple && matched_ids.length === 1) break;
       }
     } else {
       for (let index = 0; index < child_ids.length; index++) {
         const child_id = child_ids[index], child_data = transform(child_id), updated_data = await args(child_data, index);
         if (updated_data) {
-          cb(child_id, updated_data);
-          matched++;
+          cb && cb(child_id, updated_data);
+          if (child_type) {
+            ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
+            sync_records.push([child_id, child_type])
+          }
+          this.logger && this.logger("UPDATE", subject_type, child_id)
+          matched_ids.push(child_id);
         }
-        if (!multiple && matched >= 1) break;
+        if (!multiple && matched_ids.length === 1) break;
       }
     }
+    if (ops.length !== 0) {
+      ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
+      sync_records.push(this.id);
+    }
+    await this.executeUtil(ops, sync_records, execute);
+    return matched_ids;
   }
 
   protected async filterIterate<RD>(args: FilterTypes<RD>, child_ids: string[], multiple: boolean, child_type: TSubjectType, transform: ((id: string) => RD), cb?: (id: string, data: RD) => void) {

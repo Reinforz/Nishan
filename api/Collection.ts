@@ -63,12 +63,14 @@ class Collection extends Data<ICollection> {
     return (await this.filterIterate<IPage>(args, this.getCachedData()?.template_pages ?? [], multiple ?? true, "Page", (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
   }
 
-  async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
+  async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean) {
     return (await this.updateTemplates(typeof args === "function" ? args : [args], execute, false))[0]
   }
 
-  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    return (await this.updateItems<IPage, Omit<IPageInput, "type">>(args, this.getCachedData()?.template_pages ?? [], "Page", execute, multiple)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
+  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<IPage, Omit<IPageInput, "type">>(args, {
+      child_ids: this.getCachedData()?.template_pages ?? [], multiple, execute, child_type: "block", subject_type: "Page"
+    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
   /**
@@ -181,7 +183,7 @@ class Collection extends Data<ICollection> {
    */
   async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
     const results = this.createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
-    await this.updateIterate<Partial<TSchemaUnit>, TSchemaUnit & { key: string }>(args, schema_ids, multiple ?? true, (schema_id) => {
+    await this.updateIterate<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>(args, { child_ids: schema_ids, subject_type: "SchemaUnit", multiple, execute }, (schema_id) => {
       return { ...data.schema[schema_id], key: schema_id }
     }, (schema_id, schema_data) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data } as TSchemaUnit;

@@ -888,6 +888,7 @@ export default class Data<T extends TData> extends Operations {
         else if (content.type === "page") {
           if (content.contents)
             await traverse(content.contents, $block_id, "block");
+          const current_time = Date.now();
           ops.push(Operation.block.update($block_id, [], {
             is_template: (content as any).is_template && parent_table === "collection",
             id: $block_id,
@@ -898,6 +899,12 @@ export default class Data<T extends TData> extends Operations {
             parent_table,
             alive: true,
             permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: this.user_id }],
+            created_time: current_time,
+            created_by_id: this.user_id,
+            created_by_table: 'notion_user',
+            last_edited_time: current_time,
+            last_edited_by_id: this.user_id,
+            last_edited_by_table: 'notion_user'
           }))
           block_map[type].push(await this.createClass(content.type, $block_id));
         }

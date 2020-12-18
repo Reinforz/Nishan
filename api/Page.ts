@@ -135,7 +135,7 @@ export default class Page extends Permissions<IPage> {
     const block_map = this.createBlockMap();
     await this.getIterate<TBlock>(args, { multiple, child_ids: this.getCachedData().content, subject_type: "Block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
       block_map[block.type].push(await this.createClass(block.type, block.id))
-    })
+    });
     return block_map;
   }
 
@@ -143,16 +143,22 @@ export default class Page extends Permissions<IPage> {
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
-  async deleteBlock(arg?: FilterType<TBlock>) {
-    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, false);
+  async deleteBlock(arg?: FilterType<TBlock>, execute?: boolean) {
+    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
   /**
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    await this.deleteItems<TBlock>(args, multiple)
+  async deleteBlocks(args?: FilterTypes<TBlock>, execute?: boolean, multiple?: boolean) {
+    await this.deleteIterate<TBlock>(args, {
+      multiple,
+      execute,
+      child_ids: this.getCachedData().content,
+      child_path: "content",
+      child_type: "block",
+      subject_type: "Block"
+    }, (block_id) => this.cache.block.get(block_id));
   }
 }

@@ -267,37 +267,45 @@ export default class Data<T extends TData> extends Operations {
     return matched;
   }
 
-  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD), cb?: (id: string, data: TD) => void) {
+  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void) {
     await this.initializeCache();
     const { child_ids, child_type, subject_type, child_path, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
         const child_id = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
-        if (matches) {
+
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+        else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
+
+        if (child_data && matches) {
           cb && cb(child_id, child_data);
+          this.logger && this.logger("DELETE", subject_type, child_id);
+          matched_ids.push(child_id);
           if (child_type) {
             ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
             if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
             sync_records.push([child_id, child_type])
           }
-          this.logger && this.logger("DELETE", subject_type, child_id)
-          matched_ids.push(child_id);
         }
         if (!multiple && matched_ids.length === 1) break;
       }
     } else {
       for (let index = 0; index < child_ids.length; index++) {
-        const child_id = child_ids[index], child_data = transform(child_id), matches = args ? await args(child_data, index) : true;
-        if (matches) {
-          cb && cb(child_id, child_data);
-          if (child_type) {
-            ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
-            if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
-            sync_records.push([child_id, child_type])
+        const child_id = child_ids[index], child_data = transform(child_id);
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`)
+        else {
+          const matches = args ? args(child_data, index) : true;
+          if (child_data && matches) {
+            cb && cb(child_id, child_data);
+            this.logger && this.logger("DELETE", subject_type, child_id)
+            matched_ids.push(child_id);
+            if (child_type) {
+              ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
+              if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
+              sync_records.push([child_id, child_type])
+            }
           }
-          this.logger && this.logger("DELETE", subject_type, child_id)
-          matched_ids.push(child_id);
         }
         if (!multiple && matched_ids.length === 1) break;
       }
@@ -361,7 +369,7 @@ export default class Data<T extends TData> extends Operations {
         else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
 
         if (child_data && matches) {
-          cb && cb(child_id, child_data);
+          cb && await cb(child_id, child_data);
           this.logger && this.logger("READ", subject_type, child_id)
           matched_ids.push(child_id);
         }
@@ -374,7 +382,7 @@ export default class Data<T extends TData> extends Operations {
         else {
           const matches = args ? args(child_data, index) : true;
           if (child_data && matches) {
-            cb && cb(child_id, child_data);
+            cb && await cb(child_id, child_data);
             this.logger && this.logger("READ", subject_type, child_id)
             matched_ids.push(child_id);
           }
@@ -383,36 +391,6 @@ export default class Data<T extends TData> extends Operations {
       }
     }
     return matched_ids;
-  }
-
-  protected async getItems<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (Q: Q) => Promise<any>, condition?: (Q: Q) => boolean) {
-    const blocks: any[] = [];
-    await this.traverseChildren<Q>(arg, multiple, async function (block, matched) {
-      if (matched) blocks.push(await cb(block))
-    }, condition ?? (() => true))
-    return blocks;
-  }
-
-  protected async deleteItems<Q extends TData>(arg: FilterTypes<Q>, execute?: boolean, multiple?: boolean) {
-    const ops: IOperation[] = [], current_time = Date.now(), sync_records: UpdateCacheManuallyParam = [], _this = this;
-    await this.traverseChildren(arg, multiple, async function (block, matched) {
-      if (matched) {
-        sync_records.push(block.id);
-        ops.push(Operation[_this.child_type as TDataType].update(block.id, [], {
-          alive: false,
-          last_edited_time: current_time
-        }),
-          _this.listRemoveOp([_this.child_path as string], { id: block.id })
-        )
-      }
-    })
-
-    if (ops.length !== 0) {
-      ops.push(this.setOp(["last_edited_time"], current_time));
-      sync_records.push(this.id);
-    }
-
-    await this.executeUtil(ops, sync_records, execute)
   }
 
   async updateItems<T1 extends (TData | TSchemaUnit), T2>(args: UpdateTypes<T1, T2>, items: string[], child_type: TSubjectType, execute?: boolean, multiple?: boolean) {
@@ -735,7 +713,6 @@ export default class Data<T extends TData> extends Operations {
           const view = this.cache.collection_view.get(view_id) as TView;
           data.views[view.type].push(new view_classes[view.type]({ ...obj, id: view_id }) as any)
         })
-
         return data;
       default:
         return new Page(obj);

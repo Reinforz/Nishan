@@ -174,8 +174,8 @@ export default class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg?: FilterType<TPage>) {
-    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, false);
+  async deleteTRootPage(arg?: FilterType<TPage>, execute?: boolean) {
+    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
   /**
@@ -183,9 +183,15 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    await this.deleteItems<TPage>(args, multiple)
+  async deleteTRootPages(args?: FilterTypes<TPage>, execute?: boolean, multiple?: boolean) {
+    await this.deleteIterate<TPage>(args, {
+      multiple,
+      execute,
+      child_ids: this.getCachedData().pages,
+      child_path: "pages",
+      child_type: "block",
+      subject_type: "Page"
+    }, (block_id) => this.cache.block.get(block_id) as TPage)
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: boolean) {

@@ -15,7 +15,8 @@ class Collection extends Data<ICollection> {
     super({ ...args, type: "collection" });
   }
 
-  #getRowPages = () => {
+  #getRowPages = async () => {
+    await this.initializeCache();
     const page_ids: string[] = [];
     for (let [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
@@ -120,15 +121,25 @@ class Collection extends Data<ICollection> {
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    return (await this.getCustomItems<IPage>(this.#getRowPages(), "Page", (id) => this.cache.block.get(id) as IPage, args, multiple)).map((id) => new Page({ ...this.getProps(), id }));
+    return (await this.getIterate<IPage>(args, {
+      child_ids: await this.#getRowPages(),
+      subject_type: "Page",
+      multiple
+    }, (id) => this.cache.block.get(id) as IPage)).map((id) => new Page({ ...this.getProps(), id }));
   }
 
   async updatePage(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
     return (await this.updatePages(typeof args === "function" ? args : [args], execute, false))[0]
   }
 
-  async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type">>, execute?: boolean, multiple?: boolean) {
-    return (await this.updateItems<IPage, Omit<IPageInput, "type">>(args, this.#getRowPages(), "Page", execute, multiple)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
+  async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<IPage, Omit<IPageInput, "type" | "contents">>(args, {
+      child_ids: await this.#getRowPages(),
+      subject_type: "Page",
+      execute,
+      multiple,
+      child_type: "block",
+    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
   async deletePage(args?: FilterType<IPage>, execute?: boolean) {
@@ -142,7 +153,7 @@ class Collection extends Data<ICollection> {
    */
   async deletePages(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
-      child_ids: this.#getRowPages(), subject_type: "Page", child_type: "block", execute, multiple
+      child_ids: await this.#getRowPages(), subject_type: "Page", child_type: "block", execute, multiple
     }, (child_id) => this.cache.block.get(child_id) as IPage);
   }
 

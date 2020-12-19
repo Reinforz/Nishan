@@ -1,6 +1,21 @@
-import Nishan, { TBlockInput } from '../../Nishan';
+import Nishan from '../../Nishan';
 import "../env"
 import { v4 as uuidv4 } from "uuid";
+
+const months = [
+  ["January", 31],
+  ["February", 29],
+  ["March", 31],
+  ["April", 30],
+  ["May", 31],
+  ["June", 30],
+  ["July", 31],
+  ["August", 30],
+  ["September", 31],
+  ["October", 30],
+  ["November", 31],
+  ["December", 30],
+] as [string, number][];
 
 (async function () {
   // Change the interval between each request to your desire, 
@@ -26,30 +41,40 @@ import { v4 as uuidv4 } from "uuid";
     if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
   })
 
-  // Make sure Monthly page exists as a root page
-  const { page: [monthly_page] } = (await space.getTRootPages((page) => {
-    return page.type === "page" && page.properties.title[0][0] === 'Monthly'
-  }));
+  const month_page_uuids = Array(12).fill(null).map(() => uuidv4())
 
-  const objfn = (name: string) => ({ name, type: "checkbox" as const, format: [true, 100] as [boolean, number] })
-  const uuids = Array(31).fill(null).map(() => uuidv4())
-
-  await monthly_page.createBlocks([
+  const { page: [page] } = await space.createTRootPages([
     {
       type: "page",
       properties: {
-        title: [["December"]]
+        title: [["Monthly Overview"]]
       },
       format: {
-        page_full_width: true,
-        page_icon: "https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0002/7590/brand.gif?itok=UMmhpECE"
+        page_full_width: true
+      }
+    }
+  ]);
+
+  const objfn = (name: string) => ({ name, type: "checkbox" as const, format: [true, 100] as [boolean, number] });
+
+  for (let index = 0; index < month_page_uuids.length; index++) {
+    const month_page_uuid = month_page_uuids[index], [month_name, month_days] = months[index], day_page_uuids = Array(month_days).fill(null).map(() => uuidv4())
+
+    await page.createBlocks([{
+      id: month_page_uuid,
+      type: "page",
+      format: {
+        page_full_width: true
       },
-      contents: Array(31).fill(null).map((_, i) => {
-        const previous_id = uuids[i === 0 ? 30 : i - 1], next_id = uuids[i === 30 ? 0 : i + 1];
+      properties: {
+        title: [[month_name]]
+      },
+      contents: Array(month_days).fill(null).map((_, i) => {
+        const previous_id = day_page_uuids[i === 0 ? month_days - 1 : i - 1], next_id = day_page_uuids[i === month_days - 1 ? 0 : i + 1];
         i += 1;
-        const date = `2020-12-${i < 10 ? "0" + i : i}`;
+        const date = `2020-${index + 1}-${i < 10 ? "0" + i : i}`;
         return {
-          id: uuids[i - 1],
+          id: day_page_uuids[i - 1],
           type: "page",
           properties: {
             title: [[`Day ${i}`]]
@@ -312,8 +337,10 @@ import { v4 as uuidv4 } from "uuid";
                 }
               ]
             }]
-        } as TBlockInput
+        }
       })
-    }
-  ]);
+    }])
+
+    console.log(`Done with ${month_name}`)
+  };
 }())

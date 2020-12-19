@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -19,19 +19,23 @@ class NotionUser extends Data<INotionUser> {
     super({ ...arg, type: "notion_user" });
   }
 
+  #getSpaceIds = () => {
+    const space_ids: string[] = [];
+    for (const [space_id] of this.cache.space)
+      space_ids.push(space_id)
+    return space_ids;
+  }
   /**
    * Get the current logged in user settings
    * @returns Returns the logged in UserSettings object
    */
   getUserSettings() {
-    const user_settings = this.cache.user_settings.get(this.user_id);
-    if (user_settings) {
-      this.logger && this.logger('READ', 'UserSettings', user_settings.id)
-      return new UserSettings({
-        ...this.getProps(),
-        id: user_settings.id,
-      });
-    }
+    const user_settings = this.cache.user_settings.get(this.user_id) as IUserSettings;
+    this.logger && this.logger('READ', 'UserSettings', user_settings.id)
+    return new UserSettings({
+      ...this.getProps(),
+      id: user_settings.id,
+    });
   }
 
   getUserRoot() {
@@ -69,46 +73,20 @@ class NotionUser extends Data<INotionUser> {
     return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  // ? FIX:1:E Fix getSpaces to use [Data].getIterate method
   /**
    * Get multiple space objects on the user's account as an array
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
-    multiple = multiple ?? true;
-
-    const spaces: Space[] = [];
-    let i = 0;
-
-    for (const [, space] of this.cache.space) {
-      let should_add = false;
-      if (args === undefined)
-        should_add = true;
-      else if (Array.isArray(args) && args.includes(space.id))
-        should_add = true;
-      else if (typeof args === "function")
-        should_add = await args(space, i) as boolean;
-
-      if (should_add) {
-        spaces.push(new Space({
-          id: space.id,
-          interval: this.interval,
-          token: this.token,
-          cache: this.cache,
-          user_id: this.user_id,
-          shard_id: space.shard_id,
-          space_id: space.id,
-          logger: this.logger,
-          defaultExecutionState: this.defaultExecutionState
-        }))
-        this.logger && this.logger(`READ`, 'Space', space.id);
-      }
-
-      if (!multiple && spaces.length === 1) break;
-      i++;
-    }
-    return spaces;
+    return (await this.getIterate<ISpace>(args, {
+      multiple,
+      subject_type: "Space",
+      child_ids: this.#getSpaceIds(),
+    }, (space_id) => this.cache.space.get(space_id))).map((id) => new Space({
+      ...this.getProps(),
+      id
+    }));
   }
 
   /**

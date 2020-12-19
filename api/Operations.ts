@@ -4,20 +4,21 @@ import { warn } from "../utils";
 import Mutations from "./Mutations";
 
 export default class Operations extends Mutations {
-  #stack: IOperation[] = [];
-  #sync_records: UpdateCacheManuallyParam = []
+  stack: IOperation[] = [];
+  sync_records: UpdateCacheManuallyParam = []
 
   constructor(args: NishanArg) {
     super(args);
-    this.#stack = []
+    this.stack = args.stack || []
+    this.sync_records = args.sync_records || []
   }
 
   pushOperations(operations: IOperation[]) {
-    this.#stack.push(...operations)
+    this.stack.push(...operations)
   }
 
   pushSyncRecords(sync_records: UpdateCacheManuallyParam) {
-    this.#sync_records.push(...sync_records)
+    this.sync_records.push(...sync_records)
   }
 
   pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
@@ -28,26 +29,18 @@ export default class Operations extends Mutations {
   }
 
   async executeOperation() {
-    if (this.#stack.length === 0)
+    if (this.stack.length === 0)
       warn(`The operation stack is empty`)
     else {
-      await this.saveTransactions(this.#stack);
-      this.#stack = [];
+      await this.saveTransactions(this.stack);
+      this.stack = [];
     }
-    if (this.#sync_records.length === 0)
+    if (this.sync_records.length === 0)
       warn(`The sync_record stack is empty`)
     else {
-      await this.updateCacheManually(this.#sync_records)
-      this.#sync_records = [];
+      await this.updateCacheManually(this.sync_records)
+      this.sync_records = [];
     }
-  }
-
-  showOperationStack() {
-    return this.#stack
-  }
-
-  showSyncRecordsStack() {
-    return this.#sync_records
   }
 
   protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam, execute?: boolean) {

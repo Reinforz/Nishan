@@ -15,19 +15,6 @@ export default class Mutations extends Queries {
     this.createTransaction = createTransaction.bind(this, shard_id, space_id);
   }
 
-  protected getProps() {
-    return {
-      token: this.token,
-      interval: this.interval,
-      user_id: this.user_id,
-      shard_id: this.shard_id,
-      space_id: this.space_id,
-      cache: this.cache,
-      logger: this.logger,
-      defaultExecutionState: this.defaultExecutionState
-    }
-  }
-
   protected async setPageNotificationsAsRead(arg: SetPageNotificationsAsReadParams) {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {

@@ -85,7 +85,9 @@ class Nishan extends Cache {
       token: this.token,
       cache: this.cache,
       interval: this.interval,
-      logger: this.logger
+      logger: this.logger,
+      stack: [],
+      sync_records: []
     }
 
     let index = 0;

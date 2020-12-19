@@ -24,7 +24,7 @@ export default class Queries extends Cache {
   protected user_id: string;
   protected defaultExecutionState: boolean;
 
-  constructor({ logger, token, interval, user_id, cache, defaultExecutionState }: Omit<NishanArg, "shard_id" | "space_id" | "id">) {
+  constructor({ logger, token, interval, user_id, cache, defaultExecutionState }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack" | "sync_records">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;

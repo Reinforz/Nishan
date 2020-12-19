@@ -1,4 +1,4 @@
-import { ICollection, ICollectionViewPage, IPage, TBlock, TView } from ".";
+import { ICollection, ICollectionViewPage, IPage, TBlock, TView, UpdateCacheManuallyParam } from ".";
 import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
 
 export type Entity = BlockData | SpaceData | CollectionData;
@@ -152,5 +152,7 @@ export interface NishanArg {
   cache: ICache,
   id: string,
   logger: Logger,
-  defaultExecutionState?: boolean
+  defaultExecutionState?: boolean,
+  stack: IOperation[],
+  sync_records: UpdateCacheManuallyParam
 }

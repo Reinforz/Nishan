@@ -504,6 +504,21 @@ export default class Data<T extends TData> extends Operations {
     return [collection_id, created_view_ops, view_infos] as [string, IOperation[], [string, TViewType][]]
   }
 
+  protected getProps() {
+    return {
+      token: this.token,
+      interval: this.interval,
+      user_id: this.user_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
+      cache: this.cache,
+      logger: this.logger,
+      defaultExecutionState: this.defaultExecutionState,
+      stack: this.stack,
+      sync_records: this.sync_records
+    }
+  }
+
   protected createBlockMap = () => {
     return {
       linked_db: [],

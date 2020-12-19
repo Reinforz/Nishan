@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -17,6 +17,13 @@ interface CommonIterateOptions {
 interface UpdateIterateOptions extends CommonIterateOptions { child_type?: TDataType, execute?: boolean };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions {
   child_path?: keyof T
+}
+
+interface IterateOptions {
+  method: TMethodType,
+  subject_type: TSubjectType,
+  child_ids: string[],
+  multiple?: boolean
 }
 
 interface GetIterateOptions extends CommonIterateOptions { }
@@ -236,6 +243,42 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
+  #iterate = async<TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateOptions, cb1: (id: string) => any, cb2?: (id: string, data: TD) => void) => {
+    await this.initializeCache();
+    const matched_ids: string[] = [], { multiple = true, method, subject_type, child_ids } = options;
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const child_id = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+        else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
+        if (child_data && matches) {
+          cb1(child_id);
+          cb2 && cb2(child_id, child_data);
+          this.logger && this.logger(method, subject_type, child_id);
+          matched_ids.push(child_id);
+        }
+        if (!multiple && matched_ids.length === 1) break;
+      }
+    } else {
+      for (let index = 0; index < child_ids.length; index++) {
+        const child_id = child_ids[index], child_data = transform(child_id);
+        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+        else {
+          const matches = args ? args(child_data, index) : true;
+          if (child_data && matches) {
+            cb1(child_id);
+            cb2 && cb2(child_id, child_data);
+            this.logger && this.logger(method, subject_type, child_id)
+            matched_ids.push(child_id);
+          }
+        }
+        if (!multiple && matched_ids.length === 1) break;
+      }
+    }
+
+    return matched_ids;
+  }
+
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void) {
     await this.initializeCache();
     const { child_ids, child_type, subject_type, child_path, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
@@ -243,18 +286,16 @@ export default class Data<T extends TData> extends Operations {
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
         const child_id = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
-
         if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
         else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
-
         if (child_data && matches) {
           cb && cb(child_id, child_data);
           this.logger && this.logger("DELETE", subject_type, child_id);
           matched_ids.push(child_id);
           if (child_type) {
             ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
-            if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
             sync_records.push([child_id, child_type])
+            if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
           }
         }
         if (!multiple && matched_ids.length === 1) break;
@@ -296,12 +337,12 @@ export default class Data<T extends TData> extends Operations {
         const [child_id, updated_data] = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
         if (matches) {
           cb && cb(child_id, updated_data);
+          this.logger && this.logger("UPDATE", subject_type, child_id)
+          matched_ids.push(child_id);
           if (child_type) {
             ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
             sync_records.push([child_id, child_type])
           }
-          this.logger && this.logger("UPDATE", subject_type, child_id)
-          matched_ids.push(child_id);
         }
         if (!multiple && matched_ids.length === 1) break;
       }

@@ -140,7 +140,9 @@ export interface ICache {
 
 export type TSubjectType = "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "SchemaUnit" | "Page" | "CollectionView" | "CollectionViewPage" | "Collection" | "SpaceView";
 
-export type Logger = false | ((method: "CREATE" | "READ" | "UPDATE" | "DELETE", subject: TSubjectType, id: string) => void)
+export type TMethodType = "CREATE" | "READ" | "UPDATE" | "DELETE";
+
+export type Logger = false | ((method: TMethodType, subject: TSubjectType, id: string) => void)
 export interface NishanArg {
   token: string,
   interval: number,

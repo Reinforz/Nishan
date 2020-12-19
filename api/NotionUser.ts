@@ -69,7 +69,7 @@ class NotionUser extends Data<INotionUser> {
     return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
-  // ? FIX:1:E Fix getSpaces to use [Data].traverseChildren method
+  // ? FIX:1:E Fix getSpaces to use [Data].getIterate method
   /**
    * Get multiple space objects on the user's account as an array
    * @param arg empty or A predicate function or a string array of ids
@@ -181,6 +181,7 @@ class NotionUser extends Data<INotionUser> {
 
   // ? FEAT:1:M Add deleteSpaces methods
 
+  // ? FEAT:1:M Update cache for cvp views and collection 
   async getTPagesById(ids: string[]) {
     const tpage_map: ITPage = { page: [], collection_view_page: [] }, tpage_content_ids: string[] = [];
 

@@ -236,37 +236,6 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async traverseChildren<Q extends TData>(arg: FilterTypes<Q>, multiple: boolean = true, cb: (block: Q, should_add: boolean) => Promise<void>, condition?: (Q: Q) => boolean) {
-    await this.initializeCache();
-    this.initializeChildData();
-
-    const matched: Q[] = [];
-    const data = this.getCachedData(), container: string[] = data[this.child_path] as any ?? [];
-
-    if (Array.isArray(arg)) {
-      for (let index = 0; index < arg.length; index++) {
-        const block_id = arg[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = block && container.includes(block_id);
-        if (should_add) {
-          matched.push(block)
-          await cb(block, should_add);
-        }
-        if (!multiple && matched.length === 1) break;
-      }
-    } else if (typeof arg === "function" || arg === undefined) {
-      for (let index = 0; index < container.length; index++) {
-        const block_id = container[index], block = this.cache[this.child_type].get(block_id) as Q;
-        const should_add = block && (condition ? condition(block) : true) && (typeof arg === "function" ? await arg(block, index) : true);
-        if (should_add) {
-          matched.push(block)
-          await cb(block, should_add);
-        }
-        if (!multiple && matched.length === 1) break;
-      }
-    }
-    return matched;
-  }
-
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void) {
     await this.initializeCache();
     const { child_ids, child_type, subject_type, child_path, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };

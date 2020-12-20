@@ -140,28 +140,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       Operation.block.set(new_parent_id, ['last_edited_time'], current_time)
     ], [this.id, data.parent_id, new_parent_id], execute)
   }
-
-  // ? TD:1:H Add type definition propertoes and format for specific block types
-  protected createBlock({ $block_id, type, properties = {}, format = {}, parent_id, parent_table = 'block' }: CreateBlockArg) {
-    const data = this.getCachedData();
-    const current_time = Date.now();
-    const arg: any = {
-      id: $block_id,
-      properties,
-      format,
-      type,
-      parent_id: parent_id ?? data.id,
-      parent_table,
-      alive: true,
-      created_time: current_time,
-      created_by_id: this.user_id,
-      created_by_table: 'notion_user',
-      last_edited_time: current_time,
-      last_edited_by_id: this.user_id,
-      last_edited_by_table: 'notion_user',
-    };
-    return Operation.block.update($block_id, [], arg);
-  }
 }
 
 export default Block;

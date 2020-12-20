@@ -69,7 +69,7 @@ export interface PhoneNumberSchemaUnit extends ISchemaUnit {
 }
 
 export interface FormulaSchemaUnit extends ISchemaUnit {
-  type: "formula"
+  type: "formula",
 }
 export interface RelationSchemaUnit extends ISchemaUnit {
   type: "relation",

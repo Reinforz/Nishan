@@ -3,7 +3,7 @@ import { warn } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, } from "../types";
+import { ICollection, IPageCreateInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, } from "../types";
 import Page from './Page';
 
 /**
@@ -39,7 +39,7 @@ class Collection extends Data<ICollection> {
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(rows: (Omit<Partial<IPageInput>, "type">)[], execute?: boolean) {
+  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[], execute?: boolean) {
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows.map((row) => ({ ...row, is_template: true })) as any, this.id, "collection");
     await this.executeUtil(ops, sync_records, execute);
     return block_map;
@@ -68,12 +68,12 @@ class Collection extends Data<ICollection> {
     }, (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
   }
 
-  async updateTemplate(args: UpdateType<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean) {
+  async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
     return (await this.updateTemplates(typeof args === "function" ? args : [args], execute, false))[0]
   }
 
-  async updateTemplates(args: UpdateTypes<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean, multiple?: boolean) {
-    return (await this.updateIterate<IPage, Omit<IPageInput, "type">>(args, {
+  async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
       child_ids: this.getCachedData()?.template_pages ?? [],
       multiple,
       execute,
@@ -110,7 +110,7 @@ class Collection extends Data<ICollection> {
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: Omit<IPageInput, "type">[], execute?: boolean) {
+  async createPages(rows: Omit<IPageCreateInput, "type">[], execute?: boolean) {
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows.map((row) => ({ ...row, is_template: false })) as any, this.id, "collection")
     await this.executeUtil(ops, sync_records, execute);
     return block_map;
@@ -128,12 +128,12 @@ class Collection extends Data<ICollection> {
     }, (id) => this.cache.block.get(id) as IPage)).map((id) => new Page({ ...this.getProps(), id }));
   }
 
-  async updatePage(args: UpdateType<IPage, Omit<IPageInput, "type">>, execute?: boolean) {
+  async updatePage(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
     return (await this.updatePages(typeof args === "function" ? args : [args], execute, false))[0]
   }
 
-  async updatePages(args: UpdateTypes<IPage, Omit<IPageInput, "type" | "contents">>, execute?: boolean, multiple?: boolean) {
-    return (await this.updateIterate<IPage, Omit<IPageInput, "type" | "contents">>(args, {
+  async updatePages(args: UpdateTypes<IPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
       child_ids: await this.#getRowPages(),
       subject_type: "Page",
       execute,

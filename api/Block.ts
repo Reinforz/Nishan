@@ -2,7 +2,7 @@ import { Operation } from '../utils';
 
 import Data from "./Data";
 
-import { TBlock, TBlockInput, CreateBlockArg, TBasicBlockType, NishanArg, RepositionParams, IOperation, UpdateCacheManuallyParam } from "../types"
+import { TBlock, TBlockInput, TBasicBlockType, NishanArg, RepositionParams, IOperation, UpdateCacheManuallyParam } from "../types"
 
 /**
  * A class to represent block of Notion

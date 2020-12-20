@@ -71,7 +71,7 @@ export interface ICollectionBlockInput extends IInput {
   schema: TSchemaUnit[],
   properties: PageProps,
   format?: Partial<PageFormat>,
-  rows?: Omit<IPageInput, "type">[]
+  rows?: Omit<IPageCreateInput, "type">[]
 }
 
 export interface ICollectionViewInput extends ICollectionBlockInput {
@@ -143,13 +143,15 @@ export interface IColumnListInput extends IInput {
   format?: {},
   contents: TBlockInput[]
 }
-export interface IPageInput extends IInput {
+export interface IPageCreateInput extends IInput {
   type: 'page',
   properties: PageProps,
   format?: Partial<PageFormat>,
   isPrivate?: boolean,
   contents?: TBlockInput[]
 }
+
+export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "type" | "contents">>;
 
 export interface ICommonTextInput extends IInput {
   properties: {
@@ -221,7 +223,7 @@ export interface ITodoInput extends IInput {
 }
 // ? TD:2:M Add td for TCollectionBlockInput
 
-export type TBasicBlockInput = ILinkToPageInput | IPageInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
+export type TBasicBlockInput = ILinkToPageInput | IPageCreateInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
 // Advanced block input
 export interface ITOCInput extends IInput {
   type: 'table_of_contents',

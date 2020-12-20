@@ -5,7 +5,7 @@ import Nishan from '../../Nishan';
 import "../env"
 
 import { fors, categories, subject } from "../data";
-import { ILinkedDBInput, IPageInput } from '../../types';
+import { ILinkedDBInput, IPageCreateInput } from '../../types';
 
 
 async function main() {
@@ -329,7 +329,7 @@ async function main() {
             ]
           },
         ]
-      } as Omit<IPageInput, "type">))
+      } as Omit<IPageCreateInput, "type">))
   }
 
   const { collection_view_page } = await space.createTRootPages([{

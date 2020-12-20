@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { Operation, error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -83,7 +83,7 @@ export default class Space extends Data<ISpace> {
     this.cache.space.delete(this.id);
   }
 
-  async createTRootPages(options: ((ICollectionViewPageInput | IPageInput) & { position?: RepositionParams })[], execute?: boolean) {
+  async createTRootPages(options: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], execute?: boolean) {
     const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space");
     await this.executeUtil(ops, sync_records, execute);
     return block_map;
@@ -147,7 +147,7 @@ export default class Space extends Data<ISpace> {
    * @param id id of the root page to update
    * @param opt object to configure root page
    */
-  async updateRootPage(id: string, opt: Omit<IPageInput, "type">) {
+  async updateRootPage(id: string, opt: Omit<IPageCreateInput, "type">) {
     await this.updateRootPages([[id, opt]]);
   }
 
@@ -156,7 +156,7 @@ export default class Space extends Data<ISpace> {
    * @param arg Array of tuple, id and object to configure each root page
    * @param multiple whether multiple rootpages should be deleted
    */
-  async updateRootPages(arg: [string, Omit<IPageInput, "type">][]) {
+  async updateRootPages(arg: [string, Omit<IPageCreateInput, "type">][]) {
     const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
     for (let index = 0; index < arg.length; index++) {
       const [id, opts] = arg[index];

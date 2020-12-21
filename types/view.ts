@@ -1,6 +1,7 @@
 import { ParentProps, TViewFormatCover, Node, TViewFilters, ViewAggregations } from "./";
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
+export type TViewUpdateInput = Partial<TView>
 
 export interface IViewQuery2 {
   aggregations: ViewAggregations[],

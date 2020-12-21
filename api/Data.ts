@@ -21,7 +21,9 @@ interface IterateOptions {
   multiple?: boolean
 }
 
-interface GetIterateOptions extends CommonIterateOptions { }
+interface GetIterateOptions extends CommonIterateOptions {
+  method?: TMethodType,
+}
 
 /**
  * A class to update and control data specific stuffs
@@ -334,8 +336,8 @@ export default class Data<T extends TData> extends Operations {
 
   protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
     return await this.#iterate<RD>(args, transform, {
+      method: 'READ',
       ...options,
-      method: 'READ'
     }, undefined, cb);
   }
 

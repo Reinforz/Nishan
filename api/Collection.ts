@@ -248,7 +248,8 @@ class Collection extends Data<ICollection> {
     await this.getIterate<TSchemaUnit & { key: string }>(args, {
       child_ids: Object.keys(data.schema) ?? [],
       multiple,
-      subject_type: "SchemaUnit"
+      subject_type: "SchemaUnit",
+      method: "DELETE"
     }, (child_id) => {
       return { ...data.schema[child_id], key: child_id }
     }, (id) => {

@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, FilterTypes, FilterType, ICollection, TSearchManipViewParam, ICollectionViewPage, TViewUpdateInput, UpdateTypes } from '../types';
+import { NishanArg, IOperation, TView, FilterTypes, FilterType, ICollection, TSearchManipViewParam, ICollectionViewPage, TViewUpdateInput, UpdateTypes, UpdateType } from '../types';
 import { Operation } from '../utils';
 
 const view_class = {
@@ -38,10 +38,9 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 
   // ? FEAT:1:M Create View Map in createViewsUtils method
   async createViews(params: TSearchManipViewParam[], execute?: boolean) {
-    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, params, collection.id, this.id), view_map = this.createViewMap();
-    ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_infos.map(view_info => view_info[0])] }));
-    await this.executeUtil(ops, view_infos.map(view_info => [view_info[0], "collection_view"]), execute)
-    view_infos.map(view_info => view_map[view_info[1]].push(new view_class[view_info[1]]({ id: view_info[0], ...this.getProps() }) as any));
+    const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(collection.schema, params, collection.id, this.id);
+    ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_ids] }));
+    await this.executeUtil(ops, view_records, execute)
     return view_map;
   }
 
@@ -58,6 +57,10 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
       }) as any)
     })
     return view_map;
+  }
+
+  async updateView(arg: UpdateType<TView, TViewUpdateInput>, execute?: boolean) {
+    return (await this.updateViews(typeof arg === "function" ? arg : [arg], execute, false));
   }
 
   async updateViews(args: UpdateTypes<TView, TViewUpdateInput>, execute?: boolean, multiple?: boolean) {

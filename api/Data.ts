@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, TViewType, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -342,7 +342,9 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
-    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_infos: [string, TViewType][] = [];
+    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
+    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
+    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
     Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
 
@@ -360,7 +362,9 @@ export default class Data<T extends TData> extends Operations {
           [`${type}_properties`]: properties
         } as any;
 
-      view_infos.push([view_id, type]);
+      view_ids.push(view_id);
+      view_records.push([view_id, "collection_view"])
+      view_map[type].push(new view_classes[type]({ ...this.getProps(), id: view_id }))
 
       switch (type) {
         case "table":
@@ -469,7 +473,7 @@ export default class Data<T extends TData> extends Operations {
       }))
     }
 
-    return [created_view_ops, view_infos] as [IOperation[], [string, TViewType][]];
+    return [created_view_ops, view_ids, view_map, view_records] as [IOperation[], string[], ITView, UpdateCacheManuallyParam];
   }
 
   protected createCollection(param: ICollectionBlockInput, parent_id: string) {
@@ -479,7 +483,7 @@ export default class Data<T extends TData> extends Operations {
       schema[(opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_')] = opt
     });
 
-    const [created_view_ops, view_infos] = this.createViewsUtils(schema, param.views, collection_id, parent_id);
+    const [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(schema, param.views, collection_id, parent_id);
     created_view_ops.unshift(Operation.collection.update(collection_id, [], {
       id: collection_id,
       schema,
@@ -493,7 +497,7 @@ export default class Data<T extends TData> extends Operations {
       name: param.properties.title
     }));
 
-    return [collection_id, created_view_ops, view_infos] as [string, IOperation[], [string, TViewType][]]
+    return [collection_id, created_view_ops, view_ids, view_map, view_records] as [string, IOperation[], string[], ITView, UpdateCacheManuallyParam]
   }
 
   protected getProps() {
@@ -657,13 +661,10 @@ export default class Data<T extends TData> extends Operations {
   async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
 
-    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
     const CollectionView = require("./CollectionView").default;
     const CollectionViewPage = require('./CollectionViewPage').default;
     const Collection = require('./Collection').default;
     const Block = require('./Block').default;
-
-    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
     const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
       parent_content_id = parent_content_id ?? parent_id;
@@ -709,12 +710,12 @@ export default class Data<T extends TData> extends Operations {
         }
 
         if (content.type === "collection_view_page" || content.type === "collection_view") {
-          const [collection_id, create_view_ops, view_infos] = this.createCollection(content as ICollectionBlockInput, $block_id);
+          const [collection_id, create_view_ops, view_ids, view_map, view_records] = this.createCollection(content as ICollectionBlockInput, $block_id);
           const args: any = {
             id: $block_id,
             type,
             collection_id,
-            view_ids: view_infos.map(view_info => view_info[0]),
+            view_ids,
             properties,
             format,
             parent_id,
@@ -739,15 +740,10 @@ export default class Data<T extends TData> extends Operations {
               id: collection_id,
               ...this.getProps()
             }),
-            views: this.createViewMap()
+            views: view_map
           }
 
-          view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_classes[view_type]({
-            ...this.getProps(),
-            id: view_id
-          }) as any))
-
-          sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, TDataType]))
+          sync_records.push([collection_id, "collection"], ...view_records)
           block_map[type].push(collectionblock_map as any);
           if (content.rows)
             await traverse(content.rows as any, collection_id, "collection")
@@ -784,20 +780,20 @@ export default class Data<T extends TData> extends Operations {
         else if (content.type === "linked_db") {
           const { collection_id, views } = content,
             collection = this.cache.collection.get(collection_id) as ICollection,
-            [created_view_ops, view_infos] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
+            [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
 
           ops.push(Operation.block.set($block_id, [], {
             id: $block_id,
             version: 1,
             type: 'collection_view',
             collection_id,
-            view_ids: view_infos.map(view_info => view_info[0]),
+            view_ids,
             parent_id,
             parent_table,
             alive: true,
           }),
             ...created_view_ops);
-          sync_records.push([collection_id, "collection"], ...view_infos.map(view_info => [view_info[0], "collection_view"] as [string, keyof RecordMap]));
+          sync_records.push([collection_id, "collection"], ...view_records);
           const collectionblock_map: ITCollectionBlock = {
             block: new CollectionView({
               ...this.getProps(),
@@ -807,13 +803,8 @@ export default class Data<T extends TData> extends Operations {
               id: collection_id,
               ...this.getProps()
             }),
-            views: this.createViewMap()
+            views: view_map
           }
-
-          view_infos.map(([view_id, view_type]) => collectionblock_map.views[view_type].push(new view_classes[view_type]({
-            ...this.getProps(),
-            id: view_id
-          }) as any))
 
           block_map[content.type].push(collectionblock_map)
         }

@@ -7,7 +7,7 @@ import {
   TExportType,
   PageCreateContentParam,
   ISpaceView,
-  IPage, TBlock, FilterTypes, FilterType
+  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType
 } from "../types";
 import Permissions from "./Permissions";
 
@@ -136,8 +136,22 @@ export default class Page extends Permissions<IPage> {
     return block_map;
   }
 
-  async updateBlocks() {
+  async updateBlock(args: UpdateType<TBlock, TBlockInput>, execute?: boolean) {
+    return (await this.updateBlocks(typeof args === "function" ? args : [args], execute, false))
+  }
 
+  async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, execute?: boolean, multiple?: boolean) {
+    const block_map = this.createBlockMap();
+    await this.updateIterate<TBlock, TBlockInput>(args, {
+      multiple,
+      execute,
+      child_ids: this.getCachedData().content,
+      subject_type: "Block",
+      child_type: "block"
+    }, (child_id) => this.cache.block.get(child_id), async (_, data) => {
+      block_map[data.type].push(await this.createClass(data.type, data.id))
+    })
+    return block_map;
   }
 
   /**

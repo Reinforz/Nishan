@@ -3,11 +3,6 @@ import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
-/**
- * A class to update and control data specific stuffs
- * @noInheritDoc
- */
-
 interface CommonIterateOptions {
   child_ids: string[],
   subject_type: TSubjectType,
@@ -27,6 +22,11 @@ interface IterateOptions {
 }
 
 interface GetIterateOptions extends CommonIterateOptions { }
+
+/**
+ * A class to update and control data specific stuffs
+ * @noInheritDoc
+ */
 
 export default class Data<T extends TData> extends Operations {
   id: string;
@@ -244,24 +244,33 @@ export default class Data<T extends TData> extends Operations {
   }
 
   // cb1 is passed from the various iterate methods, cb2 is passed from the actual method
-  #iterate = async<TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateOptions, cb1?: (id: string) => any, cb2?: (id: string, data: TD) => void | Promise<any>) => {
+  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions, cb1?: (id: string, data: TD, updated_data?: RD) => any, cb2?: ((id: string, data: TD, updated_data: RD) => any)) => {
     await this.initializeCache();
     const matched_ids: string[] = [], { multiple = true, method, subject_type, child_ids } = options;
 
-    const iterateUtil = async (child_id: string, child_data: TD) => {
-      cb1 && await cb1(child_id);
-      cb2 && await cb2(child_id, child_data);
+    const iterateUtil = async (child_id: string, child_data: TD, updated_data?: RD) => {
+      cb1 && await cb1(child_id, child_data, updated_data);
+      cb2 && await cb2(child_id, child_data, updated_data as any);
       this.logger && this.logger(method, subject_type, child_id);
       matched_ids.push(child_id);
     }
 
     if (Array.isArray(args)) {
       for (let index = 0; index < args.length; index++) {
-        const child_id = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
-        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
-        else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
-        if (child_data && matches)
-          await iterateUtil(child_id, child_data)
+        const arg = args[index];
+        if (Array.isArray(arg)) {
+          const [child_id, updated_data] = arg, child_data = transform(child_id), matches = child_ids.includes(child_id);
+          if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+          else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
+          if (child_data && matches)
+            await iterateUtil(child_id, child_data, updated_data)
+        } else if (typeof arg === "string") {
+          const child_id = arg, child_data = transform(child_id), matches = child_ids.includes(child_id);
+          if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
+          else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
+          if (child_data && matches)
+            await iterateUtil(child_id, child_data)
+        }
         if (!multiple && matched_ids.length === 1) break;
       }
     } else {
@@ -269,9 +278,9 @@ export default class Data<T extends TData> extends Operations {
         const child_id = child_ids[index], child_data = transform(child_id);
         if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
         else {
-          const matches = args ? args(child_data, index) : true;
+          const matches = args ? await args(child_data, index) : true;
           if (child_data && matches)
-            await iterateUtil(child_id, child_data)
+            await iterateUtil(child_id, child_data, matches as RD)
         }
         if (!multiple && matched_ids.length === 1) break;
       }
@@ -280,7 +289,7 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void) {
+  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     const { child_type, child_path, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     const matched_ids = await this.#iterate(args, transform, {
@@ -301,39 +310,20 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions, transform: ((id: string) => TD), cb?: (id: string, data: RD) => void) {
-    await this.initializeCache();
-    const { child_ids, child_type, subject_type, execute = this.defaultExecutionState, multiple = true } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions, transform: ((id: string) => TD), cb?: (id: string, data: TD, updated_data: RD) => any) {
+    const { child_type, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const [child_id, updated_data] = args[index], child_data = transform(child_id), matches = child_ids.includes(child_id);
-        if (matches) {
-          cb && cb(child_id, updated_data);
-          this.logger && this.logger("UPDATE", subject_type, child_id)
-          matched_ids.push(child_id);
-          if (child_type) {
-            ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
-            sync_records.push([child_id, child_type])
-          }
-        }
-        if (!multiple && matched_ids.length === 1) break;
+
+    await this.#iterate(args, transform, {
+      method: "UPDATE",
+      ...options
+    }, (child_id, child_data, updated_data) => {
+      if (child_type) {
+        ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
+        sync_records.push([child_id, child_type])
       }
-    } else {
-      for (let index = 0; index < child_ids.length; index++) {
-        const child_id = child_ids[index], child_data = transform(child_id), updated_data = await args(child_data, index);
-        if (updated_data) {
-          cb && cb(child_id, updated_data);
-          if (child_type) {
-            ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
-            sync_records.push([child_id, child_type])
-          }
-          this.logger && this.logger("UPDATE", subject_type, child_id)
-          matched_ids.push(child_id);
-        }
-        if (!multiple && matched_ids.length === 1) break;
-      }
-    }
+    }, cb);
+
     if (ops.length !== 0) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
       sync_records.push(this.id);

@@ -136,6 +136,10 @@ export default class Page extends Permissions<IPage> {
     return block_map;
   }
 
+  async updateBlocks() {
+
+  }
+
   /**
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter

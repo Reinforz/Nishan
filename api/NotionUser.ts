@@ -172,6 +172,19 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
   }
 
+  async deleteSpaces(ids: string[]) {
+    for (let index = 0; index < ids.length; index++) {
+      const spaceId = ids[index];
+      await this.enqueueTask({
+        eventName: "deleteSpace",
+        request: {
+          spaceId
+        }
+      })
+      this.logger && this.logger("DELETE", "Space", spaceId);
+    }
+  }
+
   // ? FEAT:1:M Add deleteSpaces methods
 
   async getTPagesById(ids: string[]) {

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings } from '../types';
+import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -65,40 +65,15 @@ class NotionUser extends Data<INotionUser> {
   }
 
   /**
-   * Get a space that is available on the user's account
-   * @param arg A predicate filter function or a string
-   * @returns The obtained Space object
-   */
-  async getSpace(arg?: FilterType<ISpace>) {
-    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-
-  /**
-   * Get multiple space objects on the user's account as an array
-   * @param arg empty or A predicate function or a string array of ids
-   * @returns An array of space objects
-   */
-  async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
-    return (await this.getIterate<ISpace>(args, {
-      multiple,
-      subject_type: "Space",
-      child_ids: this.#getSpaceIds(),
-    }, (space_id) => this.cache.space.get(space_id))).map((id) => new Space({
-      ...this.getProps(),
-      id
-    }));
-  }
-
-  /**
   * Create and return a new Space
   * @param opt Object for configuring the Space options
   * @returns Newly created Space object
   */
   async createWorkSpace(opt: UpdatableSpaceParams) {
-    return await this.createWorkSpaces([opt]);
+    return (await this.createWorkSpaces([opt]))[0];
   };
 
-  async createWorkSpaces(opts: UpdatableSpaceParams[]) {
+  async createWorkSpaces(opts: UpdatableSpaceParams[], execute?: boolean) {
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], space_ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
@@ -148,18 +123,57 @@ class NotionUser extends Data<INotionUser> {
         Operation.space.listAfter(space_id, ['pages'], { id: page_id }));
       sync_records.push([space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], page_id)
       this.logger && this.logger(`CREATE`, 'Space', space_id);
-    }
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(sync_records);
+    };
+
+    await this.executeUtil(ops, sync_records, execute);
     return space_ids.map(space_id => new Space({
       id: space_id,
       ...this.getProps()
     }))
   }
 
+  /**
+   * Get a space that is available on the user's account
+   * @param arg A predicate filter function or a string
+   * @returns The obtained Space object
+   */
+  async getSpace(arg?: FilterType<ISpace>) {
+    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
+  }
+
+  /**
+   * Get multiple space objects on the user's account as an array
+   * @param arg empty or A predicate function or a string array of ids
+   * @returns An array of space objects
+   */
+  async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
+    return (await this.getIterate<ISpace>(args, {
+      multiple,
+      subject_type: "Space",
+      child_ids: this.#getSpaceIds(),
+    }, (space_id) => this.cache.space.get(space_id))).map((id) => new Space({
+      ...this.getProps(),
+      id
+    }));
+  }
+
+  // FIX:1:H Fix the updateSpace method
+  async updateSpace(arg: UpdateType<ISpace, UpdatableSpaceParams>, execute?: boolean) {
+    return (await this.updateSpaces(typeof arg === "function" ? arg : [arg], execute, false))[0]
+  }
+
+  async updateSpaces(args: UpdateTypes<ISpace, UpdatableSpaceParams>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<ISpace, UpdatableSpaceParams>(args, {
+      child_ids: this.#getSpaceIds(),
+      subject_type: "Space",
+      child_type: "space",
+      multiple,
+      execute
+    }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
+  }
+
   // ? FEAT:1:M Add deleteSpaces methods
 
-  // ? FEAT:1:M Update cache for cvp views and collection
   async getTPagesById(ids: string[]) {
     const tpage_map: ITPage = { page: [], collection_view_page: [] }, tpage_content_ids: string[] = [];
 
@@ -170,12 +184,10 @@ class NotionUser extends Data<INotionUser> {
       const page = this.cache.block.get(id) as TPage;
       if (page?.type === "page") {
         tpage_map.page.push(new Page({ ...this.getProps(), id: page.id }))
-        if (page.content) {
+        if (page.content)
           tpage_content_ids.push(...page.content);
-        }
-      } else if (page) {
+      } else if (page?.type === "collection_view_page")
         tpage_map.collection_view_page.push(new CollectionViewPage({ ...this.getProps(), id: page.id }));
-      }
     }
 
     if (tpage_content_ids.length)

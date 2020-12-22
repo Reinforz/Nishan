@@ -94,8 +94,6 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
       child_ids: this.getCachedData().view_ids
     }, (view_id) => this.cache.collection_view.get(view_id))
   }
-
-  // ? FEAT:1:H Create updateView(s) methods, take help from view.updateView method
 }
 
 export default CollectionBlock;

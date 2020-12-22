@@ -319,9 +319,9 @@ export default class Data<T extends TData> extends Operations {
     await this.#iterate(args, transform, {
       method: "UPDATE",
       ...options
-    }, (child_id, child_data, updated_data) => {
+    }, (child_id, _, updated_data) => {
       if (child_type) {
-        ops.push(Operation[child_type].update(child_id, [], { ...child_data, ...updated_data, ...updated_props }));
+        ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...updated_props }));
         sync_records.push([child_id, child_type])
       }
     }, cb);

@@ -159,7 +159,7 @@ class NotionUser extends Data<INotionUser> {
 
   // ? FEAT:1:M Add deleteSpaces methods
 
-  // ? FEAT:1:M Update cache for cvp views and collection 
+  // ? FEAT:1:M Update cache for cvp views and collection
   async getTPagesById(ids: string[]) {
     const tpage_map: ITPage = { page: [], collection_view_page: [] }, tpage_content_ids: string[] = [];
 
@@ -168,11 +168,14 @@ class NotionUser extends Data<INotionUser> {
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index];
       const page = this.cache.block.get(id) as TPage;
-      if (page.type === "page") {
+      if (page?.type === "page") {
         tpage_map.page.push(new Page({ ...this.getProps(), id: page.id }))
-        tpage_content_ids.push(...page.content);
-      } else
+        if (page.content) {
+          tpage_content_ids.push(...page.content);
+        }
+      } else if (page) {
         tpage_map.collection_view_page.push(new CollectionViewPage({ ...this.getProps(), id: page.id }));
+      }
     }
 
     if (tpage_content_ids.length)

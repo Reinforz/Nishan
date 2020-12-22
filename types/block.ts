@@ -153,7 +153,7 @@ export interface IPageCreateInput extends IInput {
 }
 
 export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "contents">>;
-
+export type ICollectionViewPageUpdateInput = Partial<Pick<ICollectionViewPage, "properties" | "format">>
 export interface ICommonTextInput extends IInput {
   properties: {
     title: string[][]

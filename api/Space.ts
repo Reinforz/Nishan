@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType, ICollectionViewPageUpdateInput } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -33,6 +33,10 @@ export default class Space extends Data<ISpace> {
       }
     }
     return target_space_view;
+  }
+
+  getCollectionIds() {
+    return this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page").map(cvp => cvp.collection_id) as string[]
   }
 
   /**
@@ -107,19 +111,6 @@ export default class Space extends Data<ISpace> {
     return trootpage_map;
   }
 
-  async getRootCollection(arg?: FilterType<ICollection>) {
-    return (await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true))[0]
-  }
-
-  async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
-    const collection_ids = this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page").map(cvp => cvp.collection_id) as string[];
-    return (await this.getIterate(args, {
-      subject_type: "Collection",
-      multiple,
-      child_ids: collection_ids,
-    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }));
-  }
-
   /**
    * Update a singular root page in the space
    * @param id id of the root page to update
@@ -134,9 +125,9 @@ export default class Space extends Data<ISpace> {
    * @param arg Array of tuple, id and object to configure each root page
    * @param multiple whether multiple rootpages should be deleted
    */
-  async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+  async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, execute?: boolean, multiple?: boolean) {
     const trootpage_map = this.createTRootPageMap();
-    await this.updateIterate<TPage, IPageUpdateInput>(args, {
+    await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>(args, {
       child_ids: this.getCachedData().pages,
       subject_type: "Page",
       child_type: "block",
@@ -167,6 +158,32 @@ export default class Space extends Data<ISpace> {
       child_type: "block",
       subject_type: "Page"
     }, (block_id) => this.cache.block.get(block_id) as TPage)
+  }
+
+  async getRootCollection(arg?: FilterType<ICollection>) {
+    return (await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true))[0]
+  }
+
+  async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
+    return (await this.getIterate(args, {
+      subject_type: "Collection",
+      multiple,
+      child_ids: this.getCollectionIds(),
+    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }));
+  }
+
+  async updateRootCollection(arg: UpdateType<ICollection, Partial<ICollection>>, execute?: boolean) {
+    return (await this.updateRootCollections(typeof arg === "function" ? arg : [arg], execute, false))[0]
+  }
+
+  async updateRootCollections(args: UpdateTypes<ICollection, Partial<ICollection>>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<ICollection, Partial<ICollection>>(args, {
+      child_ids: this.getCollectionIds(),
+      subject_type: "Collection",
+      child_type: "collection",
+      execute,
+      multiple
+    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }))
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: boolean) {

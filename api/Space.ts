@@ -1,9 +1,9 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { Operation, error } from '../utils';
+import { error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole } from '../types';
+import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -80,7 +80,6 @@ export default class Space extends Data<ISpace> {
       }
     });
     this.logger && this.logger("DELETE", "Space", this.id);
-    this.cache.space.delete(this.id);
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], execute?: boolean) {
@@ -126,8 +125,8 @@ export default class Space extends Data<ISpace> {
    * @param id id of the root page to update
    * @param opt object to configure root page
    */
-  async updateRootPage(id: string, opt: Omit<IPageCreateInput, "type">) {
-    await this.updateRootPages([[id, opt]]);
+  async updateRootPage(arg: UpdateType<TPage, IPageUpdateInput>, execute?: boolean,) {
+    return await this.updateRootPages(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
   /**
@@ -135,18 +134,15 @@ export default class Space extends Data<ISpace> {
    * @param arg Array of tuple, id and object to configure each root page
    * @param multiple whether multiple rootpages should be deleted
    */
-  async updateRootPages(arg: [string, Omit<IPageCreateInput, "type">][]) {
-    const data = this.getCachedData(), ops: IOperation[] = [], current_time = Date.now(), block_ids: string[] = [];
-    for (let index = 0; index < arg.length; index++) {
-      const [id, opts] = arg[index];
-      block_ids.push(id);
-      if (data.pages.includes(id))
-        ops.push(Operation.block.update(id, [], { ...opts, last_edited_time: current_time }))
-      else
-        throw new Error(error(`Space:${data.id} is not the parent of RootPage:${id}`));
-    }
-    await this.saveTransactions(ops);
-    await this.updateCacheManually(block_ids);
+  async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+    const trootpage_map = this.createTRootPageMap();
+    await this.updateIterate<TPage, IPageUpdateInput>(args, {
+      child_ids: this.getCachedData().pages,
+      subject_type: "Page",
+      child_type: "block",
+      execute,
+      multiple
+    }, (id) => this.cache.block.get(id) as TPage, (id, data) => trootpage_map[data.type].push(new trootpage_class[data.type]({ ...this.getProps(), id }) as any));
   }
 
   /**

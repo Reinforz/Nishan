@@ -143,6 +143,7 @@ export interface IColumnListInput extends IInput {
   format?: {},
   contents: TBlockInput[]
 }
+
 export interface IPageCreateInput extends IInput {
   type: 'page',
   properties: PageProps,
@@ -151,7 +152,7 @@ export interface IPageCreateInput extends IInput {
   contents?: TBlockInput[]
 }
 
-export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "type" | "contents">>;
+export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "contents">>;
 
 export interface ICommonTextInput extends IInput {
   properties: {

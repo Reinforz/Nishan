@@ -113,33 +113,12 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    await this.initializeCache();
-    this.initializeChildData();
-    const data = this.getCachedData(), collections: Collection[] = [], collection_ids = (((data[this.child_path] as string[]).map((id) => this.cache.block.get(id) as TPage)).filter((cvp) => cvp?.type === "collection_view_page") as ICollectionViewPage[]).map(cvp => cvp.collection_id);
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const collection_id = args[index];
-        const should_add = collection_ids.includes(collection_id);
-        if (should_add) {
-          collections.push(new Collection({ ...this.getProps(), id: collection_id }))
-          this.logger && this.logger("READ", "Collection", collection_id);
-        }
-        if (!multiple && collections.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < collection_ids.length; index++) {
-        const collection_id = collection_ids[index], collection = this.cache.collection.get(collection_id) as ICollection;
-        const should_add = (typeof args === "function" ? await args(collection, index) : true);
-        if (should_add) {
-          collections.push(new Collection({ ...this.getProps(), id: collection_id }))
-          this.logger && this.logger("READ", "Collection", collection_id);
-        }
-        if (!multiple && collections.length === 1) break;
-      }
-    }
-    return collections;
+    const collection_ids = this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page").map(cvp => cvp.collection_id) as string[];
+    return (await this.getIterate(args, {
+      subject_type: "Collection",
+      multiple,
+      child_ids: collection_ids,
+    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }));
   }
 
   /**

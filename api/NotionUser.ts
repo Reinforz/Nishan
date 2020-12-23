@@ -172,16 +172,26 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
   }
 
-  async deleteSpaces(ids: string[]) {
-    for (let index = 0; index < ids.length; index++) {
-      const spaceId = ids[index];
+  async deleteSpace(arg: FilterType<ISpace>) {
+    return (await this.deleteSpaces(typeof arg === "string" ? [arg] : arg, false));
+  }
+
+  async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
+    const matches_ids = await this.getIterate<ISpace>(args, {
+      child_ids: this.#getSpaceIds(),
+      multiple,
+      subject_type: "Space",
+      method: "DELETE"
+    }, (child_id) => this.cache.space.get(child_id));
+
+    for (let index = 0; index < matches_ids.length; index++) {
+      const spaceId = matches_ids[index];
       await this.enqueueTask({
         eventName: "deleteSpace",
         request: {
           spaceId
         }
       })
-      this.logger && this.logger("DELETE", "Space", spaceId);
     }
   }
 

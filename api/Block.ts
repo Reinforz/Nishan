@@ -91,7 +91,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
         format,
         last_edited_time: Date.now()
       }),
-    ], [data.id], execute)
+    ], data.id, execute)
   }
 
   /**
@@ -104,7 +104,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
     this.logger && this.logger("UPDATE", "Block", data.id);
     await this.executeUtil([
       this.updateOp([], { type })
-    ], [data.id], execute)
+    ], data.id, execute)
   }
 
   /**
@@ -122,7 +122,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       }),
       is_root_page ? Operation.space.listRemove(data.space_id, ['pages'], { id: data.id }) : Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
       is_root_page ? Operation.space.set(data.space_id, ['last_edited_time'], current_time) : Operation.block.set(data.parent_id, ['last_edited_time'], current_time)
-    ], [this.id], execute)
+    ], this.id, execute)
   }
 
   /**

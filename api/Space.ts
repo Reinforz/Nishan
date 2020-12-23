@@ -87,9 +87,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], execute?: boolean) {
-    const [ops, sync_records, block_map] = await this.nestedContentPopulate(options, this.id, "space");
-    await this.executeUtil(ops, sync_records, execute);
-    return block_map;
+    return await this.nestedContentPopulateAndExecute(options, execute);
   }
 
   async getTRootPage(args?: FilterTypes<IPage | ICollectionViewPage>) {

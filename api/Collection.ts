@@ -40,9 +40,7 @@ class Collection extends Data<ICollection> {
    * @param opts Array of Objects for configuring template options
    */
   async createTemplates(rows: (Omit<IPageCreateInput, "type">)[], execute?: boolean) {
-    const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows.map((row) => ({ ...row, is_template: true })) as any, this.id, "collection");
-    await this.executeUtil(ops, sync_records, execute);
-    return block_map;
+    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: true })) as any, execute);
   }
 
   /**
@@ -111,9 +109,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async createPages(rows: Omit<IPageCreateInput, "type">[], execute?: boolean) {
-    const [ops, sync_records, block_map] = await this.nestedContentPopulate(rows.map((row) => ({ ...row, is_template: false })) as any, this.id, "collection")
-    await this.executeUtil(ops, sync_records, execute);
-    return block_map;
+    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: false })) as any, execute)
   }
 
   async getPage(arg?: FilterType<IPage>) {

@@ -41,7 +41,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -77,7 +77,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -109,7 +109,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 }

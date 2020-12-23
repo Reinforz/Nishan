@@ -83,7 +83,7 @@ class View<T extends TView> extends Data<T> {
         [`${data.type}_properties`]: properties
       }
     })]);
-    await this.updateCacheManually([this.id]);
+    await this.updateCacheManually(this.id);
   }
 
   async getViewSchemaUnit(arg?: FilterType<ViewFormatProperties>) {
@@ -154,7 +154,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -197,7 +197,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -229,7 +229,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -277,7 +277,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -322,7 +322,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -355,7 +355,7 @@ class View<T extends TView> extends Data<T> {
           ...data.query2
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 
@@ -389,7 +389,7 @@ class View<T extends TView> extends Data<T> {
           [`${data.type}_properties`]: updated_properties
         }
       })]);
-      await this.updateCacheManually([this.id]);
+      await this.updateCacheManually(this.id);
     }
   }
 }

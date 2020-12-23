@@ -96,7 +96,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       role,
       ...(options ?? {})
     })])
-    await this.updateCacheManually([this.id])
+    await this.updateCacheManually(this.id)
   }
 
   async updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
@@ -107,7 +107,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       role,
       ...(options ?? {})
     })])
-    await this.updateCacheManually([this.id])
+    await this.updateCacheManually(this.id)
   }
 
   async removePublicPermission() {
@@ -115,7 +115,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       type: "public_permission",
       role: "none"
     })])
-    await this.updateCacheManually([this.id])
+    await this.updateCacheManually(this.id)
   }
 
   async updateSpacePermission(role: TSpacePermissionRole) {
@@ -123,7 +123,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       type: "space_permission",
       role,
     })]);
-    await this.updateCacheManually([this.id])
+    await this.updateCacheManually(this.id)
   }
 
   async removeSpacePermission() {
@@ -131,6 +131,6 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       type: "space_permission",
       role: "none",
     })]);
-    await this.updateCacheManually([this.id])
+    await this.updateCacheManually(this.id)
   }
 }

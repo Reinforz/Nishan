@@ -413,12 +413,15 @@ export default class Queries extends Cache {
     })
   }
 
-  async updateCacheManually(arg: UpdateCacheManuallyParam) {
+  async updateCacheManually(arg: UpdateCacheManuallyParam | string) {
     const sync_record_values: SyncRecordValuesParams[] = [];
-    arg.forEach((arg: string | [string, TDataType]) => {
-      if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
-      else if (typeof arg === "string") sync_record_values.push({ id: arg, table: "block", version: 0 })
-    })
+    if (Array.isArray(arg))
+      arg.forEach((arg: string | [string, TDataType]) => {
+        if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
+        else if (typeof arg === "string") sync_record_values.push({ id: arg, table: "block", version: 0 })
+      })
+    else if (typeof arg === "string")
+      sync_record_values.push({ id: arg, table: "block", version: 0 })
     await this.syncRecordValues(sync_record_values);
   }
 

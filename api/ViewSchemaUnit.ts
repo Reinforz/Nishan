@@ -23,7 +23,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         [`${data.type}_properties`]: container.map(properties => properties.property === this.schema_id ? { ...properties, ...arg } : properties)
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async toggleHide(should_hide?: boolean) {
@@ -34,7 +34,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         [`${data.type}_properties`]: container.map(properties => properties.property === this.schema_id ? { ...properties, visible: should_hide ?? (!properties.visible) } : properties)
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async createSort(direction: "ascending" | "descending" = "ascending") {
@@ -50,7 +50,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         sort: container
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async updateSort(arg: ((T: ViewSorts) => Promise<ViewSorts>)) {
@@ -79,7 +79,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         sort: container
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async deleteSort(arg: Predicate<ViewSorts>) {
@@ -107,7 +107,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         sort: container.filter(sort => sort)
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async createFilter(filter: [TViewFiltersOperator, TViewFiltersType, string]) {
@@ -144,7 +144,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         filter: container
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async updateFilter(arg: ((T: IViewFilters) => Promise<IViewFilters>)) {
@@ -173,7 +173,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         filter: container
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async deleteFilter(arg: Predicate<IViewFilters>) {
@@ -204,7 +204,7 @@ export default class ViewSchemaUnit extends Data<TView> {
         }
       }
     })])
-    this.updateCacheManually([this.id]);
+    this.updateCacheManually(this.id);
   }
 
   async createAggregator(aggregator: TViewAggregationsAggregators) {
@@ -220,7 +220,7 @@ export default class ViewSchemaUnit extends Data<TView> {
             aggregations: container
           }
         })])
-        this.updateCacheManually([this.id]);
+        this.updateCacheManually(this.id);
       } else
         warn(`ViewSchemaUnit:${this.schema_id} already contains an aggregrator`)
     }
@@ -242,7 +242,7 @@ export default class ViewSchemaUnit extends Data<TView> {
           aggregations: container
         }
       })])
-      this.updateCacheManually([this.id]);
+      this.updateCacheManually(this.id);
     }
   }
 
@@ -256,7 +256,7 @@ export default class ViewSchemaUnit extends Data<TView> {
           aggregations: container.filter(aggregrator => aggregrator.property !== this.schema_id)
         }
       })])
-      this.updateCacheManually([this.id]);
+      this.updateCacheManually(this.id);
     }
   }
 }

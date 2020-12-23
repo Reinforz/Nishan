@@ -18,28 +18,25 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
   // ? FEAT:1:M Change schema_id method
   // ? FEAT:1:H Change column datatype
 
-  async update(arg: T) {
+  async update(arg: T, execute?: boolean) {
     const data = super.getCachedData();
-    data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg }
-    this.saveTransactions([this.updateOp([], { schema: data.schema })])
-    this.updateCacheManually([this.id]);
+    data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute)
     this.logger && this.logger("UPDATE", "SchemaUnit", this.id);
   }
 
-  async delete() {
+  async delete(execute?: boolean) {
     const data = super.getCachedData();
     delete data.schema[this.schema_id];
-    this.saveTransactions([this.updateOp([], { schema: data.schema })])
-    this.updateCacheManually([this.id]);
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute);
     this.logger && this.logger("DELETE", "SchemaUnit", this.id);
   }
 
-  async duplicate() {
+  async duplicate(execute?: boolean) {
     const data = super.getCachedData(),
       id = shortid();
-    data.schema[id] = data.schema[this.schema_id];
-    this.saveTransactions([this.updateOp([], { schema: data.schema })])
-    this.updateCacheManually([this.id]);
+    data.schema[id] = data.schema[this.schema_id];;
+    await this.executeUtil([this.updateOp([], { schema: data.schema })], [this.id], execute)
     this.logger && this.logger("CREATE", "SchemaUnit", id);
   }
 

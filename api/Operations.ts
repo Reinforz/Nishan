@@ -13,15 +13,15 @@ export default class Operations extends Mutations {
     this.sync_records = args.sync_records || []
   }
 
-  pushOperations(operations: IOperation[]) {
+  protected pushOperations(operations: IOperation[]) {
     this.stack.push(...operations)
   }
 
-  pushSyncRecords(sync_records: UpdateCacheManuallyParam) {
+  protected pushSyncRecords(sync_records: UpdateCacheManuallyParam) {
     this.sync_records.push(...sync_records)
   }
 
-  pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
+  protected pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
     if (sync_records.length !== 0)
       this.pushSyncRecords(sync_records)
     if (operations.length !== 0)

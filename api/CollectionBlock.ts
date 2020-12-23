@@ -29,14 +29,12 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    */
   async getCollection() {
     await this.initializeCache();
-    const data = this.getCachedData();
     return new Collection({
       ...this.getProps(),
-      id: data.collection_id,
+      id: this.getCachedData().collection_id,
     });
   }
 
-  // ? FEAT:1:M Create View Map in createViewsUtils method
   async createViews(params: TSearchManipViewParam[], execute?: boolean) {
     const ops: IOperation[] = [], data = this.getCachedData(), collection = this.cache.collection.get(data.collection_id) as ICollection, [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(collection.schema, params, collection.id, this.id);
     ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [...data.view_ids, ...view_ids] }));

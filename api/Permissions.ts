@@ -8,6 +8,15 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   /**
+   * Share the current page with the user
+   * @param email email of the user to add
+   * @param role Role of the added user
+   */
+  async addSharedUser(email: string, role: TPermissionRole) {
+    return (await this.addSharedUsers([[email, role]]))?.[0]
+  }
+
+  /**
    * Share page to users with specific permissions
    * @param args array of userid and role of user to share pages to
    */
@@ -36,15 +45,6 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   /**
-   * Share the current page with the user
-   * @param email email of the user to add
-   * @param role Role of the added user
-   */
-  async addSharedUser(email: string, role: TPermissionRole) {
-    return (await this.addSharedUsers([[email, role]]))?.[0]
-  }
-
-  /**
    * Update the role of the current user based on their id
    * @param id Id of the user to update
    * @param role new Role of the user to update
@@ -57,7 +57,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
    * Update the role of the current users based on their id
    * @param args array of array [id of the user, role type for the user]
    */
-  async updateSharedUsers(args: [string, TPermissionRole][]) {
+  async updateSharedUsers(args: [string, TPermissionRole][], execute?: boolean) {
     const data = this.getCachedData(), ops: IOperation[] = [];
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
@@ -70,8 +70,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       })
     }
     ops.push(this.updateOp(["last_edited_time"], Date.now()));
-    await this.saveTransactions(ops);
-    await this.updateCacheManually([data.id, [data.space_id, "space"]]);
+    await this.executeUtil(ops, [data.id, [data.space_id, "space"]], execute);
   }
 
   /**
@@ -90,47 +89,42 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
     return await this.updateSharedUsers(ids.map(id => [id, "none"]));
   }
 
-  async addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
-    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  async addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, execute?: boolean) {
+    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role,
       ...(options ?? {})
-    })])
-    await this.updateCacheManually(this.id)
+    })], this.id, execute)
   }
 
-  async updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
+  async updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, execute?: boolean) {
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission;
-    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
       ...(permission ?? {}),
       type: "public_permission",
       role,
       ...(options ?? {})
-    })])
-    await this.updateCacheManually(this.id)
+    })], this.id, execute)
   }
 
-  async removePublicPermission() {
-    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  async removePublicPermission(execute?: boolean) {
+    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role: "none"
-    })])
-    await this.updateCacheManually(this.id)
+    })], this.id, execute)
   }
 
-  async updateSpacePermission(role: TSpacePermissionRole) {
-    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  async updateSpacePermission(role: TSpacePermissionRole, execute?: boolean) {
+    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role,
-    })]);
-    await this.updateCacheManually(this.id)
+    })], this.id, execute)
   }
 
-  async removeSpacePermission() {
-    await this.saveTransactions([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  async removeSpacePermission(execute?: boolean) {
+    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role: "none",
-    })]);
-    await this.updateCacheManually(this.id)
+    })], this.id, execute)
   }
 }

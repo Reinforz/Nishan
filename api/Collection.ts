@@ -3,7 +3,7 @@ import { warn } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageCreateInput, UpdatableCollectionParam, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, } from "../types";
+import { ICollection, IPageCreateInput, ICollectionUpdateInput, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, } from "../types";
 import Page from './Page';
 
 /**
@@ -27,7 +27,7 @@ class Collection extends Data<ICollection> {
    * Update the collection
    * @param opt `CollectionUpdateParam`
    */
-  async update(opt: UpdatableCollectionParam, execute?: boolean) {
+  async update(opt: ICollectionUpdateInput, execute?: boolean) {
     const [op, update] = this.updateCacheLocally(opt, ["description", "name", "icon"])
     await this.executeUtil([
       op

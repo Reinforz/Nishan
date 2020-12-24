@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { error } from '../utils';
 
-import { ICollectionViewPageInput, UpdatableSpaceParams, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType, ICollectionViewPageUpdateInput } from '../types';
+import { ICollectionViewPageInput, ISpaceUpdateInput, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType, ICollectionViewPageUpdateInput } from '../types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
@@ -57,7 +57,7 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  async update(opt: UpdatableSpaceParams, execute?: boolean) {
+  async update(opt: ISpaceUpdateInput, execute?: boolean) {
     const [op, update] = this.updateCacheLocally(opt, [
       'icon',
       "disable_move_to_space",

@@ -26,19 +26,19 @@ export type UpdatableSpaceKeys = "name" | "icon" |
   "invite_link_enabled" |
   "beta_enabled";
 
-export type UpdatableSpaceParams = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
+export type ISpaceUpdateInput = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
 
 export type UpdatableCollectionKeys = "name" | "icon" | "description";
-export type UpdatableCollectionParam = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
+export type ICollectionUpdateInput = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
 
 export type UpdatableNotionUserKeys = 'family_name' | 'given_name' | 'profile_photo';
-export type UpdatableNotionUserParam = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;
+export type INotionUserUpdateInput = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;
 
 export type UpdatableSpaceViewKeys = 'notify_desktop' | 'notify_email' | 'notify_mobile' | 'joined' | 'created_getting_started';
 export type ISpaceViewUpdateInput = Partial<Pick<ISpaceView, UpdatableSpaceViewKeys>>;
 
 export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
-export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
+export type IUserSettingsUpdateInput = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
 
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 

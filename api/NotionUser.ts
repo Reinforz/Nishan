@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { UpdatableNotionUserParam, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, UpdatableSpaceParams, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType } from '../types';
+import { INotionUserUpdateInput, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, ISpaceUpdateInput, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -52,7 +52,7 @@ class NotionUser extends Data<INotionUser> {
    * @param opt `UpdatableNotionUserParam`
    */
 
-  async update(opt: UpdatableNotionUserParam) {
+  async update(opt: INotionUserUpdateInput) {
     const [op, update] = this.updateCacheLocally(opt, ['family_name',
       'given_name',
       'profile_photo']);
@@ -69,11 +69,11 @@ class NotionUser extends Data<INotionUser> {
   * @param opt Object for configuring the Space options
   * @returns Newly created Space object
   */
-  async createWorkSpace(opt: UpdatableSpaceParams) {
+  async createWorkSpace(opt: ISpaceUpdateInput) {
     return (await this.createWorkSpaces([opt]))[0];
   };
 
-  async createWorkSpaces(opts: UpdatableSpaceParams[], execute?: boolean) {
+  async createWorkSpaces(opts: ISpaceUpdateInput[], execute?: boolean) {
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], space_ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
@@ -158,12 +158,12 @@ class NotionUser extends Data<INotionUser> {
   }
 
   // FIX:1:H Fix the updateSpace method
-  async updateSpace(arg: UpdateType<ISpace, UpdatableSpaceParams>, execute?: boolean) {
+  async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>, execute?: boolean) {
     return (await this.updateSpaces(typeof arg === "function" ? arg : [arg], execute, false))[0]
   }
 
-  async updateSpaces(args: UpdateTypes<ISpace, UpdatableSpaceParams>, execute?: boolean, multiple?: boolean) {
-    return (await this.updateIterate<ISpace, UpdatableSpaceParams>(args, {
+  async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
       child_ids: this.#getSpaceIds(),
       subject_type: "Space",
       child_type: "space",

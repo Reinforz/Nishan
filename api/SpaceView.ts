@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, UpdatableSpaceViewParam, NishanArg, RepositionParams, IOperation, IPage, FilterType, FilterTypes, TPage } from '../types';
+import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, IPage, FilterType, FilterTypes, TPage, ISpaceViewUpdateInput } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
 
@@ -22,7 +22,7 @@ class SpaceView extends Data<ISpaceView> {
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-  async update(arg: UpdatableSpaceViewParam, execute?: boolean) {
+  async update(arg: ISpaceViewUpdateInput, execute?: boolean) {
     const [op, update] = this.updateCacheLocally(arg, [
       'notify_email',
       'notify_desktop',

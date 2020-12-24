@@ -34,8 +34,8 @@ export type UpdatableCollectionParam = Partial<Pick<ICollection, UpdatableCollec
 export type UpdatableNotionUserKeys = 'family_name' | 'given_name' | 'profile_photo';
 export type UpdatableNotionUserParam = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;
 
-export type UpdatableSpaceViewKeys = 'notify_desktop' | 'notify_email' | 'notify_mobile';
-export type UpdatableSpaceViewParam = Partial<Pick<ISpaceView, UpdatableSpaceViewKeys>>;
+export type UpdatableSpaceViewKeys = 'notify_desktop' | 'notify_email' | 'notify_mobile' | 'joined' | 'created_getting_started';
+export type ISpaceViewUpdateInput = Partial<Pick<ISpaceView, UpdatableSpaceViewKeys>>;
 
 export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
 export type UpdatableUserSettingsParam = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;

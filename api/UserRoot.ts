@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { FilterType, FilterTypes, ISpaceView, IUserRoot, NishanArg } from "../types";
+import { FilterType, FilterTypes, ISpaceView, ISpaceViewUpdateInput, IUserRoot, NishanArg, UpdateType, UpdateTypes } from "../types";
 
 import SpaceView from "./SpaceView";
 
@@ -24,6 +24,20 @@ class UserRoot extends Data<IUserRoot> {
    */
   async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean) {
     return (await this.getIterate<ISpaceView>(args, { multiple, subject_type: "SpaceView", child_ids: this.getCachedData().space_views }, (space_id) => this.cache.space_view.get(space_id))).map(id => new SpaceView({ ...this.getProps(), id }));
+  }
+
+  async updateSpaceView(arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>, execute?: boolean) {
+    return await this.updateSpaceViews(typeof arg === "function" ? arg : [arg], execute, false)
+  }
+
+  async updateSpaceViews(args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, execute?: boolean, multiple?: boolean) {
+    return (await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(args, {
+      child_ids: this.getCachedData().space_views,
+      subject_type: "SpaceView",
+      child_type: "space_view",
+      execute,
+      multiple
+    }, (id) => this.cache.space_view.get(id))).map((id) => new SpaceView({ ...this.getProps(), id }))
   }
 }
 

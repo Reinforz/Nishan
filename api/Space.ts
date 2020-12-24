@@ -25,7 +25,7 @@ export default class Space extends Data<ISpace> {
   }
 
   get spaceView() {
-    let target_space_view: ISpaceView | null = null;
+    let target_space_view: ISpaceView = null as any;
     for (let [, space_view] of this.cache.space_view) {
       if (space_view.space_id === this.id) {
         target_space_view = space_view;
@@ -45,13 +45,11 @@ export default class Space extends Data<ISpace> {
    */
   getSpaceView() {
     const target_space_view = this.spaceView;
-    if (target_space_view) {
-      this.logger && this.logger("READ", "SpaceView", target_space_view.id)
-      return new SpaceView({
-        id: target_space_view.id,
-        ...this.getProps()
-      });
-    }
+    this.logger && this.logger("READ", "SpaceView", target_space_view.id)
+    return new SpaceView({
+      id: target_space_view.id,
+      ...this.getProps()
+    });
   }
 
   // ? FEAT:1:M Update space permissions

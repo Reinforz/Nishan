@@ -10,6 +10,8 @@ export interface CreateBlockArg {
   parent_table?: "block" | "collection" | "space", $block_id: string, type: TBlockType, properties?: any, format?: any, parent_id?: string
 }
 
+export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
+
 export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange
 
 export type RepositionParams = {
@@ -17,28 +19,21 @@ export type RepositionParams = {
   position: "before" | "after"
 } | number | undefined;
 
-export type UpdatableSpaceKeys = "name" | "icon" |
-  "disable_public_access" |
-  "disable_guests" |
-  "disable_move_to_space" |
-  "disable_export" |
-  "domain" |
-  "invite_link_enabled" |
-  "beta_enabled";
+export const TSpaceUpdateKeys = ["name", "icon", "disable_public_access", "disable_guests", "disable_move_to_space", "disable_export", "domain", "invite_link_enabled", "beta_enabled"] as const
+export const TCollectionUpdateKeys = ["name", "icon", "description"] as const;
+export const TNotionUserUpdateKeys = ['family_name', 'given_name', 'profile_photo'] as const;
+export const TSpaceViewUpdateKeys = ['notify_desktop', 'notify_email', 'notify_mobile', 'joined', 'created_getting_started'] as const;
+export const TUserSettingsUpdateKeys = ['start_day_of_week', 'time_zone', 'locale', 'preferred_locale', 'preferred_locale_origin'] as const;
 
-export type ISpaceUpdateInput = Partial<Pick<ISpace, UpdatableSpaceKeys>>;
+export type ISpaceUpdateInput = Partial<Pick<ISpace, ElementType<typeof TSpaceUpdateKeys>>>;
 
-export type UpdatableCollectionKeys = "name" | "icon" | "description";
-export type ICollectionUpdateInput = Partial<Pick<ICollection, UpdatableCollectionKeys>>;
+export type ICollectionUpdateInput = Partial<Pick<ICollection, ElementType<typeof TCollectionUpdateKeys>>>;
 
-export type UpdatableNotionUserKeys = 'family_name' | 'given_name' | 'profile_photo';
-export type INotionUserUpdateInput = Partial<Pick<INotionUser, UpdatableNotionUserKeys>>;
+export type INotionUserUpdateInput = Partial<Pick<INotionUser, ElementType<typeof TNotionUserUpdateKeys>>>;
 
-export type UpdatableSpaceViewKeys = 'notify_desktop' | 'notify_email' | 'notify_mobile' | 'joined' | 'created_getting_started';
-export type ISpaceViewUpdateInput = Partial<Pick<ISpaceView, UpdatableSpaceViewKeys>>;
+export type ISpaceViewUpdateInput = Partial<Pick<ISpaceView, ElementType<typeof TSpaceViewUpdateKeys>>>;
 
-export type UpdatableUserSettingsKeys = 'start_day_of_week' | 'time_zone' | 'locale' | 'preferred_locale' | 'preferred_locale_origin';
-export type IUserSettingsUpdateInput = Partial<Pick<IUserSettingsSettings, UpdatableUserSettingsKeys>>;
+export type IUserSettingsUpdateInput = Partial<Pick<IUserSettingsSettings, ElementType<typeof TUserSettingsUpdateKeys>>>;
 
 export type UpdateCacheManuallyParam = (string | [string, TDataType])[]
 

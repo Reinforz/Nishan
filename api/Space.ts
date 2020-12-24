@@ -59,15 +59,24 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  async update(opt: UpdatableSpaceParams) {
-    const [op, update] = this.updateCacheLocally(opt, ['icon', "disable_move_to_space", "disable_export", "disable_guests", "disable_public_access", "domain", "invite_link_enabled",
+  async update(opt: UpdatableSpaceParams, execute?: boolean) {
+    const [op, update] = this.updateCacheLocally(opt, [
+      'icon',
+      "disable_move_to_space",
+      "disable_export",
+      "disable_guests",
+      "disable_public_access",
+      "domain",
+      "invite_link_enabled",
       'beta_enabled',
       'last_edited_time',
-      'name']);
+      'name']
+    );
 
-    await this.saveTransactions([
+    this.executeUtil([
       op
-    ]);
+    ], [], execute);
+
     this.logger && this.logger("UPDATE", "Space", this.id);
     update();
   }
@@ -91,11 +100,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPage(args?: FilterTypes<IPage | ICollectionViewPage>) {
-    const troot_page = await this.getTRootPages(args, false);
-    return {
-      page: troot_page.page[0],
-      collection_view_page: troot_page.collection_view_page[0]
-    }
+    return await this.getTRootPages(args, false);
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {

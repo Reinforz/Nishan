@@ -13,24 +13,25 @@ class SpaceView extends Data<ISpaceView> {
     super({ ...arg, type: "space_view" });
   }
 
-  async reposition(arg: RepositionParams) {
-    const op = this.addToChildArray(this.id, arg);
-    await this.saveTransactions([op]);
+  async reposition(arg: RepositionParams, execute?: boolean) {
     this.logger && this.logger("UPDATE", "SpaceView", this.id);
+    await this.executeUtil([this.addToChildArray(this.id, arg)], [this.user_id, "user_root"], execute)
   }
 
   /**
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-  async update(arg: UpdatableSpaceViewParam) {
-    const [op, update] = this.updateCacheLocally(arg, ['notify_email',
+  async update(arg: UpdatableSpaceViewParam, execute?: boolean) {
+    const [op, update] = this.updateCacheLocally(arg, [
+      'notify_email',
       'notify_desktop',
-      'notify_mobile'])
-    await this.saveTransactions([
-      op
-    ]);
+      'notify_mobile'
+    ])
     this.logger && this.logger("UPDATE", "SpaceView", this.id);
+    await this.executeUtil([
+      op
+    ], [], execute);
     update();
   }
 
@@ -61,8 +62,8 @@ class SpaceView extends Data<ISpaceView> {
   * Toggle a single page from the bookmark list
   * @param arg id string or a predicate filter function
   */
-  async toggleFavourite(arg?: FilterType<TPage>) {
-    await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, false);
+  async toggleFavourite(arg?: FilterType<TPage>, execute?: boolean) {
+    await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
   /**
@@ -70,7 +71,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async toggleFavourites(args?: FilterTypes<TPage>, multiple?: boolean) {
+  async toggleFavourites(args?: FilterTypes<TPage>, execute?: boolean, multiple?: boolean) {
     multiple = multiple ?? true;
     const target_space_view = this.getCachedData(), target_space = await this.getSpace(false) as ISpace, ops: IOperation[] = [];
     if (Array.isArray(args)) {

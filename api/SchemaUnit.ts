@@ -15,9 +15,6 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
     this.schema_id = arg.schema_id
   }
 
-  // ? FEAT:1:M Change schema_id method
-  // ? FEAT:1:H Change column datatype
-
   async update(arg: T, execute?: boolean) {
     const data = super.getCachedData();
     data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };

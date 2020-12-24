@@ -72,15 +72,15 @@ export default class Page extends Permissions<IPage> {
    * @param arg Options used for setting up export
    */
   // ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionBlock will also support it)
-  async export(arg: {
+  async export(arg: Partial<{
     timeZone: string,
     recursive: boolean,
     exportType: TExportType
-  }) {
+  }>) {
     const data = this.getCachedData();
     const {
-      timeZone, recursive = true, exportType = "markdown"
-    } = arg || {};
+      timeZone = "", recursive = true, exportType = "markdown"
+    } = arg;
     const {
       taskId
     } = await this.enqueueTask({

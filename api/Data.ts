@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, ITBlock, ITView, ITSchemaUnit, TOperationTable, CreateBlockArg, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, ITBlock, ITView, ITSchemaUnit, TOperationTable, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -759,7 +759,7 @@ export default class Data<T extends TData> extends Operations {
           const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
             ...content,
             $block_id: this.generateId(content.id)
-          })) as CreateBlockArg[]).map(content => {
+          }))).map(content => {
             factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
             sync_records.push(content.$block_id)
             content_ids.push(content.$block_id);

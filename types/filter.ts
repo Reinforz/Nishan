@@ -1,7 +1,11 @@
+import { IViewAggregationsAggregator, TViewAggregationsAggregators } from "./aggregator";
+import { TSchemaUnitType } from "./schema";
+
 /**
  * Filters.filter.operator 
  */
 export type EmptyViewFiltersOperator = "is_empty" | "is_not_empty";
+
 
 export type TextViewFiltersOperator = "string_is" | "string_is_not" | "string_contains" | "string_does_not_contain" | "string_starts_with" | "string_ends_with" | EmptyViewFiltersOperator;
 export type TitleViewFiltersOperator = TextViewFiltersOperator;
@@ -224,3 +228,21 @@ export type TAdvancedViewFilters =
   LastEditedByViewFiltersValue;
 
 export type TViewFilters = TBasicViewFilters | TAdvancedViewFilters;
+
+export interface IViewFilterData {
+  schemaunit: TSchemaUnitType,
+  operator: TViewFiltersOperator,
+  type: TViewFiltersType,
+  value: TViewFiltersValue,
+  aggregator: TViewAggregationsAggregators
+}
+
+export interface TextViewFilterData extends IViewFilterData {
+  schemaunit: "text",
+  operator: TextViewFiltersOperator,
+  type: TextViewFiltersType,
+  value: TextViewFiltersValue,
+  aggregator: IViewAggregationsAggregator["text"]
+}
+
+export type TBasicViewFilterData = TextViewFilterData;

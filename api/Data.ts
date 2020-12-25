@@ -183,7 +183,7 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @param keys
    */
-  protected updateCacheLocally(arg: Partial<T>, keys: (keyof T)[]) {
+  protected updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
     const _this = this;
     const parent_data = this.getCachedData();
     const data = arg as T;

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { INotionUserUpdateInput, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, ISpaceUpdateInput, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType } from '../types';
+import { INotionUserUpdateInput, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, ISpaceUpdateInput, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType, TNotionUserUpdateKeys } from '../types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
@@ -53,9 +53,7 @@ class NotionUser extends Data<INotionUser> {
    */
 
   async update(opt: INotionUserUpdateInput) {
-    const [op, update] = this.updateCacheLocally(opt, ['family_name',
-      'given_name',
-      'profile_photo']);
+    const [op, update] = this.updateCacheLocally(opt, TNotionUserUpdateKeys);
 
     await this.saveTransactions([
       op

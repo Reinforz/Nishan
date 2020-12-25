@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { NishanArg, IUserSettings, IUserSettingsUpdateInput } from '../types';
+import { NishanArg, IUserSettings, IUserSettingsUpdateInput, TUserSettingsUpdateKeys } from '../types';
 
 /**
  * A class to represent user settings of Notion
@@ -19,11 +19,7 @@ class UserSettings extends Data<IUserSettings> {
     opt: IUserSettingsUpdateInput,
     execute?: boolean
   ) {
-    const [op, update] = this.updateCacheLocally(opt, ['start_day_of_week',
-      'time_zone',
-      'locale',
-      'preferred_locale',
-      'preferred_locale_origin']);
+    const [op, update] = this.updateCacheLocally(opt, TUserSettingsUpdateKeys);
 
     await this.executeUtil([
       op

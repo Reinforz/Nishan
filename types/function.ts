@@ -19,7 +19,7 @@ export type RepositionParams = {
   position: "before" | "after"
 } | number | undefined;
 
-export const TSpaceUpdateKeys = ["name", "icon", "disable_public_access", "disable_guests", "disable_move_to_space", "disable_export", "domain", "invite_link_enabled", "beta_enabled"] as const
+export const TSpaceUpdateKeys = ["name", "icon", "disable_public_access", "disable_guests", "disable_move_to_space", "disable_export", "domain", "invite_link_enabled", "beta_enabled"] as const;
 export const TCollectionUpdateKeys = ["name", "icon", "description"] as const;
 export const TNotionUserUpdateKeys = ['family_name', 'given_name', 'profile_photo'] as const;
 export const TSpaceViewUpdateKeys = ['notify_desktop', 'notify_email', 'notify_mobile', 'joined', 'created_getting_started'] as const;

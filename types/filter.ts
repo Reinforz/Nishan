@@ -224,25 +224,32 @@ export interface IViewFiltersValue {
 }
 
 export interface IViewFilter {
-  filters: (IViewFilters | IViewFilter)[],
+  filters: (TViewFilters | IViewFilter)[],
   operator: "and" | "or"
 }
 
-export interface IViewFilters<O extends TViewFiltersOperator = Exclude<TViewFiltersOperator, "is_empty" | "is_not_empty">, V extends TViewFiltersValue = TViewFiltersValue, T extends TViewFiltersType = "exact"> {
+export interface IViewFilters<T extends TSchemaUnitType> {
   property: string,
   filter: { operator: EmptyViewFiltersOperator } | {
-    operator: O,
+    operator: IViewFilterData<T>["operator"],
     value: {
-      type: T,
-      value: V
+      type: IViewFilterData<T>["type"],
+      value: IViewFilterData<T>["value"]
     }
   }
 }
 
-export interface TextViewFilters extends IViewFilters<TextViewFiltersOperator, TextViewFiltersValue> { };
-export interface NumberViewFilters extends IViewFilters<NumberViewFiltersOperator, NumberViewFiltersValue> { };
-export interface SelectViewFilters extends IViewFilters<SelectViewFiltersOperator, SelectViewFiltersValue> { };
-export interface MultiSelectViewFilters extends IViewFilters<MultiSelectViewFiltersOperator, MultiSelectViewFiltersValue> { };
+export type TextViewFilters = IViewFilters<"text">;
+export type TitleViewFilters = IViewFilters<"title">;
+export type NumberViewFilters = IViewFilters<"number">;
+export type SelectViewFilters = IViewFilters<"select">;
+export type MultiSelectViewFilters = IViewFilters<"multi_select">;
+export type PersonViewFilters = IViewFilters<"person">;
+export type FileViewFilters = IViewFilters<"file">;
+export type CheckboxViewFilters = IViewFilters<"checkbox">;
+export type UrlViewFilters = IViewFilters<"url">;
+export type EmailViewFilters = IViewFilters<"email">;
+export type PhoneNumberViewFilters = IViewFilters<"phone_number">;
 export interface DateViewFilters {
   property: string,
   filter: { operator: EmptyViewFiltersOperator } | {
@@ -257,21 +264,18 @@ export interface DateViewFilters {
   }
 };
 
-export interface PersonViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
-export interface FileViewFilters extends IViewFilters<FileViewFiltersOperator, FileViewFiltersValue> { };
-export interface FileViewFilters extends IViewFilters<FileViewFiltersOperator, FileViewFiltersValue> { };
-export interface CheckboxViewFilters extends IViewFilters<CheckboxViewFiltersOperator, CheckboxViewFiltersValue> { };
-export interface UrlViewFilters extends IViewFilters<UrlViewFiltersOperator, UrlViewFiltersValue> { };
-export interface EmailViewFilters extends IViewFilters<EmailViewFiltersOperator, EmailViewFiltersValue> { };
-export interface PhoneViewFilters extends IViewFilters<PhoneNumberViewFiltersOperator, PhoneNumberViewFiltersValue> { };
-
 export interface CreatedTimeViewFilters extends DateViewFilters { };
-export interface CreatedByViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
+export type CreatedByViewFilters = IViewFilters<"person">;
 export interface LastEditedTimeViewFilters extends DateViewFilters { }
-export interface EditedByViewFilters extends IViewFilters<PersonViewFiltersOperator, PersonViewFiltersValue> { };
+export type EditedByViewFilters = IViewFilters<"person">;
+export type LastEditedByViewFilters = IViewFilters<"person">;
+export type FormulaViewFilters = IViewFilters<"formula">;
+export type RelationViewFilters = IViewFilters<"relation">;
+export type RollupViewFilters = IViewFilters<"rollup">;
 
 export type TBasicViewFilters =
   TextViewFilters |
+  TitleViewFilters |
   NumberViewFilters |
   SelectViewFilters |
   MultiSelectViewFilters |
@@ -281,16 +285,16 @@ export type TBasicViewFilters =
   CheckboxViewFilters |
   UrlViewFilters |
   EmailViewFilters |
-  PhoneViewFilters;
+  PhoneNumberViewFilters;
 
 export type TAdvancedViewFilters =
-  FormulaViewFiltersValue |
-  RelationViewFiltersValue |
-  RollupViewFiltersValue |
-  CreatedTimeViewFiltersValue |
-  CreatedByViewFiltersValue |
-  LastEditedTimeViewFiltersValue |
-  LastEditedByViewFiltersValue;
+  FormulaViewFilters |
+  RelationViewFilters |
+  RollupViewFilters |
+  CreatedTimeViewFilters |
+  CreatedByViewFilters |
+  LastEditedTimeViewFilters |
+  LastEditedByViewFilters;
 
 export type TViewFilters = TBasicViewFilters | TAdvancedViewFilters;
 

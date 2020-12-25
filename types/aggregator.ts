@@ -51,7 +51,7 @@ export type TViewAdvancedAggregationsAggregators =
 
 export type TViewAggregationsAggregators = TViewBasicAggregationsAggregators | TViewAdvancedAggregationsAggregators;
 
-export interface IViewAggregationsAggregator {
+export interface IViewAggregationsAggregators {
   title: TitleViewAggregationsAggregator,
   text: TextViewAggregationsAggregator,
   number: NumberViewAggregationsAggregator,

@@ -86,37 +86,6 @@ class View<T extends TView> extends Data<T> {
     await this.updateCacheManually(this.id);
   }
 
-  async getViewSchemaUnit(arg?: FilterType<ViewFormatProperties>) {
-    return (await this.getViewSchemaUnits(typeof arg === "string" ? [arg] : arg, false))[0]
-  }
-  // ? TD:1:M Use custom schemaunit interface to pass to SchemaUnit class
-  async getViewSchemaUnits(args?: FilterTypes<ViewFormatProperties & ISchemaUnit>, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const matched: ViewSchemaUnit[] = [];
-    const collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
-    const data = this.getCachedData(), container: ViewFormatProperties[] = data.format[`${data.type}_properties` as never] ?? [];
-    const schema_ids = container.map(data => data.property);
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const schema_id = args[index];
-        const should_add = schema_ids.includes(schema_id);
-        if (should_add)
-          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id }))
-        if (!multiple && matched.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < container.length; index++) {
-        const schema_unit = collection.schema[container[index].property] as ISchemaUnit;
-        const should_add = typeof args === "function" ? await args({ ...container[index], ...schema_unit }, index) : true;
-        if (should_add)
-          matched.push(new ViewSchemaUnit({ ...this.getProps(), id: this.id, schema_id: container[index].property, }))
-        if (!multiple && matched.length === 1) break;
-      }
-    }
-    return matched;
-  }
-
   async createSort(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined) {
     await this.createSorts(cb, false)
   }

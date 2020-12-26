@@ -30,6 +30,17 @@ class View<T extends TView> extends Data<T> {
     return [sorts_map, sorts] as [Record<string, TSchemaUnit & ViewSorts>, ViewSorts[]]
   }
 
+  #getSchemaMap = () => {
+    const collection = this.#getCollection(), schema_map: Record<string, TSchemaUnit & { property: string }> = {};
+    Object.entries(collection.schema).forEach(([property, value]) => {
+      schema_map[value.name] = {
+        property,
+        ...value
+      }
+    })
+    return schema_map;
+  }
+
   async reposition(arg: RepositionParams) {
     await this.saveTransactions([this.addToChildArray(this.id, arg)]);
   }
@@ -105,45 +116,31 @@ class View<T extends TView> extends Data<T> {
     await this.updateCacheManually(this.id);
   }
 
-  async createSort(cb: (T: TSchemaUnit & { key: string }) => [TSortValue, number] | undefined) {
-    await this.createSorts(cb, false)
+  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), execute?: boolean) {
+    await this.createSorts([arg], execute)
   }
 
-  async createSorts(cb: (T: TSchemaUnit & { key: string }) => TSortValue | [TSortValue, number] | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
-    if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
-    let total_created = 0;
-    const sorts = data.query2?.sort as ViewSorts[];
-    const schema_entries = Object.entries(collection.schema);
-    for (let index = 0; index < schema_entries.length; index++) {
-      const [key, schema] = schema_entries[index];
-      const res = cb({ ...schema, key }) ?? undefined;
-      if (res) {
-        total_created++;
-        if (Array.isArray(res)) {
-          const [direction, position] = res;
-          sorts.splice(position ?? sorts.length, 0, {
-            property: key,
-            direction
-          })
-        } else sorts.splice(sorts.length, 0, {
-          property: key,
-          direction: res
+  async createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], execute?: boolean) {
+    const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, sorts] = this.#getSortsMap();
+    for (let index = 0; index < args.length; index++) {
+      const arg = args[index], target_sort = schema_map[arg[0]];
+      if (typeof arg[2] === "number") {
+        sorts.splice(arg[2], 0, {
+          property: target_sort.property,
+          direction: arg[1]
         })
-      }
-      if (!multiple && total_created === 1) break;
+      } else
+        sorts.push({
+          property: target_sort.property,
+          direction: arg[1]
+        })
     }
 
-    if (total_created) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+    await this.executeUtil([this.updateOp([], {
+      query2: {
+        ...data.query2
+      }
+    })], this.id, execute)
   }
 
   async updateSort(arg: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean,) {

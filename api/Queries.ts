@@ -30,7 +30,7 @@ export default class Queries extends Cache {
     this.interval = interval || 1000;
     this.headers = {
       headers: {
-        cookie: `token_v2=${token}`,
+        cookie: `token_v2=${token};notion_user_id=${user_id}`,
         ["x-notion-active-user-header"]: user_id
       }
     };
@@ -422,7 +422,7 @@ export default class Queries extends Cache {
       })
     else if (typeof arg === "string")
       sync_record_values.push({ id: arg, table: "block", version: 0 })
-    await this.syncRecordValues(sync_record_values);
+    return await this.syncRecordValues(sync_record_values);
   }
 
   async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {

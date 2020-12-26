@@ -3,25 +3,25 @@ import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
-interface CommonIterateOptions {
-  child_ids: string[],
+interface CommonIterateOptions<T> {
+  child_ids: string[] | keyof T,
   subject_type: TSubjectType,
   multiple?: boolean
 }
 
-interface UpdateIterateOptions extends CommonIterateOptions { child_type?: TDataType, execute?: boolean };
-interface DeleteIterateOptions<T> extends UpdateIterateOptions {
+interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, execute?: boolean };
+interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
   child_path?: keyof T
 }
 
-interface IterateOptions {
+interface IterateOptions<T> {
   method: TMethodType,
   subject_type: TSubjectType,
-  child_ids: string[],
+  child_ids: string[] | keyof T,
   multiple?: boolean
 }
 
-interface GetIterateOptions extends CommonIterateOptions {
+interface GetIterateOptions<T> extends CommonIterateOptions<T> {
   method?: TMethodType,
 }
 
@@ -204,6 +204,7 @@ export default class Data<T extends TData> extends Operations {
 
   protected async initializeCache() {
     if (!this.#init_cache) {
+
       const container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
@@ -246,9 +247,10 @@ export default class Data<T extends TData> extends Operations {
   }
 
   // cb1 is passed from the various iterate methods, cb2 is passed from the actual method
-  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions, cb1?: (id: string, data: TD, updated_data?: RD) => any, cb2?: ((id: string, data: TD, updated_data: RD) => any)) => {
+  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data?: RD) => any, cb2?: ((id: string, data: TD, updated_data: RD) => any)) => {
     await this.initializeCache();
-    const matched_ids: string[] = [], { multiple = true, method, subject_type, child_ids } = options;
+    const matched_ids: string[] = [], { multiple = true, method, subject_type } = options;
+    const child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : this.getCachedData()[options.child_ids]) ?? []) as string[];
 
     const iterateUtil = async (child_id: string, child_data: TD, updated_data?: RD) => {
       cb1 && await cb1(child_id, child_data, updated_data);
@@ -312,7 +314,7 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
     const { child_type, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
@@ -334,7 +336,7 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
+  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
     return await this.#iterate<RD>(args, transform, {
       method: 'READ',
       ...options,

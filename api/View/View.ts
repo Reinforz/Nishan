@@ -1,6 +1,5 @@
-import { RepositionParams, FilterType, FilterTypes, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam } from "../../types";
 import Data from "../Data";
-import ViewSchemaUnit from "../ViewSchemaUnit";
 
 /**
  * A class to represent view of Notion

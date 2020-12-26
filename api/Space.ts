@@ -92,7 +92,7 @@ export default class Space extends Data<ISpace> {
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
     const trootpage_map = this.createTRootPageMap(), props = this.getProps();
-    await this.getIterate<TPage>(args, { multiple, child_ids: this.getCachedData().pages, subject_type: "Page" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
+    await this.getIterate<TPage>(args, { multiple, child_ids: "pages", subject_type: "Page" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
       trootpage_map[page.type].push(new trootpage_class[page.type]({
         id: page.id,
         ...props

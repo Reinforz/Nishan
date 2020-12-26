@@ -60,7 +60,7 @@ class Collection extends Data<ICollection> {
    */
   async getTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
     return (await this.getIterate<IPage>(args, {
-      child_ids: this.getCachedData()?.template_pages ?? [],
+      child_ids: "template_pages",
       multiple,
       subject_type: "Page"
     }, (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
@@ -72,7 +72,7 @@ class Collection extends Data<ICollection> {
 
   async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
     return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
-      child_ids: this.getCachedData()?.template_pages ?? [],
+      child_ids: "template_pages",
       multiple,
       execute,
       child_type: "block",
@@ -96,7 +96,7 @@ class Collection extends Data<ICollection> {
   async deleteTemplates(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
       execute, multiple,
-      child_ids: this.getCachedData()?.template_pages ?? [],
+      child_ids: "template_pages",
       child_type: "block",
       subject_type: "Page",
       child_path: "template_pages",
@@ -188,8 +188,8 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
-    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData(), container: string[] = Object.keys(data.schema) ?? [];
-    (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: container, subject_type: "SchemaUnit" }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(schema_id => schema_unit_map[data.schema[schema_id].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }) as any))
+    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData();
+    (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit" }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(schema_id => schema_unit_map[data.schema[schema_id].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }) as any))
     return schema_unit_map;
   }
 

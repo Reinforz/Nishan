@@ -48,7 +48,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    */
   async getViews(args?: FilterTypes<TView>, multiple?: boolean) {
     const view_map = this.createViewMap();
-    await this.getIterate<TView>(args, { multiple, child_ids: this.getCachedData().view_ids, subject_type: "View" }, (view_id) => this.cache.collection_view.get(view_id) as TView, (view_id, view) => {
+    await this.getIterate<TView>(args, { multiple, child_ids: "view_ids", subject_type: "View" }, (view_id) => this.cache.collection_view.get(view_id) as TView, (view_id, view) => {
       view_map[view.type].push(new view_class[view.type]({
         id: view_id,
         ...this.getProps()

@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam, UpdateTypes } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes } from "../../types";
 import Data from "../Data";
 
 /**
@@ -12,6 +12,22 @@ class View<T extends TView> extends Data<T> {
 
   #getCollection = () => {
     return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
+  }
+
+  #getSortsMap = () => {
+    const data = this.getCachedData(), collection = this.#getCollection();
+    if (!data.query2) data.query2 = { sort: [] } as any;
+    if (data.query2 && !data.query2?.sort) data.query2.sort = [];
+    const sorts_map: Record<string, TSchemaUnit & ViewSorts> = {}, sorts = data.query2?.sort as ViewSorts[];
+    data.query2?.sort?.forEach(sort => {
+      const schema_unit = collection.schema[sort.property];
+      sorts_map[schema_unit.name] = {
+        ...schema_unit,
+        ...sort
+      }
+    });
+
+    return [sorts_map, sorts] as [Record<string, TSchemaUnit & ViewSorts>, ViewSorts[]]
   }
 
   async reposition(arg: RepositionParams) {
@@ -135,19 +151,7 @@ class View<T extends TView> extends Data<T> {
   }
 
   async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
-    const data = this.getCachedData(), collection = this.#getCollection();
-
-    if (!data.query2) data.query2 = { sort: [] } as any;
-    if (data.query2 && !data.query2?.sort) data.query2.sort = [];
-
-    const sorts_map: Record<string, TSchemaUnit & ViewSorts> = {}, sorts = data.query2?.sort as ViewSorts[];
-    data.query2?.sort?.forEach(sort => {
-      const schema_unit = collection.schema[sort.property];
-      sorts_map[schema_unit.name] = {
-        ...schema_unit,
-        ...sort
-      }
-    })
+    const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap()
 
     await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
       child_ids: Object.keys(sorts_map),
@@ -174,36 +178,22 @@ class View<T extends TView> extends Data<T> {
     await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
   }
 
-  async deleteSort(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined) {
-    await this.deleteSorts(cb, false);
+  async deleteSort(arg: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean,) {
+    await this.deleteSorts(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
-  async deleteSorts(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    let total_deleted = 0;
-    const sorts = data.query2?.sort as ViewSorts[];
-    const schema_entries = new Map(Object.entries(collection.schema));
+  async deleteSorts(args: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean, multiple?: boolean) {
+    const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap();
 
-    for (let index = 0; index < sorts.length; index++) {
-      const sort = sorts[index] as ViewSorts;
-      const schema = schema_entries.get(sort.property)
-      const should_delete = cb({ ...sort, ...schema } as any) ?? undefined;
-      if (should_delete) {
-        total_deleted++;
-        sorts.splice(index, 1)
-      }
-      if (!multiple && total_deleted === 1) break;
-    }
-
-    if (total_deleted) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+    await this.deleteIterate<TSchemaUnit & ViewSorts>(args, {
+      child_ids: Object.keys(sorts_map),
+      subject_type: "View",
+      execute,
+      multiple
+    }, (id) => sorts_map[id], (_, sort) => {
+      sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
+    });
+    await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
   }
 
   #populateFilters = (data: any) => {

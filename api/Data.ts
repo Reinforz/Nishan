@@ -247,14 +247,14 @@ export default class Data<T extends TData> extends Operations {
   }
 
   // cb1 is passed from the various iterate methods, cb2 is passed from the actual method
-  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data?: RD) => any, cb2?: ((id: string, data: TD, updated_data: RD) => any)) => {
+  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data: RD | undefined, index: number) => any, cb2?: ((id: string, data: TD, updated_data: RD, index: number) => any)) => {
     await this.initializeCache();
     const matched_ids: string[] = [], { multiple = true, method, subject_type } = options;
     const child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : this.getCachedData()[options.child_ids]) ?? []) as string[];
 
-    const iterateUtil = async (child_id: string, child_data: TD, updated_data?: RD) => {
-      cb1 && await cb1(child_id, child_data, updated_data);
-      cb2 && await cb2(child_id, child_data, updated_data as any);
+    const iterateUtil = async (child_id: string, child_data: TD, updated_data: RD | undefined, index: number) => {
+      cb1 && await cb1(child_id, child_data, updated_data, index);
+      cb2 && await cb2(child_id, child_data, updated_data as any, index);
       this.logger && this.logger(method, subject_type, child_id);
       matched_ids.push(child_id);
     }
@@ -267,13 +267,13 @@ export default class Data<T extends TData> extends Operations {
           if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
           else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
           if (child_data && matches)
-            await iterateUtil(child_id, child_data, updated_data)
+            await iterateUtil(child_id, child_data, updated_data, index)
         } else if (typeof arg === "string") {
           const child_id = arg, child_data = transform(child_id), matches = child_ids.includes(child_id);
           if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
           else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
           if (child_data && matches)
-            await iterateUtil(child_id, child_data)
+            await iterateUtil(child_id, child_data, undefined, index)
         }
         if (!multiple && matched_ids.length === 1) break;
       }
@@ -284,7 +284,7 @@ export default class Data<T extends TData> extends Operations {
         else {
           const matches = args ? await args(child_data, index) : true;
           if (child_data && matches)
-            await iterateUtil(child_id, child_data, matches as RD)
+            await iterateUtil(child_id, child_data, matches as RD, index)
         }
         if (!multiple && matched_ids.length === 1) break;
       }
@@ -314,7 +314,7 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
     const { child_type, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 

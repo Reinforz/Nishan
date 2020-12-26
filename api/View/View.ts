@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam, UpdateTypes } from "../../types";
 import Data from "../Data";
 
 /**
@@ -130,20 +130,30 @@ class View<T extends TView> extends Data<T> {
     await this.updateSorts(cb, false);
   }
 
-  async updateSorts(cb: (T: TSchemaUnit & ViewSorts) => [TSortValue, number] | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
+  async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    if (!data.query2) data.query2 = { sort: [] as ViewSorts[] } as any;
-    if (!data.query2?.sort) (data.query2 as any).sort = [] as ViewSorts[];
-    let total_updated = 0;
-    const sorts = data.query2?.sort as ViewSorts[];
-    const schema_entries = new Map(Object.entries(collection.schema));
-    for (let index = 0; index < sorts.length; index++) {
-      const sort = sorts[index], schema = schema_entries.get(sort.property);
-      const res = cb({ ...schema, ...sort } as any) ?? undefined;
-      if (res) {
-        total_updated++;
-        const [direction, position] = res;
+
+    if (!data.query2) data.query2 = { sort: [] } as any;
+    if (data.query2 && !data.query2?.sort) data.query2.sort = [];
+
+    const sorts_map: Record<string, TSchemaUnit & ViewSorts> = {}, sorts = data.query2?.sort as ViewSorts[];
+    data.query2?.sort?.forEach(sort => {
+      const schema_unit = collection.schema[sort.property];
+      sorts_map[schema_unit.name] = {
+        ...schema_unit,
+        ...sort
+      }
+    })
+
+    await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
+      child_ids: Object.keys(sorts_map),
+      subject_type: "View",
+      execute,
+      multiple
+    }, (id) => sorts_map[id], (_, sort, data, index) => {
+      console.log(index);
+      if (Array.isArray(data)) {
+        const [direction, position] = data;
         if (position) {
           sorts.splice(index, 1)
           sorts.splice(position, 0, {
@@ -151,22 +161,13 @@ class View<T extends TView> extends Data<T> {
             direction
           })
         }
-        else sorts[index] = {
-          property: sort.property,
-          direction
-        }
       }
-      if (!multiple && total_updated === 1) break;
-    }
-
-    if (total_updated) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+      else {
+        const target_sort = sorts.find(data => data.property === sort.property) as ViewSorts;
+        target_sort.direction = data
+      }
+    });
+    await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
   }
 
   async deleteSort(cb: (T: TSchemaUnit & ViewSorts) => boolean | undefined) {

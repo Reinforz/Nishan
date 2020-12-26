@@ -28,6 +28,10 @@ export default class Operations extends Mutations {
       this.pushOperations(operations)
   }
 
+  printStack() {
+    console.log(JSON.stringify(this.stack, null, 2))
+  }
+
   async executeOperation() {
     if (this.stack.length === 0)
       warn(`The operation stack is empty`)

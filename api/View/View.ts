@@ -10,6 +10,10 @@ class View<T extends TView> extends Data<T> {
     super({ ...arg, type: "collection_view" });
   }
 
+  #getCollection = () => {
+    return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
+  }
+
   async reposition(arg: RepositionParams) {
     await this.saveTransactions([this.addToChildArray(this.id, arg)]);
   }
@@ -126,12 +130,12 @@ class View<T extends TView> extends Data<T> {
     }
   }
 
-  async updateSort(cb: (T: TSchemaUnit & ViewSorts) => [TSortValue, number] | undefined) {
-    await this.updateSorts(cb, false);
+  async updateSort(arg: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean,) {
+    await this.updateSorts(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
   async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
+    const data = this.getCachedData(), collection = this.#getCollection();
 
     if (!data.query2) data.query2 = { sort: [] } as any;
     if (data.query2 && !data.query2?.sort) data.query2.sort = [];
@@ -150,12 +154,12 @@ class View<T extends TView> extends Data<T> {
       subject_type: "View",
       execute,
       multiple
-    }, (id) => sorts_map[id], (_, sort, data, index) => {
-      console.log(index);
+    }, (id) => sorts_map[id], (_, sort, data) => {
       if (Array.isArray(data)) {
+        const index = sorts.findIndex(data => data.property === sort.property);
         const [direction, position] = data;
-        if (position) {
-          sorts.splice(index, 1)
+        if (position !== null && position !== undefined) {
+          sorts.splice(index, 1);
           sorts.splice(position, 0, {
             property: sort.property,
             direction

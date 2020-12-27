@@ -492,6 +492,7 @@ export default class Data<T extends TData> extends Operations {
       format: {
         collection_page_properties: []
       },
+      cover: param?.format?.page_cover ?? "",
       icon: param?.format?.page_icon ?? "",
       parent_id,
       parent_table: 'block',

@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams, FilterType } from "../../types";
 import Data from "../Data";
 
 /**
@@ -290,33 +290,25 @@ class View<T extends TView> extends Data<T> {
     }
   } */
 
-  /* async deleteFilter(cb: (T: TSchemaUnit & TViewFilters) => boolean | undefined) {
-    await this.deleteFilters(cb, false);
+  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, execute?: boolean) {
+    await this.deleteFilters(typeof arg === "string" ? [arg] : arg, execute);
   }
 
-  async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, execute: boolean, multiple?: boolean) {
-    const [filters_map, {filters}] = this.#getFiltersMap(), data = this.getCachedData();
+  async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, execute?: boolean, multiple?: boolean) {
+    const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
     await this.getIterate<TSchemaUnit & TViewFilters>(args, {
       subject_type: "View",
       method: "DELETE",
-      multiple
+      multiple,
+      child_ids: Object.keys(filters_map),
+    }, (name) => filters_map[name], (_, filter) => {
+      filters.splice(filters.findIndex(data => (data as any).property === filter.property))
     });
-
-    for (let index = 0; index < filters.length; index++) {
-      const filter = filters[index] as TViewFilters,
-        schema = schema_entries.get(filter.property),
-        should_delete = cb({ ...filter, ...schema } as any) ?? undefined;
-      if (should_delete) {
-        total_deleted++;
-        filters.splice(index, 1)
-      }
-      if (!multiple && total_deleted === 1) break;
-    }
 
     await this.executeUtil([this.updateOp([], {
       query2: data.query2
     })], this.id, execute)
-  } */
+  }
 
   async updateFormatProperty(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined) {
     await this.updateFormatProperties(cb, false);

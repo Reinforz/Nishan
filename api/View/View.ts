@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams, FilterType } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams, FilterType, UpdateType } from "../../types";
 import Data from "../Data";
 
 /**
@@ -170,8 +170,8 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
-  async updateSort(arg: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean,) {
-    await this.updateSorts(typeof arg === "string" ? [arg] : arg, execute, false);
+  async updateSort(arg: UpdateType<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean,) {
+    await this.updateSorts(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
   async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
@@ -245,50 +245,37 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
-  /* async updateFilter(cb: (T: TSchemaUnit & TViewFilters) => UserViewFilterParams | undefined) {
-    await this.updateFilters(cb, false);
+  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>, execute?: boolean) {
+    await this.updateFilters(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
-  async updateFilters(cb: (T: TSchemaUnit & TViewFilters) => UserViewFilterParams | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    this.#populateFilters();
-    let total_updated = 0;
-    const filters = data.query2?.filter.filters as TViewFilters[];
-    const schema_entries = new Map(Object.entries(collection.schema));
-    for (let index = 0; index < filters.length; index++) {
-      const filter = filters[index], schema = schema_entries.get(filter.property), res = cb({ ...schema, ...filter } as any) ?? undefined;
-      if (res) {
-        total_updated++;
-        const [operator, type, value, position] = res[0];
-        const update_filter = {
-          property: filter.property,
-          filter: {
-            operator,
-            value: {
-              type,
-              value
-            }
-          } as any
-        };
-        if (position) {
-          filters.splice(index, 1)
-          filters.splice(position, 0, update_filter)
-        }
-        else filters[index] = update_filter;
-      }
-      if (!multiple && total_updated === 1) break;
-    }
+  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>, execute?: boolean, multiple?: boolean) {
+    const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
 
-    if (total_updated) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
-  } */
+    await this.updateIterate<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>(args, {
+      child_ids: Object.keys(filters_map),
+      subject_type: "View",
+      execute,
+      multiple
+    }, (name) => filters_map[name], (_, original_filter, updated_data) => {
+      const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters.find(data => (data as any).property === original_filter.property) as TViewFilters,
+        { type, operator, position, value } = updated_data;
+
+      (filter.filter as any).operator = operator;
+      (filter.filter as any).value = {
+        type,
+        value
+      };
+      if (position !== null && position !== undefined) {
+        filters.splice(index, 1);
+        filters.splice(position, 0, original_filter)
+      }
+    });
+
+    await this.executeUtil([this.updateOp([], {
+      query2: data.query2
+    })], this.id, execute)
+  }
 
   async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, execute?: boolean) {
     await this.deleteFilters(typeof arg === "string" ? [arg] : arg, execute);

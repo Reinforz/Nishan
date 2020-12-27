@@ -1,14 +1,6 @@
 import { Block, BoardView, CalendarView, Collection, CollectionViewPage, GalleryView, ListView, Page, SchemaUnit, TableView, TimelineView } from "../api";
 import CollectionBlock from "../api/CollectionBlock";
-import { IColumnList, IColumnListInput, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, IEmbed, IEmbedInput, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, TBlockInput, TBlockType, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, TTimelineViewTimelineby, TSortValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit, IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, IColumn, PhoneNumberSchemaUnit, IViewFilterData } from "./";
-
-export type UserViewFilterParams = [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue] | [TViewFiltersOperator, TViewFiltersType, TViewFiltersValue, number]
-
-// ? TD:1:M All the schema type rather than Record Any
-
-export interface CreateBlockArg {
-  parent_table?: "block" | "collection" | "space", $block_id: string, type: TBlockType, properties?: any, format?: any, parent_id?: string
-}
+import { IColumnList, IColumnListInput, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, IEmbed, IEmbedInput, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, TBlockInput, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit, IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, IColumn, PhoneNumberSchemaUnit, IViewFilterData } from "./";
 
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
@@ -198,3 +190,33 @@ export type ViewUpdateParam =
   ViewUpdateGenericParam<"created_by"> |
   ViewUpdateGenericParam<"last_edited_time"> |
   ViewUpdateGenericParam<"last_edited_by">
+
+interface ViewFilterCreateGenericParam<T extends TSchemaUnitType> {
+  schema_type: T,
+  operator: IViewFilterData<T>["operator"],
+  type: IViewFilterData<T>["type"],
+  value: IViewFilterData<T>["value"],
+  position?: number,
+  name: string
+}
+
+export type UserViewFilterCreateParams =
+  ViewFilterCreateGenericParam<"text"> |
+  ViewFilterCreateGenericParam<"title"> |
+  ViewFilterCreateGenericParam<"number"> |
+  ViewFilterCreateGenericParam<"select"> |
+  ViewFilterCreateGenericParam<"multi_select"> |
+  ViewFilterCreateGenericParam<"date"> |
+  ViewFilterCreateGenericParam<"person"> |
+  ViewFilterCreateGenericParam<"file"> |
+  ViewFilterCreateGenericParam<"checkbox"> |
+  ViewFilterCreateGenericParam<"url"> |
+  ViewFilterCreateGenericParam<"email"> |
+  ViewFilterCreateGenericParam<"phone_number"> |
+  ViewFilterCreateGenericParam<"formula"> |
+  ViewFilterCreateGenericParam<"relation"> |
+  ViewFilterCreateGenericParam<"rollup"> |
+  ViewFilterCreateGenericParam<"created_time"> |
+  ViewFilterCreateGenericParam<"created_by"> |
+  ViewFilterCreateGenericParam<"last_edited_time"> |
+  ViewFilterCreateGenericParam<"last_edited_by">

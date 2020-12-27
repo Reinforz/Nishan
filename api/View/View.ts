@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes } from "../../types";
+import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, UserViewFilterParams, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2 } from "../../types";
 import Data from "../Data";
 
 /**
@@ -16,8 +16,7 @@ class View<T extends TView> extends Data<T> {
 
   #getSortsMap = () => {
     const data = this.getCachedData(), collection = this.#getCollection();
-    if (!data.query2) data.query2 = { sort: [] } as any;
-    if (data.query2 && !data.query2?.sort) data.query2.sort = [];
+    this.#populateSorts();
     const sorts_map: Record<string, TSchemaUnit & ViewSorts> = {}, sorts = data.query2?.sort as ViewSorts[];
     data.query2?.sort?.forEach(sort => {
       const schema_unit = collection.schema[sort.property];
@@ -39,6 +38,19 @@ class View<T extends TView> extends Data<T> {
       }
     })
     return schema_map;
+  }
+
+  #populateFilters = () => {
+    const data = this.getCachedData();
+    if (!data.query2) data.query2 = { filter: { operator: "and", filters: [] } } as any;
+    if (!data.query2?.filter) (data.query2 as TViewQuery2).filter = { operator: "and", filters: [] };
+    if (!data.query2?.filter.filters) (data.query2 as TViewQuery2).filter.filters = [];
+  }
+
+  #populateSorts = () => {
+    const data = this.getCachedData();
+    if (!data.query2) data.query2 = { sort: [] } as any;
+    if (data.query2 && !data.query2?.sort) data.query2.sort = [];
   }
 
   async reposition(arg: RepositionParams) {
@@ -149,7 +161,6 @@ class View<T extends TView> extends Data<T> {
 
   async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap()
-
     await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
       child_ids: Object.keys(sorts_map),
       subject_type: "View",
@@ -181,7 +192,6 @@ class View<T extends TView> extends Data<T> {
 
   async deleteSorts(args: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean, multiple?: boolean) {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap();
-
     await this.deleteIterate<TSchemaUnit & ViewSorts>(args, {
       child_ids: Object.keys(sorts_map),
       subject_type: "View",
@@ -193,12 +203,6 @@ class View<T extends TView> extends Data<T> {
     await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
   }
 
-  #populateFilters = (data: any) => {
-    if (!data.query2) data.query2 = { filter: { operator: "and", filters: [] } };
-    if (!data.query2?.filter) data.query2.filter = { operator: "and", filters: [] };
-    if (!data.query2?.filter.filters) data.query2.filter.filters = [];
-  }
-
   async createFilter(cb: (T: TSchemaUnit & { key: string }) => UserViewFilterParams | undefined) {
     await this.createFilters(cb, false)
   }
@@ -206,7 +210,7 @@ class View<T extends TView> extends Data<T> {
   async createFilters(cb: (T: TSchemaUnit & { key: string }) => UserViewFilterParams | undefined, multiple?: boolean) {
     multiple = multiple ?? true;
     const data = this.getCachedData(), parent = this.cache.block.get(data.parent_id) as TCollectionBlock, collection = this.cache.collection.get(parent.collection_id) as ICollection;
-    this.#populateFilters(data);
+    this.#populateFilters();
     let total_created = 0;
 
     const filters = data.query2?.filter.filters as TViewFilters[];
@@ -248,7 +252,7 @@ class View<T extends TView> extends Data<T> {
   async updateFilters(cb: (T: TSchemaUnit & TViewFilters) => UserViewFilterParams | undefined, multiple?: boolean) {
     multiple = multiple ?? true;
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    this.#populateFilters(data);
+    this.#populateFilters();
     let total_updated = 0;
     const filters = data.query2?.filter.filters as TViewFilters[];
     const schema_entries = new Map(Object.entries(collection.schema));
@@ -293,7 +297,7 @@ class View<T extends TView> extends Data<T> {
   async deleteFilters(cb: (T: TSchemaUnit & TViewFilters) => boolean | undefined, multiple?: boolean) {
     multiple = multiple ?? true;
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    this.#populateFilters(data);
+    this.#populateFilters();
     let total_deleted = 0;
     const filters = data.query2?.filter.filters as TViewFilters[],
       schema_entries = new Map(Object.entries(collection.schema));

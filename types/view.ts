@@ -12,6 +12,7 @@ export interface IViewQuery2 {
   }
 }
 
+export type TViewQuery2 = ITableViewQuery2 | IListViewQuery2 | IBoardViewQuery2 | ICalendarViewQuery2 | IGalleryViewQuery2 | ITimelineViewQuery2;
 export interface ITableViewFormat {
   table_wrap: boolean,
   table_properties: ViewFormatProperties[]

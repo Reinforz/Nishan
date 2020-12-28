@@ -1,4 +1,4 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, UpdateType, UpdateTypes, UserViewAggregationsCreateParams, ViewAggregations } from "../../types";
+import { FilterType, FilterTypes, IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, UpdateType, UpdateTypes, UserViewAggregationsCreateParams, ViewAggregations } from "../../types";
 import View from "./View";
 
 /**
@@ -86,36 +86,24 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     })], this.id, execute)
   }
 
-  async deleteAggregation(cb: (T: TSchemaUnit & ViewAggregations) => boolean | undefined) {
-    await this.deleteAggregations(cb, false);
+  async deleteAggregation(arg: FilterType<TSchemaUnit & ViewAggregations>, execute?: boolean) {
+    await this.deleteAggregations(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
-  async deleteAggregations(cb: (T: TSchemaUnit & ViewAggregations) => boolean | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    let total_deleted = 0;
-    const aggregations = data.query2?.aggregations as ViewAggregations[];
-    const schema_entries = new Map(Object.entries(collection.schema));
+  async deleteAggregations(args: FilterTypes<TSchemaUnit & ViewAggregations>, execute?: boolean, multiple?: boolean) {
+    const [aggregations_map, aggregations] = this.#getAggregationsMap(), data = this.getCachedData();
 
-    for (let index = 0; index < aggregations.length; index++) {
-      const aggregation = aggregations[index] as ViewAggregations;
-      const schema = schema_entries.get(aggregation.property)
-      const should_delete = cb({ ...aggregation, ...schema } as any) ?? undefined;
-      if (should_delete) {
-        total_deleted++;
-        aggregations.splice(index, 1)
-      }
-      if (!multiple && total_deleted === 1) break;
-    }
-
-    if (total_deleted) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+    await this.getIterate<TSchemaUnit & ViewAggregations>(args, {
+      subject_type: "View",
+      method: "DELETE",
+      multiple,
+      child_ids: Object.keys(aggregations_map)
+    }, (name) => aggregations_map[name], (_, aggregation) => {
+      aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property))
+    })
+    await this.executeUtil([this.updateOp([], {
+      query2: data.query2
+    })], this.id, execute)
   }
 }
 

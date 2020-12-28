@@ -1,4 +1,4 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, ViewAggregations } from "../../types";
+import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, UserViewAggregationsCreateParams, ViewAggregations } from "../../types";
 import View from "./View";
 
 /**
@@ -10,39 +10,59 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     super({ ...arg });
   }
 
-  async createAggregation(cb: (T: TSchemaUnit & { key: string }) => TViewAggregationsAggregators | undefined) {
-    await this.createAggregations(cb, false)
+  #getCollection = () => {
+    return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
   }
 
-  async createAggregations(cb: (T: TSchemaUnit & { key: string }) => TViewAggregationsAggregators | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    if (!data.query2) data.query2 = { aggregations: [] as ViewAggregations[] } as any;
-    if (!data.query2?.aggregations) (data.query2 as any).aggregations = [] as ViewAggregations[];
-    let total_created = 0;
-    const aggregations = data.query2?.aggregations as ViewAggregations[];
-    const schema_entries = Object.entries(collection.schema);
-    for (let index = 0; index < schema_entries.length; index++) {
-      const [key, schema] = schema_entries[index];
-      const aggregator = cb({ ...schema, key }) ?? undefined;
-      if (aggregator) {
-        total_created++;
-        aggregations.push({
-          property: key,
-          aggregator
-        })
-      }
-      if (!multiple && total_created === 1) break;
-    }
+  #populateAggregations = () => {
+    const data = this.getCachedData();
+    if (!data.query2) data.query2 = { aggregations: [] } as any;
+    if (data.query2 && !data.query2?.aggregations) data.query2.aggregations = [];
+    return (data.query2 as any).aggregations as ViewAggregations[]
+  }
 
-    if (total_created) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+  #getSchemaMap = () => {
+    const collection = this.#getCollection(), schema_map: Record<string, TSchemaUnit & { property: string }> = {};
+    Object.entries(collection.schema).forEach(([property, value]) => {
+      schema_map[value.name] = {
+        property,
+        ...value
+      }
+    })
+    return schema_map;
+  }
+
+  #getAggregationsMap = () => {
+    const data = this.getCachedData(), collection = this.#getCollection(),
+      aggregations_map: Record<string, TSchemaUnit & ViewAggregations> = {}, aggregations = this.#populateAggregations();
+    data.query2?.aggregations?.forEach(aggregation => {
+      const schema_unit = collection.schema[aggregation.property];
+      aggregations_map[schema_unit.name] = {
+        ...schema_unit,
+        ...aggregation
+      }
+    });
+
+    return [aggregations_map, aggregations] as const;
+  }
+
+  async createAggregation(arg: UserViewAggregationsCreateParams, execute?: boolean) {
+    await this.createAggregations([arg], execute)
+  }
+
+  async createAggregations(args: UserViewAggregationsCreateParams[], execute?: boolean) {
+    const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, aggregations] = this.#getAggregationsMap();
+    for (let index = 0; index < args.length; index++) {
+      const { aggregator, name } = args[index];
+      aggregations.push({
+        property: schema_map[name].property,
+        aggregator
+      })
+    };
+
+    this.executeUtil([this.updateOp([], {
+      query2: data.query2,
+    })], this.id, execute)
   }
 
   async updateAggregation(cb: (T: TSchemaUnit & ViewAggregations) => TViewAggregationsAggregators | undefined) {

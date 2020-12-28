@@ -1,6 +1,7 @@
 import { Block, BoardView, CalendarView, Collection, CollectionViewPage, GalleryView, ListView, Page, SchemaUnit, TableView, TimelineView } from "../api";
 import CollectionBlock from "../api/CollectionBlock";
 import { IColumnList, IColumnListInput, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, IEmbed, IEmbedInput, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, TBlockInput, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, RollupSchemaUnit, CheckboxSchemaUnit, DateSchemaUnit, FileSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, CreatedTimeSchemaUnit, EmailSchemaUnit, FormulaSchemaUnit, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, RelationSchemaUnit, CreatedBySchemaUnit, IAudio, IAudioInput, IBreadcrumb, IBreadcrumbInput, IBulletedList, IBulletedListInput, ICallout, ICalloutInput, ICode, ICodeInput, ICodepen, ICodepenInput, IDivider, IDividerInput, IDrive, IDriveInput, IEquation, IEquationInput, IFactory, IFactoryInput, IFigma, IFigmaInput, IFile, IFileInput, IGist, IGistInput, IHeader, IHeaderInput, IImage, IImageInput, IMaps, IMapsInput, INumberedList, INumberedListInput, IQuote, IQuoteInput, ISubHeader, ISubHeaderInput, IText, ITextInput, ITOC, ITOCInput, ITodo, ITodoInput, IToggle, IToggleInput, ITweet, ITweetInput, IVideo, IVideoInput, IWebBookmark, IWebBookmarkInput, IColumn, PhoneNumberSchemaUnit, IViewFilterData } from "./";
+import { IViewAggregationsAggregators } from "./aggregator";
 
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 
@@ -199,6 +200,34 @@ interface ViewFilterCreateGenericParam<T extends TSchemaUnitType> {
   position?: number,
   name: string
 }
+
+interface ViewAggregationsCreateGenericParam<T extends TSchemaUnitType> {
+  schema_type: T,
+  name: string,
+  aggregator: IViewAggregationsAggregators[T]
+}
+
+export type UserViewAggregationsCreateParams =
+  ViewAggregationsCreateGenericParam<"text"> |
+  ViewAggregationsCreateGenericParam<"title"> |
+  ViewAggregationsCreateGenericParam<"number"> |
+  ViewAggregationsCreateGenericParam<"select"> |
+  ViewAggregationsCreateGenericParam<"multi_select"> |
+  ViewAggregationsCreateGenericParam<"date"> |
+  ViewAggregationsCreateGenericParam<"person"> |
+  ViewAggregationsCreateGenericParam<"file"> |
+  ViewAggregationsCreateGenericParam<"checkbox"> |
+  ViewAggregationsCreateGenericParam<"url"> |
+  ViewAggregationsCreateGenericParam<"email"> |
+  ViewAggregationsCreateGenericParam<"phone_number"> |
+  ViewAggregationsCreateGenericParam<"formula"> |
+  ViewAggregationsCreateGenericParam<"relation"> |
+  ViewAggregationsCreateGenericParam<"rollup"> |
+  ViewAggregationsCreateGenericParam<"created_time"> |
+  ViewAggregationsCreateGenericParam<"created_by"> |
+  ViewAggregationsCreateGenericParam<"last_edited_time"> |
+  ViewAggregationsCreateGenericParam<"last_edited_by">
+
 
 export type UserViewFilterCreateParams =
   ViewFilterCreateGenericParam<"text"> |

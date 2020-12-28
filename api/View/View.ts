@@ -356,6 +356,26 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
+  async updateFormatPositionProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean, multiple?: boolean) {
+    const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
+    await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
+      subject_type: "View",
+      multiple,
+      child_ids: Object.keys(format_properties_map),
+      execute
+    }, (name) => format_properties_map[name], (name, current_data, new_position) => {
+      const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
+      if (target_format_property_index !== new_position) {
+        format_properties.splice(target_format_property_index, 1);
+        format_properties.splice(new_position, 0, target_format_property)
+      }
+    });
+
+    await this.executeUtil([this.updateOp([], {
+      format: data.format,
+    })], this.id, execute)
+  }
+
   async updateFormatProperty(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined) {
     await this.updateFormatProperties(cb, false);
   }

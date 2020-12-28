@@ -356,6 +356,10 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
+  async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean) {
+    return await this.updateFormatPositionProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  }
+
   async updateFormatPositionProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
@@ -376,38 +380,31 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
-  async updateFormatProperty(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined) {
-    await this.updateFormatProperties(cb, false);
+  async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, execute?: boolean) {
+    await this.updateFormatProperties(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
-  async updateFormatProperties(cb: (T: TSchemaUnit & ViewFormatProperties) => Partial<[number, boolean, number]> | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    let total_effected = 0;
-    const properties = (data.format as any)[`${data.type}_properties`] as ViewFormatProperties[], updated_properties = [] as ViewFormatProperties[];
-    for (let index = 0; index < properties.length; index++) {
-      const property = properties[index], collection_property = collection.schema[property.property];
-      const updated_property = cb({ ...property, ...collection_property }),
-        position = updated_property?.[2]
-      const new_property = {
-        width: updated_property?.[0] ?? property.width,
-        property: property.property,
-        visible: updated_property?.[1] ?? property.visible
+  async updateFormatProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, execute?: boolean, multiple?: boolean) {
+    const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
+    await this.updateIterate<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>(args, {
+      subject_type: "View",
+      multiple,
+      child_ids: Object.keys(format_properties_map),
+      execute
+    }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
+      const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
+      const { position, visible, width } = updated_data;
+      if (target_format_property_index !== position && position !== undefined && position !== null) {
+        format_properties.splice(target_format_property_index, 1);
+        format_properties.splice(position, 0, target_format_property)
       }
-      const _index = position ?? index;
-      updated_properties[_index] = new_property
-      total_effected++;
-      if (!multiple && total_effected === 1) break;
-    }
-    if (total_effected) {
-      await this.saveTransactions([this.updateOp([], {
-        format: {
-          ...data.format,
-          [`${data.type}_properties`]: updated_properties
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+      if (visible !== undefined && visible !== null) target_format_property.visible = visible;
+      if (width !== undefined && width !== null) target_format_property.width = width;
+    });
+
+    await this.executeUtil([this.updateOp([], {
+      format: data.format,
+    })], this.id, execute)
   }
 }
 

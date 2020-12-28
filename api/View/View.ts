@@ -314,6 +314,10 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
+  async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>, execute?: boolean) {
+    return await this.updateFormatVisibilityProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  }
+
   async updateFormatVisibilityProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, boolean>, execute?: boolean, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, boolean>(args, {
@@ -324,6 +328,27 @@ class View<T extends TView> extends Data<T> {
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
+    });
+
+    await this.executeUtil([this.updateOp([], {
+      format: data.format,
+    })], this.id, execute)
+  }
+
+  async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean) {
+    return await this.updateFormatWidthProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  }
+
+  async updateFormatWidthProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean, multiple?: boolean) {
+    const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
+    await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
+      subject_type: "View",
+      multiple,
+      child_ids: Object.keys(format_properties_map),
+      execute
+    }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
+      const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
+      target_format_property.width = updated_data;
     });
 
     await this.executeUtil([this.updateOp([], {

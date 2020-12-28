@@ -42,6 +42,23 @@ class View<T extends TView> extends Data<T> {
     return [sorts_map, sorts] as const;
   }
 
+  #getFormatProperties = () => {
+    const data = this.getCachedData();
+    return [data, (data.format as any)[`${data.type}_properties`] as ViewFormatProperties[]] as const;
+  }
+
+  #getFormatPropertiesMap = () => {
+    const collection = this.#getCollection(), format_map: Record<string, TSchemaUnit & ViewFormatProperties> = {}, [data, format_properties] = this.#getFormatProperties();
+    format_properties.forEach(format_property => {
+      const schema_unit = collection.schema[format_property.property];
+      format_map[schema_unit.name] = {
+        ...schema_unit,
+        ...format_property
+      }
+    })
+    return [data, format_map, format_properties] as const;
+  }
+
   #getSchemaMap = () => {
     const collection = this.#getCollection(), schema_map: Record<string, TSchemaUnit & { property: string }> = {};
     Object.entries(collection.schema).forEach(([property, value]) => {
@@ -294,6 +311,23 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([this.updateOp([], {
       query2: data.query2
+    })], this.id, execute)
+  }
+
+  async updateFormatVisibilityProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, boolean>, execute?: boolean, multiple?: boolean) {
+    const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
+    await this.updateIterate<TSchemaUnit & ViewFormatProperties, boolean>(args, {
+      subject_type: "View",
+      multiple,
+      child_ids: Object.keys(format_properties_map),
+      execute
+    }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
+      const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
+      target_format_property.visible = updated_data;
+    });
+
+    await this.executeUtil([this.updateOp([], {
+      format: data.format,
     })], this.id, execute)
   }
 

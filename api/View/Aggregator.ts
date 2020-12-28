@@ -1,4 +1,4 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, TViewAggregationsAggregators, UserViewAggregationsCreateParams, ViewAggregations } from "../../types";
+import { IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, UpdateType, UpdateTypes, UserViewAggregationsCreateParams, ViewAggregations } from "../../types";
 import View from "./View";
 
 /**
@@ -65,40 +65,25 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     })], this.id, execute)
   }
 
-  async updateAggregation(cb: (T: TSchemaUnit & ViewAggregations) => TViewAggregationsAggregators | undefined) {
-    await this.updateAggregations(cb, false);
+  async updateAggregation(arg: UpdateType<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>, execute?: boolean) {
+    await this.updateAggregations(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
-  async updateAggregations(cb: (T: TSchemaUnit & ViewAggregations) => TViewAggregationsAggregators | undefined, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as TCollectionBlock).collection_id) as ICollection;
-    if (!data.query2) data.query2 = { aggregations: [] as ViewAggregations[] } as any;
-    if (!data.query2?.aggregations) (data.query2 as any).aggregations = [] as ViewAggregations[];
-    let total_updated = 0;
-    const aggregations = data.query2?.aggregations as ViewAggregations[];
-    const schema_entries = new Map(Object.entries(collection.schema));
-    for (let index = 0; index < aggregations.length; index++) {
-      const aggregation = aggregations[index], schema = schema_entries.get(aggregation.property);
-      const res = cb({ ...schema, ...aggregation } as any) ?? undefined;
-      if (res) {
-        total_updated++;
-        const aggregator = res;
-        aggregations[index] = {
-          property: aggregation.property,
-          aggregator
-        }
-      }
-      if (!multiple && total_updated === 1) break;
-    }
+  async updateAggregations(args: UpdateTypes<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>, execute?: boolean, multiple?: boolean) {
+    const data = this.getCachedData(), [aggregations_map, aggregations] = this.#getAggregationsMap();
+    await this.updateIterate<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>(args, {
+      child_ids: Object.keys(aggregations_map),
+      subject_type: "View",
+      execute,
+      multiple
+    }, (name) => aggregations_map[name], (_, original_data, updated_data) => {
+      const index = aggregations.findIndex(data => data.property === original_data.property), aggregation = aggregations[index], { aggregator } = updated_data;
+      aggregation.aggregator = aggregator
+    })
 
-    if (total_updated) {
-      await this.saveTransactions([this.updateOp([], {
-        query2: {
-          ...data.query2
-        }
-      })]);
-      await this.updateCacheManually(this.id);
-    }
+    this.executeUtil([this.updateOp([], {
+      query2: data.query2,
+    })], this.id, execute)
   }
 
   async deleteAggregation(cb: (T: TSchemaUnit & ViewAggregations) => boolean | undefined) {

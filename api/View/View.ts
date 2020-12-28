@@ -275,7 +275,7 @@ class View<T extends TView> extends Data<T> {
       execute,
       multiple
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
-      const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters.find(data => (data as any).property === original_filter.property) as TViewFilters,
+      const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
         { type, operator, position, value } = updated_data;
 
       (filter.filter as any).operator = operator;

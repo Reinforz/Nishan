@@ -5,7 +5,7 @@ module.exports = {
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	favicon: 'img/logo.svg',
-	organizationName: 'Nishan-Open-Source',
+	organizationName: 'Devorein',
 	projectName: 'Nishan-Docs',
 	themeConfig: {
 		navbar: {
@@ -22,12 +22,12 @@ module.exports = {
 					position: 'left'
 				},
 				{
-					href: 'https://github.com/Nishan-Open-Source/Nishan/tree/master/docs',
+					href: 'https://github.com/Devorein/Nishan/tree/master/docs',
 					label: 'GitHub',
 					position: 'right'
 				},
 				{
-					href: 'https://github.com/Nishan-Open-Source/Nishan',
+					href: 'https://github.com/Devorein/Nishan',
 					label: 'Nishan',
 					position: 'left'
 				}
@@ -50,7 +50,7 @@ module.exports = {
 					items: [
 						{
 							label: 'GitHub',
-							href: 'https://github.com/Nishan-Open-Source/Nishan/tree/master/docs'
+							href: 'https://github.com/Devorein/Nishan/tree/master/docs'
 						}
 					]
 				}
@@ -64,7 +64,7 @@ module.exports = {
 			{
 				docs: {
 					sidebarPath: require.resolve('./sidebars.js'),
-					editUrl: 'https://github.com/Nishan-Open-Source/Nishan/edit/master/docs/'
+					editUrl: 'https://github.com/Devorein/Nishan/edit/master/docs/'
 				},
 				theme: {
 					customCss: require.resolve('./src/css/custom.css')
@@ -86,8 +86,9 @@ module.exports = {
 				mode: 'modules',
 				target: `ESNext`,
 				disableOutputCheck: true,
-				excludeExternals: true,
-				ignoreCompilerErrors: true,
+        excludeExternals: true,
+        excludePrivate: true,
+				ignoreCompilerErrors: false,
 				plugin: [ 'typedoc-plugin-no-inherit' ]
 			}
 		]

@@ -10,7 +10,7 @@ Since this repo has not been published as a package yet, please clone the repo a
 ## Cloning
 
 1. Navigate to the directory you want to clone into
-2. Type `git clone https://github.com/Nishan-Open-Source/Nishan.git`
+2. Type `git clone https://github.com/Devorein/Nishan.git`
 3. Navigate to the created directory
 4. run `npm i` to install all the dependencies
 5. run `tsc` to compile the ts files to js

@@ -1,4 +1,4 @@
-<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Nishan-Open-Source/Nishan/c6b6a44002d83f53cc5ca0d671554be25fe11a14/public/Logo.svg">
+<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/c6b6a44002d83f53cc5ca0d671554be25fe11a14/public/Logo.svg">
 
 # Nishan
 
@@ -6,7 +6,7 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
-Check out the [workflows](https://github.com/Nishan-Open-Source/Nishan/tree/master/workflows) folder for some examples that I personally use
+Check out the [workflows](https://github.com/Devorein/Nishan/tree/master/workflows) folder for some examples that I personally use
 
 ## Contributors
 

@@ -5,6 +5,7 @@
       "dom",
     ],
     "module": "commonjs",
+    "moduleResolution": "node",
     "target": "es2019",
     "strict": true,
     "esModuleInterop": true,

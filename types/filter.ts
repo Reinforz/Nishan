@@ -52,6 +52,7 @@ export type TAdvancedViewFiltersOperator =
 
 export type TViewFiltersOperator = TBasicViewFiltersOperator | TAdvancedViewFiltersOperator;
 
+export type TViewGroupFilterOperator = "and" | "or";
 export interface IViewFiltersOperator {
   title: TitleViewFiltersOperator,
   text: TextViewFiltersOperator,

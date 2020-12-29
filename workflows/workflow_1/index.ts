@@ -217,7 +217,7 @@ import "../env"
               type: "checkbox",
               name: "Done",
               format: 100,
-              filter: [["checkbox_is", "exact", false]]
+              filter: [{ operator: "checkbox_is", type: "exact", value: false }]
             },
             {
               type: "select",

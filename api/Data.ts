@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, ITBlock, ITView, ITSchemaUnit, TOperationTable, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType } from "../types";
+import { Schema, NishanArg, TDataType, TData, IOperation, Args, RepositionParams, TBlock, TParentType, ICollection, ISpace, ISpaceView, IUserRoot, UpdateCacheManuallyParam, FilterTypes, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts, ISchemaUnit, ICollectionBlockInput, TSearchManipViewParam, TableSearchManipViewParam, ITableViewFormat, BoardSearchManipViewParam, IBoardViewFormat, GallerySearchManipViewParam, IGalleryViewFormat, CalendarSearchManipViewParam, ICalendarViewQuery2, ITimelineViewFormat, TimelineSearchManipViewParam, ITBlock, ITView, ITSchemaUnit, TOperationTable, IDriveInput, ITCollectionBlock, PageCreateContentParam, RecordMap, TGenericEmbedBlockType, WebBookmarkProps, SetBookmarkMetadataParams, ICollectionView, TBlockType, TView, UpdateTypes, TSubjectType, ITPage, TMethodType, ViewFilterCreateInput, TSchemaUnitType } from "../types";
 import { validateUUID, Operation, error, warn } from "../utils";
 import Operations from "./Operations";
 
@@ -399,7 +399,7 @@ export default class Data<T extends TData> extends Operations {
       }
 
       view.forEach(info => {
-        const { format, sort, aggregation, filter, name } = info, property_info = name_map.get(name);
+        const { format, sort, aggregation, filters: _filters, name } = info, property_info = name_map.get(name);
         if (property_info) {
           const { key } = property_info,
             property: ViewFormatProperties = {
@@ -431,8 +431,9 @@ export default class Data<T extends TData> extends Operations {
             aggregator: aggregation
           })
 
-          if (filter) {
-            filter.forEach(([operator, type, value, position]: any) => {
+          if (_filters) {
+            _filters.forEach((filter: ViewFilterCreateInput<TSchemaUnitType>) => {
+              const { operator, type, value, position } = filter;
               const filter_value = {
                 property: key,
                 filter: {
@@ -441,9 +442,9 @@ export default class Data<T extends TData> extends Operations {
                     type,
                     value
                   }
-                } as any
-              }
-              if (position) filters.splice(position, 0, filter_value)
+                }
+              } as any
+              if (position !== undefined && position !== null) filters.splice(position, 0, filter_value)
               else filters.push(filter_value)
             })
           }

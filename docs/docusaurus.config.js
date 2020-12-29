@@ -83,11 +83,12 @@ module.exports = {
 					sidebarFile: './typedoc-sidebars.js',
 					fullNames: false
 				},
+				exclude: [ '../api/CollectionBlock', '../api/Data', '../api/Mutation', '../api/Queries' ],
 				mode: 'modules',
 				target: `ESNext`,
 				disableOutputCheck: true,
-        excludeExternals: true,
-        excludePrivate: true,
+				excludeExternals: true,
+				excludePrivate: true,
 				ignoreCompilerErrors: false,
 				plugin: [ 'typedoc-plugin-no-inherit' ]
 			}

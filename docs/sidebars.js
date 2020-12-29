@@ -5,7 +5,7 @@ module.exports = {
 			'Introduction/Features',
 			'Introduction/Understanding Nishan',
 			'Introduction/Understanding Notion'
-		],
-		API: require('./typedoc-sidebars')
+		]
+		// API: require('./typedoc-sidebars')
 	}
 };

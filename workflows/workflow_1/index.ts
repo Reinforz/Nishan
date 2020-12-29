@@ -151,13 +151,21 @@ import "../env"
                 type: "select",
                 name: "Status",
                 format: 100,
-                filter: [["enum_is", "exact", status]]
+                filters: [{
+                  operator: "enum_is",
+                  type: "exact",
+                  value: status
+                }]
               },
               {
                 type: "select",
                 name: "Phase",
                 format: 100,
-                filter: [["enum_is", "exact", phase]]
+                filters: [{
+                  operator: "enum_is",
+                  type: "exact",
+                  value: phase
+                }]
               },
             ]
           } as TSearchManipViewParam
@@ -217,7 +225,7 @@ import "../env"
               type: "checkbox",
               name: "Done",
               format: 100,
-              filter: [{ operator: "checkbox_is", type: "exact", value: false }]
+              filters: [{ operator: "checkbox_is", type: "exact", value: false }]
             },
             {
               type: "select",

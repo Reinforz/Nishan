@@ -102,7 +102,7 @@ class View<T extends TView> extends Data<T> {
     const sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[];
 
     for (let index = 0; index < options.length; index++) {
-      const { name, format, sort, aggregation, filter } = options[index];
+      const { name, format, sort, aggregation, filters: _filters } = options[index];
       const { key } = name_map[name];
 
       if (name) {
@@ -125,8 +125,8 @@ class View<T extends TView> extends Data<T> {
           aggregator: aggregation
         })
 
-        if (filter) {
-          filter.forEach((filter: any) => {
+        if (_filters) {
+          _filters.forEach((filter: any) => {
             const [operator, type, value] = filter;
             filters.push({
               property: key,

@@ -168,11 +168,13 @@ export interface ViewFilterCreateInput<T extends TSchemaUnitType> {
   type: IViewFilterData<T>["type"],
   value: IViewFilterData<T>["value"],
   position?: number,
-  filters?: ViewFilterCreateInputFilters<TSchemaUnitType>[]
+  filters?: ViewFilterCreateInputFilters<TSchemaUnitType>[],
+  filter_operator?: TViewGroupFilterOperator
 }
 
 interface ViewFilterCreateInputFilters<T extends TSchemaUnitType> extends ViewFilterCreateInput<T> {
   schema_unit: T,
+  property: string
 }
 
 interface ViewUpdateGenericParam<T extends TSchemaUnitType> {

@@ -136,7 +136,7 @@ class View<T extends TView> extends Data<T> {
                   type,
                   value
                 }
-              } as any
+              }
             })
           })
         }

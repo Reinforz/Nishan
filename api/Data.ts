@@ -343,6 +343,39 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
+  #populateFilter = (filters: ViewFilterCreateInput<TSchemaUnitType>[], parent_filter: any, parent_property: string, name_map: Map<string, { key: string } & ISchemaUnit>) => {
+    function traverse(filters: ViewFilterCreateInput<TSchemaUnitType>["filters"], parent_filter: any, parent_property: string) {
+      filters?.forEach((filter) => {
+        const { operator, type, value, position, property = parent_property, filter_operator = "and", filters: nested_filters } = filter;
+        const filter_value = {
+          property: name_map.get(filter.property)?.key ?? property,
+          filter: {
+            operator,
+            value: {
+              type,
+              value
+            }
+          }
+        }
+
+        if (nested_filters) {
+          const temp_parent_filter = {
+            filters: [],
+            operator: filter_operator
+          } as any
+          filters.push(temp_parent_filter);
+          parent_filter.push(temp_parent_filter);
+          parent_filter = temp_parent_filter.filters;
+          traverse(nested_filters, parent_filter, property);
+        }
+
+        if (position !== undefined && position !== null && position < parent_filter.length) parent_filter.splice(position, 0, filter_value)
+        else parent_filter.push(filter_value)
+      })
+    }
+    traverse(filters as any, parent_filter, parent_property);
+  }
+
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
@@ -431,23 +464,7 @@ export default class Data<T extends TData> extends Operations {
             aggregator: aggregation
           })
 
-          if (_filters) {
-            _filters.forEach((filter: ViewFilterCreateInput<TSchemaUnitType>) => {
-              const { operator, type, value, position } = filter;
-              const filter_value = {
-                property: key,
-                filter: {
-                  operator,
-                  value: {
-                    type,
-                    value
-                  }
-                }
-              } as any
-              if (position !== undefined && position !== null) filters.splice(position, 0, filter_value)
-              else filters.push(filter_value)
-            })
-          }
+          this.#populateFilter(_filters as any, filters, key, name_map)
           properties.push(property)
         } else
           throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))

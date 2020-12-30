@@ -363,14 +363,13 @@ export default class Data<T extends TData> extends Operations {
             filters: [],
             operator: filter_operator
           } as any
-          filters.push(temp_parent_filter);
           parent_filter.push(temp_parent_filter);
           parent_filter = temp_parent_filter.filters;
-          traverse(nested_filters, parent_filter, property);
         }
 
         if (position !== undefined && position !== null && position < parent_filter.length) parent_filter.splice(position, 0, filter_value)
         else parent_filter.push(filter_value)
+        nested_filters && traverse(nested_filters, parent_filter, property);
       })
     }
     traverse(filters as any, parent_filter, parent_property);

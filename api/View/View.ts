@@ -1,4 +1,4 @@
-import { RepositionParams, ICollection, ISchemaUnit, NishanArg, TCollectionBlock, TView, ViewAggregations, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, ViewUpdateParam, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams, FilterType, UpdateType } from "../../types";
+import { RepositionParams, ICollection, NishanArg, TCollectionBlock, TView, ViewFormatProperties, TSchemaUnit, TSortValue, ViewSorts, TViewFilters, UpdateTypes, FilterTypes, TViewQuery2, IViewFilter, UserViewFilterCreateParams, FilterType, UpdateType, TSearchManipViewParam, ICollectionBlock } from "../../types";
 import Data from "../Data";
 
 /**
@@ -94,70 +94,11 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
   // ? TD:1:M Use the Data.createViews method
-  async update(options: ViewUpdateParam[]) {
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.getParent() as TCollectionBlock).collection_id) as ICollection;
-    const name_map: Record<string, { key: string } & ISchemaUnit> = {};
-    Object.entries(collection.schema).forEach(([key, schema]) => name_map[schema.name] = { key, ...schema })
 
-    const sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[];
-
-    for (let index = 0; index < options.length; index++) {
-      const { name, format, sort, aggregation, filters: _filters } = options[index];
-      const { key } = name_map[name];
-
-      if (name) {
-        const property: ViewFormatProperties = {
-          property: key,
-        } as any;
-        if (typeof format === "boolean") property.visible = format;
-        else if (typeof format === "number") property.width = format;
-        else if (Array.isArray(format)) {
-          property.width = format?.[1] ?? 250
-          property.visible = format?.[0] ?? true;
-        }
-        if (sort) sorts.push({
-          property: key,
-          direction: sort as any
-        })
-
-        if (aggregation) aggregations.push({
-          property: key,
-          aggregator: aggregation
-        })
-
-        if (_filters) {
-          _filters.forEach((filter: any) => {
-            const [operator, type, value] = filter;
-            filters.push({
-              property: key,
-              filter: {
-                operator,
-                value: {
-                  type,
-                  value
-                }
-              }
-            })
-          })
-        }
-        properties.push(property)
-      }
-    }
-
-    await this.saveTransactions([this.updateOp([], {
-      query2: {
-        sort: sorts,
-        filter: {
-          operator: "and",
-          filters
-        },
-        aggregations
-      },
-      format: {
-        [`${data.type}_properties`]: properties
-      }
-    })]);
-    await this.updateCacheManually(this.id);
+  async update(param: TSearchManipViewParam, execute?: boolean) {
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, , view_map, view_records] = this.createViewsUtils(collection.schema, [param], collection.id, data.parent_id, this.id);
+    await this.executeUtil(created_view_ops, view_records, execute)
+    return view_map;
   }
 
   async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), execute?: boolean) {

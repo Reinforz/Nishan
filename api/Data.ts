@@ -375,7 +375,7 @@ export default class Data<T extends TData> extends Operations {
     traverse(filters as any, parent_filter, parent_property);
   }
 
-  protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string) {
+  protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string, current_id?: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
     const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
@@ -385,7 +385,7 @@ export default class Data<T extends TData> extends Operations {
     for (let index = 0; index < views.length; index++) {
       const { id, name, type, view, filter_operator = "and" } = views[index],
         sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-        view_id = this.generateId(id), included_units: string[] = [], query2 = {
+        view_id = current_id || this.generateId(id), included_units: string[] = [], query2 = {
           sort: sorts,
           filter: {
             operator: filter_operator,

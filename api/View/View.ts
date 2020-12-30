@@ -85,6 +85,10 @@ class View<T extends TView> extends Data<T> {
     return (data.query2 as any).sort as ViewSorts[]
   }
 
+  getCachedParentData() {
+    return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
+  }
+
   async reposition(arg: RepositionParams) {
     await this.saveTransactions([this.addToChildArray(this.id, arg)]);
   }

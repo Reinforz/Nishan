@@ -614,6 +614,13 @@ export default class Data<T extends TData> extends Operations {
     } as ITSchemaUnit
   }
 
+  protected createPageMap() {
+    return {
+      page: [],
+      collection_view_page: []
+    } as ITPage
+  }
+
   protected async createClass(type: TBlockType, id: string): Promise<any> {
     const Page = require("./Page").default;
     const Block = require("./Block").default;

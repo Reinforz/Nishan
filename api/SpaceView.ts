@@ -1,8 +1,10 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes } from '../types';
+import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes, FilterTypes, FilterType } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
+import Page from './Page';
+import CollectionViewPage from './CollectionViewPage';
 
 /**
  * A class to represent spaceview of Notion
@@ -52,6 +54,23 @@ class SpaceView extends Data<ISpaceView> {
       });
     }
     else return target_space
+  }
+
+  async getBookmarkedPage(arg: FilterType<TPage>) {
+    return await this.getBookmarkedPages(typeof arg === "string" ? [arg] : arg, false)
+  }
+
+  async getBookmarkedPages(args: FilterTypes<TPage>, multiple?: boolean) {
+    const tpage_map = this.createPageMap();
+    (await this.getIterate<TPage>(args, {
+      child_ids: this.getCachedData().bookmarked_pages,
+      subject_type: "Page",
+      multiple
+    }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
+      if (page.type === "page") tpage_map.page.push(new Page({ ...this.getProps(), id }))
+      else tpage_map.collection_view_page.push(new CollectionViewPage({ ...this.getProps(), id }))
+    }))
+    return tpage_map;
   }
 
   /**

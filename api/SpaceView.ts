@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, IPage, FilterType, FilterTypes, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys } from '../types';
+import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes } from '../types';
 import Space from './Space';
 import { Operation } from '../utils';
 
@@ -58,8 +58,8 @@ class SpaceView extends Data<ISpaceView> {
   * Toggle a single page from the bookmark list
   * @param arg id string or a predicate filter function
   */
-  async toggleFavourite(arg?: FilterType<TPage>, execute?: boolean) {
-    await this.toggleFavourites(typeof arg === "string" ? [arg] : arg, execute, false);
+  async updateBookmarkedPage(arg: UpdateTypes<TPage, boolean>, execute?: boolean) {
+    await this.updateBookmarkedPages(typeof arg === "string" ? [arg] : arg, execute, false);
   }
 
   /**
@@ -67,40 +67,18 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async toggleFavourites(args?: FilterTypes<TPage>, execute?: boolean, multiple?: boolean) {
-    multiple = multiple ?? true;
-    const target_space_view = this.getCachedData(), target_space = await this.getSpace(false) as ISpace, ops: IOperation[] = [];
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const page_id = args[index];
-        if (target_space.pages.includes(page_id)) {
-          const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-          ops.push((is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
-            id: page_id
-          }))
-          this.logger && this.logger("UPDATE", "Page", page_id);
-        }
-        if (!multiple && ops.length === 1) break;
-      }
-    } else if (typeof args === "function") {
-      for (let index = 0; index < target_space.pages.length; index++) {
-        const page_id = target_space.pages[index];
-        const page = this.getCachedData<IPage>(page_id);
-        if (page.parent_id === target_space.id && await args(page, index)) {
-          const is_bookmarked = target_space_view?.bookmarked_pages?.includes(page_id);
-          ops.push((is_bookmarked ? this.listRemoveOp : this.listBeforeOp)(["bookmarked_pages"], {
-            id: page_id
-          }));
-          this.logger && this.logger("UPDATE", "Page", page_id);
-        }
-        if (!multiple && ops.length === 1) break;
-      }
-    }
-
-    if (ops.length !== 0) {
-      await this.saveTransactions(ops);
-      await this.updateCacheManually([[target_space_view.id, "space_view"]]);
-    }
+  async updateBookmarkedPages(args: UpdateTypes<TPage, boolean>, execute?: boolean, multiple?: boolean) {
+    const target_space_view = this.getCachedData(), ops: IOperation[] = [];
+    await this.updateIterate<TPage, boolean>(args, {
+      child_ids: this.cache.space.get(target_space_view.space_id)?.pages ?? [],
+      subject_type: "Page",
+      multiple,
+    }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
+      ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
+        id
+      }))
+    });
+    this.executeUtil(ops, [[target_space_view.id, "space_view"]], execute)
   }
 }
 

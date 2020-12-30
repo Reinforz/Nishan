@@ -7,7 +7,7 @@ import {
   TExportType,
   PageCreateContentParam,
   ISpaceView,
-  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType
+  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType, ISpace
 } from "../types";
 import Permissions from "./Permissions";
 
@@ -19,6 +19,12 @@ import Permissions from "./Permissions";
 export default class Page extends Permissions<IPage> {
   constructor(arg: NishanArg) {
     super(arg);
+  }
+
+  getCachedParentData() {
+    const data = this.getCachedData();
+    if (data.parent_table === "space") return this.cache.space.get(data.parent_id) as ISpace;
+    else return this.cache.block.get(data.parent_id) as IPage;
   }
 
   /* async upload() {

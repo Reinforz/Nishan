@@ -1,6 +1,6 @@
 import CollectionBlock from './CollectionBlock';
 
-import { NishanArg } from '../types';
+import { IPage, NishanArg } from '../types';
 
 /**
  * A class to represent collectionview of Notion
@@ -9,6 +9,10 @@ import { NishanArg } from '../types';
 class CollectionView extends CollectionBlock {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "block" });
+  }
+
+  getCachedParentData() {
+    return this.cache.block.get(this.getCachedData().parent_id) as IPage;
   }
 }
 

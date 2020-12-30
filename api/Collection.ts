@@ -3,7 +3,7 @@ import { warn } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageCreateInput, ICollectionUpdateInput, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, TCollectionUpdateKeys, } from "../types";
+import { ICollection, IPageCreateInput, ICollectionUpdateInput, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, TCollectionUpdateKeys, TCollectionBlock, } from "../types";
 import Page from './Page';
 
 /**
@@ -21,6 +21,10 @@ class Collection extends Data<ICollection> {
     for (let [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);
     return page_ids;
+  }
+
+  getCachedParentData() {
+    return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
   }
 
   /**

@@ -60,6 +60,10 @@ export default class Data<T extends TData> extends Operations {
     return { collection_view_page: [], page: [] } as ITPage;
   }
 
+  protected getLastEditedProps() {
+    return { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id }
+  }
+
   #detectChildData = (type: TDataType, id: string) => {
     let child_type: TDataType = 'block', child_path: string = '';
     const data = this.cache[type].get(id) as TBlock;
@@ -294,7 +298,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
-    const { child_type, child_path, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
+    const { child_type, child_path, execute = this.defaultExecutionState } = options, updated_props = this.getLastEditedProps();
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     const matched_ids = await this.#iterate(args, transform, {
       method: "DELETE",
@@ -315,7 +319,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
-    const { child_type, execute = this.defaultExecutionState } = options, updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id };
+    const { child_type, execute = this.defaultExecutionState } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     await this.#iterate(args, transform, {
@@ -853,9 +857,7 @@ export default class Data<T extends TData> extends Operations {
             created_time: current_time,
             created_by_id: this.user_id,
             created_by_table: 'notion_user',
-            last_edited_time: current_time,
-            last_edited_by_id: this.user_id,
-            last_edited_by_table: 'notion_user'
+            ...this.getLastEditedProps()
           }))
           block_map[type].push(await this.createClass(content.type, $block_id));
         }

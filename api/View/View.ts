@@ -93,7 +93,6 @@ class View<T extends TView> extends Data<T> {
    * Update the current view
    * @param options Options to update the view
    */
-  // ? TD:1:M Use the Data.createViews method
 
   async update(param: TSearchManipViewParam, execute?: boolean) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, , view_map, view_records] = this.createViewsUtils(collection.schema, [param], collection.id, data.parent_id, this.id);

@@ -89,7 +89,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
       this.updateOp([], {
         properties,
         format,
-        last_edited_time: Date.now()
+        ...this.getLastEditedProps()
       }),
     ], data.id, execute)
   }
@@ -112,16 +112,15 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
   async delete(execute?: boolean) {
     const data = this.getCachedData();
-    const current_time = Date.now();
     const is_root_page = data.parent_table === "space" && data.type === "page";
 
     await this.executeUtil([
       this.updateOp([], {
         alive: false,
-        last_edited_time: current_time
+        ...this.getLastEditedProps()
       }),
       is_root_page ? Operation.space.listRemove(data.space_id, ['pages'], { id: data.id }) : Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
-      is_root_page ? Operation.space.set(data.space_id, ['last_edited_time'], current_time) : Operation.block.set(data.parent_id, ['last_edited_time'], current_time)
+      is_root_page ? Operation.space.update(data.space_id, [], this.getLastEditedProps()) : Operation.block.update(data.parent_id, [], this.getLastEditedProps())
     ], this.id, execute)
   }
 
@@ -131,13 +130,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
   async transfer(new_parent_id: string, execute?: boolean) {
     const data = this.getCachedData();
-    const current_time = Date.now();
     await this.executeUtil([
-      this.updateOp([], { last_edited_time: current_time, permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
+      this.updateOp([], { ...this.getLastEditedProps(), permissions: null, parent_id: new_parent_id, parent_table: 'block', alive: true }),
       Operation.block.listRemove(data.parent_id, ['content'], { id: data.id }),
       Operation.block.listAfter(new_parent_id, ['content'], { after: '', id: data.id }),
-      Operation.block.set(data.parent_id, ['last_edited_time'], current_time),
-      Operation.block.set(new_parent_id, ['last_edited_time'], current_time)
+      Operation.block.set(data.parent_id, [], this.getLastEditedProps()),
+      Operation.block.set(new_parent_id, [], this.getLastEditedProps())
     ], [this.id, data.parent_id, new_parent_id], execute)
   }
 }

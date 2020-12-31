@@ -685,11 +685,11 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  generateId(id: string | undefined) {
+  protected generateId(id: string | undefined) {
     return id ? validateUUID(id) ? id : warn("Invalid uuid provided") && uuidv4() : uuidv4()
   }
 
-  async nestedContentPopulateAndExecute(options: PageCreateContentParam[], execute?: boolean) {
+  protected async nestedContentPopulateAndExecute(options: PageCreateContentParam[], execute?: boolean) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(options, this.id, this.type);
     await this.executeUtil(ops, sync_records, execute);
     for (let bookmark of bookmarks)
@@ -697,7 +697,7 @@ export default class Data<T extends TData> extends Operations {
     return block_map;
   }
 
-  async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
+  protected async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
 
     const CollectionView = require("./CollectionView").default;
@@ -923,5 +923,4 @@ export default class Data<T extends TData> extends Operations {
     await traverse(contents, parent_id, parent_table);
     return [ops, sync_records, block_map, { bookmarks }] as [IOperation[], UpdateCacheManuallyParam, ITBlock, { bookmarks: SetBookmarkMetadataParams[] }]
   }
-
 }

@@ -419,12 +419,12 @@ export interface ISpace extends CreateProps, LastEditedProps {
 }
 
 export interface ISpaceView extends Node {
-  created_getting_started: true,
-  created_onboarding_templates: true,
+  created_getting_started: boolean,
+  created_onboarding_templates: boolean,
   joined: boolean,
-  notify_desktop: true,
-  notify_email: true,
-  notify_mobile: true,
+  notify_desktop: boolean,
+  notify_email: boolean,
+  notify_mobile: boolean,
   sidebar_hidden_templates: string[],
   space_id: string,
   visited_templates: string[],

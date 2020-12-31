@@ -23,7 +23,7 @@ class UserRoot extends Data<IUserRoot> {
    * @returns An array of pages object matching the passed criteria
    */
   async getSpaceViews(args?: FilterTypes<ISpaceView>, multiple?: boolean) {
-    return (await this.getIterate<ISpaceView>(args, { multiple, subject_type: "SpaceView", child_ids: "space_views" }, (space_id) => this.cache.space_view.get(space_id))).map(id => new SpaceView({ ...this.getProps(), id }));
+    return (await this.getIterate<ISpaceView>(args, { multiple, subject_type: "SpaceView", child_ids: "space_views" }, (space_id) => this.cache.space_view.get(space_id))).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
   }
 
   async updateSpaceView(arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>, execute?: boolean) {

@@ -149,8 +149,9 @@ class NotionUser extends Data<INotionUser> {
       multiple,
       subject_type: "Space",
       child_ids: this.#getSpaceIds(),
-    }, (space_id) => this.cache.space.get(space_id))).map((id) => new Space({
+    }, (space_id) => this.cache.space.get(space_id))).map(({ id }) => new Space({
       ...this.getProps(),
+      space_id: id,
       id
     }));
   }
@@ -183,7 +184,7 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id));
 
     for (let index = 0; index < matches_ids.length; index++) {
-      const spaceId = matches_ids[index];
+      const { id: spaceId } = matches_ids[index];
       await this.enqueueTask({
         eventName: "deleteSpace",
         request: {

@@ -253,14 +253,14 @@ export default class Data<T extends TData> extends Operations {
   // cb1 is passed from the various iterate methods, cb2 is passed from the actual method
   #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data: RD | undefined, index: number) => any, cb2?: ((id: string, data: TD, updated_data: RD, index: number) => any)) => {
     await this.initializeCache();
-    const matched_ids: string[] = [], { multiple = true, method, subject_type } = options;
+    const matched_ids: TD[] = [], { multiple = true, method, subject_type } = options;
     const child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : this.getCachedData()[options.child_ids]) ?? []) as string[];
 
     const iterateUtil = async (child_id: string, child_data: TD, updated_data: RD | undefined, index: number) => {
       cb1 && await cb1(child_id, child_data, updated_data, index);
       cb2 && await cb2(child_id, child_data, updated_data as any, index);
       this.logger && this.logger(method, subject_type, child_id);
-      matched_ids.push(child_id);
+      matched_ids.push(child_data);
     }
 
     if (Array.isArray(args)) {

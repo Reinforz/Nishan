@@ -93,11 +93,7 @@ export default class Mutations extends Queries {
               planType: "personal",
               initialUseCases: []
             },
-            {
-              headers: {
-                cookie: `token_v2=${this.token};notion_user_id=${this.user_id};`
-              }
-            }
+            this.headers
           ) as { data: CreateSpaceResult };
           this.saveToCache(recordMap);
           resolve(data);
@@ -109,6 +105,7 @@ export default class Mutations extends Queries {
   }
 
   protected async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
+    console.log(this.headers, this.createTransaction(Operations));
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

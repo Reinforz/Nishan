@@ -67,7 +67,7 @@ class Collection extends Data<ICollection> {
       child_ids: "template_pages",
       multiple,
       subject_type: "Page"
-    }, (page_id) => this.cache.block.get(page_id) as IPage)).map(id => new Page({ ...this.getProps(), id }))
+    }, (page_id) => this.cache.block.get(page_id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }))
   }
 
   async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
@@ -125,7 +125,7 @@ class Collection extends Data<ICollection> {
       child_ids: await this.#getRowPages(),
       subject_type: "Page",
       multiple
-    }, (id) => this.cache.block.get(id) as IPage)).map((id) => new Page({ ...this.getProps(), id }));
+    }, (id) => this.cache.block.get(id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }));
   }
 
   async updatePage(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
@@ -193,7 +193,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
     const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit" }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(schema_id => schema_unit_map[data.schema[schema_id].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id }) as any))
+    (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(({ key }) => schema_unit_map[data.schema[key].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: key }) as any))
     return schema_unit_map;
   }
 

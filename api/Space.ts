@@ -157,7 +157,7 @@ export default class Space extends Data<ISpace> {
       subject_type: "Collection",
       multiple,
       child_ids: this.getCollectionIds(),
-    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }));
+    }, (collection_id) => this.cache.collection.get(collection_id))).map(({ id }) => new Collection({ ...this.getProps(), id }));
   }
 
   async updateRootCollection(arg: UpdateType<ICollection, Partial<ICollection>>, execute?: boolean) {

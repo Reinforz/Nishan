@@ -21,8 +21,8 @@ export default class Queries extends Cache {
   };
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
   protected logger: Logger;
-  protected user_id: string;
   protected defaultExecutionState: boolean;
+  user_id: string;
 
   constructor({ logger, token, interval, user_id, cache, defaultExecutionState }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack" | "sync_records">) {
     super(cache);
@@ -30,8 +30,8 @@ export default class Queries extends Cache {
     this.interval = interval || 1000;
     this.headers = {
       headers: {
-        cookie: `token_v2=${token};notion_user_id=${user_id}`,
-        ["x-notion-active-user-header"]: user_id
+        cookie: `token_v2=${token};notion_user_id=${user_id};`,
+        ["x-notion-active-user-header"]: user_id,
       }
     };
     this.user_id = user_id;

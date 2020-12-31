@@ -9,7 +9,7 @@ interface CommonIterateOptions<T> {
   multiple?: boolean
 }
 
-interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, execute?: boolean };
+interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, execute?: boolean, updateParent?: boolean };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
   child_path?: keyof T
 }
@@ -319,7 +319,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
-    const { child_type, execute = this.defaultExecutionState } = options, updated_props = this.getLastEditedProps();
+    const { child_type, execute = this.defaultExecutionState, updateParent = true } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     await this.#iterate(args, transform, {
@@ -332,7 +332,7 @@ export default class Data<T extends TData> extends Operations {
       }
     }, cb);
 
-    if (ops.length !== 0) {
+    if (ops.length !== 0 && updateParent) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
       sync_records.push(this.id);
     }

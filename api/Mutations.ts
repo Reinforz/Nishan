@@ -105,7 +105,6 @@ export default class Mutations extends Queries {
   }
 
   protected async saveTransactions(Operations: IOperation[]): Promise<RecordMap> {
-    console.log(this.headers, this.createTransaction(Operations));
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

@@ -149,9 +149,10 @@ class NotionUser extends Data<INotionUser> {
       multiple,
       subject_type: "Space",
       child_ids: this.#getSpaceIds(),
-    }, (space_id) => this.cache.space.get(space_id))).map(({ id }) => new Space({
+    }, (space_id) => this.cache.space.get(space_id))).map(({ id, shard_id }) => new Space({
       ...this.getProps(),
       space_id: id,
+      shard_id,
       id
     }));
   }

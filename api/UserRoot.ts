@@ -35,6 +35,7 @@ class UserRoot extends Data<IUserRoot> {
       child_ids: this.getCachedData().space_views,
       subject_type: "SpaceView",
       child_type: "space_view",
+      updateParent: false,
       execute,
       multiple
     }, (id) => this.cache.space_view.get(id))).map((id) => new SpaceView({ ...this.getProps(), id }))

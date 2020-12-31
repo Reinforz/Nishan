@@ -1,5 +1,5 @@
 
-import { ISpacePermission, ViewAggregations, IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat, TPlanType, Node, TOperationTable, IPermission, TTaskType, TExportType, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
+import { ISpacePermission, ViewAggregations, IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat, TPlanType, Node, TOperationTable, IPermission, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
 export interface SetPageNotificationsAsReadParams {
   navigableBlockId: string,
   spaceId: string,
@@ -262,49 +262,9 @@ export interface GetUserSharePagesResult {
     space: SpaceData,
   }
 }
-
-export interface EnqueueTaskResult {
-  taskId: string
-}
-
 export interface SyncRecordValuesResult {
   recordMap: RecordMap
 }
-
-export interface EnqueueTaskParams {
-  eventName: TTaskType
-}
-
-export interface DuplicateBlockTaskParams extends EnqueueTaskParams {
-  eventName: "duplicateBlock",
-  request: {
-    sourceBlockId: string,
-    targetBlockId: string,
-    addCopyName: boolean
-  }
-}
-
-export interface ExportBlockTaskParams extends EnqueueTaskParams {
-  eventName: "exportBlock",
-  request: {
-    blockId: string,
-    exportOptions: {
-      exportType: TExportType,
-      locale: "en",
-      timeZone: string
-    },
-    recursive: boolean
-  }
-}
-
-export interface DeleteSpaceTaskParams extends EnqueueTaskParams {
-  eventName: "deleteSpace",
-  request: {
-    spaceId: string
-  }
-}
-
-export type TEnqueueTaskParams = DuplicateBlockTaskParams | ExportBlockTaskParams | DeleteSpaceTaskParams;
 
 export interface LoadPageChunkParams {
   chunkNumber: number,

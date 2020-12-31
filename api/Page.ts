@@ -4,10 +4,9 @@ import { Operation } from "../utils";
 
 import {
   NishanArg,
-  TExportType,
   PageCreateContentParam,
   ISpaceView,
-  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType, ISpace
+  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType, ISpace, TExportType
 } from "../types";
 import Permissions from "./Permissions";
 

@@ -4,14 +4,14 @@
   "description": "Unofficial Notion Api wrapper for Node.js",
   "main": "./dist/Nishan",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "colors": "^1.4.0",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.11.8",
+    "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",

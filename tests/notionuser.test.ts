@@ -2,7 +2,8 @@ import Nishan, { NotionUser, Space } from "../dist/Nishan";
 import data from "./data";
 
 const nishan = new Nishan({
-  token: ""
+  token: "",
+  logger: false
 });
 
 nishan.init_cache = true;
@@ -49,6 +50,30 @@ it("!Get space !id", async ()=>{
   checkSpace(await user.getSpace(SPACE_ONE_ID.slice(1)), false)
 })
 
-it("Get [space] [ids]", async ()=>{
+it("Get [space] [id]", async ()=>{
   checkSpaces(await user.getSpaces([SPACE_ONE_ID]));
+})
+
+it("!Get [space] ![id]", async ()=>{
+  checkSpaces(await user.getSpaces([SPACE_ONE_ID.slice(1)]), false);
+})
+
+it("Get space cb", async ()=>{
+  checkSpace(await user.getSpace(space=>space.id === SPACE_ONE_ID));
+})
+
+it("!Get space !cb", async ()=>{
+  checkSpace(await user.getSpace(space=>space.id === SPACE_ONE_ID.slice(1)), false);
+})
+
+it("Get [space] cb", async ()=>{
+  checkSpaces(await user.getSpaces(space=>space.id === SPACE_ONE_ID));
+})
+
+it("Get [space] undefined", async ()=>{
+  checkSpaces(await user.getSpaces());
+})
+
+it("!Get [space] !cb", async ()=>{
+  checkSpaces(await user.getSpaces(space=>space.id === SPACE_ONE_ID.slice(1)), false);
 })

@@ -2,7 +2,8 @@ import Nishan, { NotionUser } from "../dist/Nishan";
 import data from "./data";
 
 const nishan = new Nishan({
-  token: ""
+  token: "",
+  logger: false
 });
 
 nishan.init_cache = true;

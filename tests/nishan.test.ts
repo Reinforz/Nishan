@@ -1,16 +1,5 @@
-import Nishan, { NotionUser } from "../dist/Nishan";
-import data from "./data";
-
-const nishan = new Nishan({
-  token: "",
-  logger: false
-});
-
-nishan.init_cache = true;
-
-nishan.saveToCache(data.recordMap)
-
-const USER_ONE_ID = "d94caf87-a207-45c3-b3d5-03d157b5b39b";
+import { NotionUser } from "../dist/Nishan";
+import {USER_ONE_ID, nishan} from "./constants"
 
 function checkUser(user: NotionUser, status?: boolean){
   status = status ?? true;

@@ -9,19 +9,34 @@ nishan.init_cache = true;
 
 nishan.saveToCache(data.recordMap)
 
+const USER_ONE_ID = "d94caf87-a207-45c3-b3d5-03d157b5b39b";
+
 it("Sets up default configuration for Nishan",()=>{
   expect(nishan.defaultExecutionState).toBe(true);
   expect(nishan.interval).toBe(500);
 })
 
-it("Gets the correct notion user when passed id", async ()=>{
-  const user = await nishan.getNotionUser("d94caf87-a207-45c3-b3d5-03d157b5b39b");
+it("Gets the correct notion user when passed correct id", async ()=>{
+  const user = await nishan.getNotionUser(USER_ONE_ID);
   expect(user).not.toBeNull();
-  expect(user.id).toBe("d94caf87-a207-45c3-b3d5-03d157b5b39b");
+  expect(user.id).toBe(USER_ONE_ID);
   expect(user.type).toBe("notion_user");
 })
 
-it("Doesnt get the correct notion user when passed wrong id", async ()=>{
-  const user = await nishan.getNotionUser("d94caf87-a207-45c3-b3d5-03d157b5b39c");
+it("Doesnt get the notion user when passed wrong id", async ()=>{
+  const user = await nishan.getNotionUser(USER_ONE_ID.slice(1));
   expect(user).toBeUndefined();
+})
+
+it("Gets the notion user when passed an array of correct id", async ()=>{
+  const users = await nishan.getNotionUsers([USER_ONE_ID]);
+  expect(users.length).toBe(1);
+  expect(users[0].id).toBe(USER_ONE_ID);
+  expect(users[0].type).toBe("notion_user");
+})
+
+it("Doesnt get the notion user when passed an array of wrong id", async ()=>{
+  const users = await nishan.getNotionUsers([USER_ONE_ID.slice(1)]);
+  expect(users.length).toBe(0);
+  expect(users[0]).toBeUndefined();
 })

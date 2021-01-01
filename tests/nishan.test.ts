@@ -16,27 +16,52 @@ it("Sets up default configuration for Nishan",()=>{
   expect(nishan.interval).toBe(500);
 })
 
-it("Gets the correct notion user when passed correct id", async ()=>{
+it("Gets the correct notion user when passed a correct id", async ()=>{
   const user = await nishan.getNotionUser(USER_ONE_ID);
   expect(user).not.toBeNull();
   expect(user.id).toBe(USER_ONE_ID);
   expect(user.type).toBe("notion_user");
 })
 
-it("Doesnt get the notion user when passed wrong id", async ()=>{
+it("Doesnt get the notion user when passed a wrong id", async ()=>{
   const user = await nishan.getNotionUser(USER_ONE_ID.slice(1));
   expect(user).toBeUndefined();
 })
 
-it("Gets the notion user when passed an array of correct id", async ()=>{
+it("Gets the notion users when passed an array of correct id", async ()=>{
   const users = await nishan.getNotionUsers([USER_ONE_ID]);
   expect(users.length).toBe(1);
   expect(users[0].id).toBe(USER_ONE_ID);
   expect(users[0].type).toBe("notion_user");
 })
 
-it("Doesnt get the notion user when passed an array of wrong id", async ()=>{
+it("Doesnt get the notion users when passed an array of wrong id", async ()=>{
   const users = await nishan.getNotionUsers([USER_ONE_ID.slice(1)]);
+  expect(users.length).toBe(0);
+  expect(users[0]).toBeUndefined();
+})
+
+it("Gets the notion user when passed a correct callback", async ()=>{
+  const user = await nishan.getNotionUser((user)=>user.id === USER_ONE_ID);
+  expect(user).not.toBeNull();
+  expect(user.id).toBe(USER_ONE_ID);
+  expect(user.type).toBe("notion_user");
+})
+
+it("Doesnt get the notion user when passed a wrong callback", async ()=>{
+  const user = await nishan.getNotionUser((user)=>user.id === USER_ONE_ID.slice(1));
+  expect(user).toBeUndefined();
+})
+
+it("Gets the notion users when passed a correct callback", async ()=>{
+  const users = await nishan.getNotionUsers((user)=>user.id === USER_ONE_ID);
+  expect(users.length).toBe(1);
+  expect(users[0].id).toBe(USER_ONE_ID);
+  expect(users[0].type).toBe("notion_user");
+})
+
+it("Doesnt get the notion users when passed a wrong callback", async ()=>{
+  const users = await nishan.getNotionUsers((user)=>user.id === USER_ONE_ID.slice(1));
   expect(users.length).toBe(0);
   expect(users[0]).toBeUndefined();
 })

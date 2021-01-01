@@ -1,0 +1,31 @@
+{
+  "name": "@nishan/core",
+  "version": "0.0.0",
+  "description": "Core package for nishan",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "license": "MIT",
+  "main": "dist/Nishan.js",
+  "directories": {
+    "lib": "api",
+    "test": "tests"
+  },
+  "files": [
+    "api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "colors": "^1.4.0",
+    "uuid": "^8.3.2"
+  }
+}

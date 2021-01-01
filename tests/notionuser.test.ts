@@ -77,3 +77,17 @@ it("Get [space] undefined", async ()=>{
 it("!Get [space] !cb", async ()=>{
   checkSpaces(await user.getSpaces(space=>space.id === SPACE_ONE_ID.slice(1)), false);
 })
+
+it("Get user_settings", ()=>{
+  const user_settings = user.getUserSettings();
+  expect(user_settings).not.toBeNull();
+  expect(user_settings.id).toBe(USER_ONE_ID);
+  expect(user_settings.type).toBe("user_settings")
+})
+
+it("Get user_root", ()=>{
+  const user_root = user.getUserRoot();
+  expect(user_root).not.toBeNull();
+  expect(user_root.id).toBe(USER_ONE_ID);
+  expect(user_root.type).toBe("user_root")
+})

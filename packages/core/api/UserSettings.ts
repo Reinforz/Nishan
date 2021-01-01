@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { NishanArg, IUserSettings, IUserSettingsUpdateInput, TUserSettingsUpdateKeys } from '../types';
+import { NishanArg, IUserSettings, IUserSettingsUpdateInput, TUserSettingsUpdateKeys } from '../../types';
 
 /**
  * A class to represent user settings of Notion

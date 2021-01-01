@@ -1,4 +1,4 @@
-import { IBoardView, NishanArg } from "../../types";
+import { IBoardView, NishanArg } from "../../../types";
 import Aggregator from "./Aggregator";
 
 /**

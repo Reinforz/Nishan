@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { NishanArg, IOperation, TView, FilterTypes, FilterType, ICollection, TSearchManipViewParam, ICollectionViewPage, TViewUpdateInput, UpdateTypes, UpdateType } from '../types';
+import { NishanArg, IOperation, TView, FilterTypes, FilterType, ICollection, TSearchManipViewParam, ICollectionViewPage, TViewUpdateInput, UpdateTypes, UpdateType } from '../../types';
 import { Operation } from '../utils';
 
 const view_class = {

@@ -1,6 +1,6 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes, FilterTypes, FilterType } from '../types';
+import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes, FilterTypes, FilterType } from '../../types';
 import Space from './Space';
 import { Operation } from '../utils';
 import Page from './Page';

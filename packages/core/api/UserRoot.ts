@@ -1,5 +1,5 @@
 import Data from "./Data";
-import { FilterType, FilterTypes, ISpaceView, ISpaceViewUpdateInput, IUserRoot, NishanArg, UpdateType, UpdateTypes } from "../types";
+import { FilterType, FilterTypes, ISpaceView, ISpaceViewUpdateInput, IUserRoot, NishanArg, UpdateType, UpdateTypes } from "../../types";
 
 import SpaceView from "./SpaceView";
 

@@ -1,6 +1,6 @@
 import CollectionBlock from './CollectionBlock';
 
-import { IPage, ISpace, NishanArg } from '../types';
+import { IPage, ISpace, NishanArg } from '../../types';
 
 /**
  * A class to represent collectionviewpage of Notion

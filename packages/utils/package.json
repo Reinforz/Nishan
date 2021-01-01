@@ -1,17 +1,17 @@
 {
-  "name": "types",
+  "name": "utils",
   "version": "0.0.0",
-  "description": "typescript typings for nishan",
+  "description": "nishan utils to enhance user experience",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
-  "main": "src/index.ts",
-  "typings": "build/index.d.ts",
+  "main": "lib/utils.js",
   "directories": {
-    "lib": "src"
+    "lib": "lib",
+    "test": "__tests__"
   },
   "files": [
-    "src"
+    "lib"
   ],
   "repository": {
     "type": "git",

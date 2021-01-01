@@ -5,7 +5,7 @@ module.exports = {
 	testPathIgnorePatterns: [ '<rootDir>/node_modules', '<rootDir>/dist' ],
 	modulePathIgnorePatterns: [ '<rootDir>/dist' ],
 	roots: [ '<rootDir>/tests' ],
-	testMatch: [ '<rootDir>/tests/**/*.ts' ],
+	testMatch: [ '<rootDir>/tests/**/*.test.ts' ],
 	transform: {
 		'^.+\\.(ts)$': 'ts-jest'
 	}

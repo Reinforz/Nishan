@@ -1,5 +1,6 @@
 
 import { ISpacePermission, ViewAggregations, IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat, TPlanType, Node, TOperationTable, IPermission, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
+import { IUserPermission } from "./permissions";
 export interface SetPageNotificationsAsReadParams {
   navigableBlockId: string,
   spaceId: string,
@@ -252,7 +253,7 @@ export interface QueryCollectionResult {
 }
 
 export interface LoadUserContentResult {
-  recordMap: RecordMap
+  recordMap: Omit<RecordMap, "collection_view">
 }
 
 export interface GetUserSharePagesResult {
@@ -361,33 +362,33 @@ export interface UserSettingsData {
 
 export interface ISpace extends CreateProps, LastEditedProps {
   beta_enabled: boolean,
-  icon: string,
+  icon?: string,
   id: string,
   invite_link_code: string,
   invite_link_enabled: boolean,
   name: string,
   pages: string[],
-  permissions: ISpacePermission[],
+  permissions: (ISpacePermission | IUserPermission)[],
   plan_type: TPlanType,
   shard_id: number,
   version: number,
-  disable_public_access: boolean,
-  disable_guests: boolean,
-  disable_move_to_space: boolean,
-  disable_export: boolean,
-  domain: string,
+  disable_public_access?: boolean,
+  disable_guests?: boolean,
+  disable_move_to_space?: boolean,
+  disable_export?: boolean,
+  domain?: string,
 }
 
 export interface ISpaceView extends Node {
   created_getting_started: boolean,
-  created_onboarding_templates: boolean,
+  created_onboarding_templates?: boolean,
   joined: boolean,
   notify_desktop: boolean,
   notify_email: boolean,
   notify_mobile: boolean,
-  sidebar_hidden_templates: string[],
+  sidebar_hidden_templates?: string[],
   space_id: string,
-  visited_templates: string[],
+  visited_templates?: string[],
   bookmarked_pages: string[],
 }
 
@@ -405,27 +406,29 @@ export interface IUserRoot {
   id: string,
   space_views: string[],
   version: number,
-  left_spaces: string[]
+  left_spaces?: string[]
 }
 
 export interface IUserSettings {
   id: string,
   version: number,
   settings: IUserSettingsSettings,
-  time_zone: string,
-  locale: TLocale
-  preferred_locale: TLocale,
-  preferred_locale_origin: string,
-  start_day_of_week: number
+  time_zone?: string,
+  locale?: TLocale
+  preferred_locale?: TLocale,
+  preferred_locale_origin?: string,
+  start_day_of_week?: number
 }
 
+export type TPersona = 'personal' | 'student'
+export type TPreferredLocaleOrigin = "autodetect" | 'legacy'
 export interface IUserSettingsSettings {
   locale: TLocale,
-  persona: 'personal',
+  persona: TPersona,
   preferred_locale: TLocale,
-  preferred_locale_origin: "autodetect",
+  preferred_locale_origin: TPreferredLocaleOrigin ,
   signup_time: number,
-  start_day_of_week: number,
+  start_day_of_week?: number,
   time_zone: string,
   type: "personal",
   used_desktop_web_app: boolean

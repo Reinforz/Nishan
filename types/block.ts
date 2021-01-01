@@ -465,7 +465,7 @@ export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock | 
 export type TParentType = IPage | ISpace | ICollectionViewPage;
 
 export interface ICollection extends Node, ParentProps {
-  description: string[][],
+  description?: string[][],
   icon?: string,
   migrated: boolean,
   name: string[][],

@@ -13,7 +13,7 @@ class Nishan extends Cache {
   logger: Logger;
   defaultExecutionState: boolean
 
-  constructor(arg: Pick<NishanArg, "token" | "interval"> & { defaultExecutionState?: boolean, logger?: Logger }) {
+  constructor(arg: Pick<NishanArg, "token"> & { interval?: number, defaultExecutionState?: boolean, logger?: Logger }) {
     super();
     this.token = arg.token;
     this.interval = arg.interval || 500;

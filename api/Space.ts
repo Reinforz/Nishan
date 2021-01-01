@@ -177,7 +177,7 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], execute?: boolean) {
     const ops: IOperation[] = [], notion_users: INotionUser[] = []
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], notion_user = await this.findUser(email);
+      const [email, role] = infos[i], { value: { value: notion_user } } = await this.findUser(email);
       if (!notion_user) error(`User does not have a notion account`);
       else
         ops.push({

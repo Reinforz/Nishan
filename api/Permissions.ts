@@ -25,7 +25,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
-      const notion_user = await this.findUser(email);
+      const { value: { value: notion_user } } = await this.findUser(email);
       if (!notion_user) error(`User does not have a notion account`);
       else
         permissionItems.push({

@@ -4,7 +4,7 @@ import colors from "colors";
 import Cache from "./Cache";
 
 import { error } from "../utils";
-import { UpdateCacheManuallyParam, TDataType, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, INotionUser, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, RecordMap, SyncRecordValuesParams, SyncRecordValuesResult, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, Logger, NishanArg } from "../types";
+import { UpdateCacheManuallyParam, TDataType, FindUserResult, GetBackLinksForBlockResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetGoogleDriveAccountsResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSpacesResult, GetSubscriptionDataParams, GetSubscriptionDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, LoadPageChunkParams, LoadPageChunkResult, LoadUserContentResult, QueryCollectionParams, QueryCollectionResult, SyncRecordValuesParams, SyncRecordValuesResult, GetUserTasksResult, GetUserSharedPagesResult, GetUserSharedPagesParams, GetPageVisitsParams, GetPageVisitsResult, Logger, NishanArg } from "../types";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -41,16 +41,17 @@ export default class Queries extends Cache {
     this.defaultExecutionState = defaultExecutionState ?? true;
   }
 
-  protected async getPageVisits(arg: GetPageVisitsParams): Promise<GetPageVisitsResult> {
+  protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T): Promise<T> => {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getPageVisits`,
-            arg,
+          const { data } = await axios.post<T>(
+            `${this.BASE_NOTION_URL}/${url}`,
+            arg ?? {},
             this.headers
-          ) as { data: GetPageVisitsResult };
-          resolve(data);
+          );
+          if (keyToCache) this.saveToCache(data[keyToCache]);
+          resolve(data)
         } catch (err) {
           reject(error(err.response.data))
         }
@@ -58,359 +59,89 @@ export default class Queries extends Cache {
     });
   }
 
-  protected async getUserSharedPages(arg: GetUserSharedPagesParams): Promise<GetUserSharedPagesResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getUserSharedPages`,
-            arg,
-            this.headers
-          ) as { data: GetUserSharedPagesResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
+  protected async getPageVisits(arg: GetPageVisitsParams) {
+    return this.returnPromise<GetPageVisitsResult>("getPageVisits", arg);
+  }
+
+  protected async getUserSharedPages(arg: GetUserSharedPagesParams) {
+    return this.returnPromise<GetUserSharedPagesResult>("getUserSharedPages", arg);
   }
 
   protected async getUserTasks(): Promise<GetUserTasksResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getUserTasks`,
-            {},
-            this.headers
-          ) as { data: GetUserTasksResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
+    return this.returnPromise<GetUserTasksResult>("getUserTasks");
   }
 
-  protected async getPublicPageData(arg: GetPublicPageDataParams): Promise<GetPublicPageDataResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getPublicPageData`,
-            arg,
-            this.headers
-          ) as { data: GetPublicPageDataResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
+  protected async getPublicPageData(arg: GetPublicPageDataParams) {
+    return this.returnPromise<GetPublicPageDataResult>("getPublicPageData", arg);
   }
 
-  protected async getPublicSpaceData(arg: GetPublicSpaceDataParams): Promise<GetPublicSpaceDataResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getPublicSpaceData`,
-            arg,
-            this.headers
-          ) as { data: GetPublicSpaceDataResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
+  protected async getPublicSpaceData(arg: GetPublicSpaceDataParams) {
+    return this.returnPromise<GetPublicSpaceDataResult>("getPublicSpaceData", arg);
   }
 
-  protected async getSubscriptionData(arg: GetSubscriptionDataParams): Promise<GetSubscriptionDataResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getSubscriptionData`,
-            arg,
-            this.headers
-          ) as { data: GetSubscriptionDataResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    });
+  protected async getSubscriptionData(arg: GetSubscriptionDataParams) {
+    return this.returnPromise<GetSubscriptionDataResult>("getSubscriptionData", arg);
   }
 
-  protected async initializePageTemplate(arg: InitializePageTemplateParams): Promise<InitializePageTemplateResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/initializePageTemplate`,
-            arg,
-            this.headers
-          ) as { data: InitializePageTemplateResult };
-          this.saveToCache(data.recordMap);
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async initializePageTemplate(arg: InitializePageTemplateParams) {
+    return this.returnPromise<InitializePageTemplateResult>("initializePageTemplate", arg, "recordMap");
   }
 
-  protected async loadBlockSubtree(arg: LoadBlockSubtreeParams): Promise<LoadBlockSubtreeResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/loadBlockSubtree`,
-            arg,
-            this.headers
-          ) as { data: LoadBlockSubtreeResult };
-          this.saveToCache(data.subtreeRecordMap);
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async loadBlockSubtree(arg: LoadBlockSubtreeParams) {
+    return this.returnPromise<LoadBlockSubtreeResult>("loadBlockSubtree", arg, "subtreeRecordMap");
   }
 
-  protected async getAllSpaces(): Promise<GetSpacesResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getSpaces`,
-            {},
-            this.headers
-          ) as { data: GetSpacesResult };
-          Object.values(data).forEach(data => this.saveToCache(data));
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async getAllSpaces() {
+    const data = await this.returnPromise<GetSpacesResult>("loadBlockSubtree");
+    Object.values(data).forEach(data => this.saveToCache(data));
+    return data;
   }
 
-  protected async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams): Promise<GetGenericEmbedBlockDataResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getGenericEmbedBlockData`,
-            arg,
-            this.headers
-          ) as { data: GetGenericEmbedBlockDataResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams) {
+    return this.returnPromise<GetGenericEmbedBlockDataResult>("getGenericEmbedBlockData", arg);
   }
 
-  protected async getUploadFileUrl(arg: GetUploadFileUrlParams): Promise<GetUploadFileUrlResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getUploadFileUrl`,
-            arg,
-            this.headers
-          ) as { data: GetUploadFileUrlResult };
-          resolve(data)
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async getUploadFileUrl(arg: GetUploadFileUrlParams) {
+    return this.returnPromise<GetUploadFileUrlResult>("getUploadFileUrl", arg);
   }
 
-  protected async getGoogleDriveAccounts(): Promise<GetGoogleDriveAccountsResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/getGoogleDriveAccounts`,
-            {},
-            this.headers
-          ) as { data: GetGoogleDriveAccountsResult };
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async getGoogleDriveAccounts() {
+    return this.returnPromise<GetGoogleDriveAccountsResult>("getGoogleDriveAccounts");
   }
 
-  protected async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams): Promise<InitializeGoogleDriveBlockResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post(
-            `${this.BASE_NOTION_URL}/initializeGoogleDriveBlock`,
-            arg,
-            this.headers
-          ) as { data: InitializeGoogleDriveBlockResult };
-          this.saveToCache(data.recordMap);
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
+    return this.returnPromise<InitializeGoogleDriveBlockResult>("initializeGoogleDriveBlock", arg, "recordMap");
   }
 
   protected async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data, data: { recordMap } } = await axios.post(
-            `${this.BASE_NOTION_URL}/getBacklinksForBlock`,
-            { blockId },
-            this.headers
-          ) as { data: GetBackLinksForBlockResult };
-          this.saveToCache(recordMap);
-          resolve(data)
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+    return this.returnPromise<GetBackLinksForBlockResult>("getBacklinksForBlock", { blockId }, "recordMap");
   }
 
-  protected async findUser(email: string): Promise<INotionUser> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data: { value } } = await axios.post(
-            `${this.BASE_NOTION_URL}/findUser`,
-            { email },
-            this.headers
-          ) as { data: FindUserResult };
-          resolve(value.value)
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async findUser(email: string) {
+    return this.returnPromise<FindUserResult>("findUser", { email });
   }
 
-  protected async syncRecordValues(requests: SyncRecordValuesParams[]): Promise<SyncRecordValuesResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data, data: { recordMap } } = await axios.post(
-            `${this.BASE_NOTION_URL}/syncRecordValues`,
-            {
-              requests
-            },
-            this.headers
-          ) as { data: SyncRecordValuesResult };
-          this.saveToCache(recordMap);
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async syncRecordValues(requests: SyncRecordValuesParams[]) {
+    return this.returnPromise<SyncRecordValuesResult>("syncRecordValues", { requests }, "recordMap");
   }
 
-  protected async queryCollection(arg: QueryCollectionParams): Promise<QueryCollectionResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data, data: { recordMap } } = await axios.post(
-            `${this.BASE_NOTION_URL}/queryCollection`,
-            arg,
-            this.headers
-          ) as { data: QueryCollectionResult };
-          this.saveToCache(recordMap);
-          resolve(data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async queryCollection(arg: QueryCollectionParams) {
+    return this.returnPromise<QueryCollectionResult>("queryCollection", arg, "recordMap");
   }
 
-  protected async loadUserContent(): Promise<RecordMap> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            `${this.BASE_NOTION_URL}/loadUserContent`, {}, this.headers
-          ) as { data: LoadUserContentResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data));
-        }
-      }, this.interval)
-    })
+  protected async loadUserContent() {
+    return this.returnPromise<LoadUserContentResult>("loadUserContent", {}, "recordMap");
   }
 
-  protected async loadPageChunk(arg: LoadPageChunkParams): Promise<RecordMap> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            `${this.BASE_NOTION_URL}/loadPageChunk`,
-            arg,
-            this.headers
-          ) as { data: LoadPageChunkResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data.recordMap);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      })
-    })
-  }
-
-  protected async getBackLinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            `${this.BASE_NOTION_URL}/getBacklinksForBlock`,
-            {
-              blockId
-            },
-            this.headers
-          ) as { data: GetBackLinksForBlockResult };
-          this.saveToCache(res.data.recordMap);
-          resolve(res.data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async loadPageChunk(arg: LoadPageChunkParams) {
+    return this.returnPromise<LoadPageChunkResult>("loadPageChunk", arg, "recordMap");
   }
 
   // ? TD:2:H GetTaskResult interface
-  protected async getTasks(taskIds: string[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const res = await axios.post(
-            `${this.BASE_NOTION_URL}/getTasks`,
-            {
-              taskIds
-            },
-            this.headers
-          ) as { data: GetBackLinksForBlockResult };
-          resolve(res.data);
-        } catch (err) {
-          reject(error(err.response.data))
-        }
-      }, this.interval)
-    })
+  protected async getTasks(taskIds: string[]) {
+    return this.returnPromise<any>("getTasks", {
+      taskIds
+    });
   }
 
   protected async updateCacheManually(arg: UpdateCacheManuallyParam | string) {

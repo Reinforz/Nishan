@@ -20,7 +20,7 @@ export default class Cache {
    * Save the passed recordMap to cache
    * @param recordMap RecordMap map to save to cache
    */
-  protected saveToCache(recordMap: Partial<RecordMap>) {
+  saveToCache(recordMap: Partial<RecordMap>) {
     type keys = keyof ICache;
     (Object.keys(this.cache) as keys[]).forEach((key) => {
       if (recordMap[key])

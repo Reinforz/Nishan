@@ -90,20 +90,23 @@ class Nishan extends Cache {
       sync_records: []
     }
 
-    let index = 0;
-    for (const [notion_user_id, notion_user] of this.cache.notion_user) {
-      if (Array.isArray(args)) {
-        for (let index = 0; index < args.length; index++) {
-          const id = args[index], block = this.cache.notion_user.get(notion_user_id), should_add = args.includes(id) && Boolean(block);
-          if (should_add && block) user_ids.push(block.id);
-          if (!multiple && user_ids.length === 1) break;
-        }
-      } else if (typeof args === "function" || args === undefined) {
-        const should_add = typeof args === "function" ? await args(notion_user, index) : true;
+    const notion_user_ids: string[] = [];
+    for (const [notion_user_id] of this.cache.notion_user) {
+      notion_user_ids.push(notion_user_id)
+    }
+
+    if (Array.isArray(args)) {
+      for (let index = 0; index < args.length; index++) {
+        const id = args[index], block = this.cache.notion_user.get(id), should_add = notion_user_ids.includes(id);
+        if (should_add && block) user_ids.push(block.id);
+        if (!multiple && user_ids.length === 1) break;
+      }
+    } else if (typeof args === "function" || args === undefined) {
+      for (let index = 0; index < notion_user_ids.length; index++) {
+        const notion_user_id = notion_user_ids[index], notion_user = this.cache.notion_user.get(notion_user_id) as INotionUser, should_add = typeof args === "function" ? await args(notion_user, index) : true;
         if (should_add && notion_user) user_ids.push(notion_user.id);
         if (!multiple && user_ids.length === 1) break;
       }
-      index++;
     }
 
     return user_ids.map(user_id => {

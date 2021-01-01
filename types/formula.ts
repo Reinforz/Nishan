@@ -17,7 +17,6 @@ export type TFormulaArgs = IFormulaArgsPropertyType | IFormulaArgsConstantType;
 export interface IFormulaArgsPropertyType {
   type: "property",
   id: string,
-
 }
 
 export type IFormulaName = "if" | "equal";

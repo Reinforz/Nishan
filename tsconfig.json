@@ -4,6 +4,7 @@
       "ESNext",
       "dom",
     ],
+    "baseUrl": ".",
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2019",

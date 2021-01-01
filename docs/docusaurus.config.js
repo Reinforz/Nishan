@@ -1,6 +1,8 @@
+const path = require('path');
+
 module.exports = {
 	title: 'Nishan Docs',
-	tagline: 'Documentation for nishan, an unofficial notion api',
+	tagline: 'Documentation for nishan, an unofficial notion api for Typescript',
 	url: 'https://nishan-docs.netlify.app/',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
@@ -11,7 +13,7 @@ module.exports = {
 		navbar: {
 			title: 'Nishan Docs',
 			logo: {
-				alt: 'My Site Logo',
+				alt: 'Nishan Logo',
 				src: 'img/logo.svg'
 			},
 			items: [
@@ -76,19 +78,18 @@ module.exports = {
 		[
 			'docusaurus-plugin-typedoc',
 			{
-				inputFiles: [ '../api', '../utils', '../Nishan.ts', '../types' ],
-				docsRoot: 'docs',
-				out: 'api',
+				inputFiles: [ path.resolve(__dirname, '../Nishan.ts') ],
+				tsconfig: path.resolve(__dirname, '../tsconfig.json'),
 				sidebar: {
 					sidebarFile: './typedoc-sidebars.js',
 					fullNames: false
 				},
-				exclude: [ '../api/CollectionBlock', '../api/Data', '../api/Mutation', '../api/Queries' ],
 				mode: 'modules',
 				target: `ESNext`,
 				disableOutputCheck: true,
 				excludeExternals: true,
 				excludePrivate: true,
+				excludeProtected: true,
 				ignoreCompilerErrors: false,
 				plugin: [ 'typedoc-plugin-no-inherit' ]
 			}

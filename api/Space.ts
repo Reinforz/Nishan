@@ -84,8 +84,8 @@ export default class Space extends Data<ISpace> {
     return await this.nestedContentPopulateAndExecute(options, execute);
   }
 
-  async getTRootPage(args?: FilterTypes<IPage | ICollectionViewPage>) {
-    return await this.getTRootPages(args, false);
+  async getTRootPage(args?: FilterType<IPage | ICollectionViewPage>) {
+    return await this.getTRootPages(typeof args === "string" ? [args] : args, false);
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {

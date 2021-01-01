@@ -115,7 +115,7 @@ export interface RemoveUsersFromSpaceResult {
 }
 
 export interface InitializePageTemplateParams {
-  recordMap: {}
+  recordMap: RecordMap
   sourceBlockId: string,
   spaceId: string,
   targetBlockId: string

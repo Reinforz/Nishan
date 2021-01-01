@@ -163,7 +163,7 @@ export interface PersonViewFiltersValue {
   id: string,
   table: "notion_user"
 }
-export interface FileViewFiltersValue { };
+export type FileViewFiltersValue = string;
 export type CheckboxViewFiltersValue = boolean;
 export type UrlViewFiltersValue = string;
 export type EmailViewFiltersValue = string;

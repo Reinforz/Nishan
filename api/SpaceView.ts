@@ -37,10 +37,10 @@ class SpaceView extends Data<ISpaceView> {
    * Get the corresponding space associated with this space view
    * @returns The corresponding space object
    */
-  async getSpace(return_object: boolean = true) {
+  async getSpace(return_object = true) {
     const data = this.getCachedData();
     let target_space: ISpace = null as any;
-    for (let [, space] of this.cache.space) {
+    for (const [, space] of this.cache.space) {
       if (data && space.id === data.space_id) {
         target_space = space;
         break;

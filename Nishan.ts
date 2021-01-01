@@ -91,7 +91,7 @@ class Nishan extends Cache {
     }
 
     let index = 0;
-    for (let [notion_user_id, notion_user] of this.cache.notion_user) {
+    for (const [notion_user_id, notion_user] of this.cache.notion_user) {
       if (Array.isArray(args)) {
         for (let index = 0; index < args.length; index++) {
           const id = args[index], block = this.cache.notion_user.get(notion_user_id), should_add = args.includes(id) && Boolean(block);

@@ -86,8 +86,8 @@ export interface ICollectionViewPageInput extends ICollectionBlockInput {
 export interface ILinkedDBInput extends IInput {
   type: "linked_db",
   collection_id: string,
-  properties?: {},
-  format?: {},
+  properties?: Record<string, unknown>,
+  format?: Record<string, unknown>,
   views: TSearchManipViewParam[],
 }
 
@@ -139,8 +139,8 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IColumnListInput extends IInput {
   type: "column_list",
-  properties?: {},
-  format?: {},
+  properties?: Record<string, unknown>,
+  format?: Record<string, unknown>,
   contents: TBlockInput[]
 }
 
@@ -165,8 +165,8 @@ export interface ICommonTextInput extends IInput {
 export interface ILinkToPageInput extends IInput {
   type: "link_to_page",
   page_id: string,
-  format?: {},
-  properties?: {}
+  format?: Record<string, unknown>,
+  properties?: Record<string, unknown>
 }
 
 export interface ITextInput extends ICommonTextInput {
@@ -203,8 +203,8 @@ export interface IQuoteInput extends ICommonTextInput {
 
 export interface IDividerInput extends IInput {
   type: 'divider',
-  properties?: {},
-  format?: {}
+  properties?: Record<string, unknown>,
+  format?: Record<string, unknown>
 }
 
 export interface ICalloutInput extends ICommonTextInput {
@@ -231,7 +231,7 @@ export interface ITOCInput extends IInput {
   format?: {
     block_color?: TFormatBlockColor
   },
-  properties?: {}
+  properties?: Record<string, unknown>
 }
 
 export interface IEquationInput extends IInput {
@@ -257,8 +257,8 @@ export interface IFactoryInput extends IInput {
 
 export interface IBreadcrumbInput extends IInput {
   type: 'breadcrumb',
-  properties?: {},
-  format?: {},
+  properties?: Record<string, unknown>,
+  format?: Record<string, unknown>,
 }
 
 export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationInput | ITOCInput;
@@ -272,7 +272,7 @@ export interface IEmbedInput extends IInput {
 
 export interface IDriveInput extends IInput {
   type: 'drive',
-  properties?: {},
+  properties?: Record<string, unknown>,
   format?: {
     drive_properties: {
       file_id: string,
@@ -296,7 +296,7 @@ export interface ITweetInput extends IInput {
   properties: {
     source: string[][]
   },
-  format?: {},
+  format?: Record<string, unknown>,
 }
 
 export interface ICodepenInput extends IInput {
@@ -389,22 +389,22 @@ export interface IColumnFormat {
 export interface IColumn extends Node, ParentProps, CreateProps, LastEditedProps, IColumnFormat, SpaceShardProps {
   content: string[],
   type: "column",
-  properties?: {}
+  properties?: Record<string, unknown>
 }
 
 export interface IColumnList extends Node, ParentProps, CreateProps, LastEditedProps, SpaceShardProps {
   content: string[],
   type: "column_list",
-  format?: {},
-  properties?: {}
+  format?: Record<string, unknown>,
+  properties?: Record<string, unknown>
 }
 
 export interface ICollectionBlock extends IBlock {
   view_ids: string[],
   collection_id: string,
   type: 'collection_view' | 'collection_view_page',
-  properties?: {},
-  format?: {},
+  properties?: Record<string, unknown>,
+  format?: Record<string, unknown>,
 }
 
 export interface ICollectionView extends ICollectionBlock {

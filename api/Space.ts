@@ -26,7 +26,7 @@ export default class Space extends Data<ISpace> {
 
   get spaceView() {
     let target_space_view: ISpaceView = null as any;
-    for (let [, space_view] of this.cache.space_view) {
+    for (const [, space_view] of this.cache.space_view) {
       if (space_view.space_id === this.id)
         target_space_view = space_view;
     }

@@ -55,7 +55,7 @@ export default class Page extends Permissions<IPage> {
   async toggleFavourite() {
     const data = this.getCachedData();
     let target_space_view: ISpaceView | null = null;
-    for (let [, space_view] of this.cache.space_view) {
+    for (const [, space_view] of this.cache.space_view) {
       if (space_view.space_id === data.space_id) {
         target_space_view = space_view;
         break;

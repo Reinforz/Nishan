@@ -81,7 +81,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
   async update(args: Partial<A>, execute?: boolean) {
     const data = this.getCachedData();
 
-    const { format = data.format, properties = data.properties } = args;
+    const { format = data.format, properties = data.properties } = args as any;
 
     this.logger && this.logger("UPDATE", "Block", data.id);
 

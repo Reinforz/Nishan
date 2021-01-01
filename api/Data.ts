@@ -40,8 +40,8 @@ export default class Data<T extends TData> extends Operations {
   protected listRemoveOp: (path: string[], args: Args) => IOperation;
   protected child_path: keyof T = "" as any;
   protected child_type: TDataType = "block" as any;
-  #init_cache: boolean = false;
-  #init_child_data: boolean;
+  #init_cache = false;
+  #init_child_data = false;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -65,7 +65,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   #detectChildData = (type: TDataType, id: string) => {
-    let child_type: TDataType = 'block', child_path: string = '';
+    let child_type: TDataType = 'block', child_path = '';
     const data = this.cache[type].get(id) as TBlock;
     if (type === "block") {
       if (data.type === "page")
@@ -152,7 +152,7 @@ export default class Data<T extends TData> extends Operations {
   #addToChildArrayUtil = (arg: { child_id: string, position: RepositionParams, container: string[], child_path: string, parent_type: TOperationTable, parent_id: string }) => {
     const { child_id, position, container, child_path, parent_type, parent_id } = arg;
     if (position !== undefined) {
-      let where: "before" | "after" = "before", id: string = '';
+      let where: "before" | "after" = "before", id = '';
       if (typeof position === "number") {
         id = container?.[position] ?? '';
         where = container.indexOf(child_id) > position ? "before" : "after";
@@ -692,7 +692,7 @@ export default class Data<T extends TData> extends Operations {
   protected async nestedContentPopulateAndExecute(options: PageCreateContentParam[], execute?: boolean) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(options, this.id, this.type);
     await this.executeUtil(ops, sync_records, execute);
-    for (let bookmark of bookmarks)
+    for (const bookmark of bookmarks)
       await this.setBookmarkMetadata(bookmark);
     return block_map;
   }

@@ -19,8 +19,8 @@
   },
   "scripts": {
     "build": "npm run clean && npx tsc --removeComments",
-    "watch": "npx tsc -w",
     "clean": "npx rimraf ./dist",
+    "watch": "npx tsc -w",
     "lint": "npx eslint . --color",
     "prepack": "npm run test:build",
     "prepublishOnly": "npm run test:build",

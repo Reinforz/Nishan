@@ -18,7 +18,8 @@
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
   "scripts": {
-    "build": "npx tsc --removeComments"
+    "build": "npm run clean && npx tsc --removeComments",
+    "clean": "npx rimraf ./dist"
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"

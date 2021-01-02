@@ -120,3 +120,4 @@ export default Nishan;
 export * from "./utils/index";
 export * from "./api";
 export * from "@nishan/types";
+export * from "./types";

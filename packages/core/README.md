@@ -1,11 +1,7 @@
 # `core`
 
-> TODO: description
+Nishan Core package for containing crud api
 
 ## Usage
 
-```
-const core = require('core');
-
-// TODO: DEMONSTRATE API
-```
+Please visit the documentation for [Nishan](https://nishan-docs.netlify.app/) to learn more about using nishan.

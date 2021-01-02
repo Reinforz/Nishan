@@ -1,5 +1,5 @@
 {
-  "name": "types",
+  "name": "@nishan/types",
   "version": "0.0.0",
   "description": "typescript typings for nishan",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

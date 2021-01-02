@@ -9,7 +9,8 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@nishan/types": "0.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^8.3.0",

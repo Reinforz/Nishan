@@ -9,6 +9,7 @@ feature.md
 /docs/build
 /examples/env.ts
 **/*.tgz
+/experiment
 
 # OSX files
 .DS_Store

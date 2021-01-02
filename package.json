@@ -1,8 +1,13 @@
 {
+  "private": true,
   "name": "nishan",
   "version": "0.0.0",
   "description": "Unofficial Notion Api wrapper for Node.js",
   "main": "./dist/Nishan",
+  "workspaces": [
+    "packages/*",
+    "examples/"
+  ],
   "devDependencies": {
     "@types/jest": "^26.0.19",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
@@ -29,14 +34,10 @@
     "test:unit": "lerna run test",
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
-    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') < 0) throw new Error('this package requires yarn for development')\"",
-    "postinstall": "run-s bootstrap",
-    "lint": "npx eslint . --color"
+    "lint": "npx eslint . --color",
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') < 0) throw new Error('this package requires yarn for development')\""
   },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "uuid": "^8.3.2"
-  }
+  "license": "MIT"
 }

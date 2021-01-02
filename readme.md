@@ -27,4 +27,10 @@ Check out the [examples](https://github.com/Devorein/Nishan/tree/master/examples
 1. Right now this repo is yet to be published as a package on npm, but that is definitely on the roadmap.
 2. The documentation still needs a lot of work, so please stay patient as I am trying my best.
 
+## How to contribute
+
+1. Clone the repo locally.
+2. Install all the dependencies using `yarn install`.
+3. Run all the tests using `yarn test`.
+
 Feel free to submit a pull request or open a new issue, contributions are more than welcome !!!

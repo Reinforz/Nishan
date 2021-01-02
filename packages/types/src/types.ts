@@ -1,5 +1,4 @@
-import { ICollection, ICollectionViewPage, IPage, TBlock, TView, UpdateCacheManuallyParam } from ".";
-import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap } from "./api";
+import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap, ICollection, ICollectionViewPage, IPage, TBlock, TView, UpdateCacheManuallyParam } from ".";
 
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;

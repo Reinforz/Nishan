@@ -1,6 +1,5 @@
 
-import { ISpacePermission, ViewAggregations, IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat, TPlanType, Node, TOperationTable, IPermission, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
-import { IUserPermission } from "./permissions";
+import { IUserPermission, ISpacePermission, ViewAggregations, IMember, ICredit, ICollectionView, ICollectionViewPage, TBlock, ICollection, MediaFormat, TPlanType, Node, TOperationTable, IPermission, Cursor, IBoardView, ICalendarView, IGalleryView, IListView, ITableView, CreateProps, LastEditedProps, TLocale, Account, Token, GoogleDriveFile, TGenericEmbedBlockType, TPermissionRole, IViewFilter, ViewSorts } from "./";
 export interface SetPageNotificationsAsReadParams {
   navigableBlockId: string,
   spaceId: string,

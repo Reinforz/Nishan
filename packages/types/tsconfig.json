@@ -15,14 +15,13 @@
     "outDir": "./dist",
     "watch": false,
     "declaration": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "noUnusedLocals": true,
     "incremental": false,
     "experimentalDecorators": true
   },
   "include": [
-    "./Nishan.ts",
-    "experiment"
+    "./src/index.ts",
   ],
   "exclude": [
     "./node_modules",

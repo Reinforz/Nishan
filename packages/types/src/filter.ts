@@ -1,5 +1,4 @@
-import { IViewAggregationsAggregators } from "./aggregator";
-import { TSchemaUnitType } from "./schema";
+import { TSchemaUnitType, IViewAggregationsAggregators } from "./";
 
 /**
  * Filters.filter.operator 

@@ -1,4 +1,4 @@
-import { ICalendarView, NishanArg } from "../../../types";
+import { ICalendarView, NishanArg } from "@nishan/types";
 import View from "./View";
 
 /**

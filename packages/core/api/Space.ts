@@ -3,7 +3,7 @@ import SpaceView from "./SpaceView";
 
 import { error } from '../utils';
 
-import { ICollectionViewPageInput, ISpaceUpdateInput, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType, ICollectionViewPageUpdateInput, TSpaceUpdateKeys } from '../../types';
+import { ICollectionViewPageInput, ISpaceUpdateInput, IPageCreateInput, ISpace, ISpaceView, NishanArg, IOperation, FilterTypes, FilterType, ICollection, RepositionParams, ICollectionViewPage, IPage, TPage, INotionUser, TSpaceMemberPermissionRole, IPageUpdateInput, UpdateTypes, UpdateType, ICollectionViewPageUpdateInput, TSpaceUpdateKeys } from '@nishan/types';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';

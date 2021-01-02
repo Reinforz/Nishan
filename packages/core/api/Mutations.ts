@@ -1,4 +1,4 @@
-import { Request, RemoveUsersFromSpaceResult, RemoveUsersFromSpaceParams, IOperation, NishanArg, SetPageNotificationsAsReadParams, SetSpaceNotificationsAsReadParams, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, InviteGuestsToSpaceParams, SetBookmarkMetadataParams, TEnqueueTaskParams } from "../../types";
+import { Request, RemoveUsersFromSpaceResult, RemoveUsersFromSpaceParams, IOperation, NishanArg, SetPageNotificationsAsReadParams, SetSpaceNotificationsAsReadParams, CreateSpaceParams, CreateSpaceResult, EnqueueTaskResult, InviteGuestsToSpaceParams, SetBookmarkMetadataParams, TEnqueueTaskParams } from "@nishan/types";
 import { createTransaction } from "../utils";
 import Queries from "./Queries";
 

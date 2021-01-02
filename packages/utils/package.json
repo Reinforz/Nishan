@@ -22,5 +22,9 @@
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "@nishan/types": "0.0.0",
+    "@nishan/core": "0.0.0"
   }
 }

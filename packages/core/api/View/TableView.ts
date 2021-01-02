@@ -1,4 +1,4 @@
-import { ITableView, NishanArg } from "../../../types";
+import { ITableView, NishanArg } from "@nishan/types";
 import Aggregator from "./Aggregator";
 
 /**

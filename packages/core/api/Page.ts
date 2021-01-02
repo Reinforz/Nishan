@@ -7,7 +7,7 @@ import {
   PageCreateContentParam,
   ISpaceView,
   IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType, ISpace, TExportType
-} from "../../types";
+} from "@nishan/types";
 import Permissions from "./Permissions";
 
 /**

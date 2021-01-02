@@ -1,4 +1,4 @@
-import { FilterType, FilterTypes, IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, UpdateType, UpdateTypes, UserViewAggregationsCreateParams, ViewAggregations } from "../../../types";
+import { FilterType, FilterTypes, IBoardView, ICollection, ITableView, ITimelineView, NishanArg, TCollectionBlock, TSchemaUnit, UpdateType, UpdateTypes, UserViewAggregationsCreateParams, ViewAggregations } from "@nishan/types";
 import View from "./View";
 
 /**

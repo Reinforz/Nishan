@@ -1,4 +1,4 @@
-import { IOperation, Request } from "../../types/src/types";
+import { IOperation, Request } from "@nishan/types/src/types";
 
 import { v4 as uuidv4 } from 'uuid';
 

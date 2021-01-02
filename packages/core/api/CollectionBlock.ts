@@ -4,7 +4,7 @@ import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView
 
 import { Operation } from '../utils';
 import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishan/types';
-import { NishanArg, TSearchManipViewParam, FilterTypes, UpdateType, UpdateTypes, FilterType } from 'types';
+import { NishanArg, TSearchManipViewParam, FilterTypes, UpdateType, UpdateTypes, FilterType } from '../types';
 
 const view_class = {
 	board: BoardView,

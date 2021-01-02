@@ -12,7 +12,7 @@ import {
 	SetBookmarkMetadataParams,
 	Request
 } from '@nishan/types';
-import { NishanArg } from 'types';
+import { NishanArg } from '../types';
 import { createTransaction } from '../utils';
 import Queries from './Queries';
 

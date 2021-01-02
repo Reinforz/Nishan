@@ -1,5 +1,5 @@
 import { ITimelineView } from '@nishan/types';
-import { NishanArg } from 'types';
+import { NishanArg } from '../../types';
 import Aggregator from './Aggregator';
 
 /**

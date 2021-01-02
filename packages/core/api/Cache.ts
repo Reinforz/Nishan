@@ -1,5 +1,5 @@
 import { RecordMap } from '@nishan/types';
-import { ICache } from 'types';
+import { ICache } from '../types';
 
 export default class Cache {
 	cache: ICache;

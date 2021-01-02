@@ -1,5 +1,5 @@
 import { TSchemaUnit, ICollection } from '@nishan/types';
-import { NishanArg } from 'types';
+import { NishanArg } from '../types';
 import { shortid } from '../utils';
 import Data from './Data';
 

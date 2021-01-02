@@ -1,5 +1,5 @@
 import { ISpace, IPage } from '@nishan/types';
-import { NishanArg } from 'types';
+import { NishanArg } from '../types';
 import CollectionBlock from './CollectionBlock';
 
 /**

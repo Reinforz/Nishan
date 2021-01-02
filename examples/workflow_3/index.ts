@@ -1,4 +1,4 @@
-import Nishan from '../../Nishan';
+import Nishan from '../../packages/core/dist/Nishan';
 import "../env"
 import { v4 as uuidv4 } from "uuid";
 

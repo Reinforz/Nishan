@@ -298,7 +298,7 @@ export interface ICollectionBlockInput extends IInput {
   views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
   schema: TSchemaUnit[],
   properties: IPage["properties"],
-  format?: IPage["format"],
+  format?: Partial<IPage["format"]>,
   rows?: Omit<IPageCreateInput, "type">[]
 }
 
@@ -376,7 +376,7 @@ export interface IColumnListInput extends IInput {
 export interface IPageCreateInput extends IInput {
   type: 'page',
   properties: IPage["properties"],
-  format?: IPage["format"],
+  format?: Partial<IPage["format"]>,
   isPrivate?: boolean,
   contents?: TBlockInput[]
 }

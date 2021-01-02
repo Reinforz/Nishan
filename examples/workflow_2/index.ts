@@ -1,11 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
-import Nishan from '../../Nishan';
+import Nishan, {ILinkedDBInput, IPageCreateInput} from '../../packages/core/dist/Nishan';
 
 import "../env"
 
 import { fors, categories, subject } from "../data";
-import { ILinkedDBInput, IPageCreateInput } from '../../types';
 
 
 async function main() {

@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import Nishan from '../../packages/core/dist/Nishan';
-import { CheckboxSchemaUnit, TSearchManipViewParam, ViewUpdateParam } from "../../packages/core/dist/Nishan";
+import Nishan, { CheckboxSchemaUnit, TSearchManipViewParam, ViewUpdateParam} from '../../packages/core/dist/Nishan';
 import { status, phase, priority, subject, difficulty } from '../data';
 
 import "../env"

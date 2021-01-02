@@ -35,5 +35,8 @@
   },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
 }

@@ -7,7 +7,7 @@ feature.md
 /docs/docs/api
 .netlify
 /docs/build
-/workflows/env.ts
+/examples/env.ts
 **/*.tgz
 
 # OSX files

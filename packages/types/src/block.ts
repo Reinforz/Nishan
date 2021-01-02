@@ -1,4 +1,4 @@
-import { ISpace, TCreditType, TFormatBlockColor, TCodeLanguage, IBlock, LastEditedProps, Schema, TSchemaUnit, IPermission, TPermissionRole, TSearchManipViewParam, Node, ParentProps, CreateProps, SpaceShardProps } from ".";
+import { ISpace, TCreditType, TFormatBlockColor, TCodeLanguage, IBlock, LastEditedProps, Schema, TSchemaUnit, IPermission, TPermissionRole, Node, ParentProps, CreateProps, SpaceShardProps } from ".";
 
 export type TGenericEmbedBlockType = "figma" | "tweet" | "codepen" | "gist" | "maps";
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';

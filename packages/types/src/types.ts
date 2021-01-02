@@ -1,4 +1,4 @@
-import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap, ICollection, ICollectionViewPage, IPage, TBlock, TView, UpdateCacheManuallyParam } from ".";
+import { BlockData, SpaceData, CollectionData, ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap, ICollection, ICollectionViewPage, IPage, TBlock, TView } from ".";
 
 export type Entity = BlockData | SpaceData | CollectionData;
 export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
@@ -124,32 +124,3 @@ export interface Stack {
 /* Nishan Specific */
 
 export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | IUserRoot | IUserSettings
-export interface ICache {
-  block: Map<string, TBlock>,
-  collection: Map<string, ICollection>,
-  collection_view: Map<string, TView>,
-  space: Map<string, ISpace>,
-  notion_user: Map<string, INotionUser>,
-  space_view: Map<string, ISpaceView>,
-  user_root: Map<string, IUserRoot>,
-  user_settings: Map<string, IUserSettings>,
-}
-
-export type TSubjectType = "NotionUser" | "View" | "Block" | "Space" | "UserSettings" | "UserRoot" | "SchemaUnit" | "Page" | "CollectionView" | "CollectionViewPage" | "Collection" | "SpaceView";
-
-export type TMethodType = "CREATE" | "READ" | "UPDATE" | "DELETE";
-
-export type Logger = false | ((method: TMethodType, subject: TSubjectType, id: string) => void)
-export interface NishanArg {
-  token: string,
-  interval: number,
-  user_id: string,
-  shard_id: number,
-  space_id: string,
-  cache: ICache,
-  id: string,
-  logger: Logger,
-  defaultExecutionState?: boolean,
-  stack: IOperation[],
-  sync_records: UpdateCacheManuallyParam
-}

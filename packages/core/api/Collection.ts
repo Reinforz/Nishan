@@ -3,8 +3,9 @@ import { warn } from '../utils';
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
-import { ICollection, IPageCreateInput, ICollectionUpdateInput, NishanArg, IPage, FilterTypes, TSchemaUnit, FilterType, UpdateTypes, UpdateType, IPageUpdateInput, TCollectionUpdateKeys, TCollectionBlock, } from "@nishan/types";
 import Page from './Page';
+import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishan/types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes } from 'types';
 
 /**
  * A class to represent collection of Notion

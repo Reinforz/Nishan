@@ -5,7 +5,8 @@ import NotionUser from "./api/NotionUser";
 import { error } from "./utils/logs";
 import Cache from "./api/Cache";
 import {  GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishan/types";
-import {Logger, NishanArg,FilterType, FilterTypes} from "./types"
+import {Logger, NishanArg,FilterType, FilterTypes} from "./types";
+
 class Nishan extends Cache {
   token: string;
   interval: number;

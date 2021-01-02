@@ -3,12 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { INotionUserUpdateInput, INotionUser, ISpace, NishanArg, FilterTypes, FilterType, ISpaceUpdateInput, IOperation, UpdateCacheManuallyParam, TPage, ITPage, IUserRoot, IUserSettings, UpdateTypes, UpdateType, TNotionUserUpdateKeys } from '@nishan/types';
 import { Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
+import { INotionUser, IUserSettings, IUserRoot, IOperation, ISpace, TPage } from '@nishan/types';
+import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, UpdateCacheManuallyParam, FilterType, FilterTypes, UpdateType, UpdateTypes, ITPage } from 'types';
 
 /**
  * A class to represent NotionUser of Notion

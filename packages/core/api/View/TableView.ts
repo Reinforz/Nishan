@@ -1,14 +1,15 @@
-import { ITableView, NishanArg } from "@nishan/types";
-import Aggregator from "./Aggregator";
+import { ITableView } from '@nishan/types';
+import { NishanArg } from 'types';
+import Aggregator from './Aggregator';
 
 /**
  * A class to represent table view of Notion
  * @noInheritDoc
  */
 class TableView extends Aggregator<ITableView> {
-  constructor(arg: NishanArg) {
-    super({ ...arg });
-  }
+	constructor (arg: NishanArg) {
+		super({ ...arg });
+	}
 }
 
 export default TableView;

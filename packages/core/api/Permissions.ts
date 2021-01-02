@@ -1,4 +1,5 @@
-import { INotionUser, TPermissionRole, ICollectionViewPage, IPage, NishanArg, IPermission, IOperation, IPublicPermissionOptions, TPublicPermissionRole, IPublicPermission, TSpacePermissionRole, IPageCreateInput, ICollectionViewPageInput } from "@nishan/types"
+import { ICollectionViewPage, IPage, TPermissionRole, INotionUser, IPermission, IOperation, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole } from "@nishan/types";
+import { ICollectionViewPageInput, IPageCreateInput, NishanArg } from "types";
 import { error, Operation } from "../utils";
 import Block from "./Block";
 

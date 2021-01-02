@@ -1,5 +1,6 @@
-import { ICalendarView, NishanArg } from "@nishan/types";
-import View from "./View";
+import { ICalendarView } from '@nishan/types';
+import { NishanArg } from 'types';
+import View from './View';
 
 /**
  * A class to represent calendar view of Notion
@@ -7,9 +8,9 @@ import View from "./View";
  */
 
 class CalendarView extends View<ICalendarView> {
-  constructor(arg: NishanArg) {
-    super({ ...arg });
-  }
+	constructor (arg: NishanArg) {
+		super({ ...arg });
+	}
 }
 
 export default CalendarView;

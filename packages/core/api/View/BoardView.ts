@@ -1,5 +1,6 @@
-import { IBoardView, NishanArg } from "@nishan/types";
-import Aggregator from "./Aggregator";
+import { IBoardView } from '@nishan/types';
+import { NishanArg } from 'types';
+import Aggregator from './Aggregator';
 
 /**
  * A class to represent board view of Notion
@@ -7,9 +8,9 @@ import Aggregator from "./Aggregator";
  */
 
 class BoardView extends Aggregator<IBoardView> {
-  constructor(arg: NishanArg) {
-    super({ ...arg });
-  }
+	constructor (arg: NishanArg) {
+		super({ ...arg });
+	}
 }
 
 export default BoardView;

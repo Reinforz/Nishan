@@ -1,13 +1,10 @@
+import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishan/types";
 import axios from "axios";
+import { NishanArg, PageCreateContentParam, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes } from "types";
 
 import { Operation } from "../utils";
 
-import {
-  NishanArg,
-  PageCreateContentParam,
-  ISpaceView,
-  IPage, TBlock, FilterTypes, FilterType, UpdateTypes, TBlockInput, UpdateType, ISpace, TExportType
-} from "@nishan/types";
+
 import Permissions from "./Permissions";
 
 /**

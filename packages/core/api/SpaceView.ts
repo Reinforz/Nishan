@@ -1,10 +1,11 @@
 import Data from './Data';
 
-import { ISpace, ISpaceView, NishanArg, RepositionParams, IOperation, TPage, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, UpdateTypes, FilterTypes, FilterType } from '@nishan/types';
 import Space from './Space';
 import { Operation } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
+import { ISpaceView, ISpace, TPage, IOperation } from '@nishan/types';
+import { NishanArg, RepositionParams, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, FilterType, FilterTypes, UpdateTypes } from 'types';
 
 /**
  * A class to represent spaceview of Notion

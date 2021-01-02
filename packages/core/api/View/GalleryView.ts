@@ -1,5 +1,6 @@
-import { IGalleryView, NishanArg } from "@nishan/types";
-import View from "./View";
+import { IGalleryView } from '@nishan/types';
+import { NishanArg } from 'types';
+import View from './View';
 
 /**
  * A class to represent gallery view of Notion
@@ -7,9 +8,9 @@ import View from "./View";
  */
 
 class GalleryView extends View<IGalleryView> {
-  constructor(arg: NishanArg) {
-    super({ ...arg });
-  }
+	constructor (arg: NishanArg) {
+		super({ ...arg });
+	}
 }
 
 export default GalleryView;

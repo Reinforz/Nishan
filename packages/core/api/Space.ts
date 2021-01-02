@@ -35,7 +35,7 @@ export default class Space extends Data<ISpace> {
   }
 
   getCollectionIds() {
-    return this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page").map(cvp => cvp.collection_id) as string[]
+    return (this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page") as ICollectionViewPage[]).map(cvp => cvp.collection_id) as string[]
   }
 
   /**

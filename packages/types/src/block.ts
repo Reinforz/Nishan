@@ -212,7 +212,7 @@ export interface IText extends IBlock, ICommonText {
 	type: 'text';
 }
 export interface ITodo extends IBlock {
-	type: 'todo';
+	type: 'to_do';
 	properties: TodoProps;
 	format?: {
 		block_color?: TFormatBlockColor;
@@ -248,6 +248,13 @@ export interface ICallout extends IBlock, ICommonText {
 	type: 'callout';
 }
 
+export interface ILinkToPage extends IBlock {
+	type: 'link_to_page';
+	page_id: string;
+	format?: Record<string, unknown>;
+	properties?: Record<string, unknown>;
+}
+
 export type TBasicBlock =
 	| IText
 	| ITodo
@@ -261,7 +268,8 @@ export type TBasicBlock =
 	| IDivider
 	| ICallout
 	| IPage
-	| TCollectionBlock;
+	| TCollectionBlock
+	| ILinkToPage;
 
 // Advanced block types
 export interface ITOC extends IBlock {

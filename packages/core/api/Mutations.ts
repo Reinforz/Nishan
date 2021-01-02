@@ -9,7 +9,8 @@ import {
 	CreateSpaceResult,
 	TEnqueueTaskParams,
 	EnqueueTaskResult,
-	SetBookmarkMetadataParams
+	SetBookmarkMetadataParams,
+	Request
 } from '@nishan/types';
 import { NishanArg } from 'types';
 import { createTransaction } from '../utils';

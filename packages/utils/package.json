@@ -1,0 +1,28 @@
+{
+  "name": "@nishan/utils",
+  "version": "0.0.0",
+  "description": "nishan utils to enhance user experience",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "license": "MIT",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "@nishan/types": "0.0.0",
+    "@nishan/core": "0.0.0"
+  }
+}

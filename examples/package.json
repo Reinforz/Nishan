@@ -1,0 +1,19 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "npx del-cli ./dist",
+    "build": "npx tsc"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^8.3.2",
+    "@nishan/types": "0.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.0",
+    "del-cli": "^3.0.1"
+  }
+}

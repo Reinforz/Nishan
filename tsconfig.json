@@ -1,36 +1,18 @@
 {
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "dom",
-    ],
-    "baseUrl": ".",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2019",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "watch": false,
-    "declaration": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
-    "incremental": false,
-    "experimentalDecorators": true
+    "composite": true
   },
-  "include": [
-    "./Nishan.ts",
-    "workflows",
-    "experiment"
-  ],
-  "exclude": [
-    "./node_modules",
-    "docs",
-  ],
-  "typedocOptions": {
-    "mode": "modules",
-    "out": "docs"
-  }
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/types/tsconfig.json"
+    },
+    {
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/utils/tsconfig.json"
+    }
+  ]
 }

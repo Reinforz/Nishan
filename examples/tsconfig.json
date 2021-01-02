@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom",
+    ],
+    "baseUrl": ".",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "watch": false,
+    "declaration": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "incremental": false,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "./workflow_1",
+    "./workflow_2",
+    "./workflow_3",
+  ],
+  "exclude": [
+    "./node_modules",
+  ],
+  "typedocOptions": {
+    "mode": "modules",
+    "out": "docs"
+  }
+}

@@ -1,6 +1,6 @@
 import { CollectionBlock, CollectionViewPage, Page, SchemaUnit, TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView, Block, Collection } from "./api";
 
-import { TViewGroupFilterOperator, IViewAggregationsAggregators, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, IViewFilterData, CheckboxSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, DateSchemaUnit, EmailSchemaUnit, FileSchemaUnit, FormulaSchemaUnit, IAudio, IBreadcrumb, IBulletedList, ICallout, ICode, ICodepen, IColumn, IColumnList, IDivider, IDrive, IEmbed, IEquation, IFactory, IFigma, IFile, IGist, IHeader, IImage, IMaps, INumberedList, IQuote, ISubHeader, IText, ITOC, ITodo, IToggle, ITweet, IVideo, IWebBookmark, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, IOperation, IUserRoot, IUserSettings, TBlock, TView, CodeFormat, CodeProps, FileFormat, FileProps, ICollectionViewPage, MediaFormat, MediaProps, PageFormat, PageProps, TFormatBlockColor, TodoProps, TSchemaUnit, WebBookmarkFormat, WebBookmarkProps, TBlockType } from "@nishan/types";
+import { TViewGroupFilterOperator, IViewAggregationsAggregators, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, IViewFilterData, CheckboxSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, DateSchemaUnit, EmailSchemaUnit, FileSchemaUnit, FormulaSchemaUnit, IAudio, IBreadcrumb, IBulletedList, ICallout, ICode, ICodepen, IColumn, IColumnList, IDivider, IDrive, IEmbed, IEquation, IFactory, IFigma, IFile, IGist, IHeader, IImage, IMaps, INumberedList, IQuote, ISubHeader, IText, ITOC, ITodo, IToggle, ITweet, IVideo, IWebBookmark, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, IOperation, IUserRoot, IUserSettings, TBlock, TView, ICollectionViewPage, TSchemaUnit, TBlockType, IPage, ISubSubHeader } from "@nishan/types";
 
 export interface ITPage {
   collection_view_page: CollectionViewPage[],
@@ -297,8 +297,8 @@ export interface NishanArg {
 export interface ICollectionBlockInput extends IInput {
   views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
   schema: TSchemaUnit[],
-  properties: PageProps,
-  format?: Partial<PageFormat>,
+  properties: IPage["properties"],
+  format?: IPage["format"],
   rows?: Omit<IPageCreateInput, "type">[]
 }
 
@@ -324,41 +324,42 @@ export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageIn
 // -----------------
 
 // Media IBlock Input
-export interface IMediaInput extends IInput {
-  properties: MediaProps,
-  format?: MediaFormat,
-  file_ids: string[]
-}
 
-export interface IVideoInput extends IMediaInput {
+export interface IVideoInput extends IInput {
   type: 'video',
+  properties: IVideo["properties"],
+  format: IVideo["format"],
 }
 
-export interface IImageInput extends IMediaInput {
+export interface IImageInput extends IInput {
   type: 'image',
+  properties: IImage["properties"],
+  format: IImage["format"],
 }
 
-export interface IAudioInput extends IMediaInput {
+export interface IAudioInput extends IInput {
   type: 'audio',
+  properties: IAudio["properties"],
+  format: IAudio["format"],
 }
 
 export interface IWebBookmarkInput extends IInput {
   type: 'bookmark',
-  properties: WebBookmarkProps,
-  format?: WebBookmarkFormat
+  properties: IWebBookmark["properties"],
+  format?: IWebBookmark["format"]
 }
 
 // Basic block input
 export interface ICodeInput extends IInput {
   type: 'code',
-  properties: CodeProps,
-  format?: CodeFormat
+  properties: ICode["properties"]
+  format?: ICode["format"]
 }
 
 export interface IFileInput extends IInput {
   type: 'file',
-  properties: FileProps,
-  format?: FileFormat
+  properties: IFile["properties"]
+  format?: IFile["format"]
 }
 
 export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBookmarkInput | ICodeInput | IFileInput;
@@ -367,65 +368,67 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IColumnListInput extends IInput {
   type: "column_list",
-  properties?: Record<string, unknown>,
-  format?: Record<string, unknown>,
+  properties?: IColumnList["properties"],
+  format?: IColumnList["format"],
   contents: TBlockInput[]
 }
 
 export interface IPageCreateInput extends IInput {
   type: 'page',
-  properties: PageProps,
-  format?: Partial<PageFormat>,
+  properties: IPage["properties"],
+  format?: IPage["format"],
   isPrivate?: boolean,
   contents?: TBlockInput[]
 }
 
 export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "contents">>;
 export type ICollectionViewPageUpdateInput = Partial<Pick<ICollectionViewPage, "properties" | "format">>
-export interface ICommonTextInput extends IInput {
-  properties: {
-    title: string[][]
-  },
-  format?: {
-    block_color?: TFormatBlockColor
-  }
-}
-export interface ILinkToPageInput extends IInput {
-  type: "link_to_page",
-  page_id: string,
-  format?: Record<string, unknown>,
-  properties?: Record<string, unknown>
-}
 
-export interface ITextInput extends ICommonTextInput {
+export interface ITextInput extends IInput {
+  properties: IText["properties"],
+  format: IText["format"],
   type: 'text'
 }
 
-export interface IHeaderInput extends ICommonTextInput {
+export interface IHeaderInput extends IInput {
+  properties: IHeader["properties"],
+  format: IHeader["format"],
   type: 'header'
 }
 
-export interface ISubHeaderInput extends ICommonTextInput {
+export interface ISubHeaderInput extends IInput {
+  properties: ISubHeader["properties"],
+  format: ISubHeader["format"],
   type: 'sub_header'
 }
 
-export interface ISubSubHeaderInput extends ICommonTextInput {
+export interface ISubSubHeaderInput extends IInput {
+  properties: ISubSubHeader["properties"],
+  format: ISubSubHeader["format"],
   type: 'sub_sub_header'
 }
 
-export interface INumberedListInput extends ICommonTextInput {
+export interface INumberedListInput extends IInput {
+  properties: INumberedList["properties"],
+  format: INumberedList["format"],
   type: 'numbered_list'
 }
 
-export interface IBulletedListInput extends ICommonTextInput {
+export interface IBulletedListInput extends IInput {
+  properties: IBulletedList["properties"],
+  format: IBulletedList["format"],
   type: 'bulleted_list'
 }
 
-export interface IToggleInput extends ICommonTextInput {
+export interface IToggleInput extends IInput {
+  properties: IToggle["properties"],
+  format: IToggle["format"],
   type: 'toggle'
 }
 
-export interface IQuoteInput extends ICommonTextInput {
+export interface IQuoteInput extends IInput {
+  properties: IQuote["properties"],
+  format: IQuote["format"],
   type: 'quote'
 }
 
@@ -436,62 +439,49 @@ interface IInput {
 
 export interface IDividerInput extends IInput {
   type: 'divider',
-  properties?: Record<string, unknown>,
-  format?: Record<string, unknown>
+  properties?: IDivider["properties"],
+  format?: IDivider["format"]
 }
 
-export interface ICalloutInput extends ICommonTextInput {
+export interface ICalloutInput {
   type: 'callout',
-  format?: {
-    page_icon: string,
-    block_color?: TFormatBlockColor
-  }
+  format?: ICallout["format"]
+  properties?: ICallout["properties"]
 }
 
 export interface ITodoInput extends IInput {
   type: 'to_do',
-  properties: TodoProps,
-  format?: {
-    block_color?: TFormatBlockColor
-  }
+  properties: ITodo["properties"],
+  format?: ITodo["format"]
+
 }
 // ? TD:2:M Add td for TCollectionBlockInput
 
-export type TBasicBlockInput = ILinkToPageInput | IPageCreateInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
+export type TBasicBlockInput = IPageCreateInput | ITodoInput | ICalloutInput | IDividerInput | IQuoteInput | IToggleInput | IBulletedListInput | INumberedListInput | ISubSubHeaderInput | ISubHeaderInput | IHeaderInput | ITextInput;
 // Advanced block input
 export interface ITOCInput extends IInput {
   type: 'table_of_contents',
-  format?: {
-    block_color?: TFormatBlockColor
-  },
-  properties?: Record<string, unknown>
+  format?: ITOC["format"],
+  properties?: ITOC["properties"]
 }
 
 export interface IEquationInput extends IInput {
   type: 'equation',
-  properties: {
-    title: string[][]
-  },
-  format?: {
-    block_color?: TFormatBlockColor
-  }
+  properties: IEquation["properties"],
+  format?: IEquation["format"]
 }
 
 export interface IFactoryInput extends IInput {
   type: 'factory',
-  properties: {
-    title: string[][]
-  },
-  format?: {
-    block_color?: TFormatBlockColor
-  },
+  properties: IFactory["properties"],
+  format?: IFactory["format"],
   contents: TBlockInput[]
 }
 
 export interface IBreadcrumbInput extends IInput {
   type: 'breadcrumb',
-  properties?: Record<string, unknown>,
-  format?: Record<string, unknown>,
+  properties?: IBreadcrumb["properties"],
+  format?: IBreadcrumb["format"],
 }
 
 export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationInput | ITOCInput;
@@ -499,72 +489,45 @@ export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationIn
 // Embed block input
 export interface IEmbedInput extends IInput {
   type: "embed",
-  properties: MediaProps,
-  format?: MediaFormat,
+  properties: IEmbed["properties"],
+  format?: IEmbed["format"],
 }
 
 export interface IDriveInput extends IInput {
   type: 'drive',
-  properties?: Record<string, unknown>,
-  format?: {
-    drive_properties: {
-      file_id: string,
-      icon: string,
-      modified_time: number,
-      title: string,
-      trashed: boolean,
-      url: string,
-      user_name: string,
-    },
-    drive_status: {
-      authed: boolean,
-      last_fetched: number
-    }
-  },
+  properties?: IDrive["properties"],
+  format?: IDrive["format"],
   file_id: string
 }
 
 export interface ITweetInput extends IInput {
   type: 'tweet',
-  properties: {
-    source: string[][]
-  },
-  format?: Record<string, unknown>,
+  properties: ITweet["properties"],
+  format?: ITweet["format"],
 }
 
 export interface ICodepenInput extends IInput {
   type: 'codepen',
-  properties: {
-    source: string[][]
-  },
-  format?: MediaFormat,
+  properties: ICodepen["properties"],
+  format?: ICodepen["format"],
 }
 
 export interface IMapsInput extends IInput {
   type: 'maps',
-  properties: {
-    source: string[][]
-  },
-  format?: MediaFormat,
+  properties: IMaps["properties"],
+  format?: IMaps["format"],
 }
 
 export interface IGistInput extends IInput {
   type: 'gist',
-  properties: {
-    source: string[][]
-  },
-  format?: {
-    block_color?: TFormatBlockColor,
-    display_source: null
-  },
+  properties: IGist["properties"],
+  format?: IGist["format"],
 }
 
 export interface IFigmaInput extends IInput {
   type: 'figma',
-  properties: {
-    source: string[][]
-  },
-  format?: MediaFormat,
+  properties: IFigma["properties"],
+  format?: IFigma["format"],
 }
 
 export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepenInput | IDriveInput | IGistInput | ITweetInput;

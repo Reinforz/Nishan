@@ -1,6 +1,6 @@
 <img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/c6b6a44002d83f53cc5ca0d671554be25fe11a14/public/Logo.svg">
 
-[Github Actions](https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg)
+<img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/>
 
 # Nishan
 
@@ -10,6 +10,8 @@ This monorepo contains the following packages:-
 1. @nishan/core: Core package for nishan with crud api
 2. @nishan/types: Typescript typings for Notion only
 3. @nishan/utils: Utility package to make working with notion easier
+4. @nishan/store(WIP): A package to easily backup or download data locally or in a remote dbaas
+5. @nishan/graphql(WIP): A graphql server and client UI to make working with nishan a breeze 
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 

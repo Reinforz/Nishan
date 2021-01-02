@@ -2,7 +2,6 @@ import Operation from "./chunk";
 import createTransaction from "./createTransaction";
 import shortid from "./shortid";
 
-export * from "../../utils/lib/inlineBlocks";
 export * from "./logs";
 export * from "./uuid";
 

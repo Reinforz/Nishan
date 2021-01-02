@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
   "main": "src/index.ts",
-  "typings": "build/index.d.ts",
+  "typings": "dist/index.d.ts",
   "directories": {
     "lib": "src"
   },

@@ -1,4 +1,4 @@
-import { LoadUserContentResult } from "../dist/types";
+import { LoadUserContentResult } from "../dist/Nishan";
 
 export default {
   "recordMap": {

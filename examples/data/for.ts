@@ -1,4 +1,4 @@
-import { TTextColor } from "../../types";
+import { TTextColor } from "../../packages/core/dist/Nishan";
 
 export type TFor =
   "Javascript" |

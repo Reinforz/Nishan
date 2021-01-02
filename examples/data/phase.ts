@@ -1,5 +1,5 @@
 
-import { SelectOption } from '../../types';
+import { SelectOption } from '../../packages/core/dist/Nishan';
 
 export default [{
   color: "red",

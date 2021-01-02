@@ -1,7 +1,8 @@
 node_modules
 experiment
 feature.md
-/dist
+**/dist
+**/build
 /docs/.docusaurus
 /docs/docs/api
 .netlify

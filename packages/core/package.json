@@ -5,7 +5,7 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
-  "main": "dist/Nishan.js",
+  "main": "./dist/Nishan.js",
   "directories": {
     "lib": "api",
     "test": "tests"
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "npm run clean && npx tsc --removeComments",
-    "watch": "npx tsc --incremental true -w",
+    "watch": "npx tsc -w",
     "clean": "npx rimraf ./dist",
     "lint": "npx eslint . --color",
     "prepack": "npm run test:build",

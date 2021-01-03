@@ -287,10 +287,36 @@ describe("Update methods for space", ()=>{
     })
   })
 
+  it("Update [root_cvp] cb", async()=>{
+    await space.updateRootPages(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID ? {
+      type: "collection_view_page",
+      format: {
+        page_icon: "icon"
+      }
+    } : undefined);
+    testUpdateMethod<ICollectionViewPageUpdateInput>({
+      child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      cb: (data) => expect(data?.format?.page_icon).toBe("icon")
+    })
+  })
+
   it("Update [collection] [id]", async()=>{
     await space.updateRootCollections([[COLLECTION_ONE_ID, {
       description: [["test"]]
     }]]);
+    testUpdateMethod<ICollectionUpdateInput>({
+      child_id: COLLECTION_ONE_ID,
+      child_type: "collection",
+      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
+    })
+  })
+
+  it("Update [collection] cb", async()=>{
+    await space.updateRootCollections((collection) => collection.id === COLLECTION_ONE_ID ? {
+      description: [["test"]]
+    } : undefined);
     testUpdateMethod<ICollectionUpdateInput>({
       child_id: COLLECTION_ONE_ID,
       child_type: "collection",

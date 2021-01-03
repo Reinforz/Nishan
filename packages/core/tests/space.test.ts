@@ -1,5 +1,5 @@
 import { ISpace, TData } from "@nishan/types";
-import { Space } from "../dist/api";
+import { Collection, Space } from "../dist/api";
 import { ITPage } from "../dist/types";
 import {nishan, COLLECTION_ONE_ID, SPACE_VIEW_ONE_ID, ROOT_COLLECTION_VIEW_PAGE_ONE_ID, USER_ONE_ID, SPACE_ONE_ID, ROOT_PAGE_ONE_ID} from "./constants"
 
@@ -36,6 +36,16 @@ function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
   }
 }
 
+function checkRootCollection(collection: Collection, status?:boolean){
+  status = status ?? true;
+  if(status){
+    expect(collection).not.toBeNull();
+    expect(collection.id).toBe(COLLECTION_ONE_ID);
+  }else{
+    expect(collection).toBeUndefined();
+  }
+}
+
 function keyValueChecker<T extends TData>(data: T, args: Partial<Record<keyof T, string | number | boolean>>){
   Object.keys(args).forEach(key=>expect(data[key as keyof T]).toBe(args[key as keyof T]))
 }
@@ -51,6 +61,46 @@ describe("Getter methods for space", ()=>{
     const collection_ids = space.getCollectionIds();
     expect(collection_ids.length).toBe(1);
     expect(collection_ids[0]).toBe(COLLECTION_ONE_ID)
+  })
+
+  it("Get collection id", async ()=>{
+    checkRootCollection(await space.getRootCollection(COLLECTION_ONE_ID))
+  })
+  
+  it("!Get collection !id", async ()=>{
+    checkRootCollection(await space.getRootCollection(COLLECTION_ONE_ID.slice(1)), false)
+  })
+  
+  it("Get [collection] [id]", async ()=>{
+    checkRootCollection((await space.getRootCollections([COLLECTION_ONE_ID]))[0]);
+  })
+  
+  it("!Get [collection] ![id]", async ()=>{
+    checkRootCollection((await space.getRootCollections([COLLECTION_ONE_ID.slice(1)]))[0], false);
+  })
+  
+  it("Get collection cb", async ()=>{
+    checkRootCollection(await space.getRootCollection(collection=>collection.id === COLLECTION_ONE_ID));
+  })
+  
+  it("!Get collection !cb", async ()=>{
+    checkRootCollection(await space.getRootCollection(collection=>collection.id === COLLECTION_ONE_ID.slice(1)), false);
+  })
+  
+  it("Get [collection] cb.id", async ()=>{
+    checkRootCollection((await space.getRootCollections(collection=>collection.id === COLLECTION_ONE_ID))[0]);
+  })
+  
+  it("Get [collection] cb.parent_id", async ()=>{
+    checkRootCollection((await space.getRootCollections(collection=>collection.parent_id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID))[0]);
+  })
+  
+it("Get [collection] undefined", async ()=>{
+    checkRootCollection((await space.getRootCollections())[0]);
+  })
+  
+  it("!Get [collection] !cb", async ()=>{
+    checkRootCollection((await space.getRootCollections(collection=>collection.id === COLLECTION_ONE_ID.slice(1)))[0], false);
   })
   
   it("Get root_page id", async ()=>{

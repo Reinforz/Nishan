@@ -382,7 +382,7 @@ export interface IPageCreateInput extends IInput {
 }
 
 export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "contents">> & {type: "page"};
-export type ICollectionViewPageUpdateInput = Partial<Pick<ICollectionViewPage, "properties" | "format">> & {type: "collection_view_page"}
+export type ICollectionViewPageUpdateInput = Partial<Pick<ICollectionViewPage, "format">> & {type: "collection_view_page"}
 
 export interface ITextInput extends IInput {
   properties: IText["properties"],

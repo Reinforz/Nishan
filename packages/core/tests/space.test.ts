@@ -95,7 +95,7 @@ describe("Getter methods for space", ()=>{
     checkRootCollection((await space.getRootCollections(collection=>collection.parent_id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID))[0]);
   })
   
-it("Get [collection] undefined", async ()=>{
+  it("Get [collection] undefined", async ()=>{
     checkRootCollection((await space.getRootCollections())[0]);
   })
   
@@ -186,6 +186,10 @@ it("Get [collection] undefined", async ()=>{
 })
 
 describe("Update methods for space", ()=>{
+  beforeEach(()=>{
+    space.clearStackSyncRecords();
+  })
+
   it("Update space", async ()=>{
     const {stack, sync_records} = space.getStackSyncRecords(),
     update_obj = {
@@ -197,6 +201,39 @@ describe("Update methods for space", ()=>{
     expect(sync_records.length).toBe(0);
     keyValueChecker<ISpace>(stack[0].args, update_obj);
     keyValueChecker<ISpace>(space.getCachedData(), update_obj);
-    space.clearStackSyncRecords();
+  })
+
+  it("Update [root_page] id", async ()=>{
+    await space.updateRootPages([[ROOT_PAGE_ONE_ID, {
+      type: "page",
+      properties: {
+        title: [["Hello World"]]
+      }
+    }]])
+    const {stack, sync_records} = space.getStackSyncRecords();
+    expect(stack.length).toBe(2);
+    expect(sync_records.length).toBe(2);
+    expect(sync_records[0][0]).toBe(ROOT_PAGE_ONE_ID);
+    expect(sync_records[0][1]).toBe("block");
+    expect(sync_records[1][0]).toBe(SPACE_ONE_ID);
+    expect(sync_records[1][1]).toBe("space");
+    const [root_page_op, space_op] = stack;
+
+    expect(root_page_op.id).toBe(ROOT_PAGE_ONE_ID)    
+    expect(root_page_op.command).toBe("update");
+    expect(root_page_op.table).toBe("block");
+    expect(root_page_op.path.length).toBe(0);
+    expect(root_page_op.args.properties.title[0][0]).toBe("Hello World");
+    expect(root_page_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(root_page_op.args.last_edited_by_table).toBe("notion_user");
+    expect(root_page_op.args.last_edited_time).toBeLessThan(Date.now());
+
+    expect(space_op.id).toBe(SPACE_ONE_ID); 
+    expect(space_op.command).toBe("update");
+    expect(space_op.table).toBe("space");
+    expect(space_op.path.length).toBe(0);
+    expect(space_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(space_op.args.last_edited_by_table).toBe("notion_user");
+    expect(space_op.args.last_edited_time).toBeLessThan(Date.now());
   })
 })

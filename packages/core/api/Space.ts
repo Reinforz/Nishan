@@ -104,7 +104,7 @@ export default class Space extends Data<ISpace> {
    * @param id id of the root page to update
    * @param opt object to configure root page
    */
-  async updateRootPage(arg: UpdateType<TPage, IPageUpdateInput>, execute?: boolean,) {
+  async updateRootPage(arg: UpdateType<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, execute?: boolean,) {
     return await this.updateRootPages(typeof arg === "function" ? arg : [arg], execute, false);
   }
 

@@ -1,4 +1,4 @@
-<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/c6b6a44002d83f53cc5ca0d671554be25fe11a14/public/Logo.svg">
+<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg">
 
 <img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/>
 
@@ -45,3 +45,4 @@ Feel free to submit a pull request or open a new issue, contributions are more t
 1. Python: [notion-py](https://github.com/jamalex/notion-py)
 2. Go: [notionapi](https://github.com/kjk/notionapi)
 3. Ruby: [notion-ruby](https://github.com/danmurphy1217/notion-ruby)
+4. Kotlin: [notion-sdk-kotlin](https://github.com/notionsdk/notion-sdk-kotlin)

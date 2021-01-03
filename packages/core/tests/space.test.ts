@@ -1,3 +1,4 @@
+import { ISpace, TData } from "@nishan/types";
 import { Space } from "../dist/api";
 import { ITPage } from "../dist/types";
 import {nishan, COLLECTION_ONE_ID, SPACE_VIEW_ONE_ID, ROOT_COLLECTION_VIEW_PAGE_ONE_ID, USER_ONE_ID, SPACE_ONE_ID, ROOT_PAGE_ONE_ID} from "./constants"
@@ -33,6 +34,10 @@ function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
     expect(pages.collection_view_page.length).toBe(0);
     expect(pages.collection_view_page[0]).toBeUndefined();
   }
+}
+
+function keyValueChecker<T extends TData>(data: T, args: Partial<Record<keyof T, string | number | boolean>>){
+  Object.keys(args).forEach(key=>expect(data[key as keyof T]).toBe(args[key as keyof T]))
 }
 
 describe("Getter methods for space", ()=>{
@@ -127,5 +132,21 @@ describe("Getter methods for space", ()=>{
   
   it("!Get [root_cvp] !cb", async ()=>{
     checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID.slice(1)), false);
+  })
+})
+
+describe("Update methods for space", ()=>{
+  it("Update space", async ()=>{
+    const {stack, sync_records} = space.getStackSyncRecords(),
+    update_obj = {
+      beta_enabled: true,
+      disable_export: true
+    };
+    await space.update(update_obj);
+    expect(stack.length).not.toBe(0);
+    expect(sync_records.length).toBe(0);
+    keyValueChecker<ISpace>(stack[0].args, update_obj);
+    keyValueChecker<ISpace>(space.getCachedData(), update_obj);
+    space.clearStackSyncRecords();
   })
 })

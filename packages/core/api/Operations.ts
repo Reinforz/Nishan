@@ -5,21 +5,21 @@ import { warn } from "../utils";
 import Mutations from "./Mutations";
 
 export default class Operations extends Mutations {
-  stack: IOperation[] = [];
-  sync_records: UpdateCacheManuallyParam = []
+  #stack: IOperation[] = [];
+  #sync_records: UpdateCacheManuallyParam = []
 
   constructor(args: NishanArg) {
     super(args);
-    this.stack = args.stack || []
-    this.sync_records = args.sync_records || []
+    this.#stack = args.stack || []
+    this.#sync_records = args.sync_records || []
   }
 
   protected pushOperations(operations: IOperation[]) {
-    this.stack.push(...operations)
+    this.#stack.push(...operations)
   }
 
   protected pushSyncRecords(sync_records: UpdateCacheManuallyParam) {
-    this.sync_records.push(...sync_records)
+    this.#sync_records.push(...sync_records)
   }
 
   protected pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
@@ -30,21 +30,49 @@ export default class Operations extends Mutations {
   }
 
   printStack() {
-    console.log(JSON.stringify(this.stack, null, 2))
+    console.log(JSON.stringify(this.#stack, null, 2))
   }
 
   async executeOperation() {
-    if (this.stack.length === 0)
+    if (this.#stack.length === 0)
       warn(`The operation stack is empty`)
     else {
-      await this.saveTransactions(this.stack);
-      this.stack = [];
+      await this.saveTransactions(this.#stack);
+      this.#stack = [];
     }
-    if (this.sync_records.length === 0)
+    if (this.#sync_records.length === 0)
       warn(`The sync_record stack is empty`)
     else {
-      await this.updateCacheManually(this.sync_records)
-      this.sync_records = [];
+      await this.updateCacheManually(this.#sync_records)
+      this.#sync_records = [];
+    }
+  }
+
+  clearStack(){
+    this.#stack = [];
+  }
+
+  clearSyncRecords(){
+    this.#sync_records = [];
+  }
+
+  clearStackSyncRecords(){
+    this.clearStack();
+    this.clearSyncRecords();
+  }
+
+  getStack(){
+    return this.#stack
+  }
+
+  getSyncRecords(){
+    return this.#sync_records
+  }
+
+  getStackSyncRecords(){
+    return {
+      stack: this.#stack,
+      sync_records: this.#sync_records
     }
   }
 

@@ -529,8 +529,7 @@ export default class Data<T extends TData> extends Operations {
       cache: this.cache,
       logger: this.logger,
       defaultExecutionState: this.defaultExecutionState,
-      stack: this.stack,
-      sync_records: this.sync_records
+      ...this.getStackSyncRecords()
     }
   }
 

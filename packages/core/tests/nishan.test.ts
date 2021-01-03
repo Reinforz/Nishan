@@ -26,7 +26,7 @@ function checkUsers(users: NotionUser[], status?:boolean){
 }
 
 it("Sets up default configuration for Nishan",()=>{
-  expect(nishan.defaultExecutionState).toBe(true);
+  expect(nishan.defaultExecutionState).toBe(false);
   expect(nishan.interval).toBe(500);
 })
 

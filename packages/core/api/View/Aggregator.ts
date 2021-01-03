@@ -61,7 +61,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       })
     };
 
-    this.executeUtil([this.updateOp([], {
+    await this.executeUtil([this.updateOp([], {
       query2: data.query2,
     })], this.id, execute)
   }
@@ -82,7 +82,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       aggregation.aggregator = aggregator
     })
 
-    this.executeUtil([this.updateOp([], {
+    await this.executeUtil([this.updateOp([], {
       query2: data.query2,
     })], this.id, execute)
   }

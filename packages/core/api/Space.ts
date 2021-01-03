@@ -51,7 +51,6 @@ export default class Space extends Data<ISpace> {
     });
   }
 
-  // ? FEAT:1:M Update space permissions
   /**
    * Update the space settings
    * @param opt Properties of the space to update
@@ -59,7 +58,7 @@ export default class Space extends Data<ISpace> {
   async update(opt: ISpaceUpdateInput, execute?: boolean) {
     const [op, update] = this.updateCacheLocally(opt, TSpaceUpdateKeys);
 
-    this.executeUtil([
+    await this.executeUtil([
       op
     ], [], execute);
 

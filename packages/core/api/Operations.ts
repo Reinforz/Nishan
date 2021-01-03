@@ -50,6 +50,7 @@ export default class Operations extends Mutations {
 
   protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam | string, execute?: boolean) {
     execute = execute ?? this.defaultExecutionState;
+    
     if (execute) {
       if (ops.length !== 0)
         await this.saveTransactions(ops);

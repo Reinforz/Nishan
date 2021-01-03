@@ -98,7 +98,7 @@ class SpaceView extends Data<ISpaceView> {
         id
       }))
     });
-    this.executeUtil(ops, [[target_space_view.id, "space_view"]], execute)
+    await this.executeUtil(ops, [[target_space_view.id, "space_view"]], execute)
   }
 }
 

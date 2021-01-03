@@ -1,6 +1,6 @@
 import { ISpace, TData, TDataType } from "@nishan/types";
 import { Collection, Space } from "../dist/api";
-import { IPageUpdateInput, ITPage } from "../dist/types";
+import { ICollectionUpdateInput, ICollectionViewPageUpdateInput, IPageUpdateInput, ITPage } from "../dist/types";
 import {nishan, COLLECTION_ONE_ID, SPACE_VIEW_ONE_ID, ROOT_COLLECTION_VIEW_PAGE_ONE_ID, USER_ONE_ID, SPACE_ONE_ID, ROOT_PAGE_ONE_ID} from "./constants"
 
 let space: Space = null as any;
@@ -53,17 +53,19 @@ function keyValueChecker<T extends TData>(data: T, args: Partial<Record<keyof T,
 function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, parent_type}: {
   child_id: string,
   child_type?: TDataType,
-  parent_id: string,
-  parent_type: TDataType,
+  parent_id?: string,
+  parent_type?: TDataType,
   cb: (data: T) => void
 }){
-  const {stack, sync_records} = space.getStackSyncRecords();
+  const {stack, sync_records} = space.getStackSyncRecords(), check_parent = parent_id && parent_type;
   expect(stack.length).toBe(2);
   expect(sync_records.length).toBe(2);
   expect(sync_records[0][0]).toBe(child_id);
   expect(sync_records[0][1]).toBe(child_type);
-  expect(sync_records[1][0]).toBe(parent_id);
-  expect(sync_records[1][1]).toBe(parent_type);
+  if(check_parent){
+    expect(sync_records[1][0]).toBe(parent_id);
+    expect(sync_records[1][1]).toBe(parent_type);
+  }
   const [child_op, parent_op] = stack;
 
   cb(child_op.args as T)
@@ -74,18 +76,20 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
   expect(child_op.path.length).toBe(0);
   expect(child_op.args.last_edited_by).toBe(USER_ONE_ID);
   expect(child_op.args.last_edited_by_table).toBe("notion_user");
-  expect(child_op.args.last_edited_time).toBeLessThan(Date.now());
+  expect(child_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
 
-  expect(parent_op.id).toBe(parent_id); 
-  expect(parent_op.command).toBe("update");
-  expect(parent_op.table).toBe(parent_type);
-  expect(parent_op.path.length).toBe(0);
-  expect(parent_op.args.last_edited_by).toBe(USER_ONE_ID);
-  expect(parent_op.args.last_edited_by_table).toBe("notion_user");
-  expect(parent_op.args.last_edited_time).toBeLessThan(Date.now());
+  if(check_parent && parent_op){
+    expect(parent_op.id).toBe(parent_id); 
+    expect(parent_op.command).toBe("update");
+    expect(parent_op.table).toBe(parent_type);
+    expect(parent_op.path.length).toBe(0);
+    expect(parent_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(parent_op.args.last_edited_by_table).toBe("notion_user");
+    expect(parent_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
+  }
 }
 
-describe.skip("Getter methods for space", ()=>{
+describe("Getter methods for space", ()=>{
   it("Get space_view",()=>{
     const space_view = space.getSpaceView();
     expect(space_view).not.toBeNull();
@@ -268,20 +272,29 @@ describe("Update methods for space", ()=>{
     })
   })
 
-  /* it("Update [root_cvp] [id]", async()=>{
+  it("Update [root_cvp] [id]", async()=>{
     await space.updateRootPages([[ROOT_COLLECTION_VIEW_PAGE_ONE_ID, {
       type: "collection_view_page",
       format: {
         page_icon: "icon"
       }
     }]]);
-    testUpdateMethod(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)
+    testUpdateMethod<ICollectionViewPageUpdateInput>({
+      child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      cb: (data) => expect(data?.format?.page_icon).toBe("icon")
+    })
   })
 
   it("Update [collection] [id]", async()=>{
     await space.updateRootCollections([[COLLECTION_ONE_ID, {
-      description: [["Collection"]]
+      description: [["test"]]
     }]]);
-    
-  }) */
+    testUpdateMethod<ICollectionUpdateInput>({
+      child_id: COLLECTION_ONE_ID,
+      child_type: "collection",
+      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
+    })
+  })
 })

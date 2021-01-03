@@ -1,0 +1,28 @@
+{
+  "name": "@nishan/graphql",
+  "version": "0.0.0",
+  "description": "A graphql server and client UI to make working with nishan a breeze",
+  "author": "Devon Reid <fireborn1003@gmail.com>",
+  "homepage": "https://github.com/Nishan-Open-Source/Nishan#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nishan-Open-Source/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Nishan-Open-Source/Nishan/issues"
+  },
+  "dependencies": {
+    "@nishan/types": "0.0.0",
+    "@nishan/core": "0.0.0"
+  }
+}

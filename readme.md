@@ -1,6 +1,6 @@
 <img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg">
 
-<img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/>
+<img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/> &nbsp; <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/> &nbsp; <img src="https://img.shields.io/github/stars/devorein/nishan?style=flat-square" /> &nbsp; <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
 
 # Nishan
 

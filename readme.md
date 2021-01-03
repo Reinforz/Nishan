@@ -11,7 +11,8 @@ This monorepo contains the following packages:-
 2. @nishan/types: Typescript typings for Notion only
 3. @nishan/utils: Utility package to make working with notion easier
 4. @nishan/store(WIP): A package to easily backup or download data locally or in a remote dbaas
-5. @nishan/graphql(WIP): A graphql server and client UI to make working with nishan a breeze 
+5. @nishan/graphql(WIP): A graphql server and client UI to make working with nishan a breeze
+6. @nsiahn/cli(WIP): A package to interact with the nishan api from the terminal
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
@@ -29,8 +30,15 @@ Check out the [examples](https://github.com/Devorein/Nishan/tree/master/examples
 
 ## How to contribute
 
-1. Clone the repo locally.
-2. Install all the dependencies using `yarn install`.
-3. Run all the tests using `yarn test`.
+1. Clone the repo locally by typing `` on the terminal.
+2. Make sure you have yarn installed
+3. Install all the dependencies using `yarn install`.
+4. Run all the tests using `yarn test`.
 
 Feel free to submit a pull request or open a new issue, contributions are more than welcome !!!
+
+## Implementations in other languages
+
+1. Python: [notion-py](https://github.com/jamalex/notion-py)
+2. Go: [notionapi](https://github.com/kjk/notionapi)
+3. Ruby: [notion-ruby](https://github.com/danmurphy1217/notion-ruby)

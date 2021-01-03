@@ -204,7 +204,7 @@ export interface ICollectionView extends ICollectionBlock {
 export interface ICollectionViewPage extends ICollectionBlock {
 	type: 'collection_view_page';
 	permissions: IPermission[];
-	format: Partial<PageFormat>;
+	format?: Partial<PageFormat>;
 }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;

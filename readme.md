@@ -14,7 +14,7 @@ This monorepo contains/will contain the following packages:-
 4. @nishan/store (WIP): A package to easily backup or download notion data locally or in a remote dbaas
 5. @nishan/graphql (WIP): A graphql server and client UI to make working with nishan a breeze
 6. @nishan/cli (WIP): A package to interact with the nishan api from the terminal
-7. @nishan/codegen (WIP): A package to automatically generate typescript definitions from a notion collection schema
+7. @nishan/typegen (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
 8. @nishan/orm (WIP): A package to use notion as a database by providing an easy to use orm api
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.

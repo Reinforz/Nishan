@@ -10,6 +10,6 @@ feature.md
 /examples/env.ts
 **/*.tgz
 /experiment
-
+**/coverage
 # OSX files
 .DS_Store

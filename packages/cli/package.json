@@ -1,0 +1,24 @@
+{
+  "name": "@nishan/cli",
+  "version": "0.0.0",
+  "description": "A package to interact with the nishan api from the terminal",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "license": "MIT",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

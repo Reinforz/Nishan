@@ -11,7 +11,7 @@ This monorepo contains/will contain the following packages:-
 1. @nishan/core: Core package for nishan with crud api
 2. @nishan/types: Typescript typings for Notion only
 3. @nishan/utils: Utility package to make working with notion easier
-4. @nishan/store (WIP): A package to easily backup or download data locally or in a remote dbaas
+4. @nishan/store (WIP): A package to easily backup or download notion data locally or in a remote dbaas
 5. @nishan/graphql (WIP): A graphql server and client UI to make working with nishan a breeze
 6. @nishan/cli (WIP): A package to interact with the nishan api from the terminal
 7. @nishan/codegen (WIP): A package to automatically generate typescript definitions from a notion collection schema

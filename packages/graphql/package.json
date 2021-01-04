@@ -2,7 +2,7 @@
   "name": "@nishan/graphql",
   "version": "0.0.0",
   "description": "A graphql server and client UI to make working with nishan a breeze",
-  "author": "Devon Reid <fireborn1003@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Nishan-Open-Source/Nishan#readme",
   "license": "MIT",
   "main": "dist/index.js",

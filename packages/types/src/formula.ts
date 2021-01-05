@@ -106,24 +106,39 @@ export type I2ArgNumberOperatorFormula<O extends T2ArgNumberOperatorName> = IOpe
 	Tuple2<TNumberResultTypeFormula>
 >;
 
+export type AndOperatorFormula = I2ArgCheckboxOperatorFormula<'and'>;
+export type OrOperatorFormula = I2ArgCheckboxOperatorFormula<'or'>;
+export type LargerOperatorFormula = I2ArgCheckboxOperatorFormula<'larger'>;
+export type LargerEqOperatorFormula = I2ArgCheckboxOperatorFormula<'largerEq'>;
+export type SmallerOperatorFormula = I2ArgCheckboxOperatorFormula<'smaller'>;
+export type SmallerEqOperatorFormula = I2ArgCheckboxOperatorFormula<'smallerEq'>;
+export type NotOperatorFormula = I1ArgCheckboxOperatorFormula<'not'>;
+
+export type SsubtractOperatorFormula = I2ArgNumberOperatorFormula<'subtract'>;
+export type DivideOperatorFormula = I2ArgNumberOperatorFormula<'divide'>;
+export type MultipleOperatorFormula = I2ArgNumberOperatorFormula<'multiple'>;
+export type PowOperatorFormula = I2ArgNumberOperatorFormula<'pow'>;
+export type ModOperatorFormula = I2ArgNumberOperatorFormula<'mod'>;
+export type UnaryMinusOperatorFormula = I1ArgNumberOperatorFormula<'unaryMinus'>;
+export type UnaryPlusOperatorFormula = I1ArgNumberOperatorFormula<'unaryPlus'>;
+
 export type TCheckboxOperatorFormula =
-	| I2ArgCheckboxOperatorFormula<'and'>
-	| I2ArgCheckboxOperatorFormula<'or'>
-	| I2ArgCheckboxOperatorFormula<'larger'>
-	| I2ArgCheckboxOperatorFormula<'largerEq'>
-	| I2ArgCheckboxOperatorFormula<'smaller'>
-	| I2ArgCheckboxOperatorFormula<'smallerEq'>
-	| I1ArgCheckboxOperatorFormula<'not'>;
+	| AndOperatorFormula
+	| OrOperatorFormula
+	| LargerOperatorFormula
+	| LargerEqOperatorFormula
+	| SmallerOperatorFormula
+	| SmallerEqOperatorFormula
+	| NotOperatorFormula;
 
 export type TNumberOperatorFormula =
-	| I2ArgNumberOperatorFormula<'subtract'>
-	| I2ArgNumberOperatorFormula<'add'>
-	| I2ArgNumberOperatorFormula<'divide'>
-	| I2ArgNumberOperatorFormula<'multiple'>
-	| I2ArgNumberOperatorFormula<'pow'>
-	| I2ArgNumberOperatorFormula<'mod'>
-	| I1ArgNumberOperatorFormula<'unaryMinus'>
-	| I1ArgNumberOperatorFormula<'unaryPlus'>;
+	| SsubtractOperatorFormula
+	| DivideOperatorFormula
+	| MultipleOperatorFormula
+	| PowOperatorFormula
+	| ModOperatorFormula
+	| UnaryMinusOperatorFormula
+	| UnaryPlusOperatorFormula;
 
 export type TOperatorFormula =
 	| IfOperatorFormula
@@ -183,6 +198,7 @@ export type T1ArgNumberFunctionName = 'unaryMinus' | 'unaryPlus';
 export type T2ArgNumberFunctionName = 'add' | 'subtract' | 'multiple' | 'divide' | 'pow' | 'mod';
 export type T1ArgCheckboxFunctionName = 'not';
 export type T2ArgCheckboxFunctionName = 'and' | 'or' | 'larger' | 'largerEq' | 'smaller' | 'smallerEq';
+export type T2ArgTextFunctionName = 'concat';
 
 export interface IfFunctionFormula {
 	type: 'function';
@@ -208,14 +224,20 @@ export interface AddFunctionFormula {
 	args: Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>;
 }
 
+export type TFunctionFormulaType =
+	| T1ArgNumberFunctionName
+	| T2ArgNumberFunctionName
+	| T1ArgCheckboxFunctionName
+	| T2ArgCheckboxFunctionName
+	| T2ArgTextFunctionName;
 export interface IFunctionFormula<
 	RT extends TFormulaResultType,
-	O extends T1ArgNumberFunctionName | T2ArgNumberFunctionName | T1ArgCheckboxFunctionName | T2ArgCheckboxFunctionName,
+	N extends TFunctionFormulaType,
 	A extends TResultTypeFormula | Tuple2<TResultTypeFormula>
 > {
 	type: 'function';
 	result_type: RT;
-	name: O;
+	name: N;
 	args: A;
 }
 
@@ -240,24 +262,39 @@ export type I2ArgNumberFunctionFormula<O extends T2ArgNumberFunctionName> = IFun
 	Tuple2<TNumberResultTypeFormula>
 >;
 
+export type AndFunctionFormula = I2ArgCheckboxFunctionFormula<'and'>;
+export type OrFunctionFormula = I2ArgCheckboxFunctionFormula<'or'>;
+export type LargerFunctionFormula = I2ArgCheckboxFunctionFormula<'larger'>;
+export type LargerEqFunctionFormula = I2ArgCheckboxFunctionFormula<'largerEq'>;
+export type SmallerFunctionFormula = I2ArgCheckboxFunctionFormula<'smaller'>;
+export type SmallerEqFunctionFormula = I2ArgCheckboxFunctionFormula<'smallerEq'>;
+export type NotFunctionFormula = I1ArgCheckboxFunctionFormula<'not'>;
+
+export type SubtractFunctionFormula = I2ArgNumberFunctionFormula<'subtract'>;
+export type DivideFunctionFormula = I2ArgNumberFunctionFormula<'divide'>;
+export type MultipleFunctionFormula = I2ArgNumberFunctionFormula<'multiple'>;
+export type PowFunctionFormula = I2ArgNumberFunctionFormula<'pow'>;
+export type ModFunctionFormula = I2ArgNumberFunctionFormula<'mod'>;
+export type UnaryMinusFunctionFormula = I1ArgNumberFunctionFormula<'unaryMinus'>;
+export type UnaryPlusFunctionFormula = I1ArgNumberFunctionFormula<'unaryPlus'>;
+
 export type TCheckboxFunctionFormula =
-	| I2ArgCheckboxFunctionFormula<'and'>
-	| I2ArgCheckboxFunctionFormula<'or'>
-	| I2ArgCheckboxFunctionFormula<'larger'>
-	| I2ArgCheckboxFunctionFormula<'largerEq'>
-	| I2ArgCheckboxFunctionFormula<'smaller'>
-	| I2ArgCheckboxFunctionFormula<'smallerEq'>
-	| I1ArgCheckboxFunctionFormula<'not'>;
+	| AndFunctionFormula
+	| OrFunctionFormula
+	| LargerFunctionFormula
+	| LargerEqFunctionFormula
+	| SmallerFunctionFormula
+	| SmallerEqFunctionFormula
+	| NotFunctionFormula;
 
 export type TNumberFunctionFormula =
-	| I2ArgNumberFunctionFormula<'subtract'>
-	| I2ArgNumberFunctionFormula<'add'>
-	| I2ArgNumberFunctionFormula<'divide'>
-	| I2ArgNumberFunctionFormula<'multiple'>
-	| I2ArgNumberFunctionFormula<'pow'>
-	| I2ArgNumberFunctionFormula<'mod'>
-	| I1ArgNumberFunctionFormula<'unaryMinus'>
-	| I1ArgNumberFunctionFormula<'unaryPlus'>;
+	| SubtractFunctionFormula
+	| DivideFunctionFormula
+	| MultipleFunctionFormula
+	| PowFunctionFormula
+	| ModFunctionFormula
+	| UnaryMinusFunctionFormula
+	| UnaryPlusFunctionFormula;
 
 export type THybridFunctionFormula =
 	| IfFunctionFormula
@@ -266,4 +303,8 @@ export type THybridFunctionFormula =
 	| TNumberFunctionFormula
 	| TCheckboxFunctionFormula;
 
-export type TFormula = TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;
+// Functions
+
+export type TFunctionFormula = '';
+
+export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

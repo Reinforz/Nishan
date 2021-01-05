@@ -1,4 +1,4 @@
-import { IListView } from '@nishan/types';
+import { IListView } from '@nishans/types';
 import { NishanArg } from '../../types';
 import View from './View';
 

@@ -22,7 +22,7 @@
     "url": "https://github.com/Nishan-Open-Source/Nishan/issues"
   },
   "dependencies": {
-    "@nishan/types": "0.0.0",
-    "@nishan/core": "0.0.0"
+    "@nishans/types": "0.0.0",
+    "@nishans/core": "0.0.0"
   }
 }

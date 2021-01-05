@@ -1,4 +1,4 @@
-import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishan/types";
+import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import axios from "axios";
 import { NishanArg, PageCreateContentParam, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes } from "types";
 

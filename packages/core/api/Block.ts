@@ -1,4 +1,4 @@
-import { TBlock, IOperation, TBasicBlockType } from '@nishan/types';
+import { TBlock, IOperation, TBasicBlockType } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams, UpdateCacheManuallyParam } from '../types';
 import { Operation } from '../utils';
 

@@ -6,7 +6,7 @@ import { error } from '../utils';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
-import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, IOperation, INotionUser } from '@nishan/types';
+import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, IOperation, INotionUser } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput } from '../types';
 
 const trootpage_class = {

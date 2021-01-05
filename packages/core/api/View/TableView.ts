@@ -1,4 +1,4 @@
-import { ITableView } from '@nishan/types';
+import { ITableView } from '@nishans/types';
 import { NishanArg } from '../../types';
 import Aggregator from './Aggregator';
 

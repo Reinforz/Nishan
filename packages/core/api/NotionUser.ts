@@ -8,7 +8,7 @@ import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { INotionUser, IUserSettings, IUserRoot, IOperation, ISpace, TPage } from '@nishan/types';
+import { INotionUser, IUserSettings, IUserRoot, IOperation, ISpace, TPage } from '@nishans/types';
 import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, UpdateCacheManuallyParam, FilterType, FilterTypes, UpdateType, UpdateTypes, ITPage } from '../types';
 
 /**

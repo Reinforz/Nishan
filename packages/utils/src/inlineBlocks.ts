@@ -1,4 +1,4 @@
-import { TFormatBlockColor, InlineDateArg } from '@nishan/core';
+import { TFormatBlockColor, InlineDateArg } from '@nishans/core';
 
 export function inlineDate (arg: InlineDateArg) {
 	const text: [[string, any[][]]] = [ [ '‣', [ [ 'd', arg ] ] ] ];

@@ -4,7 +4,7 @@ import Space from './Space';
 import { Operation } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { ISpaceView, ISpace, TPage, IOperation } from '@nishan/types';
+import { ISpaceView, ISpace, TPage, IOperation } from '@nishans/types';
 import { NishanArg, RepositionParams, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, FilterType, FilterTypes, UpdateTypes } from '../types';
 
 /**

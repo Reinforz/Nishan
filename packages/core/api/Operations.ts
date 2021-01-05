@@ -1,4 +1,4 @@
-import { IOperation } from "@nishan/types";
+import { IOperation } from "@nishans/types";
 import { UpdateCacheManuallyParam, NishanArg } from "types";
 import { warn } from "../utils";
 

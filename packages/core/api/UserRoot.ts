@@ -1,4 +1,4 @@
-import { IUserRoot, ISpaceView } from '@nishan/types';
+import { IUserRoot, ISpaceView } from '@nishans/types';
 import { NishanArg, FilterType, FilterTypes, UpdateType, ISpaceViewUpdateInput, UpdateTypes } from '../types';
 import Data from './Data';
 

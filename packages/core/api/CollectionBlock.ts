@@ -3,7 +3,7 @@ import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
 import { Operation } from '../utils';
-import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishan/types';
+import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishans/types';
 import { NishanArg, TSearchManipViewParam, FilterTypes, UpdateType, UpdateTypes, FilterType } from '../types';
 
 const view_class = {

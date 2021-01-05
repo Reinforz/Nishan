@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/core",
+  "name": "@nishans/core",
   "version": "0.0.0",
   "description": "Core package for nishan",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
@@ -11,11 +11,14 @@
     "test": "tests"
   },
   "files": [
-    "api"
+    "dist/api",
+    "dist/utils",
+    "dist/Nishan"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
+    "url": "git+https://github.com/Devorein/Nishan.git",
+    "directory": "packages/core"
   },
   "scripts": {
     "test": "npx jest --runInBand ./tests",
@@ -31,7 +34,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishan/types": "0.0.0",
+    "@nishans/types": "0.0.1",
     "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0"
   }

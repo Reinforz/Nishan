@@ -11,7 +11,7 @@ import {
 	EnqueueTaskResult,
 	SetBookmarkMetadataParams,
 	Request
-} from '@nishan/types';
+} from '@nishans/types';
 import { NishanArg } from '../types';
 import { createTransaction } from '../utils';
 import Queries from './Queries';

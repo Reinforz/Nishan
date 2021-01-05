@@ -1248,6 +1248,11 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/types@0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.0.tgz#779d8c9fb90c45c277fad69884eb52af6423ca21"
+  integrity sha512-G9aon4XkCNs4m1RPOkbd1G8aZFXGyUAuXIuTh0wz1ctQa29EHx+57NJt392XCqhR8nI4bNz8oJzNCjpYzZPL6w==
+
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"

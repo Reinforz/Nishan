@@ -1,4 +1,4 @@
-import { ISpace, TData, TDataType } from "@nishan/types";
+import { ISpace, TData, TDataType } from "@nishans/types";
 import { Collection, Space } from "../dist/api";
 import { ICollectionUpdateInput, ICollectionViewPageUpdateInput, IPageUpdateInput, ITPage } from "../dist/types";
 import {nishan, COLLECTION_ONE_ID, SPACE_VIEW_ONE_ID, ROOT_COLLECTION_VIEW_PAGE_ONE_ID, USER_ONE_ID, SPACE_ONE_ID, ROOT_PAGE_ONE_ID} from "./constants"

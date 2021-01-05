@@ -4,7 +4,7 @@ import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
-import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishan/types';
+import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
 import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes } from '../types';
 
 /**

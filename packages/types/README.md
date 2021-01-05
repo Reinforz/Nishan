@@ -1,9 +1,9 @@
-# `@nishan/types`
+# `@nishans/types`
 
 ## Installation
 
 ```shell
-npm install --save @nishan/types
+npm install --save @nishans/types
 ```
 
 ## Summary

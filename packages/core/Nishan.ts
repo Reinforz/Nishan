@@ -4,7 +4,7 @@ import colors from "colors";
 import NotionUser from "./api/NotionUser";
 import { error } from "./utils/logs";
 import Cache from "./api/Cache";
-import {  GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishan/types";
+import {  GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishans/types";
 import {Logger, NishanArg,FilterType, FilterTypes} from "./types";
 
 class Nishan extends Cache {
@@ -120,5 +120,5 @@ class Nishan extends Cache {
 export default Nishan;
 export * from "./utils/index";
 export * from "./api";
-export * from "@nishan/types";
+export * from "@nishans/types";
 export * from "./types";

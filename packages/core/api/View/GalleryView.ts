@@ -1,4 +1,4 @@
-import { IGalleryView } from '@nishan/types';
+import { IGalleryView } from '@nishans/types';
 import { NishanArg } from '../../types';
 import View from './View';
 

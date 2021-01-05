@@ -1,4 +1,4 @@
-import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, TViewQuery2, IViewFilter, ICollectionBlock, TSortValue } from "@nishan/types";
+import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, TViewQuery2, IViewFilter, ICollectionBlock, TSortValue } from "@nishans/types";
 import { NishanArg, RepositionParams, TSearchManipViewParam, UpdateType, UpdateTypes, FilterTypes, UserViewFilterCreateParams, FilterType } from "types";
 import Data from "../Data";
 

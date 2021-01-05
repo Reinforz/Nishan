@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/orm",
+  "name": "@nishans/orm",
   "version": "0.0.0",
   "description": "A package to use notion as a database by providing an easy to use orm api",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

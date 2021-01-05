@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/cli",
+  "name": "@nishans/cli",
   "version": "0.0.0",
   "description": "A package to interact with the nishan api from the terminal",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

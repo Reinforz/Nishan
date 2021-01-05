@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/store",
+  "name": "@nishans/store",
   "version": "0.0.0",
   "description": "A package to easily backup or download notion data locally or in a remote dbaas",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

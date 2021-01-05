@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/graphql",
+  "name": "@nishans/graphql",
   "version": "0.0.0",
   "description": "A graphql server and client UI to make working with nishan a breeze",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

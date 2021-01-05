@@ -1,5 +1,5 @@
 {
-  "name": "@nishan/typegen",
+  "name": "@nishans/typegen",
   "version": "0.0.0",
   "description": "A package to automatically generate typescript definitions from a remote notion collection schema",
   "author": "Safwan Shaheer <devorein00@gmail.com>",

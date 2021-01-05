@@ -1,6 +1,10 @@
-# `core`
+# `@nishans/core`
 
-Nishan Core package for containing crud api
+## Installation
+
+```shell
+npm install @nishans/core
+```
 
 ## Usage
 

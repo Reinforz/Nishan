@@ -6,6 +6,7 @@
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
   "main": "dist/Nishan.js",
+  "typings": "dist/Nishan.d.ts",
   "directories": {
     "lib": "api",
     "test": "tests"
@@ -13,7 +14,7 @@
   "files": [
     "dist/api",
     "dist/utils",
-    "dist/Nishan"
+    "dist/Nishan.*"
   ],
   "repository": {
     "type": "git",

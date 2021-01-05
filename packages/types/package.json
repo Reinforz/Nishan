@@ -6,16 +6,17 @@
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "directories": {
     "lib": "src"
   },
   "files": [
-    "src"
+    "dist/*.d.ts"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
+    "url": "git+https://github.com/Devorein/Nishan.git",
+    "directory": "packages/types"
   },
   "scripts": {},
   "bugs": {

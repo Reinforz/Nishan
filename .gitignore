@@ -1,15 +1,13 @@
 **/node_modules
-experiment
 feature.md
 **/dist
-**/build
 /docs/.docusaurus
 /docs/docs/api
 .netlify
 /docs/build
 /examples/env.ts
 **/*.tgz
-/experiment
+**/experiment
 **/coverage
 # OSX files
 .DS_Store

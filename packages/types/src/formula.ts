@@ -46,6 +46,33 @@ export type T2ArgNumberOperatorName = T2ArgNumberFunctionName;
 export type T1ArgCheckboxOperatorName = T1ArgCheckboxFunctionName;
 export type T2ArgCheckboxOperatorName = T2ArgCheckboxFunctionName;
 
+export interface IfOperatorFormula {
+	type: 'operator';
+	result_type: 'text';
+	name: 'if';
+	operator: 'if';
+	args: Tuple3AnyResultType<TCheckboxResultTypeFormula>;
+}
+
+export interface EqualityOperatorFormula<N extends 'equal' | 'unequal'> {
+	type: 'operator';
+	result_type: 'checkbox';
+	name: N;
+	operator: N;
+	args: Tuple2AnyResultType;
+}
+
+export type EqualOperatorFormula = EqualityOperatorFormula<'equal'>;
+export type UnequalOperatorFormula = EqualityOperatorFormula<'unequal'>;
+
+export interface AddOperatorFormula {
+	type: 'operator';
+	result_type: 'text';
+	name: 'add';
+	operator: 'add';
+	args: Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>;
+}
+
 export interface IOperatorFormula<
 	RT extends TFormulaResultType,
 	O extends T1ArgNumberOperatorName | T2ArgNumberOperatorName | T1ArgCheckboxOperatorName | T2ArgCheckboxOperatorName,
@@ -98,7 +125,13 @@ export type TNumberOperatorFormula =
 	| I1ArgNumberOperatorFormula<'unaryMinus'>
 	| I1ArgNumberOperatorFormula<'unaryPlus'>;
 
-export type TOperatorFormula = TCheckboxOperatorFormula | TNumberOperatorFormula;
+export type TOperatorFormula =
+	| IfOperatorFormula
+	| AddOperatorFormula
+	| EqualOperatorFormula
+	| UnequalOperatorFormula
+	| TCheckboxOperatorFormula
+	| TNumberOperatorFormula;
 
 // Constants
 
@@ -158,19 +191,15 @@ export interface IfFunctionFormula {
 	args: Tuple3AnyResultType<TCheckboxResultTypeFormula>;
 }
 
-export interface EqualFunctionFormula {
+export interface EqualityFunctionFormula<N extends 'equal' | 'unequal'> {
 	type: 'function';
 	result_type: 'checkbox';
-	name: 'equal';
+	name: N;
 	args: Tuple2AnyResultType;
 }
 
-export interface UnequalFunctionFormula {
-	type: 'function';
-	result_type: 'checkbox';
-	name: 'unequal';
-	args: Tuple2AnyResultType;
-}
+export type EqualFunctionFormula = EqualityFunctionFormula<'equal'>;
+export type UnequalFunctionFormula = EqualityFunctionFormula<'unequal'>;
 
 export interface AddFunctionFormula {
 	type: 'function';

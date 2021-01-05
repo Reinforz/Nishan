@@ -1,6 +1,11 @@
-<img height="125px" width="125px" src = "https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg">
+<p align="center"><a href="https://nishan-docs.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="125" src="https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg" alt="Vue logo"></a></p>
 
-<img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/> &nbsp; <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/> &nbsp; <img src="https://img.shields.io/github/stars/devorein/nishan?style=flat-square" /> &nbsp; <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
+<p align="center">
+  <a href="https://github.com/Devorein/Nishan/actions?query=workflow%3A%22Lint%2C+Build+and+Test%22"><img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/></a>
+  <a href="https://codecov.io/github/devorein/nishan?branch=master"><img src="https://img.shields.io/codecov/c/github/devorein/nishan/master.svg?sanitize=true" alt="Coverage Status"></a>
+  <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/>
+  <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
+</p>
 
 # Nishan
 

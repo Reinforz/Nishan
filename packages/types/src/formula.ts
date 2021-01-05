@@ -100,6 +100,39 @@ export interface IfFunctionFormula {
 		| [TCheckboxResultTypeFormula, TNumberResultTypeFormula, TNumberResultTypeFormula];
 }
 
-export type TFunctionFormula = IfFunctionFormula;
+export interface AddFunctionFormula {
+	type: 'function';
+	result_type: 'text';
+	name: 'add';
+	args: [TTextResultTypeFormula, TTextResultTypeFormula] | [TNumberResultTypeFormula, TNumberResultTypeFormula];
+}
+
+export type T1ArgNumberFunctionName = 'unaryMinus' | 'unaryPlus';
+export type T2ArgNumberFunctionName = 'add' | 'subtract' | 'multiple' | 'divide' | 'pow' | 'mod';
+
+export interface I1ArgNumberFunctionFormula<N extends T1ArgNumberFunctionName> {
+	type: 'function';
+	result_type: 'number';
+	name: N;
+	args: [TNumberResultTypeFormula];
+}
+export interface I2ArgNumberFunctionFormula<N extends T2ArgNumberFunctionName> {
+	type: 'function';
+	result_type: 'number';
+	name: N;
+	args: [TNumberResultTypeFormula, TNumberResultTypeFormula];
+}
+
+export type TNumberFunctionFormula =
+	| I2ArgNumberFunctionFormula<'subtract'>
+	| I2ArgNumberFunctionFormula<'add'>
+	| I2ArgNumberFunctionFormula<'divide'>
+	| I2ArgNumberFunctionFormula<'multiple'>
+	| I2ArgNumberFunctionFormula<'pow'>
+	| I2ArgNumberFunctionFormula<'mod'>
+	| I1ArgNumberFunctionFormula<'unaryMinus'>
+	| I1ArgNumberFunctionFormula<'unaryPlus'>;
+
+export type TFunctionFormula = IfFunctionFormula | TNumberFunctionFormula;
 
 export type TFormula = TOperatorFormula | TPropertyFormula | TSymbolFormula | TFunctionFormula;

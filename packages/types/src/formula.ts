@@ -5,7 +5,8 @@ export type TFormulaValueType = 'number' | 'string';
 export type TFormulaSymbolName = 'false' | 'true';
 
 export type Tuple2<T extends TResultTypeFormula> = [T, T];
-export type Tuple3<T1 extends TResultTypeFormula, T2 extends TResultTypeFormula> = [T1, T2, T2];
+export type Tuple12<T1 extends TResultTypeFormula, T2 extends TResultTypeFormula> = [T1, T2, T2];
+export type Tuple3<T extends TResultTypeFormula> = [T, T, T];
 
 // Result types
 
@@ -19,7 +20,7 @@ export type TTextResultTypeFormula =
 	| IPropertyFormula<'text'>
 	| IConstantFormula<'text', 'string'>
 	| IConstantFormula<'text', 'number'>;
-export type TNumberResultTypeFormula = IPropertyFormula<'number'>;
+export type TNumberResultTypeFormula = IPropertyFormula<'number'> | INumberConstantFormula;
 export type TDateResultTypeFormula = IPropertyFormula<'date'>;
 export type TResultTypeFormula =
 	| TCheckboxResultTypeFormula
@@ -34,50 +35,15 @@ export type Tuple2AnyResultType =
 	| Tuple2<TNumberResultTypeFormula>;
 
 export type Tuple3AnyResultType<T extends TResultTypeFormula> =
-	| Tuple3<T, TTextResultTypeFormula>
-	| Tuple3<T, TCheckboxResultTypeFormula>
-	| Tuple3<T, TDateResultTypeFormula>
-	| Tuple3<T, TNumberResultTypeFormula>;
+	| Tuple12<T, TTextResultTypeFormula>
+	| Tuple12<T, TCheckboxResultTypeFormula>
+	| Tuple12<T, TDateResultTypeFormula>
+	| Tuple12<T, TNumberResultTypeFormula>;
 
 // Operators
 
-export type T1ArgNumberOperatorName = T1ArgNumberFunctionName;
-export type T2ArgNumberOperatorName = T2ArgNumberFunctionName;
-export type T1ArgCheckboxOperatorName = T1ArgCheckboxFunctionName;
-export type T2ArgCheckboxOperatorName = T2ArgCheckboxFunctionName;
-
-export interface IfOperatorFormula {
-	type: 'operator';
-	result_type: 'text';
-	name: 'if';
-	operator: 'if';
-	args: Tuple3AnyResultType<TCheckboxResultTypeFormula>;
-}
-
-export interface EqualityOperatorFormula<N extends 'equal' | 'unequal'> {
-	type: 'operator';
-	result_type: 'checkbox';
-	name: N;
-	operator: N;
-	args: Tuple2AnyResultType;
-}
-
-export type EqualOperatorFormula = EqualityOperatorFormula<'equal'>;
-export type UnequalOperatorFormula = EqualityOperatorFormula<'unequal'>;
-
-export interface AddOperatorFormula {
-	type: 'operator';
-	result_type: 'text';
-	name: 'add';
-	operator: 'add';
-	args: Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>;
-}
-
-export interface IOperatorFormula<
-	RT extends TFormulaResultType,
-	O extends T1ArgNumberOperatorName | T2ArgNumberOperatorName | T1ArgCheckboxOperatorName | T2ArgCheckboxOperatorName,
-	A extends TResultTypeFormula | Tuple2<TResultTypeFormula>
-> {
+export type TOperatorName = THybridFunctionName;
+export interface IOperatorFormula<RT extends TFormulaResultType, O extends TOperatorName, A extends any> {
 	type: 'operator';
 	result_type: RT;
 	operator: O;
@@ -85,46 +51,38 @@ export interface IOperatorFormula<
 	args: A;
 }
 
-export type I1ArgCheckboxOperatorFormula<O extends T1ArgCheckboxOperatorName> = IOperatorFormula<
-	'checkbox',
-	O,
-	TCheckboxResultTypeFormula
->;
-export type I2ArgCheckboxOperatorFormula<O extends T2ArgCheckboxOperatorName> = IOperatorFormula<
-	'checkbox',
-	O,
-	Tuple2<TCheckboxResultTypeFormula>
->;
-export type I1ArgNumberOperatorFormula<O extends T1ArgNumberOperatorName> = IOperatorFormula<
-	'number',
-	O,
-	TNumberResultTypeFormula
->;
-export type I2ArgNumberOperatorFormula<O extends T2ArgNumberOperatorName> = IOperatorFormula<
-	'number',
-	O,
-	Tuple2<TNumberResultTypeFormula>
->;
+export type EqualOperatorFormula = IOperatorFormula<'checkbox', 'equal', Tuple2AnyResultType>;
+export type UnequalOperatorFormula = IOperatorFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
+export type AndOperatorFormula = IOperatorFormula<'checkbox', 'and', Tuple2<TCheckboxResultTypeFormula>>;
+export type OrOperatorFormula = IOperatorFormula<'checkbox', 'or', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerOperatorFormula = IOperatorFormula<'checkbox', 'larger', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerEqOperatorFormula = IOperatorFormula<'checkbox', 'largerEq', Tuple2<TCheckboxResultTypeFormula>>;
+export type SmallerOperatorFormula = IOperatorFormula<'checkbox', 'smaller', Tuple2<TCheckboxResultTypeFormula>>;
+export type SmallerEqOperatorFormula = IOperatorFormula<'checkbox', 'smallerEq', Tuple2<TCheckboxResultTypeFormula>>;
+export type NotOperatorFormula = IOperatorFormula<'checkbox', 'not', [TCheckboxResultTypeFormula]>;
 
-export type AndOperatorFormula = I2ArgCheckboxOperatorFormula<'and'>;
-export type OrOperatorFormula = I2ArgCheckboxOperatorFormula<'or'>;
-export type LargerOperatorFormula = I2ArgCheckboxOperatorFormula<'larger'>;
-export type LargerEqOperatorFormula = I2ArgCheckboxOperatorFormula<'largerEq'>;
-export type SmallerOperatorFormula = I2ArgCheckboxOperatorFormula<'smaller'>;
-export type SmallerEqOperatorFormula = I2ArgCheckboxOperatorFormula<'smallerEq'>;
-export type NotOperatorFormula = I1ArgCheckboxOperatorFormula<'not'>;
+export type SubtractOperatorFormula = IOperatorFormula<'number', 'subtract', Tuple2<TNumberResultTypeFormula>>;
+export type DivideOperatorFormula = IOperatorFormula<'number', 'divide', Tuple2<TNumberResultTypeFormula>>;
+export type MultipleOperatorFormula = IOperatorFormula<'number', 'multiple', Tuple2<TNumberResultTypeFormula>>;
+export type PowOperatorFormula = IOperatorFormula<'number', 'pow', Tuple2<TNumberResultTypeFormula>>;
+export type ModOperatorFormula = IOperatorFormula<'number', 'mod', Tuple2<TNumberResultTypeFormula>>;
+export type UnaryMinusOperatorFormula = IOperatorFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
+export type UnaryPlusOperatorFormula = IOperatorFormula<'number', 'unaryPlus', [TNumberResultTypeFormula]>;
 
-export type SsubtractOperatorFormula = I2ArgNumberOperatorFormula<'subtract'>;
-export type DivideOperatorFormula = I2ArgNumberOperatorFormula<'divide'>;
-export type MultipleOperatorFormula = I2ArgNumberOperatorFormula<'multiple'>;
-export type PowOperatorFormula = I2ArgNumberOperatorFormula<'pow'>;
-export type ModOperatorFormula = I2ArgNumberOperatorFormula<'mod'>;
-export type UnaryMinusOperatorFormula = I1ArgNumberOperatorFormula<'unaryMinus'>;
-export type UnaryPlusOperatorFormula = I1ArgNumberOperatorFormula<'unaryPlus'>;
+export type AddOperatorFormula = IOperatorFormula<
+	'text',
+	'add',
+	Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>
+>;
+export type IfOperatorFormula = IOperatorFormula<'text', 'if', Tuple3AnyResultType<TCheckboxResultTypeFormula>>;
+
+export type TTextOperatorFormula = AddOperatorFormula | IfOperatorFormula;
 
 export type TCheckboxOperatorFormula =
 	| AndOperatorFormula
 	| OrOperatorFormula
+	| EqualOperatorFormula
+	| UnequalOperatorFormula
 	| LargerOperatorFormula
 	| LargerEqOperatorFormula
 	| SmallerOperatorFormula
@@ -132,7 +90,7 @@ export type TCheckboxOperatorFormula =
 	| NotOperatorFormula;
 
 export type TNumberOperatorFormula =
-	| SsubtractOperatorFormula
+	| SubtractOperatorFormula
 	| DivideOperatorFormula
 	| MultipleOperatorFormula
 	| PowOperatorFormula
@@ -140,13 +98,7 @@ export type TNumberOperatorFormula =
 	| UnaryMinusOperatorFormula
 	| UnaryPlusOperatorFormula;
 
-export type TOperatorFormula =
-	| IfOperatorFormula
-	| AddOperatorFormula
-	| EqualOperatorFormula
-	| UnequalOperatorFormula
-	| TCheckboxOperatorFormula
-	| TNumberOperatorFormula;
+export type TOperatorFormula = TTextOperatorFormula | TCheckboxOperatorFormula | TNumberOperatorFormula;
 
 // Constants
 
@@ -190,95 +142,76 @@ export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFor
 	value: string;
 }
 
+export type INumberConstantFormula = IConstantFormula<'number', 'number'>;
+export type ITextConstantFormula = IConstantFormula<'text', 'string'>;
+
 export type TConstantFormula = IConstantFormula<'text', 'string'> | IConstantFormula<'text', 'number'>;
 
 // Hybrid Functions
 
-export type T1ArgNumberFunctionName = 'unaryMinus' | 'unaryPlus';
-export type T2ArgNumberFunctionName = 'add' | 'subtract' | 'multiple' | 'divide' | 'pow' | 'mod';
-export type T1ArgCheckboxFunctionName = 'not';
-export type T2ArgCheckboxFunctionName = 'and' | 'or' | 'larger' | 'largerEq' | 'smaller' | 'smallerEq';
-export type T2ArgTextFunctionName = 'concat';
+export type THybridFunctionName =
+	| 'unaryMinus'
+	| 'unaryPlus'
+	| 'add'
+	| 'subtract'
+	| 'multiple'
+	| 'divide'
+	| 'pow'
+	| 'mod'
+	| 'and'
+	| 'or'
+	| 'larger'
+	| 'largerEq'
+	| 'smaller'
+	| 'smallerEq'
+	| 'not'
+	| 'concat'
+	| 'join'
+	| 'slice'
+	| 'length'
+	| 'format'
+	| 'equal'
+	| 'unequal'
+	| 'if';
 
-export interface IfFunctionFormula {
-	type: 'function';
-	result_type: 'text';
-	name: 'if';
-	args: Tuple3AnyResultType<TCheckboxResultTypeFormula>;
-}
+export type EqualFunctionFormula = IFunctionFormula<'checkbox', 'equal', Tuple2AnyResultType>;
+export type UnequalFunctionFormula = IFunctionFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
 
-export interface EqualityFunctionFormula<N extends 'equal' | 'unequal'> {
-	type: 'function';
-	result_type: 'checkbox';
-	name: N;
-	args: Tuple2AnyResultType;
-}
-
-export type EqualFunctionFormula = EqualityFunctionFormula<'equal'>;
-export type UnequalFunctionFormula = EqualityFunctionFormula<'unequal'>;
-
-export interface AddFunctionFormula {
-	type: 'function';
-	result_type: 'text';
-	name: 'add';
-	args: Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>;
-}
-
-export type TFunctionFormulaType =
-	| T1ArgNumberFunctionName
-	| T2ArgNumberFunctionName
-	| T1ArgCheckboxFunctionName
-	| T2ArgCheckboxFunctionName
-	| T2ArgTextFunctionName;
-export interface IFunctionFormula<
-	RT extends TFormulaResultType,
-	N extends TFunctionFormulaType,
-	A extends TResultTypeFormula | Tuple2<TResultTypeFormula>
-> {
+export interface IFunctionFormula<RT extends TFormulaResultType, N extends THybridFunctionName, A extends any> {
 	type: 'function';
 	result_type: RT;
 	name: N;
 	args: A;
 }
 
-export type I1ArgCheckboxFunctionFormula<O extends T1ArgCheckboxFunctionName> = IFunctionFormula<
-	'checkbox',
-	O,
-	TCheckboxResultTypeFormula
->;
-export type I2ArgCheckboxFunctionFormula<O extends T2ArgCheckboxFunctionName> = IFunctionFormula<
-	'checkbox',
-	O,
-	Tuple2<TCheckboxResultTypeFormula>
->;
-export type I1ArgNumberFunctionFormula<O extends T1ArgNumberFunctionName> = IFunctionFormula<
-	'number',
-	O,
-	TNumberResultTypeFormula
->;
-export type I2ArgNumberFunctionFormula<O extends T2ArgNumberFunctionName> = IFunctionFormula<
-	'number',
-	O,
-	Tuple2<TNumberResultTypeFormula>
->;
+export type AndFunctionFormula = IFunctionFormula<'checkbox', 'and', Tuple2<TCheckboxResultTypeFormula>>;
+export type OrFunctionFormula = IFunctionFormula<'checkbox', 'or', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerFunctionFormula = IFunctionFormula<'checkbox', 'larger', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerEqFunctionFormula = IFunctionFormula<'checkbox', 'largerEq', Tuple2<TCheckboxResultTypeFormula>>;
+export type SmallerFunctionFormula = IFunctionFormula<'checkbox', 'smaller', Tuple2<TCheckboxResultTypeFormula>>;
+export type SmallerEqFunctionFormula = IFunctionFormula<'checkbox', 'smallerEq', Tuple2<TCheckboxResultTypeFormula>>;
+export type NotFunctionFormula = IFunctionFormula<'checkbox', 'not', [TCheckboxResultTypeFormula]>;
 
-export type AndFunctionFormula = I2ArgCheckboxFunctionFormula<'and'>;
-export type OrFunctionFormula = I2ArgCheckboxFunctionFormula<'or'>;
-export type LargerFunctionFormula = I2ArgCheckboxFunctionFormula<'larger'>;
-export type LargerEqFunctionFormula = I2ArgCheckboxFunctionFormula<'largerEq'>;
-export type SmallerFunctionFormula = I2ArgCheckboxFunctionFormula<'smaller'>;
-export type SmallerEqFunctionFormula = I2ArgCheckboxFunctionFormula<'smallerEq'>;
-export type NotFunctionFormula = I1ArgCheckboxFunctionFormula<'not'>;
+export type SubtractFunctionFormula = IFunctionFormula<'number', 'subtract', Tuple2<TNumberResultTypeFormula>>;
+export type DivideFunctionFormula = IFunctionFormula<'number', 'divide', Tuple2<TNumberResultTypeFormula>>;
+export type MultipleFunctionFormula = IFunctionFormula<'number', 'multiple', Tuple2<TNumberResultTypeFormula>>;
+export type PowFunctionFormula = IFunctionFormula<'number', 'pow', Tuple2<TNumberResultTypeFormula>>;
+export type ModFunctionFormula = IFunctionFormula<'number', 'mod', Tuple2<TNumberResultTypeFormula>>;
+export type UnaryMinusFunctionFormula = IFunctionFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
+export type UnaryPlusFunctionFormula = IFunctionFormula<'number', 'unaryPlus', [TNumberResultTypeFormula]>;
 
-export type SubtractFunctionFormula = I2ArgNumberFunctionFormula<'subtract'>;
-export type DivideFunctionFormula = I2ArgNumberFunctionFormula<'divide'>;
-export type MultipleFunctionFormula = I2ArgNumberFunctionFormula<'multiple'>;
-export type PowFunctionFormula = I2ArgNumberFunctionFormula<'pow'>;
-export type ModFunctionFormula = I2ArgNumberFunctionFormula<'mod'>;
-export type UnaryMinusFunctionFormula = I1ArgNumberFunctionFormula<'unaryMinus'>;
-export type UnaryPlusFunctionFormula = I1ArgNumberFunctionFormula<'unaryPlus'>;
+export type AddFunctionFormula = IFunctionFormula<
+	'text',
+	'add',
+	Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>
+>;
+export type IfFunctionFormula = IFunctionFormula<'text', 'if', Tuple3AnyResultType<TCheckboxResultTypeFormula>>;
+
+export type TTextFunctionFormula = IfFunctionFormula | AddFunctionFormula;
 
 export type TCheckboxFunctionFormula =
+	| EqualFunctionFormula
+	| UnequalFunctionFormula
 	| AndFunctionFormula
 	| OrFunctionFormula
 	| LargerFunctionFormula
@@ -296,15 +229,25 @@ export type TNumberFunctionFormula =
 	| UnaryMinusFunctionFormula
 	| UnaryPlusFunctionFormula;
 
-export type THybridFunctionFormula =
-	| IfFunctionFormula
-	| EqualFunctionFormula
-	| UnequalFunctionFormula
-	| TNumberFunctionFormula
-	| TCheckboxFunctionFormula;
+export type THybridFunctionFormula = TTextFunctionFormula | TNumberFunctionFormula | TCheckboxFunctionFormula;
 
 // Functions
 
-export type TFunctionFormula = '';
+export type ConcatFunctionFormula = IFunctionFormula<'text', 'concat', Tuple2<TTextResultTypeFormula>>;
+export type JoinFunctionFormula = IFunctionFormula<'text', 'join', Array<IConstantFormula<'text', 'string'>>>;
+export type SliceFunctionFormula = IFunctionFormula<
+	'text',
+	'slice',
+	Tuple12<ITextConstantFormula, INumberConstantFormula>
+>;
+export type LengthFunctionFormula = IFunctionFormula<'number', 'length', [ITextConstantFormula]>;
+export type FormatFunctionFormula = IFunctionFormula<'text', 'format', [TResultTypeFormula]>;
+
+export type TFunctionFormula =
+	| ConcatFunctionFormula
+	| JoinFunctionFormula
+	| SliceFunctionFormula
+	| LengthFunctionFormula
+	| FormatFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

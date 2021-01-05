@@ -43,6 +43,31 @@ export interface IEqualOperatorFormula {
 	args: [TCheckboxFormula, TCheckboxFormula];
 }
 
+export type TCheckboxResultTypeFormula =
+	| IPropertyFormula<'checkbox'>
+	| ISymbolFormula<'false', 'checkbox'>
+	| ISymbolFormula<'true', 'checkbox'>;
+export type TTextResultTypeFormula =
+	| IPropertyFormula<'text'>
+	| IConstantFormula<'text', 'string'>
+	| IConstantFormula<'text', 'number'>;
+export type TNumberResultTypeFormula = IPropertyFormula<'number'>;
+export type TDateResultTypeFormula = IPropertyFormula<'date'>;
+
+export type TSymbolFormulaName = 'e' | 'pi' | 'true' | 'false';
+export type TSymbolResultType = 'number' | 'checkbox';
+export interface ISymbolFormula<N extends TSymbolFormulaName, RT extends TSymbolResultType> {
+	type: 'symbol';
+	result_type: RT;
+	name: N;
+}
+
+export type TSymbolFormula =
+	| ISymbolFormula<'e', 'number'>
+	| ISymbolFormula<'pi', 'number'>
+	| ISymbolFormula<'true', 'checkbox'>
+	| ISymbolFormula<'false', 'checkbox'>;
+
 export interface IPropertyFormula<RT extends TFormulaResultType> {
 	type: 'property';
 	id: string;
@@ -56,4 +81,25 @@ export type TPropertyFormula =
 	| IPropertyFormula<'date'>
 	| IPropertyFormula<'number'>;
 
-export type TFormula = TOperatorFormula | TPropertyFormula;
+export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFormulaValueType> {
+	type: 'constant';
+	result_type: RT;
+	value_type: VT;
+	value: string;
+}
+
+export type TConstantFormula = IConstantFormula<'text', 'string'> | IConstantFormula<'text', 'number'>;
+export interface IfFunctionFormula {
+	type: 'function';
+	result_type: 'text';
+	name: 'if';
+	args:
+		| [TCheckboxResultTypeFormula, TTextResultTypeFormula, TTextResultTypeFormula]
+		| [TCheckboxResultTypeFormula, TCheckboxResultTypeFormula, TCheckboxResultTypeFormula]
+		| [TCheckboxResultTypeFormula, TDateResultTypeFormula, TDateResultTypeFormula]
+		| [TCheckboxResultTypeFormula, TNumberResultTypeFormula, TNumberResultTypeFormula];
+}
+
+export type TFunctionFormula = IfFunctionFormula;
+
+export type TFormula = TOperatorFormula | TPropertyFormula | TSymbolFormula | TFunctionFormula;

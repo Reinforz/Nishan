@@ -314,6 +314,13 @@ export type CeilFunctionFormula = IFunctionFormula<'number', 'ceil', [TNumberRes
 export type ExpFunctionFormula = IFunctionFormula<'number', 'exp', [TNumberResultTypeFormula]>;
 export type FloorFunctionFormula = IFunctionFormula<'number', 'floor', [TNumberResultTypeFormula]>;
 export type LnFunctionFormula = IFunctionFormula<'number', 'ln', [TNumberResultTypeFormula]>;
+export type Log10FunctionFormula = IFunctionFormula<'number', 'log10', [TNumberResultTypeFormula]>;
+export type Log2FunctionFormula = IFunctionFormula<'number', 'log2', [TNumberResultTypeFormula]>;
+export type MaxFunctionFormula = IFunctionFormula<'number', 'max', [TNumberResultTypeFormula]>;
+export type MinFunctionFormula = IFunctionFormula<'number', 'min', [TNumberResultTypeFormula]>;
+export type RoundFunctionFormula = IFunctionFormula<'number', 'round', [TNumberResultTypeFormula]>;
+export type SignFunctionFormula = IFunctionFormula<'number', 'sign', [TNumberResultTypeFormula]>;
+export type SqrtFunctionFormula = IFunctionFormula<'number', 'sqrt', [TNumberResultTypeFormula]>;
 
 export type TFunctionFormula =
 	| ConcatFunctionFormula
@@ -332,6 +339,13 @@ export type TFunctionFormula =
 	| CeilFunctionFormula
 	| ExpFunctionFormula
 	| FloorFunctionFormula
-	| LnFunctionFormula;
+	| LnFunctionFormula
+	| Log10FunctionFormula
+	| Log2FunctionFormula
+	| MaxFunctionFormula
+	| MinFunctionFormula
+	| RoundFunctionFormula
+	| SignFunctionFormula
+	| SqrtFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

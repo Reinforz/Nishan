@@ -165,14 +165,12 @@ export type THybridFunctionName =
 	| 'smaller'
 	| 'smallerEq'
 	| 'not'
-	| 'concat'
-	| 'join'
-	| 'slice'
 	| 'length'
 	| 'format'
 	| 'equal'
 	| 'unequal'
-	| 'if';
+	| 'if'
+	| TFunctionName;
 
 export type EqualFunctionFormula = IFunctionFormula<'checkbox', 'equal', Tuple2AnyResultType>;
 export type UnequalFunctionFormula = IFunctionFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
@@ -233,6 +231,8 @@ export type THybridFunctionFormula = TTextFunctionFormula | TNumberFunctionFormu
 
 // Functions
 
+export type TFunctionName = 'concat' | 'join' | 'slice' | 'toNumber' | 'contains' | 'replace' | 'replaceAll';
+
 export type ConcatFunctionFormula = IFunctionFormula<'text', 'concat', Tuple2<TTextResultTypeFormula>>;
 export type JoinFunctionFormula = IFunctionFormula<'text', 'join', Array<IConstantFormula<'text', 'string'>>>;
 export type SliceFunctionFormula = IFunctionFormula<
@@ -242,12 +242,32 @@ export type SliceFunctionFormula = IFunctionFormula<
 >;
 export type LengthFunctionFormula = IFunctionFormula<'number', 'length', [ITextConstantFormula]>;
 export type FormatFunctionFormula = IFunctionFormula<'text', 'format', [TResultTypeFormula]>;
+export type ToNumberFunctionFormula = IFunctionFormula<'number', 'toNumber', [TResultTypeFormula]>;
+export type ContainsFunctionFormula = IFunctionFormula<'checkbox', 'contains', Tuple2<TTextResultTypeFormula>>;
+export type ReplaceFunctionFormula = IFunctionFormula<
+	'text',
+	'replace',
+	| Tuple12<TNumberResultTypeFormula, TTextResultTypeFormula>
+	| Tuple12<TTextResultTypeFormula, TTextResultTypeFormula>
+	| Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
+>;
+export type ReplaceAllFunctionFormula = IFunctionFormula<
+	'text',
+	'replaceAll',
+	| Tuple12<TNumberResultTypeFormula, TTextResultTypeFormula>
+	| Tuple12<TTextResultTypeFormula, TTextResultTypeFormula>
+	| Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
+>;
 
 export type TFunctionFormula =
 	| ConcatFunctionFormula
 	| JoinFunctionFormula
 	| SliceFunctionFormula
 	| LengthFunctionFormula
-	| FormatFunctionFormula;
+	| FormatFunctionFormula
+	| ToNumberFunctionFormula
+	| ContainsFunctionFormula
+	| ReplaceFunctionFormula
+	| ReplaceAllFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

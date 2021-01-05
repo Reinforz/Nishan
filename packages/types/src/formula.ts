@@ -231,7 +231,44 @@ export type THybridFunctionFormula = TTextFunctionFormula | TNumberFunctionFormu
 
 // Functions
 
-export type TFunctionName = 'concat' | 'join' | 'slice' | 'toNumber' | 'contains' | 'replace' | 'replaceAll';
+export type TFunctionName =
+	| 'concat'
+	| 'join'
+	| 'slice'
+	| 'toNumber'
+	| 'contains'
+	| 'replace'
+	| 'replaceAll'
+	| 'test'
+	| 'empty'
+	| 'abs'
+	| 'cbrt'
+	| 'ceil'
+	| 'exp'
+	| 'floor'
+	| 'ln'
+	| 'log10'
+	| 'log2'
+	| 'min'
+	| 'max'
+	| 'round'
+	| 'sign'
+	| 'sqrt'
+	| 'start'
+	| 'end'
+	| 'now'
+	| 'timestamp'
+	| 'fromTimestamp'
+	| 'dateAdd'
+	| 'dateSubtract'
+	| 'dateBetween'
+	| 'formatDate'
+	| 'minute'
+	| 'hour'
+	| 'day'
+	| 'date'
+	| 'month'
+	| 'year';
 
 export type ConcatFunctionFormula = IFunctionFormula<'text', 'concat', Tuple2<TTextResultTypeFormula>>;
 export type JoinFunctionFormula = IFunctionFormula<'text', 'join', Array<IConstantFormula<'text', 'string'>>>;
@@ -259,6 +296,25 @@ export type ReplaceAllFunctionFormula = IFunctionFormula<
 	| Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
 >;
 
+export type TestFunctionFormula = IFunctionFormula<
+	'checkbox',
+	'test',
+	| [TNumberResultTypeFormula, TTextResultTypeFormula]
+	| [TTextResultTypeFormula, TTextResultTypeFormula]
+	| [TCheckboxResultTypeFormula, TTextResultTypeFormula]
+>;
+export type EmptyFunctionFormula = IFunctionFormula<
+	'checkbox',
+	'empty',
+	[TNumberResultTypeFormula] | [TTextResultTypeFormula] | [TDateResultTypeFormula] | [TCheckboxResultTypeFormula]
+>;
+export type AbsFunctionFormula = IFunctionFormula<'number', 'abs', [TNumberResultTypeFormula]>;
+export type CbrtFunctionFormula = IFunctionFormula<'number', 'cbrt', [TNumberResultTypeFormula]>;
+export type CeilFunctionFormula = IFunctionFormula<'number', 'ceil', [TNumberResultTypeFormula]>;
+export type ExpFunctionFormula = IFunctionFormula<'number', 'exp', [TNumberResultTypeFormula]>;
+export type FloorFunctionFormula = IFunctionFormula<'number', 'floor', [TNumberResultTypeFormula]>;
+export type LnFunctionFormula = IFunctionFormula<'number', 'ln', [TNumberResultTypeFormula]>;
+
 export type TFunctionFormula =
 	| ConcatFunctionFormula
 	| JoinFunctionFormula
@@ -268,6 +324,14 @@ export type TFunctionFormula =
 	| ToNumberFunctionFormula
 	| ContainsFunctionFormula
 	| ReplaceFunctionFormula
-	| ReplaceAllFunctionFormula;
+	| ReplaceAllFunctionFormula
+	| TestFunctionFormula
+	| EmptyFunctionFormula
+	| AbsFunctionFormula
+	| CbrtFunctionFormula
+	| CeilFunctionFormula
+	| ExpFunctionFormula
+	| FloorFunctionFormula
+	| LnFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

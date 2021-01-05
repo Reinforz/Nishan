@@ -22,7 +22,6 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/types": "0.0.0",
-    "@nishans/core": "0.0.0"
+    "@nishans/types": "0.0.1"
   }
 }

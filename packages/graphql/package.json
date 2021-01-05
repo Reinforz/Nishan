@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "files": [
-    "src"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "url": "https://github.com/Nishan-Open-Source/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/types": "0.0.0",
-    "@nishans/core": "0.0.0"
+    "@nishans/types": "0.0.1",
+    "@nishans/core": "0.0.1"
   }
 }

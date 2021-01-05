@@ -1,7 +1,7 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.0",
-  "description": "Core package for nishan",
+  "version": "0.0.1",
+  "description": "Core package for nishan api",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
@@ -31,10 +31,10 @@
   "dependencies": {
     "axios": "^0.21.1",
     "colors": "^1.4.0",
-    "jest": "^26.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "jest": "^26.6.3",
     "@nishans/types": "0.0.1",
     "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0"

@@ -21,7 +21,7 @@ export type TTextResultTypeFormula =
 	| IConstantFormula<'text', 'string'>
 	| IConstantFormula<'text', 'number'>;
 export type TNumberResultTypeFormula = IPropertyFormula<'number'> | INumberConstantFormula;
-export type TDateResultTypeFormula = IPropertyFormula<'date'>;
+export type TDateResultTypeFormula = IPropertyFormula<'date'> | NowFunctionFormula;
 export type TResultTypeFormula =
 	| TCheckboxResultTypeFormula
 	| TTextResultTypeFormula
@@ -135,15 +135,15 @@ export type TPropertyFormula =
 	| IPropertyFormula<'date'>
 	| IPropertyFormula<'number'>;
 
-export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFormulaValueType> {
+export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFormulaValueType, V = string> {
 	type: 'constant';
 	result_type: RT;
 	value_type: VT;
-	value: string;
+	value: V;
 }
 
-export type INumberConstantFormula = IConstantFormula<'number', 'number'>;
-export type ITextConstantFormula = IConstantFormula<'text', 'string'>;
+export type INumberConstantFormula<V = string> = IConstantFormula<'number', 'number', V>;
+export type ITextConstantFormula<V = string> = IConstantFormula<'text', 'string', V>;
 
 export type TConstantFormula = IConstantFormula<'text', 'string'> | IConstantFormula<'text', 'number'>;
 
@@ -321,6 +321,51 @@ export type MinFunctionFormula = IFunctionFormula<'number', 'min', [TNumberResul
 export type RoundFunctionFormula = IFunctionFormula<'number', 'round', [TNumberResultTypeFormula]>;
 export type SignFunctionFormula = IFunctionFormula<'number', 'sign', [TNumberResultTypeFormula]>;
 export type SqrtFunctionFormula = IFunctionFormula<'number', 'sqrt', [TNumberResultTypeFormula]>;
+export type StartFunctionFormula = IFunctionFormula<'date', 'start', [TDateResultTypeFormula]>;
+export type EndFunctionFormula = IFunctionFormula<'date', 'end', [TDateResultTypeFormula]>;
+export type NowFunctionFormula = {
+	type: 'function';
+	result_type: 'date';
+	name: 'now';
+};
+export type TimestampFunctionFormula = IFunctionFormula<'number', 'timestamp', [TDateResultTypeFormula]>;
+export type FromTimestampFunctionFormula = IFunctionFormula<'date', 'fromTimestamp', [TNumberResultTypeFormula]>;
+export type MinuteFunctionFormula = IFunctionFormula<'number', 'minute', [TDateResultTypeFormula]>;
+export type HourFunctionFormula = IFunctionFormula<'number', 'hour', [TDateResultTypeFormula]>;
+export type DayFunctionFormula = IFunctionFormula<'number', 'day', [TDateResultTypeFormula]>;
+export type DateFunctionFormula = IFunctionFormula<'number', 'date', [TDateResultTypeFormula]>;
+export type MonthFunctionFormula = IFunctionFormula<'number', 'month', [TDateResultTypeFormula]>;
+export type YearFunctionFormula = IFunctionFormula<'number', 'year', [TDateResultTypeFormula]>;
+export type TDateConstantValueType =
+	| 'years'
+	| 'quarters'
+	| 'months'
+	| 'weeks'
+	| 'days'
+	| 'hours'
+	| 'minutes'
+	| 'seconds'
+	| 'milliseconds';
+export type DateAddFunctionFormula = IFunctionFormula<
+	'date',
+	'dateAdd',
+	[TDateResultTypeFormula, TNumberResultTypeFormula, ITextConstantFormula<TDateConstantValueType>]
+>;
+export type DateSubtractFunctionFormula = IFunctionFormula<
+	'date',
+	'dateSubtract',
+	[TDateResultTypeFormula, TNumberResultTypeFormula, ITextConstantFormula<TDateConstantValueType>]
+>;
+export type DateBetweenFunctionFormula = IFunctionFormula<
+	'number',
+	'dateBetween',
+	[TDateResultTypeFormula, TDateResultTypeFormula, ITextConstantFormula<TDateConstantValueType>]
+>;
+export type FormatDateFunctionFormula = IFunctionFormula<
+	'date',
+	'formatDate',
+	[TDateResultTypeFormula, ITextConstantFormula]
+>;
 
 export type TFunctionFormula =
 	| ConcatFunctionFormula
@@ -346,6 +391,20 @@ export type TFunctionFormula =
 	| MinFunctionFormula
 	| RoundFunctionFormula
 	| SignFunctionFormula
-	| SqrtFunctionFormula;
+	| SqrtFunctionFormula
+	| StartFunctionFormula
+	| EndFunctionFormula
+	| NowFunctionFormula
+	| TimestampFunctionFormula
+	| MinuteFunctionFormula
+	| HourFunctionFormula
+	| DayFunctionFormula
+	| DateFunctionFormula
+	| MonthFunctionFormula
+	| YearFunctionFormula
+	| DateAddFunctionFormula
+	| DateSubtractFunctionFormula
+	| DateBetweenFunctionFormula
+	| FormatDateFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

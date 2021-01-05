@@ -9,6 +9,6 @@ module.exports = {
 	transform: {
 		'^.+\\.(ts)$': 'ts-jest'
   },
-  /* coverageDirectory: "./coverage",
-  collectCoverage: true */
+  coverageDirectory: "./coverage",
+  collectCoverage: true
 };

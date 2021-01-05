@@ -89,6 +89,50 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
   }
 }
 
+function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "block", parent_id, parent_type}: {
+  child_id: string,
+  child_type?: TDataType,
+  parent_id?: string,
+  parent_type?: TDataType,
+  child_path: keyof P,
+}){
+  const {stack, sync_records} = space.getStackSyncRecords(), check_parent = parent_id && parent_type;
+  expect(stack.length).toBe(3);
+  expect(sync_records.length).toBe(2);
+  expect(sync_records[0][0]).toBe(child_id);
+  expect(sync_records[0][1]).toBe(child_type);
+  if(check_parent){
+    expect(sync_records[1][0]).toBe(parent_id);
+    expect(sync_records[1][1]).toBe(parent_type);
+  }
+  const [child_op, parent_path_op, parent_op] = stack;
+
+  expect(child_op.id).toBe(child_id)    
+  expect(child_op.command).toBe("update");
+  expect(child_op.table).toBe(child_type);
+  expect(child_op.path.length).toBe(0);
+  expect(child_op.args.alive).toBe(false);
+  expect(child_op.args.last_edited_by).toBe(USER_ONE_ID);
+  expect(child_op.args.last_edited_by_table).toBe("notion_user");
+  expect(child_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
+
+  expect(parent_path_op.path[0]).toBe(child_path)
+  expect(parent_path_op.command).toBe('listRemove')
+  expect(parent_path_op.table).toBe(parent_type);
+  expect(parent_path_op.id).toBe(parent_id);
+  expect(parent_path_op.args.id).toBe(child_id);
+
+  if(check_parent && parent_op){
+    expect(parent_op.id).toBe(parent_id); 
+    expect(parent_op.command).toBe("update");
+    expect(parent_op.table).toBe(parent_type);
+    expect(parent_op.path.length).toBe(0);
+    expect(parent_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(parent_op.args.last_edited_by_table).toBe("notion_user");
+    expect(parent_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
+  }
+}
+
 describe("Getter methods for space", ()=>{
   it("Get space_view",()=>{
     const space_view = space.getSpaceView();
@@ -404,5 +448,21 @@ describe("Update methods for space", ()=>{
       child_type: "collection",
       cb: (data) => expect(data?.description?.[0][0]).toBe("test")
     })
+  })
+})
+
+describe("Delete methods for space", ()=>{
+  beforeEach(()=>{
+    space.clearStackSyncRecords();
+  })
+
+  it("Delete [root_page] [id]", async () => {
+    await space.deleteTRootPages([ROOT_PAGE_ONE_ID]);
+    testDeleteMethod<ISpace>({
+      child_id: ROOT_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      child_path: "pages"
+    });  
   })
 })

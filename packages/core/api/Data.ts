@@ -307,7 +307,7 @@ export default class Data<T extends TData> extends Operations {
     }, cb);
     if (ops.length !== 0) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
-      sync_records.push(this.id);
+      sync_records.push([this.id, this.type]);
     }
     await this.executeUtil(ops, sync_records, execute);
     return matched_ids;

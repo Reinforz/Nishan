@@ -135,7 +135,7 @@ export interface AddFunctionFormula {
 
 export type T1ArgNumberFunctionName = 'unaryMinus' | 'unaryPlus';
 export type T2ArgNumberFunctionName = 'add' | 'subtract' | 'multiple' | 'divide' | 'pow' | 'mod';
-export type T2ArgCheckboxFunctionName = 'and' | 'or';
+export type T2ArgCheckboxFunctionName = 'and' | 'or' | 'larger' | 'largerEq' | 'smaller' | 'smallerEq';
 export interface I1ArgNumberFunctionFormula<N extends T1ArgNumberFunctionName> {
 	type: 'function';
 	result_type: 'number';
@@ -156,7 +156,13 @@ export interface I2ArgCheckboxFunctionFormula<N extends T2ArgCheckboxFunctionNam
 	args: [TCheckboxResultTypeFormula, TCheckboxResultTypeFormula];
 }
 
-export type TCheckboxFunctionFormula = I2ArgCheckboxFunctionFormula<'and'> | I2ArgCheckboxFunctionFormula<'or'>;
+export type TCheckboxFunctionFormula =
+	| I2ArgCheckboxFunctionFormula<'and'>
+	| I2ArgCheckboxFunctionFormula<'or'>
+	| I2ArgCheckboxFunctionFormula<'larger'>
+	| I2ArgCheckboxFunctionFormula<'largerEq'>
+	| I2ArgCheckboxFunctionFormula<'smaller'>
+	| I2ArgCheckboxFunctionFormula<'smallerEq'>;
 
 export type TNumberFunctionFormula =
 	| I2ArgNumberFunctionFormula<'subtract'>

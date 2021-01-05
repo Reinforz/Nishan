@@ -23,10 +23,11 @@ jobs:
       - run: yarn test
       - uses: codecov/codecov-action@v1
         with:
+          working-directory: ./packages/core
+          files: ./clover.xml
+          directory: ./coverage
           token: ${{ secrets.CODECOV_TOKEN }}
-          path_to_write_report: ./coverage/codecov_report.txt
-          files: ./coverage/clover.xml
           flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: true

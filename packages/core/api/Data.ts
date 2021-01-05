@@ -188,7 +188,7 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @param keys
    */
-  protected updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
+  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
     const parent_data = this.getCachedData(), data = arg as T;
 
     const update = () =>{
@@ -198,7 +198,7 @@ export default class Data<T extends TData> extends Operations {
       })
     }
 
-    return [this.updateOp(this.type === "user_settings" ? ["settings"] : [], data), update] as [IOperation, (() => void)];
+    return [this.updateOp(this.type === "user_settings" ? ["settings"] : [], data), update] as [IOperation, (() => void)]
   }
 
   protected async initializeCache() {

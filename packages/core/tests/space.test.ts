@@ -133,7 +133,7 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
   }
 }
 
-describe.skip("Getter methods for space", ()=>{
+describe("Getter methods for space", ()=>{
   it("Get space_view",()=>{
     const space_view = space.getSpaceView();
     expect(space_view).not.toBeNull();
@@ -268,7 +268,7 @@ describe.skip("Getter methods for space", ()=>{
   })
 })
 
-describe.skip("Update methods for space", ()=>{
+describe("Update methods for space", ()=>{
   beforeEach(()=>{
     space.clearStackSyncRecords();
   })
@@ -468,6 +468,7 @@ describe("Delete methods for space", ()=>{
 
   it("Delete [root_page] cb", async ()=>{
     await space.deleteTRootPages((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID)
+    
     testDeleteMethod<ISpace>({
       child_id: ROOT_PAGE_ONE_ID,
       parent_id: SPACE_ONE_ID,
@@ -488,6 +489,46 @@ describe("Delete methods for space", ()=>{
 
   it("Delete [root_cvp] cb", async()=>{
     await space.deleteTRootPages(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+    testDeleteMethod<ISpace>({
+      child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      child_path: "pages"
+    })
+  })
+  
+  it("Delete root_page id", async () => {
+    await space.deleteTRootPage(ROOT_PAGE_ONE_ID);
+    testDeleteMethod<ISpace>({
+      child_id: ROOT_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      child_path: "pages"
+    });  
+  })
+
+  it("Delete root_page cb", async ()=>{
+    await space.deleteTRootPage((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID)
+    testDeleteMethod<ISpace>({
+      child_id: ROOT_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      child_path: "pages"
+    })
+  })
+
+  it("Delete root_cvp id", async()=>{
+    await space.deleteTRootPage(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+    testDeleteMethod<ISpace>({
+      child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+      parent_id: SPACE_ONE_ID,
+      parent_type: "space",
+      child_path: "pages"
+    })
+  })
+
+  it("Delete root_cvp cb", async()=>{
+    await space.deleteTRootPage(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
     testDeleteMethod<ISpace>({
       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
       parent_id: SPACE_ONE_ID,

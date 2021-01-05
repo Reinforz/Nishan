@@ -145,7 +145,7 @@ export default class Queries extends Cache {
     });
   }
 
-  protected async updateCacheManually(arg: UpdateCacheManuallyParam | string) {
+  async updateCacheManually(arg: UpdateCacheManuallyParam | string) {
     const sync_record_values: SyncRecordValuesParams[] = [];
     if (Array.isArray(arg))
       arg.forEach((arg: string | [string, TDataType]) => {
@@ -157,7 +157,7 @@ export default class Queries extends Cache {
     return await this.syncRecordValues(sync_record_values);
   }
 
-  protected async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {
+  async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {
     const sync_record_values: SyncRecordValuesParams[] = [];
     arg.forEach((arg: string | [string, TDataType]) => {
       if (Array.isArray(arg) && !this.cache[arg[1]].get(arg[0])) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });

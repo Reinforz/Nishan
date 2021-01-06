@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   },
-  "dependencies": {
+  "devDependencies": {
     "@nishans/types": "latest"
   }
 }

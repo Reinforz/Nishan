@@ -2,7 +2,6 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/actions?query=workflow%3A%22Lint%2C+Build+and+Test%22"><img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/></a>
-  <a href="https://codecov.io/github/devorein/nishan?branch=master"><img src="https://img.shields.io/codecov/c/github/devorein/nishan/master.svg?sanitize=true" alt="Coverage Status"></a>
   <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/>
   <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
   <img src="https://img.shields.io/github/contributors/devorein/nishan?label=contributors">
@@ -14,16 +13,16 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 This monorepo contains/will contain the following packages:-
 
-1. @nishans/core (Published): Core package for nishan with crud api
-2. @nishans/types (Published): Typescript typings for Notion only
-3. @nishans/utils (Published): Utility package to make working with notion easier
-4. @nishans/store (WIP): A package to easily backup or download notion data locally or in a remote dbaas
-5. @nishans/graphql (WIP): A graphql server and client UI to make working with nishan a breeze
-6. @nishans/cli (WIP): A package to interact with the nishan api from the terminal
-7. @nishans/typegen (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
-8. @nishans/orm (WIP): A package to use notion as a database by providing an easy to use orm api
+1. [@nishans/core](https://github.com/Devorein/Nishan/tree/master/packages/core) (Published): Core package for nishan with crud api
+2. [@nishans/types](https://github.com/Devorein/Nishan/tree/master/packages/types) (Published): Typescript typings for Notion only
+3. [@nishans/utils](https://github.com/Devorein/Nishan/tree/master/packages/utils) (Published): Utility package to make working with notion easier
+4. [@nishans/store](https://github.com/Devorein/Nishan/tree/master/packages/store) (WIP): A package to easily backup or download notion data locally or in a remote dbaas
+5. [@nishans/graphql](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (WIP): A graphql server and client UI to make working with nishan a breeze
+6. [@nishans/cli](https://github.com/Devorein/Nishan/tree/master/packages/cli) (WIP): A package to interact with the nishan api from the terminal
+7. [@nishans/typegen](https://github.com/Devorein/Nishan/tree/master/packages/typegen) (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
+8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (WIP): A package to use notion as a database by providing an easy to use orm api
 
-***NOTE:***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its `nishans`.
+***NOTE:***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 

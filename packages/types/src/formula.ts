@@ -1,8 +1,8 @@
 export type TFormulaName = 'if' | 'equal';
 export type TFormulaType = 'operator' | 'property' | 'function' | 'symbol' | 'constant';
 export type TFormulaResultType = 'number' | 'checkbox' | 'text' | 'date';
-export type TFormulaValueType = 'number' | 'string';
-export type TFormulaSymbolName = 'false' | 'true';
+export type TConstantFormulaValueType = 'number' | 'string';
+export type TFormulaSymbolName = 'false' | 'true' | 'pi' | 'e';
 
 export type Tuple2<T extends TResultTypeFormula> = [T, T];
 export type Tuple12<T1 extends TResultTypeFormula, T2 extends TResultTypeFormula> = [T1, T2, T2];
@@ -12,15 +12,13 @@ export type Tuple3<T extends TResultTypeFormula> = [T, T, T];
 
 export type TCheckboxResultTypeFormula =
 	| IPropertyFormula<'checkbox'>
-	| ISymbolFormula<'false', 'checkbox'>
-	| ISymbolFormula<'true', 'checkbox'>
+	| TCheckboxSymbolFormula
 	| TCheckboxFunctionFormula
 	| TCheckboxOperatorFormula;
 
 export type TTextResultTypeFormula =
 	| IPropertyFormula<'text'>
-	| IConstantFormula<'text', 'string'>
-	| IConstantFormula<'text', 'number'>
+	| ITextConstantFormula
 	| TTextFunctionFormula
 	| TTextOperatorFormula;
 
@@ -28,8 +26,11 @@ export type TNumberResultTypeFormula =
 	| IPropertyFormula<'number'>
 	| INumberConstantFormula
 	| TNumberFunctionFormula
-	| TNumberOperatorFormula;
-export type TDateResultTypeFormula = IPropertyFormula<'date'> | NowFunctionFormula;
+	| TNumberOperatorFormula
+	| TNumberSymbolFormula;
+
+export type TDateResultTypeFormula = IPropertyFormula<'date'> | TDateFunctionFormula;
+
 export type TResultTypeFormula =
 	| TCheckboxResultTypeFormula
 	| TTextResultTypeFormula
@@ -124,11 +125,10 @@ export interface ISymbolFormula<N extends TSymbolFormulaName, RT extends TSymbol
 	name: N;
 }
 
-export type TSymbolFormula =
-	| ISymbolFormula<'e', 'number'>
-	| ISymbolFormula<'pi', 'number'>
-	| ISymbolFormula<'true', 'checkbox'>
-	| ISymbolFormula<'false', 'checkbox'>;
+export type TCheckboxSymbolFormula = ISymbolFormula<'true', 'checkbox'> | ISymbolFormula<'false', 'checkbox'>;
+
+export type TNumberSymbolFormula = ISymbolFormula<'e', 'number'> | ISymbolFormula<'pi', 'number'>;
+export type TSymbolFormula = TNumberSymbolFormula | TCheckboxSymbolFormula;
 
 export interface IPropertyFormula<RT extends TFormulaResultType> {
 	type: 'property';
@@ -143,7 +143,7 @@ export type TPropertyFormula =
 	| IPropertyFormula<'date'>
 	| IPropertyFormula<'number'>;
 
-export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFormulaValueType, V = string> {
+export interface IConstantFormula<RT extends TFormulaResultType, VT extends TConstantFormulaValueType, V = string> {
 	type: 'constant';
 	result_type: RT;
 	value_type: VT;
@@ -153,9 +153,11 @@ export interface IConstantFormula<RT extends TFormulaResultType, VT extends TFor
 export type INumberConstantFormula<V = string> = IConstantFormula<'number', 'number', V>;
 export type ITextConstantFormula<V = string> = IConstantFormula<'text', 'string', V>;
 
-export type TConstantFormula = IConstantFormula<'text', 'string'> | IConstantFormula<'text', 'number'>;
+export type TConstantFormula = INumberConstantFormula | ITextConstantFormula;
 
 // Hybrid Functions
+
+export type TFunctionName = THybridFunctionName | TPureFunctionName;
 
 export type THybridFunctionName =
 	| 'unaryMinus'
@@ -177,18 +179,17 @@ export type THybridFunctionName =
 	| 'format'
 	| 'equal'
 	| 'unequal'
-	| 'if'
-	| TFunctionName;
+	| 'if';
 
-export type EqualFunctionFormula = IFunctionFormula<'checkbox', 'equal', Tuple2AnyResultType>;
-export type UnequalFunctionFormula = IFunctionFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
-
-export interface IFunctionFormula<RT extends TFormulaResultType, N extends THybridFunctionName, A extends any> {
+export interface IFunctionFormula<RT extends TFormulaResultType, N extends TFunctionName, A extends any> {
 	type: 'function';
 	result_type: RT;
 	name: N;
 	args: A;
 }
+
+export type EqualFunctionFormula = IFunctionFormula<'checkbox', 'equal', Tuple2AnyResultType>;
+export type UnequalFunctionFormula = IFunctionFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
 
 export type AndFunctionFormula = IFunctionFormula<'checkbox', 'and', Tuple2<TCheckboxResultTypeFormula>>;
 export type OrFunctionFormula = IFunctionFormula<'checkbox', 'or', Tuple2<TCheckboxResultTypeFormula>>;
@@ -223,9 +224,9 @@ export type TextIfFunctionFormula = IFunctionFormula<
 	Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
 >;
 
-export type TTextFunctionFormula = TextIfFunctionFormula | AddFunctionFormula;
+export type TTextHybridFunctionFormula = TextIfFunctionFormula | AddFunctionFormula;
 
-export type TCheckboxFunctionFormula =
+export type TCheckboxHybridFunctionFormula =
 	| EqualFunctionFormula
 	| UnequalFunctionFormula
 	| AndFunctionFormula
@@ -236,7 +237,7 @@ export type TCheckboxFunctionFormula =
 	| SmallerEqFunctionFormula
 	| NotFunctionFormula;
 
-export type TNumberFunctionFormula =
+export type TNumberHybridFunctionFormula =
 	| SubtractFunctionFormula
 	| DivideFunctionFormula
 	| MultipleFunctionFormula
@@ -246,11 +247,14 @@ export type TNumberFunctionFormula =
 	| UnaryPlusFunctionFormula
 	| NumberIfFunctionFormula;
 
-export type THybridFunctionFormula = TTextFunctionFormula | TNumberFunctionFormula | TCheckboxFunctionFormula;
+export type THybridFunctionFormula =
+	| TTextHybridFunctionFormula
+	| TNumberHybridFunctionFormula
+	| TCheckboxHybridFunctionFormula;
 
 // Functions
 
-export type TFunctionName =
+export type TPureFunctionName =
 	| 'concat'
 	| 'join'
 	| 'slice'
@@ -386,44 +390,50 @@ export type FormatDateFunctionFormula = IFunctionFormula<
 	[TDateResultTypeFormula, ITextConstantFormula]
 >;
 
-export type TFunctionFormula =
+export type TTextPureFunctionFormula =
+	| ReplaceAllFunctionFormula
+	| ReplaceFunctionFormula
 	| ConcatFunctionFormula
 	| JoinFunctionFormula
 	| SliceFunctionFormula
-	| LengthFunctionFormula
-	| FormatFunctionFormula
-	| ToNumberFunctionFormula
-	| ContainsFunctionFormula
-	| ReplaceFunctionFormula
-	| ReplaceAllFunctionFormula
-	| TestFunctionFormula
-	| EmptyFunctionFormula
-	| AbsFunctionFormula
-	| CbrtFunctionFormula
-	| CeilFunctionFormula
-	| ExpFunctionFormula
-	| FloorFunctionFormula
-	| LnFunctionFormula
-	| Log10FunctionFormula
-	| Log2FunctionFormula
-	| MaxFunctionFormula
-	| MinFunctionFormula
-	| RoundFunctionFormula
-	| SignFunctionFormula
-	| SqrtFunctionFormula
-	| StartFunctionFormula
-	| EndFunctionFormula
-	| NowFunctionFormula
-	| TimestampFunctionFormula
-	| MinuteFunctionFormula
-	| HourFunctionFormula
-	| DayFunctionFormula
-	| DateFunctionFormula
-	| MonthFunctionFormula
-	| YearFunctionFormula
-	| DateAddFunctionFormula
-	| DateSubtractFunctionFormula
+	| FormatFunctionFormula;
+export type TNumberPureFunctionFormula =
 	| DateBetweenFunctionFormula
-	| FormatDateFunctionFormula;
+	| TimestampFunctionFormula
+	| SqrtFunctionFormula
+	| SignFunctionFormula
+	| RoundFunctionFormula
+	| MinFunctionFormula
+	| MaxFunctionFormula
+	| Log2FunctionFormula
+	| Log10FunctionFormula
+	| LnFunctionFormula
+	| FloorFunctionFormula
+	| ExpFunctionFormula
+	| CeilFunctionFormula
+	| CbrtFunctionFormula
+	| AbsFunctionFormula
+	| ToNumberFunctionFormula
+	| LengthFunctionFormula;
+export type TCheckboxPureFunctionFormula = EmptyFunctionFormula | TestFunctionFormula | ContainsFunctionFormula;
+export type TDatePureFunctionFormula =
+	| FormatDateFunctionFormula
+	| DateSubtractFunctionFormula
+	| DateAddFunctionFormula
+	| NowFunctionFormula
+	| StartFunctionFormula
+	| EndFunctionFormula;
+export type TPureFunctionFormula =
+	| TTextPureFunctionFormula
+	| TNumberPureFunctionFormula
+	| TDatePureFunctionFormula
+	| TCheckboxPureFunctionFormula;
+
+export type TNumberFunctionFormula = TNumberHybridFunctionFormula | TNumberPureFunctionFormula;
+export type TTextFunctionFormula = TTextHybridFunctionFormula | TTextPureFunctionFormula;
+export type TCheckboxFunctionFormula = TCheckboxHybridFunctionFormula | TCheckboxPureFunctionFormula;
+export type TDateFunctionFormula = TDatePureFunctionFormula;
+
+export type TFunctionFormula = TPureFunctionFormula | THybridFunctionFormula;
 
 export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;

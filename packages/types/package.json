@@ -11,7 +11,7 @@
     "lib": "src"
   },
   "files": [
-    "dist/*.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",

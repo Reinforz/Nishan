@@ -1,6 +1,6 @@
-import { TFormatBlockColor /* InlineDateArg */ } from '@nishans/types';
+import { TFormatBlockColor, InlineDateArg } from '@nishans/types';
 
-/* export function inlineDate (arg: InlineDateArg) {
+export function inlineDate (arg: InlineDateArg) {
 	const text: [[string, any[][]]] = [ [ '‣', [ [ 'd', arg ] ] ] ];
 	return {
 		text,
@@ -9,7 +9,7 @@ import { TFormatBlockColor /* InlineDateArg */ } from '@nishans/types';
 			return new chunk(text);
 		}
 	};
-} */
+}
 
 export function inlineMention (id: string) {
 	const mod_title: [[string, string[][]]] = [ [ '‣', [ [ 'u', id ] ] ] ];

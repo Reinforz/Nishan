@@ -1,6 +1,6 @@
 import { CollectionBlock, CollectionViewPage, Page, SchemaUnit, TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView, Block, Collection } from "./api";
 
-import { TViewGroupFilterOperator, ILinkToPage, IViewAggregationsAggregators, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, IDate, IDateRange, IDateTime, IDateTimeRange, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, IViewFilterData, CheckboxSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, DateSchemaUnit, EmailSchemaUnit, FileSchemaUnit, FormulaSchemaUnit, IAudio, IBreadcrumb, IBulletedList, ICallout, ICode, ICodepen, IColumn, IColumnList, IDivider, IDrive, IEmbed, IEquation, IFactory, IFigma, IFile, IGist, IHeader, IImage, IMaps, INumberedList, IQuote, ISubHeader, IText, ITOC, ITodo, IToggle, ITweet, IVideo, IWebBookmark, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, IOperation, IUserRoot, IUserSettings, TBlock, TView, ICollectionViewPage, TSchemaUnit, TBlockType, IPage, ISubSubHeader } from "@nishans/types";
+import { TViewGroupFilterOperator, ILinkToPage, IViewAggregationsAggregators, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TSchemaUnitType, INotionUser, ISpace, ISpaceView, IUserSettingsSettings, ICollection, TViewType, TDataType, TTimelineViewTimelineby, TSortValue, ITableViewFormat, IViewFilterData, CheckboxSchemaUnit, CreatedBySchemaUnit, CreatedTimeSchemaUnit, DateSchemaUnit, EmailSchemaUnit, FileSchemaUnit, FormulaSchemaUnit, IAudio, IBreadcrumb, IBulletedList, ICallout, ICode, ICodepen, IColumn, IColumnList, IDivider, IDrive, IEmbed, IEquation, IFactory, IFigma, IFile, IGist, IHeader, IImage, IMaps, INumberedList, IQuote, ISubHeader, IText, ITOC, ITodo, IToggle, ITweet, IVideo, IWebBookmark, LastEditedBySchemaUnit, LastEditedTimeSchemaUnit, MultiSelectSchemaUnit, NumberSchemaUnit, PersonSchemaUnit, PhoneNumberSchemaUnit, RelationSchemaUnit, RollupSchemaUnit, SelectSchemaUnit, TextSchemaUnit, TitleSchemaUnit, UrlSchemaUnit, IOperation, IUserRoot, IUserSettings, TBlock, TView, ICollectionViewPage, TSchemaUnit, TBlockType, IPage, ISubSubHeader } from "@nishans/types";
 
 export interface ITPage {
   collection_view_page: CollectionViewPage[],
@@ -87,8 +87,6 @@ export type ITCollectionBlock = {
 }
 
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
-
-export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange
 
 export type RepositionParams = {
   id: string,

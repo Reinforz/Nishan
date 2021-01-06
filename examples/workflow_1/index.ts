@@ -101,36 +101,31 @@ import "../env"
             {
               type: "formula",
               name: "Priority Counter",
+              format: 150,
               formula: {
                 type: "function",
                 name: "if",
-                result_type: "text",
+                result_type: "number",
                 args: [
                   {
                     type: "function",
-                    function: "equal",
-                    result_type: "checkbox",
+                    name: "equal",
+                    return_type: "checkbox",
                     args: [
-                      {
-                        args: [
-                          {
-                            id: "phase",
-                            name: "Phase",
-                            type: "property",
-                            result_type: "text"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Practice",
-                            "value_type": "string",
-                            "result_type": "text"
-                          }
-                        ],
-                        name: "equal",
-                        type: "function",
-                        result_type: "checkbox"
-                      }
+
                     ]
+                  },
+                  {
+                    value: "2",
+                    result_type: "number",
+                    type: "constant",
+                    value_type: "number"
+                  },
+                  {
+                    value: "1",
+                    result_type: "number",
+                    type: "constant",
+                    value_type: "number"
                   }
                 ]
               }

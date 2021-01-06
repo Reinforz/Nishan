@@ -14,13 +14,21 @@ export type TCheckboxResultTypeFormula =
 	| IPropertyFormula<'checkbox'>
 	| ISymbolFormula<'false', 'checkbox'>
 	| ISymbolFormula<'true', 'checkbox'>
-	| TOperatorFormula;
+	| TCheckboxFunctionFormula
+	| TCheckboxOperatorFormula;
 
 export type TTextResultTypeFormula =
 	| IPropertyFormula<'text'>
 	| IConstantFormula<'text', 'string'>
-	| IConstantFormula<'text', 'number'>;
-export type TNumberResultTypeFormula = IPropertyFormula<'number'> | INumberConstantFormula;
+	| IConstantFormula<'text', 'number'>
+	| TTextFunctionFormula
+	| TTextOperatorFormula;
+
+export type TNumberResultTypeFormula =
+	| IPropertyFormula<'number'>
+	| INumberConstantFormula
+	| TNumberFunctionFormula
+	| TNumberOperatorFormula;
 export type TDateResultTypeFormula = IPropertyFormula<'date'> | NowFunctionFormula;
 export type TResultTypeFormula =
 	| TCheckboxResultTypeFormula
@@ -203,9 +211,19 @@ export type AddFunctionFormula = IFunctionFormula<
 	'add',
 	Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>
 >;
-export type IfFunctionFormula = IFunctionFormula<'text', 'if', Tuple3AnyResultType<TCheckboxResultTypeFormula>>;
 
-export type TTextFunctionFormula = IfFunctionFormula | AddFunctionFormula;
+export type NumberIfFunctionFormula = IFunctionFormula<
+	'number',
+	'if',
+	Tuple12<TCheckboxResultTypeFormula, TNumberResultTypeFormula>
+>;
+export type TextIfFunctionFormula = IFunctionFormula<
+	'text',
+	'if',
+	Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
+>;
+
+export type TTextFunctionFormula = TextIfFunctionFormula | AddFunctionFormula;
 
 export type TCheckboxFunctionFormula =
 	| EqualFunctionFormula
@@ -225,7 +243,8 @@ export type TNumberFunctionFormula =
 	| PowFunctionFormula
 	| ModFunctionFormula
 	| UnaryMinusFunctionFormula
-	| UnaryPlusFunctionFormula;
+	| UnaryPlusFunctionFormula
+	| NumberIfFunctionFormula;
 
 export type THybridFunctionFormula = TTextFunctionFormula | TNumberFunctionFormula | TCheckboxFunctionFormula;
 

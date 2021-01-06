@@ -5,13 +5,13 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "src"
+    "dist"
   ],
   "repository": {
     "type": "git",

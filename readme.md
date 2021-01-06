@@ -5,6 +5,7 @@
   <a href="https://codecov.io/github/devorein/nishan?branch=master"><img src="https://img.shields.io/codecov/c/github/devorein/nishan/master.svg?sanitize=true" alt="Coverage Status"></a>
   <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/>
   <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
+  <img src="https://img.shields.io/github/contributors/devorein/nishan?label=contributors">
 </p>
 
 # Nishan

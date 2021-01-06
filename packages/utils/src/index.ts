@@ -1,1 +1,2 @@
-export * from "./inlineBlocks"
+export * from './inlineBlocks';
+export * from './uuidConversion';

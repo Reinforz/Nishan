@@ -6,6 +6,7 @@ Utility package to make working with @nishans/core easier
 
 1. Easier formatted content creation
 2. Using a string as a formula rather than passing an ast (WIP)
+3. Id to uuid and uuid to id conversion
 
 ## Usage
 

@@ -540,7 +540,7 @@ export type TEmbedBlockInput = IEmbedInput | IFigmaInput | IMapsInput | ICodepen
 export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockInput | TEmbedBlockInput | TCollectionBlockInput | IColumnListInput;
 
 // Formula Inputs
-type TResultType =
+export type TResultType =
 	| TCheckboxResultType
 	| TTextResultType
 	| TNumberResultType

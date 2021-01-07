@@ -1,6 +1,6 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Typescript typings for notion",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
@@ -18,7 +18,12 @@
     "url": "git+https://github.com/Devorein/Nishan.git",
     "directory": "packages/types"
   },
-  "scripts": {},
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "prebuild": "npm run lint && run-s clean",
+    "clean": "del-cli ./dist"
+  },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   }

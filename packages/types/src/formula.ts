@@ -10,25 +10,26 @@ export type Tuple3<T extends any> = [T, T, T];
 // Result types
 
 export type TCheckboxResultTypeFormula =
-	| IPropertyFormula<'checkbox'>
+	| EqualFunctionFormula
+	| ICheckboxPropertyFormula
 	| TCheckboxSymbolFormula
-	| TCheckboxFunctionFormula
-	| TCheckboxOperatorFormula;
+	| TCheckboxOperatorFormula
+	| TCheckboxFunctionFormula;
 
 export type TTextResultTypeFormula =
-	| IPropertyFormula<'text'>
+	| ITextPropertyFormula
 	| ITextConstantFormula
-	| TTextFunctionFormula
-	| TTextOperatorFormula;
+	| TTextOperatorFormula
+	| TTextFunctionFormula;
 
 export type TNumberResultTypeFormula =
-	| IPropertyFormula<'number'>
+	| INumberPropertyFormula
+	| TNumberSymbolFormula
 	| INumberConstantFormula
-	| TNumberFunctionFormula
 	| TNumberOperatorFormula
-	| TNumberSymbolFormula;
+	| TNumberFunctionFormula;
 
-export type TDateResultTypeFormula = IPropertyFormula<'date'> | TDateFunctionFormula;
+export type TDateResultTypeFormula = IDatePropertyFormula | TDateFunctionFormula;
 
 export type TResultTypeFormula =
 	| TCheckboxResultTypeFormula
@@ -47,6 +48,26 @@ export type Tuple3AnyResultType<T extends TResultTypeFormula> =
 	| Tuple12<T, TCheckboxResultTypeFormula>
 	| Tuple12<T, TDateResultTypeFormula>
 	| Tuple12<T, TNumberResultTypeFormula>;
+
+// Properties
+
+export interface IPropertyFormula<RT extends TFormulaResultType> {
+	type: 'property';
+	id: string;
+	name: string;
+	result_type: RT;
+}
+
+export type TPropertyFormula =
+	| ICheckboxPropertyFormula
+	| ITextPropertyFormula
+	| IDatePropertyFormula
+	| INumberPropertyFormula;
+
+export type ICheckboxPropertyFormula = IPropertyFormula<'checkbox'>;
+export type ITextPropertyFormula = IPropertyFormula<'text'>;
+export type IDatePropertyFormula = IPropertyFormula<'date'>;
+export type INumberPropertyFormula = IPropertyFormula<'number'>;
 
 // Operators
 
@@ -108,7 +129,7 @@ export type TNumberOperatorFormula =
 
 export type TOperatorFormula = TTextOperatorFormula | TCheckboxOperatorFormula | TNumberOperatorFormula;
 
-// Constants
+// Symbols
 
 export interface ISymbolCheckboxFormula {
 	name: TFormulaSymbolName;
@@ -129,19 +150,7 @@ export type TCheckboxSymbolFormula = ISymbolFormula<'true', 'checkbox'> | ISymbo
 export type TNumberSymbolFormula = ISymbolFormula<'e', 'number'> | ISymbolFormula<'pi', 'number'>;
 export type TSymbolFormula = TNumberSymbolFormula | TCheckboxSymbolFormula;
 
-export interface IPropertyFormula<RT extends TFormulaResultType> {
-	type: 'property';
-	id: string;
-	name: string;
-	result_type: RT;
-}
-
-export type TPropertyFormula =
-	| IPropertyFormula<'checkbox'>
-	| IPropertyFormula<'text'>
-	| IPropertyFormula<'date'>
-	| IPropertyFormula<'number'>;
-
+// Constants
 export interface IConstantFormula<RT extends TFormulaResultType, VT extends TConstantFormulaValueType, V = string> {
 	type: 'constant';
 	result_type: RT;
@@ -217,10 +226,23 @@ export type NumberIfFunctionFormula = IFunctionFormula<
 	'if',
 	Tuple12<TCheckboxResultTypeFormula, TNumberResultTypeFormula>
 >;
+
 export type TextIfFunctionFormula = IFunctionFormula<
 	'text',
 	'if',
 	Tuple12<TCheckboxResultTypeFormula, TTextResultTypeFormula>
+>;
+
+export type DateIfFunctionFormula = IFunctionFormula<
+	'date',
+	'if',
+	Tuple12<TCheckboxResultTypeFormula, TDateResultTypeFormula>
+>;
+
+export type CheckboxIfFunctionFormula = IFunctionFormula<
+	'checkbox',
+	'if',
+	Tuple12<TCheckboxResultTypeFormula, TCheckboxResultTypeFormula>
 >;
 
 export type TTextHybridFunctionFormula = TextIfFunctionFormula | AddFunctionFormula;
@@ -234,7 +256,8 @@ export type TCheckboxHybridFunctionFormula =
 	| LargerEqFunctionFormula
 	| SmallerFunctionFormula
 	| SmallerEqFunctionFormula
-	| NotFunctionFormula;
+	| NotFunctionFormula
+	| CheckboxIfFunctionFormula;
 
 export type TNumberHybridFunctionFormula =
 	| SubtractFunctionFormula
@@ -246,10 +269,13 @@ export type TNumberHybridFunctionFormula =
 	| UnaryPlusFunctionFormula
 	| NumberIfFunctionFormula;
 
+export type TDateHybridFunctionFormula = DateIfFunctionFormula;
+
 export type THybridFunctionFormula =
 	| TTextHybridFunctionFormula
 	| TNumberHybridFunctionFormula
-	| TCheckboxHybridFunctionFormula;
+	| TCheckboxHybridFunctionFormula
+	| TDateHybridFunctionFormula;
 
 // Functions
 
@@ -349,6 +375,7 @@ export type NowFunctionFormula = {
 	type: 'function';
 	result_type: 'date';
 	name: 'now';
+	args: [];
 };
 export type TimestampFunctionFormula = IFunctionFormula<'number', 'timestamp', [TDateResultTypeFormula]>;
 export type FromTimestampFunctionFormula = IFunctionFormula<'date', 'fromTimestamp', [TNumberResultTypeFormula]>;
@@ -441,8 +468,8 @@ export type TPureFunctionFormula =
 export type TNumberFunctionFormula = TNumberHybridFunctionFormula | TNumberPureFunctionFormula;
 export type TTextFunctionFormula = TTextHybridFunctionFormula | TTextPureFunctionFormula;
 export type TCheckboxFunctionFormula = TCheckboxHybridFunctionFormula | TCheckboxPureFunctionFormula;
-export type TDateFunctionFormula = TDatePureFunctionFormula;
+export type TDateFunctionFormula = TDateHybridFunctionFormula | TDatePureFunctionFormula;
 
 export type TFunctionFormula = TPureFunctionFormula | THybridFunctionFormula;
 
-export type TFormula = TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula | THybridFunctionFormula;
+export type TFormula = TConstantFormula | TFunctionFormula | TOperatorFormula | TPropertyFormula | TSymbolFormula;

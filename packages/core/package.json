@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Core package for nishan api",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
@@ -15,7 +15,8 @@
     "dist/api",
     "dist/utils",
     "dist/Nishan.*",
-    "dist/types.*"
+    "dist/types/*.d.ts",
+    "dist/types/*.js"
   ],
   "repository": {
     "type": "git",

@@ -4,7 +4,7 @@ import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
-import { ICollection, TCollectionBlock, IPage, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
+import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
 import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, FormulaSchemaUnitInput } from '../types';
 
 /**
@@ -14,17 +14,6 @@ import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateIn
 class Collection extends Data<ICollection> {
   constructor(args: NishanArg) {
     super({ ...args, type: "collection" });
-  }
-
-  #getSchemaMap = () =>{
-    const data = this.getCachedData(), schema_map: Map<string, {id: string, type: TSchemaUnitType}> = new Map();
-    Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
-      schema_map.set(schema_unit.name, {
-        id: schema_id,
-        type: schema_unit.type
-      })
-    })
-    return schema_map;
   }
 
   #getRowPages = async () => {
@@ -37,6 +26,17 @@ class Collection extends Data<ICollection> {
 
   getCachedParentData() {
     return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
+  }
+
+  getSchemaMap = () =>{
+    const data = this.getCachedData(), schema_map: Map<string, {id: string} & TSchemaUnit> = new Map();
+    Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
+      schema_map.set(schema_unit.name, {
+        id: schema_id,
+        ...schema_unit
+      })
+    })
+    return schema_map;
   }
 
   /**
@@ -186,7 +186,7 @@ class Collection extends Data<ICollection> {
         data.schema[schema_id] = {
           type,
           name,
-          ...(options ? type === "formula" ? parseFormula(args[index] as FormulaSchemaUnitInput, this.#getSchemaMap()) : options : {})
+          ...(options ? type === "formula" ? parseFormula(args[index] as FormulaSchemaUnitInput, this.getSchemaMap()) : options : {})
         } as any;
         results[type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
         this.logger && this.logger("CREATE", "SchemaUnit", schema_id);

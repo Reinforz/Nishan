@@ -1,4 +1,4 @@
-import { FormulaSchemaUnit, TFormulaResultType, TFunctionName, TSchemaUnitType } from '@nishans/types';
+import { FormulaSchemaUnit, TFormulaResultType, TFunctionName, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
 import { FormulaSchemaUnitInput, TResultType } from '../types';
 
 const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
@@ -62,9 +62,37 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'formatDate', 'date' ]
 ]);
 
+export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TFormulaResultType {
+	switch (type) {
+		case 'checkbox':
+			return 'checkbox';
+		case 'created_time':
+		case 'last_edited_time':
+		case 'date':
+			return 'date';
+		case 'email':
+		case 'file':
+		case 'created_by':
+		case 'last_edited_by':
+		case 'multi_select':
+		case 'select':
+		case 'phone_number':
+		case 'url':
+		case 'title':
+		case 'text':
+		case 'relation':
+			return 'text';
+		case 'number':
+		case 'rollup':
+			return 'number';
+		default:
+			return 'number';
+	}
+}
+
 export function parseFormula (
 	formula: FormulaSchemaUnitInput,
-	schema_map: Map<string, { id: string; type: TSchemaUnitType }>
+	schema_map: Map<string, { id: string } & TSchemaUnit>
 ): FormulaSchemaUnit {
 	const res_formula = {
 		args: []
@@ -107,11 +135,14 @@ export function parseFormula (
 			const result = schema_map.get(schema_name);
 			if (result) {
 				const { id, type } = result;
+				let result_type: TFormulaResultType = '' as any;
+				if (result.type === 'formula') result_type = result.formula.result_type;
+				else result_type = formulateResultTypeFromSchemaType(type);
 				parent.push({
 					type: 'property',
 					id,
 					name: schema_name,
-					result_type: type === 'text' ? 'text' : 'number'
+					result_type
 				});
 			}
 		}

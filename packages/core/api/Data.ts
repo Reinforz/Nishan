@@ -1,4 +1,4 @@
-import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TSchemaUnitType, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
+import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TSchemaUnitType, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ViewFilterCreateInput, TSearchManipViewParam, TableSearchManipViewParam, BoardSearchManipViewParam, GallerySearchManipViewParam, CalendarSearchManipViewParam, TimelineSearchManipViewParam, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { validateUUID, Operation, error, warn, parseFormula } from "../utils";
@@ -495,11 +495,11 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected createCollection(param: ICollectionBlockInput, parent_id: string) {
-    const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, {id: string, type: TSchemaUnitType}> = new Map();
+    const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
 
     param.schema.forEach(opt => {
       const schema_id = (opt[0] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-      schema_map.set(opt[0], {id: schema_id, type: opt[1]});
+      schema_map.set(opt[0], {name: opt[0], id: schema_id, type: opt[1], ...(opt[2] ?? {})} as any);
       schema[schema_id] = {
         name: opt[0],
         type: opt[1],

@@ -121,3 +121,4 @@ export default Nishan;
 export * from "./api";
 export * from "./types";
 export * from "@nishans/types";
+export * from "./utils";

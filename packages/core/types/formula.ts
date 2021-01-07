@@ -27,12 +27,14 @@ export type AddFunctionCreateInput = ['add', Tuple2<TTextResultType> | Tuple2<TN
 export type ReplaceAllFunctionCreateInput = [
 	'replaceAll',
 
+
 		| Tuple12<TNumberResultType, TTextResultType>
 		| Tuple12<TTextResultType, TTextResultType>
 		| Tuple12<TCheckboxResultType, TTextResultType>
 ];
 export type ReplaceFunctionCreateInput = [
 	'replace',
+
 
 		| Tuple12<TNumberResultType, TTextResultType>
 		| Tuple12<TTextResultType, TTextResultType>
@@ -176,9 +178,3 @@ export type TFormulaCreateInput =
 	| TTextFunctionCreateInput
 	| TNumberFunctionCreateInput
 	| TCheckboxFunctionCreateInput;
-
-export interface FormulaSchemaUnitInput {
-	name: string;
-	type: 'formula';
-	formula: TFormulaCreateInput;
-}

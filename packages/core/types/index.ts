@@ -4,5 +4,6 @@ export * from './formula';
 export * from './filter';
 export * from './maps';
 export * from './nishan';
+export * from './schema';
 export * from './utils';
 export * from './view';

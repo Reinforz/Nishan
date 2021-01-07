@@ -1,7 +1,7 @@
 import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TSchemaUnitType, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ViewFilterCreateInput, TSearchManipViewParam, TableSearchManipViewParam, BoardSearchManipViewParam, GallerySearchManipViewParam, CalendarSearchManipViewParam, TimelineSearchManipViewParam, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, error, warn } from "../utils";
+import { validateUUID, Operation, error, warn, parseFormula } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -498,8 +498,12 @@ export default class Data<T extends TData> extends Operations {
     const schema: Schema = {}, collection_id = this.generateId(param.id);
 
     param.schema.forEach(opt => {
-      const schema_name = (opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
-      schema[schema_name] = /* opt.type === "formula" ? parseFormula(opt) : */ opt
+      const schema_name = (opt[0] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+      schema[schema_name] = {
+        name: opt[0],
+        type: opt[1],
+        ... (opt[2] ? opt[1] === "formula" ? parseFormula(opt) : opt[2] : {})
+      } as any
     });
 
     const [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(schema, param.views, collection_id, parent_id);

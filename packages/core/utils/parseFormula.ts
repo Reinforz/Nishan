@@ -109,9 +109,9 @@ export function parseFormula (formula: FormulaSchemaUnitInput): FormulaSchemaUni
 		}
 	}
 
-	traverseFormula(res_formula.args, formula.formula);
+	traverseFormula(res_formula.args, formula[2].formula);
 	return {
-		name: formula.name,
+		name: formula[0],
 		type: 'formula',
 		formula: res_formula.args[0]
 	};

@@ -109,7 +109,9 @@ export function parseFormula (
 				result_type,
 				args: temp_args
 			});
-			for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
+			if (Array.isArray(args))
+				for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
+			else traverseFormula(temp_args, args);
 		} else if (typeof formula === 'number') {
 			parent.push({
 				type: 'constant',

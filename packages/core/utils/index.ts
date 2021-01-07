@@ -1,12 +1,9 @@
-import Operation from "./chunk";
-import createTransaction from "./createTransaction";
-import shortid from "./shortid";
+import Operation from './chunk';
+import createTransaction from './createTransaction';
+import shortid from './shortid';
 
-export * from "./logs";
-export * from "./uuid";
+export * from './logs';
+export * from './uuid';
+export * from './parseFormula';
 
-export {
-  Operation,
-  createTransaction,
-  shortid
-};
+export { Operation, createTransaction, shortid };

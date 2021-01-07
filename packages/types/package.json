@@ -18,12 +18,7 @@
     "url": "git+https://github.com/Devorein/Nishan.git",
     "directory": "packages/types"
   },
-  "scripts": {
-    "prepublish": "npm run build",
-    "build": "tsc",
-    "prebuild": "npm run lint && run-s clean",
-    "clean": "del-cli ./dist"
-  },
+  "scripts": {},
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   }

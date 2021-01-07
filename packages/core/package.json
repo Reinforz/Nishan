@@ -23,8 +23,7 @@
     "directory": "packages/core"
   },
   "scripts": {
-    "test": "npx jest --runInBand ./tests",
-    "preversion": "npm run test"
+    "test": "npx jest --runInBand ./tests"
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"

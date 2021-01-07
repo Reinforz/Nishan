@@ -498,7 +498,8 @@ export default class Data<T extends TData> extends Operations {
     const schema: Schema = {}, collection_id = this.generateId(param.id);
 
     param.schema.forEach(opt => {
-      schema[(opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_')] = opt
+      const schema_name = (opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
+      schema[schema_name] = /* opt.type === "formula" ? parseFormula(opt) : */ opt
     });
 
     const [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(schema, param.views, collection_id, parent_id);

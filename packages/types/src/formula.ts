@@ -10,7 +10,6 @@ export type Tuple3<T extends any> = [T, T, T];
 // Result types
 
 export type TCheckboxResultTypeFormula =
-	| EqualFunctionFormula
 	| ICheckboxPropertyFormula
 	| TCheckboxSymbolFormula
 	| TCheckboxOperatorFormula

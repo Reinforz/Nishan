@@ -1,7 +1,7 @@
 import { TSchemaUnitType, SelectOption } from '@nishans/types';
 import { TFormulaCreateInput } from './formula';
 
-export type ISchemaUnitInput<T extends TSchemaUnitType, O extends any = undefined> = [string, T, O];
+export type ISchemaUnitInput<T extends TSchemaUnitType, O extends any = undefined> = O extends undefined ? [string, T] : [string, T, O];
 
 /* Basic Schema Units */
 

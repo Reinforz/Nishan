@@ -495,16 +495,21 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected createCollection(param: ICollectionBlockInput, parent_id: string) {
-    const schema: Schema = {}, collection_id = this.generateId(param.id);
+    const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, {id: string, type: TSchemaUnitType}> = new Map();
 
     param.schema.forEach(opt => {
-      const schema_name = (opt[0] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
-      schema[schema_name] = {
+      const schema_id = (opt[0] === "title" ? "Title" : opt[0]).toLowerCase().replace(/\s/g, '_');
+      schema_map.set(opt[0], {id: schema_id, type: opt[1]});
+      schema[schema_id] = {
         name: opt[0],
         type: opt[1],
-        ... (opt[2] ? opt[1] === "formula" ? parseFormula(opt) : opt[2] : {})
+        ... (opt[2] || {})
       } as any
     });
+
+    Object.entries(schema).forEach(([schema_id, schema_unit])=>{
+      if(schema_unit.type === "formula") schema_unit = {...schema_unit, ...parseFormula(schema_unit as any, schema_map)}
+    })
 
     const [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(schema, param.views, collection_id, parent_id);
     created_view_ops.unshift(Operation.collection.update(collection_id, [], {

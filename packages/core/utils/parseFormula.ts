@@ -1,4 +1,4 @@
-import { FormulaSchemaUnit, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
+import { FormulaSchemaUnit, TFormulaResultType, TFunctionName, TSchemaUnitType } from '@nishans/types';
 import { FormulaSchemaUnitInput, TResultType } from '../types';
 
 const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
@@ -62,7 +62,10 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'formatDate', 'date' ]
 ]);
 
-export function parseFormula (formula: FormulaSchemaUnitInput): FormulaSchemaUnit {
+export function parseFormula (
+	formula: FormulaSchemaUnitInput,
+	schema_map: Map<string, { id: string; type: TSchemaUnitType }>
+): FormulaSchemaUnit {
 	const res_formula = {
 		args: []
 	};
@@ -71,7 +74,7 @@ export function parseFormula (formula: FormulaSchemaUnitInput): FormulaSchemaUni
 		if (Array.isArray(formula)) {
 			const [ name, args ] = formula;
 			const result_type = formula_info_map.get(name);
-			const temp_args = [] as TFunctionFormula['args'];
+			const temp_args = [] as any;
 			parent.push({
 				name,
 				type: 'function',
@@ -100,12 +103,17 @@ export function parseFormula (formula: FormulaSchemaUnitInput): FormulaSchemaUni
 				result_type: 'text'
 			});
 		} else if (!Array.isArray(formula)) {
-			parent.push({
-				type: 'property',
-				id: formula.property.toString().toLowerCase(),
-				name: formula.property.toString(),
-				result_type: 'text'
-			});
+			const schema_name = formula.property.toString();
+			const result = schema_map.get(schema_name);
+			if (result) {
+				const { id, type } = result;
+				parent.push({
+					type: 'property',
+					id,
+					name: schema_name,
+					result_type: type === 'text' ? 'text' : 'number'
+				});
+			}
 		}
 	}
 

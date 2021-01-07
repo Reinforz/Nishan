@@ -1,12 +1,11 @@
-export type TFormulaName = 'if' | 'equal';
 export type TFormulaType = 'operator' | 'property' | 'function' | 'symbol' | 'constant';
 export type TFormulaResultType = 'number' | 'checkbox' | 'text' | 'date';
 export type TConstantFormulaValueType = 'number' | 'string';
 export type TFormulaSymbolName = 'false' | 'true' | 'pi' | 'e';
 
-export type Tuple2<T extends TResultTypeFormula> = [T, T];
-export type Tuple12<T1 extends TResultTypeFormula, T2 extends TResultTypeFormula> = [T1, T2, T2];
-export type Tuple3<T extends TResultTypeFormula> = [T, T, T];
+export type Tuple2<T extends any> = [T, T];
+export type Tuple12<T1 extends any, T2 extends any> = [T1, T2, T2];
+export type Tuple3<T extends any> = [T, T, T];
 
 // Result types
 
@@ -397,6 +396,7 @@ export type TTextPureFunctionFormula =
 	| JoinFunctionFormula
 	| SliceFunctionFormula
 	| FormatFunctionFormula;
+
 export type TNumberPureFunctionFormula =
 	| DateBetweenFunctionFormula
 	| TimestampFunctionFormula
@@ -422,7 +422,16 @@ export type TDatePureFunctionFormula =
 	| DateAddFunctionFormula
 	| NowFunctionFormula
 	| StartFunctionFormula
-	| EndFunctionFormula;
+	| EndFunctionFormula
+	| TimestampFunctionFormula
+	| FromTimestampFunctionFormula
+	| MinuteFunctionFormula
+	| HourFunctionFormula
+	| DayFunctionFormula
+	| DateFunctionFormula
+	| MonthFunctionFormula
+	| YearFunctionFormula;
+
 export type TPureFunctionFormula =
 	| TTextPureFunctionFormula
 	| TNumberPureFunctionFormula

@@ -97,14 +97,13 @@ export type ModOperatorFormula = IOperatorFormula<'number', 'mod', Tuple2<TNumbe
 export type UnaryMinusOperatorFormula = IOperatorFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
 export type UnaryPlusOperatorFormula = IOperatorFormula<'number', 'unaryPlus', [TNumberResultTypeFormula]>;
 
-export type AddOperatorFormula = IOperatorFormula<
-	'text',
-	'add',
-	Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>
->;
+export type TextAddOperatorFormula = IOperatorFormula<'text', 'add', Tuple2<TTextResultTypeFormula>>;
+
+export type NumberAddOperatorFormula = IOperatorFormula<'number', 'add', Tuple2<TNumberResultTypeFormula>>;
+
 export type IfOperatorFormula = IOperatorFormula<'text', 'if', Tuple3AnyResultType<TCheckboxResultTypeFormula>>;
 
-export type TTextOperatorFormula = AddOperatorFormula | IfOperatorFormula;
+export type TTextOperatorFormula = TextAddOperatorFormula | IfOperatorFormula;
 
 export type TCheckboxOperatorFormula =
 	| AndOperatorFormula
@@ -118,6 +117,7 @@ export type TCheckboxOperatorFormula =
 	| NotOperatorFormula;
 
 export type TNumberOperatorFormula =
+	| NumberAddOperatorFormula
 	| SubtractOperatorFormula
 	| DivideOperatorFormula
 	| MultipleOperatorFormula
@@ -214,11 +214,9 @@ export type ModFunctionFormula = IFunctionFormula<'number', 'mod', Tuple2<TNumbe
 export type UnaryMinusFunctionFormula = IFunctionFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
 export type UnaryPlusFunctionFormula = IFunctionFormula<'number', 'unaryPlus', [TNumberResultTypeFormula]>;
 
-export type AddFunctionFormula = IFunctionFormula<
-	'text',
-	'add',
-	Tuple2<TTextResultTypeFormula> | Tuple2<TNumberResultTypeFormula>
->;
+export type NumberAddFunctionFormula = IFunctionFormula<'number', 'add', Tuple2<TNumberResultTypeFormula>>;
+
+export type TextAddFunctionFormula = IFunctionFormula<'text', 'add', Tuple2<TTextResultTypeFormula>>;
 
 export type NumberIfFunctionFormula = IFunctionFormula<
 	'number',
@@ -244,7 +242,7 @@ export type CheckboxIfFunctionFormula = IFunctionFormula<
 	Tuple12<TCheckboxResultTypeFormula, TCheckboxResultTypeFormula>
 >;
 
-export type TTextHybridFunctionFormula = TextIfFunctionFormula | AddFunctionFormula;
+export type TTextHybridFunctionFormula = TextIfFunctionFormula | TextAddFunctionFormula;
 
 export type TCheckboxHybridFunctionFormula =
 	| EqualFunctionFormula
@@ -259,6 +257,7 @@ export type TCheckboxHybridFunctionFormula =
 	| CheckboxIfFunctionFormula;
 
 export type TNumberHybridFunctionFormula =
+	| NumberAddFunctionFormula
 	| SubtractFunctionFormula
 	| DivideFunctionFormula
 	| MultipleFunctionFormula

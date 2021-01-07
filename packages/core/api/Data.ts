@@ -507,7 +507,7 @@ export default class Data<T extends TData> extends Operations {
       } as any
     });
 
-    Object.entries(schema).forEach(([schema_id, schema_unit])=>{
+    Object.values(schema).forEach((schema_unit)=>{
       if(schema_unit.type === "formula") schema_unit = {...schema_unit, ...parseFormula(schema_unit as any, schema_map)}
     })
 

@@ -236,8 +236,9 @@ class Collection extends Data<ICollection> {
       execute
     }, (schema_id) => {
       return { ...data.schema[schema_id], key: schema_id }
-    }, (schema_id, schema_data) => {
-      data.schema[schema_id] = { ...data.schema[schema_id], ...schema_data } as TSchemaUnit;
+    }, (schema_id, schema_data, updated_data) => {
+      delete (schema_data as any).key
+      data.schema[schema_id] = { ...schema_data, ...updated_data } as TSchemaUnit;
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
 

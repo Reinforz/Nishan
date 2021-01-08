@@ -5,5 +5,6 @@ import shortid from './shortid';
 export * from './logs';
 export * from './uuid';
 export * from './parseFormula';
+export * from './populateFilters';
 
 export { Operation, createTransaction, shortid };

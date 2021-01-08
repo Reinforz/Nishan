@@ -1,7 +1,7 @@
 import { TSchemaUnitType, IViewAggregationsAggregators } from './';
 
 /**
- * Filters.filter.operator 
+ * Filters operator 
  */
 export type EmptyViewFiltersOperator = 'is_empty' | 'is_not_empty';
 
@@ -73,6 +73,7 @@ export type TAdvancedViewFiltersOperator =
 export type TViewFiltersOperator = TBasicViewFiltersOperator | TAdvancedViewFiltersOperator;
 
 export type TViewGroupFilterOperator = 'and' | 'or';
+
 export interface IViewFiltersOperator {
 	title: TitleViewFiltersOperator;
 	text: TextViewFiltersOperator;
@@ -96,7 +97,7 @@ export interface IViewFiltersOperator {
 }
 
 /**
- * Filters.filter.value.type 
+ * Filters type 
  */
 export type TitleViewFiltersType = 'exact';
 export type TextViewFiltersType = 'exact';
@@ -167,7 +168,7 @@ export interface IViewFiltersType {
 }
 
 /**
- * Filters.filter.value.value 
+ * Filters value 
  */
 export type TitleViewFiltersValue = string;
 export type TextViewFiltersValue = string;
@@ -338,24 +339,3 @@ export interface IViewFilterData<S extends TSchemaUnitType> {
 	value: IViewFiltersValue[S];
 	aggregator: IViewAggregationsAggregators[S];
 }
-
-export type TViewFilterData =
-	| IViewFilterData<'title'>
-	| IViewFilterData<'text'>
-	| IViewFilterData<'number'>
-	| IViewFilterData<'select'>
-	| IViewFilterData<'multi_select'>
-	| IViewFilterData<'date'>
-	| IViewFilterData<'person'>
-	| IViewFilterData<'file'>
-	| IViewFilterData<'checkbox'>
-	| IViewFilterData<'url'>
-	| IViewFilterData<'email'>
-	| IViewFilterData<'phone_number'>
-	| IViewFilterData<'formula'>
-	| IViewFilterData<'relation'>
-	| IViewFilterData<'rollup'>
-	| IViewFilterData<'created_time'>
-	| IViewFilterData<'created_by'>
-	| IViewFilterData<'last_edited_time'>
-	| IViewFilterData<'last_edited_by'>;

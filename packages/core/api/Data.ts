@@ -1,7 +1,7 @@
-import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TSchemaUnitType, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ViewFilterCreateInput, TSearchManipViewParam, TableSearchManipViewParam, BoardSearchManipViewParam, GallerySearchManipViewParam, CalendarSearchManipViewParam, TimelineSearchManipViewParam, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
+import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TSearchManipViewParam, TableSearchManipViewParam, BoardSearchManipViewParam, GallerySearchManipViewParam, CalendarSearchManipViewParam, TimelineSearchManipViewParam, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, error, warn, parseFormula } from "../utils";
+import { validateUUID, Operation, error, warn, parseFormula, populateFilters } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -342,38 +342,6 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
-  #populateFilter = (filters: ViewFilterCreateInput<TSchemaUnitType>[], parent_filter: any, parent_property: string, name_map: Map<string, { key: string } & ISchemaUnit>) => {
-    function traverse(filters: ViewFilterCreateInput<TSchemaUnitType>["filters"], parent_filter: any, parent_property: string) {
-      filters?.forEach((filter) => {
-        const { operator, type, value, position, property = parent_property, filter_operator = "and", filters: nested_filters } = filter;
-        const filter_value = {
-          property: name_map.get(filter.property)?.key ?? property,
-          filter: {
-            operator,
-            value: {
-              type,
-              value
-            }
-          }
-        }
-
-        if (nested_filters) {
-          const temp_parent_filter = {
-            filters: [],
-            operator: filter_operator
-          } as any
-          parent_filter.push(temp_parent_filter);
-          parent_filter = temp_parent_filter.filters;
-        }
-
-        if (position !== undefined && position !== null && position < parent_filter.length) parent_filter.splice(position, 0, filter_value)
-        else parent_filter.push(filter_value)
-        nested_filters && traverse(nested_filters, parent_filter, property);
-      })
-    }
-    traverse(filters as any, parent_filter, parent_property);
-  }
-
   protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string, current_id?: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
@@ -462,7 +430,7 @@ export default class Data<T extends TData> extends Operations {
             aggregator: aggregation
           })
 
-          this.#populateFilter(_filters as any, filters, key, name_map)
+          populateFilters(_filters as any, filters, key, name_map)
           properties.push(property)
         } else
           throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
@@ -498,7 +466,7 @@ export default class Data<T extends TData> extends Operations {
     const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
 
     param.schema.forEach(opt => {
-      const schema_id = (opt.name === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
+      const schema_id = (opt.type === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
       schema[schema_id] = opt as any;
       schema_map.set(schema_id, {...opt, id: schema_id} as any) 
     });

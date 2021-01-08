@@ -353,10 +353,14 @@ const daily_sites = ["Github", "Gmail", "Twitter", "Codepen", "Youtube", "Reddit
             name: "Today",
             view: [
               {
+                type: "title",
+                name: "Date"
+              },
+              {
                 type: "date",
                 name: "Created At",
                 sort: "descending",
-                format: 150,
+                format: false,
                 filters: [{operator: "date_is", value: "today", type: "relative"}]
               },
               ...daily_sites.map(name => ({ type: "checkbox", name, format: 100 }) as ViewUpdateParam),
@@ -367,10 +371,14 @@ const daily_sites = ["Github", "Gmail", "Twitter", "Codepen", "Youtube", "Reddit
             name: "Yesterday",
             view: [
               {
+                type: "title",
+                name: "Date"
+              },
+              {
                 type: "date",
                 name: "Created At",
                 sort: "descending",
-                format: 150,
+                format: false,
                 filters: [{operator: "date_is", value: "yesterday", type: "relative"}]
               },
               ...daily_sites.map(name => ({ type: "checkbox", name, format: 100 }) as ViewUpdateParam),
@@ -381,10 +389,14 @@ const daily_sites = ["Github", "Gmail", "Twitter", "Codepen", "Youtube", "Reddit
             name: "One Week Ago",
             view: [
               {
+                type: "title",
+                name: "Date"
+              },
+              {
                 type: "date",
                 name: "Created At",
                 sort: "descending",
-                format: 150,
+                format: false,
                 filters: [{operator: "date_is", value: "one_week_ago", type: "relative"}]
               },
               ...daily_sites.map(name => ({ type: "checkbox", name, format: 100 }) as ViewUpdateParam),

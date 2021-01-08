@@ -155,7 +155,7 @@ const daily_sites = [
 							[ 'Completing', 'Practice' ],
 							[ 'Completed', 'Practice' ]
 						].map(([ status, phase ]) => {
-							return {
+							const data: TViewCreateInput = {
 								name: `${status} ${phase} Articles`,
 								type: 'table',
 								view: [
@@ -198,29 +198,36 @@ const daily_sites = [
 									{
 										type: 'select',
 										name: 'Status',
-										format: 100,
-										filters: [
-											{
-												operator: 'enum_is',
-												type: 'exact',
-												value: status
-											}
-										]
+										format: 100
 									},
 									{
 										type: 'select',
 										name: 'Phase',
-										format: 100,
-										filters: [
-											{
-												operator: 'enum_is',
-												type: 'exact',
-												value: phase
-											}
-										]
+										format: 100
+									}
+								],
+								filters: [
+									{
+										type: 'select',
+										name: 'Phase',
+										filter: {
+											operator: 'enum_is',
+											type: 'exact',
+											value: phase
+										}
+									},
+									{
+										type: 'select',
+										name: 'Status',
+										filter: {
+											operator: 'enum_is',
+											type: 'exact',
+											value: status
+										}
 									}
 								]
-							} as TViewCreateInput;
+							};
+							return data;
 						})
 					]
 				},
@@ -304,10 +311,20 @@ const daily_sites = [
 								{
 									type: 'formula',
 									name: 'Done',
-									format: false,
-									filters: [ { operator: 'checkbox_is', type: 'exact', value: false } ]
+									format: false
 								}
-							] as any
+							],
+							filters: [
+								{
+									type: 'formula',
+									name: 'Done',
+									filter: {
+										operator: 'checkbox_is',
+										type: 'exact',
+										value: false
+									}
+								}
+							]
 						},
 						{
 							name: 'Done',
@@ -335,10 +352,16 @@ const daily_sites = [
 								{
 									type: 'formula',
 									name: 'Done',
-									format: false,
-									filters: [ { operator: 'checkbox_is', type: 'exact', value: true } ]
+									format: false
 								}
-							] as any
+							],
+							filters: [
+								{
+									type: 'formula',
+									name: 'Done',
+									filter: { operator: 'checkbox_is', type: 'exact', value: true }
+								}
+							]
 						}
 					]
 				},
@@ -387,10 +410,16 @@ const daily_sites = [
 									type: 'date',
 									name: 'Created At',
 									sort: 'descending',
-									format: false,
-									filters: [ { operator: 'date_is', value: 'today', type: 'relative' } ]
+									format: false
 								},
 								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+							],
+							filters: [
+								{
+									type: 'date',
+									name: 'Created At',
+									filter: { operator: 'date_is', value: 'today', type: 'relative' }
+								}
 							]
 						},
 						{
@@ -405,10 +434,16 @@ const daily_sites = [
 									type: 'date',
 									name: 'Created At',
 									sort: 'descending',
-									format: false,
-									filters: [ { operator: 'date_is', value: 'yesterday', type: 'relative' } ]
+									format: false
 								},
 								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+							],
+							filters: [
+								{
+									type: 'date',
+									name: 'Created At',
+									filter: { operator: 'date_is', value: 'yesterday', type: 'relative' }
+								}
 							]
 						},
 						{
@@ -423,10 +458,16 @@ const daily_sites = [
 									type: 'date',
 									name: 'Created At',
 									sort: 'descending',
-									format: false,
-									filters: [ { operator: 'date_is', value: 'one_week_ago', type: 'relative' } ]
+									format: false
 								},
 								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+							],
+							filters: [
+								{
+									type: 'date',
+									name: 'Created At',
+									filter: { operator: 'date_is', value: 'one_week_ago', type: 'relative' }
+								}
 							]
 						}
 					]

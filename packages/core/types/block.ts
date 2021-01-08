@@ -4,7 +4,7 @@ import { TViewCreateInput } from "./view";
 import {TSchemaUnitInput} from "./schema"
 
 export interface ICollectionBlockInput extends IInput {
-  views: [TViewCreateInput, ...TViewCreateInput[]],
+  views: TViewCreateInput[],
   schema: TSchemaUnitInput[],
   properties: IPage["properties"],
   format?: Partial<IPage["format"]>,

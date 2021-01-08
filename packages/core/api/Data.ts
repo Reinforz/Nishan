@@ -347,7 +347,7 @@ export default class Data<T extends TData> extends Operations {
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
     const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
-    Object.entries(schema).forEach(([key, schema]) => name_map.set(schema.name, { key, ...schema }));
+    Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { key: schema_id, ...schema }));
 
     for (let index = 0; index < views.length; index++) {
       const { id, name, type, view, filter_operator = "and" } = views[index],
@@ -398,7 +398,7 @@ export default class Data<T extends TData> extends Operations {
       }
 
       view.forEach(info => {
-        const { format, sort, aggregation, filters: _filters, name } = info, property_info = name_map.get(name);
+        const { format, sort, aggregation, name } = info, property_info = name_map.get(name);
         if (property_info) {
           const { key } = property_info,
             property: ViewFormatProperties = {
@@ -430,14 +430,13 @@ export default class Data<T extends TData> extends Operations {
             aggregator: aggregation
           })
 
-          populateFilters(_filters as any, filters, key, name_map)
           properties.push(property)
         } else
           throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
       })
 
       const non_included_units = Object.keys(schema).filter(key => !included_units.includes(key));
-
+      populateFilters(views[index].filters, filters, name_map)
       non_included_units.forEach(property => {
         properties.push({
           property,

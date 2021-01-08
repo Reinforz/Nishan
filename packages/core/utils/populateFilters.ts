@@ -1,12 +1,11 @@
-import { TSchemaUnitType, ISchemaUnit } from "@nishans/types";
-import { ViewFilterCreateInput } from "../types";
+import { TSchemaUnitType, ISchemaUnit, TViewFilters } from "@nishans/types";
+import { IViewCreateInput, ViewFilterCreateInput } from "../types";
 
-export function populateFilters (filters: ViewFilterCreateInput<TSchemaUnitType>[], parent_filter: any, parent_property: string, name_map: Map<string, { key: string } & ISchemaUnit>) {
-  function traverse(filters: ViewFilterCreateInput<TSchemaUnitType>["filters"], parent_filter: any, parent_property: string) {
-    filters?.forEach((filter) => {
-      const { operator, type, value, position, property = parent_property, filter_operator = "and", filters: nested_filters } = filter;
+export function populateFilters (filters: IViewCreateInput["filters"], parent_filter: TViewFilters[], name_map: Map<string, { key: string } & ISchemaUnit>) {
+  function traverse(filter: ViewFilterCreateInput<TSchemaUnitType>, parent_filter: TViewFilters[]) {
+      const { name, position, filter: {operator, value, type, filter_operator = "and", children} } = filter;
       const filter_value = {
-        property: name_map.get(filter.property)?.key ?? property,
+        property: name_map.get(name)?.key ?? name,
         filter: {
           operator,
           value: {
@@ -14,9 +13,9 @@ export function populateFilters (filters: ViewFilterCreateInput<TSchemaUnitType>
             value
           }
         }
-      }
+      } as TViewFilters
 
-      if (nested_filters) {
+      if (children) {
         const temp_parent_filter = {
           filters: [],
           operator: filter_operator
@@ -24,11 +23,9 @@ export function populateFilters (filters: ViewFilterCreateInput<TSchemaUnitType>
         parent_filter.push(temp_parent_filter);
         parent_filter = temp_parent_filter.filters;
       }
-
       if (position !== undefined && position !== null && position < parent_filter.length) parent_filter.splice(position, 0, filter_value)
-      else parent_filter.push(filter_value)
-      nested_filters && traverse(nested_filters, parent_filter, property);
-    })
+      else parent_filter.push(filter_value);
+      children && children.forEach(filter=>traverse(filter, parent_filter));
   }
-  traverse(filters as any, parent_filter, parent_property);
+  filters && filters.forEach(filter=>traverse(filter, parent_filter))
 }

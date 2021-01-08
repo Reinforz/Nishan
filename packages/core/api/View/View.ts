@@ -1,5 +1,5 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, TViewQuery2, IViewFilter, ICollectionBlock, TSortValue } from "@nishans/types";
-import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, UserViewFilterCreateParams, FilterType, TViewCreateInput } from "types";
+import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput } from "types";
 import Data from "../Data";
 
 /**
@@ -180,14 +180,15 @@ class View<T extends TView> extends Data<T> {
     await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
   }
 
-  async createFilter(arg: UserViewFilterCreateParams, execute?: boolean) {
+  async createFilter(arg: TViewFilterCreateInput, execute?: boolean) {
     await this.createFilters([arg], execute)
   }
 
-  async createFilters(args: UserViewFilterCreateParams[], execute?: boolean) {
+  // ? FEAT:1:M Support nested filter creation
+  async createFilters(args: TViewFilterCreateInput[], execute?: boolean) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = this.#populateFilters().filters;
     for (let index = 0; index < args.length; index++) {
-      const { type, operator, value, name, position } = args[index];
+      const { type, filter: {operator, value}, name, position } = args[index];
       const filter = {
         property: schema_map[name].property,
         filter: {
@@ -207,21 +208,21 @@ class View<T extends TView> extends Data<T> {
     })], this.id, execute)
   }
 
-  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>, execute?: boolean) {
+  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, execute?: boolean) {
     await this.updateFilters(typeof arg === "function" ? arg : [arg], execute, false);
   }
 
-  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>, execute?: boolean, multiple?: boolean) {
+  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, execute?: boolean, multiple?: boolean) {
     const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
 
-    await this.updateIterate<TSchemaUnit & TViewFilters, Omit<UserViewFilterCreateParams, "name">>(args, {
+    await this.updateIterate<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>(args, {
       child_ids: Object.keys(filters_map),
       subject_type: "View",
       execute,
       multiple
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
-        { type, operator, position, value } = updated_data;
+        { type, filter: {operator, value}, position,  } = updated_data;
 
       (filter.filter as any).operator = operator;
       (filter.filter as any).value = {

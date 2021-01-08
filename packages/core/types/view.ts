@@ -1,8 +1,8 @@
-import { TViewType, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TTimelineViewTimelineby, TSchemaUnitType, TSortValue, TViewGroupFilterOperator, IViewFilterData } from "@nishans/types"
+import { TViewType, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ITimelineViewFormat, TTimelineViewTimelineby, TSchemaUnitType, TSortValue, TViewGroupFilterOperator, IViewAggregationsAggregators } from "@nishans/types"
 import { RepositionParams } from "./block"
 import { ViewFilterCreateInput } from "./filter"
 
-export interface SearchManipViewParam {
+export interface ViewCreateInput {
   id?: string,
   type: TViewType,
   name: string,
@@ -11,34 +11,34 @@ export interface SearchManipViewParam {
   filter_operator?: "or" | "and"
 }
 
-export interface TableSearchManipViewParam extends SearchManipViewParam, Partial<Omit<ITableViewFormat, "table_properties">> {
+export interface TableViewCreateInput extends ViewCreateInput, Partial<Omit<ITableViewFormat, "table_properties">> {
   type: "table",
 }
 
-export interface ListSearchManipViewParam extends SearchManipViewParam {
+export interface ListViewCreateInput extends ViewCreateInput {
   type: "list"
 }
 
-export interface BoardSearchManipViewParam extends SearchManipViewParam, Partial<Omit<IBoardViewFormat, "board_properties">> {
+export interface BoardViewCreateInput extends ViewCreateInput, Partial<Omit<IBoardViewFormat, "board_properties">> {
   type: "board",
   group_by: string
 }
 
-export interface GallerySearchManipViewParam extends SearchManipViewParam, Partial<Omit<IGalleryViewFormat, "gallery_properties">> {
+export interface GalleryViewCreateInput extends ViewCreateInput, Partial<Omit<IGalleryViewFormat, "gallery_properties">> {
   type: "gallery",
 }
 
-export interface CalendarSearchManipViewParam extends SearchManipViewParam {
+export interface CalendarViewCreateInput extends ViewCreateInput {
   type: "calendar",
   calendar_by: string
 }
 
-export interface TimelineSearchManipViewParam extends SearchManipViewParam, Partial<Omit<ITimelineViewFormat, "timeline_properties" | "timeline_table_properties">> {
+export interface TimelineViewCreateInput extends ViewCreateInput, Partial<Omit<ITimelineViewFormat, "timeline_properties" | "timeline_table_properties">> {
   type: "timeline",
   timeline_by: TTimelineViewTimelineby
 }
 
-export type TSearchManipViewParam = TableSearchManipViewParam | ListSearchManipViewParam | BoardSearchManipViewParam | GallerySearchManipViewParam | CalendarSearchManipViewParam | TimelineSearchManipViewParam
+export type TViewCreateInput = TableViewCreateInput | ListViewCreateInput | BoardViewCreateInput | GalleryViewCreateInput | CalendarViewCreateInput | TimelineViewCreateInput
 
 interface ViewUpdateGenericParam<T extends TSchemaUnitType> {
   name: string,
@@ -47,7 +47,7 @@ interface ViewUpdateGenericParam<T extends TSchemaUnitType> {
   format?: boolean | number | [boolean, number],
   filters?: ViewFilterCreateInput<T>[],
   filter_operator?: TViewGroupFilterOperator,
-  aggregation?: IViewFilterData<T>["aggregator"]
+  aggregation?: IViewAggregationsAggregators[T]
 }
 
 export type ViewUpdateParam =

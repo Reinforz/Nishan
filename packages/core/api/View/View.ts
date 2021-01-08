@@ -1,5 +1,5 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, TViewQuery2, IViewFilter, ICollectionBlock, TSortValue } from "@nishans/types";
-import { NishanArg, RepositionParams, TSearchManipViewParam, UpdateType, UpdateTypes, FilterTypes, UserViewFilterCreateParams, FilterType } from "types";
+import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, UserViewFilterCreateParams, FilterType, TViewCreateInput } from "types";
 import Data from "../Data";
 
 /**
@@ -99,7 +99,7 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-  async update(param: TSearchManipViewParam, execute?: boolean) {
+  async update(param: TViewCreateInput, execute?: boolean) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, , view_map, view_records] = this.createViewsUtils(collection.schema, [param], collection.id, data.parent_id, this.id);
     await this.executeUtil(created_view_ops, view_records, execute)
     return view_map;

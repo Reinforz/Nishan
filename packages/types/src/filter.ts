@@ -333,7 +333,7 @@ export type TAdvancedViewFilters =
 export type TViewFilters = TBasicViewFilters | TAdvancedViewFilters;
 
 export interface IViewFilterData<S extends TSchemaUnitType> {
-	schemaunit: S;
+	schema_unit: S;
 	operator: IViewFiltersOperator[S];
 	type: IViewFiltersType[S];
 	value: IViewFiltersValue[S];

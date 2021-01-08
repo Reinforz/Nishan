@@ -1,5 +1,5 @@
 import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TSearchManipViewParam, TableSearchManipViewParam, BoardSearchManipViewParam, GallerySearchManipViewParam, CalendarSearchManipViewParam, TimelineSearchManipViewParam, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock, CalendarViewCreateInput, TimelineViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, TableViewCreateInput, TViewCreateInput } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { validateUUID, Operation, error, warn, parseFormula, populateFilters } from "../utils";
 import Operations from "./Operations";
@@ -342,7 +342,7 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
-  protected createViewsUtils(schema: Schema, views: TSearchManipViewParam[], collection_id: string, parent_id: string, current_id?: string) {
+  protected createViewsUtils(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, current_id?: string) {
     const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
     const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
@@ -369,29 +369,29 @@ export default class Data<T extends TData> extends Operations {
 
       switch (type) {
         case "table":
-          const table_view = views[index] as TableSearchManipViewParam, table_format = format as ITableViewFormat;
+          const table_view = views[index] as TableViewCreateInput, table_format = format as ITableViewFormat;
           table_format.table_wrap = table_view.table_wrap ?? true;
           break;
         case "board":
-          const board_view = views[index] as BoardSearchManipViewParam, board_format = format as IBoardViewFormat;
+          const board_view = views[index] as BoardViewCreateInput, board_format = format as IBoardViewFormat;
           board_format.board_cover = board_view.board_cover ?? { type: "page_cover" };
           board_format.board_cover_aspect = board_view.board_cover_aspect;
           board_format.board_cover_size = board_view.board_cover_size;
           board_format.board_groups2 = board_view.board_groups2 as any;
           break;
         case "gallery":
-          const gallery_view = views[index] as GallerySearchManipViewParam, gallery_format = format as IGalleryViewFormat;
+          const gallery_view = views[index] as GalleryViewCreateInput, gallery_format = format as IGalleryViewFormat;
           if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.key as string }
           else gallery_format.gallery_cover = gallery_view.gallery_cover
           gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
           gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
           break;
         case "calendar":
-          const calender_view = views[index] as CalendarSearchManipViewParam, calendar_query2 = query2 as ICalendarViewQuery2;
+          const calender_view = views[index] as CalendarViewCreateInput, calendar_query2 = query2 as ICalendarViewQuery2;
           calendar_query2.calendar_by = calender_view.calendar_by;
           break;
         case "timeline":
-          const timeline_view = views[index] as TimelineSearchManipViewParam, timeline_format = format as ITimelineViewFormat;
+          const timeline_view = views[index] as TimelineViewCreateInput, timeline_format = format as ITimelineViewFormat;
           timeline_format.timeline_preference = timeline_view.timeline_preference ?? { centerTimestamp: 1, zoomLevel: "month" }
           timeline_format.timeline_show_table = timeline_view.timeline_show_table ?? true;
           break;

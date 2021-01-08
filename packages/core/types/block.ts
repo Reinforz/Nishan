@@ -1,10 +1,10 @@
 import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, ICollectionViewPage, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, ILinkToPage, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings } from "@nishans/types";
 import { ElementType } from "./utils";
-import { TSearchManipViewParam } from "./view";
+import { TViewCreateInput } from "./view";
 import {TSchemaUnitInput} from "./schema"
 
 export interface ICollectionBlockInput extends IInput {
-  views: [TSearchManipViewParam, ...TSearchManipViewParam[]],
+  views: [TViewCreateInput, ...TViewCreateInput[]],
   schema: TSchemaUnitInput[],
   properties: IPage["properties"],
   format?: Partial<IPage["format"]>,
@@ -25,7 +25,7 @@ export interface ILinkedDBInput extends IInput {
   collection_id: string,
   properties?: Record<string, unknown>,
   format?: Record<string, unknown>,
-  views: TSearchManipViewParam[],
+  views: TViewCreateInput[],
 }
 
 export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageInput | ILinkedDBInput;

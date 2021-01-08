@@ -4,7 +4,7 @@ import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView
 
 import { Operation } from '../utils';
 import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishans/types';
-import { NishanArg, TSearchManipViewParam, FilterTypes, UpdateType, UpdateTypes, FilterType } from '../types';
+import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput } from '../types';
 
 const view_class = {
 	board: BoardView,
@@ -36,7 +36,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		});
 	}
 
-	async createViews (params: TSearchManipViewParam[], execute?: boolean) {
+	async createViews (params: TViewCreateInput[], execute?: boolean) {
 		const ops: IOperation[] = [],
 			data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,

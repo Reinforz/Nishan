@@ -223,15 +223,16 @@ export interface DateViewFilters {
 	filter:
 		| { operator: EmptyViewFiltersOperator }
 		| {
-				operator: 'relative';
-				value: DateViewFiltersValue;
-			}
-		| {
-				operator: 'exact';
-				value: {
-					start_date: string;
-					type: 'date';
-				};
+				operator: DateViewFiltersOperator;
+				value:
+					| {
+							value: DateViewFiltersValue;
+							type: 'relative';
+						}
+					| {
+							start_date: string;
+							type: 'exact';
+						};
 			};
 }
 

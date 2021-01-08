@@ -212,8 +212,10 @@ const daily_sites = [
 										name: 'Phase',
 										filter: {
 											operator: 'enum_is',
-											type: 'exact',
-											value: phase
+											value: {
+												type: 'exact',
+												value: phase
+											}
 										}
 									},
 									{
@@ -221,8 +223,10 @@ const daily_sites = [
 										name: 'Status',
 										filter: {
 											operator: 'enum_is',
-											type: 'exact',
-											value: status
+											value: {
+												type: 'exact',
+												value: status
+											}
 										}
 									}
 								]
@@ -320,8 +324,10 @@ const daily_sites = [
 									name: 'Done',
 									filter: {
 										operator: 'checkbox_is',
-										type: 'exact',
-										value: false
+										value: {
+											type: 'exact',
+											value: false
+										}
 									}
 								}
 							]
@@ -359,7 +365,7 @@ const daily_sites = [
 								{
 									type: 'formula',
 									name: 'Done',
-									filter: { operator: 'checkbox_is', type: 'exact', value: true }
+									filter: { operator: 'checkbox_is', value: { type: 'exact', value: true } }
 								}
 							]
 						}
@@ -418,7 +424,7 @@ const daily_sites = [
 								{
 									type: 'date',
 									name: 'Created At',
-									filter: { operator: 'date_is', value: 'today', type: 'relative' }
+									filter: { operator: 'date_is', value: { value: 'today', type: 'relative' } }
 								}
 							]
 						},
@@ -442,7 +448,7 @@ const daily_sites = [
 								{
 									type: 'date',
 									name: 'Created At',
-									filter: { operator: 'date_is', value: 'yesterday', type: 'relative' }
+									filter: { operator: 'date_is', value: { value: 'yesterday', type: 'relative' } }
 								}
 							]
 						},
@@ -466,7 +472,7 @@ const daily_sites = [
 								{
 									type: 'date',
 									name: 'Created At',
-									filter: { operator: 'date_is', value: 'one_week_ago', type: 'relative' }
+									filter: { operator: 'date_is', value: { value: 'one_week_ago', type: 'relative' } }
 								}
 							]
 						}

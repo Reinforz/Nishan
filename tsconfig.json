@@ -13,9 +13,6 @@
     },
     {
       "path": "./packages/utils/tsconfig.json"
-    },
-    {
-      "path": "./examples/tsconfig.json"
     }
   ]
 }

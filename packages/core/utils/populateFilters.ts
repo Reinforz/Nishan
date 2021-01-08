@@ -1,18 +1,12 @@
-import { TSchemaUnitType, ISchemaUnit, TViewFilters } from "@nishans/types";
-import { IViewCreateInput, ViewFilterCreateInput } from "../types";
+import { ISchemaUnit, TViewFilters } from "@nishans/types";
+import { IViewCreateInput, TViewFilterCreateInput } from "../types";
 
 export function populateFilters (filters: IViewCreateInput["filters"], parent_filter: TViewFilters[], name_map: Map<string, { key: string } & ISchemaUnit>) {
-  function traverse(filter: ViewFilterCreateInput<TSchemaUnitType>, parent_filter: TViewFilters[]) {
-      const { name, position, filter: {operator, value, type, filter_operator = "and", children} } = filter;
+  function traverse(filter: TViewFilterCreateInput, parent_filter: TViewFilters[]) {
+      const { name, position, filter:_filter, filter_operator = "and", children } = filter;
       const filter_value = {
         property: name_map.get(name)?.key ?? name,
-        filter: {
-          operator,
-          value: {
-            type,
-            value
-          }
-        }
+        filter: _filter
       } as TViewFilters
 
       if (children) {

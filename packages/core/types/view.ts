@@ -11,7 +11,7 @@ import {
 	IViewAggregationsAggregators
 } from '@nishans/types';
 import { RepositionParams } from './block';
-import { ViewFilterCreateInput } from './filter';
+import { TViewFilterCreateInput } from './filter';
 
 export interface IViewCreateInput {
 	id?: string;
@@ -20,7 +20,7 @@ export interface IViewCreateInput {
 	view: TViewViewCreateInput[];
 	position?: RepositionParams;
 	filter_operator?: TViewGroupFilterOperator;
-	filters?: ViewFilterCreateInput<TSchemaUnitType>[];
+	filters?: TViewFilterCreateInput[];
 }
 
 export interface TableViewCreateInput extends IViewCreateInput, Partial<Omit<ITableViewFormat, 'table_properties'>> {

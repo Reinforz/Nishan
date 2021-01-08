@@ -188,16 +188,10 @@ class View<T extends TView> extends Data<T> {
   async createFilters(args: TViewFilterCreateInput[], execute?: boolean) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = this.#populateFilters().filters;
     for (let index = 0; index < args.length; index++) {
-      const { type, filter: {operator, value}, name, position } = args[index];
+      const { filter:_filter, name, position } = args[index];
       const filter = {
         property: schema_map[name].property,
-        filter: {
-          operator,
-          value: {
-            type,
-            value
-          }
-        }
+        filter: _filter
       };
       if (position !== undefined)
         filters.splice(position, 0, filter as any)
@@ -222,13 +216,9 @@ class View<T extends TView> extends Data<T> {
       multiple
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
-        { type, filter: {operator, value}, position,  } = updated_data;
+        { filter:_filter, position, } = updated_data;
 
-      (filter.filter as any).operator = operator;
-      (filter.filter as any).value = {
-        type,
-        value
-      };
+      filter.filter = _filter
       if (position !== null && position !== undefined) {
         filters.splice(index, 1);
         filters.splice(position, 0, original_filter)

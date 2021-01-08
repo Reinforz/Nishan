@@ -1,5 +1,3 @@
-import { TSchemaUnitType, IViewAggregationsAggregators } from './';
-
 /**
  * Filters operator 
  */
@@ -11,8 +9,7 @@ export type TextViewFiltersOperator =
 	| 'string_contains'
 	| 'string_does_not_contain'
 	| 'string_starts_with'
-	| 'string_ends_with'
-	| EmptyViewFiltersOperator;
+	| 'string_ends_with';
 export type TitleViewFiltersOperator = TextViewFiltersOperator;
 export type NumberViewFiltersOperator =
 	| 'number_equals'
@@ -20,19 +17,17 @@ export type NumberViewFiltersOperator =
 	| 'number_greater_than'
 	| 'number_less_than'
 	| 'number_greater_than_or_equal_to'
-	| 'number_less_than_or_equal_to'
-	| EmptyViewFiltersOperator;
-export type SelectViewFiltersOperator = 'enum_is' | 'enum_is_not' | EmptyViewFiltersOperator;
-export type MultiSelectViewFiltersOperator = 'enum_contains' | 'enum_does_not_contain' | EmptyViewFiltersOperator;
+	| 'number_less_than_or_equal_to';
+export type SelectViewFiltersOperator = 'enum_is' | 'enum_is_not';
+export type MultiSelectViewFiltersOperator = 'enum_contains' | 'enum_does_not_contain';
 export type DateViewFiltersOperator =
 	| 'date_is'
 	| 'date_is_before'
 	| 'date_is_after'
 	| 'date_is_on_or_before'
 	| 'date_is_on_or_after'
-	| 'date_is_within'
-	| EmptyViewFiltersOperator;
-export type PersonViewFiltersOperator = 'person_contains' | 'person_does_not_contain' | EmptyViewFiltersOperator;
+	| 'date_is_within';
+export type PersonViewFiltersOperator = 'person_contains' | 'person_does_not_contain';
 export type FileViewFiltersOperator = EmptyViewFiltersOperator;
 export type CheckboxViewFiltersOperator = 'checkbox_is' | 'checkbox_is_not';
 export type UrlViewFiltersOperator = TextViewFiltersOperator;
@@ -40,7 +35,7 @@ export type EmailViewFiltersOperator = TextViewFiltersOperator;
 export type PhoneNumberViewFiltersOperator = TextViewFiltersOperator;
 
 export type FormulaViewFiltersOperator = TextViewFiltersOperator;
-export type RelationViewFiltersOperator = 'relation_contains' | 'relation_does_not_contain' | EmptyViewFiltersOperator;
+export type RelationViewFiltersOperator = 'relation_contains' | 'relation_does_not_contain';
 export type RollupViewFiltersOperator = undefined;
 export type CreatedTimeViewFiltersOperator = DateViewFiltersOperator;
 export type CreatedByViewFiltersOperator = PersonViewFiltersOperator;
@@ -74,28 +69,6 @@ export type TViewFiltersOperator = TBasicViewFiltersOperator | TAdvancedViewFilt
 
 export type TViewGroupFilterOperator = 'and' | 'or';
 
-export interface IViewFiltersOperator {
-	title: TitleViewFiltersOperator;
-	text: TextViewFiltersOperator;
-	number: NumberViewFiltersOperator;
-	select: SelectViewFiltersOperator;
-	multi_select: MultiSelectViewFiltersOperator;
-	date: DateViewFiltersOperator;
-	person: PersonViewFiltersOperator;
-	file: FileViewFiltersOperator;
-	checkbox: CheckboxViewFiltersOperator;
-	url: UrlViewFiltersOperator;
-	email: EmailViewFiltersOperator;
-	phone_number: PhoneNumberViewFiltersOperator;
-	formula: FormulaViewFiltersOperator;
-	relation: RelationViewFiltersOperator;
-	rollup: RollupViewFiltersOperator;
-	created_time: CreatedTimeViewFiltersOperator;
-	created_by: CreatedByViewFiltersOperator;
-	last_edited_time: LastEditedTimeViewFiltersOperator;
-	last_edited_by: LastEditedByViewFiltersOperator;
-}
-
 /**
  * Filters type 
  */
@@ -128,7 +101,7 @@ export type TBasicViewFiltersType =
 
 export type FormulaViewFiltersType = 'exact';
 export type RelationViewFiltersType = 'exact';
-export type RollupViewFiltersType = undefined;
+export type RollupViewFiltersType = 'exact';
 export type CreatedTimeViewFiltersType = 'exact' | 'relative';
 export type CreatedByViewFiltersType = 'exact';
 export type LastEditedTimeViewFiltersType = 'exact' | 'relative';
@@ -145,28 +118,6 @@ export type TAdvancedViewFiltersType =
 
 export type TViewFiltersType = TBasicViewFiltersType | TAdvancedViewFiltersType;
 
-export interface IViewFiltersType {
-	title: TitleViewFiltersType;
-	text: TextViewFiltersType;
-	number: NumberViewFiltersType;
-	select: SelectViewFiltersType;
-	multi_select: MultiSelectViewFiltersType;
-	date: DateViewFiltersType;
-	person: PersonViewFiltersType;
-	file: FileViewFiltersType;
-	checkbox: CheckboxViewFiltersType;
-	url: UrlViewFiltersType;
-	email: EmailViewFiltersType;
-	phone_number: PhoneNumberViewFiltersType;
-	formula: FormulaViewFiltersType;
-	relation: RelationViewFiltersType;
-	rollup: RollupViewFiltersType;
-	created_time: CreatedTimeViewFiltersType;
-	created_by: CreatedByViewFiltersType;
-	last_edited_time: LastEditedTimeViewFiltersType;
-	last_edited_by: LastEditedByViewFiltersType;
-}
-
 /**
  * Filters value 
  */
@@ -182,11 +133,7 @@ export type DateViewFiltersValue =
 	| 'one_week_ago'
 	| 'one_week_from_now'
 	| 'one_month_ago'
-	| 'one_month_from_now'
-	| {
-			start_date: string;
-			type: 'date';
-		};
+	| 'one_month_from_now';
 export interface PersonViewFiltersValue {
 	id: string;
 	table: 'notion_user';
@@ -230,57 +177,47 @@ export type TAdvancedViewFiltersValue =
 
 export type TViewFiltersValue = TBasicViewFiltersValue | TAdvancedViewFiltersValue;
 
-export interface IViewFiltersValue {
-	title: TitleViewFiltersValue;
-	text: TextViewFiltersValue;
-	number: NumberViewFiltersValue;
-	select: SelectViewFiltersValue;
-	multi_select: MultiSelectViewFiltersValue;
-	date: DateViewFiltersValue;
-	person: PersonViewFiltersValue;
-	file: FileViewFiltersValue;
-	checkbox: CheckboxViewFiltersValue;
-	url: UrlViewFiltersValue;
-	email: EmailViewFiltersValue;
-	phone_number: PhoneNumberViewFiltersValue;
-	formula: FormulaViewFiltersValue;
-	relation: RelationViewFiltersValue;
-	rollup: RollupViewFiltersValue;
-	created_time: CreatedTimeViewFiltersValue;
-	created_by: CreatedByViewFiltersValue;
-	last_edited_time: LastEditedTimeViewFiltersValue;
-	last_edited_by: LastEditedByViewFiltersValue;
-}
-
 export interface IViewFilter {
 	filters: (TViewFilters | IViewFilter)[];
 	operator: 'and' | 'or';
 }
 
-export interface IViewFilters<T extends TSchemaUnitType> {
+export interface IViewFilters<O, T, V> {
 	property: string;
 	filter:
-		| { operator: EmptyViewFiltersOperator }
 		| {
-				operator: IViewFilterData<T>['operator'];
+				operator: O;
 				value: {
-					type: IViewFilterData<T>['type'];
-					value: IViewFilterData<T>['value'];
+					type: T;
+					value: V;
 				};
-			};
+			}
+		| { operator: EmptyViewFiltersOperator };
 }
 
-export type TextViewFilters = IViewFilters<'text'>;
-export type TitleViewFilters = IViewFilters<'title'>;
-export type NumberViewFilters = IViewFilters<'number'>;
-export type SelectViewFilters = IViewFilters<'select'>;
-export type MultiSelectViewFilters = IViewFilters<'multi_select'>;
-export type PersonViewFilters = IViewFilters<'person'>;
-export type FileViewFilters = IViewFilters<'file'>;
-export type CheckboxViewFilters = IViewFilters<'checkbox'>;
-export type UrlViewFilters = IViewFilters<'url'>;
-export type EmailViewFilters = IViewFilters<'email'>;
-export type PhoneNumberViewFilters = IViewFilters<'phone_number'>;
+export type TextViewFilters = IViewFilters<TextViewFiltersOperator, TextViewFiltersType, TextViewFiltersValue>;
+export type TitleViewFilters = IViewFilters<TitleViewFiltersOperator, TitleViewFiltersType, TitleViewFiltersValue>;
+export type NumberViewFilters = IViewFilters<NumberViewFiltersOperator, NumberViewFiltersType, NumberViewFiltersValue>;
+export type SelectViewFilters = IViewFilters<SelectViewFiltersOperator, SelectViewFiltersType, SelectViewFiltersValue>;
+export type MultiSelectViewFilters = IViewFilters<
+	MultiSelectViewFiltersOperator,
+	MultiSelectViewFiltersType,
+	MultiSelectViewFiltersValue
+>;
+export type PersonViewFilters = IViewFilters<PersonViewFiltersOperator, PersonViewFiltersType, PersonViewFiltersValue>;
+export type FileViewFilters = IViewFilters<FileViewFiltersOperator, FileViewFiltersType, FileViewFiltersValue>;
+export type CheckboxViewFilters = IViewFilters<
+	CheckboxViewFiltersOperator,
+	CheckboxViewFiltersType,
+	CheckboxViewFiltersValue
+>;
+export type UrlViewFilters = IViewFilters<UrlViewFiltersOperator, UrlViewFiltersType, UrlViewFiltersValue>;
+export type EmailViewFilters = IViewFilters<EmailViewFiltersOperator, EmailViewFiltersType, EmailViewFiltersValue>;
+export type PhoneNumberViewFilters = IViewFilters<
+	PhoneNumberViewFiltersOperator,
+	PhoneNumberViewFiltersType,
+	PhoneNumberViewFiltersValue
+>;
 export interface DateViewFilters {
 	property: string;
 	filter:
@@ -299,13 +236,24 @@ export interface DateViewFilters {
 }
 
 export interface CreatedTimeViewFilters extends DateViewFilters {}
-export type CreatedByViewFilters = IViewFilters<'person'>;
+export type CreatedByViewFilters = IViewFilters<
+	CreatedByViewFiltersOperator,
+	CreatedByViewFiltersType,
+	CreatedByViewFiltersValue
+>;
 export interface LastEditedTimeViewFilters extends DateViewFilters {}
-export type EditedByViewFilters = IViewFilters<'person'>;
-export type LastEditedByViewFilters = IViewFilters<'person'>;
-export type FormulaViewFilters = IViewFilters<'formula'>;
-export type RelationViewFilters = IViewFilters<'relation'>;
-export type RollupViewFilters = IViewFilters<'rollup'>;
+export type LastEditedByViewFilters = IViewFilters<
+	LastEditedByViewFiltersOperator,
+	LastEditedByViewFiltersType,
+	LastEditedByViewFiltersValue
+>;
+export type FormulaViewFilters = NumberViewFilters | CheckboxViewFilters | TextViewFilters | DateViewFilters;
+export type RelationViewFilters = IViewFilters<
+	RelationViewFiltersOperator,
+	RelationViewFiltersType,
+	RelationViewFiltersValue
+>;
+export type RollupViewFilters = NumberViewFilters;
 
 export type TBasicViewFilters =
 	| TextViewFilters
@@ -332,10 +280,24 @@ export type TAdvancedViewFilters =
 
 export type TViewFilters = TBasicViewFilters | TAdvancedViewFilters;
 
-export interface IViewFilterData<S extends TSchemaUnitType> {
-	schema_unit: S;
-	operator: IViewFiltersOperator[S];
-	type: IViewFiltersType[S];
-	value: IViewFiltersValue[S];
-	aggregator: IViewAggregationsAggregators[S];
+export interface IViewFilterData {
+	title: TitleViewFilters;
+	text: TextViewFilters;
+	number: NumberViewFilters;
+	select: SelectViewFilters;
+	multi_select: MultiSelectViewFilters;
+	date: DateViewFilters;
+	person: PersonViewFilters;
+	file: FileViewFilters;
+	checkbox: CheckboxViewFilters;
+	url: UrlViewFilters;
+	email: EmailViewFilters;
+	phone_number: PhoneNumberViewFilters;
+	formula: FormulaViewFilters;
+	relation: RelationViewFilters;
+	rollup: RollupViewFilters;
+	created_time: CreatedTimeViewFilters;
+	created_by: CreatedByViewFilters;
+	last_edited_time: LastEditedTimeViewFilters;
+	last_edited_by: LastEditedByViewFilters;
 }

@@ -97,7 +97,6 @@ export function parseFormula (
 	const res_formula = {
 		args: []
 	};
-
 	function traverseFormula (parent: any, formula: TResultType) {
 		if (Array.isArray(formula)) {
 			const [ name, args ] = formula;
@@ -133,8 +132,8 @@ export function parseFormula (
 				result_type: 'text'
 			});
 		} else if (!Array.isArray(formula)) {
-			const schema_name = formula.property.toString();
-			const result = schema_map.get(schema_name);
+			const schema_name = formula.property.toString(),
+				result = schema_map.get(schema_name);
 			if (result) {
 				const { id, type } = result;
 				let result_type: TFormulaResultType = '' as any;

@@ -21,9 +21,9 @@
     "experimentalDecorators": true
   },
   "include": [
-    "./workflow_1",
+    "./workflow_1" /* ,
     "./workflow_2",
-    "./workflow_3",
+    "./workflow_3", */
   ],
   "exclude": [
     "./node_modules",

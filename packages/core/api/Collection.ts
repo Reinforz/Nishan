@@ -5,7 +5,7 @@ import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, FormulaSchemaUnitInput } from '../types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput } from '../types';
 
 /**
  * A class to represent collection of Notion
@@ -181,14 +181,11 @@ class Collection extends Data<ICollection> {
   async createSchemaUnits(args: TSchemaUnitInput[], execute?: boolean) {
     const results = this.createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
-      const [name, type, options] = args[index], schema_id = name.toLowerCase().replace(/\s/g, '_');
+      const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
       if (!data.schema[schema_id]) {
-        data.schema[schema_id] = {
-          type,
-          name,
-          ...(options ? type === "formula" ? parseFormula(args[index] as FormulaSchemaUnitInput, this.getSchemaMap()) : options : {})
-        } as any;
-        results[type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
+        if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
+        else data.schema[schema_id] = arg 
+        results[arg.type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
         this.logger && this.logger("CREATE", "SchemaUnit", schema_id);
       } else
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)

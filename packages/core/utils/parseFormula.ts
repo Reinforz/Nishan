@@ -1,4 +1,4 @@
-import { FormulaSchemaUnit, TFormulaResultType, TFunctionName, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
+import { TFormula, TFormulaResultType, TFunctionName, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
 import { FormulaSchemaUnitInput, TResultType } from '../types';
 
 const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
@@ -91,9 +91,9 @@ export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TForm
 }
 
 export function parseFormula (
-	formula: FormulaSchemaUnitInput,
+	formula: FormulaSchemaUnitInput['formula'],
 	schema_map: Map<string, { id: string } & TSchemaUnit>
-): FormulaSchemaUnit {
+): TFormula {
 	const res_formula = {
 		args: []
 	};
@@ -150,10 +150,6 @@ export function parseFormula (
 		}
 	}
 
-	traverseFormula(res_formula.args, formula[2].formula);
-	return {
-		name: formula[0],
-		type: 'formula',
-		formula: res_formula.args[0]
-	};
+	traverseFormula(res_formula.args, formula);
+	return res_formula.args[0];
 }

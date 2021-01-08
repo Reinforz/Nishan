@@ -30,29 +30,29 @@ import "../env"
           },
           schema: [
             { type: "title", name: "Title" },
-            {
-              type: "formula",
-              name: "Urgency",
-              formula: {
-                type: "function",
-                result_type: "text",
-                name: "add",
-                args: [
-                  {
-                    type: "constant",
-                    result_type: "number",
-                    value: "2",
-                    value_type: "number"
-                  },
-                  {
-                    type: "constant",
-                    result_type: "number",
-                    value: "1",
-                    value_type: "number"
-                  }
-                ]
-              }
-            },
+            // {
+            //   type: "formula",
+            //   name: "Urgency",
+            //   formula: {
+            //     type: "function",
+            //     result_type: "text",
+            //     name: "add",
+            //     args: [
+            //       {
+            //         type: "constant",
+            //         result_type: "number",
+            //         value: "2",
+            //         value_type: "number"
+            //       },
+            //       {
+            //         type: "constant",
+            //         result_type: "number",
+            //         value: "1",
+            //         value_type: "number"
+            //       }
+            //     ]
+            //   }
+            // },
             /* {
               type: "formula",
               name: "Completed"
@@ -98,38 +98,38 @@ import "../env"
               type: "date",
               name: "Practice Range",
             },
-            {
-              type: "formula",
-              name: "Priority Counter",
-              format: 150,
-              formula: {
-                type: "function",
-                name: "if",
-                result_type: "number",
-                args: [
-                  {
-                    type: "function",
-                    name: "equal",
-                    return_type: "checkbox",
-                    args: [
+            // {
+            //   type: "formula",
+            //   name: "Priority Counter",
+            //   format: 150,
+            //   formula: {
+            //     type: "function",
+            //     name: "if",
+            //     result_type: "number",
+            //     args: [
+            //       {
+            //         type: "function",
+            //         name: "equal",
+            //         return_type: "checkbox",
+            //         args: [
 
-                    ]
-                  },
-                  {
-                    value: "2",
-                    result_type: "number",
-                    type: "constant",
-                    value_type: "number"
-                  },
-                  {
-                    value: "1",
-                    result_type: "number",
-                    type: "constant",
-                    value_type: "number"
-                  }
-                ]
-              }
-            },
+            //         ]
+            //       },
+            //       {
+            //         value: "2",
+            //         result_type: "number",
+            //         type: "constant",
+            //         value_type: "number"
+            //       },
+            //       {
+            //         value: "1",
+            //         result_type: "number",
+            //         type: "constant",
+            //         value_type: "number"
+            //       }
+            //     ]
+            //   }
+            // },
             /* {
               type: "formula",
               name: "Status Counter",

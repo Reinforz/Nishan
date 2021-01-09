@@ -1,7 +1,7 @@
-import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
+import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, error, warn, parseFormula, createViews } from "../utils";
+import { validateUUID, Operation, warn, parseFormula, createViews } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -99,31 +99,13 @@ export default class Data<T extends TData> extends Operations {
   }
 
   /**
-   * Get the parent of the current data
-   */
-  protected getParent() {
-    const data = this.getCachedData() as TBlock;
-    if (this.type.match(/(space|block|collection)/) && data?.parent_id) {
-      const parent = this.cache.block.get(data.parent_id) as TParentType;
-      if (!parent) throw new Error(error(`Block with id ${data.id} doesnot have a parent`));
-      return parent;
-    } else
-      throw new Error(error(`Block with id ${data.id} doesnot have a parent`));
-  }
-
-  /**
    * Get the cached data using the current data id
    */
-  getCachedData<Q extends TData = T>(arg?: string, type?: TDataType) {
-    type = type ? type : "block";
-    let id = this.id;
-    if (typeof arg === "string") id = arg;
-    const data = this.cache[arg ? type : this.type].get(id) as Q;
-    if (data) return data;
-    else if ((data as any).alive === false)
-      throw new Error(error("Data has been deleted"));
-    else
-      throw new Error(error("Data not available in cache"))
+  getCachedData() {
+    const data = this.cache[this.type].get(this.id);
+    if ((data as any).alive === false)
+      warn(`${this.type}:${this.id} has been deleted`);
+    return data as T;
   }
 
   /**

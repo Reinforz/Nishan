@@ -1,5 +1,6 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, TViewQuery2, IViewFilter, ICollectionBlock, TSortValue } from "@nishans/types";
 import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput } from "types";
+import { populateFilters } from "../../utils";
 import Data from "../Data";
 
 /**
@@ -15,15 +16,18 @@ class View<T extends TView> extends Data<T> {
     return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
   }
 
+  // ! FIX:1:H Make better filter coagulation using filters property that contains an array of root filters for the name
   #getFiltersMap = () => {
     const data = this.getCachedData(), collection = this.#getCollection(), filters = this.#populateFilters(),
       filters_map: Record<string, TSchemaUnit & TViewFilters> = {};
 
     data.query2?.filter.filters.forEach(filter => {
-      const schema_unit = collection.schema[filter.property];
-      filters_map[schema_unit.name] = {
-        ...schema_unit,
-        ...filter
+      if((filter as TViewFilters).property){
+        const schema_unit = collection.schema[(filter as TViewFilters).property];
+        filters_map[schema_unit.name] = {
+          ...schema_unit,
+          ...filter
+        } as any
       }
     })
     return [filters_map, filters] as const;
@@ -61,12 +65,12 @@ class View<T extends TView> extends Data<T> {
   }
 
   #getSchemaMap = () => {
-    const collection = this.#getCollection(), schema_map: Record<string, TSchemaUnit & { property: string }> = {};
+    const collection = this.#getCollection(), schema_map: Map<string, TSchemaUnit & { property: string }> = new Map();
     Object.entries(collection.schema).forEach(([property, value]) => {
-      schema_map[value.name] = {
+      schema_map.set(value.name, {
         property,
         ...value
-      }
+      })
     })
     return schema_map;
   }
@@ -112,17 +116,19 @@ class View<T extends TView> extends Data<T> {
   async createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], execute?: boolean) {
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, sorts] = this.#getSortsMap();
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index], target_sort = schema_map[arg[0]];
-      if (typeof arg[2] === "number") {
-        sorts.splice(arg[2], 0, {
-          property: target_sort.property,
-          direction: arg[1]
-        })
-      } else
-        sorts.push({
-          property: target_sort.property,
-          direction: arg[1]
-        })
+      const arg = args[index], target_sort = schema_map.get(arg[0]);
+      if(target_sort){
+        if (typeof arg[2] === "number") {
+          sorts.splice(arg[2], 0, {
+            property: target_sort.property,
+            direction: arg[1]
+          })
+        } else
+          sorts.push({
+            property: target_sort.property,
+            direction: arg[1]
+          })
+      }
     }
 
     await this.executeUtil([this.updateOp([], {
@@ -187,16 +193,7 @@ class View<T extends TView> extends Data<T> {
   // ? FEAT:1:M Support nested filter creation
   async createFilters(args: TViewFilterCreateInput[], execute?: boolean) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = this.#populateFilters().filters;
-    for (let index = 0; index < args.length; index++) {
-      const { filter:_filter, name, position } = args[index];
-      const filter = {
-        property: schema_map[name].property,
-        filter: _filter
-      };
-      if (position !== undefined)
-        filters.splice(position, 0, filter as any)
-      else filters.push(filter as any)
-    }
+    populateFilters(args, filters, schema_map)
     await this.executeUtil([this.updateOp([], {
       query2: data.query2
     })], this.id, execute)

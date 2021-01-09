@@ -1,4 +1,4 @@
-import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, ISchemaUnit, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
+import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock, CalendarViewCreateInput, TimelineViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, TableViewCreateInput, TViewCreateInput } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { validateUUID, Operation, error, warn, parseFormula, populateFilters } from "../utils";
@@ -343,11 +343,11 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected createViewsUtils(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, current_id?: string) {
-    const name_map: Map<string, { key: string } & ISchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
+    const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
     const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
     const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
-    Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { key: schema_id, ...schema }));
+    Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { property: schema_id, ...schema }));
 
     for (let index = 0; index < views.length; index++) {
       const { id, name, type, view, filter_operator = "and" } = views[index],
@@ -381,7 +381,7 @@ export default class Data<T extends TData> extends Operations {
           break;
         case "gallery":
           const gallery_view = views[index] as GalleryViewCreateInput, gallery_format = format as IGalleryViewFormat;
-          if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.key as string }
+          if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.property as string }
           else gallery_format.gallery_cover = gallery_view.gallery_cover
           gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
           gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
@@ -400,13 +400,12 @@ export default class Data<T extends TData> extends Operations {
       view.forEach(info => {
         const { format, sort, aggregation, name } = info, property_info = name_map.get(name);
         if (property_info) {
-          const { key } = property_info,
-            property: ViewFormatProperties = {
-              property: key,
+          const property: ViewFormatProperties = {
+              property: property_info.property,
               visible: true,
               width: 250
             };
-          included_units.push(key);
+          included_units.push(property_info.property);
           if (typeof format === "boolean") property.visible = format;
           else if (typeof format === "number") property.width = format;
           else if (Array.isArray(format)) {
@@ -416,17 +415,17 @@ export default class Data<T extends TData> extends Operations {
           if (sort) {
             if (Array.isArray(sort))
               sorts.splice(sort[1], 0, {
-                property: key,
+                property: property_info.property,
                 direction: sort[0]
               })
             else sorts.push({
-              property: key,
+              property: property_info.property,
               direction: sort
             })
           }
 
           if (aggregation) aggregations.push({
-            property: key,
+            property: property_info.property,
             aggregator: aggregation
           })
 

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
@@ -54,16 +55,18 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		formula: [
 			'round',
 			[
-				'multiple',
 				[
+					'multiple',
 					[
-						'divide',
 						[
-							{ property: `Goal ${goal_number} Steps` },
-							[ 'toNumber', { property: `Goal ${goal_number} Total Steps` } ]
-						]
-					],
-					100
+							'divide',
+							[
+								{ property: `Goal ${goal_number} Steps` },
+								[ 'toNumber', { property: `Goal ${goal_number} Total Steps` } ]
+							]
+						],
+						100
+					]
 				]
 			]
 		]
@@ -281,6 +284,6 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 			]
 		}
 	]);
-
-	await page.executeOperation();
+	fs.writeFileSync(__dirname + '/data.json', JSON.stringify(page.getStack()), 'utf-8');
+	// await page.executeOperation();
 })();

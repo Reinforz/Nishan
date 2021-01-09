@@ -1,5 +1,5 @@
 import { TFormula, TFormulaResultType, TFunctionName, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
-import { FormulaSchemaUnitInput, TResultType } from '../types';
+import { FormulaSchemaUnitInput, TFormulaCreateInput, TResultType } from '../types';
 
 const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'equal', 'checkbox' ],
@@ -97,13 +97,13 @@ export function parseFormula (
 	const res_formula = {
 		args: []
 	};
-	function traverseFormula (parent: any, formula: TResultType) {
-		if (Array.isArray(formula)) {
-			const [ name, args ] = formula;
-			const result_type = formula_info_map.get(name);
-			const temp_args = [] as any;
+	function traverseFormula (parent: any, formula: TResultType | undefined) {
+		if ((formula as TFormulaCreateInput).function) {
+			const { function: function_name, args } = formula as TFormulaCreateInput,
+				result_type = formula_info_map.get(function_name),
+				temp_args = [] as any;
 			parent.push({
-				name,
+				name: function_name,
 				type: 'function',
 				result_type,
 				args: temp_args
@@ -131,8 +131,8 @@ export function parseFormula (
 				value_type: 'string',
 				result_type: 'text'
 			});
-		} else if (!Array.isArray(formula)) {
-			const schema_name = formula.property.toString(),
+		} else {
+			const schema_name = (formula as { property: string }).property.toString(),
 				result = schema_map.get(schema_name);
 			if (result) {
 				const { id, type } = result;

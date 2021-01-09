@@ -2,9 +2,9 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/actions?query=workflow%3A%22Lint%2C+Build+and+Test%22"><img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/></a>
-  <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square"/>
-  <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan" />
-  <img src="https://img.shields.io/github/contributors/devorein/nishan?label=contributors">
+  <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan?color=yellow" />
+  <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square&color=orange"/>
+  <img src="https://img.shields.io/github/contributors/devorein/nishan?label=contributors&color=red">
 </p>
 
 # Nishan

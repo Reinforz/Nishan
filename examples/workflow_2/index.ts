@@ -1,8 +1,44 @@
 import { v4 as uuidv4 } from 'uuid';
 import '../env';
-import Nishan from '@nishans/core';
+import Nishan, { TSchemaUnit, TSchemaUnitInput, TViewViewCreateInput } from '@nishans/core';
 import { status, purpose, subject, source } from '../data';
 import { formulaUtil } from '../util';
+
+const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
+	{
+		type: 'multi_select',
+		name: 'Purpose',
+		options: purpose.map((purpose) => ({ ...purpose, id: uuidv4() }))
+	},
+	{
+		type: 'multi_select',
+		name: 'Subject',
+		options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
+	},
+	{
+		type: 'multi_select',
+		name: 'Source',
+		options: source.map((source) => ({ ...source, id: uuidv4() }))
+	}
+];
+
+const CommonMultiSelectSchema: TViewViewCreateInput[] = [
+	{
+		type: 'multi_select',
+		name: 'Purpose',
+		format: 200
+	},
+	{
+		type: 'multi_select',
+		name: 'Purpose',
+		format: 200
+	},
+	{
+		type: 'multi_select',
+		name: 'Purpose',
+		format: 200
+	}
+];
 
 (async function () {
 	const nishan = new Nishan({
@@ -26,6 +62,80 @@ import { formulaUtil } from '../util';
 				page_full_width: true
 			},
 			contents: [
+				{
+					type: 'collection_view_page',
+					properties: {
+						title: [ [ 'Tasks' ] ]
+					},
+					views: [
+						{
+							type: 'table',
+							name: 'Today',
+							view: [
+								{
+									type: 'formula',
+									name: 'On'
+								},
+								{
+									type: 'title',
+									name: 'Task',
+									format: 300
+								},
+								...CommonMultiSelectSchema,
+								{
+									type: 'number',
+									name: 'Goal 1 Steps',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 2 Steps',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 3 Steps',
+									format: 100
+								}
+							]
+						}
+					],
+					schema: [
+						{
+							type: 'title',
+							name: 'Task'
+						},
+						...CommonMultiSelectSchemaInput,
+						{
+							type: 'number',
+							name: 'Goal 1 Steps'
+						},
+						{
+							type: 'number',
+							name: 'Goal 2 Steps'
+						},
+						{
+							type: 'number',
+							name: 'Goal 3 Steps'
+						},
+						{
+							type: 'date',
+							name: 'Custom Date'
+						},
+						{
+							type: 'created_time',
+							name: 'Created'
+						},
+						{
+							type: 'formula',
+							name: 'On',
+							formula: [
+								'if',
+								[ [ 'empty', { property: 'custom_date' } ], { property: 'created' }, { property: 'custom_date' } ]
+							]
+						}
+					]
+				},
 				{
 					type: 'collection_view_page',
 					properties: {
@@ -67,21 +177,7 @@ import { formulaUtil } from '../util';
 								]
 							]
 						}, */
-						{
-							type: 'multi_select',
-							name: 'Purpose',
-							options: purpose.map((purpose) => ({ ...purpose, id: uuidv4() }))
-						},
-						{
-							type: 'multi_select',
-							name: 'Subject',
-							options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
-						},
-						{
-							type: 'multi_select',
-							name: 'Source',
-							options: source.map((source) => ({ ...source, id: uuidv4() }))
-						},
+						...CommonMultiSelectSchemaInput,
 						{
 							type: 'select',
 							name: 'Status',

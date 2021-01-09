@@ -3,6 +3,11 @@ import { ElementType } from "./utils";
 import { TViewCreateInput } from "./view";
 import {TSchemaUnitInput} from "./schema"
 
+interface IInput {
+  id?: string,
+  type: TBlockType
+}
+
 export interface ICollectionBlockInput extends IInput {
   views: TViewCreateInput[],
   schema: TSchemaUnitInput[],
@@ -146,11 +151,6 @@ export interface ILinkToPageInput extends IInput {
   page_id: string,
   format?: ILinkToPage["format"],
   properties?: ILinkToPage["properties"]
-}
-
-interface IInput {
-  id?: string,
-  type: TBlockType
 }
 
 export interface IDividerInput extends IInput {

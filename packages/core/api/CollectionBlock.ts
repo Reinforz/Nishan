@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { Operation } from '../utils';
+import { createViews, Operation } from '../utils';
 import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishans/types';
 import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput } from '../types';
 
@@ -40,11 +40,12 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		const ops: IOperation[] = [],
 			data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
-			[ created_view_ops, view_ids, view_map, view_records ] = this.createViewsUtils(
+			[ created_view_ops, view_ids, view_map, view_records ] = createViews(
 				collection.schema,
 				params,
 				collection.id,
-				this.id
+				this.id,
+				this.getProps()
 			);
 		ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		await this.executeUtil(ops, view_records, execute);

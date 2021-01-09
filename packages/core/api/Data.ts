@@ -1,7 +1,7 @@
-import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock, CalendarViewCreateInput, TimelineViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, TableViewCreateInput, TViewCreateInput } from '../types';
+import { TDataType, TData, Args, IOperation, TBlock, TParentType, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, error, warn, parseFormula, populateFilters } from "../utils";
+import { validateUUID, Operation, error, warn, parseFormula, createViews } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -342,124 +342,6 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
-  protected createViewsUtils(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, current_id?: string) {
-    const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = this.createViewMap(), view_records: UpdateCacheManuallyParam = [];
-    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
-    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
-
-    Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { property: schema_id, ...schema }));
-
-    for (let index = 0; index < views.length; index++) {
-      const { id, name, type, view, filter_operator = "and" } = views[index],
-        sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-        view_id = current_id || this.generateId(id), included_units: string[] = [], query2 = {
-          sort: sorts,
-          filter: {
-            operator: filter_operator,
-            filters
-          },
-          aggregations
-        } as any, format = {
-          [`${type}_properties`]: properties
-        } as any;
-
-      view_ids.push(view_id);
-      view_records.push([view_id, "collection_view"])
-      view_map[type].push(new view_classes[type]({ ...this.getProps(), id: view_id }))
-
-      switch (type) {
-        case "table":
-          const table_view = views[index] as TableViewCreateInput, table_format = format as ITableViewFormat;
-          table_format.table_wrap = table_view.table_wrap ?? true;
-          break;
-        case "board":
-          const board_view = views[index] as BoardViewCreateInput, board_format = format as IBoardViewFormat;
-          board_format.board_cover = board_view.board_cover ?? { type: "page_cover" };
-          board_format.board_cover_aspect = board_view.board_cover_aspect;
-          board_format.board_cover_size = board_view.board_cover_size;
-          board_format.board_groups2 = board_view.board_groups2 as any;
-          break;
-        case "gallery":
-          const gallery_view = views[index] as GalleryViewCreateInput, gallery_format = format as IGalleryViewFormat;
-          if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.property as string }
-          else gallery_format.gallery_cover = gallery_view.gallery_cover
-          gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
-          gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
-          break;
-        case "calendar":
-          const calender_view = views[index] as CalendarViewCreateInput, calendar_query2 = query2 as ICalendarViewQuery2;
-          calendar_query2.calendar_by = calender_view.calendar_by;
-          break;
-        case "timeline":
-          const timeline_view = views[index] as TimelineViewCreateInput, timeline_format = format as ITimelineViewFormat;
-          timeline_format.timeline_preference = timeline_view.timeline_preference ?? { centerTimestamp: 1, zoomLevel: "month" }
-          timeline_format.timeline_show_table = timeline_view.timeline_show_table ?? true;
-          break;
-      }
-
-      view.forEach(info => {
-        const { format, sort, aggregation, name } = info, property_info = name_map.get(name);
-        if (property_info) {
-          const property: ViewFormatProperties = {
-              property: property_info.property,
-              visible: true,
-              width: 250
-            };
-          included_units.push(property_info.property);
-          if (typeof format === "boolean") property.visible = format;
-          else if (typeof format === "number") property.width = format;
-          else if (Array.isArray(format)) {
-            property.width = format?.[1] ?? 250
-            property.visible = format?.[0] ?? true;
-          }
-          if (sort) {
-            if (Array.isArray(sort))
-              sorts.splice(sort[1], 0, {
-                property: property_info.property,
-                direction: sort[0]
-              })
-            else sorts.push({
-              property: property_info.property,
-              direction: sort
-            })
-          }
-
-          if (aggregation) aggregations.push({
-            property: property_info.property,
-            aggregator: aggregation
-          })
-
-          properties.push(property)
-        } else
-          throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
-      })
-
-      const non_included_units = Object.keys(schema).filter(key => !included_units.includes(key));
-      populateFilters(views[index].filters, filters, name_map)
-      non_included_units.forEach(property => {
-        properties.push({
-          property,
-          visible: false
-        })
-      })
-
-      created_view_ops.push(Operation.collection_view.set(view_id, [], {
-        id: view_id,
-        version: 0,
-        type,
-        name,
-        page_sort: [],
-        parent_id,
-        parent_table: 'block',
-        alive: true,
-        format,
-        query2,
-      }))
-    }
-
-    return [created_view_ops, view_ids, view_map, view_records] as [IOperation[], string[], ITView, UpdateCacheManuallyParam];
-  }
-
   protected createCollection(param: ICollectionBlockInput, parent_id: string) {
     const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
 
@@ -473,7 +355,7 @@ export default class Data<T extends TData> extends Operations {
       if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map)
     })
 
-    const [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(schema, param.views, collection_id, parent_id);
+    const [created_view_ops, view_ids, view_map, view_records] = createViews(schema, param.views, collection_id, parent_id, this.getProps());
     created_view_ops.unshift(Operation.collection.update(collection_id, [], {
       id: collection_id,
       schema,
@@ -715,7 +597,7 @@ export default class Data<T extends TData> extends Operations {
         }
 
         if (content.type === "collection_view_page" || content.type === "collection_view") {
-          const [collection_id, create_view_ops, view_ids, view_map, view_records] = this.createCollection(content as ICollectionBlockInput, $block_id);
+          const [collection_id, create_view_ops, view_ids, view_map, view_records] = this.createCollection(content, $block_id);
           const args: any = {
             id: $block_id,
             type,
@@ -785,7 +667,7 @@ export default class Data<T extends TData> extends Operations {
         else if (content.type === "linked_db") {
           const { collection_id, views } = content,
             collection = this.cache.collection.get(collection_id) as ICollection,
-            [created_view_ops, view_ids, view_map, view_records] = this.createViewsUtils(collection.schema, views, collection.id, $block_id);
+            [created_view_ops, view_ids, view_map, view_records] = createViews(collection.schema, views, collection.id, $block_id, this.getProps());
 
           ops.push(Operation.block.set($block_id, [], {
             id: $block_id,

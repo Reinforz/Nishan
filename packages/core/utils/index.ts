@@ -6,5 +6,6 @@ export * from './logs';
 export * from './uuid';
 export * from './parseFormula';
 export * from './populateFilters';
+export * from './createViews';
 
 export { Operation, createTransaction, shortid };

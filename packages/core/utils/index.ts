@@ -7,5 +7,7 @@ export * from './uuid';
 export * from './parseFormula';
 export * from './populateFilters';
 export * from './createViews';
+export * from './createCollection';
+export * from './generateId';
 
 export { Operation, createTransaction, shortid };

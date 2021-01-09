@@ -1,7 +1,6 @@
-import {v4 as uuidv4} from "uuid";
 import { Schema, TSchemaUnit, IOperation, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
 import { TViewCreateInput, UpdateCacheManuallyParam, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView } from "../types";
-import { error, Operation, validateUUID, warn } from "../utils";
+import { generateId, error, Operation } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 export function createViewMap() {
@@ -13,10 +12,6 @@ export function createViewMap() {
     table: [],
     calendar: [],
   } as ITView;
-}
-
-export function generateId(id: string | undefined) {
-  return id ? validateUUID(id) ? id : warn("Invalid uuid provided") && uuidv4() : uuidv4()
 }
 
 export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: any, current_id?: string) {

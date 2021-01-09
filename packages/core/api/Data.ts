@@ -1,7 +1,7 @@
-import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, Schema, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps, TSchemaUnit } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ICollectionBlockInput, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
+import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, warn, parseFormula, createViews } from "../utils";
+import { validateUUID, Operation, warn, createViews, createCollection } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -324,37 +324,6 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
-  protected createCollection(param: ICollectionBlockInput, parent_id: string) {
-    const schema: Schema = {}, collection_id = this.generateId(param.id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
-
-    param.schema.forEach(opt => {
-      const schema_id = (opt.type === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');
-      schema[schema_id] = opt as any;
-      schema_map.set(schema_id, {...opt, id: schema_id} as any) 
-    });
-
-    Object.values(schema).forEach((schema_unit)=>{
-      if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map)
-    })
-
-    const [created_view_ops, view_ids, view_map, view_records] = createViews(schema, param.views, collection_id, parent_id, this.getProps());
-    created_view_ops.unshift(Operation.collection.update(collection_id, [], {
-      id: collection_id,
-      schema,
-      format: {
-        collection_page_properties: []
-      },
-      cover: param?.format?.page_cover ?? "",
-      icon: param?.format?.page_icon ?? "",
-      parent_id,
-      parent_table: 'block',
-      alive: true,
-      name: param.properties.title
-    }));
-
-    return [collection_id, created_view_ops, view_ids, view_map, view_records] as [string, IOperation[], string[], ITView, UpdateCacheManuallyParam]
-  }
-
   protected getProps() {
     return {
       token: this.token,
@@ -579,7 +548,7 @@ export default class Data<T extends TData> extends Operations {
         }
 
         if (content.type === "collection_view_page" || content.type === "collection_view") {
-          const [collection_id, create_view_ops, view_ids, view_map, view_records] = this.createCollection(content, $block_id);
+          const [collection_id, create_view_ops, view_ids, view_map, view_records] = createCollection(content, $block_id, this.getProps());
           const args: any = {
             id: $block_id,
             type,

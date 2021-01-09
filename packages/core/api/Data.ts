@@ -1,7 +1,7 @@
 import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITView, ITBlock, ITSchemaUnit, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { validateUUID, Operation, warn, createViews, createCollection } from "../utils";
+import { Operation, warn, createViews, createCollection, createBlockMap, createViewMap, generateId } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -338,88 +338,6 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected createBlockMap = () => {
-    return {
-      linked_db: [],
-      collection_view_page: [],
-      embed: [],
-      video: [],
-      audio: [],
-      image: [],
-      bookmark: [],
-      code: [],
-      file: [],
-      tweet: [],
-      gist: [],
-      codepen: [],
-      maps: [],
-      figma: [],
-      drive: [],
-      text: [],
-      table_of_contents: [],
-      equation: [],
-      breadcrumb: [],
-      factory: [],
-      page: [],
-      to_do: [],
-      header: [],
-      sub_header: [],
-      sub_sub_header: [],
-      bulleted_list: [],
-      numbered_list: [],
-      toggle: [],
-      quote: [],
-      divider: [],
-      callout: [],
-      collection_view: [],
-      link_to_page: [],
-      column_list: [],
-      column: []
-    } as ITBlock
-  }
-
-  protected createViewMap() {
-    return {
-      board: [],
-      gallery: [],
-      list: [],
-      timeline: [],
-      table: [],
-      calendar: [],
-    } as ITView;
-  }
-
-  protected createSchemaUnitMap() {
-    return {
-      text: [],
-      number: [],
-      select: [],
-      multi_select: [],
-      title: [],
-      date: [],
-      person: [],
-      file: [],
-      checkbox: [],
-      url: [],
-      email: [],
-      phone_number: [],
-      formula: [],
-      relation: [],
-      rollup: [],
-      created_time: [],
-      created_by: [],
-      last_edited_time: [],
-      last_edited_by: []
-    } as ITSchemaUnit
-  }
-
-  protected createPageMap() {
-    return {
-      page: [],
-      collection_view_page: []
-    } as ITPage
-  }
-
   protected async createClass(type: TBlockType, id: string): Promise<any> {
     const Page = require("./Page").default;
     const Block = require("./Block").default;
@@ -472,7 +390,7 @@ export default class Data<T extends TData> extends Operations {
         const data = {
           block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
           collection: new Collection({ ...obj, id: cv.collection_id }),
-          views: this.createViewMap()
+          views: createViewMap()
         }
         cv.view_ids.forEach((view_id) => {
           const view = this.cache.collection_view.get(view_id) as TView;
@@ -484,10 +402,6 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected generateId(id: string | undefined) {
-    return id ? validateUUID(id) ? id : warn("Invalid uuid provided") && uuidv4() : uuidv4()
-  }
-
   protected async nestedContentPopulateAndExecute(options: PageCreateContentParam[], execute?: boolean) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(options, this.id, this.type);
     await this.executeUtil(ops, sync_records, execute);
@@ -497,7 +411,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
-    const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = this.createBlockMap();
+    const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
 
     const CollectionView = require("./CollectionView").default;
     const CollectionViewPage = require('./CollectionViewPage').default;
@@ -507,7 +421,7 @@ export default class Data<T extends TData> extends Operations {
     const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
       parent_content_id = parent_content_id ?? parent_id;
       for (let index = 0; index < contents.length; index++) {
-        const content = contents[index], $block_id = this.generateId(content.id);
+        const content = contents[index], $block_id = generateId(content.id);
         sync_records.push($block_id);
         content.type = content.type ?? 'page';
 
@@ -586,9 +500,9 @@ export default class Data<T extends TData> extends Operations {
           if (content.rows)
             await traverse(content.rows as any, collection_id, "collection")
         } else if (content.type === "factory") {
-          const factory_contents_map = this.createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
+          const factory_contents_map = createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
             ...content,
-            $block_id: this.generateId(content.id)
+            $block_id: generateId(content.id)
           }))).map(content => {
             factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
             sync_records.push(content.$block_id)

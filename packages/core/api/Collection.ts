@@ -1,4 +1,4 @@
-import { parseFormula, warn } from '../utils';
+import { createSchemaUnitMap, parseFormula, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -179,7 +179,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async createSchemaUnits(args: TSchemaUnitInput[], execute?: boolean) {
-    const results = this.createSchemaUnitMap(), data = this.getCachedData();
+    const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
       if (!data.schema[schema_id]) {
@@ -205,7 +205,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
-    const schema_unit_map = this.createSchemaUnitMap(), data = this.getCachedData();
+    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
     (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(({ key }) => schema_unit_map[data.schema[key].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: key }) as any))
     return schema_unit_map;
   }
@@ -225,7 +225,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
-    const results = this.createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
+    const results = createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
     await this.updateIterate<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>(args, {
       child_ids: schema_ids,
       subject_type: "SchemaUnit",

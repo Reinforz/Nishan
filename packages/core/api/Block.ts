@@ -1,6 +1,6 @@
 import { TBlock, IOperation, TBasicBlockType } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams, UpdateCacheManuallyParam } from '../types';
-import { Operation } from '../utils';
+import { createBlockMap, generateId, Operation } from '../utils';
 
 import Data from './Data';
 
@@ -32,13 +32,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
 
 	async duplicate (infos: { position: RepositionParams; id?: string }[], execute?: boolean) {
-		const block_map = this.createBlockMap(),
+		const block_map = createBlockMap(),
 			data = this.getCachedData(),
 			ops: IOperation[] = [],
 			sync_records: UpdateCacheManuallyParam = [];
 		for (let index = 0; index < infos.length; index++) {
 			const { position, id } = infos[index],
-				$gen_block_id = this.generateId(id);
+				$gen_block_id = generateId(id);
 			sync_records.push($gen_block_id);
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				ops.push(
@@ -52,12 +52,11 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				);
 				await this.enqueueTask({
 					eventName: 'duplicateBlock',
-					request:
-						{
-							sourceBlockId: data.id,
-							targetBlockId: $gen_block_id,
-							addCopyName: true
-						}
+					request: {
+						sourceBlockId: data.id,
+						targetBlockId: $gen_block_id,
+						addCopyName: true
+					}
 				});
 				this.logger && this.logger('CREATE', 'Block', $gen_block_id);
 			} else {

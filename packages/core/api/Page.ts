@@ -2,7 +2,7 @@ import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import axios from "axios";
 import { NishanArg, PageCreateContentParam, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes } from "../types";
 
-import { Operation } from "../utils";
+import { createBlockMap, Operation } from "../utils";
 
 
 import Permissions from "./Permissions";
@@ -127,7 +127,7 @@ export default class Page extends Permissions<IPage> {
    * @returns An array of block object
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
-    const block_map = this.createBlockMap();
+    const block_map = createBlockMap();
     await this.getIterate<TBlock>(args, { multiple, child_ids: "content", subject_type: "Block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
       block_map[block.type].push(await this.createClass(block.type, block.id))
     });
@@ -139,7 +139,7 @@ export default class Page extends Permissions<IPage> {
   }
 
   async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, execute?: boolean, multiple?: boolean) {
-    const block_map = this.createBlockMap();
+    const block_map = createBlockMap();
     await this.updateIterate<TBlock, TBlockInput>(args, {
       multiple,
       execute,

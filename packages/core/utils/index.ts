@@ -9,5 +9,6 @@ export * from './populateFilters';
 export * from './createViews';
 export * from './createCollection';
 export * from './generateId';
+export * from './createMaps';
 
 export { Operation, createTransaction, shortid };

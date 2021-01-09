@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { createViews, Operation } from '../utils';
+import { createViewMap, createViews, Operation } from '../utils';
 import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishans/types';
 import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput } from '../types';
 
@@ -57,7 +57,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    * @returns An array of view objects of the collectionblock
    */
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
-		const view_map = this.createViewMap();
+		const view_map = createViewMap();
 		await this.getIterate<TView>(
 			args,
 			{ multiple, child_ids: 'view_ids', subject_type: 'View' },
@@ -77,7 +77,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 	}
 
 	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, execute?: boolean, multiple?: boolean) {
-		const view_map = this.createViewMap();
+		const view_map = createViewMap();
 		await this.updateIterate<TView, TViewUpdateInput>(
 			args,
 			{

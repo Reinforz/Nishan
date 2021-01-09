@@ -1,18 +1,7 @@
 import { Schema, TSchemaUnit, IOperation, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
 import { TViewCreateInput, UpdateCacheManuallyParam, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView } from "../types";
-import { generateId, error, Operation } from "../utils";
+import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
-
-export function createViewMap() {
-  return {
-    board: [],
-    gallery: [],
-    list: [],
-    timeline: [],
-    table: [],
-    calendar: [],
-  } as ITView;
-}
 
 export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: any, current_id?: string) {
   const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = createViewMap(), view_records: UpdateCacheManuallyParam = [];

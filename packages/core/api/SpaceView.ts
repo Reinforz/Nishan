@@ -1,7 +1,7 @@
 import Data from './Data';
 
 import Space from './Space';
-import { Operation } from '../utils';
+import { createPageMap, Operation } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
 import { ISpaceView, ISpace, TPage, IOperation } from '@nishans/types';
@@ -62,7 +62,7 @@ class SpaceView extends Data<ISpaceView> {
   }
 
   async getBookmarkedPages(args: FilterTypes<TPage>, multiple?: boolean) {
-    const tpage_map = this.createPageMap();
+    const tpage_map = createPageMap();
     (await this.getIterate<TPage>(args, {
       child_ids: this.getCachedData().bookmarked_pages,
       subject_type: "Page",

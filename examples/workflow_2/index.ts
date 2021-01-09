@@ -1,6 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import '../env';
-import Nishan, { TSchemaUnit, TSchemaUnitInput, TViewViewCreateInput } from '@nishans/core';
+import Nishan, {
+	FormulaSchemaUnitInput,
+	TFormulaCreateInput,
+	TSchemaUnit,
+	TSchemaUnitInput,
+	TViewViewCreateInput
+} from '@nishans/core';
 import { status, purpose, subject, source } from '../data';
 import { formulaUtil } from '../util';
 
@@ -40,6 +46,29 @@ const CommonMultiSelectSchema: TViewViewCreateInput[] = [
 	}
 ];
 
+function goalProgress (goal_number: number): FormulaSchemaUnitInput {
+	return {
+		type: 'formula',
+		name: `Goal ${goal_number} Progress`,
+		formula: [
+			'round',
+			[
+				'multiple',
+				[
+					[
+						'divide',
+						[
+							{ property: `Goal ${goal_number} Steps` },
+							[ 'toNumber', { property: `Goal ${goal_number} Total Steps` } ]
+						]
+					],
+					100
+				]
+			]
+		]
+	};
+}
+
 (async function () {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
@@ -62,80 +91,6 @@ const CommonMultiSelectSchema: TViewViewCreateInput[] = [
 				page_full_width: true
 			},
 			contents: [
-				{
-					type: 'collection_view_page',
-					properties: {
-						title: [ [ 'Tasks' ] ]
-					},
-					views: [
-						{
-							type: 'table',
-							name: 'Today',
-							view: [
-								{
-									type: 'formula',
-									name: 'On'
-								},
-								{
-									type: 'title',
-									name: 'Task',
-									format: 300
-								},
-								...CommonMultiSelectSchema,
-								{
-									type: 'number',
-									name: 'Goal 1 Steps',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 2 Steps',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 3 Steps',
-									format: 100
-								}
-							]
-						}
-					],
-					schema: [
-						{
-							type: 'title',
-							name: 'Task'
-						},
-						...CommonMultiSelectSchemaInput,
-						{
-							type: 'number',
-							name: 'Goal 1 Steps'
-						},
-						{
-							type: 'number',
-							name: 'Goal 2 Steps'
-						},
-						{
-							type: 'number',
-							name: 'Goal 3 Steps'
-						},
-						{
-							type: 'date',
-							name: 'Custom Date'
-						},
-						{
-							type: 'created_time',
-							name: 'Created'
-						},
-						{
-							type: 'formula',
-							name: 'On',
-							formula: [
-								'if',
-								[ [ 'empty', { property: 'custom_date' } ], { property: 'created' }, { property: 'custom_date' } ]
-							]
-						}
-					]
-				},
 				{
 					type: 'collection_view_page',
 					properties: {
@@ -199,6 +154,98 @@ const CommonMultiSelectSchema: TViewViewCreateInput[] = [
 							type: 'formula',
 							name: 'Status Counter',
 							formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
+						}
+					]
+				},
+				{
+					type: 'collection_view_page',
+					properties: {
+						title: [ [ 'Tasks' ] ]
+					},
+					views: [
+						{
+							type: 'table',
+							name: 'Today',
+							view: [
+								{
+									type: 'formula',
+									name: 'On'
+								},
+								{
+									type: 'title',
+									name: 'Task',
+									format: 300
+								},
+								...CommonMultiSelectSchema,
+								{
+									type: 'number',
+									name: 'Goal 1 Steps',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 2 Steps',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 3 Steps',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 1 Progress',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 2 Progress',
+									format: 100
+								},
+								{
+									type: 'number',
+									name: 'Goal 3 Progress',
+									format: 100
+								}
+							]
+						}
+					],
+					schema: [
+						{
+							type: 'title',
+							name: 'Task'
+						},
+						...CommonMultiSelectSchemaInput,
+						goalProgress(1),
+						goalProgress(2),
+						goalProgress(3),
+						{
+							type: 'number',
+							name: 'Goal 1 Steps'
+						},
+						{
+							type: 'number',
+							name: 'Goal 2 Steps'
+						},
+						{
+							type: 'number',
+							name: 'Goal 3 Steps'
+						},
+						{
+							type: 'date',
+							name: 'Custom Date'
+						},
+						{
+							type: 'created_time',
+							name: 'Created'
+						},
+						{
+							type: 'formula',
+							name: 'On',
+							formula: [
+								'if',
+								[ [ 'empty', { property: 'custom_date' } ], { property: 'created' }, { property: 'custom_date' } ]
+							]
 						}
 					]
 				}

@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan from '@nishans/core';
-import { purpose } from '../data';
+import { status, purpose, subject, source } from '../data';
+import { formulaUtil } from '../util';
 
 (async function () {
 	const nishan = new Nishan({
@@ -67,13 +68,41 @@ import { purpose } from '../data';
 							]
 						}, */
 						{
-							type: 'select',
-							name: 'Priority',
+							type: 'multi_select',
+							name: 'Purpose',
 							options: purpose.map((purpose) => ({ ...purpose, id: uuidv4() }))
+						},
+						{
+							type: 'multi_select',
+							name: 'Subject',
+							options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
+						},
+						{
+							type: 'multi_select',
+							name: 'Source',
+							options: source.map((source) => ({ ...source, id: uuidv4() }))
+						},
+						{
+							type: 'select',
+							name: 'Status',
+							options: status.map((status) => ({ ...status, id: uuidv4() }))
 						},
 						{
 							type: 'title',
 							name: 'Goal'
+						},
+						{
+							type: 'date',
+							name: 'Completed At'
+						},
+						{
+							type: 'number',
+							name: 'Total Steps'
+						},
+						{
+							type: 'formula',
+							name: 'Status Counter',
+							formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
 						}
 					]
 				}

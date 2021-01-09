@@ -2,15 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewViewCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
+import { formulaUtil } from '../util';
 
 import '../env';
-
-function formulaUtil (property: string, levels: [string, string]): TFormulaCreateInput {
-	return [
-		'if',
-		[ [ 'equal', [ { property }, levels[0] ] ], 3, [ 'if', [ [ 'equal', [ { property }, levels[1] ] ], 2, 1 ] ] ]
-	];
-}
 
 const daily_sites = [
 	'Github',

@@ -4,7 +4,8 @@ import status from './status';
 import difficulty from './difficulty';
 import subject from './subject';
 import purpose from './purpose';
+import source from './source';
 export * from './category';
 export * from './for';
 
-export { phase, priority, status, subject, difficulty, purpose };
+export { source, phase, priority, status, subject, difficulty, purpose };

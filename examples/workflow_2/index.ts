@@ -52,24 +52,29 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	return {
 		type: 'formula',
 		name: `Goal ${goal_number} Progress`,
-		formula: [
-			'round',
-			[
-				[
-					'multiple',
-					[
-						[
-							'divide',
-							[
-								{ property: `Goal ${goal_number} Steps` },
-								[ 'toNumber', { property: `Goal ${goal_number} Total Steps` } ]
-							]
-						],
-						100
-					]
+		formula: {
+			function: 'round',
+			args: {
+				function: 'multiple',
+				args: [
+					{
+						function: 'divide',
+						args: [
+							{
+								property: `goal_${goal_number}_steps`
+							},
+							{
+								function: 'toNumber',
+								args: {
+									property: `goal_${goal_number}_total_steps`
+								}
+							}
+						]
+					},
+					100
 				]
-			]
-		]
+			}
+		}
 	};
 }
 
@@ -274,16 +279,22 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						{
 							type: 'formula',
 							name: 'On',
-							formula: [
-								'if',
-								[ [ 'empty', { property: 'custom_date' } ], { property: 'created' }, { property: 'custom_date' } ]
-							]
+							formula: {
+								function: 'if',
+								args: [
+									{
+										function: 'empty',
+										args: { property: 'custom_date' }
+									},
+									{ property: 'created' },
+									{ property: 'custom_date' }
+								]
+							}
 						}
 					]
 				}
 			]
 		}
 	]);
-	fs.writeFileSync(__dirname + '/data.json', JSON.stringify(page.getStack()), 'utf-8');
-	// await page.executeOperation();
+	await page.executeOperation();
 })();

@@ -1,7 +1,7 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { error } from '../utils';
+import { createPageMap, error } from '../utils';
 
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
@@ -89,7 +89,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    const trootpage_map = this.createTRootPageMap(), props = this.getProps();
+    const trootpage_map = createPageMap(), props = this.getProps();
     await this.getIterate<TPage>(args, { multiple, child_ids: "pages", subject_type: "Page" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
       trootpage_map[page.type].push(new trootpage_class[page.type]({
         id: page.id,
@@ -114,7 +114,7 @@ export default class Space extends Data<ISpace> {
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, execute?: boolean, multiple?: boolean) {
-    const trootpage_map = this.createTRootPageMap();
+    const trootpage_map = createPageMap();
     await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>(args, {
       child_ids: this.getCachedData().pages,
       subject_type: "Page",

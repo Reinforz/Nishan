@@ -1,8 +1,8 @@
 import { Schema, TSchemaUnit, IOperation } from "@nishans/types";
-import { ICollectionBlockInput, ITView, UpdateCacheManuallyParam } from "../types";
+import { ICollectionBlockInput, ITView, NishanArg, UpdateCacheManuallyParam } from "../types";
 import { parseFormula, createViews, Operation,generateId } from "../utils";
 
-export function createCollection(param: ICollectionBlockInput, parent_id: string, props: any) {
+export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
   const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
 
   param.schema.forEach(opt => {

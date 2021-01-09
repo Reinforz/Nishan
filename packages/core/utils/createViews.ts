@@ -1,9 +1,9 @@
 import { Schema, TSchemaUnit, IOperation, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
-import { TViewCreateInput, UpdateCacheManuallyParam, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView } from "../types";
+import { TViewCreateInput, UpdateCacheManuallyParam, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView, NishanArg } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
-export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: any, current_id?: string) {
+export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: Omit<NishanArg, "id">, current_id?: string) {
   const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = createViewMap(), view_records: UpdateCacheManuallyParam = [];
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../api/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };

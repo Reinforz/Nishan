@@ -1,5 +1,5 @@
 import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, TBlockCreateInput, IDriveInput, ITCollectionBlock } from '../types';
+import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, TBlockCreateInput, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { Operation, warn, createViews, createCollection, createBlockMap, createViewMap, generateId } from "../utils";
 import Operations from "./Operations";
@@ -55,10 +55,6 @@ export default class Data<T extends TData> extends Operations {
     this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
     this.#init_cache = false;
     this.#init_child_data = false;
-  }
-
-  protected createTRootPageMap() {
-    return { collection_view_page: [], page: [] } as ITPage;
   }
 
   protected getLastEditedProps() {

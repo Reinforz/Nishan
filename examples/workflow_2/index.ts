@@ -2,11 +2,12 @@ import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
-	TFormulaCreateInput,
-	TSchemaUnit,
+	RelationSchemaUnit,
+	RollupSchemaUnit,
 	TSchemaUnitInput,
 	TViewViewCreateInput
 } from '@nishans/core';
+
 import { status, purpose, subject, source } from '../data';
 import { formulaUtil } from '../util';
 
@@ -80,7 +81,28 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	const { page: [ page ] } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
 	);
-	const collection_id = uuidv4();
+	const goals_collection_id = uuidv4();
+	const goalRelation = (index: number): RelationSchemaUnit => {
+		return {
+			type: 'relation',
+			collection_id: goals_collection_id,
+			name: `Goal ${index}`,
+			property: 'goal'
+		};
+	};
+
+	const goalRollup = (index: number): RollupSchemaUnit => {
+		return {
+			collection_id: goals_collection_id,
+			type: 'rollup',
+			name: `Goal ${index} Total Steps`,
+			aggregation: 'sum',
+			relation_property: `goal_${index}`,
+			target_property: 'total_steps',
+			target_property_type: 'number'
+		};
+	};
+
 	await page.createBlocks([
 		{
 			type: 'page',
@@ -96,7 +118,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 					properties: {
 						title: [ [ 'Goals' ] ]
 					},
-					collection_id,
+					collection_id: goals_collection_id,
 					views: [
 						{
 							type: 'table',
@@ -220,6 +242,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						goalProgress(1),
 						goalProgress(2),
 						goalProgress(3),
+						goalRelation(1),
+						goalRelation(2),
+						goalRelation(3),
+						goalRollup(1),
+						goalRollup(2),
+						goalRollup(3),
 						{
 							type: 'number',
 							name: 'Goal 1 Steps'

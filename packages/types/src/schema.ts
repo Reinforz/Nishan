@@ -103,10 +103,10 @@ export interface RelationSchemaUnit extends ISchemaUnit {
 export interface RollupSchemaUnit extends ISchemaUnit {
 	type: 'rollup';
 	collection_id: string;
-	property: string;
 	relation_property: string;
 	target_property: string;
 	target_property_type: TSchemaUnitType;
+	aggregation: any;
 }
 
 export interface CreatedTimeSchemaUnit extends ISchemaUnit {

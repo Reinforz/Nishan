@@ -38,12 +38,12 @@ const CommonMultiSelectSchema: TViewViewCreateInput[] = [
 	},
 	{
 		type: 'multi_select',
-		name: 'Purpose',
+		name: 'Subject',
 		format: 200
 	},
 	{
 		type: 'multi_select',
-		name: 'Purpose',
+		name: 'Source',
 		format: 200
 	}
 ];
@@ -89,17 +89,18 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	const { page: [ page ] } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
 	);
-	const goals_collection_id = uuidv4();
-	const goalRelation = (index: number): RelationSchemaUnit => {
+	const goals_collection_id = uuidv4(),
+		tasks_collection_id = uuidv4();
+	const task2goalRelation = (index: number): RelationSchemaUnit => {
 		return {
 			type: 'relation',
 			collection_id: goals_collection_id,
 			name: `Goal ${index}`,
-			property: 'goal'
+			property: `task_${index}`
 		};
 	};
 
-	const goalRollup = (index: number): RollupSchemaUnit => {
+	const task2goalRollup = (index: number): RollupSchemaUnit => {
 		return {
 			collection_id: goals_collection_id,
 			type: 'rollup',
@@ -145,24 +146,68 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 							type: 'created_time',
 							name: 'Created'
 						},
-						/* {
+						{
 							type: 'formula',
 							name: 'Progress',
-							formula: [
-								'if',
-								[
-									[ 'equal', [ { property: 'Total Steps' }, 0 ] ],
+							formula: {
+								function: 'if',
+								args: [
+									{
+										function: 'equal',
+										args: [ { property: 'Total Steps' }, 0 ]
+									},
 									0,
-									[
-										'round',
-										[
-											'multiple',
-											[ [ 'divide', [ { property: 'CS (Completed Steps)' }, { property: 'Total Steps' } ] ], 100 ]
-										]
-									]
+									{
+										function: 'round',
+										args: {
+											function: 'multiple',
+											args: [
+												{
+													function: 'divide',
+													args: [
+														{
+															property: 'completed_steps'
+														},
+														{
+															property: 'total_steps'
+														}
+													]
+												},
+												100
+											]
+										}
+									}
 								]
-							]
-						}, */
+							}
+						},
+						{
+							type: 'formula',
+							name: 'Completed Steps',
+							formula: {
+								function: 'add',
+								args: [
+									{ property: 'completed_steps_1' },
+									{
+										function: 'add',
+										args: [ { property: 'completed_steps_2' }, { property: 'completed_steps_3' } ]
+									}
+								]
+							}
+						},
+						{
+							type: 'formula',
+							name: 'Total Tasks',
+							formula: {
+								function: 'add',
+								args: [
+									{ property: 'total_tasks_1' },
+									{
+										function: 'add',
+										args: [ { property: 'total_tasks_2' }, { property: 'total_tasks_3' } ]
+									}
+								]
+							}
+						},
 						...CommonMultiSelectSchemaInput,
 						{
 							type: 'select',
@@ -193,6 +238,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 					properties: {
 						title: [ [ 'Tasks' ] ]
 					},
+					collection_id: tasks_collection_id,
 					views: [
 						{
 							type: 'table',
@@ -208,6 +254,21 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									format: 300
 								},
 								...CommonMultiSelectSchema,
+								{
+									type: 'relation',
+									name: 'Goal 1',
+									format: 100
+								},
+								{
+									type: 'relation',
+									name: 'Goal 2',
+									format: 100
+								},
+								{
+									type: 'relation',
+									name: 'Goal 3',
+									format: 100
+								},
 								{
 									type: 'number',
 									name: 'Goal 1 Steps',
@@ -250,12 +311,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						goalProgress(1),
 						goalProgress(2),
 						goalProgress(3),
-						goalRelation(1),
-						goalRelation(2),
-						goalRelation(3),
-						goalRollup(1),
-						goalRollup(2),
-						goalRollup(3),
+						task2goalRelation(1),
+						task2goalRelation(2),
+						task2goalRelation(3),
+						task2goalRollup(1),
+						task2goalRollup(2),
+						task2goalRollup(3),
 						{
 							type: 'number',
 							name: 'Goal 1 Steps'

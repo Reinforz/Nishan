@@ -10,5 +10,6 @@ export * from './createViews';
 export * from './createCollection';
 export * from './generateId';
 export * from './createMaps';
+export * from './initializeView';
 
 export { Operation, createTransaction, shortid };

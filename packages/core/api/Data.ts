@@ -1,5 +1,5 @@
 import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, PageCreateContentParam, IDriveInput, ITCollectionBlock } from '../types';
+import { TSubjectType, TMethodType, NishanArg, ITPage, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, TBlockCreateInput, IDriveInput, ITCollectionBlock } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import { Operation, warn, createViews, createCollection, createBlockMap, createViewMap, generateId } from "../utils";
 import Operations from "./Operations";
@@ -402,7 +402,7 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async nestedContentPopulateAndExecute(options: PageCreateContentParam[], execute?: boolean) {
+  protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], execute?: boolean) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(options, this.id, this.type);
     await this.executeUtil(ops, sync_records, execute);
     for (const bookmark of bookmarks)
@@ -410,7 +410,7 @@ export default class Data<T extends TData> extends Operations {
     return block_map;
   }
 
-  protected async nestedContentPopulate(contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType) {
+  protected async nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType) {
     const ops: IOperation[] = [], bookmarks: SetBookmarkMetadataParams[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
 
     const CollectionView = require("./CollectionView").default;
@@ -418,7 +418,7 @@ export default class Data<T extends TData> extends Operations {
     const Collection = require('./Collection').default;
     const Block = require('./Block').default;
 
-    const traverse = async (contents: PageCreateContentParam[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
+    const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
       parent_content_id = parent_content_id ?? parent_id;
       for (let index = 0; index < contents.length; index++) {
         const content = contents[index], $block_id = generateId(content.id);

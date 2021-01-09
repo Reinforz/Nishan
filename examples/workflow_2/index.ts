@@ -80,7 +80,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	const { page: [ page ] } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
 	);
-
+	const collection_id = uuidv4();
 	await page.createBlocks([
 		{
 			type: 'page',
@@ -96,6 +96,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 					properties: {
 						title: [ [ 'Goals' ] ]
 					},
+					collection_id,
 					views: [
 						{
 							type: 'table',

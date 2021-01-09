@@ -3,7 +3,7 @@ import { ICollectionBlockInput, ITView, UpdateCacheManuallyParam } from "../type
 import { parseFormula, createViews, Operation,generateId } from "../utils";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: any) {
-  const schema: Schema = {}, collection_id = generateId(param.id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
+  const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: Map<string, TSchemaUnit & {id: string}> = new Map();
 
   param.schema.forEach(opt => {
     const schema_id = (opt.type === "title" ? "Title" : opt.name).toLowerCase().replace(/\s/g, '_');

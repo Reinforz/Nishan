@@ -13,7 +13,8 @@ export interface ICollectionBlockInput extends IInput {
   schema: TSchemaUnitInput[],
   properties: IPage["properties"],
   format?: Partial<IPage["format"]>,
-  rows?: Omit<IPageCreateInput, "type">[]
+  rows?: Omit<IPageCreateInput, "type">[],
+  collection_id?:string
 }
 
 export interface ICollectionViewInput extends ICollectionBlockInput {
@@ -271,6 +272,6 @@ export type ISpaceViewUpdateInput = Partial<Pick<ISpaceView, ElementType<typeof 
 
 export type IUserSettingsUpdateInput = Partial<Pick<IUserSettingsSettings, ElementType<typeof TUserSettingsUpdateKeys>>>;
 
-export type PageCreateContentParam = TBlockInput & {
+export type TBlockCreateInput = TBlockInput & {
   position?: RepositionParams
 }

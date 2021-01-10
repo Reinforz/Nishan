@@ -13,25 +13,18 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		super({ ...arg, type: 'block' });
 	}
 
-	/**
-   * Reposition the current block within its parent block
-   * @param arg number or the specific position to reposition the current block
-   * @param execute Boolean to indicate whether to execute the operation or add it for batching
-   */
-
-	async reposition (arg: RepositionParams, execute?: boolean) {
+	async reposition (arg: RepositionParams) {
 		const data = this.getCachedData();
-		await this.executeUtil([ this.addToChildArray(this.id, arg) ], [ data.id, data.parent_id ], execute);
+		await this.executeUtil([ this.addToChildArray(this.id, arg) ], [ data.id, data.parent_id ]);
 	}
 
 	/**
    * Duplicate the current block
    * @param infos Array of objects containing information regarding the position and id of the duplicated block
-   * @param execute Boolean to indicate whether to execute the operation or add it for batching
    * @returns A block map
    */
 
-	async duplicate (infos: { position: RepositionParams; id?: string }[], execute?: boolean) {
+	async duplicate (infos: { position: RepositionParams; id?: string }[]) {
 		const block_map = createBlockMap(),
 			data = this.getCachedData(),
 			ops: IOperation[] = [],
@@ -74,7 +67,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			block_map[data.type].push(createBlockClass(data.type, $gen_block_id, this.getProps()));
 		}
 
-		await this.executeUtil(ops, [ ...sync_records, data.parent_id ], execute);
+		await this.executeUtil(ops, [ ...sync_records, data.parent_id ]);
 		return block_map;
 	}
 
@@ -82,7 +75,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Update a block's properties and format
    * @param args Block update format and properties options
    */
-	async update (args: Partial<A>, execute?: boolean) {
+	async update (args: Partial<A>) {
 		const data = this.getCachedData();
 
 		const { format = data.format, properties = data.properties } = args as any;
@@ -97,8 +90,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					...this.getLastEditedProps()
 				})
 			],
-			data.id,
-			execute
+			data.id
 		);
 	}
 
@@ -106,17 +98,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Convert the current block to a different basic block
    * @param type `TBasicBlockType` basic block types
    */
-	async convertTo (type: TBasicBlockType, execute?: boolean) {
+	async convertTo (type: TBasicBlockType) {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'Block', data.id);
-		await this.executeUtil([ Operation.block.update(this.id, [], { type }) ], data.id, execute);
+		await this.executeUtil([ Operation.block.update(this.id, [], { type }) ], data.id);
 	}
 
 	/**
    * Delete the current block
    */
-	async delete (execute?: boolean) {
+	async delete () {
 		const data = this.getCachedData();
 		const is_root_page = data.parent_table === 'space' && data.type === 'page';
 
@@ -133,8 +125,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					? Operation.space.update(data.space_id, [], this.getLastEditedProps())
 					: Operation.block.update(data.parent_id, [], this.getLastEditedProps())
 			],
-			this.id,
-			execute
+			this.id
 		);
 	}
 
@@ -142,7 +133,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Transfer a block from one parent page to another page
    * @param new_parent_id Id of the new parent page
    */
-	async transfer (new_parent_id: string, execute?: boolean) {
+	async transfer (new_parent_id: string) {
 		const data = this.getCachedData();
 		await this.executeUtil(
 			[
@@ -158,8 +149,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				Operation.block.set(data.parent_id, [], this.getLastEditedProps()),
 				Operation.block.set(new_parent_id, [], this.getLastEditedProps())
 			],
-			[ this.id, data.parent_id, new_parent_id ],
-			execute
+			[ this.id, data.parent_id, new_parent_id ]
 		);
 	}
 }

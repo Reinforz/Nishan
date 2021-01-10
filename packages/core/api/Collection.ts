@@ -44,16 +44,16 @@ class Collection extends Data<ICollection> {
    * Update the collection
    * @param opt `CollectionUpdateParam`
    */
-  async update(opt: ICollectionUpdateInput, execute?: boolean) {
-    await this.updateCacheLocally(opt, TCollectionUpdateKeys, execute)
+  async update(opt: ICollectionUpdateInput, ) {
+    await this.updateCacheLocally(opt, TCollectionUpdateKeys)
   }
 
   /**
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[], execute?: boolean) {
-    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: true })) as any, execute);
+  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[], ) {
+    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: true })) as any);
   }
 
   /**
@@ -79,15 +79,14 @@ class Collection extends Data<ICollection> {
     }, (page_id) => this.cache.block.get(page_id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }))
   }
 
-  async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
-    return (await this.updateTemplates(typeof args === "function" ? args : [args], execute, false))[0]
+  async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>, ) {
+    return (await this.updateTemplates(typeof args === "function" ? args : [args], false))[0]
   }
 
-  async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+  async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
     return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
       child_ids: "template_pages",
       multiple,
-      execute,
       child_type: "block",
       subject_type: "Page"
     }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
@@ -97,8 +96,8 @@ class Collection extends Data<ICollection> {
    * Delete a single template page from the collection
    * @param args string id or a predicate function
    */
-  async deleteTemplate(args?: FilterType<IPage>, execute?: boolean) {
-    return await this.deleteTemplates(typeof args === "string" ? [args] : args, execute, false);
+  async deleteTemplate(args?: FilterType<IPage>, ) {
+    return await this.deleteTemplates(typeof args === "string" ? [args] : args, false);
   }
 
   /**
@@ -106,9 +105,9 @@ class Collection extends Data<ICollection> {
    * @param args string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async deleteTemplates(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
+  async deleteTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
-      execute, multiple,
+      multiple,
       child_ids: "template_pages",
       child_type: "block",
       subject_type: "Page",
@@ -121,8 +120,8 @@ class Collection extends Data<ICollection> {
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: Omit<IPageCreateInput, "type">[], execute?: boolean) {
-    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: false })) as any, execute)
+  async createPages(rows: Omit<IPageCreateInput, "type">[], ) {
+    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: false })) as any, )
   }
 
   async getPage(arg?: FilterType<IPage>) {
@@ -137,22 +136,21 @@ class Collection extends Data<ICollection> {
     }, (id) => this.cache.block.get(id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }));
   }
 
-  async updatePage(args: UpdateType<IPage, IPageUpdateInput>, execute?: boolean) {
-    return (await this.updatePages(typeof args === "function" ? args : [args], execute, false))[0]
+  async updatePage(args: UpdateType<IPage, IPageUpdateInput>, ) {
+    return (await this.updatePages(typeof args === "function" ? args : [args], false))[0]
   }
 
-  async updatePages(args: UpdateTypes<IPage, IPageUpdateInput>, execute?: boolean, multiple?: boolean) {
+  async updatePages(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
     return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
       child_ids: await this.#getRowPages(),
       subject_type: "Page",
-      execute,
       multiple,
       child_type: "block",
     }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
-  async deletePage(args?: FilterType<IPage>, execute?: boolean) {
-    return await this.deletePages(typeof args === "string" ? [args] : args, execute, false);
+  async deletePage(args?: FilterType<IPage>, ) {
+    return await this.deletePages(typeof args === "string" ? [args] : args,  false);
   }
 
   /**
@@ -160,12 +158,11 @@ class Collection extends Data<ICollection> {
    * @param args string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async deletePages(args?: FilterTypes<IPage>, execute?: boolean, multiple?: boolean) {
+  async deletePages(args?: FilterTypes<IPage>, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
       child_ids: await this.#getRowPages(),
       subject_type: "Page",
       child_type: "block",
-      execute,
       multiple
     }, (child_id) => this.cache.block.get(child_id) as IPage);
   }
@@ -175,7 +172,7 @@ class Collection extends Data<ICollection> {
    * @param args array of Schema creation properties
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async createSchemaUnits(args: TSchemaUnitInput[], execute?: boolean) {
+  async createSchemaUnits(args: TSchemaUnitInput[], ) {
     const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
@@ -188,7 +185,7 @@ class Collection extends Data<ICollection> {
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
     };
 
-    await this.executeUtil([Operation.collection.update(this.id, [], { schema: data.schema })], this.id, execute);
+    await this.executeUtil([Operation.collection.update(this.id, [], { schema: data.schema })], this.id, );
     return results;
   }
 
@@ -212,8 +209,8 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties tuple
    * @returns A SchemaUnit object representing the column
    */
-  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, execute?: boolean) {
-    return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], execute, false))
+  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, ) {
+    return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], false))
   }
 
   /**
@@ -221,13 +218,12 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties array of tuples
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
+  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, multiple?: boolean) {
     const results = createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
     await this.updateIterate<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>(args, {
       child_ids: schema_ids,
       subject_type: "SchemaUnit",
       multiple,
-      execute
     }, (schema_id) => {
       return { ...data.schema[schema_id], property: schema_id }
     }, (schema_id, schema_data, updated_data) => {
@@ -236,7 +232,7 @@ class Collection extends Data<ICollection> {
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
 
-    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, execute)
+    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, )
     return results;
   }
 
@@ -245,8 +241,8 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>, execute?: boolean) {
-    return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, execute, false));
+  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>, ) {
+    return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, false));
   }
 
   /**
@@ -254,7 +250,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { property: string }>, execute?: boolean, multiple?: boolean) {
+  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { property: string }>, multiple?: boolean) {
     const data = this.getCachedData();
     await this.getIterate<TSchemaUnit & { property: string }>(args, {
       child_ids: Object.keys(data.schema) ?? [],
@@ -266,7 +262,7 @@ class Collection extends Data<ICollection> {
     }, (id) => {
       delete data.schema[id]
     });
-    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, execute)
+    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, )
   }
 }
 

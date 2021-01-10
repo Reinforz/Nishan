@@ -36,7 +36,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		});
 	}
 
-	async createViews (params: TViewCreateInput[], execute?: boolean) {
+	async createViews (params: TViewCreateInput[]) {
 		const ops: IOperation[] = [],
 			data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
@@ -48,7 +48,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				this.getProps()
 			);
 		ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
-		await this.executeUtil(ops, view_records, execute);
+		await this.executeUtil(ops, view_records);
 		return view_map;
 	}
 
@@ -72,17 +72,17 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		return view_map;
 	}
 
-	async updateView (arg: UpdateType<TView, TViewUpdateInput>, execute?: boolean) {
-		return await this.updateViews(typeof arg === 'function' ? arg : [ arg ], execute, false);
+	async updateView (arg: UpdateType<TView, TViewUpdateInput>) {
+		return await this.updateViews(typeof arg === 'function' ? arg : [ arg ], false);
 	}
 
-	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, execute?: boolean, multiple?: boolean) {
+	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, multiple?: boolean) {
 		const view_map = createViewMap();
 		await this.updateIterate<TView, TViewUpdateInput>(
 			args,
 			{
 				multiple,
-				execute,
+
 				child_ids: this.getCachedData().view_ids,
 				subject_type: 'View',
 				child_type: 'collection_view'
@@ -99,8 +99,8 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-	async deleteView (arg?: FilterType<TView>, execute?: boolean) {
-		return await this.deleteViews(typeof arg === 'string' ? [ arg ] : arg, execute, false);
+	async deleteView (arg?: FilterType<TView>) {
+		return await this.deleteViews(typeof arg === 'string' ? [ arg ] : arg, false);
 	}
 
 	/**
@@ -108,14 +108,14 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-	async deleteViews (args?: FilterTypes<TView>, execute?: boolean, multiple?: boolean) {
+	async deleteViews (args?: FilterTypes<TView>, multiple?: boolean) {
 		await this.deleteIterate<TView>(
 			args,
 			{
 				child_path: 'view_ids',
 				child_type: 'collection_view',
 				multiple,
-				execute,
+
 				subject_type: 'View',
 				child_ids: this.getCachedData().view_ids
 			},

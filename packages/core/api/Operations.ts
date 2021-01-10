@@ -76,13 +76,7 @@ export default class Operations extends Mutations {
     }
   }
 
-  protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam | string, execute?: boolean) {
-    if (execute) {
-      if (ops.length !== 0)
-        await this.saveTransactions(ops);
-      if (sync_records.length !== 0)
-        await this.updateCacheManually(typeof sync_records === "string" ? [sync_records] : sync_records);
-    } else
-      this.pushOperationSyncRecords(ops, typeof sync_records === "string" ? [sync_records] : sync_records);
+  protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam | string) {
+    this.pushOperationSyncRecords(ops, typeof sync_records === "string" ? [sync_records] : sync_records);
   }
 }

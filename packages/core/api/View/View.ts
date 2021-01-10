@@ -88,17 +88,17 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-  async update(param: TViewCreateInput, execute?: boolean) {
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, , view_map, view_records] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
-    await this.executeUtil(created_view_ops, view_records, execute)
+  async update(param: TViewCreateInput, ) {
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, view_map, ,view_records] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
+    await this.executeUtil(created_view_ops, view_records)
     return view_map;
   }
 
-  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), execute?: boolean) {
-    await this.createSorts([arg], execute)
+  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), ) {
+    await this.createSorts([arg], )
   }
 
-  async createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], execute?: boolean) {
+  async createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], ) {
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, sorts] = this.#getSortsMap();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], target_sort = schema_map.get(arg[0]);
@@ -120,19 +120,19 @@ class View<T extends TView> extends Data<T> {
       query2: {
         ...data.query2
       }
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateSort(arg: UpdateType<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean,) {
-    await this.updateSorts(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateSort(arg: UpdateType<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>,) {
+    await this.updateSorts(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, execute?: boolean, multiple?: boolean) {
+  async updateSorts(args: UpdateTypes<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>, multiple?: boolean) {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap()
     await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
       child_ids: Object.keys(sorts_map),
       subject_type: "View",
-      execute,
+      
       multiple
     }, (id) => sorts_map[id], (_, sort, data) => {
       if (Array.isArray(data)) {
@@ -151,14 +151,14 @@ class View<T extends TView> extends Data<T> {
         target_sort.direction = data
       }
     });
-    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, execute)
+    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, )
   }
 
-  async deleteSort(arg: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean,) {
-    await this.deleteSorts(typeof arg === "string" ? [arg] : arg, execute, false);
+  async deleteSort(arg: FilterTypes<TSchemaUnit & ViewSorts>,) {
+    await this.deleteSorts(typeof arg === "string" ? [arg] : arg,  false);
   }
 
-  async deleteSorts(args: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean, multiple?: boolean) {
+  async deleteSorts(args: FilterTypes<TSchemaUnit & ViewSorts>, multiple?: boolean) {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap();
     await this.getIterate<TSchemaUnit & ViewSorts>(args, {
       child_ids: Object.keys(sorts_map),
@@ -168,33 +168,33 @@ class View<T extends TView> extends Data<T> {
     }, (id) => sorts_map[id], (_, sort) => {
       sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
     });
-    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, execute)
+    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, )
   }
 
-  async createFilter(arg: TViewFilterCreateInput, execute?: boolean) {
-    await this.createFilters([arg], execute)
+  async createFilter(arg: TViewFilterCreateInput, ) {
+    await this.createFilters([arg], )
   }
 
   // ? FEAT:1:M Support nested filter creation
-  async createFilters(args: TViewFilterCreateInput[], execute?: boolean) {
+  async createFilters(args: TViewFilterCreateInput[], ) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = initializeViewFilters(this.getCachedData()).filters;
     populateFilters(args, filters, schema_map)
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, execute?: boolean) {
-    await this.updateFilters(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, ) {
+    await this.updateFilters(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, execute?: boolean, multiple?: boolean) {
+  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, multiple?: boolean) {
     const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
 
     await this.updateIterate<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>(args, {
       child_ids: Object.keys(filters_map),
       subject_type: "View",
-      execute,
+      
       multiple
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
@@ -209,14 +209,14 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, execute?: boolean) {
-    await this.deleteFilters(typeof arg === "string" ? [arg] : arg, execute);
+  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, ) {
+    await this.deleteFilters(typeof arg === "string" ? [arg] : arg, );
   }
 
-  async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, execute?: boolean, multiple?: boolean) {
+  async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, multiple?: boolean) {
     const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
     await this.getIterate<TSchemaUnit & TViewFilters>(args, {
       subject_type: "View",
@@ -229,20 +229,20 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>, execute?: boolean) {
-    return await this.updateFormatVisibilityProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>, ) {
+    return await this.updateFormatVisibilityProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFormatVisibilityProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, boolean>, execute?: boolean, multiple?: boolean) {
+  async updateFormatVisibilityProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, boolean>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, boolean>(args, {
       subject_type: "View",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      execute
+      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
@@ -250,20 +250,20 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean) {
-    return await this.updateFormatWidthProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
+    return await this.updateFormatWidthProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFormatWidthProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean, multiple?: boolean) {
+  async updateFormatWidthProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
       subject_type: "View",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      execute
+      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.width = updated_data;
@@ -271,20 +271,20 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean) {
-    return await this.updateFormatPositionProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
+    return await this.updateFormatPositionProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFormatPositionProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, execute?: boolean, multiple?: boolean) {
+  async updateFormatPositionProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
       subject_type: "View",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      execute
+      
     }, (name) => format_properties_map[name], (name, current_data, new_position) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       if (target_format_property_index !== new_position) {
@@ -295,20 +295,20 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, execute)
+    })], this.id, )
   }
 
-  async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, execute?: boolean) {
-    await this.updateFormatProperties(typeof arg === "function" ? arg : [arg], execute, false);
+  async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, ) {
+    await this.updateFormatProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFormatProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, execute?: boolean, multiple?: boolean) {
+  async updateFormatProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>(args, {
       subject_type: "View",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      execute
+      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       const { position, visible, width } = updated_data;
@@ -322,7 +322,7 @@ class View<T extends TView> extends Data<T> {
 
     await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, execute)
+    })], this.id, )
   }
 }
 

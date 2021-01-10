@@ -16,17 +16,17 @@ class SpaceView extends Data<ISpaceView> {
     super({ ...arg, type: "space_view" });
   }
 
-  async reposition(arg: RepositionParams, execute?: boolean) {
+  async reposition(arg: RepositionParams, ) {
     this.logger && this.logger("UPDATE", "SpaceView", this.id);
-    await this.executeUtil([this.addToChildArray(this.id, arg)], [this.user_id, "user_root"], execute)
+    await this.executeUtil([this.addToChildArray(this.id, arg)], [this.user_id, "user_root"], )
   }
 
   /**
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-  async update(arg: ISpaceViewUpdateInput, execute?: boolean) {
-    await this.updateCacheLocally(arg, TSpaceViewUpdateKeys, execute)
+  async update(arg: ISpaceViewUpdateInput, ) {
+    await this.updateCacheLocally(arg, TSpaceViewUpdateKeys, )
   }
 
   /**
@@ -73,8 +73,8 @@ class SpaceView extends Data<ISpaceView> {
   * Toggle a single page from the bookmark list
   * @param arg id string or a predicate filter function
   */
-  async updateBookmarkedPage(arg: UpdateTypes<TPage, boolean>, execute?: boolean) {
-    await this.updateBookmarkedPages(typeof arg === "string" ? [arg] : arg, execute, false);
+  async updateBookmarkedPage(arg: UpdateTypes<TPage, boolean>, ) {
+    await this.updateBookmarkedPages(typeof arg === "string" ? [arg] : arg,  false);
   }
 
   /**
@@ -82,7 +82,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg string of ids or a predicate function
    * @param multiple whether multiple or single item is targeted
    */
-  async updateBookmarkedPages(args: UpdateTypes<TPage, boolean>, execute?: boolean, multiple?: boolean) {
+  async updateBookmarkedPages(args: UpdateTypes<TPage, boolean>, multiple?: boolean) {
     const target_space_view = this.getCachedData(), ops: IOperation[] = [];
     await this.updateIterate<TPage, boolean>(args, {
       child_ids: this.cache.space.get(target_space_view.space_id)?.pages ?? [],
@@ -93,7 +93,7 @@ class SpaceView extends Data<ISpaceView> {
         id
       }))
     });
-    await this.executeUtil(ops, [[target_space_view.id, "space_view"]], execute)
+    await this.executeUtil(ops, [[target_space_view.id, "space_view"]], )
   }
 }
 

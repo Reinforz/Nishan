@@ -114,8 +114,8 @@ export default class Page extends Permissions<IPage> {
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-  async createBlocks(contents: TBlockCreateInput[], execute?: boolean) {
-    return await this.nestedContentPopulateAndExecute(contents, execute);
+  async createBlocks(contents: TBlockCreateInput[], ) {
+    return await this.nestedContentPopulateAndExecute(contents, );
   }
 
   async getBlock(arg?: FilterType<TBlock>) {
@@ -134,15 +134,15 @@ export default class Page extends Permissions<IPage> {
     return block_map;
   }
 
-  async updateBlock(args: UpdateType<TBlock, TBlockInput>, execute?: boolean) {
-    return (await this.updateBlocks(typeof args === "function" ? args : [args], execute, false))
+  async updateBlock(args: UpdateType<TBlock, TBlockInput>, ) {
+    return (await this.updateBlocks(typeof args === "function" ? args : [args],  false))
   }
 
-  async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, execute?: boolean, multiple?: boolean) {
+  async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, multiple?: boolean) {
     const block_map = createBlockMap();
     await this.updateIterate<TBlock, TBlockInput>(args, {
       multiple,
-      execute,
+      
       child_ids: this.getCachedData().content,
       subject_type: "Block",
       child_type: "block"
@@ -156,18 +156,18 @@ export default class Page extends Permissions<IPage> {
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
-  async deleteBlock(arg?: FilterType<TBlock>, execute?: boolean) {
-    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg, execute, false);
+  async deleteBlock(arg?: FilterType<TBlock>, ) {
+    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg,  false);
   }
 
   /**
    * Delete multiple blocks from a page
    * @param arg array of ids or a predicate acting as a filter
    */
-  async deleteBlocks(args?: FilterTypes<TBlock>, execute?: boolean, multiple?: boolean) {
+  async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     await this.deleteIterate<TBlock>(args, {
       multiple,
-      execute,
+      
       child_ids: this.getCachedData().content,
       child_path: "content",
       child_type: "block",

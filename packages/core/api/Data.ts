@@ -9,11 +9,10 @@ interface CommonIterateOptions<T> {
   multiple?: boolean
 }
 
-interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, execute?: boolean, updateParent?: boolean };
+interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, updateParent?: boolean };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
   child_path?: keyof T
 }
-
 interface GetIterateOptions<T> extends CommonIterateOptions<T> {
   method?: TMethodType,
 }
@@ -98,7 +97,7 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @param keys
    */
-  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, execute?:boolean, appendToStack?: boolean) {
+  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, appendToStack?: boolean) {
     appendToStack = appendToStack ?? true
     const parent_data = this.getCachedData(), data = arg;
 
@@ -111,7 +110,7 @@ export default class Data<T extends TData> extends Operations {
     if(appendToStack)
       await this.executeUtil([
         Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data)
-      ], [], execute);
+      ], []);
   }
 
   protected async initializeCache() {
@@ -159,7 +158,7 @@ export default class Data<T extends TData> extends Operations {
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCache()
-    const { child_type, child_path, execute } = options, updated_props = this.getLastEditedProps();
+    const { child_type, child_path } = options, updated_props = this.getLastEditedProps();
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     const matched_ids = await iterateChildren<T, TD>(args, transform, {
       data: this.getCachedData(),
@@ -178,13 +177,13 @@ export default class Data<T extends TData> extends Operations {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
       sync_records.push([this.id, this.type]);
     }
-    await this.executeUtil(ops, sync_records, execute);
+    await this.executeUtil(ops, sync_records);
     return matched_ids;
   }
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
     await this.initializeCache()
-    const { child_type, execute, updateParent = true } = options, updated_props = this.getLastEditedProps();
+    const { child_type, updateParent = true } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     await iterateChildren<T, TD, RD>(args, transform, {
@@ -204,7 +203,7 @@ export default class Data<T extends TData> extends Operations {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
       sync_records.push([this.id, this.type]);
     }
-    await this.executeUtil(ops, sync_records, execute);
+    await this.executeUtil(ops, sync_records);
     return matched_ids;
   }
 
@@ -232,9 +231,9 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], execute?: boolean) {
+  protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], ) {
     const [ops, sync_records, block_map] = await nestedContentPopulate(options, this.id, this.type, this.getProps(), this.id);
-    await this.executeUtil(ops, sync_records, execute);
+    await this.executeUtil(ops, sync_records);
     return block_map;
   }
 }

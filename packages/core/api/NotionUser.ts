@@ -53,8 +53,8 @@ class NotionUser extends Data<INotionUser> {
    * @param opt `UpdatableNotionUserParam`
    */
 
-  async update(opt: INotionUserUpdateInput, execute?:boolean) {
-    await this.updateCacheLocally(opt, TNotionUserUpdateKeys, execute);
+  async update(opt: INotionUserUpdateInput) {
+    await this.updateCacheLocally(opt, TNotionUserUpdateKeys, );
   }
 
   /**
@@ -66,7 +66,7 @@ class NotionUser extends Data<INotionUser> {
     return (await this.createWorkSpaces([opt]))[0];
   };
 
-  async createWorkSpaces(opts: ISpaceUpdateInput[], execute?: boolean) {
+  async createWorkSpaces(opts: ISpaceUpdateInput[], ) {
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], space_ids: string[] = [];
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
@@ -118,7 +118,7 @@ class NotionUser extends Data<INotionUser> {
       this.logger && this.logger(`CREATE`, 'Space', space_id);
     };
 
-    await this.executeUtil(ops, sync_records, execute);
+    await this.executeUtil(ops, sync_records, );
     return space_ids.map(space_id => new Space({
       id: space_id,
       ...this.getProps()
@@ -153,17 +153,16 @@ class NotionUser extends Data<INotionUser> {
   }
 
   // FIX:1:H Fix the updateSpace method
-  async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>, execute?: boolean) {
-    return (await this.updateSpaces(typeof arg === "function" ? arg : [arg], execute, false))[0]
+  async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>, ) {
+    return (await this.updateSpaces(typeof arg === "function" ? arg : [arg],  false))[0]
   }
 
-  async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, execute?: boolean, multiple?: boolean) {
+  async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {
     return (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
       child_ids: this.#getSpaceIds(),
       subject_type: "Space",
       child_type: "space",
       multiple,
-      execute
     }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
   }
 

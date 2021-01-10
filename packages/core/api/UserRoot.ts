@@ -31,11 +31,11 @@ class UserRoot extends Data<IUserRoot> {
 		)).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
 	}
 
-	async updateSpaceView (arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>, execute?: boolean) {
-		return await this.updateSpaceViews(typeof arg === 'function' ? arg : [ arg ], execute, false);
+	async updateSpaceView (arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>) {
+		return await this.updateSpaceViews(typeof arg === 'function' ? arg : [ arg ], false);
 	}
 
-	async updateSpaceViews (args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, execute?: boolean, multiple?: boolean) {
+	async updateSpaceViews (args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, multiple?: boolean) {
 		return (await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(
 			args,
 			{
@@ -43,7 +43,7 @@ class UserRoot extends Data<IUserRoot> {
 				subject_type: 'SpaceView',
 				child_type: 'space_view',
 				updateParent: false,
-				execute,
+
 				multiple
 			},
 			(id) => this.cache.space_view.get(id)

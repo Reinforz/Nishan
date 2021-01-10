@@ -1,11 +1,11 @@
 import { TBlockType } from '@nishans/types';
-import { NishanArg } from 'types';
+import { NishanArg } from '../types';
 
 export function createBlockClass (type: TBlockType, id: string, props: Omit<NishanArg, 'id'>) {
-	const Page = require('./Page').default;
-	const Block = require('./Block').default;
-	const CollectionView = require('./CollectionView').default;
-	const CollectionViewPage = require('./CollectionViewPage').default;
+	const Page = require('../api/Page').default;
+	const Block = require('../api/Block').default;
+	const CollectionView = require('../api/CollectionView').default;
+	const CollectionViewPage = require('../api/CollectionViewPage').default;
 
 	const obj = {
 		id,

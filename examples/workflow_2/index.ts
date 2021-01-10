@@ -357,24 +357,19 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		}
 	]);
 
+	// await goals_collection?.updateSchemaUnits((schema_unit)=>{
+	//   console.log(schema_unit.key)
+	//   /* switch(schema_unit.key){
+	//     case "task_1":
+	//       return {name: "Task 1"}
+	//     case "task_2":
+	//       return {name: "Task 2"}
+	//     case "task_3":
+	//       return {name: "Task 3"}
+	//     default:
+	//       false
+	//   } */
+	// })
 
-	const goals_collection = collection_view_page.find(
-		(collection_view_page) => collection_view_page.collection.id === goals_collection_id
-  )?.collection;
-
-  // await goals_collection?.updateSchemaUnits((schema_unit)=>{
-  //   console.log(schema_unit.key)
-  //   /* switch(schema_unit.key){
-  //     case "task_1":
-  //       return {name: "Task 1"}
-  //     case "task_2":
-  //       return {name: "Task 2"}
-  //     case "task_3":
-  //       return {name: "Task 3"}
-  //     default:
-  //       false
-  //   } */
-  // })
-  
 	await page.executeOperation();
 })();

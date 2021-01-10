@@ -13,5 +13,6 @@ export * from './createMaps';
 export * from './initializeView';
 export * from './slugify';
 export * from './createBlockClass';
+export * from './nestedContentPopulate';
 
 export { Operation, createTransaction, shortid };

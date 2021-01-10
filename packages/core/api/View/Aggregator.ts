@@ -75,8 +75,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     const data = this.getCachedData(), [aggregations_map, aggregations] = this.#getAggregationsMap();
     await this.updateIterate<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>(args, {
       child_ids: Object.keys(aggregations_map),
-      subject_type: "View",
-      
+      child_type: "collection_view",
       multiple
     }, (name) => aggregations_map[name], (_, original_data, updated_data) => {
       const index = aggregations.findIndex(data => data.property === original_data.property), aggregation = aggregations[index], { aggregator } = updated_data;
@@ -96,7 +95,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     const [aggregations_map, aggregations] = this.#getAggregationsMap(), data = this.getCachedData();
 
     await this.getIterate<TSchemaUnit & ViewAggregations>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       method: "DELETE",
       multiple,
       child_ids: Object.keys(aggregations_map)

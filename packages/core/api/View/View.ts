@@ -130,8 +130,7 @@ class View<T extends TView> extends Data<T> {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap()
     await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
       child_ids: Object.keys(sorts_map),
-      subject_type: "View",
-      
+      child_type: "collection_view",
       multiple
     }, (id) => sorts_map[id], (_, sort, data) => {
       if (Array.isArray(data)) {
@@ -162,7 +161,7 @@ class View<T extends TView> extends Data<T> {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap();
     await this.getIterate<TSchemaUnit & ViewSorts>(args, {
       child_ids: Object.keys(sorts_map),
-      subject_type: "View",
+      child_type: "collection_view",
       multiple,
       method: "DELETE"
     }, (id) => sorts_map[id], (_, sort) => {
@@ -190,8 +189,7 @@ class View<T extends TView> extends Data<T> {
 
     await this.updateIterate<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>(args, {
       child_ids: Object.keys(filters_map),
-      subject_type: "View",
-      
+      child_type: "collection_view",
       multiple
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
@@ -217,7 +215,7 @@ class View<T extends TView> extends Data<T> {
   async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, multiple?: boolean) {
     const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
     await this.getIterate<TSchemaUnit & TViewFilters>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       method: "DELETE",
       multiple,
       child_ids: Object.keys(filters_map),
@@ -238,10 +236,9 @@ class View<T extends TView> extends Data<T> {
   async updateFormatVisibilityProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, boolean>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, boolean>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
@@ -260,10 +257,9 @@ class View<T extends TView> extends Data<T> {
   async updateFormatWidthProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.width = updated_data;
@@ -282,10 +278,9 @@ class View<T extends TView> extends Data<T> {
   async updateFormatPositionProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, number>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, number>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      
     }, (name) => format_properties_map[name], (name, current_data, new_position) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       if (target_format_property_index !== new_position) {
@@ -307,10 +302,9 @@ class View<T extends TView> extends Data<T> {
   async updateFormatProperties(args: UpdateTypes<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, multiple?: boolean) {
     const [data, format_properties_map, format_properties] = this.#getFormatPropertiesMap();
     await this.updateIterate<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>(args, {
-      subject_type: "View",
+      child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       const { position, visible, width } = updated_data;

@@ -20,14 +20,14 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 		const data = super.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
 		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
-		this.logger && this.logger('UPDATE', 'SchemaUnit', this.id);
+		this.logger && this.logger('UPDATE', 'collection', this.id);
 	}
 
 	delete () {
 		const data = super.getCachedData();
 		delete data.schema[this.schema_id];
 		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
-		this.logger && this.logger('DELETE', 'SchemaUnit', this.id);
+		this.logger && this.logger('DELETE', 'collection', this.id);
 	}
 
 	duplicate () {
@@ -35,7 +35,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 			id = shortid();
 		data.schema[id] = data.schema[this.schema_id];
 		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
-		this.logger && this.logger('CREATE', 'SchemaUnit', id);
+		this.logger && this.logger('CREATE', 'collection', id);
 	}
 
 	getCachedChildData () {

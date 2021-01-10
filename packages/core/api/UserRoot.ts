@@ -26,7 +26,7 @@ class UserRoot extends Data<IUserRoot> {
 	async getSpaceViews (args?: FilterTypes<ISpaceView>, multiple?: boolean) {
 		return (await this.getIterate<ISpaceView>(
 			args,
-			{ multiple, subject_type: 'SpaceView', child_ids: 'space_views' },
+			{ multiple, child_type: 'space_view', child_ids: 'space_views' },
 			(space_id) => this.cache.space_view.get(space_id)
 		)).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
 	}
@@ -40,10 +40,7 @@ class UserRoot extends Data<IUserRoot> {
 			args,
 			{
 				child_ids: this.getCachedData().space_views,
-				subject_type: 'SpaceView',
 				child_type: 'space_view',
-				updateParent: false,
-
 				multiple
 			},
 			(id) => this.cache.space_view.get(id)

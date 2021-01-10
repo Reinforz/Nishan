@@ -75,7 +75,7 @@ class Collection extends Data<ICollection> {
     return (await this.getIterate<IPage>(args, {
       child_ids: "template_pages",
       multiple,
-      subject_type: "Page"
+      child_type: "block"
     }, (page_id) => this.cache.block.get(page_id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }))
   }
 
@@ -88,7 +88,6 @@ class Collection extends Data<ICollection> {
       child_ids: "template_pages",
       multiple,
       child_type: "block",
-      subject_type: "Page"
     }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
   }
 
@@ -108,9 +107,8 @@ class Collection extends Data<ICollection> {
   async deleteTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
       multiple,
-      child_ids: "template_pages",
+      child_ids: this.getCachedData().template_pages ?? [],
       child_type: "block",
-      subject_type: "Page",
       child_path: "template_pages",
     }, (child_id) => this.cache.block.get(child_id) as IPage)
   }
@@ -131,7 +129,7 @@ class Collection extends Data<ICollection> {
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
     return (await this.getIterate<IPage>(args, {
       child_ids: await this.#getRowPages(),
-      subject_type: "Page",
+      child_type: "block",
       multiple
     }, (id) => this.cache.block.get(id) as IPage)).map(({ id }) => new Page({ ...this.getProps(), id }));
   }
@@ -143,7 +141,6 @@ class Collection extends Data<ICollection> {
   async updatePages(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
     return (await this.updateIterate<IPage, IPageUpdateInput>(args, {
       child_ids: await this.#getRowPages(),
-      subject_type: "Page",
       multiple,
       child_type: "block",
     }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
@@ -161,7 +158,6 @@ class Collection extends Data<ICollection> {
   async deletePages(args?: FilterTypes<IPage>, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
       child_ids: await this.#getRowPages(),
-      subject_type: "Page",
       child_type: "block",
       multiple
     }, (child_id) => this.cache.block.get(child_id) as IPage);
@@ -180,7 +176,7 @@ class Collection extends Data<ICollection> {
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
         else data.schema[schema_id] = arg 
         results[arg.type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
-        this.logger && this.logger("CREATE", "SchemaUnit", schema_id);
+        this.logger && this.logger("CREATE", "collection", schema_id);
       } else
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
     };
@@ -201,7 +197,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { property: string })>, multiple?: boolean) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].set(property, new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
+    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].set(property, new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
     return schema_unit_map;
   }
 
@@ -223,7 +219,7 @@ class Collection extends Data<ICollection> {
     const results = createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
     await this.updateIterate<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>(args, {
       child_ids: schema_ids,
-      subject_type: "SchemaUnit",
+      child_type: "collection",
       multiple,
     }, (schema_id) => {
       return { ...data.schema[schema_id], property: schema_id }
@@ -256,7 +252,7 @@ class Collection extends Data<ICollection> {
     await this.getIterate<TSchemaUnit & { property: string }>(args, {
       child_ids: Object.keys(data.schema) ?? [],
       multiple,
-      subject_type: "SchemaUnit",
+      child_type: "collection",
       method: "DELETE"
     }, (child_id) => {
       return { ...data.schema[child_id], property: child_id }

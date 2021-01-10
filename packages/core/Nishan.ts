@@ -86,7 +86,6 @@ class Nishan extends Cache {
       interval: this.interval,
       logger: this.logger,
       stack: [],
-      sync_records: []
     }
 
     const notion_user_ids: string[] = [];
@@ -109,7 +108,7 @@ class Nishan extends Cache {
     }
 
     return user_ids.map(user_id => {
-      this.logger && this.logger(`READ`, 'NotionUser', user_id);
+      this.logger && this.logger(`READ`, 'notion_user', user_id);
       return new NotionUser({ ...common_props, user_id: user_id, id: user_id, space_id: "0", shard_id: 0 })
     });
   }

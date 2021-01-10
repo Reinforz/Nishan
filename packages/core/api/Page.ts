@@ -128,7 +128,7 @@ export default class Page extends Permissions<IPage> {
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     const block_map = createBlockMap();
-    await this.getIterate<TBlock>(args, { multiple, child_ids: "content", subject_type: "Block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
+    await this.getIterate<TBlock>(args, { multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
       block_map[block.type].set(block.id, createBlockClass(block.type, block.id, this.getProps()))
     });
     return block_map;
@@ -142,9 +142,7 @@ export default class Page extends Permissions<IPage> {
     const block_map = createBlockMap();
     await this.updateIterate<TBlock, TBlockInput>(args, {
       multiple,
-      
       child_ids: this.getCachedData().content,
-      subject_type: "Block",
       child_type: "block"
     }, (child_id) => this.cache.block.get(child_id), async (_, data) => {
       block_map[data.type].set(data.id, createBlockClass(data.type, data.id, this.getProps()))
@@ -167,11 +165,9 @@ export default class Page extends Permissions<IPage> {
   async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     await this.deleteIterate<TBlock>(args, {
       multiple,
-      
       child_ids: this.getCachedData().content,
       child_path: "content",
       child_type: "block",
-      subject_type: "Block"
     }, (block_id) => this.cache.block.get(block_id));
   }
 }

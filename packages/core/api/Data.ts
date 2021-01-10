@@ -1,15 +1,15 @@
 import { TDataType, TData, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
+import { TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
 import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
-  child_ids: string[] | keyof T,
-  subject_type: TSubjectType,
+  child_ids: keyof T | string[],
+  child_type: TDataType,
   multiple?: boolean
 }
 
-interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, updateParent?: boolean };
+interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
   child_path?: keyof T
 }
@@ -195,7 +195,7 @@ export default class Data<T extends TData> extends Operations {
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
     await this.initializeCache()
-    const { child_type, updateParent = true } = options, updated_props = this.getLastEditedProps();
+    const { child_type } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [];
 
     await iterateChildren<T, TD, RD>(args, transform, {
@@ -213,7 +213,7 @@ export default class Data<T extends TData> extends Operations {
       }
     }, cb);
 
-    if (ops.length !== 0 && updateParent) {
+    if (ops.length !== 0) {
       this.updateLastEditedProps();
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
     }

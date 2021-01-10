@@ -48,7 +48,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 						addCopyName: true
 					}
 				});
-				this.logger && this.logger('CREATE', 'Block', $gen_block_id);
+				this.logger && this.logger('CREATE', 'block', $gen_block_id);
 			} else {
 				ops.push(
 					Operation.block.update($gen_block_id, [], {
@@ -58,7 +58,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					}),
 					this.addToParentChildArray($gen_block_id, position)
 				);
-				this.logger && this.logger('CREATE', 'Block', $gen_block_id);
+				this.logger && this.logger('CREATE', 'block', $gen_block_id);
 			}
 
 			block_map[data.type].set($gen_block_id, createBlockClass(data.type, $gen_block_id, this.getProps()));
@@ -75,7 +75,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	update (args: Partial<A>) {
 		const data = this.getCachedData();
 		const { format = data.format, properties = data.properties } = args as any;
-		this.logger && this.logger('UPDATE', 'Block', data.id);
+		this.logger && this.logger('UPDATE', 'block', data.id);
 		this.stack.push(
 			Operation.block.update(this.id, [], {
 				properties,
@@ -93,7 +93,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	convertTo (type: TBasicBlockType) {
 		const data = this.getCachedData() as any;
 		data.type = type;
-		this.logger && this.logger('UPDATE', 'Block', data.id);
+		this.logger && this.logger('UPDATE', 'block', data.id);
 		this.stack.push(Operation.block.update(this.id, [], { type }));
 	}
 

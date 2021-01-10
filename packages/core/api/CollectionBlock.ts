@@ -62,7 +62,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		const view_map = createViewMap();
 		await this.getIterate<TView>(
 			args,
-			{ multiple, child_ids: 'view_ids', subject_type: 'View' },
+			{ multiple, child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
 			(view_id, view) => {
 				view_map[view.type].set(view_id, new view_class[view.type]({
@@ -85,7 +85,6 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 			{
 				multiple,
 				child_ids: this.getCachedData().view_ids,
-				subject_type: 'View',
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
@@ -116,8 +115,6 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				child_path: 'view_ids',
 				child_type: 'collection_view',
 				multiple,
-
-				subject_type: 'View',
 				child_ids: this.getCachedData().view_ids
 			},
 			(view_id) => this.cache.collection_view.get(view_id)

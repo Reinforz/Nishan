@@ -32,7 +32,7 @@ class NotionUser extends Data<INotionUser> {
    */
   getUserSettings() {
     const user_settings = this.cache.user_settings.get(this.user_id) as IUserSettings;
-    this.logger && this.logger('READ', 'UserSettings', user_settings.id)
+    this.logger && this.logger('READ', 'user_settings', user_settings.id)
     return new UserSettings({
       ...this.getProps(),
       id: user_settings.id,
@@ -41,7 +41,7 @@ class NotionUser extends Data<INotionUser> {
 
   getUserRoot() {
     const notion_user = this.cache.user_root.get(this.id) as IUserRoot;
-    this.logger && this.logger('READ', 'UserRoot', notion_user.id)
+    this.logger && this.logger('READ', 'user_root', notion_user.id)
     return new UserRoot({
       ...this.getProps(),
       id: this.id
@@ -142,7 +142,7 @@ class NotionUser extends Data<INotionUser> {
         }),
         Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
         Operation.space.listAfter(space_id, ['pages'], { id: page_id }));
-      this.logger && this.logger(`CREATE`, 'Space', space_id);
+      this.logger && this.logger(`CREATE`, 'space', space_id);
     };
     // ? FEAT:1:H update local cache
     this.stack.push(...ops);
@@ -169,7 +169,7 @@ class NotionUser extends Data<INotionUser> {
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
     return (await this.getIterate<ISpace>(args, {
       multiple,
-      subject_type: "Space",
+      child_type: "space",
       child_ids: this.#getSpaceIds(),
     }, (space_id) => this.cache.space.get(space_id))).map(({ id, shard_id }) => new Space({
       ...this.getProps(),
@@ -187,7 +187,6 @@ class NotionUser extends Data<INotionUser> {
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {
     return (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
       child_ids: this.#getSpaceIds(),
-      subject_type: "Space",
       child_type: "space",
       multiple,
     }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
@@ -201,7 +200,7 @@ class NotionUser extends Data<INotionUser> {
     const matches_ids = await this.getIterate<ISpace>(args, {
       child_ids: this.#getSpaceIds(),
       multiple,
-      subject_type: "Space",
+      child_type: "space",
       method: "DELETE"
     }, (child_id) => this.cache.space.get(child_id));
 

@@ -44,7 +44,7 @@ export default class Space extends Data<ISpace> {
    */
   getSpaceView() {
     const target_space_view = this.spaceView;
-    this.logger && this.logger("READ", "SpaceView", target_space_view.id)
+    this.logger && this.logger("READ", "space_view", target_space_view.id)
     return new SpaceView({
       id: target_space_view.id,
       ...this.getProps()
@@ -70,7 +70,7 @@ export default class Space extends Data<ISpace> {
         spaceId: this.id
       }
     });
-    this.logger && this.logger("DELETE", "Space", this.id);
+    this.logger && this.logger("DELETE", "space", this.id);
   }
 
   async createTRootPages(options: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], ) {
@@ -83,7 +83,7 @@ export default class Space extends Data<ISpace> {
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
     const trootpage_map = createPageMap(), props = this.getProps();
-    await this.getIterate<TPage>(args, { multiple, child_ids: "pages", subject_type: "Page" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
+    await this.getIterate<TPage>(args, { multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
       trootpage_map[page.type].set(page.id, new trootpage_class[page.type]({
         id: page.id,
         ...props
@@ -110,9 +110,7 @@ export default class Space extends Data<ISpace> {
     const trootpage_map = createPageMap();
     await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>(args, {
       child_ids: this.getCachedData().pages,
-      subject_type: "Page",
       child_type: "block",
-      
       multiple
     }, (id) => this.cache.block.get(id) as TPage, (id, data) => trootpage_map[data.type].set(id, new trootpage_class[data.type]({ ...this.getProps(), id }) as any));
   }
@@ -136,7 +134,6 @@ export default class Space extends Data<ISpace> {
       child_ids: this.getCachedData().pages,
       child_path: "pages",
       child_type: "block",
-      subject_type: "Page"
     }, (block_id) => this.cache.block.get(block_id) as TPage)
   }
 
@@ -146,7 +143,7 @@ export default class Space extends Data<ISpace> {
 
   async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
     return (await this.getIterate(args, {
-      subject_type: "Collection",
+      child_type: "collection",
       multiple,
       child_ids: this.getCollectionIds(),
     }, (collection_id) => this.cache.collection.get(collection_id))).map(({ id }) => new Collection({ ...this.getProps(), id }));
@@ -159,9 +156,7 @@ export default class Space extends Data<ISpace> {
   async updateRootCollections(args: UpdateTypes<ICollection, Partial<ICollection>>, multiple?: boolean) {
     return (await this.updateIterate<ICollection, Partial<ICollection>>(args, {
       child_ids: this.getCollectionIds(),
-      subject_type: "Collection",
       child_type: "collection",
-      
       multiple
     }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }))
   }
@@ -183,7 +178,7 @@ export default class Space extends Data<ISpace> {
         data.permissions.push(permission_data)
       }
       notion_users.push(notion_user)
-      this.logger && this.logger("UPDATE", "Space", this.id)
+      this.logger && this.logger("UPDATE", "space", this.id)
     }
     this.updateLastEditedProps();
     this.stack.push(...ops);

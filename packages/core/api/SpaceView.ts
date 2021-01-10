@@ -17,7 +17,7 @@ class SpaceView extends Data<ISpaceView> {
   }
 
   reposition(arg: RepositionParams, ) {
-    this.logger && this.logger("UPDATE", "SpaceView", this.id);
+    this.logger && this.logger("UPDATE", "space_view", this.id);
     this.stack.push(this.addToChildArray(this.id, arg))
   }
 
@@ -43,7 +43,7 @@ class SpaceView extends Data<ISpaceView> {
       }
     }
     if (return_object) {
-      this.logger && this.logger("READ", "Space", target_space.id);
+      this.logger && this.logger("READ", "block", target_space.id);
       return new Space({
         id: target_space.id,
         ...this.getProps()
@@ -60,7 +60,7 @@ class SpaceView extends Data<ISpaceView> {
     const tpage_map = createPageMap();
     (await this.getIterate<TPage>(args, {
       child_ids: this.getCachedData().bookmarked_pages,
-      subject_type: "Page",
+      child_type: "block",
       multiple
     }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
       if (page.type === "page") tpage_map.page.set(id, new Page({ ...this.getProps(), id }))
@@ -86,7 +86,7 @@ class SpaceView extends Data<ISpaceView> {
     const target_space_view = this.getCachedData(), ops: IOperation[] = [];
     await this.updateIterate<TPage, boolean>(args, {
       child_ids: this.cache.space.get(target_space_view.space_id)?.pages ?? [],
-      subject_type: "Page",
+      child_type: "block",
       multiple,
     }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
       ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {

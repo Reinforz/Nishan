@@ -65,7 +65,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 			{ multiple, child_ids: 'view_ids', subject_type: 'View' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
 			(view_id, view) => {
-				view_map[view.type].push(new view_class[view.type]({
+				view_map[view.type].set(view_id, new view_class[view.type]({
 					id: view_id,
 					...this.getProps()
 				}) as any);
@@ -84,14 +84,13 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 			args,
 			{
 				multiple,
-
 				child_ids: this.getCachedData().view_ids,
 				subject_type: 'View',
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
 			(id, { type }) => {
-				view_map[type].push(new view_class[type]({ ...this.getProps(), id }) as any);
+				view_map[type].set(id, new view_class[type]({ ...this.getProps(), id }) as any);
 			}
 		);
 		return view_map;

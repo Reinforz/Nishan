@@ -95,8 +95,8 @@ import {
 } from './block';
 
 export interface ITPage {
-	collection_view_page: CollectionViewPage[];
-	page: Page[];
+	collection_view_page: Map<string, CollectionViewPage>;
+	page: Map<string, Page>;
 }
 
 export interface ITSchemaUnit {
@@ -122,12 +122,12 @@ export interface ITSchemaUnit {
 }
 
 export interface ITView {
-	table: TableView[];
-	gallery: GalleryView[];
-	list: ListView[];
-	board: BoardView[];
-	timeline: TimelineView[];
-	calendar: CalendarView[];
+	table: Map<string, TableView>;
+	gallery: Map<string, GalleryView>;
+	list: Map<string, ListView>;
+	board: Map<string, BoardView>;
+	timeline: Map<string, TimelineView>;
+	calendar: Map<string, CalendarView>;
 }
 
 export interface ITBlock {

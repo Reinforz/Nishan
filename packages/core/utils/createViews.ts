@@ -26,7 +26,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
 
     view_ids.push(view_id);
     view_records.push([view_id, "collection_view"])
-    view_map[type].push(new view_classes[type]({ ...props, id: view_id }))
+    view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))
 
     switch (type) {
       case "table":

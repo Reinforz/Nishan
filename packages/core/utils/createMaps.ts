@@ -42,12 +42,12 @@ export function createBlockMap () {
 
 export function createViewMap () {
 	return {
-		board: [],
-		gallery: [],
-		list: [],
-		timeline: [],
-		table: [],
-		calendar: []
+		board: new Map(),
+		gallery: new Map(),
+		list: new Map(),
+		timeline: new Map(),
+		table: new Map(),
+		calendar: new Map()
 	} as ITView;
 }
 
@@ -77,7 +77,7 @@ export function createSchemaUnitMap () {
 
 export function createPageMap () {
 	return {
-		page: [],
-		collection_view_page: []
+		page: new Map(),
+		collection_view_page: new Map()
 	} as ITPage;
 }

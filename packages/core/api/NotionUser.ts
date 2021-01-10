@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { Operation } from '../utils';
+import { createPageMap, Operation } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
 import { INotionUser, IUserSettings, IUserRoot, IOperation, ISpace, TPage } from '@nishans/types';
-import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, UpdateCacheManuallyParam, FilterType, FilterTypes, UpdateType, UpdateTypes, ITPage } from '../types';
+import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, UpdateCacheManuallyParam, FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
 
 /**
  * A class to represent NotionUser of Notion
@@ -192,7 +192,7 @@ class NotionUser extends Data<INotionUser> {
   // ? FEAT:1:M Add deleteSpaces methods
 
   async getTPagesById(ids: string[]) {
-    const tpage_map: ITPage = { page: [], collection_view_page: [] }, tpage_content_ids: string[] = [];
+    const tpage_map = createPageMap(), tpage_content_ids: string[] = [];
 
     await this.updateCacheManually(ids);
 
@@ -200,11 +200,11 @@ class NotionUser extends Data<INotionUser> {
       const id = ids[index];
       const page = this.cache.block.get(id) as TPage;
       if (page?.type === "page") {
-        tpage_map.page.push(new Page({ ...this.getProps(), id: page.id }))
+        tpage_map.page.set(page.id, new Page({ ...this.getProps(), id: page.id }))
         if (page.content)
           tpage_content_ids.push(...page.content);
       } else if (page?.type === "collection_view_page")
-        tpage_map.collection_view_page.push(new CollectionViewPage({ ...this.getProps(), id: page.id }));
+        tpage_map.collection_view_page.set(page.id, new CollectionViewPage({ ...this.getProps(), id: page.id }));
     }
 
     if (tpage_content_ids.length)

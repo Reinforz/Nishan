@@ -13,26 +13,26 @@ beforeAll(async ()=>{
 function checkRootPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
-    expect(pages.page.length).toBe(1);
-    expect(pages.page[0]).not.toBeNull();
-    expect(pages.page[0].id).toBe(ROOT_PAGE_ONE_ID);
-    expect(pages.page[0].type).toBe("block");
+    expect(pages.page.size).toBe(1);
+    expect(pages.page.get(ROOT_PAGE_ONE_ID)).not.toBeNull();
+    expect(pages.page.get(ROOT_PAGE_ONE_ID)?.id).toBe(ROOT_PAGE_ONE_ID);
+    expect(pages.page.get(ROOT_PAGE_ONE_ID)?.type).toBe("block");
   }else{
-    expect(pages.page.length).toBe(0);
-    expect(pages.page[0]).toBeUndefined();
+    expect(pages.page.size).toBe(0);
+    expect(pages.page.get(ROOT_PAGE_ONE_ID)).toBeUndefined();
   }
 }
 
 function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
-    expect(pages.collection_view_page.length).toBe(1);
-    expect(pages.collection_view_page[0]).not.toBeNull();
-    expect(pages.collection_view_page[0].id).toBe(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
-    expect(pages.collection_view_page[0].type).toBe("block");
+    expect(pages.collection_view_page.size).toBe(1);
+    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)).not.toBeNull();
+    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.id).toBe(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.type).toBe("block");
   }else{
-    expect(pages.collection_view_page.length).toBe(0);
-    expect(pages.collection_view_page[0]).toBeUndefined();
+    expect(pages.collection_view_page.size).toBe(0);
+    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)).toBeUndefined();
   }
 }
 

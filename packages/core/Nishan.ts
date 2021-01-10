@@ -12,9 +12,8 @@ class Nishan extends Cache {
   interval: number;
   init_cache: boolean;
   logger: Logger;
-  defaultExecutionState: boolean
 
-  constructor(arg: Pick<NishanArg, "token"> & { interval?: number, defaultExecutionState?: boolean, logger?: Logger }) {
+  constructor(arg: Pick<NishanArg, "token"> & { interval?: number, logger?: Logger }) {
     super();
     this.token = arg.token;
     this.interval = arg.interval || 500;
@@ -22,7 +21,6 @@ class Nishan extends Cache {
     this.logger = arg.logger || function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     };
-    this.defaultExecutionState = arg.defaultExecutionState ?? true;
   }
 
   #initializeCache = async () => {
@@ -112,7 +110,7 @@ class Nishan extends Cache {
 
     return user_ids.map(user_id => {
       this.logger && this.logger(`READ`, 'NotionUser', user_id);
-      return new NotionUser({ ...common_props, user_id: user_id, id: user_id, space_id: "0", shard_id: 0, defaultExecutionState: this.defaultExecutionState })
+      return new NotionUser({ ...common_props, user_id: user_id, id: user_id, space_id: "0", shard_id: 0 })
     });
   }
 }

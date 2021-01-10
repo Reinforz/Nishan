@@ -12,6 +12,7 @@ import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateIn
  * @noInheritDoc
  */
 class Collection extends Data<ICollection> {
+  
   constructor(args: NishanArg) {
     super({ ...args, type: "collection" });
   }

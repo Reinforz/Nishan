@@ -51,7 +51,6 @@ export interface NishanArg {
 	cache: ICache;
 	id: string;
 	logger: Logger;
-	defaultExecutionState?: boolean;
 	stack: IOperation[];
 	sync_records: UpdateCacheManuallyParam;
 }

@@ -21,8 +21,8 @@ export default class Mutations extends Queries {
 	protected shard_id: number;
 	protected createTransaction: (operations: IOperation[]) => Request;
 
-	constructor ({ cache, token, interval, logger, user_id, shard_id, space_id, defaultExecutionState }: NishanArg) {
-		super({ logger, token, interval, user_id, cache, defaultExecutionState });
+	constructor ({ cache, token, interval, logger, user_id, shard_id, space_id }: NishanArg) {
+		super({ logger, token, interval, user_id, cache });
 		this.shard_id = shard_id;
 		this.space_id = space_id;
 		this.createTransaction = createTransaction.bind(this, shard_id, space_id);

@@ -22,10 +22,9 @@ export default class Queries extends Cache {
   };
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
   protected logger: Logger;
-  protected defaultExecutionState: boolean;
   user_id: string;
 
-  constructor({ logger, token, interval, user_id, cache, defaultExecutionState }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack" | "sync_records">) {
+  constructor({ logger, token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack" | "sync_records">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;
@@ -39,7 +38,6 @@ export default class Queries extends Cache {
     this.logger = logger === false ? false : function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
     };
-    this.defaultExecutionState = defaultExecutionState ?? true;
   }
 
   protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T): Promise<T> => {

@@ -116,7 +116,6 @@ export default class Data<T extends TData> extends Operations {
 
   protected async initializeCache() {
     if (!this.#init_cache) {
-
       const container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
@@ -159,7 +158,8 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
-    const { child_type, child_path, execute = this.defaultExecutionState } = options, updated_props = this.getLastEditedProps();
+    await this.initializeCache()
+    const { child_type, child_path, execute } = options, updated_props = this.getLastEditedProps();
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
     const matched_ids = await iterateChildren<T, TD>(args, transform, {
       data: this.getCachedData(),
@@ -183,7 +183,8 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
-    const { child_type, execute = this.defaultExecutionState, updateParent = true } = options, updated_props = this.getLastEditedProps();
+    await this.initializeCache()
+    const { child_type, execute, updateParent = true } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
     await iterateChildren<T, TD, RD>(args, transform, {
@@ -208,6 +209,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
+    await this.initializeCache()
     return await iterateChildren<T,RD>(args, transform, {
       data: this.getCachedData(),
       logger: this.logger,
@@ -226,7 +228,6 @@ export default class Data<T extends TData> extends Operations {
       space_id: this.space_id,
       cache: this.cache,
       logger: this.logger,
-      defaultExecutionState: this.defaultExecutionState,
       ...this.getStackSyncRecords()
     }
   }

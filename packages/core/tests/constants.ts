@@ -7,7 +7,6 @@ const nishan = new Nishan({
 
 nishan.logger = false;
 nishan.init_cache = true;
-nishan.defaultExecutionState = false;
 
 nishan.saveToCache(data.recordMap);
 

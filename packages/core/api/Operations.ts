@@ -1,82 +1,26 @@
-import { IOperation } from "@nishans/types";
-import { UpdateCacheManuallyParam, NishanArg } from "../types";
-import { warn } from "../utils";
+import { IOperation } from '@nishans/types';
+import { NishanArg } from '../types';
+import { warn } from '../utils';
 
-import Mutations from "./Mutations";
+import Mutations from './Mutations';
 
 export default class Operations extends Mutations {
-  #stack: IOperation[] = [];
-  #sync_records: UpdateCacheManuallyParam = []
+	stack: IOperation[] = [];
 
-  constructor(args: NishanArg) {
-    super(args);
-    this.#stack = args.stack || []
-    this.#sync_records = args.sync_records || []
-  }
+	constructor (args: NishanArg) {
+		super(args);
+		this.stack = args.stack || [];
+	}
 
-  protected pushOperations(operations: IOperation[]) {
-    this.#stack.push(...operations)
-  }
+	printStack () {
+		console.log(JSON.stringify(this.stack, null, 2));
+	}
 
-  protected pushSyncRecords(sync_records: UpdateCacheManuallyParam) {
-    this.#sync_records.push(...sync_records)
-  }
-
-  protected pushOperationSyncRecords(operations: IOperation[], sync_records: UpdateCacheManuallyParam) {
-    if (sync_records.length !== 0)
-      this.pushSyncRecords(sync_records)
-    if (operations.length !== 0)
-      this.pushOperations(operations)
-  }
-
-  printStack() {
-    console.log(JSON.stringify(this.#stack, null, 2))
-  }
-
-  async executeOperation() {
-    if (this.#stack.length === 0)
-      warn(`The operation stack is empty`)
-    else {
-      await this.saveTransactions(this.#stack);
-      this.#stack = [];
-    }
-    if (this.#sync_records.length === 0)
-      warn(`The sync_record stack is empty`)
-    else {
-      await this.updateCacheManually(this.#sync_records)
-      this.#sync_records = [];
-    }
-  }
-
-  clearStack(){
-    this.#stack = [];
-  }
-
-  clearSyncRecords(){
-    this.#sync_records = [];
-  }
-
-  clearStackSyncRecords(){
-    this.clearStack();
-    this.clearSyncRecords();
-  }
-
-  getStack(){
-    return this.#stack
-  }
-
-  getSyncRecords(){
-    return this.#sync_records
-  }
-
-  getStackSyncRecords(){
-    return {
-      stack: this.#stack,
-      sync_records: this.#sync_records
-    }
-  }
-
-  protected async executeUtil(ops: IOperation[], sync_records: UpdateCacheManuallyParam | string) {
-    this.pushOperationSyncRecords(ops, typeof sync_records === "string" ? [sync_records] : sync_records);
-  }
+	async executeOperation () {
+		if (this.stack.length === 0) warn(`The operation stack is empty`);
+		else {
+			await this.saveTransactions(this.stack);
+			this.stack = [];
+		}
+	}
 }

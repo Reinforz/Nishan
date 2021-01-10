@@ -16,9 +16,9 @@ class SpaceView extends Data<ISpaceView> {
     super({ ...arg, type: "space_view" });
   }
 
-  async reposition(arg: RepositionParams, ) {
+  reposition(arg: RepositionParams, ) {
     this.logger && this.logger("UPDATE", "SpaceView", this.id);
-    await this.executeUtil([this.addToChildArray(this.id, arg)], [this.user_id, "user_root"], )
+    this.stack.push(this.addToChildArray(this.id, arg))
   }
 
   /**
@@ -93,7 +93,7 @@ class SpaceView extends Data<ISpaceView> {
         id
       }))
     });
-    await this.executeUtil(ops, [[target_space_view.id, "space_view"]], )
+    this.stack.push(...ops)
   }
 }
 

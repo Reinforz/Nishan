@@ -172,7 +172,7 @@ class Collection extends Data<ICollection> {
    * @param args array of Schema creation properties
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async createSchemaUnits(args: TSchemaUnitInput[], ) {
+  createSchemaUnits(args: TSchemaUnitInput[], ) {
     const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
@@ -185,7 +185,7 @@ class Collection extends Data<ICollection> {
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
     };
 
-    await this.executeUtil([Operation.collection.update(this.id, [], { schema: data.schema })], this.id, );
+    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
     return results;
   }
 
@@ -232,7 +232,7 @@ class Collection extends Data<ICollection> {
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
 
-    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, )
+    this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }))
     return results;
   }
 
@@ -262,7 +262,7 @@ class Collection extends Data<ICollection> {
     }, (id) => {
       delete data.schema[id]
     });
-    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, )
+    this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }) )
   }
 }
 

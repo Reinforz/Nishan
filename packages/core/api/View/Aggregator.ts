@@ -62,9 +62,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       })
     };
 
-    await this.executeUtil([Operation.collection_view.update(this.id, [], {
+    this.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2,
-    })], this.id, )
+    }))
   }
 
   async updateAggregation(arg: UpdateType<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>, ) {
@@ -83,9 +83,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       aggregation.aggregator = aggregator
     })
 
-    await this.executeUtil([Operation.collection_view.update(this.id, [], {
+    this.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2,
-    })], this.id, )
+    }))
   }
 
   async deleteAggregation(arg: FilterType<TSchemaUnit & ViewAggregations>, ) {
@@ -103,9 +103,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }, (name) => aggregations_map[name], (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property))
     })
-    await this.executeUtil([Operation.collection_view.update(this.id, [], {
+    this.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2
-    })], this.id, )
+    }))
   }
 }
 

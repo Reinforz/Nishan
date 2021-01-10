@@ -57,15 +57,8 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
   parent_type?: TDataType,
   cb: (data: T) => void
 }){
-  const {stack, sync_records} = space.getStackSyncRecords(), check_parent = parent_id && parent_type;
+  const {stack} = space, check_parent = parent_id && parent_type;
   expect(stack.length).toBe(2);
-  expect(sync_records.length).toBe(2);
-  expect(sync_records[0][0]).toBe(child_id);
-  expect(sync_records[0][1]).toBe(child_type);
-  if(check_parent){
-    expect(sync_records[1][0]).toBe(parent_id);
-    expect(sync_records[1][1]).toBe(parent_type);
-  }
   const [child_op, parent_op] = stack;
 
   cb(child_op.args as T)
@@ -96,15 +89,8 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
   parent_type?: TDataType,
   child_path: keyof P,
 }){
-  const {stack, sync_records} = space.getStackSyncRecords(), check_parent = parent_id && parent_type;
+  const {stack} = space, check_parent = parent_id && parent_type;
   expect(stack.length).toBe(3);
-  expect(sync_records.length).toBe(2);
-  expect(sync_records[0][0]).toBe(child_id);
-  expect(sync_records[0][1]).toBe(child_type);
-  if(check_parent){
-    expect(sync_records[1][0]).toBe(parent_id);
-    expect(sync_records[1][1]).toBe(parent_type);
-  }
   const [child_op, parent_path_op, parent_op] = stack;
 
   expect(child_op.id).toBe(child_id)    
@@ -270,18 +256,17 @@ describe("Getter methods for space", ()=>{
 
 describe("Update methods for space", ()=>{
   beforeEach(()=>{
-    space.clearStackSyncRecords();
+    space.stack = [];
   })
 
   it("Update space", async ()=>{
-    const {stack, sync_records} = space.getStackSyncRecords(),
+    const {stack} = space,
     update_obj = {
       beta_enabled: true,
       disable_export: true
     };
     await space.update(update_obj);
     expect(stack.length).not.toBe(0);
-    expect(sync_records.length).toBe(0);
     keyValueChecker<ISpace>(stack[0].args, update_obj);
     keyValueChecker<ISpace>(space.getCachedData(), update_obj);
   })
@@ -453,7 +438,7 @@ describe("Update methods for space", ()=>{
 
 describe("Delete methods for space", ()=>{
   beforeEach(()=>{
-    space.clearStackSyncRecords();
+    space.stack = [];
   })
 
   it("Delete [root_page] [id]", async () => {

@@ -184,7 +184,7 @@ export default class Space extends Data<ISpace> {
       this.logger && this.logger("UPDATE", "Space", this.id)
     }
 
-    await this.executeUtil(ops, this.id, );
+    this.stack.push(...ops);
     return notion_users;
   }
 

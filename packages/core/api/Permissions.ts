@@ -58,8 +58,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
    * Update the role of the current users based on their id
    * @param args array of array [id of the user, role type for the user]
    */
-  async updateSharedUsers(args: [string, TPermissionRole][], ) {
-    const data = this.getCachedData(), ops: IOperation[] = [];
+  updateSharedUsers(args: [string, TPermissionRole][], ) {
+    const ops: IOperation[] = [];
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       ops.push({
@@ -71,61 +71,61 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       })
     }
     ops.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
-    await this.executeUtil(ops, [data.id, [data.space_id, "space"]], );
+    this.stack.push(...ops);
   }
 
   /**
    * Remove a single user from the pages permission option
    * @param id Id of the user to remove from permission
    */
-  async removeSharedUser(id: string) {
-    return await this.removeSharedUsers([id]);
+  removeSharedUser(id: string) {
+    return this.removeSharedUsers([id]);
   }
 
   /**
    * Remove multiple users from the pages permission option
    * @param id array of the users id to remove from permission
    */
-  async removeSharedUsers(ids: string[]) {
-    return await this.updateSharedUsers(ids.map(id => [id, "none"]));
+  removeSharedUsers(ids: string[]) {
+    return this.updateSharedUsers(ids.map(id => [id, "none"]));
   }
 
-  async addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
-    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
+    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role,
       ...(options ?? {})
-    })], this.id, )
+    }))
   }
 
-  async updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
+  updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission;
-    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
+    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       ...(permission ?? {}),
       type: "public_permission",
       role,
       ...(options ?? {})
-    })], this.id, )
+    }))
   }
 
-  async removePublicPermission() {
-    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  removePublicPermission() {
+    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role: "none"
-    })], this.id, )
+    }))
   }
 
-  async updateSpacePermission(role: TSpacePermissionRole, ) {
-    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  updateSpacePermission(role: TSpacePermissionRole, ) {
+    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role,
-    })], this.id, )
+    }))
   }
 
-  async removeSpacePermission() {
-    await this.executeUtil([Operation.block.setPermissionItem(this.id, ["permissions"], {
+  removeSpacePermission() {
+    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role: "none",
-    })], this.id, )
+    }))
   }
 }

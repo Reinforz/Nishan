@@ -52,7 +52,6 @@ export interface NishanArg {
 	id: string;
 	logger: Logger;
 	stack: IOperation[];
-	sync_records: UpdateCacheManuallyParam;
 }
 
 export type FilterTypes<T> = undefined | string[] | Predicate<T>;

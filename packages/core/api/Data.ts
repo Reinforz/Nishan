@@ -97,7 +97,7 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @param keys
    */
-  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, appendToStack?: boolean) {
+  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, appendToStack?: boolean) {
     appendToStack = appendToStack ?? true
     const parent_data = this.getCachedData(), data = arg;
 
@@ -108,9 +108,9 @@ export default class Data<T extends TData> extends Operations {
 
     this.logger && this.logger("UPDATE", this.type as any, this.id)
     if(appendToStack)
-      await this.executeUtil([
+      this.stack.push(
         Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data)
-      ], []);
+      );
   }
 
   protected async initializeCache() {
@@ -159,7 +159,7 @@ export default class Data<T extends TData> extends Operations {
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCache()
     const { child_type, child_path } = options, updated_props = this.getLastEditedProps();
-    const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
+    const ops: IOperation[] = [];
     const matched_ids = await iterateChildren<T, TD>(args, transform, {
       data: this.getCachedData(),
       logger: this.logger,
@@ -169,22 +169,20 @@ export default class Data<T extends TData> extends Operations {
     }, (child_id) => {
       if (child_type) {
         ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
-        sync_records.push([child_id, child_type])
         if (typeof child_path === "string") ops.push(Operation[this.type].listRemove(this.id, [child_path], { id: child_id }));
       }
     }, cb);
     if (ops.length !== 0) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
-      sync_records.push([this.id, this.type]);
     }
-    await this.executeUtil(ops, sync_records);
+    this.stack.push(...ops);
     return matched_ids;
   }
 
   protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
     await this.initializeCache()
     const { child_type, updateParent = true } = options, updated_props = this.getLastEditedProps();
-    const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
+    const matched_ids: string[] = [], ops: IOperation[] = [];
 
     await iterateChildren<T, TD, RD>(args, transform, {
       data: this.getCachedData(),
@@ -195,15 +193,13 @@ export default class Data<T extends TData> extends Operations {
     }, (child_id, _, updated_data) => {
       if (child_type) {
         ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...updated_props }));
-        sync_records.push([child_id, child_type])
       }
     }, cb);
 
     if (ops.length !== 0 && updateParent) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
-      sync_records.push([this.id, this.type]);
     }
-    await this.executeUtil(ops, sync_records);
+    this.stack.push(...ops);
     return matched_ids;
   }
 
@@ -227,13 +223,13 @@ export default class Data<T extends TData> extends Operations {
       space_id: this.space_id,
       cache: this.cache,
       logger: this.logger,
-      ...this.getStackSyncRecords()
+      stack: this.stack
     }
   }
 
   protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], ) {
-    const [ops, sync_records, block_map] = await nestedContentPopulate(options, this.id, this.type, this.getProps(), this.id);
-    await this.executeUtil(ops, sync_records);
+    const [ops, , block_map] = await nestedContentPopulate(options, this.id, this.type, this.getProps(), this.id);
+    this.stack.push(...ops);
     return block_map;
   }
 }

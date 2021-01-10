@@ -88,9 +88,9 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-  async update(param: TViewCreateInput, ) {
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, view_map, ,view_records] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
-    await this.executeUtil(created_view_ops, view_records)
+  update(param: TViewCreateInput, ) {
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, view_map] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
+    this.stack.push(...created_view_ops)
     return view_map;
   }
 
@@ -98,7 +98,7 @@ class View<T extends TView> extends Data<T> {
     await this.createSorts([arg], )
   }
 
-  async createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], ) {
+  createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], ) {
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, sorts] = this.#getSortsMap();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], target_sort = schema_map.get(arg[0]);
@@ -116,11 +116,11 @@ class View<T extends TView> extends Data<T> {
       }
     }
 
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: {
         ...data.query2
       }
-    })], this.id, )
+    }))
   }
 
   async updateSort(arg: UpdateType<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>,) {
@@ -151,7 +151,7 @@ class View<T extends TView> extends Data<T> {
         target_sort.direction = data
       }
     });
-    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, )
+    this.stack.push(Operation.collection_view.update(this.id,[], { query2: data.query2 }))
   }
 
   async deleteSort(arg: FilterTypes<TSchemaUnit & ViewSorts>,) {
@@ -168,20 +168,16 @@ class View<T extends TView> extends Data<T> {
     }, (id) => sorts_map[id], (_, sort) => {
       sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
     });
-    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, )
-  }
-
-  async createFilter(arg: TViewFilterCreateInput, ) {
-    await this.createFilters([arg], )
+    this.stack.push(Operation.collection_view.update(this.id,[], { query2: data.query2 }))
   }
 
   // ? FEAT:1:M Support nested filter creation
-  async createFilters(args: TViewFilterCreateInput[], ) {
+  createFilters(args: TViewFilterCreateInput[], ) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = initializeViewFilters(this.getCachedData()).filters;
     populateFilters(args, filters, schema_map)
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, )
+    }))
   }
 
   async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, ) {
@@ -206,10 +202,9 @@ class View<T extends TView> extends Data<T> {
         filters.splice(position, 0, original_filter)
       }
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, )
+    }))
   }
 
   async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, ) {
@@ -226,10 +221,9 @@ class View<T extends TView> extends Data<T> {
     }, (name) => filters_map[name], (_, filter) => {
       filters.splice(filters.findIndex(data => (data as any).property === filter.property))
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2
-    })], this.id, )
+    }))
   }
 
   async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>, ) {
@@ -247,10 +241,9 @@ class View<T extends TView> extends Data<T> {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, )
+    }))
   }
 
   async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
@@ -268,10 +261,9 @@ class View<T extends TView> extends Data<T> {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.width = updated_data;
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, )
+    }))
   }
 
   async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
@@ -292,10 +284,9 @@ class View<T extends TView> extends Data<T> {
         format_properties.splice(new_position, 0, target_format_property)
       }
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, )
+    }))
   }
 
   async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, ) {
@@ -319,10 +310,9 @@ class View<T extends TView> extends Data<T> {
       if (visible !== undefined && visible !== null) target_format_property.visible = visible;
       if (width !== undefined && width !== null) target_format_property.width = width;
     });
-
-    await this.executeUtil([Operation.collection_view.update(this.id,[], {
+    this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
-    })], this.id, )
+    }))
   }
 }
 

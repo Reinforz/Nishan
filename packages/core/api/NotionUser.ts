@@ -118,7 +118,7 @@ class NotionUser extends Data<INotionUser> {
       this.logger && this.logger(`CREATE`, 'Space', space_id);
     };
 
-    await this.executeUtil(ops, sync_records, );
+    this.stack.push(...ops);
     return space_ids.map(space_id => new Space({
       id: space_id,
       ...this.getProps()

@@ -36,11 +36,11 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		});
 	}
 
-	async createViews (params: TViewCreateInput[]) {
+	createViews (params: TViewCreateInput[]) {
 		const ops: IOperation[] = [],
 			data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
-			[ created_view_ops, view_ids, view_map, view_records ] = createViews(
+			[ created_view_ops, view_ids, view_map ] = createViews(
 				collection.schema,
 				params,
 				collection.id,
@@ -48,7 +48,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				this.getProps()
 			);
 		ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
-		await this.executeUtil(ops, view_records);
+		this.stack.push(...ops);
 		return view_map;
 	}
 

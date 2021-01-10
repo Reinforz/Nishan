@@ -16,25 +16,25 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 		this.schema_id = arg.schema_id;
 	}
 
-	async update (arg: T) {
+	update (arg: T) {
 		const data = super.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id);
+		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
 		this.logger && this.logger('UPDATE', 'SchemaUnit', this.id);
 	}
 
-	async delete () {
+	delete () {
 		const data = super.getCachedData();
 		delete data.schema[this.schema_id];
-		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id);
+		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
 		this.logger && this.logger('DELETE', 'SchemaUnit', this.id);
 	}
 
-	async duplicate () {
+	duplicate () {
 		const data = super.getCachedData(),
 			id = shortid();
 		data.schema[id] = data.schema[this.schema_id];
-		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id);
+		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
 		this.logger && this.logger('CREATE', 'SchemaUnit', id);
 	}
 

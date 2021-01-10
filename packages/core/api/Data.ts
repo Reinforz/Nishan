@@ -1,6 +1,6 @@
 import { TDataType, TData, Args, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
-import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren } from "../utils";
+import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -53,33 +53,9 @@ export default class Data<T extends TData> extends Operations {
     return { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: this.user_id }
   }
 
-  #detectChildData = (type: TDataType, id: string) => {
-    let child_type: TDataType = 'block', child_path = '';
-    const data = this.cache[type].get(id) as TBlock;
-    if (type === "block") {
-      if (data.type === "page")
-        child_path = "content" as any
-      else if (data.type === "collection_view" || data.type === "collection_view_page") {
-        child_path = "view_ids" as any
-        child_type = "collection_view"
-      }
-    } else if (type === "space")
-      child_path = "pages" as any;
-    else if (type === "user_root") {
-      child_path = "space_views" as any;
-      child_type = "space_view"
-    }
-    else if (type === "collection")
-      child_path = "template_pages" as any;
-    else if (type === "space_view")
-      child_path = "bookmarked_pages" as any;
-
-    return [child_path, child_type] as [string, TDataType]
-  }
-
   protected initializeChildData() {
     if (!this.#init_child_data) {
-      const [child_path, child_type] = this.#detectChildData(this.type, this.id);
+      const [child_path, child_type] = detectChildData(this.type, this.getCachedData() as TBlock);
       this.child_path = child_path as any;
       this.child_type = child_type as any;
       this.#init_child_data = true;
@@ -96,15 +72,15 @@ export default class Data<T extends TData> extends Operations {
     return data as T;
   }
 
+  async updateCachedData(){
+    await this.updateCacheManually([[this.id, this.type]])
+  }
+
   /**
    * Delete the cached data using the id
    */
   protected deleteCachedData() {
     this.cache[this.type].delete(this.id);
-  }
-
-  async updateCachedData(){
-    await this.updateCacheManually([[this.id, this.type]])
   }
 
   /**
@@ -123,7 +99,7 @@ export default class Data<T extends TData> extends Operations {
 
   protected addToParentChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData() as any, parent = (this.cache as any)[data.parent_table].get(data.parent_id),
-      child_path = this.#detectChildData(data.parent_table, parent.id)[0], container: string[] = parent[child_path] as any;
+      child_path = detectChildData(data.parent_table, this.getCachedData() as TBlock)[0], container: string[] = parent[child_path] as any;
     return positionChildren({ child_id, position, container, child_path, parent_id: data.parent_id, parent_type: data.parent_table })
   }
 

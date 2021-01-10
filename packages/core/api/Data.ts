@@ -1,6 +1,6 @@
-import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
+import { TDataType, TData, Args, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
-import { Operation, warn, nestedContentPopulate } from "../utils";
+import { Operation, warn, nestedContentPopulate, positionChildren } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -123,45 +123,17 @@ export default class Data<T extends TData> extends Operations {
   protected addToChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData();
     this.initializeChildData();
-
     if (!data[this.child_path]) data[this.child_path] = [] as any;
-
     const container: string[] = data[this.child_path] as any;
-
-    return this.#addToChildArrayUtil({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: this.type })
+    return positionChildren({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: this.type })
   }
 
-  #addToChildArrayUtil = (arg: { child_id: string, position: RepositionParams, container: string[], child_path: string, parent_type: TOperationTable, parent_id: string }) => {
-    const { child_id, position, container, child_path, parent_type, parent_id } = arg;
-    if (position !== undefined) {
-      let where: "before" | "after" = "before", id = '';
-      if (typeof position === "number") {
-        id = container?.[position] ?? '';
-        where = container.indexOf(child_id) > position ? "before" : "after";
-        container.splice(position, 0, child_id);
-      } else {
-        where = position.position, id = position.id;
-        container.splice(container.indexOf(position.id) + (position.position === "before" ? -1 : 1), 0, child_id);
-      }
-
-      return (Operation[parent_type] as any)[`list${where.charAt(0).toUpperCase() + where.substr(1)}`](parent_id, [child_path], {
-        [where]: id,
-        id: child_id
-      }) as IOperation
-    } else {
-      container.push(child_id);
-      return Operation[parent_type].listAfter(parent_id, [child_path], {
-        after: '',
-        id: child_id
-      }) as IOperation;
-    }
-  }
+  
 
   protected addToParentChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData() as any, parent = (this.cache as any)[data.parent_table].get(data.parent_id),
       child_path = this.#detectChildData(data.parent_table, parent.id)[0], container: string[] = parent[child_path] as any;
-
-    return this.#addToChildArrayUtil({ child_id, position, container, child_path, parent_id: data.parent_id, parent_type: data.parent_table })
+    return positionChildren({ child_id, position, container, child_path, parent_id: data.parent_id, parent_type: data.parent_table })
   }
 
   /**

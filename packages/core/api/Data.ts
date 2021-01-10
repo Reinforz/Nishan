@@ -183,7 +183,7 @@ export default class Data<T extends TData> extends Operations {
     if (ops.length !== 0) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
     }
-    // ? FEAT:1:H Update local cache
+    // ? FEAT:1:H update local cache
     this.stack.push(...ops);
     return matched_ids;
   }
@@ -208,7 +208,7 @@ export default class Data<T extends TData> extends Operations {
     if (ops.length !== 0 && updateParent) {
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
     }
-    // ? FEAT:1:H Update local cache
+    // ? FEAT:1:H update local cache
     this.stack.push(...ops);
     return matched_ids;
   }

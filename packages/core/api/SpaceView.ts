@@ -93,7 +93,7 @@ class SpaceView extends Data<ISpaceView> {
         id
       }))
     });
-    // ? FEAT:1:H Update local cache
+    // ? FEAT:1:H update local cache
 
     this.stack.push(...ops)
   }

@@ -183,7 +183,7 @@ export default class Space extends Data<ISpace> {
       notion_users.push(notion_user)
       this.logger && this.logger("UPDATE", "Space", this.id)
     }
-    // ? FEAT:1:H Update local cache
+    // ? FEAT:1:H update local cache
     this.stack.push(...ops);
     return notion_users;
   }

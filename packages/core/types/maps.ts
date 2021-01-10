@@ -100,25 +100,25 @@ export interface ITPage {
 }
 
 export interface ITSchemaUnit {
-	text: SchemaUnit<TextSchemaUnit>[];
-	number: SchemaUnit<NumberSchemaUnit>[];
-	select: SchemaUnit<SelectSchemaUnit>[];
-	multi_select: SchemaUnit<MultiSelectSchemaUnit>[];
-	title: SchemaUnit<TitleSchemaUnit>[];
-	date: SchemaUnit<DateSchemaUnit>[];
-	person: SchemaUnit<PersonSchemaUnit>[];
-	file: SchemaUnit<FileSchemaUnit>[];
-	checkbox: SchemaUnit<CheckboxSchemaUnit>[];
-	url: SchemaUnit<UrlSchemaUnit>[];
-	email: SchemaUnit<EmailSchemaUnit>[];
-	phone_number: SchemaUnit<PhoneNumberSchemaUnit>[];
-	formula: SchemaUnit<FormulaSchemaUnit>[];
-	relation: SchemaUnit<RelationSchemaUnit>[];
-	rollup: SchemaUnit<RollupSchemaUnit>[];
-	created_time: SchemaUnit<CreatedTimeSchemaUnit>[];
-	created_by: SchemaUnit<CreatedBySchemaUnit>[];
-	last_edited_time: SchemaUnit<LastEditedTimeSchemaUnit>[];
-	last_edited_by: SchemaUnit<LastEditedBySchemaUnit>[];
+	text: Map<string, SchemaUnit<TextSchemaUnit>>;
+	number: Map<string, SchemaUnit<NumberSchemaUnit>>;
+	select: Map<string, SchemaUnit<SelectSchemaUnit>>;
+	multi_select: Map<string, SchemaUnit<MultiSelectSchemaUnit>>;
+	title: Map<string, SchemaUnit<TitleSchemaUnit>>;
+	date: Map<string, SchemaUnit<DateSchemaUnit>>;
+	person: Map<string, SchemaUnit<PersonSchemaUnit>>;
+	file: Map<string, SchemaUnit<FileSchemaUnit>>;
+	checkbox: Map<string, SchemaUnit<CheckboxSchemaUnit>>;
+	url: Map<string, SchemaUnit<UrlSchemaUnit>>;
+	email: Map<string, SchemaUnit<EmailSchemaUnit>>;
+	phone_number: Map<string, SchemaUnit<PhoneNumberSchemaUnit>>;
+	formula: Map<string, SchemaUnit<FormulaSchemaUnit>>;
+	relation: Map<string, SchemaUnit<RelationSchemaUnit>>;
+	rollup: Map<string, SchemaUnit<RollupSchemaUnit>>;
+	created_time: Map<string, SchemaUnit<CreatedTimeSchemaUnit>>;
+	created_by: Map<string, SchemaUnit<CreatedBySchemaUnit>>;
+	last_edited_time: Map<string, SchemaUnit<LastEditedTimeSchemaUnit>>;
+	last_edited_by: Map<string, SchemaUnit<LastEditedBySchemaUnit>>;
 }
 
 export interface ITView {

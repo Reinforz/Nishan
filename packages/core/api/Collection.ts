@@ -179,7 +179,7 @@ class Collection extends Data<ICollection> {
       if (!data.schema[schema_id]) {
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
         else data.schema[schema_id] = arg 
-        results[arg.type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
+        results[arg.type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
         this.logger && this.logger("CREATE", "SchemaUnit", schema_id);
       } else
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
@@ -201,7 +201,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { property: string })>, multiple?: boolean) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
+    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].set(property, new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
     return schema_unit_map;
   }
 
@@ -230,7 +230,7 @@ class Collection extends Data<ICollection> {
     }, (schema_id, schema_data, updated_data) => {
       delete (schema_data as any).property
       data.schema[schema_id] = { ...schema_data, ...updated_data } as TSchemaUnit;
-      results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
+      results[data.schema[schema_id].type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
     this.updateLastEditedProps();
     this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }))

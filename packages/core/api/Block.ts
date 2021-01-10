@@ -1,4 +1,4 @@
-import { TBlock, IOperation, TBasicBlockType } from '@nishans/types';
+import { TBlock, IOperation, TBasicBlockType, ISpace, IPage } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams, UpdateCacheManuallyParam } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
@@ -105,7 +105,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	delete () {
 		const data = this.getCachedData();
 		const is_root_page = data.parent_table === 'space' && data.type === 'page';
-		// ? FEAT:1:H update local cache
+		if (is_root_page) {
+			const space = this.cache.space.get(data.parent_id) as ISpace;
+			space.pages = space.pages.filter((id) => id !== data.id);
+			this.updateLastEditedProps(space);
+		} else {
+			const page = this.cache.block.get(data.parent_id) as IPage;
+			page.content = page.content.filter((id) => id !== data.id);
+			this.updateLastEditedProps(page);
+		}
+		data.alive = false;
+		this.updateLastEditedProps();
 		this.stack.push(
 			Operation.block.update(this.id, [], {
 				alive: false,
@@ -125,12 +135,22 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param new_parent_id Id of the new parent page
    */
 	transfer (new_parent_id: string) {
-		const data = this.getCachedData();
-		// ? FEAT:1:H update local cache
+		const data = this.getCachedData(),
+			parent_data = this.cache.block.get(data.parent_id) as IPage,
+			new_parent_data = this.cache.block.get(new_parent_id) as IPage;
+		data.parent_id = new_parent_id;
+		parent_data.content = parent_data.content.filter((id) => id !== data.id);
+		this.updateLastEditedProps();
+		this.updateLastEditedProps(parent_data);
+
+		if (new_parent_data) {
+			new_parent_data.content.push(data.id);
+			this.updateLastEditedProps(new_parent_data);
+		}
+
 		this.stack.push(
 			Operation.block.update(this.id, [], {
 				...this.getLastEditedProps(),
-				permissions: null,
 				parent_id: new_parent_id,
 				parent_table: 'block',
 				alive: true

@@ -6,7 +6,7 @@ import { createPageMap, error } from '../utils';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
-import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, IOperation, INotionUser } from '@nishans/types';
+import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, IOperation, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput } from '../types';
 
 const trootpage_class = {
@@ -168,22 +168,25 @@ export default class Space extends Data<ISpace> {
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], ) {
-    const ops: IOperation[] = [], notion_users: INotionUser[] = []
+    const ops: IOperation[] = [], notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], { value: { value: notion_user } } = await this.findUser(email);
       if (!notion_user) error(`User does not have a notion account`);
-      else
+      else{
+        const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
         ops.push({
-          args: { role, type: "user_permission", user_id: notion_user.id },
+          args: permission_data,
           command: "setPermissionItem",
           id: this.id,
           path: ["permissions"],
           table: "space"
         });
+        data.permissions.push(permission_data)
+      }
       notion_users.push(notion_user)
       this.logger && this.logger("UPDATE", "Space", this.id)
     }
-    // ? FEAT:1:H update local cache
+    this.updateLastEditedProps();
     this.stack.push(...ops);
     return notion_users;
   }

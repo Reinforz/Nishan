@@ -42,12 +42,11 @@ export default class Data<T extends TData> extends Operations {
     return { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: this.user_id }
   }
 
-  protected updateLastEditedProps(){
-    const data = this.getCachedData();
-    (data as any).last_edited_time = Date.now();
-    (data as any).last_edited_by_table = "notion_user";
-    (data as any).last_edited_by_id = this.user_id
-
+  protected updateLastEditedProps(data?:TData){
+    const target = data ?? this.getCachedData() as any;
+    target.last_edited_time = Date.now();
+    target.last_edited_by_table = "notion_user";
+    target.last_edited_by_id = this.user_id;
   }
 
   protected initializeChildData() {

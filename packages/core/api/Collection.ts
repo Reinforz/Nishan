@@ -186,6 +186,7 @@ class Collection extends Data<ICollection> {
     };
 
     this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+    this.updateLastEditedProps();
     return results;
   }
 
@@ -231,7 +232,7 @@ class Collection extends Data<ICollection> {
       data.schema[schema_id] = { ...schema_data, ...updated_data } as TSchemaUnit;
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
-
+    this.updateLastEditedProps();
     this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }))
     return results;
   }
@@ -262,6 +263,7 @@ class Collection extends Data<ICollection> {
     }, (id) => {
       delete data.schema[id]
     });
+    this.updateLastEditedProps();
     this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }) )
   }
 }

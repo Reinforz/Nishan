@@ -117,7 +117,7 @@ class NotionUser extends Data<INotionUser> {
       sync_records.push([space_id, "space"], [$space_view_id, "space_view"], [this.user_id, "user_root"], page_id)
       this.logger && this.logger(`CREATE`, 'Space', space_id);
     };
-
+    // ? FEAT:1:H Update local cache
     this.stack.push(...ops);
     return space_ids.map(space_id => new Space({
       id: space_id,

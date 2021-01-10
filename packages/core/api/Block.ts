@@ -65,7 +65,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 			block_map[data.type].push(createBlockClass(data.type, $gen_block_id, this.getProps()));
 		}
-
+		// ? FEAT:1:H update local cache
 		this.stack.push(...ops);
 		return block_map;
 	}
@@ -85,6 +85,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				...this.getLastEditedProps()
 			})
 		);
+		this.updateLastEditedProps();
 	}
 
 	/**
@@ -104,7 +105,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	delete () {
 		const data = this.getCachedData();
 		const is_root_page = data.parent_table === 'space' && data.type === 'page';
-
+		// ? FEAT:1:H update local cache
 		this.stack.push(
 			Operation.block.update(this.id, [], {
 				alive: false,
@@ -125,6 +126,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
 	transfer (new_parent_id: string) {
 		const data = this.getCachedData();
+		// ? FEAT:1:H update local cache
 		this.stack.push(
 			Operation.block.update(this.id, [], {
 				...this.getLastEditedProps(),

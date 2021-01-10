@@ -48,6 +48,8 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				this.getProps()
 			);
 		ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
+		data.view_ids = [ ...data.view_ids, ...view_ids ];
+		this.updateLastEditedProps();
 		this.stack.push(...ops);
 		return view_map;
 	}

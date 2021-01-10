@@ -67,7 +67,7 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
   expect(child_op.command).toBe("update");
   expect(child_op.table).toBe(child_type);
   expect(child_op.path.length).toBe(0);
-  expect(child_op.args.last_edited_by).toBe(USER_ONE_ID);
+  expect(child_op.args.last_edited_by_id).toBe(USER_ONE_ID);
   expect(child_op.args.last_edited_by_table).toBe("notion_user");
   expect(child_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
 
@@ -76,7 +76,7 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
     expect(parent_op.command).toBe("update");
     expect(parent_op.table).toBe(parent_type);
     expect(parent_op.path.length).toBe(0);
-    expect(parent_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(parent_op.args.last_edited_by_id).toBe(USER_ONE_ID);
     expect(parent_op.args.last_edited_by_table).toBe("notion_user");
     expect(parent_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
   }
@@ -98,7 +98,7 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
   expect(child_op.table).toBe(child_type);
   expect(child_op.path.length).toBe(0);
   expect(child_op.args.alive).toBe(false);
-  expect(child_op.args.last_edited_by).toBe(USER_ONE_ID);
+  expect(child_op.args.last_edited_by_id).toBe(USER_ONE_ID);
   expect(child_op.args.last_edited_by_table).toBe("notion_user");
   expect(child_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
 
@@ -113,7 +113,7 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
     expect(parent_op.command).toBe("update");
     expect(parent_op.table).toBe(parent_type);
     expect(parent_op.path.length).toBe(0);
-    expect(parent_op.args.last_edited_by).toBe(USER_ONE_ID);
+    expect(parent_op.args.last_edited_by_id).toBe(USER_ONE_ID);
     expect(parent_op.args.last_edited_by_table).toBe("notion_user");
     expect(parent_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
   }

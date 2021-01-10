@@ -71,6 +71,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       })
     }
     ops.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+    // ? FEAT:1:H Update local cache
     this.stack.push(...ops);
   }
 
@@ -91,6 +92,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
+    // ? FEAT:1:H Update local cache
+
     this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role,
@@ -100,6 +103,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
 
   updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission;
+    // ? FEAT:1:H Update local cache
+
     this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       ...(permission ?? {}),
       type: "public_permission",
@@ -109,6 +114,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   removePublicPermission() {
+    // ? FEAT:1:H Update local cache
+
     this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "public_permission",
       role: "none"
@@ -116,6 +123,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   updateSpacePermission(role: TSpacePermissionRole, ) {
+    // ? FEAT:1:H Update local cache
+
     this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role,
@@ -123,6 +132,8 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   removeSpacePermission() {
+    // ? FEAT:1:H Update local cache
+
     this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role: "none",

@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
@@ -112,7 +111,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		};
 	};
 
-	await page.createBlocks([
+	const { collection_view_page } = await page.createBlocks([
 		{
 			type: 'page',
 			properties: {
@@ -357,5 +356,25 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 			]
 		}
 	]);
+
+
+	const goals_collection = collection_view_page.find(
+		(collection_view_page) => collection_view_page.collection.id === goals_collection_id
+  )?.collection;
+
+  // await goals_collection?.updateSchemaUnits((schema_unit)=>{
+  //   console.log(schema_unit.key)
+  //   /* switch(schema_unit.key){
+  //     case "task_1":
+  //       return {name: "Task 1"}
+  //     case "task_2":
+  //       return {name: "Task 2"}
+  //     case "task_3":
+  //       return {name: "Task 3"}
+  //     default:
+  //       false
+  //   } */
+  // })
+  
 	await page.executeOperation();
 })();

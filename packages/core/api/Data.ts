@@ -111,6 +111,10 @@ export default class Data<T extends TData> extends Operations {
     this.cache[this.type].delete(this.id);
   }
 
+  async updateCachedData(){
+    await this.updateCacheManually([[this.id, this.type]])
+  }
+
   /**
    * Adds the passed block id in the child container array of parent
    * @param $block_id id of the block to add

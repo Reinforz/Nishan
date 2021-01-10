@@ -11,5 +11,6 @@ export * from './createCollection';
 export * from './generateId';
 export * from './createMaps';
 export * from './initializeView';
+export * from './slugify';
 
 export { Operation, createTransaction, shortid };

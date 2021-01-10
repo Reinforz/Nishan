@@ -29,10 +29,10 @@ class Collection extends Data<ICollection> {
   }
 
   getSchemaMap = () =>{
-    const data = this.getCachedData(), schema_map: Map<string, {id: string} & TSchemaUnit> = new Map();
+    const data = this.getCachedData(), schema_map: Map<string, {property: string} & TSchemaUnit> = new Map();
     Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
       schema_map.set(schema_unit.name, {
-        id: schema_id,
+        property: schema_id,
         ...schema_unit
       })
     })
@@ -195,7 +195,7 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
-  async getSchemaUnit(arg?: FilterType<(TSchemaUnit & { key: string })>) {
+  async getSchemaUnit(arg?: FilterType<(TSchemaUnit & { property: string })>) {
     return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))
   }
 
@@ -204,9 +204,9 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { key: string })>, multiple?: boolean) {
+  async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { property: string })>, multiple?: boolean) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { key: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], key: schema_id }))).map(({ key }) => schema_unit_map[data.schema[key].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: key }) as any))
+    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], subject_type: "SchemaUnit", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].push(new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
     return schema_unit_map;
   }
 
@@ -215,7 +215,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties tuple
    * @returns A SchemaUnit object representing the column
    */
-  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean) {
+  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, execute?: boolean) {
     return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], execute, false))
   }
 
@@ -224,17 +224,17 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties array of tuples
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
+  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, execute?: boolean, multiple?: boolean) {
     const results = createSchemaUnitMap(), data = this.getCachedData(), schema_ids = Object.keys(data.schema);
-    await this.updateIterate<TSchemaUnit & { key: string }, Partial<TSchemaUnit>>(args, {
+    await this.updateIterate<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>(args, {
       child_ids: schema_ids,
       subject_type: "SchemaUnit",
       multiple,
       execute
     }, (schema_id) => {
-      return { ...data.schema[schema_id], key: schema_id }
+      return { ...data.schema[schema_id], property: schema_id }
     }, (schema_id, schema_data, updated_data) => {
-      delete (schema_data as any).key
+      delete (schema_data as any).property
       data.schema[schema_id] = { ...schema_data, ...updated_data } as TSchemaUnit;
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
@@ -248,7 +248,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { key: string }>, execute?: boolean) {
+  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>, execute?: boolean) {
     return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, execute, false));
   }
 
@@ -257,15 +257,15 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { key: string }>, execute?: boolean, multiple?: boolean) {
+  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { property: string }>, execute?: boolean, multiple?: boolean) {
     const data = this.getCachedData();
-    await this.getIterate<TSchemaUnit & { key: string }>(args, {
+    await this.getIterate<TSchemaUnit & { property: string }>(args, {
       child_ids: Object.keys(data.schema) ?? [],
       multiple,
       subject_type: "SchemaUnit",
       method: "DELETE"
     }, (child_id) => {
-      return { ...data.schema[child_id], key: child_id }
+      return { ...data.schema[child_id], property: child_id }
     }, (id) => {
       delete data.schema[id]
     });

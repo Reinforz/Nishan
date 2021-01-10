@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Core package for nishan api",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "jest": "^26.6.3",
-    "@nishans/types": "0.0.8",
+    "@nishans/types": "0.0.9",
     "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0"
   }

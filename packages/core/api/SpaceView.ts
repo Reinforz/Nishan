@@ -26,12 +26,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg Options to update the spaceView
    */
   async update(arg: ISpaceViewUpdateInput, execute?: boolean) {
-    const [op, update] = this.updateCacheLocally(arg, TSpaceViewUpdateKeys)
-    this.logger && this.logger("UPDATE", "SpaceView", this.id);
-    await this.executeUtil([
-      op
-    ], [], execute);
-    update();
+    await this.updateCacheLocally(arg, TSpaceViewUpdateKeys, execute)
   }
 
   /**

@@ -16,11 +16,7 @@ class UserSettings extends Data<IUserSettings> {
    * @param opt Options to update the User settings
    */
 	async update (opt: IUserSettingsUpdateInput, execute?: boolean) {
-		const [ op, update ] = this.updateCacheLocally(opt, TUserSettingsUpdateKeys);
-
-		await this.executeUtil([ op ], this.id, execute);
-		this.logger && this.logger('UPDATE', 'UserSettings', this.id);
-		update();
+		await this.updateCacheLocally(opt, TUserSettingsUpdateKeys, execute);
 	}
 }
 

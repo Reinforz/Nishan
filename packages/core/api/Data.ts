@@ -98,17 +98,20 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @param keys
    */
-  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
-    const parent_data = this.getCachedData(), data = arg as T;
+  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, execute?:boolean, appendToStack?: boolean) {
+    appendToStack = appendToStack ?? true
+    const parent_data = this.getCachedData(), data = arg;
 
-    const update = () =>{
-      Object.entries(arg).forEach(([key, value])=>{
-        if(keys.includes(key as keyof T))
-          parent_data[key as keyof T] = value;
-      })
-    }
+    Object.entries(arg).forEach(([key, value])=>{
+      if(keys.includes(key as keyof T))
+        parent_data[key as keyof T] = value;
+    })
 
-    return [Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data), update] as [IOperation, (() => void)]
+    this.logger && this.logger("UPDATE", this.type as any, this.id)
+    if(appendToStack)
+      await this.executeUtil([
+        Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data)
+      ], [], execute);
   }
 
   protected async initializeCache() {

@@ -44,11 +44,7 @@ class Collection extends Data<ICollection> {
    * @param opt `CollectionUpdateParam`
    */
   async update(opt: ICollectionUpdateInput, execute?: boolean) {
-    const [op, update] = this.updateCacheLocally(opt, TCollectionUpdateKeys)
-    await this.executeUtil([
-      op
-    ], [], execute);
-    update();
+    await this.updateCacheLocally(opt, TCollectionUpdateKeys, execute)
   }
 
   /**

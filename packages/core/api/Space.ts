@@ -56,14 +56,7 @@ export default class Space extends Data<ISpace> {
    * @param opt Properties of the space to update
    */
   async update(opt: ISpaceUpdateInput, execute?: boolean) {
-    const [op, update] = this.updateCacheLocally(opt, TSpaceUpdateKeys);
-
-    await this.executeUtil([
-      op
-    ], [], execute);
-
-    this.logger && this.logger("UPDATE", "Space", this.id);
-    update();
+    await this.updateCacheLocally(opt, TSpaceUpdateKeys, execute);
   }
 
   /**
@@ -196,7 +189,6 @@ export default class Space extends Data<ISpace> {
   }
 
   // ? FEAT:1:M Empty userids for all user, a predicate
-
   /**
    * Remove multiple users from the current space
    * @param userIds ids of the user to remove from the workspace
@@ -211,6 +203,6 @@ export default class Space extends Data<ISpace> {
     });
     this.updateCacheLocally({
       permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
-    }, ["permissions"]);
+    }, ["permissions"], false, false);
   }
 }

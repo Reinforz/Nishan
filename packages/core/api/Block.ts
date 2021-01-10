@@ -91,7 +91,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 		await this.executeUtil(
 			[
-				this.updateOp([], {
+				Operation.block.update(this.id, [], {
 					properties,
 					format,
 					...this.getLastEditedProps()
@@ -110,7 +110,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'Block', data.id);
-		await this.executeUtil([ this.updateOp([], { type }) ], data.id, execute);
+		await this.executeUtil([ Operation.block.update(this.id, [], { type }) ], data.id, execute);
 	}
 
 	/**
@@ -122,7 +122,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 		await this.executeUtil(
 			[
-				this.updateOp([], {
+				Operation.block.update(this.id, [], {
 					alive: false,
 					...this.getLastEditedProps()
 				}),
@@ -146,7 +146,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData();
 		await this.executeUtil(
 			[
-				this.updateOp([], {
+				Operation.block.update(this.id, [], {
 					...this.getLastEditedProps(),
 					permissions: null,
 					parent_id: new_parent_id,

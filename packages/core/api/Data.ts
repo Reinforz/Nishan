@@ -1,4 +1,4 @@
-import { TDataType, TData, Args, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
+import { TDataType, TData, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
 import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData } from "../utils";
 import Operations from "./Operations";
@@ -26,11 +26,6 @@ interface GetIterateOptions<T> extends CommonIterateOptions<T> {
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
-  protected listBeforeOp: (path: string[], args: Args) => IOperation;
-  protected listAfterOp: (path: string[], args: Args) => IOperation;
-  protected updateOp: (path: string[], args: Args) => IOperation;
-  protected setOp: (path: string[], args: Args) => IOperation;
-  protected listRemoveOp: (path: string[], args: Args) => IOperation;
   protected child_path: keyof T = "" as any;
   protected child_type: TDataType = "block" as any;
   #init_cache = false;
@@ -40,11 +35,6 @@ export default class Data<T extends TData> extends Operations {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;
-    this.listBeforeOp = Operation[arg.type].listBefore.bind(this, this.id);
-    this.listAfterOp = Operation[arg.type].listAfter.bind(this, this.id);
-    this.updateOp = Operation[arg.type].update.bind(this, this.id)
-    this.setOp = Operation[arg.type].set.bind(this, this.id)
-    this.listRemoveOp = Operation[arg.type].listRemove.bind(this, this.id);
     this.#init_cache = false;
     this.#init_child_data = false;
   }
@@ -118,7 +108,7 @@ export default class Data<T extends TData> extends Operations {
       })
     }
 
-    return [this.updateOp(this.type === "user_settings" ? ["settings"] : [], data), update] as [IOperation, (() => void)]
+    return [Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data), update] as [IOperation, (() => void)]
   }
 
   protected async initializeCache() {
@@ -178,7 +168,7 @@ export default class Data<T extends TData> extends Operations {
       if (child_type) {
         ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
         sync_records.push([child_id, child_type])
-        if (typeof child_path === "string") ops.push(this.listRemoveOp([child_path], { id: child_id }));
+        if (typeof child_path === "string") ops.push(Operation[this.type].listRemove(this.id, [child_path], { id: child_id }));
       }
     }, cb);
     if (ops.length !== 0) {

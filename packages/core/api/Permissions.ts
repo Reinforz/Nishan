@@ -70,7 +70,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
         table: "block"
       })
     }
-    ops.push(this.updateOp([], this.getLastEditedProps()));
+    ops.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
     await this.executeUtil(ops, [data.id, [data.space_id, "space"]], execute);
   }
 

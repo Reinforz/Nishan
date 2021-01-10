@@ -1,6 +1,6 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, ICollectionBlock, TSortValue } from "@nishans/types";
-import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput } from "types";
-import { createViews, initializeViewFilters, initializeViewSorts, populateFilters } from "../../utils";
+import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput } from "../../types";
+import { createViews, initializeViewFilters, initializeViewSorts, Operation, populateFilters } from "../../utils";
 import Data from "../Data";
 
 /**
@@ -116,7 +116,7 @@ class View<T extends TView> extends Data<T> {
       }
     }
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: {
         ...data.query2
       }
@@ -151,7 +151,7 @@ class View<T extends TView> extends Data<T> {
         target_sort.direction = data
       }
     });
-    await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
+    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, execute)
   }
 
   async deleteSort(arg: FilterTypes<TSchemaUnit & ViewSorts>, execute?: boolean,) {
@@ -168,7 +168,7 @@ class View<T extends TView> extends Data<T> {
     }, (id) => sorts_map[id], (_, sort) => {
       sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
     });
-    await this.executeUtil([this.updateOp([], { query2: data.query2 })], this.id, execute)
+    await this.executeUtil([Operation.collection_view.update(this.id,[], { query2: data.query2 })], this.id, execute)
   }
 
   async createFilter(arg: TViewFilterCreateInput, execute?: boolean) {
@@ -179,7 +179,7 @@ class View<T extends TView> extends Data<T> {
   async createFilters(args: TViewFilterCreateInput[], execute?: boolean) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = initializeViewFilters(this.getCachedData()).filters;
     populateFilters(args, filters, schema_map)
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
     })], this.id, execute)
   }
@@ -207,7 +207,7 @@ class View<T extends TView> extends Data<T> {
       }
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
     })], this.id, execute)
   }
@@ -227,7 +227,7 @@ class View<T extends TView> extends Data<T> {
       filters.splice(filters.findIndex(data => (data as any).property === filter.property))
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       query2: data.query2
     })], this.id, execute)
   }
@@ -248,7 +248,7 @@ class View<T extends TView> extends Data<T> {
       target_format_property.visible = updated_data;
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
     })], this.id, execute)
   }
@@ -269,7 +269,7 @@ class View<T extends TView> extends Data<T> {
       target_format_property.width = updated_data;
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
     })], this.id, execute)
   }
@@ -293,7 +293,7 @@ class View<T extends TView> extends Data<T> {
       }
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
     })], this.id, execute)
   }
@@ -320,7 +320,7 @@ class View<T extends TView> extends Data<T> {
       if (width !== undefined && width !== null) target_format_property.width = width;
     });
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id,[], {
       format: data.format,
     })], this.id, execute)
   }

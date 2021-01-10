@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, parseFormula, warn } from '../utils';
+import { createSchemaUnitMap, Operation, parseFormula, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -191,7 +191,7 @@ class Collection extends Data<ICollection> {
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
     };
 
-    await this.executeUtil([this.updateOp([], { schema: data.schema })], this.id, execute);
+    await this.executeUtil([Operation.collection.update(this.id, [], { schema: data.schema })], this.id, execute);
     return results;
   }
 
@@ -239,7 +239,7 @@ class Collection extends Data<ICollection> {
       results[data.schema[schema_id].type].push(new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
 
-    await this.executeUtil([this.updateOp([], { schema: data.schema })], this.id, execute)
+    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, execute)
     return results;
   }
 
@@ -269,7 +269,7 @@ class Collection extends Data<ICollection> {
     }, (id) => {
       delete data.schema[id]
     });
-    await this.executeUtil([this.updateOp([], { schema: data.schema })], this.id, execute)
+    await this.executeUtil([Operation.collection.update(this.id,[], { schema: data.schema })], this.id, execute)
   }
 }
 

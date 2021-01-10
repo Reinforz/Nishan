@@ -1,5 +1,6 @@
 import { ITableView, IBoardView, ITimelineView, TCollectionBlock, ICollection, ViewAggregations, TSchemaUnit } from "@nishans/types";
-import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes } from "types";
+import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes } from "../../types";
+import { Operation } from "../../utils";
 import View from "./View";
 
 /**
@@ -61,7 +62,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       })
     };
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id, [], {
       query2: data.query2,
     })], this.id, execute)
   }
@@ -82,7 +83,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       aggregation.aggregator = aggregator
     })
 
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id, [], {
       query2: data.query2,
     })], this.id, execute)
   }
@@ -102,7 +103,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }, (name) => aggregations_map[name], (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property))
     })
-    await this.executeUtil([this.updateOp([], {
+    await this.executeUtil([Operation.collection_view.update(this.id, [], {
       query2: data.query2
     })], this.id, execute)
   }

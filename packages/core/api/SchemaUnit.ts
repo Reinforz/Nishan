@@ -1,6 +1,6 @@
 import { TSchemaUnit, ICollection } from '@nishans/types';
 import { NishanArg } from '../types';
-import { shortid } from '../utils';
+import { Operation, shortid } from '../utils';
 import Data from './Data';
 
 /**
@@ -19,14 +19,14 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 	async update (arg: T, execute?: boolean) {
 		const data = super.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		await this.executeUtil([ this.updateOp([], { schema: data.schema }) ], this.id, execute);
+		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id, execute);
 		this.logger && this.logger('UPDATE', 'SchemaUnit', this.id);
 	}
 
 	async delete (execute?: boolean) {
 		const data = super.getCachedData();
 		delete data.schema[this.schema_id];
-		await this.executeUtil([ this.updateOp([], { schema: data.schema }) ], this.id, execute);
+		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id, execute);
 		this.logger && this.logger('DELETE', 'SchemaUnit', this.id);
 	}
 
@@ -34,7 +34,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 		const data = super.getCachedData(),
 			id = shortid();
 		data.schema[id] = data.schema[this.schema_id];
-		await this.executeUtil([ this.updateOp([], { schema: data.schema }) ], this.id, execute);
+		await this.executeUtil([ Operation.collection.update(this.id, [], { schema: data.schema }) ], this.id, execute);
 		this.logger && this.logger('CREATE', 'SchemaUnit', id);
 	}
 

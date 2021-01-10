@@ -46,7 +46,8 @@ import {
 	IDivider,
 	ICallout,
 	IColumnList,
-	IColumn
+	IColumn,
+	ILinkToPage
 } from '@nishans/types';
 import {
 	CollectionViewPage,
@@ -89,7 +90,8 @@ import {
 	IQuoteInput,
 	IDividerInput,
 	ICalloutInput,
-	IColumnListInput
+	IColumnListInput,
+	ILinkToPageInput
 } from './block';
 
 export interface ITPage {
@@ -129,42 +131,39 @@ export interface ITView {
 }
 
 export interface ITBlock {
-	link_to_page: Block<any, any>[];
-	embed: Block<IEmbed, IEmbedInput>[];
-	video: Block<IVideo, IVideoInput>[];
-	audio: Block<IAudio, IAudioInput>[];
-	image: Block<IImage, IImageInput>[];
-	bookmark: Block<IWebBookmark, IWebBookmarkInput>[];
-	code: Block<ICode, ICodeInput>[];
-	file: Block<IFile, IFileInput>[];
-	tweet: Block<ITweet, ITweetInput>[];
-	gist: Block<IGist, IGistInput>[];
-	codepen: Block<ICodepen, ICodepenInput>[];
-	maps: Block<IMaps, IMapsInput>[];
-	figma: Block<IFigma, IFigmaInput>[];
-	drive: Block<IDrive, IDriveInput>[];
-	text: Block<IText, ITextInput>[];
-	table_of_contents: Block<ITOC, ITOCInput>[];
-	equation: Block<IEquation, IEquationInput>[];
-	breadcrumb: Block<IBreadcrumb, IBreadcrumbInput>[];
-	factory: {
-		block: Block<IFactory, IFactoryInput>;
-		contents: ITBlock;
-	}[];
-	page: Page[];
-	to_do: Block<ITodo, ITodoInput>[];
-	header: Block<IHeader, IHeaderInput>[];
-	sub_header: Block<ISubHeader, ISubHeaderInput>[];
-	sub_sub_header: Block<ISubHeader, ISubHeaderInput>[];
-	bulleted_list: Block<IBulletedList, IBulletedListInput>[];
-	numbered_list: Block<INumberedList, INumberedListInput>[];
-	toggle: Block<IToggle, IToggleInput>[];
-	quote: Block<IQuote, IQuoteInput>[];
-	divider: Block<IDivider, IDividerInput>[];
-	callout: Block<ICallout, ICalloutInput>[];
-	collection_view: CollectionView[];
-	collection_view_page: CollectionViewPage[];
-	linked_db: CollectionView[];
-	column_list: Block<IColumnList, IColumnListInput>[];
-	column: Block<IColumn, any>[];
+	link_to_page: Map<string, Block<ILinkToPage, ILinkToPageInput>>;
+	embed: Map<string, Block<IEmbed, IEmbedInput>>;
+	video: Map<string, Block<IVideo, IVideoInput>>;
+	audio: Map<string, Block<IAudio, IAudioInput>>;
+	image: Map<string, Block<IImage, IImageInput>>;
+	bookmark: Map<string, Block<IWebBookmark, IWebBookmarkInput>>;
+	code: Map<string, Block<ICode, ICodeInput>>;
+	file: Map<string, Block<IFile, IFileInput>>;
+	tweet: Map<string, Block<ITweet, ITweetInput>>;
+	gist: Map<string, Block<IGist, IGistInput>>;
+	codepen: Map<string, Block<ICodepen, ICodepenInput>>;
+	maps: Map<string, Block<IMaps, IMapsInput>>;
+	figma: Map<string, Block<IFigma, IFigmaInput>>;
+	drive: Map<string, Block<IDrive, IDriveInput>>;
+	text: Map<string, Block<IText, ITextInput>>;
+	table_of_contents: Map<string, Block<ITOC, ITOCInput>>;
+	equation: Map<string, Block<IEquation, IEquationInput>>;
+	breadcrumb: Map<string, Block<IBreadcrumb, IBreadcrumbInput>>;
+	factory: Map<string, Block<IFactory, IFactoryInput>>;
+	page: Map<string, Page>;
+	to_do: Map<string, Block<ITodo, ITodoInput>>;
+	header: Map<string, Block<IHeader, IHeaderInput>>;
+	sub_header: Map<string, Block<ISubHeader, ISubHeaderInput>>;
+	sub_sub_header: Map<string, Block<ISubHeader, ISubHeaderInput>>;
+	bulleted_list: Map<string, Block<IBulletedList, IBulletedListInput>>;
+	numbered_list: Map<string, Block<INumberedList, INumberedListInput>>;
+	toggle: Map<string, Block<IToggle, IToggleInput>>;
+	quote: Map<string, Block<IQuote, IQuoteInput>>;
+	divider: Map<string, Block<IDivider, IDividerInput>>;
+	callout: Map<string, Block<ICallout, ICalloutInput>>;
+	collection_view: Map<string, CollectionView>;
+	collection_view_page: Map<string, CollectionViewPage>;
+	linked_db: Map<string, CollectionView>;
+	column_list: Map<string, Block<IColumnList, IColumnListInput>>;
+	column: Map<string, Block<IColumn, any>>;
 }

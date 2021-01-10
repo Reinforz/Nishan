@@ -93,16 +93,15 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         });
 
         sync_records.push([collection_id, "collection"], ...view_records)
-        block_map[type].push(collectionblock);
+        block_map[type].set(block_id, collectionblock);
         if (content.rows)
           await traverse(content.rows as any, collection_id, "collection")
       } else if (content.type === "factory") {
         // ! FIX:1:H Nested content for factory children is not populated, ie if a page is passed as a children, its nested content will not be populated 
-        const factory_contents_map = createBlockMap(), content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
+        const content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
           ...content,
           block_id: generateId(content.id)
         }))).map(content => {
-          factory_contents_map[content.type].push(createBlockClass(content.type, content.block_id, props))
           sync_records.push(content.block_id)
           content_ids.push(content.block_id);
           const content_data: any = {
@@ -127,12 +126,10 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...content_blocks_ops
         );
         props.cache.block.set(block_id, factory_data)
-        block_map.factory.push({
-          block: new Block({
-            id: block_id,
-            ...props
-          }), contents: factory_contents_map
-        })
+        block_map.factory.set(block_id, new Block({
+          id: block_id,
+          ...props
+        }))
       }
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
@@ -153,7 +150,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...created_view_ops);
         props.cache.block.set(block_id, collection_view_data);
         sync_records.push([collection_id, "collection"], ...view_records);
-        block_map[content.type].push(new CollectionView({
+        block_map[content.type].set(block_id, new CollectionView({
           ...props,
           id: block_id
         }))
@@ -176,7 +173,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }
         ops.push(Operation.block.update(block_id, [], page_data));
         props.cache.block.set(block_id, page_data)
-        block_map[type].push(createBlockClass(content.type, block_id, props));
+        block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
       }
       else if (content.type === "column_list") {
         const { contents } = content;
@@ -225,7 +222,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         };
         ops.push(Operation.block.update(block_id, [], block_data));
         props.cache.block.set(block_id, block_data)
-        block_map[type].push(createBlockClass(content.type, block_id, props));
+        block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
       }
 
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;

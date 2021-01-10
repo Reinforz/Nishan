@@ -63,7 +63,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				this.logger && this.logger('CREATE', 'Block', $gen_block_id);
 			}
 
-			block_map[data.type].push(createBlockClass(data.type, $gen_block_id, this.getProps()));
+			block_map[data.type].set($gen_block_id, createBlockClass(data.type, $gen_block_id, this.getProps()));
 		}
 		// ? FEAT:1:H update local cache
 		this.stack.push(...ops);

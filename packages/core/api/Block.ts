@@ -1,6 +1,6 @@
 import { TBlock, IOperation, TBasicBlockType } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams, UpdateCacheManuallyParam } from '../types';
-import { createBlockMap, generateId, Operation } from '../utils';
+import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
 import Data from './Data';
 
@@ -71,7 +71,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				this.logger && this.logger('CREATE', 'Block', $gen_block_id);
 			}
 
-			block_map[data.type].push(await this.createClass(data.type, $gen_block_id));
+			block_map[data.type].push(createBlockClass(data.type, $gen_block_id, this.getProps()));
 		}
 
 		await this.executeUtil(ops, [ ...sync_records, data.parent_id ], execute);

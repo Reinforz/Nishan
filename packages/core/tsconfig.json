@@ -4,7 +4,7 @@
       "ESNext",
       "dom",
     ],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES2020",
@@ -22,7 +22,7 @@
   },
   "include": [
     "./Nishan.ts",
-    "experiment"
+    "./experiment"
   ],
   "exclude": [
     "./node_modules",

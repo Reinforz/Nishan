@@ -26,6 +26,11 @@
   "scripts": {
     "test": "npx jest --runInBand ./tests"
   },
+  "keywords": [
+    "notion",
+    "notion client",
+    "notion api"
+  ],
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   },

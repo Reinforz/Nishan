@@ -59,8 +59,7 @@ import {
 	TimelineView,
 	CalendarView,
 	Block,
-	CollectionBlock,
-	Collection
+	CollectionView
 } from '../api';
 import {
 	IEmbedInput,
@@ -163,15 +162,9 @@ export interface ITBlock {
 	quote: Block<IQuote, IQuoteInput>[];
 	divider: Block<IDivider, IDividerInput>[];
 	callout: Block<ICallout, ICalloutInput>[];
-	collection_view: ITCollectionBlock[];
-	collection_view_page: ITCollectionBlock[];
-	linked_db: ITCollectionBlock[];
+	collection_view: CollectionView[];
+	collection_view_page: CollectionViewPage[];
+	linked_db: CollectionView[];
 	column_list: Block<IColumnList, IColumnListInput>[];
 	column: Block<IColumn, any>[];
 }
-
-export type ITCollectionBlock = {
-	block: CollectionBlock;
-	collection: Collection;
-	views: ITView;
-};

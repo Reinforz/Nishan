@@ -1,7 +1,7 @@
-import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, TBlockType, ICollectionView, RecordMap, TView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
-import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, TBlockCreateInput, IDriveInput, ITCollectionBlock } from '../types';
+import { TDataType, TData, Args, IOperation, TBlock, TOperationTable, ISpace, IUserRoot, ICollection, ISpaceView, SetBookmarkMetadataParams, TGenericEmbedBlockType, WebBookmarkProps } from '@nishans/types';
+import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, ITBlock, TBlockCreateInput, IDriveInput } from '../types';
 import { v4 as uuidv4 } from 'uuid';
-import { Operation, warn, createViews, createCollection, createBlockMap, createViewMap, generateId } from "../utils";
+import { Operation, warn, createViews, createCollection, createBlockMap, generateId, createBlockClass } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -338,70 +338,6 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async createClass(type: TBlockType, id: string): Promise<any> {
-    const Page = require("./Page").default;
-    const Block = require("./Block").default;
-    const CollectionView = require("./CollectionView").default;
-    const CollectionViewPage = require('./CollectionViewPage').default;
-    const Collection = require("./Collection").default;
-    const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("./View/index");
-    const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
-
-    const obj = {
-      id,
-      ...this.getProps()
-    };
-
-    switch (type) {
-      case "video":
-      case "audio":
-      case "image":
-      case "bookmark":
-      case "code":
-      case "file":
-      case "tweet":
-      case "gist":
-      case "codepen":
-      case "maps":
-      case "figma":
-      case "drive":
-      case "text":
-      case "table_of_contents":
-      case "equation":
-      case "breadcrumb":
-      case "factory":
-      case "to_do":
-      case "header":
-      case "sub_header":
-      case "sub_sub_header":
-      case "bulleted_list":
-      case "numbered_list":
-      case "toggle":
-      case "quote":
-      case "divider":
-      case "callout":
-        return new Block(obj);
-      case "page":
-        return new Page(obj);
-      case "collection_view":
-      case "collection_view_page":
-        const cv = this.cache.block.get(id) as ICollectionView;
-        await this.updateCacheIfNotPresent([[cv.collection_id, "collection"], ...cv.view_ids.map(view_id => [view_id, "collection_view"] as [string, keyof RecordMap])])
-        const data = {
-          block: type === "collection_view" ? new CollectionView(obj) : new CollectionViewPage(obj),
-          collection: new Collection({ ...obj, id: cv.collection_id }),
-          views: createViewMap()
-        }
-        cv.view_ids.forEach((view_id) => {
-          const view = this.cache.collection_view.get(view_id) as TView;
-          data.views[view.type].push(new view_classes[view.type]({ ...obj, id: view_id }) as any)
-        })
-        return data;
-      default:
-        return new Page(obj);
-    }
-  }
-
   protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], execute?: boolean) {
     const [ops, sync_records, block_map, { bookmarks }] = await this.nestedContentPopulate(options, this.id, this.type);
     await this.executeUtil(ops, sync_records, execute);
@@ -415,7 +351,6 @@ export default class Data<T extends TData> extends Operations {
 
     const CollectionView = require("./CollectionView").default;
     const CollectionViewPage = require('./CollectionViewPage').default;
-    const Collection = require('./Collection').default;
     const Block = require('./Block').default;
 
     const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
@@ -462,7 +397,7 @@ export default class Data<T extends TData> extends Operations {
         }
 
         if (content.type === "collection_view_page" || content.type === "collection_view") {
-          const [collection_id, create_view_ops, view_ids, view_map, view_records] = createCollection(content, $block_id, this.getProps());
+          const [collection_id, create_view_ops, view_ids, , view_records] = createCollection(content, $block_id, this.getProps());
           const args: any = {
             id: $block_id,
             type,
@@ -480,23 +415,16 @@ export default class Data<T extends TData> extends Operations {
               ...create_view_ops,
             )
 
-          const collectionblock_map: ITCollectionBlock = {
-            block: type === "collection_view" ? new CollectionView({
-              ...this.getProps(),
-              id: $block_id
-            }) : new CollectionViewPage({
-              ...this.getProps(),
-              id: $block_id
-            }),
-            collection: new Collection({
-              id: collection_id,
-              ...this.getProps()
-            }),
-            views: view_map
-          }
+          const collectionblock = type === "collection_view" ? new CollectionView({
+            ...this.getProps(),
+            id: $block_id
+          }) : new CollectionViewPage({
+            ...this.getProps(),
+            id: $block_id
+          });
 
           sync_records.push([collection_id, "collection"], ...view_records)
-          block_map[type].push(collectionblock_map as any);
+          block_map[type].push(collectionblock);
           if (content.rows)
             await traverse(content.rows as any, collection_id, "collection")
         } else if (content.type === "factory") {
@@ -504,7 +432,7 @@ export default class Data<T extends TData> extends Operations {
             ...content,
             $block_id: generateId(content.id)
           }))).map(content => {
-            factory_contents_map[content.type].push(this.createClass(content.type, content.$block_id) as any)
+            factory_contents_map[content.type].push(createBlockClass(content.type, content.$block_id, this.getProps()))
             sync_records.push(content.$block_id)
             content_ids.push(content.$block_id);
             return Operation.block.update(content.$block_id, [], { ...content, parent_id: $block_id, alive: true, parent_table: "block" })
@@ -532,7 +460,7 @@ export default class Data<T extends TData> extends Operations {
         else if (content.type === "linked_db") {
           const { collection_id, views } = content,
             collection = this.cache.collection.get(collection_id) as ICollection,
-            [created_view_ops, view_ids, view_map, view_records] = createViews(collection.schema, views, collection.id, $block_id, this.getProps());
+            [created_view_ops, view_ids, , view_records] = createViews(collection.schema, views, collection.id, $block_id, this.getProps());
 
           ops.push(Operation.block.set($block_id, [], {
             id: $block_id,
@@ -546,19 +474,12 @@ export default class Data<T extends TData> extends Operations {
           }),
             ...created_view_ops);
           sync_records.push([collection_id, "collection"], ...view_records);
-          const collectionblock_map: ITCollectionBlock = {
-            block: new CollectionView({
-              ...this.getProps(),
-              id: $block_id
-            }),
-            collection: new Collection({
-              id: collection_id,
-              ...this.getProps()
-            }),
-            views: view_map
-          }
+          const collectionblock = new CollectionView({
+            ...this.getProps(),
+            id: $block_id
+          })
 
-          block_map[content.type].push(collectionblock_map)
+          block_map[content.type].push(collectionblock)
         }
         else if (content.type === "page") {
           if (content.contents)
@@ -579,7 +500,7 @@ export default class Data<T extends TData> extends Operations {
             created_by_table: 'notion_user',
             ...this.getLastEditedProps()
           }))
-          block_map[type].push(await this.createClass(content.type, $block_id));
+          block_map[type].push(createBlockClass(content.type, $block_id, this.getProps()));
         }
         else if (content.type === "column_list") {
           const { contents } = content;
@@ -619,7 +540,7 @@ export default class Data<T extends TData> extends Operations {
             parent_table,
             alive: true,
           }));
-          block_map[type].push(await this.createClass(content.type, $block_id));
+          block_map[type].push(createBlockClass(content.type, $block_id, this.getProps()));
         }
 
         const content_id = content.type === "link_to_page" ? content.page_id : $block_id;

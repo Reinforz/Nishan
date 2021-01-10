@@ -12,5 +12,6 @@ export * from './generateId';
 export * from './createMaps';
 export * from './initializeView';
 export * from './slugify';
+export * from './createBlockClass';
 
 export { Operation, createTransaction, shortid };

@@ -165,7 +165,7 @@ export default class Data<T extends TData> extends Operations {
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCache()
-    const { child_type, child_path } = options, updated_props = this.getLastEditedProps();
+    const { child_type, child_path } = options, updated_props = this.getLastEditedProps(), data = this.getCachedData();
     const ops: IOperation[] = [];
     const matched_ids = await iterateChildren<T, TD>(args, transform, {
       data: this.getCachedData(),
@@ -175,14 +175,20 @@ export default class Data<T extends TData> extends Operations {
       ...options
     }, (child_id) => {
       if (child_type) {
+        const block = this.cache[child_type].get(child_id) as any;
+        block.alive = false;
+        this.updateLastEditedProps(block);
         ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
-        if (typeof child_path === "string") ops.push(Operation[this.type].listRemove(this.id, [child_path], { id: child_id }));
+        if (typeof child_path === "string") {
+          data[child_path] = (data[child_path] as any).filter((id: string)=>id !== child_id) as any
+          ops.push(Operation[this.type].listRemove(this.id, [child_path], { id: child_id }));
+        }
       }
     }, cb);
     if (ops.length !== 0) {
+      this.updateLastEditedProps();
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
     }
-    // ? FEAT:1:H update local cache
     this.stack.push(...ops);
     return matched_ids;
   }
@@ -198,16 +204,19 @@ export default class Data<T extends TData> extends Operations {
       type: this.type,
       method: "UPDATE",
       ...options
-    }, (child_id, _, updated_data) => {
+    }, (child_id, _, updated_data: any) => {
       if (child_type) {
+        const block = this.cache[child_type].get(child_id) as any;
+        if(updated_data)
+          Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key])
         ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...updated_props }));
       }
     }, cb);
 
     if (ops.length !== 0 && updateParent) {
+      this.updateLastEditedProps();
       ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
     }
-    // ? FEAT:1:H update local cache
     this.stack.push(...ops);
     return matched_ids;
   }

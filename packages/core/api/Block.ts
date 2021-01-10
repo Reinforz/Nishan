@@ -1,5 +1,5 @@
 import { TBlock, IOperation, TBasicBlockType, ISpace, IPage } from '@nishans/types';
-import { TBlockInput, NishanArg, RepositionParams, UpdateCacheManuallyParam } from '../types';
+import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
 import Data from './Data';
@@ -26,12 +26,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	async duplicate (infos: { position: RepositionParams; id?: string }[]) {
 		const block_map = createBlockMap(),
 			data = this.getCachedData(),
-			ops: IOperation[] = [],
-			sync_records: UpdateCacheManuallyParam = [];
+			ops: IOperation[] = [];
 		for (let index = 0; index < infos.length; index++) {
 			const { position, id } = infos[index],
 				$gen_block_id = generateId(id);
-			sync_records.push($gen_block_id);
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				ops.push(
 					Operation.block.update($gen_block_id, [], {

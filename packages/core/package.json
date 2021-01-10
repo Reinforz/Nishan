@@ -24,7 +24,7 @@
     "directory": "packages/core"
   },
   "scripts": {
-    "test": "npx jest --runInBand ./tests"
+    "test": "npx jest --runInBand ./tests --collectCoverage"
   },
   "keywords": [
     "notion",

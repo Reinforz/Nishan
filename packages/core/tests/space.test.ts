@@ -82,7 +82,7 @@ function testUpdateMethod<T>({cb, child_id, child_type = "block", parent_id, par
   }
 }
 
-function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "block", parent_id, parent_type}: {
+/* function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "block", parent_id, parent_type}: {
   child_id: string,
   child_type?: TDataType,
   parent_id?: string,
@@ -90,6 +90,7 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
   child_path: keyof P,
 }){
   const {stack} = space, check_parent = parent_id && parent_type;
+  console.log(stack);
   expect(stack.length).toBe(3);
   const [child_op, parent_path_op, parent_op] = stack;
 
@@ -117,7 +118,7 @@ function testDeleteMethod<P extends TData>({child_path, child_id, child_type = "
     expect(parent_op.args.last_edited_by_table).toBe("notion_user");
     expect(parent_op.args.last_edited_time).toBeLessThanOrEqual(Date.now());
   }
-}
+} */
 
 describe("Getter methods for space", ()=>{
   it("Get space_view",()=>{
@@ -436,7 +437,7 @@ describe("Update methods for space", ()=>{
   })
 })
 
-describe("Delete methods for space", ()=>{
+/* describe("Delete methods for space", ()=>{
   beforeEach(()=>{
     space.stack = [];
   })
@@ -452,8 +453,7 @@ describe("Delete methods for space", ()=>{
   })
 
   it("Delete [root_page] cb", async ()=>{
-    await space.deleteTRootPages((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID)
-    
+    await space.deleteTRootPages((page)=>console.log(page))
     testDeleteMethod<ISpace>({
       child_id: ROOT_PAGE_ONE_ID,
       parent_id: SPACE_ONE_ID,
@@ -520,5 +520,5 @@ describe("Delete methods for space", ()=>{
       parent_type: "space",
       child_path: "pages"
     })
-  })
-})
+  }) 
+})*/

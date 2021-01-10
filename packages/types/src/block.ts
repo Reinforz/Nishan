@@ -145,16 +145,16 @@ export interface PageProps {
 }
 
 export interface PageFormat {
-	page_icon: string;
-	page_font: string;
-	page_full_width: boolean;
-	page_small_text: boolean;
-	block_locked_by: string;
-	block_locked: boolean;
-	page_cover: string;
-	page_cover_position: number;
+	page_icon?: string;
+	page_font?: string;
+	page_full_width?: boolean;
+	page_small_text?: boolean;
+	block_locked_by?: string;
+	block_locked?: boolean;
+	page_cover?: string;
+	page_cover_position?: number;
 	block_color?: TFormatBlockColor;
-	page_section_visibility: {
+	page_section_visibility?: {
 		backlinks: 'section_show' | 'section_hide' | 'section_collapsed';
 		comments: 'section_hide' | 'section_show';
 	};
@@ -172,7 +172,7 @@ export interface IPage extends IBlock {
 
 export interface IColumnFormat {
 	format: {
-		column_ratio: 0.5;
+		column_ratio: number;
 	};
 }
 

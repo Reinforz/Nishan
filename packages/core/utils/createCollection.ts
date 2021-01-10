@@ -1,6 +1,6 @@
 import { Schema, TSchemaUnit, IOperation } from "@nishans/types";
 import { ICollectionBlockInput, ITView, NishanArg, UpdateCacheManuallyParam } from "../types";
-import { parseFormula, createViews, Operation,generateId } from "../utils";
+import { parseFormula, createViews, Operation, generateId } from "../utils";
 import { slugify } from "./slugify";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {

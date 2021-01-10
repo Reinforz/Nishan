@@ -103,8 +103,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
         visible: false
       })
     })
-
-    created_view_ops.push(Operation.collection_view.set(view_id, [], {
+    const view_data = {
       id: view_id,
       version: 0,
       type,
@@ -115,7 +114,9 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
       alive: true,
       format,
       query2,
-    }))
+    } as any;
+    created_view_ops.push(Operation.collection_view.set(view_id, [], view_data))
+    props.cache.collection_view.set(view_id, view_data)
   }
 
   return [created_view_ops, view_ids, view_map, view_records] as [IOperation[], string[], ITView, UpdateCacheManuallyParam];

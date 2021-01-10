@@ -10,6 +10,15 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
   const CollectionViewPage = require('../api/CollectionViewPage').default;
   const Block = require('../api/Block').default;
 
+  const metadata = {
+    created_time: Date.now(),
+    created_by_id: props.user_id,
+    created_by_table: 'notion_user',
+    last_edited_time: Date.now(), 
+    last_edited_by_table: "notion_user", 
+    last_edited_by: props.user_id
+  };
+
   const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
     parent_content_id = parent_content_id ?? parent_id;
     for (let index = 0; index < contents.length; index++) {
@@ -26,7 +35,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       }; */
 
       const {
-        format,
+        format = {},
         properties,
         type,
       } = content;
@@ -65,12 +74,16 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           parent_id,
           parent_table,
           alive: true,
+          ...metadata
         };
 
-        if (content.type === "collection_view_page") args.permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
-          ops.push(Operation.block.update($block_id, [], args),
-            ...create_view_ops,
-          )
+        if (content.type === "collection_view_page") args.permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }];
+
+        ops.push(Operation.block.update($block_id, [], args),
+          ...create_view_ops,
+        )
+
+        props.cache.block.set($block_id, args)
 
         const collectionblock = type === "collection_view" ? new CollectionView({
           ...props,
@@ -141,7 +154,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       else if (content.type === "page") {
         if (content.contents)
           await traverse(content.contents, $block_id, "block");
-        const current_time = Date.now();
         ops.push(Operation.block.update($block_id, [], {
           is_template: (content as any).is_template && parent_table === "collection",
           id: $block_id,
@@ -152,10 +164,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           parent_table,
           alive: true,
           permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
-          created_time: current_time,
-          created_by_id: props.user_id,
-          created_by_table: 'notion_user',
-          last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by: props.user_id
+          ...metadata
         }))
         block_map[type].push(createBlockClass(content.type, $block_id, props));
       }

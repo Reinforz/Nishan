@@ -15,5 +15,6 @@ export * from './slugify';
 export * from './createBlockClass';
 export * from './nestedContentPopulate';
 export * from './positionChildren';
+export * from './iterateChildren';
 
 export { Operation, createTransaction, shortid };

@@ -1,6 +1,6 @@
 import { TDataType, TData, Args, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { TSubjectType, TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
-import { Operation, warn, nestedContentPopulate, positionChildren } from "../utils";
+import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -12,13 +12,6 @@ interface CommonIterateOptions<T> {
 interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { child_type?: TDataType, execute?: boolean, updateParent?: boolean };
 interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
   child_path?: keyof T
-}
-
-interface IterateOptions<T> {
-  method: TMethodType,
-  subject_type: TSubjectType,
-  child_ids: string[] | keyof T,
-  multiple?: boolean
 }
 
 interface GetIterateOptions<T> extends CommonIterateOptions<T> {
@@ -128,8 +121,6 @@ export default class Data<T extends TData> extends Operations {
     return positionChildren({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: this.type })
   }
 
-  
-
   protected addToParentChildArray(child_id: string, position: RepositionParams) {
     const data = this.getCachedData() as any, parent = (this.cache as any)[data.parent_table].get(data.parent_id),
       child_path = this.#detectChildData(data.parent_table, parent.id)[0], container: string[] = parent[child_path] as any;
@@ -198,58 +189,14 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  // cb1 is passed from the various iterate methods, cb2 is passed from the actual method
-  #iterate = async<TD, RD = TD>(args: FilterTypes<TD> | UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data: RD | undefined, index: number) => any, cb2?: ((id: string, data: TD, updated_data: RD, index: number) => any)) => {
-    await this.initializeCache();
-    const matched_ids: TD[] = [], { multiple = true, method, subject_type } = options;
-    const child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : this.getCachedData()[options.child_ids]) ?? []) as string[];
-
-    const iterateUtil = async (child_id: string, child_data: TD, updated_data: RD | undefined, index: number) => {
-      cb1 && await cb1(child_id, child_data, updated_data, index);
-      cb2 && await cb2(child_id, child_data, updated_data as any, index);
-      this.logger && this.logger(method, subject_type, child_id);
-      matched_ids.push(child_data);
-    }
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const arg = args[index];
-        if (Array.isArray(arg)) {
-          const [child_id, updated_data] = arg, child_data = transform(child_id), matches = child_ids.includes(child_id);
-          if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
-          else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
-          if (child_data && matches)
-            await iterateUtil(child_id, child_data, updated_data, index)
-        } else if (typeof arg === "string") {
-          const child_id = arg, child_data = transform(child_id), matches = child_ids.includes(child_id);
-          if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
-          else if (!matches) warn(`Child:${child_id} is not a child of ${this.type}:${this.id}`);
-          if (child_data && matches)
-            await iterateUtil(child_id, child_data, undefined, index)
-        }
-        if (!multiple && matched_ids.length === 1) break;
-      }
-    } else {
-      for (let index = 0; index < child_ids.length; index++) {
-        const child_id = child_ids[index], child_data = transform(child_id);
-        if (!child_data) warn(`Child:${child_id} does not exist in the cache`);
-        else {
-          const matches = args ? await args(child_data, index) : true;
-          if (child_data && matches)
-            await iterateUtil(child_id, child_data, matches as RD, index)
-        }
-        if (!multiple && matched_ids.length === 1) break;
-      }
-    }
-
-    return matched_ids;
-  }
-
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     const { child_type, child_path, execute = this.defaultExecutionState } = options, updated_props = this.getLastEditedProps();
     const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
-    const matched_ids = await this.#iterate(args, transform, {
+    const matched_ids = await iterateChildren<T, TD>(args, transform, {
+      data: this.getCachedData(),
+      logger: this.logger,
       method: "DELETE",
+      type: this.type,
       ...options
     }, (child_id) => {
       if (child_type) {
@@ -270,7 +217,10 @@ export default class Data<T extends TData> extends Operations {
     const { child_type, execute = this.defaultExecutionState, updateParent = true } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [];
 
-    await this.#iterate(args, transform, {
+    await iterateChildren<T, TD, RD>(args, transform, {
+      data: this.getCachedData(),
+      logger: this.logger,
+      type: this.type,
       method: "UPDATE",
       ...options
     }, (child_id, _, updated_data) => {
@@ -289,7 +239,10 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
-    return await this.#iterate<RD>(args, transform, {
+    return await iterateChildren<T,RD>(args, transform, {
+      data: this.getCachedData(),
+      logger: this.logger,
+      type: this.type,
       method: 'READ',
       ...options,
     }, undefined, cb);

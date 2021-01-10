@@ -107,7 +107,7 @@ class Collection extends Data<ICollection> {
   async deleteTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
     await this.deleteIterate<IPage>(args, {
       multiple,
-      child_ids: this.getCachedData().template_pages ?? [],
+      child_ids: "template_pages",
       child_type: "block",
       child_path: "template_pages",
     }, (child_id) => this.cache.block.get(child_id) as IPage)

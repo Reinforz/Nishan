@@ -171,7 +171,7 @@ export default class Data<T extends TData> extends Operations {
       data: this.getCachedData(),
       logger: this.logger,
       method: "DELETE",
-      type: this.type,
+      parent_type: this.type,
       ...options
     }, (child_id) => {
       if (child_type) {
@@ -201,7 +201,7 @@ export default class Data<T extends TData> extends Operations {
     await iterateChildren<T, TD, RD>(args, transform, {
       data: this.getCachedData(),
       logger: this.logger,
-      type: this.type,
+      parent_type: this.type,
       method: "UPDATE",
       ...options
     }, (child_id, _, updated_data: any) => {
@@ -226,7 +226,7 @@ export default class Data<T extends TData> extends Operations {
     return await iterateChildren<T,RD>(args, transform, {
       data: this.getCachedData(),
       logger: this.logger,
-      type: this.type,
+      parent_type: this.type,
       method: 'READ',
       ...options,
     }, undefined, cb);

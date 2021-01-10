@@ -165,7 +165,7 @@ export default class Page extends Permissions<IPage> {
   async deleteBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     await this.deleteIterate<TBlock>(args, {
       multiple,
-      child_ids: this.getCachedData().content,
+      child_ids: 'content',
       child_path: "content",
       child_type: "block",
     }, (block_id) => this.cache.block.get(block_id));

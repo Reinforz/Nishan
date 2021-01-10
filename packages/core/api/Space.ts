@@ -131,7 +131,7 @@ export default class Space extends Data<ISpace> {
   async deleteTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
     await this.deleteIterate<TPage>(args, {
       multiple,
-      child_ids: this.getCachedData().pages,
+      child_ids: 'pages',
       child_path: "pages",
       child_type: "block",
     }, (block_id) => this.cache.block.get(block_id) as TPage)

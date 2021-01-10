@@ -112,10 +112,10 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 		await this.deleteIterate<TView>(
 			args,
 			{
+				child_ids: 'view_ids',
 				child_path: 'view_ids',
 				child_type: 'collection_view',
-				multiple,
-				child_ids: this.getCachedData().view_ids
+				multiple
 			},
 			(view_id) => this.cache.collection_view.get(view_id)
 		);

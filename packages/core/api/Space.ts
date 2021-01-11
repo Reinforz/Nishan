@@ -158,7 +158,7 @@ export default class Space extends Data<ISpace> {
       child_ids: this.getCollectionIds(),
       child_type: "collection",
       multiple
-    }, (collection_id) => this.cache.collection.get(collection_id))).map(collection_id => new Collection({ ...this.getProps(), id: collection_id }))
+    }, (collection_id) => this.cache.collection.get(collection_id))).map(({id}) => new Collection({ ...this.getProps(), id }))
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][], ) {

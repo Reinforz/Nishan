@@ -88,7 +88,7 @@ class Collection extends Data<ICollection> {
       child_ids: "template_pages",
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
+    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(({id}) => new Page({ ...this.getProps(), id }));
   }
 
   /**
@@ -143,7 +143,7 @@ class Collection extends Data<ICollection> {
       child_ids: await this.#getRowPages(),
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(block_id => new Page({ ...this.getProps(), id: block_id }));
+    }, (child_id) => this.cache.block.get(child_id) as IPage)).map(({id}) => new Page({ ...this.getProps(), id }));
   }
 
   async deletePage(args?: FilterType<IPage>, ) {
@@ -221,11 +221,8 @@ class Collection extends Data<ICollection> {
       child_ids: schema_ids,
       child_type: "collection",
       multiple,
-    }, (schema_id) => {
-      return { ...data.schema[schema_id], property: schema_id }
-    }, (schema_id, schema_data, updated_data) => {
-      delete (schema_data as any).property
-      data.schema[schema_id] = { ...schema_data, ...updated_data } as TSchemaUnit;
+    }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (schema_id, _, updated_data) => {
+      data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
       results[data.schema[schema_id].type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
     });
     this.updateLastEditedProps();

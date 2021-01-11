@@ -44,7 +44,7 @@ class UserRoot extends Data<IUserRoot> {
 				multiple
 			},
 			(id) => this.cache.space_view.get(id)
-		)).map((id) => new SpaceView({ ...this.getProps(), id }));
+		)).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
 	}
 }
 

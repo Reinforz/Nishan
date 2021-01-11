@@ -131,7 +131,8 @@ class View<T extends TView> extends Data<T> {
     await this.updateIterate<TSchemaUnit & ViewSorts, TSortValue | [TSortValue, number]>(args, {
       child_ids: Object.keys(sorts_map),
       child_type: "collection_view",
-      multiple
+      multiple,
+      manual_update: true
     }, (id) => sorts_map[id], (_, sort, data) => {
       if (Array.isArray(data)) {
         const index = sorts.findIndex(data => data.property === sort.property);
@@ -149,7 +150,6 @@ class View<T extends TView> extends Data<T> {
         target_sort.direction = data
       }
     });
-    this.updateLastEditedProps();
     this.stack.push(Operation.collection_view.update(this.id,[], { query2: data.query2 }))
   }
 
@@ -159,15 +159,14 @@ class View<T extends TView> extends Data<T> {
 
   async deleteSorts(args: FilterTypes<TSchemaUnit & ViewSorts>, multiple?: boolean) {
     const data = this.getCachedData(), [sorts_map, sorts] = this.#getSortsMap();
-    await this.getIterate<TSchemaUnit & ViewSorts>(args, {
+    await this.deleteIterate<TSchemaUnit & ViewSorts>(args, {
       child_ids: Object.keys(sorts_map),
       child_type: "collection_view",
       multiple,
-      method: "DELETE"
+      manual_delete: true
     }, (id) => sorts_map[id], (_, sort) => {
       sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
     });
-    this.updateLastEditedProps();
     this.stack.push(Operation.collection_view.update(this.id,[], { query2: data.query2 }))
   }
 
@@ -190,7 +189,8 @@ class View<T extends TView> extends Data<T> {
     await this.updateIterate<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>(args, {
       child_ids: Object.keys(filters_map),
       child_type: "collection_view",
-      multiple
+      multiple,
+      manual_update: true
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
         { filter:_filter, position, } = updated_data;
@@ -201,8 +201,6 @@ class View<T extends TView> extends Data<T> {
         filters.splice(position, 0, original_filter)
       }
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2
     }))
@@ -214,16 +212,14 @@ class View<T extends TView> extends Data<T> {
 
   async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, multiple?: boolean) {
     const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
-    await this.getIterate<TSchemaUnit & TViewFilters>(args, {
+    await this.deleteIterate<TSchemaUnit & TViewFilters>(args, {
       child_type: "collection_view",
-      method: "DELETE",
       multiple,
+      manual_delete: true,
       child_ids: Object.keys(filters_map),
     }, (name) => filters_map[name], (_, filter) => {
       filters.splice(filters.findIndex(data => (data as any).property === filter.property), 1)
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2
     }))
@@ -239,12 +235,11 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
+      manual_update: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
     }))
@@ -260,12 +255,11 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
+      manual_update: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.width = updated_data;
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
     }))
@@ -281,6 +275,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
+      manual_update: true
     }, (name) => format_properties_map[name], (name, current_data, new_position) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       if (target_format_property_index !== new_position) {
@@ -288,8 +283,6 @@ class View<T extends TView> extends Data<T> {
         format_properties.splice(new_position, 0, target_format_property)
       }
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
     }))
@@ -305,6 +298,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
+      manual_update: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       const { position, visible, width } = updated_data;
@@ -315,8 +309,6 @@ class View<T extends TView> extends Data<T> {
       if (visible !== undefined && visible !== null) target_format_property.visible = visible;
       if (width !== undefined && width !== null) target_format_property.width = width;
     });
-    this.updateLastEditedProps();
-
     this.stack.push(Operation.collection_view.update(this.id,[], {
       format: data.format,
     }))

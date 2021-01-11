@@ -83,13 +83,14 @@ class SpaceView extends Data<ISpaceView> {
    * @param multiple whether multiple or single item is targeted
    */
   async updateBookmarkedPages(args: UpdateTypes<TPage, boolean>, multiple?: boolean) {
-    const target_space_view = this.getCachedData(), ops: IOperation[] = [];
+    const data = this.getCachedData(), ops: IOperation[] = [];
     await this.updateIterate<TPage, boolean>(args, {
-      child_ids: this.cache.space.get(target_space_view.space_id)?.pages ?? [],
+      child_ids: this.cache.space.get(data.space_id)?.pages ?? [],
       child_type: "block",
       multiple,
+      manual_update: true
     }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
-      ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
+      ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
         id
       }))
     });

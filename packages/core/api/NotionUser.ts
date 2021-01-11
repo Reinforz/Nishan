@@ -189,7 +189,7 @@ class NotionUser extends Data<INotionUser> {
       child_ids: this.#getSpaceIds(),
       child_type: "space",
       multiple,
-    }, (child_id) => this.cache.space.get(child_id))).map(id => new Space({ ...this.getProps(), id }))
+    }, (child_id) => this.cache.space.get(child_id))).map(({id}) => new Space({ ...this.getProps(), id }))
   }
 
   async deleteSpace(arg: FilterType<ISpace>) {

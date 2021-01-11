@@ -68,9 +68,8 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
   
   const iterateUtil = async (child_id: string, current_data: TD) => {
     if (child_type && !manual) {
-      const block = cache[child_type].get(child_id) as any;
-      block.alive = false;
-      updateLastEditedProps(block, user_id);
+      (current_data as any).alive = false;
+      updateLastEditedProps(current_data, user_id);
       ops.push(Operation[child_type].update(child_id, [], { alive: false, ...last_updated_props }));
       if (typeof child_path === "string") {
         data[child_path] = (data[child_path] as any).filter((id: string)=>id !== child_id) as any
@@ -123,10 +122,9 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
 
   const iterateUtil = async (child_id: string, current_data: CD, updated_data: RD) => {
     if (child_type && !manual) {
-      const block = cache[child_type].get(child_id) as any;
-      updateLastEditedProps(block, user_id);
+      updateLastEditedProps(current_data, user_id);
       if(updated_data)
-        Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key as keyof RD])
+        Object.keys(updated_data).forEach((key)=>(current_data as any)[key] = updated_data[key as keyof RD])
       ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
     }
     

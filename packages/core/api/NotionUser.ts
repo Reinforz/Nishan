@@ -8,7 +8,7 @@ import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { INotionUser, IUserSettings, IUserRoot, IOperation, ISpace, TPage, ISpaceView } from '@nishans/types';
+import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView } from '@nishans/types';
 import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
 
 /**
@@ -77,10 +77,14 @@ class NotionUser extends Data<INotionUser> {
       last_edited_time: Date.now(),
     } as const;
 
-    const ops: IOperation[] = [], space_ids: string[] = [];
+    const spaces: Space[] = [];
+
     for (let index = 0; index < opts.length; index++) {
       const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
-      space_ids.push(space_id);
+      spaces.push(new Space({
+        id: space_id,
+        ...this.getProps()
+      }))
       const space_op_data = {
         disable_public_access,
         disable_export,
@@ -122,7 +126,7 @@ class NotionUser extends Data<INotionUser> {
       this.cache.space_view.set($space_view_id, space_view_data);
       const user_root = this.cache.user_root.get(this.user_id);
       user_root?.space_views.push($space_view_id);
-      ops.push(
+      this.stack.push(
         Operation.space.update(space_id, [], space_op_data),
         Operation.user_settings.update(this.user_id, ['settings'], {
           persona: 'personal', type: 'personal'
@@ -141,15 +145,12 @@ class NotionUser extends Data<INotionUser> {
           }
         }),
         Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-        Operation.space.listAfter(space_id, ['pages'], { id: page_id }));
+        Operation.space.listAfter(space_id, ['pages'], { id: page_id })
+      );
       this.logger && this.logger(`CREATE`, 'space', space_id);
     };
-    // ? FEAT:1:H update local cache
-    this.stack.push(...ops);
-    return space_ids.map(space_id => new Space({
-      id: space_id,
-      ...this.getProps()
-    }))
+
+    return spaces;
   }
 
   /**
@@ -167,16 +168,20 @@ class NotionUser extends Data<INotionUser> {
    * @returns An array of space objects
    */
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
-    return (await this.getIterate<ISpace>(args, {
+    const spaces:Space[] = [];
+    (await this.getIterate<ISpace>(args, {
       multiple,
       child_type: "space",
       child_ids: this.#getSpaceIds(),
-    }, (space_id) => this.cache.space.get(space_id))).map(({ id, shard_id }) => new Space({
-      ...this.getProps(),
-      space_id: id,
-      shard_id,
-      id
+    }, (space_id) => this.cache.space.get(space_id), (id, {shard_id})=>{
+      spaces.push(new Space({
+        ...this.getProps(),
+        space_id: id,
+        shard_id,
+        id
+      }))
     }));
+    return spaces;
   }
 
   // FIX:1:H Fix the updateSpace method
@@ -185,11 +190,13 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {
-    return (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
+    const spaces: Space[] = [];
+    (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
       child_ids: this.#getSpaceIds(),
       child_type: "space",
       multiple,
-    }, (child_id) => this.cache.space.get(child_id))).map(({id}) => new Space({ ...this.getProps(), id }))
+    }, (child_id) => this.cache.space.get(child_id), (id)=>spaces.push(new Space({ ...this.getProps(), id }))))
+    return spaces;
   }
 
   async deleteSpace(arg: FilterType<ISpace>) {
@@ -213,9 +220,7 @@ class NotionUser extends Data<INotionUser> {
 
   async getTPagesById(ids: string[]) {
     const tpage_map = createPageMap(), tpage_content_ids: string[] = [];
-
     await this.updateCacheManually(ids);
-
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index];
       const page = this.cache.block.get(id) as TPage;
@@ -227,7 +232,10 @@ class NotionUser extends Data<INotionUser> {
           tpage_content_ids.push(...page.content);
       } else if (page?.type === "collection_view_page"){
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
-        // ? FEAT:2:H Get collection from cvp and use it as a map key
+        const collection = this.cache.collection.get(page.collection_id);
+        if(collection)
+          tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj);
+
         tpage_map.collection_view_page.set(page.id, cvp_obj);
       }
     }

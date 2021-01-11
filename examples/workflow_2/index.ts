@@ -4,7 +4,7 @@ import Nishan, {
 	FormulaSchemaUnitInput,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
-  slugify,
+	slugify,
 	TSchemaUnitInput,
 	TViewViewCreateInput
 } from '@nishans/core';
@@ -87,11 +87,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	const space = await user.getSpace((space) => space.name === 'Developers');
 	const { page } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
-  );
-  
-  const target_page = page.get("Hello");
+	);
+
+	const target_page = page.get('Hello');
 
 	const goals_collection_id = uuidv4(),
+		goals_cvp_id = uuidv4(),
 		tasks_collection_id = uuidv4();
 	const task2goalRelation = (index: number): RelationSchemaUnit => {
 		return {
@@ -114,264 +115,270 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		};
 	};
 
-	await target_page?.createBlocks([
-		{
-			type: 'page',
-			properties: {
-				title: [ [ 'Workflow 2' ] ]
-			},
-			format: {
-				page_full_width: true
-			},
-			contents: [
-				{
-					type: 'collection_view_page',
-					properties: {
-						title: [ [ 'Goals' ] ]
-					},
-					collection_id: goals_collection_id,
-					views: [
-						{
-							type: 'table',
-							name: 'Min Current',
-							view: [
-								{
-									type: 'title',
-									name: 'Goal',
-									format: 300
-								}
-							]
-						}
-					],
-					schema: [
-						{
-							type: 'created_time',
-							name: 'Created'
-						},
-						{
-							type: 'formula',
-							name: 'Progress',
-							formula: {
-								function: 'if',
-								args: [
-									{
-										function: 'equal',
-										args: [ { property: slugify('Total Steps') }, 0 ]
-									},
-									0,
-									{
-										function: 'round',
-										args: {
-											function: 'multiple',
-											args: [
-												{
-													function: 'divide',
-													args: [
-														{
-															property: 'completed_steps'
-														},
-														{
-															property: 'total_steps'
-														}
-													]
-												},
-												100
-											]
-										}
-									}
-								]
-							}
-						},
-						{
-							type: 'formula',
-							name: 'Completed Steps',
-							formula: {
-								function: 'add',
-								args: [
-									{ property: 'completed_steps_1' },
-									{
-										function: 'add',
-										args: [ { property: 'completed_steps_2' }, { property: 'completed_steps_3' } ]
-									}
-								]
-							}
-						},
-						{
-							type: 'formula',
-							name: 'Total Tasks',
-							formula: {
-								function: 'add',
-								args: [
-									{ property: 'total_tasks_1' },
-									{
-										function: 'add',
-										args: [ { property: 'total_tasks_2' }, { property: 'total_tasks_3' } ]
-									}
-								]
-							}
-						},
-						...CommonMultiSelectSchemaInput,
-						{
-							type: 'select',
-							name: 'Status',
-							options: status.map((status) => ({ ...status, id: uuidv4() }))
-						},
-						{
-							type: 'title',
-							name: 'Goal'
-						},
-						{
-							type: 'date',
-							name: 'Completed At'
-						},
-						{
-							type: 'number',
-							name: 'Total Steps'
-						},
-						{
-							type: 'formula',
-							name: 'Status Counter',
-							formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
-						}
-					]
+	if (target_page) {
+		const { collection_view_page } = await target_page.createBlocks([
+			{
+				type: 'page',
+				properties: {
+					title: [ [ 'Workflow 2' ] ]
 				},
-				{
-					type: 'collection_view_page',
-					properties: {
-						title: [ [ 'Tasks' ] ]
-					},
-					collection_id: tasks_collection_id,
-					views: [
-						{
-							type: 'table',
-							name: 'Today',
-							view: [
-								{
-									type: 'formula',
-									name: 'On'
-								},
-								{
-									type: 'title',
-									name: 'Task',
-									format: 300
-								},
-								...CommonMultiSelectSchema,
-								{
-									type: 'relation',
-									name: 'Goal 1',
-									format: 100
-								},
-								{
-									type: 'relation',
-									name: 'Goal 2',
-									format: 100
-								},
-								{
-									type: 'relation',
-									name: 'Goal 3',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 1 Steps',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 2 Steps',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 3 Steps',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 1 Progress',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 2 Progress',
-									format: 100
-								},
-								{
-									type: 'number',
-									name: 'Goal 3 Progress',
-									format: 100
-								}
-							]
-						}
-					],
-					schema: [
-						{
-							type: 'title',
-							name: 'Task'
+				format: {
+					page_full_width: true
+				},
+				contents: [
+					{
+            id: goals_cvp_id,
+						type: 'collection_view_page',
+						properties: {
+							title: [ [ 'Goals' ] ]
 						},
-						...CommonMultiSelectSchemaInput,
-						goalProgress(1),
-						goalProgress(2),
-						goalProgress(3),
-						task2goalRelation(1),
-						task2goalRelation(2),
-						task2goalRelation(3),
-						task2goalRollup(1),
-						task2goalRollup(2),
-						task2goalRollup(3),
-						{
-							type: 'number',
-							name: 'Goal 1 Steps'
-						},
-						{
-							type: 'number',
-							name: 'Goal 2 Steps'
-						},
-						{
-							type: 'number',
-							name: 'Goal 3 Steps'
-						},
-						{
-							type: 'date',
-							name: 'Custom Date'
-						},
-						{
-							type: 'created_time',
-							name: 'Created'
-						},
-						{
-							type: 'formula',
-							name: 'On',
-							formula: {
-								function: 'if',
-								args: [
+						collection_id: goals_collection_id,
+						views: [
+							{
+								type: 'table',
+								name: 'Min Current',
+								view: [
 									{
-										function: 'empty',
-										args: { property: 'custom_date' }
-									},
-									{ property: 'created' },
-									{ property: 'custom_date' }
+										type: 'title',
+										name: 'Goal',
+										format: 300
+									}
 								]
 							}
-						}
-					]
-				}
-			]
-		}
-	]);
+						],
+						schema: [
+							{
+								type: 'created_time',
+								name: 'Created'
+							},
+							{
+								type: 'formula',
+								name: 'Progress',
+								formula: {
+									function: 'if',
+									args: [
+										{
+											function: 'equal',
+											args: [ { property: slugify('Total Steps') }, 0 ]
+										},
+										0,
+										{
+											function: 'round',
+											args: {
+												function: 'multiple',
+												args: [
+													{
+														function: 'divide',
+														args: [
+															{
+																property: 'completed_steps'
+															},
+															{
+																property: 'total_steps'
+															}
+														]
+													},
+													100
+												]
+											}
+										}
+									]
+								}
+							},
+							{
+								type: 'formula',
+								name: 'Completed Steps',
+								formula: {
+									function: 'add',
+									args: [
+										{ property: 'completed_steps_1' },
+										{
+											function: 'add',
+											args: [ { property: 'completed_steps_2' }, { property: 'completed_steps_3' } ]
+										}
+									]
+								}
+							},
+							{
+								type: 'formula',
+								name: 'Total Tasks',
+								formula: {
+									function: 'add',
+									args: [
+										{ property: 'total_tasks_1' },
+										{
+											function: 'add',
+											args: [ { property: 'total_tasks_2' }, { property: 'total_tasks_3' } ]
+										}
+									]
+								}
+							},
+							...CommonMultiSelectSchemaInput,
+							{
+								type: 'select',
+								name: 'Status',
+								options: status.map((status) => ({ ...status, id: uuidv4() }))
+							},
+							{
+								type: 'title',
+								name: 'Goal'
+							},
+							{
+								type: 'date',
+								name: 'Completed At'
+							},
+							{
+								type: 'number',
+								name: 'Total Steps'
+							},
+							{
+								type: 'formula',
+								name: 'Status Counter',
+								formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
+							}
+						]
+					},
+					{
+						type: 'collection_view_page',
+						properties: {
+							title: [ [ 'Tasks' ] ]
+						},
+						collection_id: tasks_collection_id,
+						views: [
+							{
+								type: 'table',
+								name: 'Today',
+								view: [
+									{
+										type: 'formula',
+										name: 'On'
+									},
+									{
+										type: 'title',
+										name: 'Task',
+										format: 300
+									},
+									...CommonMultiSelectSchema,
+									{
+										type: 'relation',
+										name: 'Goal 1',
+										format: 100
+									},
+									{
+										type: 'relation',
+										name: 'Goal 2',
+										format: 100
+									},
+									{
+										type: 'relation',
+										name: 'Goal 3',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 1 Steps',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 2 Steps',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 3 Steps',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 1 Progress',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 2 Progress',
+										format: 100
+									},
+									{
+										type: 'number',
+										name: 'Goal 3 Progress',
+										format: 100
+									}
+								]
+							}
+						],
+						schema: [
+							{
+								type: 'title',
+								name: 'Task'
+							},
+							...CommonMultiSelectSchemaInput,
+							goalProgress(1),
+							goalProgress(2),
+							goalProgress(3),
+							task2goalRelation(1),
+							task2goalRelation(2),
+							task2goalRelation(3),
+							task2goalRollup(1),
+							task2goalRollup(2),
+							task2goalRollup(3),
+							{
+								type: 'number',
+								name: 'Goal 1 Steps'
+							},
+							{
+								type: 'number',
+								name: 'Goal 2 Steps'
+							},
+							{
+								type: 'number',
+								name: 'Goal 3 Steps'
+							},
+							{
+								type: 'date',
+								name: 'Custom Date'
+							},
+							{
+								type: 'created_time',
+								name: 'Created'
+							},
+							{
+								type: 'formula',
+								name: 'On',
+								formula: {
+									function: 'if',
+									args: [
+										{
+											function: 'empty',
+											args: { property: 'custom_date' }
+										},
+										{ property: 'created' },
+										{ property: 'custom_date' }
+									]
+								}
+							}
+						]
+					}
+				]
+			}
+		]);
 
-	// await goals_collection?.updateSchemaUnits((schema_unit)=>{
-	//   console.log(schema_unit.key)
-	//   /* switch(schema_unit.key){
-	//     case "task_1":
-	//       return {name: "Task 1"}
-	//     case "task_2":
-	//       return {name: "Task 2"}
-	//     case "task_3":
-	//       return {name: "Task 3"}
-	//     default:
-	//       false
-	//   } */
-	// })
-	await target_page?.executeOperation();
+    const goals_cvp = collection_view_page.get(goals_cvp_id);
+    if(goals_cvp){
+      const goals_collection = await goals_cvp.getCollection()
+      await goals_collection?.updateSchemaUnits((schema_unit)=>{
+        switch(schema_unit.property){
+          case "task_1":
+            return {name: "Task 1"}
+          case "task_2":
+            return {name: "Task 2"}
+          case "task_3":
+            return {name: "Task 3"}
+          default:
+            false
+        }
+      })
+      await target_page?.executeOperation();
+    }
+	}
 })();

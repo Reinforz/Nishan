@@ -18,7 +18,8 @@
     "sourceMap": false,
     "noUnusedLocals": false,
     "incremental": false,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "noImplicitAny": false
   },
   "include": [
     "./workflow_1",

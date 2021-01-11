@@ -15,8 +15,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 	getCachedParentData (): TData {
 		const data = this.getCachedData();
-		if (data.parent_table === 'space') return this.cache.space.get(data.parent_id) as ISpace;
-		return this.cache.block.get(data.parent_id) as IPage;
+		return this.cache[data.parent_table].get(data.parent_id) as TData;
 	}
 
 	reposition (arg: RepositionParams) {

@@ -113,20 +113,25 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
   return matched_data;
 }
 
+// ! FIX:1:H Update deeply for example now it only replaces the top most properties
+// if page.properties = {key1: value1, key2:value2} and updated properties = {key1: value1} it'll lose {key2:value2}  
 export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateAndUpdateOptions<T>, cb?: ((id: string, current_data: CD, updated_data: RD) => any)) => {
   const matched_data: CD[] = [], { manual = false, user_id, parent_id, multiple = true, child_type, logger, cache, stack, parent_type } = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[], ops: IOperation[] = [],
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };
 
-  const iterateUtil = (child_id: string, current_data: CD, updated_data: RD) => {
+  const iterateUtil = async (child_id: string, current_data: CD, updated_data: RD) => {
     if (child_type && !manual) {
       const block = cache[child_type].get(child_id) as any;
+      (block as any).last_edited_time = Date.now();
+      (block as any).last_edited_by_table = "notion_user";
+      (block as any).last_edited_by_id = user_id;
       if(updated_data)
         Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key as keyof RD])
       ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
     }
     
-    cb && cb(child_id, current_data, updated_data);
+    cb && await cb(child_id, current_data, updated_data);
     logger && logger("UPDATE", child_type, child_id);
     matched_data.push(current_data);
   }

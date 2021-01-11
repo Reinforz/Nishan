@@ -159,7 +159,7 @@ export default class Data<T extends TData> extends Operations {
     }, cb);
   }
 
-  protected async getIterate<RD>(args: FilterTypes<RD>, options: IterateAndGetOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
+  protected async getIterate<RD>(args: FilterTypes<RD>, options: IterateAndGetOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => any) {
     await this.initializeCache()
     return await iterateAndGetChildren<T,RD>(args, transform, {
       parent_id: this.id,

@@ -2,7 +2,7 @@ import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import axios from "axios";
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes } from "../types";
 
-import { createBlockClass, createBlockMap, Operation } from "../utils";
+import { createBlockClass, createBlockMap, nestedContentPopulate, Operation } from "../utils";
 
 
 import Permissions from "./Permissions";
@@ -115,7 +115,7 @@ export default class Page extends Permissions<IPage> {
    * @returns Array of newly created block content objects
    */
   async createBlocks(contents: TBlockCreateInput[], ) {
-    return await this.nestedContentPopulateAndExecute(contents, );
+    return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
   }
 
   async getBlock(arg?: FilterType<TBlock>) {

@@ -1,7 +1,7 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { createPageMap, error } from '../utils';
+import { createPageMap, error, nestedContentPopulate } from '../utils';
 
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
@@ -73,8 +73,8 @@ export default class Space extends Data<ISpace> {
     this.logger && this.logger("DELETE", "space", this.id);
   }
 
-  async createTRootPages(options: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], ) {
-    return await this.nestedContentPopulateAndExecute(options, );
+  async createTRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], ) {
+    return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
   }
 
   async getTRootPage(args?: FilterType<IPage | ICollectionViewPage>) {

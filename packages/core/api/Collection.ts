@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, Operation, parseFormula, warn } from '../utils';
+import { createSchemaUnitMap, nestedContentPopulate, Operation, parseFormula, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -52,8 +52,8 @@ class Collection extends Data<ICollection> {
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[], ) {
-    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: true })) as any);
+  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[]) {
+    return await nestedContentPopulate(rows.map((row) => ({ ...row, is_template: true })) as any, this.id, this.type, this.getProps(), this.id)
   }
 
   /**
@@ -119,7 +119,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async createPages(rows: Omit<IPageCreateInput, "type">[], ) {
-    return await this.nestedContentPopulateAndExecute(rows.map((row) => ({ ...row, is_template: false })) as any, )
+    return await nestedContentPopulate(rows.map((row) => ({ ...row, is_template: false })) as any, this.id, this.type, this.getProps(), this.id)
   }
 
   async getPage(arg?: FilterType<IPage>) {

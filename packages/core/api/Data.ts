@@ -1,6 +1,6 @@
 import { TDataType, TData, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
-import { TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
-import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData, iterateUpdateChildren } from "../utils";
+import { TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
+import { Operation, warn, positionChildren, iterateChildren, detectChildData, iterateUpdateChildren } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -230,7 +230,7 @@ export default class Data<T extends TData> extends Operations {
     }, undefined, cb);
   }
 
-  protected getProps() {
+  getProps() {
     return {
       token: this.token,
       interval: this.interval,
@@ -241,11 +241,5 @@ export default class Data<T extends TData> extends Operations {
       logger: this.logger,
       stack: this.stack
     }
-  }
-
-  protected async nestedContentPopulateAndExecute(options: TBlockCreateInput[], ) {
-    const [ops, , block_map] = await nestedContentPopulate(options, this.id, this.type, this.getProps(), this.id);
-    this.stack.push(...ops);
-    return block_map;
   }
 }

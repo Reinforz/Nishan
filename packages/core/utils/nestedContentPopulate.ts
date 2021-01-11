@@ -1,5 +1,5 @@
 import { TDataType, IOperation, ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
-import { TBlockCreateInput, UpdateCacheManuallyParam, ITBlock, NishanArg } from "../types";
+import { TBlockCreateInput, UpdateCacheManuallyParam, NishanArg } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -255,5 +255,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
   }
 
   await traverse(contents, parent_id, parent_table);
-  return [ops, sync_records, block_map] as [IOperation[], UpdateCacheManuallyParam, ITBlock]
+  props.stack.push(...ops);
+  return block_map
 }

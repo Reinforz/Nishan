@@ -254,9 +254,7 @@ class Collection extends Data<ICollection> {
       multiple,
       child_type: "collection",
       method: "DELETE"
-    }, (child_id) => {
-      return { ...data.schema[child_id], property: child_id }
-    }, (id) => {
+    }, (child_id) => ({ ...data.schema[child_id], property: child_id }), (id) => {
       delete data.schema[id]
     });
     this.updateLastEditedProps();

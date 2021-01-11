@@ -220,7 +220,7 @@ class View<T extends TView> extends Data<T> {
       multiple,
       child_ids: Object.keys(filters_map),
     }, (name) => filters_map[name], (_, filter) => {
-      filters.splice(filters.findIndex(data => (data as any).property === filter.property))
+      filters.splice(filters.findIndex(data => (data as any).property === filter.property), 1)
     });
     this.updateLastEditedProps();
 

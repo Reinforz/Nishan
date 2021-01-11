@@ -93,14 +93,13 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 
   async deleteAggregations(args: FilterTypes<TSchemaUnit & ViewAggregations>, multiple?: boolean) {
     const [aggregations_map, aggregations] = this.#getAggregationsMap(), data = this.getCachedData();
-
     await this.getIterate<TSchemaUnit & ViewAggregations>(args, {
       child_type: "collection_view",
       method: "DELETE",
       multiple,
       child_ids: Object.keys(aggregations_map)
     }, (name) => aggregations_map[name], (_, aggregation) => {
-      aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property))
+      aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property), 1)
     })
     this.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2

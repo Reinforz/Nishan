@@ -57,10 +57,11 @@ export const iterateChildren = async<T extends TData, TD, RD = TD>(args: FilterT
   return matched_data;
 }
 
-export const iterateUpdateChildren = async<T extends TData, TD, RD>(args: UpdateTypes<TD, RD>, transform: ((id: string) => TD | undefined), options: IterateOptions<T>, cb1?: (id: string, data: TD, updated_data: RD | undefined) => any, cb2?: ((id: string, data: TD, updated_data: RD) => any)) => {
-  const matched_data: TD[] = [], { multiple = true, child_type, logger, data, parent_type, data: {id} } = options;
-  const child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[];
-  const iterateUtil = (child_id: string, current_data: TD, updated_data: RD) => {
+export const iterateUpdateChildren = async<T extends TData, CD, RD>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateOptions<T>, cb1?: (id: string, current_data: CD, updated_data: RD) => any, cb2?: ((id: string, current_data: CD, updated_data: RD) => any)) => {
+  const matched_data: CD[] = [], { multiple = true, child_type, logger, data, parent_type, data: {id} } = options,
+    child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[];
+
+  const iterateUtil = (child_id: string, current_data: CD, updated_data: RD) => {
     cb1 && cb1(child_id, current_data, updated_data);
     cb2 && cb2(child_id, current_data, updated_data);
     logger && logger("UPDATE", child_type, child_id);

@@ -1,6 +1,6 @@
 import { TDataType, TData, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, TBlockCreateInput } from '../types';
-import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData } from "../utils";
+import { Operation, warn, nestedContentPopulate, positionChildren, iterateChildren, detectChildData, iterateUpdateChildren } from "../utils";
 import Operations from "./Operations";
 
 interface CommonIterateOptions<T> {
@@ -193,22 +193,22 @@ export default class Data<T extends TData> extends Operations {
     return matched_ids;
   }
 
-  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, index: number) => any) {
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
     await this.initializeCache()
     const { child_type } = options, updated_props = this.getLastEditedProps();
     const matched_ids: string[] = [], ops: IOperation[] = [];
 
-    await iterateChildren<T, TD, RD>(args, transform, {
+    await iterateUpdateChildren<T, TD, RD>(args, transform, {
       data: this.getCachedData(),
       logger: this.logger,
       parent_type: this.type,
       method: "UPDATE",
       ...options
-    }, (child_id, _, updated_data: any) => {
+    }, (child_id, current_data, updated_data) => {
       if (child_type) {
         const block = this.cache[child_type].get(child_id) as any;
         if(updated_data)
-          Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key])
+          Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key as keyof RD])
         ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...updated_props }));
       }
     }, cb);

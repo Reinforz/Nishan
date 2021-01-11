@@ -76,7 +76,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     await this.updateIterate<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>(args, {
       child_ids: Object.keys(aggregations_map),
       child_type: "collection_view",
-      manual_update: true,
+      manual: true,
       multiple
     }, (name) => aggregations_map[name], (_, original_data, updated_data) => {
       const aggregation = aggregations[aggregations.findIndex(data => data.property === original_data.property)], { aggregator } = updated_data;
@@ -98,7 +98,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(aggregations_map),
-      manual_delete: true
+      manual: true
     }, (name) => aggregations_map[name], (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property), 1)
     })

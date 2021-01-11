@@ -88,7 +88,7 @@ class SpaceView extends Data<ISpaceView> {
       child_ids: this.cache.space.get(data.space_id)?.pages ?? [],
       child_type: "block",
       multiple,
-      manual_update: true
+      manual: true
     }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
       ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
         id

@@ -250,7 +250,6 @@ class Collection extends Data<ICollection> {
       child_ids: Object.keys(data.schema) ?? [],
       multiple,
       child_type: "collection",
-      method: "DELETE"
     }, (child_id) => ({ ...data.schema[child_id], property: child_id }), (id) => {
       delete data.schema[id]
     });

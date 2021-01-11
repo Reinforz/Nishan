@@ -132,7 +132,7 @@ class View<T extends TView> extends Data<T> {
       child_ids: Object.keys(sorts_map),
       child_type: "collection_view",
       multiple,
-      manual_update: true
+      manual: true
     }, (id) => sorts_map[id], (_, sort, data) => {
       if (Array.isArray(data)) {
         const index = sorts.findIndex(data => data.property === sort.property);
@@ -163,7 +163,7 @@ class View<T extends TView> extends Data<T> {
       child_ids: Object.keys(sorts_map),
       child_type: "collection_view",
       multiple,
-      manual_delete: true
+      manual: true
     }, (id) => sorts_map[id], (_, sort) => {
       sorts.splice(sorts.findIndex(data => data.property === sort.property), 1);
     });
@@ -190,7 +190,7 @@ class View<T extends TView> extends Data<T> {
       child_ids: Object.keys(filters_map),
       child_type: "collection_view",
       multiple,
-      manual_update: true
+      manual: true
     }, (name) => filters_map[name], (_, original_filter, updated_data) => {
       const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
         { filter:_filter, position, } = updated_data;
@@ -215,7 +215,7 @@ class View<T extends TView> extends Data<T> {
     await this.deleteIterate<TSchemaUnit & TViewFilters>(args, {
       child_type: "collection_view",
       multiple,
-      manual_delete: true,
+      manual: true,
       child_ids: Object.keys(filters_map),
     }, (name) => filters_map[name], (_, filter) => {
       filters.splice(filters.findIndex(data => (data as any).property === filter.property), 1)
@@ -235,7 +235,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      manual_update: true
+      manual: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.visible = updated_data;
@@ -255,7 +255,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      manual_update: true
+      manual: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property = format_properties.find(format_property => format_property.property === current_data.property) as ViewFormatProperties;
       target_format_property.width = updated_data;
@@ -275,7 +275,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      manual_update: true
+      manual: true
     }, (name) => format_properties_map[name], (name, current_data, new_position) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       if (target_format_property_index !== new_position) {
@@ -298,7 +298,7 @@ class View<T extends TView> extends Data<T> {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(format_properties_map),
-      manual_update: true
+      manual: true
     }, (name) => format_properties_map[name], (name, current_data, updated_data) => {
       const target_format_property_index = format_properties.findIndex(format_property => format_property.property === current_data.property), target_format_property = format_properties[target_format_property_index];
       const { position, visible, width } = updated_data;

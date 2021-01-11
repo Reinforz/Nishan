@@ -201,7 +201,6 @@ class NotionUser extends Data<INotionUser> {
       child_ids: this.#getSpaceIds(),
       multiple,
       child_type: "space",
-      method: "DELETE"
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
       await this.enqueueTask({
         eventName: "deleteSpace",

@@ -1,23 +1,19 @@
-import { TDataType, TData, IOperation, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
-import { TMethodType, NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
-import { Operation, warn, positionChildren, iterateChildren, detectChildData, iterateUpdateChildren } from "../utils";
+import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
+import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
+import { Operation, warn, positionChildren, detectChildData, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
-
-interface CommonIterateOptions<T> {
-  child_ids: keyof T | string[],
+interface IterateAndGetOptions<T>{
   child_type: TDataType,
-  multiple?: boolean
+  child_ids: string[] | keyof T,
+  multiple?: boolean,
 }
 
-interface UpdateIterateOptions<T> extends CommonIterateOptions<T> { 
-  manual_update?: boolean
-};
-interface DeleteIterateOptions<T> extends UpdateIterateOptions<T> {
-  child_path?: keyof T,
-  manual_delete?: boolean
+interface IterateAndUpdateOptions<T> extends IterateAndGetOptions<T>{
+  manual?:boolean
 }
-interface GetIterateOptions<T> extends CommonIterateOptions<T> {
-  method?: TMethodType,
+
+interface IterateAndDeleteOptions<T> extends IterateAndUpdateOptions<T>{
+  child_path?: keyof T,
 }
 
 /**
@@ -166,68 +162,34 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: DeleteIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCache()
-    const { child_type, child_path, manual_delete = false } = options, updated_props = this.getLastEditedProps(), data = this.getCachedData();
-    const ops: IOperation[] = [];
-    const matched_data = await iterateChildren<T, TD>(args, transform, {
-      data: this.getCachedData(),
-      logger: this.logger,
-      method: "DELETE",
+    return  await iterateAndDeleteChildren<T, TD>(args, transform, {
+      parent_id: this.id,
       parent_type: this.type,
+      ...this.getProps(),
       ...options
-    }, (child_id) => {
-      if (child_type && !manual_delete) {
-        const block = this.cache[child_type].get(child_id) as any;
-        block.alive = false;
-        this.updateLastEditedProps(block);
-        ops.push(Operation[child_type].update(child_id, [], { alive: false, ...updated_props }));
-        if (typeof child_path === "string") {
-          data[child_path] = (data[child_path] as any).filter((id: string)=>id !== child_id) as any
-          ops.push(Operation[this.type].listRemove(this.id, [child_path], { id: child_id }));
-        }
-      }
     }, cb);
-    this.updateLastEditedProps();
-    ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
-    this.stack.push(...ops);
-    return matched_data;
   }
 
-  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: UpdateIterateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
+  protected async updateIterate<TD, RD>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD) => any) {
     await this.initializeCache()
-    const { child_type, manual_update = false } = options, updated_props = this.getLastEditedProps(), ops: IOperation[] = [];
-
-    const matched_data = await iterateUpdateChildren<T, TD, RD>(args, transform, {
-      data: this.getCachedData(),
-      logger: this.logger,
+    return await iterateAndUpdateChildren<T, TD, RD>(args, transform, {
       parent_type: this.type,
-      method: "UPDATE",
+      parent_id: this.id,
+      ...this.getProps(),
       ...options
-    }, (child_id, current_data, updated_data) => {
-      if (child_type && !manual_update) {
-        const block = this.cache[child_type].get(child_id) as any;
-        if(updated_data)
-          Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key as keyof RD])
-        ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...updated_props }));
-      }
     }, cb);
-
-    this.updateLastEditedProps();
-    ops.push(Operation[this.type].update(this.id, [], { ...updated_props }));
-    this.stack.push(...ops);
-    return matched_data;
   }
 
-  protected async getIterate<RD>(args: FilterTypes<RD>, options: GetIterateOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
+  protected async getIterate<RD>(args: FilterTypes<RD>, options: IterateAndGetOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => void | Promise<any>) {
     await this.initializeCache()
-    return await iterateChildren<T,RD>(args, transform, {
-      data: this.getCachedData(),
-      logger: this.logger,
+    return await iterateAndGetChildren<T,RD>(args, transform, {
+      parent_id: this.id,
       parent_type: this.type,
-      method: 'READ',
+      ...this.getProps(),
       ...options,
-    }, undefined, cb);
+    }, cb);
   }
 
   getProps() {

@@ -1,4 +1,4 @@
-import { TBlock, IOperation, TBasicBlockType, ISpace, IPage, ICollectionBlock } from '@nishans/types';
+import { TBlock, IOperation, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
@@ -13,8 +13,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		super({ ...arg, type: 'block' });
 	}
 
+	getCachedParentData (): TData {
+		const data = this.getCachedData();
+		if (data.parent_table === 'space') return this.cache.space.get(data.parent_id) as ISpace;
+		return this.cache.block.get(data.parent_id) as IPage;
+	}
+
 	reposition (arg: RepositionParams) {
-		this.stack.push(this.addToChildArray(this.id, arg));
+		this.addToChildArray(this.getCachedParentData(), arg);
 	}
 
 	/**

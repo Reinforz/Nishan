@@ -1,14 +1,16 @@
 import { IOperation, TDataType } from "@nishans/types";
-import { RepositionParams } from "../types";
+import { Logger, RepositionParams } from "../types";
 import { Operation } from "../utils";
 import { detectChildData } from "./detectChildData";
 
-export function positionChildren(arg: { data: any, child_id: string, position: RepositionParams, parent_type: TDataType, parent_id: string }) {
-  const { child_id, position, data, parent_type, parent_id } = arg;
-  const [child_path] = detectChildData(parent_type,data);
+interface PositionChildrenParam { logger: Logger, parent: any, child_id: string, position: RepositionParams, parent_type: TDataType, parent_id: string }
 
-  if (!data[child_path]) data[child_path] = [];
-  const container: string[] = data[child_path];
+export function positionChildren(arg: PositionChildrenParam) {
+  const { child_id, position, parent, parent_type, parent_id, logger } = arg;
+  const [child_path] = detectChildData(parent_type,parent);
+  if (!parent[child_path]) parent[child_path] = [];
+  const container: string[] = parent[child_path];
+  logger && logger("UPDATE", parent_type, parent_id);
 
   if (position !== undefined) {
     let where: "before" | "after" = "before", id = '';

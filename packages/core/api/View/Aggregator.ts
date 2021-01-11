@@ -49,7 +49,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async createAggregation(arg: UserViewAggregationsCreateParams, ) {
-    await this.createAggregations([arg], )
+    await this.createAggregations([arg])
   }
 
   async createAggregations(args: UserViewAggregationsCreateParams[], ) {

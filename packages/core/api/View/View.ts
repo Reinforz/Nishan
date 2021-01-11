@@ -80,7 +80,7 @@ class View<T extends TView> extends Data<T> {
   }
 
   async reposition(arg: RepositionParams) {
-    await this.saveTransactions([this.addToChildArray(this.id, arg)]);
+    this.addToChildArray(this.getCachedParentData(), arg);
   }
 
   /**
@@ -96,7 +96,7 @@ class View<T extends TView> extends Data<T> {
   }
 
   async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), ) {
-    await this.createSorts([arg], )
+    this.createSorts([arg])
   }
 
   createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], ) {

@@ -4,7 +4,7 @@ import Space from './Space';
 import { createPageMap, Operation } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { ISpaceView, ISpace, TPage, IOperation } from '@nishans/types';
+import { ISpaceView, ISpace, TPage, IOperation, IUserRoot } from '@nishans/types';
 import { NishanArg, RepositionParams, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, FilterType, FilterTypes, UpdateTypes } from '../types';
 
 /**
@@ -15,10 +15,13 @@ class SpaceView extends Data<ISpaceView> {
   constructor(arg: NishanArg) {
     super({ ...arg, type: "space_view" });
   }
+  
+  getCachedParentData(){
+    return this.cache.user_root.get(this.user_id) as IUserRoot
+  }
 
   reposition(arg: RepositionParams, ) {
-    this.logger && this.logger("UPDATE", "space_view", this.id);
-    this.stack.push(this.addToChildArray(this.id, arg))
+    this.addToChildArray(this.getCachedParentData(), arg)
   }
 
   /**
@@ -26,7 +29,7 @@ class SpaceView extends Data<ISpaceView> {
    * @param arg Options to update the spaceView
    */
   async update(arg: ISpaceViewUpdateInput, ) {
-    await this.updateCacheLocally(arg, TSpaceViewUpdateKeys, )
+    this.updateCacheLocally(arg, TSpaceViewUpdateKeys, )
   }
 
   /**

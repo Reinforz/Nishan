@@ -71,8 +71,8 @@ export default class Data<T extends TData> extends Operations {
    * @param arg
    * @returns created Operation and a function to update the cache and the class data
    */
-  protected addToChildArray(child_id: string, position: RepositionParams) {
-    return positionChildren({ child_id, position, data: this.getCachedData(), parent_id: this.id, parent_type: this.type })
+  protected addToChildArray(parent: TData, position: RepositionParams) {
+    this.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_id: this.id, parent_type: this.type }))
   }
 
   /**

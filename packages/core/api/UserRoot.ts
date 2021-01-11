@@ -24,11 +24,20 @@ class UserRoot extends Data<IUserRoot> {
    * @returns An array of pages object matching the passed criteria
    */
 	async getSpaceViews (args?: FilterTypes<ISpaceView>, multiple?: boolean) {
-		return (await this.getIterate<ISpaceView>(
+		const space_views: SpaceView[] = [];
+		await this.getIterate<ISpaceView>(
 			args,
 			{ multiple, child_type: 'space_view', child_ids: 'space_views' },
-			(space_id) => this.cache.space_view.get(space_id)
-		)).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
+			(space_id) => this.cache.space_view.get(space_id),
+			(id) =>
+				space_views.push(
+					new SpaceView({
+						...this.getProps(),
+						id
+					})
+				)
+		);
+		return space_views;
 	}
 
 	async updateSpaceView (arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>) {
@@ -36,15 +45,18 @@ class UserRoot extends Data<IUserRoot> {
 	}
 
 	async updateSpaceViews (args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, multiple?: boolean) {
-		return (await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(
+		const space_views: SpaceView[] = [];
+		await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(
 			args,
 			{
 				child_ids: this.getCachedData().space_views,
 				child_type: 'space_view',
 				multiple
 			},
-			(id) => this.cache.space_view.get(id)
-		)).map(({ id }) => new SpaceView({ ...this.getProps(), id }));
+			(id) => this.cache.space_view.get(id),
+			(id) => space_views.push(new SpaceView({ ...this.getProps(), id }))
+		);
+		return space_views;
 	}
 }
 

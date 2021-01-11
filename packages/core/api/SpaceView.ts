@@ -4,7 +4,7 @@ import Space from './Space';
 import { createPageMap, Operation } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { ISpaceView, ISpace, TPage, IOperation, IUserRoot } from '@nishans/types';
+import { ISpaceView, ISpace, TPage, IUserRoot } from '@nishans/types';
 import { NishanArg, RepositionParams, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, FilterType, FilterTypes, UpdateTypes } from '../types';
 
 /**
@@ -36,7 +36,7 @@ class SpaceView extends Data<ISpaceView> {
    * Get the corresponding space associated with this space view
    * @returns The corresponding space object
    */
-  async getSpace(return_object = true) {
+  async getSpace() {
     const data = this.getCachedData();
     let target_space: ISpace = null as any;
     for (const [, space] of this.cache.space) {
@@ -45,14 +45,11 @@ class SpaceView extends Data<ISpaceView> {
         break;
       }
     }
-    if (return_object) {
-      this.logger && this.logger("READ", "block", target_space.id);
-      return new Space({
-        id: target_space.id,
-        ...this.getProps()
-      });
-    }
-    else return target_space
+    this.logger && this.logger("READ", "block", target_space.id);
+    return new Space({
+      id: target_space.id,
+      ...this.getProps()
+    });
   }
 
   async getBookmarkedPage(arg: FilterType<TPage>) {
@@ -96,18 +93,19 @@ class SpaceView extends Data<ISpaceView> {
    * @param multiple whether multiple or single item is targeted
    */
   async updateBookmarkedPages(args: UpdateTypes<TPage, boolean>, multiple?: boolean) {
-    const data = this.getCachedData(), ops: IOperation[] = [];
+    const data = this.getCachedData();
     await this.updateIterate<TPage, boolean>(args, {
       child_ids: this.cache.space.get(data.space_id)?.pages ?? [],
       child_type: "block",
       multiple,
       manual: true
     }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
-      ops.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
+      if(!new_favourite_status) data.bookmarked_pages = data.bookmarked_pages.filter(page_id=>page_id !== id);
+      else data.bookmarked_pages.push(id)
+      this.stack.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
         id
       }))
     });
-    this.stack.push(...ops)
   }
 }
 

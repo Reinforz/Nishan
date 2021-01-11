@@ -132,7 +132,7 @@ export function parseFormula (
 				result_type: 'text'
 			});
 		} else {
-			const schema_name = (formula as { property: string }).property.toString(),
+			const schema_name = (formula as { property: string }).property,
 				result = schema_map.get(schema_name);
 			if (result) {
 				const { schema_id, type } = result;

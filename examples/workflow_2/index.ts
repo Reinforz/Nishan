@@ -363,7 +363,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 			}
 		]);
 
-    const goals_cvp = collection_view_page.get(goals_cvp_id);
+		const goals_cvp = collection_view_page.get(goals_cvp_id);
     if(goals_cvp){
       const goals_collection = await goals_cvp.getCollection()
       await goals_collection?.updateSchemaUnits((schema_unit)=>{

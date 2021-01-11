@@ -17,6 +17,7 @@ This package contains the core api to interact with notion.
 npm install @nishans/core
 ```
 
+**NOTE**: Please note that even if the patch version changes, there could be breaking changes since this package is still under heavy development. Majority of the functionality will stay intact during this experimental and unstable time, but please use with caution.
 ## Usage
 
 Please visit the documentation for [Nishan](https://nishan-docs.netlify.app/) to learn more about using it.

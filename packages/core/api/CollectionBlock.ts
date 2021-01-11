@@ -3,7 +3,7 @@ import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
 import { createViewMap, createViews, Operation } from '../utils';
-import { ICollectionViewPage, IOperation, ICollection, TView, TViewUpdateInput } from '@nishans/types';
+import { ICollectionViewPage, ICollection, TView, TViewUpdateInput } from '@nishans/types';
 import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput } from '../types';
 
 const view_class = {
@@ -37,20 +37,12 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 	}
 
 	createViews (params: TViewCreateInput[]) {
-		const ops: IOperation[] = [],
-			data = this.getCachedData(),
+		const data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
-			[ created_view_ops, view_ids, view_map ] = createViews(
-				collection.schema,
-				params,
-				collection.id,
-				this.id,
-				this.getProps()
-			);
-		ops.push(...created_view_ops, Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
+			[ view_ids, view_map ] = createViews(collection.schema, params, collection.id, this.id, this.getProps());
+		this.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();
-		this.stack.push(...ops);
 		return view_map;
 	}
 

@@ -1,5 +1,5 @@
-import { Schema, TSchemaUnit, IOperation } from "@nishans/types";
-import { ICollectionBlockInput, ITView, NishanArg, UpdateCacheManuallyParam } from "../types";
+import { Schema, TSchemaUnit } from "@nishans/types";
+import { ICollectionBlockInput, ITView, NishanArg } from "../types";
 import { parseFormula, createViews, Operation, generateId } from "../utils";
 import { slugify } from "./slugify";
 
@@ -18,7 +18,7 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map)
   })
 
-  const [created_view_ops, view_ids, view_map, view_records] = createViews(schema, param.views, collection_id, parent_id, props);
+  const [view_ids, view_map] = createViews(schema, param.views, collection_id, parent_id, props);
   const collection_data = {
     id: collection_id,
     schema,
@@ -33,9 +33,9 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     name: param.properties.title,
     migrated: false, version: 0
   } as const;
-  created_view_ops.unshift(Operation.collection.update(collection_id, [], collection_data));
+  props.stack.push(Operation.collection.update(collection_id, [], collection_data))
   props.cache.collection.set(collection_id, collection_data);
   props.logger && props.logger("CREATE", "collection", collection_id);
 
-  return [collection_id, created_view_ops, view_ids, view_map, view_records] as [string, IOperation[], string[], ITView, UpdateCacheManuallyParam]
+  return [collection_id, view_ids, view_map] as [string, string[], ITView]
 }

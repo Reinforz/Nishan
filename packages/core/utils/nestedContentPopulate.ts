@@ -1,10 +1,10 @@
-import { TDataType, IOperation, ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
-import { TBlockCreateInput, UpdateCacheManuallyParam, NishanArg } from "../types";
+import { TDataType, ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
+import { TBlockCreateInput, NishanArg } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, props: Omit<NishanArg,"id">, this_id: string) {
-  const ops: IOperation[] = [], sync_records: UpdateCacheManuallyParam = [], block_map = createBlockMap();
+  const block_map = createBlockMap();
 
   const CollectionView = require("../api/CollectionView").default;
   const CollectionViewPage = require('../api/CollectionViewPage').default;
@@ -26,7 +26,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
     parent_content_id = parent_content_id ?? parent_id;
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index], block_id = generateId(content.id);
-      sync_records.push(block_id);
       content.type = content.type ?? 'page';
 
       /* if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
@@ -66,7 +65,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       } */
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
-        const [collection_id, create_view_ops, view_ids, , view_records] = createCollection(content, block_id, props);
+        const [collection_id, view_ids,] = createCollection(content, block_id, props);
         const args: ICollectionBlock = {
           id: block_id,
           type: content.type,
@@ -81,7 +80,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
 
         if (content.type === "collection_view_page") (args as ICollectionViewPage).permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }];
 
-        ops.push(Operation.block.update(block_id, [], args),...create_view_ops)
+        props.stack.push(Operation.block.update(block_id, [], args))
         props.cache.block.set(block_id, args as any)
 
         const collectionblock = type === "collection_view" ? new CollectionView({
@@ -92,7 +91,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           id: block_id
         });
 
-        sync_records.push([collection_id, "collection"], ...view_records)
         block_map[type].set(block_id, collectionblock);
         if (content.rows)
           await traverse(content.rows as any, collection_id, "collection")
@@ -102,7 +100,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...content,
           block_id: generateId(content.id)
         }))).map(content => {
-          sync_records.push(content.block_id)
           content_ids.push(content.block_id);
           const content_data: any = {
             ...content, parent_id: block_id, parent_table: "block", ...metadata
@@ -121,7 +118,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           contents: content_ids,
           ...metadata
         }
-        ops.push(
+        props.stack.push(
           Operation.block.update(block_id, [], factory_data),
           ...content_blocks_ops
         );
@@ -134,7 +131,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
           collection = props.cache.collection.get(collection_id) as ICollection,
-          [created_view_ops, view_ids, , view_records] = createViews(collection.schema, views, collection.id, block_id, props),
+          [view_ids] = createViews(collection.schema, views, collection.id, block_id, props),
           collection_view_data: ICollectionView = {
             id: block_id,
             type: 'collection_view',
@@ -146,10 +143,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
             ...metadata
           }
 
-        ops.push(Operation.block.set(block_id, [], collection_view_data),
-          ...created_view_ops);
+        props.stack.push(Operation.block.set(block_id, [], collection_view_data));
         props.cache.block.set(block_id, collection_view_data);
-        sync_records.push([collection_id, "collection"], ...view_records);
         block_map[content.type].set(block_id, new CollectionView({
           ...props,
           id: block_id
@@ -171,7 +166,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
           ...metadata
         }
-        ops.push(Operation.block.update(block_id, [], page_data));
+        props.stack.push(Operation.block.update(block_id, [], page_data));
         props.cache.block.set(block_id, page_data)
         block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
       }
@@ -186,7 +181,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           content: [],
           ...metadata
         };
-        ops.push(Operation.block.set(block_id, [], column_list_data));
+        props.stack.push(Operation.block.set(block_id, [], column_list_data));
         props.cache.block.set(block_id, column_list_data)
 
         for (let index = 0; index < contents.length; index++) {
@@ -202,10 +197,9 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
             ...metadata,
             content: []
           };
-          ops.push(Operation.block.set(column_id, [], column_data), Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
+          props.stack.push(Operation.block.set(column_id, [], column_data), Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
           props.cache.block.set(column_id, column_data);
           column_list_data.content.push(column_id);
-          sync_records.push(column_id);
           await traverse([contents[index]], this_id, "block", column_id)
         }
       }
@@ -220,7 +214,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           alive: true,
           ...metadata
         };
-        ops.push(Operation.block.update(block_id, [], block_data));
+        props.stack.push(Operation.block.update(block_id, [], block_data));
         props.cache.block.set(block_id, block_data)
         block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
       }
@@ -228,7 +222,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;
 
       if (parent_table === "block"){
-        ops.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
+        props.stack.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
         const parent = props.cache.block.get(parent_content_id);
         if(parent){
           if(!(parent as IPage)['content']) (parent as IPage)['content'] = [];
@@ -236,7 +230,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }
       }
       else if (parent_table === "space"){
-        ops.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
+        props.stack.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
         const parent = props.cache.space.get(parent_content_id);
         if(parent){
           if(!parent['pages']) parent['pages'] = []
@@ -244,7 +238,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }
       }
       else if (parent_table === "collection" && (content as any).is_template){
-        ops.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
+        props.stack.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
         const parent = props.cache.collection.get(parent_content_id);
         if(parent){
           if(!parent['template_pages']) parent['template_pages'] = []
@@ -256,6 +250,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
   }
 
   await traverse(contents, parent_id, parent_table);
-  props.stack.push(...ops);
+  props.stack.push(...props.stack);
   return block_map
 }

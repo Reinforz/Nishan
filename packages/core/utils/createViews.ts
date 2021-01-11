@@ -1,10 +1,10 @@
-import { Schema, TSchemaUnit, IOperation, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
-import { TViewCreateInput, UpdateCacheManuallyParam, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView, NishanArg } from "../types";
+import { Schema, TSchemaUnit,  ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
+import { TViewCreateInput, TableViewCreateInput, BoardViewCreateInput, GalleryViewCreateInput, CalendarViewCreateInput, TimelineViewCreateInput, ITView, NishanArg } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: Omit<NishanArg, "id">, current_id?: string) {
-  const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), created_view_ops: IOperation[] = [], view_ids: string[] = [], view_map = createViewMap(), view_records: UpdateCacheManuallyParam = [];
+  const name_map: Map<string, { property: string } & TSchemaUnit> = new Map(), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../api/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
@@ -25,7 +25,6 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
       } as any;
 
     view_ids.push(view_id);
-    view_records.push([view_id, "collection_view"])
     view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))
 
     switch (type) {
@@ -115,10 +114,10 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
       format,
       query2,
     } as any;
-    created_view_ops.push(Operation.collection_view.set(view_id, [], view_data))
+    props.stack.push(Operation.collection_view.set(view_id, [], view_data))
     props.cache.collection_view.set(view_id, view_data)
     props.logger && props.logger("CREATE", "collection_view", view_id) 
   }
 
-  return [created_view_ops, view_ids, view_map, view_records] as [IOperation[], string[], ITView, UpdateCacheManuallyParam];
+  return [view_ids, view_map] as [string[], ITView];
 }

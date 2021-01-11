@@ -89,8 +89,7 @@ class View<T extends TView> extends Data<T> {
    */
 
   update(param: TViewCreateInput, ) {
-    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [created_view_ops, view_map] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
-    this.stack.push(...created_view_ops);
+    const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [, view_map] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
     this.updateLastEditedProps();
     return view_map;
   }

@@ -1,6 +1,6 @@
 import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
 import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
-import { Operation, warn, positionChildren, detectChildData, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
+import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
 interface IterateAndGetOptions<T>{
   child_type: TDataType,
@@ -24,17 +24,13 @@ interface IterateAndDeleteOptions<T> extends IterateAndUpdateOptions<T>{
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
-  protected child_path: keyof T = "" as any;
-  protected child_type: TDataType = "block" as any;
   #init_cache = false;
-  #init_child_data = false;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;
     this.#init_cache = false;
-    this.#init_child_data = false;
   }
 
   protected getLastEditedProps() {
@@ -46,15 +42,6 @@ export default class Data<T extends TData> extends Operations {
     target.last_edited_time = Date.now();
     target.last_edited_by_table = "notion_user";
     target.last_edited_by_id = this.user_id;
-  }
-
-  protected initializeChildData() {
-    if (!this.#init_child_data) {
-      const [child_path, child_type] = detectChildData(this.type, this.getCachedData() as TBlock);
-      this.child_path = child_path as any;
-      this.child_type = child_type as any;
-      this.#init_child_data = true;
-    }
   }
 
   /**

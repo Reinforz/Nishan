@@ -30,10 +30,10 @@ class Collection extends Data<ICollection> {
   }
 
   getSchemaMap = () =>{
-    const data = this.getCachedData(), schema_map: Map<string, {property: string} & TSchemaUnit> = new Map();
+    const data = this.getCachedData(), schema_map: Map<string, {schema_id: string} & TSchemaUnit> = new Map();
     Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
       schema_map.set(schema_unit.name, {
-        property: schema_id,
+        schema_id,
         ...schema_unit
       })
     })

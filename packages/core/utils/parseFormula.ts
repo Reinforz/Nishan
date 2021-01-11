@@ -92,7 +92,7 @@ export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TForm
 
 export function parseFormula (
 	formula: FormulaSchemaUnitInput['formula'],
-	schema_map: Map<string, { property: string } & TSchemaUnit>
+	schema_map: Map<string, { schema_id: string } & TSchemaUnit>
 ): TFormula {
 	const res_formula = {
 		args: []
@@ -135,13 +135,13 @@ export function parseFormula (
 			const schema_name = (formula as { property: string }).property.toString(),
 				result = schema_map.get(schema_name);
 			if (result) {
-				const { property, type } = result;
+				const { schema_id, type } = result;
 				let result_type: TFormulaResultType = '' as any;
 				if (result.type === 'formula') result_type = result.formula.result_type;
 				else result_type = formulateResultTypeFromSchemaType(type);
 				parent.push({
 					type: 'property',
-					id: property,
+					id: schema_id,
 					name: schema_name,
 					result_type
 				});

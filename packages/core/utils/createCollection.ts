@@ -4,18 +4,28 @@ import { parseFormula, createViews, Operation, generateId } from "../utils";
 import { slugify } from "./slugify";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
-  const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: Map<string, TSchemaUnit & {property: string}> = new Map();
+  const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: Map<string, TSchemaUnit & {schema_id: string}> = new Map();
 
   param.schema.forEach(opt => {
     const schema_id = slugify(opt.type === "title" ? "Title" : opt.name);
     schema[schema_id] = opt as any;
-    const schema_map_value = {...opt, property: schema_id} as any
+    const schema_map_value = {...opt, schema_id} as any
     schema_map.set(opt.name,  schema_map_value)
     schema_map.set(schema_id, schema_map_value)
   });
 
-  Object.values(schema).forEach((schema_unit)=>{
-    if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map)
+  Object.entries(schema).forEach(([schema_id, schema_unit])=>{
+    if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map);
+    else if(schema_unit.type === "relation"){
+      const collection = props.cache.collection.get(schema_unit.collection_id);
+      if(collection)
+        collection.schema[schema_unit.property] = {
+          type: "relation",
+          collection_id,
+          name: `Related to ${param.properties.title} (${schema_unit.name})`,
+          property: schema_id
+        }
+    }
   })
 
   const [view_ids, view_map] = createViews(schema, param.views, collection_id, parent_id, props);

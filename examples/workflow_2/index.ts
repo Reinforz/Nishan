@@ -4,6 +4,7 @@ import Nishan, {
 	FormulaSchemaUnitInput,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
+  slugify,
 	TSchemaUnitInput,
 	TViewViewCreateInput
 } from '@nishans/core';
@@ -86,7 +87,10 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	const space = await user.getSpace((space) => space.name === 'Developers');
 	const { page } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
-	);
+  );
+  
+  const target_page = page.get("Hello");
+
 	const goals_collection_id = uuidv4(),
 		tasks_collection_id = uuidv4();
 	const task2goalRelation = (index: number): RelationSchemaUnit => {
@@ -110,11 +114,11 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		};
 	};
 
-	const { collection_view_page } = await page.createBlocks([
+	await target_page?.createBlocks([
 		{
 			type: 'page',
 			properties: {
-				title: [ [ 'Workflow 1' ] ]
+				title: [ [ 'Workflow 2' ] ]
 			},
 			format: {
 				page_full_width: true
@@ -152,7 +156,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 								args: [
 									{
 										function: 'equal',
-										args: [ { property: 'Total Steps' }, 0 ]
+										args: [ { property: slugify('Total Steps') }, 0 ]
 									},
 									0,
 									{
@@ -369,6 +373,5 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	//       false
 	//   } */
 	// })
-
-	await page.executeOperation();
+	await target_page?.executeOperation();
 })();

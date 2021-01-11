@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
+import fs from "fs";
 import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewViewCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
 import { formulaUtil } from '../util';
@@ -23,15 +23,15 @@ const daily_sites = [
 (async function () {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
-		defaultExecutionState: false
 	});
 
 	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
 	const space = await user.getSpace((space) => space.name === 'Developers');
-	const { page: [ page ] } = await space.getTRootPage(
+	const { page } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
-	);
-	await page.createBlocks([
+  );
+  const target_page = page.get("Hello");
+	await target_page?.createBlocks([
 		{
 			type: 'page',
 			properties: {
@@ -492,7 +492,7 @@ const daily_sites = [
 				}
 			]
 		}
-	]);
-	// page.printStack()
-	await page.executeOperation();
+  ]);
+  // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
+	await target_page?.executeOperation();
 })();

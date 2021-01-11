@@ -65,7 +65,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       } */
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
-        const [collection_id, view_ids,] = createCollection(content, block_id, props);
+        const [collection_id, view_ids] = createCollection(content, block_id, props);
         const args: ICollectionBlock = {
           id: block_id,
           type: content.type,
@@ -151,8 +151,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }))
       }
       else if (content.type === "page") {
-        if (content.contents)
-          await traverse(content.contents, block_id, "block");
         const page_data: IPage = {
           content: [],
           is_template: (content as any).is_template && parent_table === "collection",
@@ -169,6 +167,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         props.stack.push(Operation.block.update(block_id, [], page_data));
         props.cache.block.set(block_id, page_data)
         block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
+        if (content.contents)
+          await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "column_list") {
         const { contents } = content;
@@ -250,6 +250,5 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
   }
 
   await traverse(contents, parent_id, parent_table);
-  props.stack.push(...props.stack);
   return block_map
 }

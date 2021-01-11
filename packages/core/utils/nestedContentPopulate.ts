@@ -251,6 +251,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           parent['template_pages'].push(content_id)
         }
       }
+      props.logger && props.logger("CREATE","block", content_id)
     }
   }
 

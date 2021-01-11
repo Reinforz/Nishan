@@ -34,7 +34,8 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     migrated: false, version: 0
   } as const;
   created_view_ops.unshift(Operation.collection.update(collection_id, [], collection_data));
-  props.cache.collection.set(collection_id, collection_data)
+  props.cache.collection.set(collection_id, collection_data);
+  props.logger && props.logger("CREATE", "collection", collection_id);
 
   return [collection_id, created_view_ops, view_ids, view_map, view_records] as [string, IOperation[], string[], ITView, UpdateCacheManuallyParam]
 }

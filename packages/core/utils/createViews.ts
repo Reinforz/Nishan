@@ -117,6 +117,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
     } as any;
     created_view_ops.push(Operation.collection_view.set(view_id, [], view_data))
     props.cache.collection_view.set(view_id, view_data)
+    props.logger && props.logger("CREATE", "collection_view", view_id) 
   }
 
   return [created_view_ops, view_ids, view_map, view_records] as [IOperation[], string[], ITView, UpdateCacheManuallyParam];

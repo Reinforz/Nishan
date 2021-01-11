@@ -13,7 +13,7 @@ beforeAll(async ()=>{
 function checkRootPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
-    expect(pages.page.size).toBe(1);
+    expect(pages.page.size).toBe(2);
     expect(pages.page.get(ROOT_PAGE_ONE_ID)).not.toBeNull();
     expect(pages.page.get(ROOT_PAGE_ONE_ID)?.id).toBe(ROOT_PAGE_ONE_ID);
     expect(pages.page.get(ROOT_PAGE_ONE_ID)?.type).toBe("block");
@@ -26,7 +26,7 @@ function checkRootPages(pages: ITPage, status?:boolean){
 function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
-    expect(pages.collection_view_page.size).toBe(1);
+    expect(pages.collection_view_page.size).toBe(2);
     expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)).not.toBeNull();
     expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.id).toBe(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
     expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.type).toBe("block");

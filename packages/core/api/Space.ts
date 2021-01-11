@@ -82,12 +82,18 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    const trootpage_map = createPageMap(), props = this.getProps();
+    const trootpage_map = createPageMap();
     await this.getIterate<TPage>(args, { multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
-      trootpage_map[page.type].set(page.id, new trootpage_class[page.type]({
+      const page_obj: any = new trootpage_class[page.type]({
         id: page.id,
-        ...props
-      }) as any)
+        ...this.getProps()
+      });
+      if(page.type === "page") trootpage_map[page.type].set(page.properties.title[0][0], page_obj);
+      else{
+        const collection = this.cache.collection.get(page.collection_id);
+        if(collection) trootpage_map[page.type].set(collection.name[0][0], page_obj);
+      }
+      trootpage_map[page.type].set(page.id, page_obj)
     });
     return trootpage_map;
   }
@@ -112,7 +118,18 @@ export default class Space extends Data<ISpace> {
       child_ids: this.getCachedData().pages,
       child_type: "block",
       multiple
-    }, (id) => this.cache.block.get(id) as TPage, (id, data) => trootpage_map[data.type].set(id, new trootpage_class[data.type]({ ...this.getProps(), id }) as any));
+    }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
+      const page_obj: any = new trootpage_class[page.type]({
+        id: page.id,
+        ...this.getProps()
+      });
+      if(page.type === "page") trootpage_map[page.type].set(page.properties.title[0][0], page_obj);
+      else{
+        const collection = this.cache.collection.get(page.collection_id);
+        if(collection) trootpage_map[page.type].set(collection.name[0][0], page_obj);
+      }
+      trootpage_map[page.type].set(page.id, page_obj)
+    });
   }
 
   /**

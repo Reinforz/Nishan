@@ -211,8 +211,6 @@ class NotionUser extends Data<INotionUser> {
     });
   }
 
-  // ? FEAT:1:M Add deleteSpaces methods
-
   async getTPagesById(ids: string[]) {
     const tpage_map = createPageMap(), tpage_content_ids: string[] = [];
 
@@ -222,11 +220,16 @@ class NotionUser extends Data<INotionUser> {
       const id = ids[index];
       const page = this.cache.block.get(id) as TPage;
       if (page?.type === "page") {
-        tpage_map.page.set(page.id, new Page({ ...this.getProps(), id: page.id }))
+        const page_obj = new Page({ ...this.getProps(), id: page.id })
+        tpage_map.page.set(page.id, page_obj)
+        tpage_map.page.set(page.properties.title[0][0], page_obj)
         if (page.content)
           tpage_content_ids.push(...page.content);
-      } else if (page?.type === "collection_view_page")
-        tpage_map.collection_view_page.set(page.id, new CollectionViewPage({ ...this.getProps(), id: page.id }));
+      } else if (page?.type === "collection_view_page"){
+        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
+        // ? FEAT:2:H Get collection from cvp and use it as a map key
+        tpage_map.collection_view_page.set(page.id, cvp_obj);
+      }
     }
 
     if (tpage_content_ids.length)

@@ -63,8 +63,18 @@ class SpaceView extends Data<ISpaceView> {
       child_type: "block",
       multiple
     }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
-      if (page.type === "page") tpage_map.page.set(id, new Page({ ...this.getProps(), id }))
-      else tpage_map.collection_view_page.set(id, new CollectionViewPage({ ...this.getProps(), id }))
+      if (page.type === "page") {
+        const page_obj = new Page({ ...this.getProps(), id })
+        tpage_map.page.set(id, page_obj)
+        tpage_map.page.set(page.properties.title[0][0], page_obj)
+      }
+      else {
+        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id });
+        tpage_map.collection_view_page.set(id, cvp_obj)
+        const collection = this.cache.collection.get(page.collection_id);
+        if(collection)
+          tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj)
+      }
     }))
     return tpage_map;
   }

@@ -1,4 +1,4 @@
-import { TBlock, IOperation, TBasicBlockType, ISpace, IPage } from '@nishans/types';
+import { TBlock, IOperation, TBasicBlockType, ISpace, IPage, ICollectionBlock } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
@@ -60,8 +60,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				);
 				this.logger && this.logger('CREATE', 'block', $gen_block_id);
 			}
-
-			block_map[data.type].set($gen_block_id, createBlockClass(data.type, $gen_block_id, this.getProps()));
+			const block_map_data = createBlockClass(data.type, $gen_block_id, this.getProps());
+			block_map[data.type].set($gen_block_id, block_map_data);
+			if (data.type === 'page') block_map[data.type].set((data as IPage).properties.title[0][0], block_map_data);
+			else if (data.type === 'collection_view' || data.type === 'collection_view_page') {
+				const collection = this.cache.collection.get((data as ICollectionBlock).collection_id);
+				if (collection) block_map[data.type].set(collection.name[0][0], block_map_data);
+			}
 		}
 		// ? FEAT:1:H update local cache
 		this.stack.push(...ops);

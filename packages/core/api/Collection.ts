@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, nestedContentPopulate, Operation, parseFormula, warn } from '../utils';
+import { createSchemaUnitMap, nestedContentPopulate, Operation, parseFormula, slugify, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -45,7 +45,7 @@ class Collection extends Data<ICollection> {
    * @param opt `CollectionUpdateParam`
    */
   async update(opt: ICollectionUpdateInput, ) {
-    await this.updateCacheLocally(opt, TCollectionUpdateKeys)
+    this.updateCacheLocally(opt, TCollectionUpdateKeys)
   }
 
   /**
@@ -171,11 +171,13 @@ class Collection extends Data<ICollection> {
   createSchemaUnits(args: TSchemaUnitInput[], ) {
     const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index], schema_id = arg.name.toLowerCase().replace(/\s/g, '_');
+      const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
-        else data.schema[schema_id] = arg 
-        results[arg.type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
+        else data.schema[schema_id] = arg;
+        const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
+        results[arg.type].set(schema_id, schema_obj);
+        results[arg.type].set(arg.name, schema_obj);
         this.logger && this.logger("CREATE", "collection", schema_id);
       } else
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
@@ -197,7 +199,11 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { property: string })>, multiple?: boolean) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }))).map(({ property }) => schema_unit_map[data.schema[property].type].set(property, new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property }) as any))
+    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (_, { property, name, type })=>{
+      const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property });
+      schema_unit_map[type].set(property, schema_obj)  
+      schema_unit_map[type].set(name, schema_obj)  
+    }))
     return schema_unit_map;
   }
 
@@ -221,9 +227,12 @@ class Collection extends Data<ICollection> {
       child_ids: schema_ids,
       child_type: "collection",
       multiple,
-    }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (schema_id, _, updated_data) => {
+    }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (schema_id, {type, name}, updated_data) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
-      results[data.schema[schema_id].type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any)
+      type = updated_data.type ?? type;
+      const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
+      results[type].set(schema_id, schema_obj)
+      results[type].set(name, schema_obj)
     });
     this.updateLastEditedProps();
     this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }))

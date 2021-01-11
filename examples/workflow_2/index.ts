@@ -79,13 +79,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 
 (async function () {
 	const nishan = new Nishan({
-		token: process.env.NOTION_TOKEN as string,
-		defaultExecutionState: false
+		token: process.env.NOTION_TOKEN as string
 	});
 
 	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
 	const space = await user.getSpace((space) => space.name === 'Developers');
-	const { page: [ page ] } = await space.getTRootPage(
+	const { page } = await space.getTRootPage(
 		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
 	);
 	const goals_collection_id = uuidv4(),

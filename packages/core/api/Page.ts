@@ -128,8 +128,16 @@ export default class Page extends Permissions<IPage> {
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
     const block_map = createBlockMap();
-    await this.getIterate<TBlock>(args, { multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, async (_, block) => {
-      block_map[block.type].set(block.id, createBlockClass(block.type, block.id, this.getProps()))
+    await this.getIterate<TBlock>(args, { multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, (_, block) => {
+      const block_obj = createBlockClass(block.type, block.id, this.getProps());
+      if(block.type === "page")
+        block_map[block.type].set(block.properties.title[0][0], block_obj)
+      else if(block.type === "collection_view" || block.type === "collection_view_page"){
+        const collection = this.cache.collection.get(block.collection_id);
+        if(collection)
+          block_map[block.type].set(collection.name[0][0], block_obj)
+      }
+      block_map[block.type].set(block.id, block_obj)
     });
     return block_map;
   }
@@ -144,8 +152,16 @@ export default class Page extends Permissions<IPage> {
       multiple,
       child_ids: this.getCachedData().content,
       child_type: "block"
-    }, (child_id) => this.cache.block.get(child_id), async (_, data) => {
-      block_map[data.type].set(data.id, createBlockClass(data.type, data.id, this.getProps()))
+    }, (child_id) => this.cache.block.get(child_id), async (_, block) => {
+      const block_obj = createBlockClass(block.type, block.id, this.getProps());
+      if(block.type === "page")
+        block_map[block.type].set(block.properties.title[0][0], block_obj)
+      else if(block.type === "collection_view" || block.type === "collection_view_page"){
+        const collection = this.cache.collection.get(block.collection_id);
+        if(collection)
+          block_map[block.type].set(collection.name[0][0], block_obj)
+      }
+      block_map[block.type].set(block.id, block_obj)
     })
     return block_map;
   }

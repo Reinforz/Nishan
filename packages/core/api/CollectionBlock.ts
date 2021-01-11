@@ -64,11 +64,13 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 			args,
 			{ multiple, child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
-			(view_id, view) => {
-				view_map[view.type].set(view_id, new view_class[view.type]({
+			(view_id, { type, name }) => {
+				const view_obj = new view_class[type]({
 					id: view_id,
 					...this.getProps()
-				}) as any);
+				}) as any;
+				view_map[type].set(view_id, view_obj);
+				view_map[type].set(name, view_obj);
 			}
 		);
 		return view_map;
@@ -88,8 +90,10 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
-			(id, { type }) => {
-				view_map[type].set(id, new view_class[type]({ ...this.getProps(), id }) as any);
+			(id, { type, name }) => {
+				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
+				view_map[type].set(id, view_obj);
+				view_map[type].set(name, view_obj);
 			}
 		);
 		return view_map;

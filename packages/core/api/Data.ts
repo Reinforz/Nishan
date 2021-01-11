@@ -85,17 +85,7 @@ export default class Data<T extends TData> extends Operations {
    * @returns created Operation and a function to update the cache and the class data
    */
   protected addToChildArray(child_id: string, position: RepositionParams) {
-    const data = this.getCachedData();
-    this.initializeChildData();
-    if (!data[this.child_path]) data[this.child_path] = [] as any;
-    const container: string[] = data[this.child_path] as any;
-    return positionChildren({ child_id, position, container, child_path: this.child_path as string, parent_id: this.id, parent_type: this.type })
-  }
-
-  protected addToParentChildArray(child_id: string, position: RepositionParams) {
-    const data = this.getCachedData() as any, parent = (this.cache as any)[data.parent_table].get(data.parent_id),
-      child_path = detectChildData(data.parent_table, this.getCachedData() as TBlock)[0], container: string[] = parent[child_path] as any;
-    return positionChildren({ child_id, position, container, child_path, parent_id: data.parent_id, parent_type: data.parent_table })
+    return positionChildren({ child_id, position, data: this.getCachedData(), parent_id: this.id, parent_type: this.type })
   }
 
   /**

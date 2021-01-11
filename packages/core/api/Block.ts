@@ -23,17 +23,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns A block map
    */
 
-	async duplicate (infos: { position: RepositionParams; id?: string }[]) {
+	async duplicate (infos: { id?: string }[]) {
 		const block_map = createBlockMap(),
 			data = this.getCachedData(),
 			ops: IOperation[] = [];
 		for (let index = 0; index < infos.length; index++) {
-			const { position, id } = infos[index],
-				$gen_block_id = generateId(id);
+			const { id } = infos[index],
+				block_id = generateId(id);
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				ops.push(
-					Operation.block.update($gen_block_id, [], {
-						id: $gen_block_id,
+					Operation.block.update(block_id, [], {
+						id: block_id,
 						type: 'copy_indicator',
 						parent_id: data.parent_id,
 						parent_table: 'block',
@@ -44,24 +44,23 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					eventName: 'duplicateBlock',
 					request: {
 						sourceBlockId: data.id,
-						targetBlockId: $gen_block_id,
+						targetBlockId: block_id,
 						addCopyName: true
 					}
 				});
-				this.logger && this.logger('CREATE', 'block', $gen_block_id);
+				this.logger && this.logger('CREATE', 'block', block_id);
 			} else {
 				ops.push(
-					Operation.block.update($gen_block_id, [], {
+					Operation.block.update(block_id, [], {
 						...data,
-						id: $gen_block_id,
+						id: block_id,
 						copied_from: data.id
-					}),
-					this.addToParentChildArray($gen_block_id, position)
+					})
 				);
-				this.logger && this.logger('CREATE', 'block', $gen_block_id);
+				this.logger && this.logger('CREATE', 'block', block_id);
 			}
-			const block_map_data = createBlockClass(data.type, $gen_block_id, this.getProps());
-			block_map[data.type].set($gen_block_id, block_map_data);
+			const block_map_data = createBlockClass(data.type, block_id, this.getProps());
+			block_map[data.type].set(block_id, block_map_data);
 			if (data.type === 'page') block_map[data.type].set((data as IPage).properties.title[0][0], block_map_data);
 			else if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				const collection = this.cache.collection.get((data as ICollectionBlock).collection_id);

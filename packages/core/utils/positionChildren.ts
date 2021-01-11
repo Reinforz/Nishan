@@ -1,9 +1,15 @@
-import { TOperationTable, IOperation } from "@nishans/types";
+import { IOperation, TDataType } from "@nishans/types";
 import { RepositionParams } from "../types";
 import { Operation } from "../utils";
+import { detectChildData } from "./detectChildData";
 
-export function positionChildren(arg: { child_id: string, position: RepositionParams, container: string[], child_path: string, parent_type: TOperationTable, parent_id: string }) {
-  const { child_id, position, container, child_path, parent_type, parent_id } = arg;
+export function positionChildren(arg: { data: any, child_id: string, position: RepositionParams, parent_type: TDataType, parent_id: string }) {
+  const { child_id, position, data, parent_type, parent_id } = arg;
+  const [child_path] = detectChildData(parent_type,data);
+
+  if (!data[child_path]) data[child_path] = [];
+  const container: string[] = data[child_path];
+
   if (position !== undefined) {
     let where: "before" | "after" = "before", id = '';
     if (typeof position === "number") {

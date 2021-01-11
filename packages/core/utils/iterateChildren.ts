@@ -19,7 +19,12 @@ interface IterateAndDeleteOptions<T> extends IterateAndUpdateOptions<T>{
   child_path?: keyof T,
 }
 
-// cb1 is passed from the various iterate methods, cb2 is passed from the actual method
+function updateLastEditedProps(block: any, user_id: string){
+  block.last_edited_time = Date.now();
+  block.last_edited_by_table = "notion_user";
+  block.last_edited_by_id = user_id;
+}
+
 export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndGetOptions<T>, cb?: ((id: string, data: TD) => any)) => {
   const matched_data: TD[] = [], { parent_id, multiple = true, child_type, logger, cache, parent_type} = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[];
@@ -34,8 +39,8 @@ export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterType
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       const child_id = arg, current_data = transform(child_id), matches = child_ids.includes(child_id);
-      if (!current_data) warn(`Child:${child_id} does not exist in the cache`);
-      else if (!matches) warn(`Child:${child_id} is not a child of ${parent_type}:${parent_id}`);
+      if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
+      else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
         await iterateUtil(child_id, current_data)
       if (!multiple && matched_data.length === 1) break;
@@ -43,7 +48,7 @@ export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterType
   } else {
     for (let index = 0; index < child_ids.length; index++) {
       const child_id = child_ids[index], current_data = transform(child_id);
-      if (!current_data) warn(`Child:${child_id} does not exist in the cache`);
+      if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else {
         const matches = args ? await args(current_data, index) : true;
         if (current_data && matches)
@@ -65,9 +70,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
     if (child_type && !manual) {
       const block = cache[child_type].get(child_id) as any;
       block.alive = false;
-      (block as any).last_edited_time = Date.now();
-      (block as any).last_edited_by_table = "notion_user";
-      (block as any).last_edited_by_id = user_id;
+      updateLastEditedProps(block, user_id);
       ops.push(Operation[child_type].update(child_id, [], { alive: false, ...last_updated_props }));
       if (typeof child_path === "string") {
         data[child_path] = (data[child_path] as any).filter((id: string)=>id !== child_id) as any
@@ -84,8 +87,8 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       const child_id = arg, current_data = transform(child_id), matches = child_ids.includes(child_id);
-      if (!current_data) warn(`Child:${child_id} does not exist in the cache`);
-      else if (!matches) warn(`Child:${child_id} is not a child of ${parent_type}:${parent_id}`);
+      if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
+      else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
         await iterateUtil(child_id, current_data)
       if (!multiple && matched_data.length === 1) break;
@@ -93,7 +96,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
   } else {
     for (let index = 0; index < child_ids.length; index++) {
       const child_id = child_ids[index], current_data = transform(child_id);
-      if (!current_data) warn(`Child:${child_id} does not exist in the cache`);
+      if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else {
         const matches = args ? await args(current_data, index) : true;
         if (current_data && matches)
@@ -103,9 +106,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
     }
   }
 
-  (data as any).last_edited_time = Date.now();
-  (data as any).last_edited_by_table = "notion_user";
-  (data as any).last_edited_by_id = user_id;
+  updateLastEditedProps(data, user_id);
 
   ops.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
   stack.push(...ops);
@@ -123,9 +124,7 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
   const iterateUtil = async (child_id: string, current_data: CD, updated_data: RD) => {
     if (child_type && !manual) {
       const block = cache[child_type].get(child_id) as any;
-      (block as any).last_edited_time = Date.now();
-      (block as any).last_edited_by_table = "notion_user";
-      (block as any).last_edited_by_id = user_id;
+      updateLastEditedProps(block, user_id);
       if(updated_data)
         Object.keys(updated_data).forEach((key)=>block[key] = updated_data[key as keyof RD])
       ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
@@ -159,9 +158,7 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
     }
   }
 
-  (data as any).last_edited_time = Date.now();
-  (data as any).last_edited_by_table = "notion_user";
-  (data as any).last_edited_by_id = user_id;
+  updateLastEditedProps(data, user_id);
 
   ops.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
   stack.push(...ops);

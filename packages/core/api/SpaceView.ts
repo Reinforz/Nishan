@@ -28,7 +28,7 @@ class SpaceView extends Data<ISpaceView> {
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-  async update(arg: ISpaceViewUpdateInput, ) {
+  update(arg: ISpaceViewUpdateInput, ) {
     this.updateCacheLocally(arg, TSpaceViewUpdateKeys, )
   }
 

@@ -53,8 +53,8 @@ class NotionUser extends Data<INotionUser> {
    * @param opt `UpdatableNotionUserParam`
    */
 
-  async update(opt: INotionUserUpdateInput) {
-    await this.updateCacheLocally(opt, TNotionUserUpdateKeys, );
+  update(opt: INotionUserUpdateInput) {
+    this.updateCacheLocally(opt, TNotionUserUpdateKeys, );
   }
 
   /**

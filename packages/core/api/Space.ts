@@ -55,8 +55,8 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  async update(opt: ISpaceUpdateInput, ) {
-    await this.updateCacheLocally(opt, TSpaceUpdateKeys, );
+  update(opt: ISpaceUpdateInput, ) {
+    this.updateCacheLocally(opt, TSpaceUpdateKeys, );
   }
 
   /**

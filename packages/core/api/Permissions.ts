@@ -1,4 +1,4 @@
-import { ICollectionViewPage, IPage, TPermissionRole, INotionUser, IPermission, IOperation, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole, ISpacePermission } from "@nishans/types";
+import { ICollectionViewPage, IPage, TPermissionRole, INotionUser, IPermission, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole, ISpacePermission } from "@nishans/types";
 import { ICollectionViewPageInput, IPageCreateInput, NishanArg } from "../types";
 import { error, Operation } from "../utils";
 import Block from "./Block";
@@ -60,11 +60,10 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
    */
   updateSharedUsers(args: [string, TPermissionRole][] ) {
     const data = this.getCachedData();
-    const ops: IOperation[] = [];
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       const permission_data: IPermission = { role: arg[1], type: "user_permission", user_id: arg[0] }
-      ops.push({
+      this.stack.push({
         args: permission_data,
         command: "setPermissionItem",
         id: this.id,
@@ -74,8 +73,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
       data.permissions.push(permission_data)
     }
     this.updateLastEditedProps();
-    ops.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
-    this.stack.push(...ops);
+    this.stack.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
   }
 
   /**
@@ -95,16 +93,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions> ) {
-    const data = this.getCachedData(), permission_data : IPublicPermission = {
-      type: "public_permission",
-      role,
-      allow_search_engine_indexing: true,
-      allow_duplicate: true,
-      ...(options ?? {})
-    }
-    this.updateLastEditedProps();
-    data.permissions.push(permission_data)
-    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], permission_data))
+    this.updatePublicPermission(role, options)
   }
 
   updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
@@ -123,16 +112,10 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   removePublicPermission() {
-    const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission;
-    permission.role = "none";
-    this.updateLastEditedProps();
-    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
-      type: "public_permission",
-      role: "none"
-    }))
+    this.updatePublicPermission("none");
   }
 
-  updateSpacePermission(role: TSpacePermissionRole, ) {
+  updateSpacePermission(role: TSpacePermissionRole) {
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as ISpacePermission;
     permission.role = role;
     this.updateLastEditedProps();
@@ -143,12 +126,6 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
   }
 
   removeSpacePermission() {
-    const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as ISpacePermission;
-    permission.role = "none";
-    this.updateLastEditedProps();
-    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
-      type: "space_permission",
-      role: "none",
-    }))
+    this.updateSpacePermission("none")
   }
 }

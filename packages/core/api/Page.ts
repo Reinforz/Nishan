@@ -51,22 +51,23 @@ export default class Page extends Permissions<IPage> {
    */
   async toggleFavourite() {
     const data = this.getCachedData();
-    let target_space_view: ISpaceView | null = null;
+    let target_space_view: ISpaceView = null as any;
     for (const [, space_view] of this.cache.space_view) {
       if (space_view.space_id === data.space_id) {
         target_space_view = space_view;
         break;
       }
     };
-    if (target_space_view) {
-      const is_bookmarked = target_space_view?.bookmarked_pages?.includes(data.id);
-      await this.saveTransactions([
-        (is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
-          id: data.id
-        })
-      ])
-      await this.updateCacheManually([[target_space_view.id, "space_view"]]);
-    }
+    const is_bookmarked = target_space_view?.bookmarked_pages?.includes(data.id);
+    if(is_bookmarked)
+      target_space_view.bookmarked_pages = target_space_view.bookmarked_pages.filter(id=>id !== this.id);
+    else target_space_view.bookmarked_pages.push(this.id);
+
+    this.stack.push(
+      (is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
+        id: data.id
+      })
+    )
   }
 
   /**
@@ -142,7 +143,7 @@ export default class Page extends Permissions<IPage> {
     return block_map;
   }
 
-  async updateBlock(args: UpdateType<TBlock, TBlockInput>, ) {
+  async updateBlock(args: UpdateType<TBlock, TBlockInput>) {
     return (await this.updateBlocks(typeof args === "function" ? args : [args],  false))
   }
 
@@ -152,7 +153,7 @@ export default class Page extends Permissions<IPage> {
       multiple,
       child_ids: this.getCachedData().content,
       child_type: "block"
-    }, (child_id) => this.cache.block.get(child_id), async (_, block) => {
+    }, (child_id) => this.cache.block.get(child_id), (_, block) => {
       const block_obj = createBlockClass(block.type, block.id, this.getProps());
       if(block.type === "page")
         block_map[block.type].set(block.properties.title[0][0], block_obj)
@@ -170,7 +171,7 @@ export default class Page extends Permissions<IPage> {
    * Delete a single block from a page
    * @param arg id string or a predicate acting as a filter
    */
-  async deleteBlock(arg?: FilterType<TBlock>, ) {
+  async deleteBlock(arg?: FilterType<TBlock>) {
     return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg,  false);
   }
 

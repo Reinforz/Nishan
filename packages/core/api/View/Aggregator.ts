@@ -48,11 +48,11 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     return [aggregations_map, aggregations] as const;
   }
 
-  async createAggregation(arg: UserViewAggregationsCreateParams, ) {
+  async createAggregation(arg: UserViewAggregationsCreateParams) {
     await this.createAggregations([arg])
   }
 
-  async createAggregations(args: UserViewAggregationsCreateParams[], ) {
+  async createAggregations(args: UserViewAggregationsCreateParams[]) {
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, aggregations] = this.#getAggregationsMap();
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
@@ -67,7 +67,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }))
   }
 
-  async updateAggregation(arg: UpdateType<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>, ) {
+  async updateAggregation(arg: UpdateType<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>) {
     await this.updateAggregations(typeof arg === "function" ? arg : [arg],  false);
   }
 
@@ -88,7 +88,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }))
   }
 
-  async deleteAggregation(arg: FilterType<TSchemaUnit & ViewAggregations>, ) {
+  async deleteAggregation(arg: FilterType<TSchemaUnit & ViewAggregations>) {
     await this.deleteAggregations(typeof arg === "string" ? [arg] : arg,  false);
   }
 

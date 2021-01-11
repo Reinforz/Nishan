@@ -44,7 +44,7 @@ class Collection extends Data<ICollection> {
    * Update the collection
    * @param opt `CollectionUpdateParam`
    */
-  update(opt: ICollectionUpdateInput, ) {
+  update(opt: ICollectionUpdateInput) {
     this.updateCacheLocally(opt, TCollectionUpdateKeys)
   }
 
@@ -81,7 +81,7 @@ class Collection extends Data<ICollection> {
     return pages;
   }
 
-  async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>, ) {
+  async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>) {
     return (await this.updateTemplates(typeof args === "function" ? args : [args], false))[0]
   }
 
@@ -99,7 +99,7 @@ class Collection extends Data<ICollection> {
    * Delete a single template page from the collection
    * @param args string id or a predicate function
    */
-  async deleteTemplate(args?: FilterType<IPage>, ) {
+  async deleteTemplate(args?: FilterType<IPage>) {
     return await this.deleteTemplates(typeof args === "string" ? [args] : args, false);
   }
 
@@ -122,7 +122,7 @@ class Collection extends Data<ICollection> {
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: Omit<IPageCreateInput, "type">[], ) {
+  async createPages(rows: Omit<IPageCreateInput, "type">[]) {
     return await nestedContentPopulate(rows.map((row) => ({ ...row, is_template: false })) as any, this.id, this.type, this.getProps(), this.id)
   }
 
@@ -140,7 +140,7 @@ class Collection extends Data<ICollection> {
     return pages;
   }
 
-  async updatePage(args: UpdateType<IPage, IPageUpdateInput>, ) {
+  async updatePage(args: UpdateType<IPage, IPageUpdateInput>) {
     return (await this.updatePages(typeof args === "function" ? args : [args], false))[0]
   }
 
@@ -154,7 +154,7 @@ class Collection extends Data<ICollection> {
     return pages;
   }
 
-  async deletePage(args?: FilterType<IPage>, ) {
+  async deletePage(args?: FilterType<IPage>) {
     return await this.deletePages(typeof args === "string" ? [args] : args,  false);
   }
 
@@ -176,7 +176,7 @@ class Collection extends Data<ICollection> {
    * @param args array of Schema creation properties
    * @returns An array of SchemaUnit objects representing the columns
    */
-  createSchemaUnits(args: TSchemaUnitInput[], ) {
+  createSchemaUnits(args: TSchemaUnitInput[]) {
     const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
@@ -220,7 +220,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties tuple
    * @returns A SchemaUnit object representing the column
    */
-  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, ) {
+  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>) {
     return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], false))
   }
 
@@ -253,7 +253,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>, ) {
+  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>) {
     return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, false));
   }
 

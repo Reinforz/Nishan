@@ -1,4 +1,4 @@
-import { TBlock, IOperation, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
+import { TBlock, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
 
@@ -30,13 +30,12 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 	async duplicate (infos: { id?: string }[]) {
 		const block_map = createBlockMap(),
-			data = this.getCachedData(),
-			ops: IOperation[] = [];
+			data = this.getCachedData();
 		for (let index = 0; index < infos.length; index++) {
 			const { id } = infos[index],
 				block_id = generateId(id);
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
-				ops.push(
+				this.stack.push(
 					Operation.block.update(block_id, [], {
 						id: block_id,
 						type: 'copy_indicator',
@@ -55,7 +54,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				});
 				this.logger && this.logger('CREATE', 'block', block_id);
 			} else {
-				ops.push(
+				this.stack.push(
 					Operation.block.update(block_id, [], {
 						...data,
 						id: block_id,
@@ -73,7 +72,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			}
 		}
 		// ? FEAT:1:H update local cache
-		this.stack.push(...ops);
 		return block_map;
 	}
 

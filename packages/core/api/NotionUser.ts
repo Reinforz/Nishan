@@ -54,7 +54,7 @@ class NotionUser extends Data<INotionUser> {
    */
 
   update(opt: INotionUserUpdateInput) {
-    this.updateCacheLocally(opt, TNotionUserUpdateKeys, );
+    this.updateCacheLocally(opt, TNotionUserUpdateKeys);
   }
 
   /**
@@ -67,7 +67,7 @@ class NotionUser extends Data<INotionUser> {
   };
 
   // ? FEAT:1:H Take root pages to create as parameter 
-  async createWorkSpaces(opts: ISpaceUpdateInput[], ) {
+  async createWorkSpaces(opts: ISpaceUpdateInput[]) {
     const metadata = {
       created_by_id: this.user_id,
       created_by_table: "notion_user",
@@ -185,7 +185,7 @@ class NotionUser extends Data<INotionUser> {
   }
 
   // FIX:1:H Fix the updateSpace method
-  async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>, ) {
+  async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>) {
     return (await this.updateSpaces(typeof arg === "function" ? arg : [arg],  false))[0]
   }
 

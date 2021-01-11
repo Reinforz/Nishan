@@ -115,7 +115,7 @@ export default class Page extends Permissions<IPage> {
    * @param contents array of options for configuring each content
    * @returns Array of newly created block content objects
    */
-  async createBlocks(contents: TBlockCreateInput[], ) {
+  async createBlocks(contents: TBlockCreateInput[]) {
     return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
   }
 

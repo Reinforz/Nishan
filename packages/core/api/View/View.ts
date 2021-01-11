@@ -88,17 +88,17 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-  update(param: TViewCreateInput, ) {
+  update(param: TViewCreateInput) {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [, view_map] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
     this.updateLastEditedProps();
     return view_map;
   }
 
-  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue]), ) {
+  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue])) {
     this.createSorts([arg])
   }
 
-  createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[], ) {
+  createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[]) {
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, sorts] = this.#getSortsMap();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], target_sort = schema_map.get(arg[0]);
@@ -169,7 +169,7 @@ class View<T extends TView> extends Data<T> {
     this.stack.push(Operation.collection_view.update(this.id,[], { query2: data.query2 }))
   }
 
-  createFilters(args: TViewFilterCreateInput[], ) {
+  createFilters(args: TViewFilterCreateInput[]) {
     const schema_map = this.#getSchemaMap(), data = this.getCachedData(), filters = initializeViewFilters(this.getCachedData()).filters;
     populateFilters(args, filters, schema_map)
     this.updateLastEditedProps();
@@ -178,7 +178,7 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, ) {
+  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>) {
     await this.updateFilters(typeof arg === "function" ? arg : [arg],  false);
   }
 
@@ -205,8 +205,8 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>, ) {
-    await this.deleteFilters(typeof arg === "string" ? [arg] : arg, );
+  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>) {
+    await this.deleteFilters(typeof arg === "string" ? [arg] : arg);
   }
 
   async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, multiple?: boolean) {
@@ -224,7 +224,7 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>, ) {
+  async updateFormatVisibilityProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, boolean>) {
     return await this.updateFormatVisibilityProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
@@ -244,7 +244,7 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
+  async updateFormatWidthProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>) {
     return await this.updateFormatWidthProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
@@ -264,7 +264,7 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>, ) {
+  async updateFormatPositionProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, number>) {
     return await this.updateFormatPositionProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 
@@ -287,7 +287,7 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>, ) {
+  async updateFormatProperty(arg: UpdateType<TSchemaUnit & ViewFormatProperties, Partial<{ position: number, visible: boolean, width: number }>>) {
     await this.updateFormatProperties(typeof arg === "function" ? arg : [arg],  false);
   }
 

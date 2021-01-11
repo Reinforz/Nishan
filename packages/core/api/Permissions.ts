@@ -96,7 +96,7 @@ export default class Permissions<T extends (ICollectionViewPage | IPage)> extend
     this.updatePublicPermission(role, options)
   }
 
-  updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>, ) {
+  updatePublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions>) {
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as IPublicPermission, permission_data: IPublicPermission = {
       ...(permission ?? {}),
       type: "public_permission",

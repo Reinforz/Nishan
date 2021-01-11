@@ -20,7 +20,7 @@ class SpaceView extends Data<ISpaceView> {
     return this.cache.user_root.get(this.user_id) as IUserRoot
   }
 
-  reposition(arg: RepositionParams, ) {
+  reposition(arg: RepositionParams) {
     this.addToChildArray(this.getCachedParentData(), arg)
   }
 
@@ -28,8 +28,8 @@ class SpaceView extends Data<ISpaceView> {
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-  update(arg: ISpaceViewUpdateInput, ) {
-    this.updateCacheLocally(arg, TSpaceViewUpdateKeys, )
+  update(arg: ISpaceViewUpdateInput) {
+    this.updateCacheLocally(arg, TSpaceViewUpdateKeys)
   }
 
   /**
@@ -86,7 +86,7 @@ class SpaceView extends Data<ISpaceView> {
   * Toggle a single page from the bookmark list
   * @param arg id string or a predicate filter function
   */
-  async updateBookmarkedPage(arg: UpdateTypes<TPage, boolean>, ) {
+  async updateBookmarkedPage(arg: UpdateTypes<TPage, boolean>) {
     await this.updateBookmarkedPages(typeof arg === "string" ? [arg] : arg,  false);
   }
 

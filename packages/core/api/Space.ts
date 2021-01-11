@@ -6,7 +6,7 @@ import { createPageMap, error, nestedContentPopulate } from '../utils';
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
-import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, IOperation, INotionUser, IUserPermission } from '@nishans/types';
+import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput } from '../types';
 
 const trootpage_class = {
@@ -55,8 +55,8 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  update(opt: ISpaceUpdateInput, ) {
-    this.updateCacheLocally(opt, TSpaceUpdateKeys, );
+  update(opt: ISpaceUpdateInput) {
+    this.updateCacheLocally(opt, TSpaceUpdateKeys);
   }
 
   /**
@@ -73,7 +73,7 @@ export default class Space extends Data<ISpace> {
     this.logger && this.logger("DELETE", "space", this.id);
   }
 
-  async createTRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[], ) {
+  async createTRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
     return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
   }
 
@@ -115,7 +115,7 @@ export default class Space extends Data<ISpace> {
   async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, multiple?: boolean) {
     const trootpage_map = createPageMap();
     await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>(args, {
-      child_ids: this.getCachedData().pages,
+      child_ids: "pages",
       child_type: "block",
       multiple
     }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
@@ -136,7 +136,7 @@ export default class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg?: FilterType<TPage>, ) {
+  async deleteTRootPage(arg?: FilterType<TPage>) {
     return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg,  false);
   }
 
@@ -159,33 +159,37 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
-    return (await this.getIterate(args, {
+    const collections: Collection[] = [];
+    (await this.getIterate(args, {
       child_type: "collection",
       multiple,
       child_ids: this.getCollectionIds(),
-    }, (collection_id) => this.cache.collection.get(collection_id))).map(({ id }) => new Collection({ ...this.getProps(), id }));
+    }, (collection_id) => this.cache.collection.get(collection_id), (id)=>collections.push(new Collection({ ...this.getProps(), id }))));
+    return collections;
   }
 
-  async updateRootCollection(arg: UpdateType<ICollection, Partial<ICollection>>, ) {
+  async updateRootCollection(arg: UpdateType<ICollection, Partial<ICollection>>) {
     return (await this.updateRootCollections(typeof arg === "function" ? arg : [arg],  false))[0]
   }
 
   async updateRootCollections(args: UpdateTypes<ICollection, Partial<ICollection>>, multiple?: boolean) {
-    return (await this.updateIterate<ICollection, Partial<ICollection>>(args, {
+    const collections: Collection[] = [];
+    (await this.updateIterate<ICollection, Partial<ICollection>>(args, {
       child_ids: this.getCollectionIds(),
       child_type: "collection",
       multiple
-    }, (collection_id) => this.cache.collection.get(collection_id))).map(({id}) => new Collection({ ...this.getProps(), id }))
+    }, (collection_id) => this.cache.collection.get(collection_id), (id)=>collections.push(new Collection({ ...this.getProps(), id }))))
+    return collections;
   }
 
-  async addMembers(infos: [string, TSpaceMemberPermissionRole][], ) {
-    const ops: IOperation[] = [], notion_users: INotionUser[] = [],data = this.getCachedData()
+  async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
+    const notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], { value: { value: notion_user } } = await this.findUser(email);
       if (!notion_user) error(`User does not have a notion account`);
       else{
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
-        ops.push({
+        this.stack.push({
           args: permission_data,
           command: "setPermissionItem",
           id: this.id,
@@ -198,7 +202,6 @@ export default class Space extends Data<ISpace> {
       this.logger && this.logger("UPDATE", "space", this.id)
     }
     this.updateLastEditedProps();
-    this.stack.push(...ops);
     return notion_users;
   }
 
@@ -215,8 +218,7 @@ export default class Space extends Data<ISpace> {
       spaceId: data.id,
       userIds
     });
-    this.updateCacheLocally({
-      permissions: data.permissions.filter(permission => !userIds.includes(permission.user_id))
-    }, ["permissions"], false);
+    data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id))
+    this.updateLastEditedProps();
   }
 }

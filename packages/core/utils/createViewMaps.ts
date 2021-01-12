@@ -1,5 +1,5 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, TView, TViewFilters } from '@nishans/types';
-import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaMap, ISchemaSortsMap } from '../types';
+import { IBoardView, ICollection, ITableView, ITimelineView, TView, TViewFilters, ViewFormatProperties } from '@nishans/types';
+import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
 
 export function getSchemaMap (collection: ICollection) {
@@ -59,4 +59,17 @@ export function getFiltersMap(data: TView, collection: ICollection){
     }
   })
   return [filters_map, filters] as const;
+}
+
+export function getFormatPropertiesMap(data: TView, collection: ICollection){
+  const format_properties_map: ISchemaFormatMap = new Map(), format_properties = (data.format as any)[`${data.type}_properties`] as ViewFormatProperties[];
+  format_properties.forEach(format_property => {
+    const schema_unit = collection.schema[format_property.property];
+    format_properties_map.set(schema_unit.name, {
+      ...schema_unit,
+      schema_id: format_property.property,
+      format: format_property
+    })
+  })
+  return [format_properties_map, format_properties] as const;
 }

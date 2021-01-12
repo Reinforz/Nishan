@@ -1,6 +1,7 @@
 import {
 	CreatedBySchemaUnit,
 	CreatedTimeSchemaUnit,
+	IViewFilter,
 	LastEditedBySchemaUnit,
 	LastEditedTimeSchemaUnit,
 	RelationSchemaUnit,
@@ -26,6 +27,9 @@ export type ISchemaAggregationMap = Map<string, ISchemaAggregationMapValue>;
 
 export type ISchemaSortsMapValue = { schema_id: string; sort: ViewSorts } & TSchemaUnit;
 export type ISchemaSortsMap = Map<string, ISchemaSortsMapValue>;
+
+export type ISchemaFiltersMapValue = { schema_id: string; filters: IViewFilter['filters'] } & TSchemaUnit;
+export type ISchemaFiltersMap = Map<string, ISchemaFiltersMapValue>;
 
 export type TSchemaUnitInput =
 	| TBasicSchemaUnit

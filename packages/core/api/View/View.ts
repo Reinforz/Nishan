@@ -1,6 +1,6 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, ICollectionBlock, TSortValue } from "@nishans/types";
-import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput, ISchemaSortsMapValue } from "../../types";
-import { createViews, getSchemaMap, getSortsMap, initializeViewFilters, Operation, populateFilters } from "../../utils";
+import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput, ISchemaSortsMapValue, ISchemaFiltersMapValue } from "../../types";
+import { createViews, getFiltersMap, getSchemaMap, getSortsMap, initializeViewFilters, Operation, populateFilters } from "../../utils";
 import Data from "../Data";
 
 /**
@@ -14,23 +14,6 @@ class View<T extends TView> extends Data<T> {
 
   protected getCollection = () => {
     return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
-  }
-
-  // ! FIX:1:H Make better filter coagulation using filters property that contains an array of root filters for the name
-  #getFiltersMap = () => {
-    const data = this.getCachedData(), collection = this.getCollection(), filters = initializeViewFilters(this.getCachedData()),
-      filters_map: Record<string, TSchemaUnit & TViewFilters> = {};
-
-    data.query2?.filter.filters.forEach(filter => {
-      if((filter as TViewFilters).property){
-        const schema_unit = collection.schema[(filter as TViewFilters).property];
-        filters_map[schema_unit.name] = {
-          ...schema_unit,
-          ...filter
-        } as any
-      }
-    })
-    return [filters_map, filters] as const;
   }
 
   #getFormatProperties = () => {
@@ -67,10 +50,6 @@ class View<T extends TView> extends Data<T> {
     const data = this.getCachedData(), collection = this.cache.collection.get((this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id) as ICollection, [, view_map] = createViews(collection.schema, [param], collection.id, data.parent_id, this.getProps(), this.id);
     this.updateLastEditedProps();
     return view_map;
-  }
-
-  async createSort(arg: ([string, TSortValue, number] | [string, TSortValue])) {
-    this.createSorts([arg])
   }
 
   createSorts(args: ([string, TSortValue, number] | [string, TSortValue])[]) {
@@ -153,26 +132,26 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async updateFilter(arg: UpdateType<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>) {
+  async updateFilter(arg: UpdateType<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, "name">>) {
     await this.updateFilters(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateFilters(args: UpdateTypes<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>, multiple?: boolean) {
-    const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
+  async updateFilters(args: UpdateTypes<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, "name">>, multiple?: boolean) {
+    const [filters_map, { filters }] = getFiltersMap(this.getCachedData(), this.getCollection()), data = this.getCachedData();
 
-    await this.updateIterate<TSchemaUnit & TViewFilters, Omit<TViewFilterCreateInput, "name">>(args, {
+    await this.updateIterate<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, "name">>(args, {
       child_ids: Object.keys(filters_map),
       child_type: "collection_view",
       multiple,
       manual: true
-    }, (name) => filters_map[name], (_, original_filter, updated_data) => {
-      const index = filters.findIndex(data => (data as any).property === original_filter.property), filter = filters[index] as TViewFilters,
+    }, (schema_id) => filters_map.get(schema_id), (_, original_filter, updated_data) => {
+      const index = filters.findIndex(data => (data as any).property === original_filter.schema_id), filter = filters[index] as TViewFilters,
         { filter:_filter, position, } = updated_data;
 
       filter.filter = _filter
       if (position !== null && position !== undefined) {
         filters.splice(index, 1);
-        filters.splice(position, 0, original_filter)
+        filters.splice(position, 0, original_filter as any)
       }
     });
     this.stack.push(Operation.collection_view.update(this.id,[], {
@@ -180,19 +159,19 @@ class View<T extends TView> extends Data<T> {
     }))
   }
 
-  async deleteFilter(arg: FilterType<TSchemaUnit & TViewFilters>) {
+  async deleteFilter(arg: FilterType<ISchemaFiltersMapValue>) {
     await this.deleteFilters(typeof arg === "string" ? [arg] : arg);
   }
 
-  async deleteFilters(args: FilterTypes<TSchemaUnit & TViewFilters>, multiple?: boolean) {
-    const [filters_map, { filters }] = this.#getFiltersMap(), data = this.getCachedData();
-    await this.deleteIterate<TSchemaUnit & TViewFilters>(args, {
+  async deleteFilters(args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
+    const [filters_map, { filters }] = getFiltersMap(this.getCachedData(), this.getCollection()), data = this.getCachedData();
+    await this.deleteIterate<ISchemaFiltersMapValue>(args, {
       child_type: "collection_view",
       multiple,
       manual: true,
       child_ids: Object.keys(filters_map),
-    }, (name) => filters_map[name], (_, filter) => {
-      filters.splice(filters.findIndex(data => (data as any).property === filter.property), 1)
+    }, (schema_id) => filters_map.get(schema_id), (_, filter) => {
+      filters.splice(filters.findIndex(data => (data as any).property === filter.schema_id), 1)
     });
     this.stack.push(Operation.collection_view.update(this.id,[], {
       query2: data.query2

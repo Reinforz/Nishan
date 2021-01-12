@@ -39,6 +39,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
         board_format.board_cover_aspect = board_view.board_cover_aspect;
         board_format.board_cover_size = board_view.board_cover_size;
         board_format.board_groups2 = board_view.board_groups2 as any;
+        query2.group_by = name_map.get(board_view.group_by)?.schema_id ?? board_view.group_by;
         break;
       case "gallery":
         const gallery_view = view, gallery_format = format as IGalleryViewFormat;

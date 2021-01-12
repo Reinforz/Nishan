@@ -1,13 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 import '../env';
 import Nishan, {
-  DateViewFiltersValue,
+	DateViewFiltersValue,
 	FormulaSchemaUnitInput,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
 	TSchemaUnitInput,
-  TViewCreateInput,
+	TViewCreateInput,
 	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
 
@@ -105,42 +106,65 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 	];
 };
 
-const tasksViews = (name: string, value: DateViewFiltersValue): TViewCreateInput =>{
-  return {
-    type: 'table',
-    name,
-    schema_units: [
-      {
-        type: 'formula',
-        name: 'On',
-        sort: 'descending'
-      },
-      {
-        type: 'title',
-        name: 'Task',
-        format: 300,
-        aggregation: 'count'
-      },
-      ...CommonMultiSelectSchema,
-      ...goalViewItem(1),
-      ...goalViewItem(2),
-      ...goalViewItem(3)
-    ],
-    filters: [
-      {
-        type: 'formula',
-        name: 'On',
-        filter: {
-          operator: 'date_is',
-          value: {
-            value,
-            type: 'relative'
-          }
-        }
-      }
-    ]
-  }
-}
+const tasksTableViews = (name: string, value: DateViewFiltersValue): TViewCreateInput => {
+	return {
+		type: 'table',
+		name,
+		schema_units: [
+			{
+				type: 'formula',
+				name: 'On',
+				sort: 'descending'
+			},
+			{
+				type: 'title',
+				name: 'Task',
+				format: 300,
+				aggregation: 'count'
+			},
+			...CommonMultiSelectSchema,
+			...goalViewItem(1),
+			...goalViewItem(2),
+			...goalViewItem(3)
+		],
+		filters: [
+			{
+				type: 'formula',
+				name: 'On',
+				filter: {
+					operator: 'date_is',
+					value: {
+						value,
+						type: 'relative'
+					}
+				}
+			}
+		]
+	};
+};
+
+const tasksBoardViews = (name: string): TViewCreateInput => {
+	return {
+		type: 'board',
+		name,
+		board_cover_size: 'medium',
+		group_by: name,
+		schema_units: [
+			{
+				type: 'title',
+				name: 'Task',
+				format: 300,
+				aggregation: 'count'
+			},
+			{
+				type: 'formula',
+				name: 'On',
+				sort: 'descending'
+			},
+			...CommonMultiSelectSchema
+		]
+	};
+};
 
 (async function () {
 	const nishan = new Nishan({
@@ -309,9 +333,11 @@ const tasksViews = (name: string, value: DateViewFiltersValue): TViewCreateInput
 						},
 						collection_id: tasks_collection_id,
 						views: [
-							tasksViews('Today', 'today'),
-							tasksViews('Yesterday', 'yesterday'),
-							tasksViews('Weekly', 'one_week_ago'),
+							tasksTableViews('Today', 'today'),
+							tasksTableViews('Yesterday', 'yesterday'),
+							tasksTableViews('Weekly', 'one_week_ago'),
+							tasksBoardViews('Purpose'),
+							tasksBoardViews('Subject')
 						],
 						schema: [
 							{
@@ -372,7 +398,6 @@ const tasksViews = (name: string, value: DateViewFiltersValue): TViewCreateInput
 
 		const goals_cvp = collection_view_page.get(goals_cvp_id),
 			tasks_cvp = collection_view_page.get(tasks_cvp_id);
-
 		if (goals_cvp) {
 			const goals_collection = await goals_cvp.getCollection();
 			if (goals_collection) {
@@ -407,6 +432,7 @@ const tasksViews = (name: string, value: DateViewFiltersValue): TViewCreateInput
 						formula: threePropertiesAddition([ 'Total Tasks 1', 'Total Tasks 2', 'Total Tasks 3' ])
 					}
 				]);
+				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
 				await target_page.executeOperation();
 			}
 		}

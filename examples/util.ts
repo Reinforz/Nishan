@@ -1,8 +1,9 @@
-import { TFormulaCreateInput } from '@nishans/core';
+import { NumberAddFunctionCreateInput, TFormulaCreateInput } from '@nishans/core';
 
-export function formulaUtil (property: string, levels: [string, string]): TFormulaCreateInput {
+export function counterFormula (property: string, levels: [string, string]): TFormulaCreateInput {
 	return {
 		function: 'if',
+		result_type: 'number',
 		args: [
 			{
 				function: 'equal',
@@ -11,6 +12,7 @@ export function formulaUtil (property: string, levels: [string, string]): TFormu
 			3,
 			{
 				function: 'if',
+				result_type: 'number',
 				args: [
 					{
 						function: 'equal',
@@ -23,3 +25,26 @@ export function formulaUtil (property: string, levels: [string, string]): TFormu
 		]
 	};
 }
+
+export const threePropertiesAddition = (properties: [string, string, string]): NumberAddFunctionCreateInput => {
+	return {
+		function: 'add',
+		result_type: 'number',
+		args: [
+			{ property: properties[0] },
+			{
+				function: 'add',
+				result_type: 'number',
+				args: [ { property: properties[1] }, { property: properties[2] } ]
+			}
+		]
+	};
+};
+
+export const twoPropertiesAddition = (properties: [string, string]): NumberAddFunctionCreateInput => {
+	return {
+		function: 'add',
+		result_type: 'number',
+		args: [ { property: properties[0] }, { property: properties[1] } ]
+	};
+};

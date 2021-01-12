@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
-	parseFormula,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
@@ -11,7 +10,7 @@ import Nishan, {
 } from '@nishans/core';
 
 import { status, purpose, subject, source } from '../data';
-import { formulaUtil } from '../util';
+import { counterFormula, threePropertiesAddition } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{
@@ -208,6 +207,7 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 								name: 'Progress',
 								formula: {
 									function: 'if',
+									result_type: 'number',
 									args: [
 										{
 											function: 'equal',
@@ -258,7 +258,7 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 							{
 								type: 'formula',
 								name: 'Status Counter',
-								formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
+								formula: counterFormula('status', [ 'Completing', 'To Complete' ])
 							}
 						]
 					},
@@ -345,6 +345,7 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 								name: 'On',
 								formula: {
 									function: 'if',
+									result_type: 'date',
 									args: [
 										{
 											function: 'empty',
@@ -390,30 +391,12 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 					{
 						type: 'formula',
 						name: 'Completed Steps',
-						formula: {
-							function: 'add',
-							args: [
-								{ property: 'Completed Steps 1' },
-								{
-									function: 'add',
-									args: [ { property: 'Completed Steps 2' }, { property: 'Completed Steps 3' } ]
-								}
-							]
-						}
+						formula: threePropertiesAddition([ 'Completed Steps 1', 'Completed Steps 2', 'Completed Steps 3' ])
 					},
 					{
 						type: 'formula',
 						name: 'Total Tasks',
-						formula: {
-							function: 'add',
-							args: [
-								{ property: 'Total Tasks 1' },
-								{
-									function: 'add',
-									args: [ { property: 'Total Tasks 2' }, { property: 'Total Tasks 3' } ]
-								}
-							]
-						}
+						formula: threePropertiesAddition([ 'Total Tasks 1', 'Total Tasks 2', 'Total Tasks 3' ])
 					}
 				]);
 				await target_page.executeOperation();

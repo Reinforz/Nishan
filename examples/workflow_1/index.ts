@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
 import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
-import { formulaUtil } from '../util';
+import { counterFormula, threePropertiesAddition, twoPropertiesAddition } from '../util';
 
 import '../env';
 
@@ -57,16 +57,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Urgency',
-							formula: {
-								function: 'add',
-								args: [
-									{ property: 'Phase Counter' },
-									{
-										function: 'add',
-										args: [ { property: 'Status Counter' }, { property: 'Priority Counter' } ]
-									}
-								]
-							}
+							formula: threePropertiesAddition(['Phase Counter', 'Status Counter', 'Priority Counter'])
 						},
 						{
 							type: 'formula',
@@ -99,7 +90,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Priority Counter',
-							formula: formulaUtil('priority', [ 'High', 'Medium' ])
+							formula: counterFormula('priority', [ 'High', 'Medium' ])
 						},
 						{
 							type: 'select',
@@ -109,7 +100,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Status Counter',
-							formula: formulaUtil('status', [ 'Completing', 'To Complete' ])
+							formula: counterFormula('status', [ 'Completing', 'To Complete' ])
 						},
 						{
 							type: 'select',
@@ -119,7 +110,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Phase Counter',
-							formula: formulaUtil('phase', [ 'Practice', 'Revise' ])
+							formula: counterFormula('phase', [ 'Practice', 'Revise' ])
 						},
 						{
 							type: 'date',
@@ -255,10 +246,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Urgency',
-							formula: {
-								function: 'add',
-								args: [ { property: 'Difficulty Counter' }, { property: 'Priority Counter' } ]
-							}
+							formula: twoPropertiesAddition(['Difficulty Counter', 'Priority Counter'])
 						},
 						{
 							type: 'formula',
@@ -284,12 +272,12 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Priority Counter',
-							formula: formulaUtil('priority', [ 'High', 'Medium' ])
+							formula: counterFormula('priority', [ 'High', 'Medium' ])
 						},
 						{
 							type: 'formula',
 							name: 'Difficulty Counter',
-							formula: formulaUtil('difficulty', [ 'Easy', 'Medium' ])
+							formula: counterFormula('difficulty', [ 'Easy', 'Medium' ])
 						},
 						{
 							type: 'date',

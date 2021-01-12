@@ -1,4 +1,4 @@
-import { ITableView, IBoardView, ITimelineView, TCollectionBlock, ICollection } from "@nishans/types";
+import { ITableView, IBoardView, ITimelineView } from "@nishans/types";
 import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaAggregationMapValue } from "../../types";
 import { getAggregationsMap, getSchemaMap, Operation } from "../../utils";
 import View from "./View";
@@ -12,16 +12,12 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     super({ ...arg });
   }
 
-  #getCollection = () => {
-    return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
-  }
-
   async createAggregation(arg: UserViewAggregationsCreateParams) {
     await this.createAggregations([arg])
   }
 
   async createAggregations(args: UserViewAggregationsCreateParams[]) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(this.#getCollection()), [, aggregations] = getAggregationsMap(this.getCachedData(), this.#getCollection());
+    const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection()), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
       // ? FIX:1:E Warning if schema_map.get(name) returns undefined
@@ -41,7 +37,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>, multiple?: boolean) {
-    const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.#getCollection());
+    const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
     await this.updateIterate<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>(args, {
       child_ids: Object.keys(aggregations_map),
       child_type: "collection_view",
@@ -62,7 +58,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async deleteAggregations(args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-    const [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.#getCollection()), data = this.getCachedData();
+    const [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection()), data = this.getCachedData();
     await this.deleteIterate<ISchemaAggregationMapValue>(args, {
       child_type: "collection_view",
       multiple,

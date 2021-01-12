@@ -5,8 +5,7 @@ import {
 	TViewFilters,
 	ViewSorts,
 	ViewFormatProperties,
-	ICollectionBlock,
-	TSortValue
+	ICollectionBlock
 } from '@nishans/types';
 import {
 	NishanArg,
@@ -19,7 +18,9 @@ import {
 	TViewFilterCreateInput,
 	ISchemaSortsMapValue,
 	ISchemaFiltersMapValue,
-	ISchemaFormatMapValue
+	ISchemaFormatMapValue,
+	TSortCreateInput,
+	TSortUpdateInput
 } from '../../types';
 import {
 	createViews,
@@ -78,8 +79,7 @@ class View<T extends TView> extends Data<T> {
 		return view_map;
 	}
 
-	// ? FEAT:1:H Add SortCreateInput interface and use type: TSchemaUnitType for better type inference
-	createSorts (args: ([string, TSortValue, number] | [string, TSortValue])[]) {
+	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(this.getCollection()),
 			[ , sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
@@ -107,14 +107,14 @@ class View<T extends TView> extends Data<T> {
 		);
 	}
 
-	async updateSort (arg: UpdateType<ISchemaSortsMapValue, TSortValue | [TSortValue, number]>) {
+	async updateSort (arg: UpdateType<ISchemaSortsMapValue, TSortUpdateInput>) {
 		await this.updateSorts(typeof arg === 'function' ? arg : [ arg ], false);
 	}
 
-	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortValue | [TSortValue, number]>, multiple?: boolean) {
+	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
 			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
-		await this.updateIterate<ISchemaSortsMapValue, TSortValue | [TSortValue, number]>(
+		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
 				child_ids: Array.from(sorts_map.keys()),

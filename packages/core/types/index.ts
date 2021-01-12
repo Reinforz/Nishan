@@ -5,5 +5,6 @@ export * from './filter';
 export * from './maps';
 export * from './nishan';
 export * from './schema';
+export * from './sort';
 export * from './utils';
 export * from './view';

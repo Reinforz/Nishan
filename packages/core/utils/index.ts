@@ -17,5 +17,6 @@ export * from './nestedContentPopulate';
 export * from './positionChildren';
 export * from './iterateChildren';
 export * from './detectChildData';
+export * from './createViewMaps';
 
 export { Operation, createTransaction, shortid };

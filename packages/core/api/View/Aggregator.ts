@@ -1,6 +1,6 @@
-import { ITableView, IBoardView, ITimelineView, TCollectionBlock, ICollection, ViewAggregations, TSchemaUnit } from "@nishans/types";
-import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaMap } from "../../types";
-import { Operation } from "../../utils";
+import { ITableView, IBoardView, ITimelineView, TCollectionBlock, ICollection } from "@nishans/types";
+import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaMap, ISchemaAggregationMap, ISchemaAggregationMapValue } from "../../types";
+import { initializeViewAggregations, Operation } from "../../utils";
 import View from "./View";
 
 /**
@@ -16,13 +16,6 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     return this.cache.collection.get((this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id) as ICollection
   }
 
-  #populateAggregations = () => {
-    const data = this.getCachedData();
-    if (!data.query2) data.query2 = { aggregations: [] } as any;
-    if (data.query2 && !data.query2?.aggregations) data.query2.aggregations = [];
-    return (data.query2 as any).aggregations as ViewAggregations[]
-  }
-
   #getSchemaMap = () => {
     const collection = this.#getCollection(), schema_map: ISchemaMap = new Map();
     Object.entries(collection.schema).forEach(([schema_id, value]) => {
@@ -36,13 +29,14 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 
   #getAggregationsMap = () => {
     const data = this.getCachedData(), collection = this.#getCollection(),
-      aggregations_map: Record<string, TSchemaUnit & ViewAggregations> = {}, aggregations = this.#populateAggregations();
+      aggregations_map: ISchemaAggregationMap = new Map(), aggregations = initializeViewAggregations(data);
     data.query2?.aggregations?.forEach(aggregation => {
       const schema_unit = collection.schema[aggregation.property];
-      aggregations_map[schema_unit.name] = {
+      aggregations_map.set(schema_unit.name, {
+        schema_id: aggregation.property,
         ...schema_unit,
-        ...aggregation
-      }
+        aggregation
+      })
     });
 
     return [aggregations_map, aggregations] as const;
@@ -56,6 +50,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     const data = this.getCachedData(), schema_map = this.#getSchemaMap(), [, aggregations] = this.#getAggregationsMap();
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
+      // ? FIX:1:E Warning if schema_map.get(name) returns undefined
       aggregations.push({
         property: schema_map.get(name)?.schema_id ?? name,
         aggregator
@@ -67,19 +62,19 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }))
   }
 
-  async updateAggregation(arg: UpdateType<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>) {
+  async updateAggregation(arg: UpdateType<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>) {
     await this.updateAggregations(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateAggregations(args: UpdateTypes<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>, multiple?: boolean) {
+  async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>, multiple?: boolean) {
     const data = this.getCachedData(), [aggregations_map, aggregations] = this.#getAggregationsMap();
-    await this.updateIterate<TSchemaUnit & ViewAggregations, Omit<UserViewAggregationsCreateParams, "name">>(args, {
+    await this.updateIterate<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>(args, {
       child_ids: Object.keys(aggregations_map),
       child_type: "collection_view",
       manual: true,
       multiple
-    }, (name) => aggregations_map[name], (_, original_data, updated_data) => {
-      const aggregation = aggregations[aggregations.findIndex(data => data.property === original_data.property)], { aggregator } = updated_data;
+    }, (name) => aggregations_map.get(name), (_, original_data, updated_data) => {
+      const aggregation = aggregations[aggregations.findIndex(data => data.property === original_data.schema_id)], { aggregator } = updated_data;
       aggregation.aggregator = aggregator;
     })
 
@@ -88,19 +83,19 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }))
   }
 
-  async deleteAggregation(arg: FilterType<TSchemaUnit & ViewAggregations>) {
+  async deleteAggregation(arg: FilterType<ISchemaAggregationMapValue>) {
     await this.deleteAggregations(typeof arg === "string" ? [arg] : arg,  false);
   }
 
-  async deleteAggregations(args: FilterTypes<TSchemaUnit & ViewAggregations>, multiple?: boolean) {
+  async deleteAggregations(args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
     const [aggregations_map, aggregations] = this.#getAggregationsMap(), data = this.getCachedData();
-    await this.deleteIterate<TSchemaUnit & ViewAggregations>(args, {
+    await this.deleteIterate<ISchemaAggregationMapValue>(args, {
       child_type: "collection_view",
       multiple,
       child_ids: Object.keys(aggregations_map),
       manual: true
-    }, (name) => aggregations_map[name], (_, aggregation) => {
-      aggregations.splice(aggregations.findIndex(data => data.property === aggregation.property), 1)
+    }, (name) => aggregations_map.get(name), (_, aggregation) => {
+      aggregations.splice(aggregations.findIndex(data => data.property === aggregation.schema_id), 1)
     })
     this.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2

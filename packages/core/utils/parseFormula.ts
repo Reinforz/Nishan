@@ -98,11 +98,11 @@ export function parseFormula (formula: FormulaSchemaUnitInput['formula'], schema
 		if ((formula as TFormulaCreateInput).function) {
 			const { function: function_name, args } = formula as TFormulaCreateInput,
 				result_type = formula_info_map.get(function_name),
-				temp_args = [] as any;
+        temp_args = [] as any;
 			parent.push({
 				name: function_name,
 				type: 'function',
-				result_type: result_type ?? (formula as any).type,
+				result_type: result_type ?? (formula as any).result_type,
 				args: temp_args
       });
       // ? FEAT:1:E unknown function used

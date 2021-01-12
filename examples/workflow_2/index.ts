@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan, {
+  DateViewFiltersValue,
 	FormulaSchemaUnitInput,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
 	TSchemaUnitInput,
+  TViewCreateInput,
 	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
 
@@ -102,6 +104,43 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 		}
 	];
 };
+
+const tasksViews = (name: string, value: DateViewFiltersValue): TViewCreateInput =>{
+  return {
+    type: 'table',
+    name,
+    schema_units: [
+      {
+        type: 'formula',
+        name: 'On',
+        sort: 'descending'
+      },
+      {
+        type: 'title',
+        name: 'Task',
+        format: 300,
+        aggregation: 'count'
+      },
+      ...CommonMultiSelectSchema,
+      ...goalViewItem(1),
+      ...goalViewItem(2),
+      ...goalViewItem(3)
+    ],
+    filters: [
+      {
+        type: 'formula',
+        name: 'On',
+        filter: {
+          operator: 'date_is',
+          value: {
+            value,
+            type: 'relative'
+          }
+        }
+      }
+    ]
+  }
+}
 
 (async function () {
 	const nishan = new Nishan({
@@ -270,40 +309,9 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 						},
 						collection_id: tasks_collection_id,
 						views: [
-							{
-								type: 'table',
-								name: 'Today',
-								schema_units: [
-									{
-										type: 'formula',
-										name: 'On',
-										sort: 'descending'
-									},
-									{
-										type: 'title',
-										name: 'Task',
-										format: 300,
-										aggregation: 'count'
-									},
-									...CommonMultiSelectSchema,
-									...goalViewItem(1),
-									...goalViewItem(2),
-									...goalViewItem(3)
-								],
-								filters: [
-									{
-										type: 'date',
-										name: 'On',
-										filter: {
-											operator: 'date_is',
-											value: {
-												value: 'today',
-												type: 'relative'
-											}
-										}
-									}
-								]
-							}
+							tasksViews('Today', 'today'),
+							tasksViews('Yesterday', 'yesterday'),
+							tasksViews('Weekly', 'one_week_ago'),
 						],
 						schema: [
 							{

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
-import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewViewCreateInput } from '@nishans/core';
+import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
 import { formulaUtil } from '../util';
 
@@ -161,7 +161,7 @@ const daily_sites = [
 							const data: TViewCreateInput = {
 								name: `${status} ${phase} Articles`,
 								type: 'table',
-								view: [
+								schema_units: [
 									{
 										type: 'title',
 										format: 300,
@@ -300,7 +300,7 @@ const daily_sites = [
 						{
 							name: 'Todo',
 							type: 'table',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									format: 350,
@@ -347,7 +347,7 @@ const daily_sites = [
 						{
 							name: 'Done',
 							type: 'table',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									format: 350,
@@ -406,20 +406,20 @@ const daily_sites = [
 						{
 							type: 'table',
 							name: 'All',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									name: 'Date',
 									sort: 'descending',
 									format: 150
 								},
-								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
 							]
 						},
 						{
 							type: 'table',
 							name: 'Today',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									name: 'Date'
@@ -430,7 +430,7 @@ const daily_sites = [
 									sort: 'descending',
 									format: false
 								},
-								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
 							],
 							filters: [
 								{
@@ -443,7 +443,7 @@ const daily_sites = [
 						{
 							type: 'table',
 							name: 'Yesterday',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									name: 'Date'
@@ -454,7 +454,7 @@ const daily_sites = [
 									sort: 'descending',
 									format: false
 								},
-								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
 							],
 							filters: [
 								{
@@ -467,7 +467,7 @@ const daily_sites = [
 						{
 							type: 'table',
 							name: 'One Week Ago',
-							view: [
+							schema_units: [
 								{
 									type: 'title',
 									name: 'Date'
@@ -478,7 +478,7 @@ const daily_sites = [
 									sort: 'descending',
 									format: false
 								},
-								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewViewCreateInput))
+								...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
 							],
 							filters: [
 								{

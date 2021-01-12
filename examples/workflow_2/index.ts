@@ -7,7 +7,7 @@ import Nishan, {
 	RollupSchemaUnit,
 	slugify,
 	TSchemaUnitInput,
-	TViewViewCreateInput
+	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
 
 import { status, purpose, subject, source } from '../data';
@@ -31,21 +31,24 @@ const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	}
 ];
 
-const CommonMultiSelectSchema: TViewViewCreateInput[] = [
+const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
 	{
 		type: 'multi_select',
 		name: 'Purpose',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Subject',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Source',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	}
 ];
 
@@ -79,6 +82,28 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	};
 }
 
+const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
+	return [
+		{
+			type: 'relation',
+			name: `Goal ${index}`,
+			format: true
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Steps`,
+			format: 100,
+			aggregation: 'sum'
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Progress`,
+			format: 100,
+			aggregation: 'sum'
+		}
+	];
+};
+
 (async function () {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string
@@ -94,7 +119,9 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 
 	const goals_collection_id = uuidv4(),
 		goals_cvp_id = uuidv4(),
-		tasks_collection_id = uuidv4();
+    tasks_collection_id = uuidv4(),
+    tasks_cvp_id = uuidv4();
+
 	const task2goalRelation = (index: number): RelationSchemaUnit => {
 		return {
 			type: 'relation',
@@ -162,7 +189,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 							{
 								type: 'table',
 								name: 'Min Current',
-								view: [
+								schema_units: [
 									{
 										type: 'title',
 										name: 'Goal',
@@ -236,6 +263,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						]
 					},
 					{
+            id: tasks_cvp_id,
 						type: 'collection_view_page',
 						properties: {
 							title: [ [ 'Tasks' ] ]
@@ -245,7 +273,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 							{
 								type: 'table',
 								name: 'Today',
-								view: [
+								schema_units: [
 									{
 										type: 'formula',
 										name: 'On'
@@ -253,54 +281,13 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									{
 										type: 'title',
 										name: 'Task',
-										format: 300
+										format: 300,
+										aggregation: 'count'
 									},
 									...CommonMultiSelectSchema,
-									{
-										type: 'relation',
-										name: 'Goal 1',
-										format: 100
-									},
-									{
-										type: 'relation',
-										name: 'Goal 2',
-										format: 100
-									},
-									{
-										type: 'relation',
-										name: 'Goal 3',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 1 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 2 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 3 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 1 Progress',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 2 Progress',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 3 Progress',
-										format: 100
-									}
+									...goalViewItem(1),
+									...goalViewItem(2),
+									...goalViewItem(3)
 								]
 							}
 						],
@@ -360,8 +347,15 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 			}
 		]);
 
-		const goals_cvp = collection_view_page.get(goals_cvp_id);
-		if (goals_cvp) {
+    const goals_cvp = collection_view_page.get(goals_cvp_id),
+      tasks_cvp = collection_view_page.get(tasks_cvp_id);
+    if(tasks_cvp){
+      const {table} = await tasks_cvp.getViews();
+      const today_table = table.get("Today");
+      console.log(JSON.stringify(today_table?.getCachedData().format.table_properties, null, 2))
+    }
+
+		/* if (goals_cvp) {
 			const goals_collection = await goals_cvp.getCollection();
 			if (goals_collection) {
 				await goals_collection.updateSchemaUnits((schema_unit) => {
@@ -415,6 +409,6 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 				]);
 				await target_page.executeOperation();
 			}
-		}
+		} */
 	}
 })();

@@ -65,10 +65,10 @@ class View<T extends TView> extends Data<T> {
   }
 
   #getSchemaMap = () => {
-    const collection = this.#getCollection(), schema_map: Map<string, TSchemaUnit & { property: string }> = new Map();
-    Object.entries(collection.schema).forEach(([property, value]) => {
+    const collection = this.#getCollection(), schema_map: Map<string, TSchemaUnit & { schema_id: string }> = new Map();
+    Object.entries(collection.schema).forEach(([schema_id, value]) => {
       schema_map.set(value.name, {
-        property,
+        schema_id,
         ...value
       })
     })
@@ -105,12 +105,12 @@ class View<T extends TView> extends Data<T> {
       if(target_sort){
         if (typeof arg[2] === "number") {
           sorts.splice(arg[2], 0, {
-            property: target_sort.property,
+            property: target_sort.schema_id,
             direction: arg[1]
           })
         } else
           sorts.push({
-            property: target_sort.property,
+            property: target_sort.schema_id,
             direction: arg[1]
           })
       }

@@ -337,7 +337,28 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 							tasksTableViews('Yesterday', 'yesterday'),
 							tasksTableViews('Weekly', 'one_week_ago'),
 							tasksBoardViews('Purpose'),
-							tasksBoardViews('Subject')
+							tasksBoardViews('Subject'),
+							{
+								type: 'calendar',
+								name: 'Monthly Calendar',
+								calendar_by: 'On',
+								schema_units: [
+									{
+										type: 'multi_select',
+										name: 'Purpose'
+									},
+									{
+										type: 'multi_select',
+										name: 'Subject'
+									},
+									{
+										type: 'formula',
+										name: 'On',
+										sort: 'ascending',
+										format: false
+									}
+								]
+							}
 						],
 						schema: [
 							{

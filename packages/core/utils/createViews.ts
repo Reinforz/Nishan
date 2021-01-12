@@ -50,7 +50,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
         break;
       case "calendar":
         const calender_view = view, calendar_query2 = query2 as ICalendarViewQuery2;
-        calendar_query2.calendar_by = calender_view.calendar_by;
+        calendar_query2.calendar_by = name_map.get(calender_view.calendar_by)?.schema_id ?? calender_view.calendar_by;
         break;
       case "timeline":
         const timeline_view = view, timeline_format = format as ITimelineViewFormat;

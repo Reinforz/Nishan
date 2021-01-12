@@ -20,7 +20,7 @@ export default class Operations extends Mutations {
 		if (this.stack.length === 0) warn(`The operation stack is empty`);
 		else {
 			await this.saveTransactions(this.stack);
-			this.stack = [];
+			while (this.stack.length !== 0) this.stack.pop();
 		}
 	}
 }

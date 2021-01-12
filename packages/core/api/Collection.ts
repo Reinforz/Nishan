@@ -32,12 +32,10 @@ class Collection extends Data<ICollection> {
   getSchemaMap = () =>{
     const data = this.getCachedData(), schema_map: Map<string, {schema_id: string} & TSchemaUnit> = new Map();
     Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
-      const schema_data = {
+      schema_map.set(schema_unit.name, {
         schema_id,
         ...schema_unit
-      }
-      schema_map.set(schema_unit.name, schema_data)
-      schema_map.set(schema_id, schema_data)
+      })
     })
     return schema_map;
   }
@@ -179,11 +177,12 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   createSchemaUnits(args: TSchemaUnitInput[]) {
-    const results = createSchemaUnitMap(), data = this.getCachedData(), schema_map = this.getSchemaMap();
+    const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
-        if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, schema_map) }
+        if(arg.type === "formula")
+          data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         results[arg.type].set(schema_id, schema_obj);

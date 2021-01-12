@@ -142,7 +142,7 @@ export function parseFormula (
 				parent.push({
 					type: 'property',
 					id: schema_id,
-					name: schema_name,
+					name: result.name,
 					result_type
 				});
 			}

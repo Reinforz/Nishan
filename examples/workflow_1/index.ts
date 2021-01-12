@@ -60,10 +60,10 @@ const daily_sites = [
 							formula: {
 								function: 'add',
 								args: [
-									{ property: 'phase_counter' },
+									{ property: 'Phase Counter' },
 									{
 										function: 'add',
-										args: [ { property: 'status_counter' }, { property: 'priority_counter' } ]
+										args: [ { property: 'Status Counter' }, { property: 'Priority Counter' } ]
 									}
 								]
 							}
@@ -76,9 +76,9 @@ const daily_sites = [
 								args: [
 									{
 										function: 'and',
-										args: [ { property: 'practiced' }, { property: 'learned' } ]
+										args: [ { property: 'Practiced' }, { property: 'Learned' } ]
 									},
-									{ property: 'revised' }
+									{ property: 'Revised' }
 								]
 							}
 						},
@@ -257,7 +257,7 @@ const daily_sites = [
 							name: 'Urgency',
 							formula: {
 								function: 'add',
-								args: [ { property: 'difficulty_counter' }, { property: 'priority_counter' } ]
+								args: [ { property: 'Difficulty Counter' }, { property: 'Priority Counter' } ]
 							}
 						},
 						{
@@ -267,7 +267,7 @@ const daily_sites = [
 								function: 'not',
 								args: {
 									function: 'empty',
-									args: { property: 'completed_at' }
+									args: { property: 'Completed At' }
 								}
 							}
 						},

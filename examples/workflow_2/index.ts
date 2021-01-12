@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
+	parseFormula,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
@@ -61,12 +62,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						function: 'divide',
 						args: [
 							{
-								property: `goal_${goal_number}_steps`
+								property: `Goal ${goal_number} Step`
 							},
 							{
 								function: 'toNumber',
 								args: {
-									property: `goal_${goal_number}_total_steps`
+									property: `Goal ${goal_number} Total Steps`
 								}
 							}
 						]
@@ -183,7 +184,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									args: [
 										{
 											function: 'equal',
-											args: [ { property: slugify('Total Steps') }, 0 ]
+											args: [ { property: 'Total Steps' }, 0 ]
 										},
 										0,
 										{
@@ -195,44 +196,16 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 														function: 'divide',
 														args: [
 															{
-																property: 'completed_steps'
+																property: 'Completed Steps'
 															},
 															{
-																property: 'total_steps'
+																property: 'Total Steps'
 															}
 														]
 													},
 													100
 												]
 											}
-										}
-									]
-								}
-							},
-							{
-								type: 'formula',
-								name: 'Completed Steps',
-								formula: {
-									function: 'add',
-									args: [
-										{ property: 'completed_steps_1' },
-										{
-											function: 'add',
-											args: [ { property: 'completed_steps_2' }, { property: 'completed_steps_3' } ]
-										}
-									]
-								}
-							},
-							{
-								type: 'formula',
-								name: 'Total Tasks',
-								formula: {
-									function: 'add',
-									args: [
-										{ property: 'total_tasks_1' },
-										{
-											function: 'add',
-											args: [ { property: 'total_tasks_2' }, { property: 'total_tasks_3' } ]
 										}
 									]
 								}
@@ -374,10 +347,10 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									args: [
 										{
 											function: 'empty',
-											args: { property: 'custom_date' }
+											args: { property: 'Custom Date' }
 										},
-										{ property: 'created' },
-										{ property: 'custom_date' }
+										{ property: 'Created' },
+										{ property: 'Custom Date' }
 									]
 								}
 							}
@@ -410,9 +383,36 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 					goal2taskTotalTasksRollup(3),
 					goal2taskCompletedStepsRollup(1),
 					goal2taskCompletedStepsRollup(2),
-					goal2taskCompletedStepsRollup(3)
+					goal2taskCompletedStepsRollup(3),
+					{
+						type: 'formula',
+						name: 'Completed Steps',
+						formula: {
+							function: 'add',
+							args: [
+								{ property: 'Completed Steps 1' },
+								{
+									function: 'add',
+									args: [ { property: 'Completed Steps 2' }, { property: 'Completed Steps 3' } ]
+								}
+							]
+						}
+					},
+					{
+						type: 'formula',
+						name: 'Total Tasks',
+						formula: {
+							function: 'add',
+							args: [
+								{ property: 'Total Tasks 1' },
+								{
+									function: 'add',
+									args: [ { property: 'Total Tasks 2' }, { property: 'Total Tasks 3' } ]
+								}
+							]
+						}
+					}
 				]);
-				// console.log(goals_collection.getCachedData().schema);
 				await target_page.executeOperation();
 			}
 		}

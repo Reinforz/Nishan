@@ -1,5 +1,5 @@
 import { TView, TCollectionBlock, ICollection, TSchemaUnit, TViewFilters, ViewSorts, ViewFormatProperties, ICollectionBlock, TSortValue } from "@nishans/types";
-import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput } from "../../types";
+import { NishanArg, RepositionParams,  UpdateType, UpdateTypes, FilterTypes, FilterType, TViewCreateInput, TViewFilterCreateInput, ISchemaMap } from "../../types";
 import { createViews, initializeViewFilters, initializeViewSorts, Operation, populateFilters } from "../../utils";
 import Data from "../Data";
 
@@ -65,7 +65,7 @@ class View<T extends TView> extends Data<T> {
   }
 
   #getSchemaMap = () => {
-    const collection = this.#getCollection(), schema_map: Map<string, TSchemaUnit & { schema_id: string }> = new Map();
+    const collection = this.#getCollection(), schema_map: ISchemaMap = new Map();
     Object.entries(collection.schema).forEach(([schema_id, value]) => {
       schema_map.set(value.name, {
         schema_id,

@@ -119,8 +119,8 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 
 	const goals_collection_id = uuidv4(),
 		goals_cvp_id = uuidv4(),
-    tasks_collection_id = uuidv4(),
-    tasks_cvp_id = uuidv4();
+		tasks_collection_id = uuidv4(),
+		tasks_cvp_id = uuidv4();
 
 	const task2goalRelation = (index: number): RelationSchemaUnit => {
 		return {
@@ -263,7 +263,7 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 						]
 					},
 					{
-            id: tasks_cvp_id,
+						id: tasks_cvp_id,
 						type: 'collection_view_page',
 						properties: {
 							title: [ [ 'Tasks' ] ]
@@ -276,7 +276,8 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 								schema_units: [
 									{
 										type: 'formula',
-										name: 'On'
+										name: 'On',
+										sort: 'descending'
 									},
 									{
 										type: 'title',
@@ -288,6 +289,19 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 									...goalViewItem(1),
 									...goalViewItem(2),
 									...goalViewItem(3)
+								],
+								filters: [
+									{
+										type: 'date',
+										name: 'On',
+										filter: {
+											operator: 'date_is',
+											value: {
+												value: 'today',
+												type: 'relative'
+											}
+										}
+									}
 								]
 							}
 						],
@@ -347,19 +361,14 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 			}
 		]);
 
-    const goals_cvp = collection_view_page.get(goals_cvp_id),
-      tasks_cvp = collection_view_page.get(tasks_cvp_id);
-    if(tasks_cvp){
-      const {table} = await tasks_cvp.getViews();
-      const today_table = table.get("Today");
-      console.log(JSON.stringify(today_table?.getCachedData().format.table_properties, null, 2))
-    }
+		const goals_cvp = collection_view_page.get(goals_cvp_id),
+			tasks_cvp = collection_view_page.get(tasks_cvp_id);
 
-		/* if (goals_cvp) {
+		if (goals_cvp) {
 			const goals_collection = await goals_cvp.getCollection();
 			if (goals_collection) {
 				await goals_collection.updateSchemaUnits((schema_unit) => {
-					switch (schema_unit.property) {
+					switch (schema_unit.schema_id) {
 						case 'task_1':
 							return { name: 'Task 1' };
 						case 'task_2':
@@ -409,6 +418,6 @@ const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
 				]);
 				await target_page.executeOperation();
 			}
-		} */
+		}
 	}
 })();

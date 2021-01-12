@@ -1,7 +1,7 @@
-import { TFormula, TFormulaResultType, TFunctionName, TSchemaUnit, TSchemaUnitType } from '@nishans/types';
-import { FormulaSchemaUnitInput, TFormulaCreateInput, TResultType } from '../types';
+import { TFormula, TFormulaResultType, TFunctionName, TSchemaUnitType } from '@nishans/types';
+import { FormulaSchemaUnitInput, ISchemaMap, TFormulaCreateInput, TResultType } from '../types';
 
-const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
+const formula_info_map: Map<TFunctionName, TFormulaResultType | 'auto'> = new Map([
 	[ 'equal', 'checkbox' ],
 	[ 'unequal', 'checkbox' ],
 	[ 'and', 'checkbox' ],
@@ -11,6 +11,13 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'smaller', 'checkbox' ],
 	[ 'smallerEq', 'checkbox' ],
 	[ 'not', 'checkbox' ],
+	[ 'test', 'checkbox' ],
+	[ 'contains', 'checkbox' ],
+	[ 'empty', 'checkbox' ],
+
+	[ 'add', 'auto' ],
+	[ 'if', 'auto' ],
+
 	[ 'subtract', 'number' ],
 	[ 'divide', 'number' ],
 	[ 'multiple', 'number' ],
@@ -18,19 +25,8 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'mod', 'number' ],
 	[ 'unaryPlus', 'number' ],
 	[ 'unaryMinus', 'number' ],
-	[ 'add', 'number' ],
-	[ 'if', 'number' ],
-	[ 'concat', 'text' ],
-	[ 'join', 'text' ],
-	[ 'slice', 'text' ],
-	[ 'format', 'text' ],
-	[ 'toNumber', 'number' ],
 	[ 'length', 'number' ],
-	[ 'contains', 'checkbox' ],
-	[ 'replace', 'text' ],
-	[ 'replaceAll', 'text' ],
-	[ 'test', 'checkbox' ],
-	[ 'empty', 'checkbox' ],
+	[ 'toNumber', 'number' ],
 	[ 'abs', 'number' ],
 	[ 'cbrt', 'number' ],
 	[ 'ceil', 'number' ],
@@ -44,22 +40,30 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'round', 'number' ],
 	[ 'sign', 'number' ],
 	[ 'sqrt', 'number' ],
-	[ 'start', 'date' ],
-	[ 'end', 'date' ],
-	[ 'now', 'date' ],
 	[ 'timestamp', 'number' ],
-	[ 'fromTimestamp', 'date' ],
 	[ 'minute', 'number' ],
 	[ 'hour', 'number' ],
 	[ 'day', 'number' ],
 	[ 'date', 'number' ],
 	[ 'month', 'number' ],
 	[ 'year', 'number' ],
+
+	[ 'start', 'date' ],
+	[ 'end', 'date' ],
+	[ 'now', 'date' ],
+	[ 'fromTimestamp', 'date' ],
 	[ 'dateAdd', 'date' ],
 	[ 'dateSubtract', 'date' ],
 	[ 'dateBetween', 'date' ],
 	[ 'dateBetween', 'date' ],
-	[ 'formatDate', 'date' ]
+	[ 'formatDate', 'date' ],
+
+	[ 'concat', 'text' ],
+	[ 'join', 'text' ],
+	[ 'slice', 'text' ],
+	[ 'format', 'text' ],
+	[ 'replace', 'text' ],
+	[ 'replaceAll', 'text' ]
 ]);
 
 export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TFormulaResultType {
@@ -83,17 +87,13 @@ export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TForm
 		case 'relation':
 			return 'text';
 		case 'number':
-		case 'rollup':
 			return 'number';
 		default:
 			return 'number';
 	}
 }
 
-export function parseFormula (
-	formula: FormulaSchemaUnitInput['formula'],
-	schema_map: Map<string, { schema_id: string } & TSchemaUnit>
-): TFormula {
+export function parseFormula (formula: FormulaSchemaUnitInput['formula'], schema_map: ISchemaMap): TFormula {
 	const res_formula = {
 		args: []
 	};

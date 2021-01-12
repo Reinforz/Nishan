@@ -36,13 +36,13 @@ const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
 	{
 		type: 'multi_select',
-		name: 'Purpose',
+		name: 'Subject',
 		format: 200,
 		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
-		name: 'Subject',
+		name: 'Purpose',
 		format: 200,
 		aggregation: 'unique'
 	},
@@ -250,12 +250,77 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 						views: [
 							{
 								type: 'table',
-								name: 'Min Current',
+								name: 'Current Minimalistic',
 								schema_units: [
+									{
+										type: 'formula',
+										name: 'Progress',
+										format: 150,
+										aggregation: 'average',
+										sort: 'descending'
+									},
 									{
 										type: 'title',
 										name: 'Goal',
-										format: 300
+										format: 300,
+										aggregation: 'count'
+									},
+									...CommonMultiSelectSchema
+								],
+								filters: [
+									{
+										type: 'select',
+										name: 'Status',
+										filter: {
+											operator: 'enum_is',
+											value: {
+												type: 'exact',
+												value: 'Completing'
+											}
+										}
+									}
+								]
+							},
+							{
+								type: 'table',
+								name: 'Completed',
+								schema_units: [
+									{
+										type: 'date',
+										name: 'Completed At',
+										sort: 'descending',
+										format: 200
+									},
+									{
+										type: 'title',
+										name: 'Goal',
+										format: 300,
+										aggregation: 'count'
+									},
+									...CommonMultiSelectSchema
+								],
+								filters: [
+									{
+										type: 'select',
+										name: 'Status',
+										filter: {
+											operator: 'enum_is',
+											value: {
+												type: 'exact',
+												value: 'Completed'
+											}
+										}
+									},
+									{
+										type: 'formula',
+										name: 'Progress',
+										filter: {
+											operator: 'number_less_than',
+											value: {
+												type: 'exact',
+												value: 100
+											}
+										}
 									}
 								]
 							}

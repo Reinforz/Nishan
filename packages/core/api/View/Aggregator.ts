@@ -1,5 +1,5 @@
 import { ITableView, IBoardView, ITimelineView } from "@nishans/types";
-import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaAggregationMapValue } from "../../types";
+import { NishanArg, TAggregationsCreateInput, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaAggregationMapValue, TAggregationsUpdateInput } from "../../types";
 import { getAggregationsMap, getSchemaMap, Operation } from "../../utils";
 import View from "./View";
 
@@ -12,11 +12,11 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     super({ ...arg });
   }
 
-  async createAggregation(arg: UserViewAggregationsCreateParams) {
+  async createAggregation(arg: TAggregationsCreateInput) {
     await this.createAggregations([arg])
   }
 
-  async createAggregations(args: UserViewAggregationsCreateParams[]) {
+  async createAggregations(args: TAggregationsCreateInput[]) {
     const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection()), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
@@ -32,13 +32,13 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }))
   }
 
-  async updateAggregation(arg: UpdateType<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>) {
+  async updateAggregation(arg: UpdateType<ISchemaAggregationMapValue, TAggregationsUpdateInput>) {
     await this.updateAggregations(typeof arg === "function" ? arg : [arg],  false);
   }
 
-  async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>, multiple?: boolean) {
+  async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, TAggregationsUpdateInput>, multiple?: boolean) {
     const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
-    await this.updateIterate<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>(args, {
+    await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(args, {
       child_ids: Array.from(aggregations_map.keys()),
       child_type: "collection_view",
       manual: true,

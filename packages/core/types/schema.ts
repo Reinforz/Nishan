@@ -35,6 +35,8 @@ export type ISchemaFiltersMap = Map<string, ISchemaFiltersMapValue>;
 export type ISchemaFormatMapValue = { schema_id: string; format: ViewFormatProperties } & TSchemaUnit;
 export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 
+export type SchemaFormalPropertiesUpdateInput = Partial<{ position: number; visible: boolean; width: number }>;
+
 export type TSchemaUnitInput =
 	| TBasicSchemaUnit
 	| RelationSchemaUnit

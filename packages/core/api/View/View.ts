@@ -20,7 +20,9 @@ import {
 	ISchemaFiltersMapValue,
 	ISchemaFormatMapValue,
 	TSortCreateInput,
-	TSortUpdateInput
+	TSortUpdateInput,
+	TViewFilterUpdateInput,
+	SchemaFormalPropertiesUpdateInput
 } from '../../types';
 import {
 	createViews,
@@ -179,18 +181,15 @@ class View<T extends TView> extends Data<T> {
 		);
 	}
 
-	async updateFilter (arg: UpdateType<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, 'name'>>) {
+	async updateFilter (arg: UpdateType<ISchemaFiltersMapValue, TViewFilterUpdateInput>) {
 		await this.updateFilters(typeof arg === 'function' ? arg : [ arg ], false);
 	}
 
-	async updateFilters (
-		args: UpdateTypes<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, 'name'>>,
-		multiple?: boolean
-	) {
+	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
 		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection()),
 			data = this.getCachedData();
 
-		await this.updateIterate<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, 'name'>>(
+		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
 			{
 				child_ids: Array.from(filters_map.keys()),
@@ -339,19 +338,17 @@ class View<T extends TView> extends Data<T> {
 		);
 	}
 
-	async updateFormatProperty (
-		arg: UpdateType<ISchemaFormatMapValue, Partial<{ position: number; visible: boolean; width: number }>>
-	) {
+	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>) {
 		await this.updateFormatProperties(typeof arg === 'function' ? arg : [ arg ], false);
 	}
 
 	async updateFormatProperties (
-		args: UpdateTypes<ISchemaFormatMapValue, Partial<{ position: number; visible: boolean; width: number }>>,
+		args: UpdateTypes<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>,
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
 			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection());
-		await this.updateIterate<ISchemaFormatMapValue, Partial<{ position: number; visible: boolean; width: number }>>(
+		await this.updateIterate<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>(
 			args,
 			{
 				child_type: 'collection_view',

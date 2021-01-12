@@ -115,6 +115,30 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		};
 	};
 
+	const goal2taskTotalTasksRollup = (index: number): RollupSchemaUnit => {
+		return {
+			collection_id: tasks_collection_id,
+			type: 'rollup',
+			name: `Total Tasks ${index}`,
+			aggregation: 'count',
+			relation_property: `task_${index}`,
+			target_property: 'title',
+			target_property_type: 'number'
+		};
+	};
+
+	const goal2taskCompletedStepsRollup = (index: number): RollupSchemaUnit => {
+		return {
+			collection_id: tasks_collection_id,
+			type: 'rollup',
+			name: `Completed Steps ${index}`,
+			aggregation: 'sum',
+			relation_property: `task_${index}`,
+			target_property: `goal_${index}_steps`,
+			target_property_type: 'number'
+		};
+	};
+
 	if (target_page) {
 		const { collection_view_page } = await target_page.createBlocks([
 			{
@@ -127,7 +151,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 				},
 				contents: [
 					{
-            id: goals_cvp_id,
+						id: goals_cvp_id,
 						type: 'collection_view_page',
 						properties: {
 							title: [ [ 'Goals' ] ]
@@ -364,21 +388,33 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		]);
 
 		const goals_cvp = collection_view_page.get(goals_cvp_id);
-    if(goals_cvp){
-      const goals_collection = await goals_cvp.getCollection()
-      await goals_collection?.updateSchemaUnits((schema_unit)=>{
-        switch(schema_unit.property){
-          case "task_1":
-            return {name: "Task 1"}
-          case "task_2":
-            return {name: "Task 2"}
-          case "task_3":
-            return {name: "Task 3"}
-          default:
-            false
-        }
-      })
-      await target_page?.executeOperation();
-    }
+		if (goals_cvp) {
+			const goals_collection = await goals_cvp.getCollection();
+			if (goals_collection) {
+				await goals_collection.updateSchemaUnits((schema_unit) => {
+					switch (schema_unit.property) {
+						case 'task_1':
+							return { name: 'Task 1' };
+						case 'task_2':
+							return { name: 'Task 2' };
+						case 'task_3':
+							return { name: 'Task 3' };
+						default:
+							false;
+					}
+				});
+
+				goals_collection.createSchemaUnits([
+					goal2taskTotalTasksRollup(1),
+					goal2taskTotalTasksRollup(2),
+					goal2taskTotalTasksRollup(3),
+					goal2taskCompletedStepsRollup(1),
+					goal2taskCompletedStepsRollup(2),
+					goal2taskCompletedStepsRollup(3)
+				]);
+				// console.log(goals_collection.getCachedData().schema);
+				await target_page.executeOperation();
+			}
+		}
 	}
 })();

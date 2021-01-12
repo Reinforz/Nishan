@@ -78,6 +78,7 @@ class View<T extends TView> extends Data<T> {
 		return view_map;
 	}
 
+	// ? FEAT:1:H Add SortCreateInput interface and use type: TSchemaUnitType for better type inference
 	createSorts (args: ([string, TSortValue, number] | [string, TSortValue])[]) {
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(this.getCollection()),
@@ -116,7 +117,7 @@ class View<T extends TView> extends Data<T> {
 		await this.updateIterate<ISchemaSortsMapValue, TSortValue | [TSortValue, number]>(
 			args,
 			{
-				child_ids: Object.keys(sorts_map),
+				child_ids: Array.from(sorts_map.keys()),
 				child_type: 'collection_view',
 				multiple,
 				manual: true
@@ -152,7 +153,7 @@ class View<T extends TView> extends Data<T> {
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
-				child_ids: Object.keys(sorts_map),
+				child_ids: Array.from(sorts_map.keys()),
 				child_type: 'collection_view',
 				multiple,
 				manual: true
@@ -192,7 +193,7 @@ class View<T extends TView> extends Data<T> {
 		await this.updateIterate<ISchemaFiltersMapValue, Omit<TViewFilterCreateInput, 'name'>>(
 			args,
 			{
-				child_ids: Object.keys(filters_map),
+				child_ids: Array.from(filters_map.keys()),
 				child_type: 'collection_view',
 				multiple,
 				manual: true
@@ -230,7 +231,7 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				manual: true,
-				child_ids: Object.keys(filters_map)
+				child_ids: Array.from(filters_map.keys())
 			},
 			(schema_id) => filters_map.get(schema_id),
 			(_, filter) => {
@@ -256,7 +257,7 @@ class View<T extends TView> extends Data<T> {
 			{
 				child_type: 'collection_view',
 				multiple,
-				child_ids: Object.keys(format_properties_map),
+				child_ids: Array.from(format_properties_map.keys()),
 				manual: true
 			},
 			(name) => format_properties_map.get(name),
@@ -286,7 +287,7 @@ class View<T extends TView> extends Data<T> {
 			{
 				child_type: 'collection_view',
 				multiple,
-				child_ids: Object.keys(format_properties_map),
+				child_ids: Array.from(format_properties_map.keys()),
 				manual: true
 			},
 			(name) => format_properties_map.get(name),
@@ -316,7 +317,7 @@ class View<T extends TView> extends Data<T> {
 			{
 				child_type: 'collection_view',
 				multiple,
-				child_ids: Object.keys(format_properties_map),
+				child_ids: Array.from(format_properties_map.keys()),
 				manual: true
 			},
 			(name) => format_properties_map.get(name),
@@ -355,7 +356,7 @@ class View<T extends TView> extends Data<T> {
 			{
 				child_type: 'collection_view',
 				multiple,
-				child_ids: Object.keys(format_properties_map),
+				child_ids: Array.from(format_properties_map.keys()),
 				manual: true
 			},
 			(name) => format_properties_map.get(name),

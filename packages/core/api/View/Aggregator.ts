@@ -39,7 +39,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>, multiple?: boolean) {
     const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
     await this.updateIterate<ISchemaAggregationMapValue, Omit<UserViewAggregationsCreateParams, "name">>(args, {
-      child_ids: Object.keys(aggregations_map),
+      child_ids: Array.from(aggregations_map.keys()),
       child_type: "collection_view",
       manual: true,
       multiple
@@ -62,7 +62,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     await this.deleteIterate<ISchemaAggregationMapValue>(args, {
       child_type: "collection_view",
       multiple,
-      child_ids: Object.keys(aggregations_map),
+      child_ids: Array.from(aggregations_map.keys()),
       manual: true
     }, (name) => aggregations_map.get(name), (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.schema_id), 1)

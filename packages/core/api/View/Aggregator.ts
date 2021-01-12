@@ -1,5 +1,5 @@
 import { ITableView, IBoardView, ITimelineView, TCollectionBlock, ICollection, ViewAggregations, TSchemaUnit } from "@nishans/types";
-import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes } from "../../types";
+import { NishanArg, UserViewAggregationsCreateParams, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaMap } from "../../types";
 import { Operation } from "../../utils";
 import View from "./View";
 
@@ -24,13 +24,13 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   #getSchemaMap = () => {
-    const collection = this.#getCollection(), schema_map: Record<string, TSchemaUnit & { property: string }> = {};
-    Object.entries(collection.schema).forEach(([property, value]) => {
-      schema_map[value.name] = {
-        property,
+    const collection = this.#getCollection(), schema_map: ISchemaMap = new Map();
+    Object.entries(collection.schema).forEach(([schema_id, value]) => {
+      schema_map.set(value.name, {
+        schema_id,
         ...value
       }
-    })
+      )})
     return schema_map;
   }
 
@@ -57,7 +57,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
       aggregations.push({
-        property: schema_map[name].property,
+        property: schema_map.get(name)?.schema_id ?? name,
         aggregator
       })
     };

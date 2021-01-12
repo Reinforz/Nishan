@@ -17,7 +17,7 @@ export interface IViewCreateInput {
 	id?: string;
 	type: TViewType;
 	name: string;
-	view: TViewViewCreateInput[];
+	schema_units: TViewSchemaUnitsCreateInput[];
 	position?: RepositionParams;
 	filter_operator?: TViewGroupFilterOperator;
 	filters?: TViewFilterCreateInput[];
@@ -62,7 +62,7 @@ export type TViewCreateInput =
 	| CalendarViewCreateInput
 	| TimelineViewCreateInput;
 
-interface IViewViewCreateInput<SUT extends TSchemaUnitType> {
+interface IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> {
 	// name of the schema unit
 	name: string;
 	// schemaunit type
@@ -75,23 +75,23 @@ interface IViewViewCreateInput<SUT extends TSchemaUnitType> {
 	aggregation?: IViewAggregationsAggregators[SUT];
 }
 
-export type TViewViewCreateInput =
-	| IViewViewCreateInput<'text'>
-	| IViewViewCreateInput<'title'>
-	| IViewViewCreateInput<'number'>
-	| IViewViewCreateInput<'select'>
-	| IViewViewCreateInput<'multi_select'>
-	| IViewViewCreateInput<'date'>
-	| IViewViewCreateInput<'person'>
-	| IViewViewCreateInput<'file'>
-	| IViewViewCreateInput<'checkbox'>
-	| IViewViewCreateInput<'url'>
-	| IViewViewCreateInput<'email'>
-	| IViewViewCreateInput<'phone_number'>
-	| IViewViewCreateInput<'formula'>
-	| IViewViewCreateInput<'relation'>
-	| IViewViewCreateInput<'rollup'>
-	| IViewViewCreateInput<'created_time'>
-	| IViewViewCreateInput<'created_by'>
-	| IViewViewCreateInput<'last_edited_time'>
-	| IViewViewCreateInput<'last_edited_by'>;
+export type TViewSchemaUnitsCreateInput =
+	| IViewSchemaUnitsCreateInput<'text'>
+	| IViewSchemaUnitsCreateInput<'title'>
+	| IViewSchemaUnitsCreateInput<'number'>
+	| IViewSchemaUnitsCreateInput<'select'>
+	| IViewSchemaUnitsCreateInput<'multi_select'>
+	| IViewSchemaUnitsCreateInput<'date'>
+	| IViewSchemaUnitsCreateInput<'person'>
+	| IViewSchemaUnitsCreateInput<'file'>
+	| IViewSchemaUnitsCreateInput<'checkbox'>
+	| IViewSchemaUnitsCreateInput<'url'>
+	| IViewSchemaUnitsCreateInput<'email'>
+	| IViewSchemaUnitsCreateInput<'phone_number'>
+	| IViewSchemaUnitsCreateInput<'formula'>
+	| IViewSchemaUnitsCreateInput<'relation'>
+	| IViewSchemaUnitsCreateInput<'rollup'>
+	| IViewSchemaUnitsCreateInput<'created_time'>
+	| IViewSchemaUnitsCreateInput<'created_by'>
+	| IViewSchemaUnitsCreateInput<'last_edited_time'>
+	| IViewSchemaUnitsCreateInput<'last_edited_by'>;

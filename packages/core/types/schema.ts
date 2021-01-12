@@ -5,7 +5,8 @@ import {
 	LastEditedTimeSchemaUnit,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
-	TBasicSchemaUnit
+	TBasicSchemaUnit,
+	TSchemaUnit
 } from '@nishans/types';
 import { TFormulaCreateInput } from './formula';
 
@@ -14,6 +15,9 @@ export type FormulaSchemaUnitInput = {
 	name: string;
 	formula: TFormulaCreateInput;
 };
+
+export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
+export type ISchemaMap = Map<string, ISchemaMapValue>;
 
 export type TSchemaUnitInput =
 	| TBasicSchemaUnit

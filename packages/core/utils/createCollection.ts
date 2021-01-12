@@ -9,9 +9,7 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
   param.schema.forEach(opt => {
     const schema_id = slugify(opt.type === "title" ? "Title" : opt.name);
     schema[schema_id] = opt as any;
-    const schema_map_value = {...opt, schema_id} as any
-    schema_map.set(opt.name,  schema_map_value)
-    schema_map.set(schema_id, schema_map_value)
+    schema_map.set(opt.name,  {...opt, schema_id} as any)
   });
 
   Object.entries(schema).forEach(([schema_id, schema_unit])=>{

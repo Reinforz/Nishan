@@ -2,11 +2,12 @@ import { v4 as uuidv4 } from 'uuid';
 import '../env';
 import Nishan, {
 	FormulaSchemaUnitInput,
+	parseFormula,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
 	TSchemaUnitInput,
-	TViewViewCreateInput
+	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
 
 import { status, purpose, subject, source } from '../data';
@@ -30,21 +31,24 @@ const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	}
 ];
 
-const CommonMultiSelectSchema: TViewViewCreateInput[] = [
+const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
 	{
 		type: 'multi_select',
 		name: 'Purpose',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Subject',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Source',
-		format: 200
+		format: 200,
+		aggregation: 'unique'
 	}
 ];
 
@@ -61,12 +65,12 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						function: 'divide',
 						args: [
 							{
-								property: `goal_${goal_number}_steps`
+								property: `Goal ${goal_number} Step`
 							},
 							{
 								function: 'toNumber',
 								args: {
-									property: `goal_${goal_number}_total_steps`
+									property: `Goal ${goal_number} Total Steps`
 								}
 							}
 						]
@@ -77,6 +81,28 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		}
 	};
 }
+
+const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
+	return [
+		{
+			type: 'relation',
+			name: `Goal ${index}`,
+			format: true
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Steps`,
+			format: 100,
+			aggregation: 'sum'
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Progress`,
+			format: 100,
+			aggregation: 'sum'
+		}
+	];
+};
 
 (async function () {
 	const nishan = new Nishan({
@@ -93,7 +119,9 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 
 	const goals_collection_id = uuidv4(),
 		goals_cvp_id = uuidv4(),
-		tasks_collection_id = uuidv4();
+		tasks_collection_id = uuidv4(),
+		tasks_cvp_id = uuidv4();
+
 	const task2goalRelation = (index: number): RelationSchemaUnit => {
 		return {
 			type: 'relation',
@@ -115,6 +143,30 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		};
 	};
 
+	const goal2taskTotalTasksRollup = (index: number): RollupSchemaUnit => {
+		return {
+			collection_id: tasks_collection_id,
+			type: 'rollup',
+			name: `Total Tasks ${index}`,
+			aggregation: 'count',
+			relation_property: `task_${index}`,
+			target_property: 'title',
+			target_property_type: 'number'
+		};
+	};
+
+	const goal2taskCompletedStepsRollup = (index: number): RollupSchemaUnit => {
+		return {
+			collection_id: tasks_collection_id,
+			type: 'rollup',
+			name: `Completed Steps ${index}`,
+			aggregation: 'sum',
+			relation_property: `task_${index}`,
+			target_property: `goal_${index}_steps`,
+			target_property_type: 'number'
+		};
+	};
+
 	if (target_page) {
 		const { collection_view_page } = await target_page.createBlocks([
 			{
@@ -127,7 +179,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 				},
 				contents: [
 					{
-            id: goals_cvp_id,
+						id: goals_cvp_id,
 						type: 'collection_view_page',
 						properties: {
 							title: [ [ 'Goals' ] ]
@@ -137,7 +189,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 							{
 								type: 'table',
 								name: 'Min Current',
-								view: [
+								schema_units: [
 									{
 										type: 'title',
 										name: 'Goal',
@@ -159,7 +211,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									args: [
 										{
 											function: 'equal',
-											args: [ { property: slugify('Total Steps') }, 0 ]
+											args: [ { property: 'Total Steps' }, 0 ]
 										},
 										0,
 										{
@@ -171,44 +223,16 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 														function: 'divide',
 														args: [
 															{
-																property: 'completed_steps'
+																property: 'Completed Steps'
 															},
 															{
-																property: 'total_steps'
+																property: 'Total Steps'
 															}
 														]
 													},
 													100
 												]
 											}
-										}
-									]
-								}
-							},
-							{
-								type: 'formula',
-								name: 'Completed Steps',
-								formula: {
-									function: 'add',
-									args: [
-										{ property: 'completed_steps_1' },
-										{
-											function: 'add',
-											args: [ { property: 'completed_steps_2' }, { property: 'completed_steps_3' } ]
-										}
-									]
-								}
-							},
-							{
-								type: 'formula',
-								name: 'Total Tasks',
-								formula: {
-									function: 'add',
-									args: [
-										{ property: 'total_tasks_1' },
-										{
-											function: 'add',
-											args: [ { property: 'total_tasks_2' }, { property: 'total_tasks_3' } ]
 										}
 									]
 								}
@@ -239,6 +263,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 						]
 					},
 					{
+						id: tasks_cvp_id,
 						type: 'collection_view_page',
 						properties: {
 							title: [ [ 'Tasks' ] ]
@@ -248,61 +273,34 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 							{
 								type: 'table',
 								name: 'Today',
-								view: [
+								schema_units: [
 									{
 										type: 'formula',
-										name: 'On'
+										name: 'On',
+										sort: 'descending'
 									},
 									{
 										type: 'title',
 										name: 'Task',
-										format: 300
+										format: 300,
+										aggregation: 'count'
 									},
 									...CommonMultiSelectSchema,
+									...goalViewItem(1),
+									...goalViewItem(2),
+									...goalViewItem(3)
+								],
+								filters: [
 									{
-										type: 'relation',
-										name: 'Goal 1',
-										format: 100
-									},
-									{
-										type: 'relation',
-										name: 'Goal 2',
-										format: 100
-									},
-									{
-										type: 'relation',
-										name: 'Goal 3',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 1 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 2 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 3 Steps',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 1 Progress',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 2 Progress',
-										format: 100
-									},
-									{
-										type: 'number',
-										name: 'Goal 3 Progress',
-										format: 100
+										type: 'date',
+										name: 'On',
+										filter: {
+											operator: 'date_is',
+											value: {
+												value: 'today',
+												type: 'relative'
+											}
+										}
 									}
 								]
 							}
@@ -350,10 +348,10 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 									args: [
 										{
 											function: 'empty',
-											args: { property: 'custom_date' }
+											args: { property: 'Custom Date' }
 										},
-										{ property: 'created' },
-										{ property: 'custom_date' }
+										{ property: 'Created' },
+										{ property: 'Custom Date' }
 									]
 								}
 							}
@@ -363,22 +361,63 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 			}
 		]);
 
-		const goals_cvp = collection_view_page.get(goals_cvp_id);
-    if(goals_cvp){
-      const goals_collection = await goals_cvp.getCollection()
-      await goals_collection?.updateSchemaUnits((schema_unit)=>{
-        switch(schema_unit.property){
-          case "task_1":
-            return {name: "Task 1"}
-          case "task_2":
-            return {name: "Task 2"}
-          case "task_3":
-            return {name: "Task 3"}
-          default:
-            false
-        }
-      })
-      await target_page?.executeOperation();
-    }
+		const goals_cvp = collection_view_page.get(goals_cvp_id),
+			tasks_cvp = collection_view_page.get(tasks_cvp_id);
+
+		if (goals_cvp) {
+			const goals_collection = await goals_cvp.getCollection();
+			if (goals_collection) {
+				await goals_collection.updateSchemaUnits((schema_unit) => {
+					switch (schema_unit.schema_id) {
+						case 'task_1':
+							return { name: 'Task 1' };
+						case 'task_2':
+							return { name: 'Task 2' };
+						case 'task_3':
+							return { name: 'Task 3' };
+						default:
+							false;
+					}
+				});
+
+				goals_collection.createSchemaUnits([
+					goal2taskTotalTasksRollup(1),
+					goal2taskTotalTasksRollup(2),
+					goal2taskTotalTasksRollup(3),
+					goal2taskCompletedStepsRollup(1),
+					goal2taskCompletedStepsRollup(2),
+					goal2taskCompletedStepsRollup(3),
+					{
+						type: 'formula',
+						name: 'Completed Steps',
+						formula: {
+							function: 'add',
+							args: [
+								{ property: 'Completed Steps 1' },
+								{
+									function: 'add',
+									args: [ { property: 'Completed Steps 2' }, { property: 'Completed Steps 3' } ]
+								}
+							]
+						}
+					},
+					{
+						type: 'formula',
+						name: 'Total Tasks',
+						formula: {
+							function: 'add',
+							args: [
+								{ property: 'Total Tasks 1' },
+								{
+									function: 'add',
+									args: [ { property: 'Total Tasks 2' }, { property: 'Total Tasks 3' } ]
+								}
+							]
+						}
+					}
+				]);
+				await target_page.executeOperation();
+			}
+		}
 	}
 })();

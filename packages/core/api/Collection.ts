@@ -5,7 +5,7 @@ import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput } from '../types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMap, ISchemaMapValue } from '../types';
 
 /**
  * A class to represent collection of Notion
@@ -30,14 +30,12 @@ class Collection extends Data<ICollection> {
   }
 
   getSchemaMap = () =>{
-    const data = this.getCachedData(), schema_map: Map<string, {schema_id: string} & TSchemaUnit> = new Map();
+    const data = this.getCachedData(), schema_map: ISchemaMap = new Map();
     Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
-      const schema_data = {
+      schema_map.set(schema_unit.name, {
         schema_id,
         ...schema_unit
-      }
-      schema_map.set(schema_unit.name, schema_data)
-      schema_map.set(schema_id, schema_data)
+      })
     })
     return schema_map;
   }
@@ -179,11 +177,12 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   createSchemaUnits(args: TSchemaUnitInput[]) {
-    const results = createSchemaUnitMap(), data = this.getCachedData(), schema_map = this.getSchemaMap();
+    const results = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
-        if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, schema_map) }
+        if(arg.type === "formula")
+          data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         results[arg.type].set(schema_id, schema_obj);
@@ -198,7 +197,7 @@ class Collection extends Data<ICollection> {
     return results;
   }
 
-  async getSchemaUnit(arg?: FilterType<(TSchemaUnit & { property: string })>) {
+  async getSchemaUnit(arg?: FilterType<ISchemaMapValue>) {
     return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))
   }
 
@@ -207,11 +206,11 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async getSchemaUnits(args?: FilterTypes<(TSchemaUnit & { property: string })>, multiple?: boolean) {
+  async getSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { property: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (_, { property, name, type })=>{
-      const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id: property });
-      schema_unit_map[type].set(property, schema_obj)  
+    (await this.getIterate<TSchemaUnit & { schema_id: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (_, { schema_id, name, type })=>{
+      const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
+      schema_unit_map[type].set(schema_id, schema_obj)  
       schema_unit_map[type].set(name, schema_obj)  
     }))
     return schema_unit_map;
@@ -222,7 +221,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties tuple
    * @returns A SchemaUnit object representing the column
    */
-  async updateSchemaUnit(arg: UpdateType<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>) {
+  async updateSchemaUnit(arg: UpdateType<ISchemaMapValue, Partial<TSchemaUnit>>) {
     return (await this.updateSchemaUnits(typeof arg === "function" ? arg : [arg], false))
   }
 
@@ -231,14 +230,14 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string and schema properties array of tuples
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async updateSchemaUnits(args: UpdateTypes<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>, multiple?: boolean) {
+  async updateSchemaUnits(args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
     const results = createSchemaUnitMap(), data = this.getCachedData();
-    await this.updateIterate<TSchemaUnit & { property: string }, Partial<TSchemaUnit>>(args, {
+    await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>>(args, {
       child_ids: Object.keys(data.schema),
       child_type: "collection",
       multiple,
       manual: true
-    }, (schema_id) => ({ ...data.schema[schema_id], property: schema_id }), (schema_id, {type, name}, updated_data) => {
+    }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (schema_id, {type, name}, updated_data) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
       type = updated_data.type ?? type;
       const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
@@ -255,7 +254,7 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string or predicate function
    * @returns A SchemaUnit object representing the column
    */
-  async deleteSchemaUnit(args?: FilterType<TSchemaUnit & { property: string }>) {
+  async deleteSchemaUnit(args?: FilterType<ISchemaMapValue>) {
     return (await this.deleteSchemaUnits(typeof args === "string" ? [args] : args, false));
   }
 
@@ -264,14 +263,14 @@ class Collection extends Data<ICollection> {
    * @param args schema_id string array or predicate function
    * @returns An array of SchemaUnit objects representing the columns
    */
-  async deleteSchemaUnits(args?: FilterTypes<TSchemaUnit & { property: string }>, multiple?: boolean) {
+  async deleteSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
     const data = this.getCachedData();
-    await this.deleteIterate<TSchemaUnit & { property: string }>(args, {
+    await this.deleteIterate<ISchemaMapValue>(args, {
       child_ids: Object.keys(data.schema),
       child_type: "collection",
       multiple,
       manual: true
-    }, (child_id) => ({ ...data.schema[child_id], property: child_id }), (id) => {
+    }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (id) => {
       delete data.schema[id]
     });
     this.updateLastEditedProps();

@@ -15,9 +15,6 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType | 'auto'> = new Ma
 	[ 'contains', 'checkbox' ],
 	[ 'empty', 'checkbox' ],
 
-	[ 'add', 'auto' ],
-	[ 'if', 'auto' ],
-
 	[ 'subtract', 'number' ],
 	[ 'divide', 'number' ],
 	[ 'multiple', 'number' ],
@@ -105,9 +102,10 @@ export function parseFormula (formula: FormulaSchemaUnitInput['formula'], schema
 			parent.push({
 				name: function_name,
 				type: 'function',
-				result_type,
+				result_type: result_type ?? (formula as any).type,
 				args: temp_args
-			});
+      });
+      // ? FEAT:1:E unknown function used
 			if (Array.isArray(args))
 				for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
 			else traverseFormula(temp_args, args);

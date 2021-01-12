@@ -22,12 +22,44 @@ interface IFunctionCreateInput<F extends TFunctionName, A> {
 	args: A;
 }
 
-export type NumberIfFunctionCreateInput = IFunctionCreateInput<'if', Tuple12<TCheckboxResultType, TNumberResultType>>;
-export type TextIfFunctionCreateInput = IFunctionCreateInput<'if', Tuple12<TCheckboxResultType, TTextResultType>>;
+export type NumberIfFunctionCreateInput = {
+	function: 'if';
+	result_type: 'number';
+	args: Tuple12<TCheckboxResultType, TNumberResultType>;
+};
+
+export type TextIfFunctionCreateInput = {
+	function: 'if';
+	result_type: 'text';
+	args: Tuple12<TCheckboxResultType, TTextResultType>;
+};
+
+export type CheckboxIfFunctionCreateInput = {
+	function: 'if';
+	result_type: 'checkbox';
+	args: Tuple12<TCheckboxResultType, TCheckboxResultType>;
+};
+
+export type DateIfFunctionCreateInput = {
+	function: 'if';
+	result_type: 'date';
+	args: Tuple12<TCheckboxResultType, TDateResultType>;
+};
+
 export type EqualFunctionCreateInput = IFunctionCreateInput<'equal', Tuple2AnyResultType>;
 export type UnequalFunctionCreateInput = IFunctionCreateInput<'unequal', Tuple2AnyResultType>;
-export type TextAddFunctionCreateInput = IFunctionCreateInput<'add', Tuple2<TTextResultType>>;
-export type NumberAddFunctionCreateInput = IFunctionCreateInput<'add', Tuple2<TNumberResultType>>;
+export type TextAddFunctionCreateInput = {
+	function: 'add';
+	args: Tuple2<TTextResultType>;
+	result_type: 'text';
+};
+
+export type NumberAddFunctionCreateInput = {
+	function: 'add';
+	args: Tuple2<TNumberResultType>;
+	result_type: 'number';
+};
+
 export type ReplaceAllFunctionCreateInput = IFunctionCreateInput<
 	'replaceAll',
 	| Tuple12<TNumberResultType, TTextResultType>
@@ -121,6 +153,7 @@ export type TTextFunctionCreateInput =
 	| FormatFunctionCreateInput;
 
 export type TCheckboxFunctionCreateInput =
+	| CheckboxIfFunctionCreateInput
 	| EqualFunctionCreateInput
 	| UnequalFunctionCreateInput
 	| AndFunctionCreateInput
@@ -163,6 +196,7 @@ export type TNumberFunctionCreateInput =
 	| LengthFunctionCreateInput;
 
 export type TDateFunctionCreateInput =
+	| DateIfFunctionCreateInput
 	| FormatDateFunctionCreateInput
 	| DateSubtractFunctionCreateInput
 	| DateAddFunctionCreateInput

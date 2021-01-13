@@ -74,6 +74,7 @@ class Collection extends Data<ICollection> {
     return (await this.updateTemplates(typeof args === "function" ? args : [args], false))[0]
   }
 
+  // ? FEAT:1:H Custom update to take care of new properties, using the name rather than the id
   async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
     const pages: Page[] = [];
     (await this.updateIterate<IPage, IPageUpdateInput>(args, {

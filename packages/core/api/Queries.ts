@@ -40,7 +40,7 @@ export default class Queries extends Cache {
     };
   }
 
-  protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T): Promise<T> => {
+  protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T, interval?:number): Promise<T> => {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
@@ -54,7 +54,7 @@ export default class Queries extends Cache {
         } catch (err) {
           reject(error(err.response.data))
         }
-      }, this.interval)
+      }, interval ?? this.interval)
     });
   }
 
@@ -120,12 +120,12 @@ export default class Queries extends Cache {
     return this.returnPromise<FindUserResult>("findUser", { email });
   }
 
-  protected async syncRecordValues(requests: SyncRecordValuesParams[]) {
-    return this.returnPromise<SyncRecordValuesResult>("syncRecordValues", { requests }, "recordMap");
+  protected async syncRecordValues(requests: SyncRecordValuesParams[], interval?:number) {
+    return this.returnPromise<SyncRecordValuesResult>("syncRecordValues", { requests }, "recordMap", interval);
   }
 
-  protected async queryCollection(arg: QueryCollectionParams) {
-    return this.returnPromise<QueryCollectionResult>("queryCollection", arg, "recordMap");
+  protected async queryCollection(arg: QueryCollectionParams, interval?:number) {
+    return this.returnPromise<QueryCollectionResult>("queryCollection", arg, "recordMap", interval);
   }
 
   protected async loadUserContent() {
@@ -143,7 +143,7 @@ export default class Queries extends Cache {
     });
   }
 
-  async updateCacheManually(arg: UpdateCacheManuallyParam | string) {
+  async updateCacheManually(arg: UpdateCacheManuallyParam | string, interval?: number) {
     const sync_record_values: SyncRecordValuesParams[] = [];
     if (Array.isArray(arg))
       arg.forEach((arg: string | [string, TDataType]) => {
@@ -152,7 +152,7 @@ export default class Queries extends Cache {
       })
     else if (typeof arg === "string")
       sync_record_values.push({ id: arg, table: "block", version: 0 })
-    return await this.syncRecordValues(sync_record_values);
+    return await this.syncRecordValues(sync_record_values, interval);
   }
 
   async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {

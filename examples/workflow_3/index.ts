@@ -1,92 +1,110 @@
-import { v4 as uuidv4 } from "uuid";
-import Nishan, {ILinkedDBInput, IPageCreateInput, TViewCreateInput, ElementType} from '@nishans/core';
-import "../env"
-import { fors, categories, subject } from "../data";
+import { v4 as uuidv4 } from 'uuid';
+import Nishan, { ILinkedDBInput, IPageCreateInput, TViewCreateInput, ElementType } from '@nishans/core';
+import '../env';
+import { fors, categories, subject } from '../data';
 
-async function main() {
-  const nishan = new Nishan({
-    token: process.env.NOTION_TOKEN as string,
-    interval: 500,
-  });
+function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title: string) {
+	return {
+		type: 'linked_db',
+		collection_id,
+		views: [
+			[ 'To Complete', 'Learn' ],
+			[ 'Completing', 'Learn' ],
+			[ 'Completed', 'Learn' ],
+			[ 'To Complete', 'Revise' ],
+			[ 'Completing', 'Revise' ],
+			[ 'Completed', 'Revise' ],
+			[ 'To Complete', 'Practice' ],
+			[ 'Completing', 'Practice' ],
+			[ 'Completed', 'Practice' ]
+		].map(
+			([ status, phase ]) =>
+				({
+					type: 'gallery',
+					name: `${status} ${phase} ${cvp}`,
+					gallery_cover: { property: 'Cover', type: 'property' },
+					schema_units: [
+						{
+							type: 'title',
+							name: 'Name',
+							sort: 'ascending'
+						},
+						{
+							type: 'text',
+							name: 'Instructor'
+						},
+						{
+							type: 'select',
+							name: 'Publisher'
+						},
+						{
+							type: 'multi_select',
+							name: 'Subject',
+							filter: [ [ 'enum_contains', 'exact', title ] ]
+						},
+						{
+							name: 'Status',
+							type: 'select',
+							format: false,
+							filter: [ [ 'enum_is', 'exact', status as any ] ]
+						},
+						{
+							name: 'Phase',
+							type: 'select',
+							format: false
+						},
+						{
+							name: 'Priority',
+							type: 'select'
+						},
+						{
+							type: 'formula',
+							sort: [ 'descending', 0 ],
+							format: false,
+							name: 'Urgency'
+						}
+					],
+					filters: [
+						{
+							type: 'select',
+							name: 'Phase',
+							filter: {
+								operator: 'enum_is',
+								value: {
+									type: 'exact',
+									value: phase
+								}
+							}
+						}
+					]
+				} as TViewCreateInput)
+		)
+	} as ILinkedDBInput;
+}
 
-  const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
-  const space = await user.getSpace((space) => space.name === 'Developer');
-  const root_cvp_titles = ["Tasks", "Reading List", "Articles", "Course List", "Goals"] as const;
-  type root_cvp_titles_type = ElementType<typeof root_cvp_titles>;
+async function main () {
+	const nishan = new Nishan({
+		token: process.env.NOTION_TOKEN as string
+	});
 
-  const collection_ids: Record<root_cvp_titles_type, string> = {} as any;
+	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
+	const space = await user.getSpace((space) => space.name === 'Developers');
+	const { page } = await space.getTRootPage(
+		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
+	);
 
-  await space.getRootCollections((collection) => {
-    const index = root_cvp_titles.indexOf(collection.name[0][0] as any);
-    if (index !== -1) collection_ids[collection?.name[0][0] as root_cvp_titles_type] = collection.id;
-  })
+	const target_page = page.get('Hello');
 
-  function createLinkedDB(key: root_cvp_titles_type, _for: "EBooks" | "Courses", title: string) {
-    return {
-      type: "linked_db",
-      collection_id: collection_ids[key],
-      views: [
-        ["To Complete", "Learn"], ["Completing", "Learn"], ["Completed", "Learn"],
-        ["To Complete", "Revise"], ["Completing", "Revise"], ["Completed", "Revise"],
-        ["To Complete", "Practice"], ["Completing", "Practice"], ["Completed", "Practice"]
-      ].map(([status, phase]) => (
-        {
-          type: "gallery",
-          name: `${status} ${phase} ${_for}`,
-          gallery_cover: { property: "Cover", type: "property" },
-          view: [
-            {
-              type: "title",
-              name: "Name",
-              sort: "ascending"
-            },
-            {
-              type: "text",
-              name: "Instructor"
-            },
-            {
-              type: "select",
-              name: "Publisher"
-            },
-            {
-              type: "multi_select",
-              name: "Subject",
-              filter: [["enum_contains", "exact", title]]
-            },
-            {
-              name: "Status",
-              type: "select",
-              format: false,
-              filter: [["enum_is", "exact", status as any]]
-            },
-            {
-              name: "Phase",
-              type: "select",
-              format: false,
-              filter: [["enum_is", "exact", phase as any]]
-            },
-            {
-              name: "Priority",
-              type: "select",
-            },
-            {
-              type: "formula",
-              sort: ["descending", 0],
-              format: false,
-              name: "Urgency",
-            }
-          ],
-          filters: [
-            {
+	if (target_page) {
+		const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
+		const articles_cvp = collection_view_page.get('Articles'),
+			daily_cvp = collection_view_page.get('Daily'),
+			goals_cvp = collection_view_page.get('Goals'),
+			course_list_cvp = collection_view_page.get('Course List'),
+			reading_list_cvp = collection_view_page.get('Reading List');
+	}
 
-            }
-          ]
-        } as TViewCreateInput)
-      )
-    } as ILinkedDBInput
-  }
-
-  function returnSubjectSlice(start: number, end: number) {
+	/* function returnSubjectSlice(start: number, end: number) {
     return subject.slice(start, end).map(({ for: _for, image, title, category }) => (
       {
         format: {
@@ -342,7 +360,7 @@ async function main() {
       {
         type: "table",
         name: "Overview",
-        view: [{
+        schema_units: [{
           type: "text",
           name: "Title",
           sort: ["ascending", 0],
@@ -365,14 +383,15 @@ async function main() {
         }]
       }
     ]
-  }])
+  }]) */
 
-  const tota_batch = Math.floor(subject.length / 10);
+	/* const total_batch = Math.floor(subject.length / 10);
 
-  for (let index = 0; index <= tota_batch; index++) {
+  for (let index = 0; index <= total_batch; index++) {
     const start = (10 * index) + 1, end = start + 9;
     await collection_view_page[0].collection.createPages(returnSubjectSlice(start, end));
     console.log(`Deployed batch ${index + 1}`);
-  }
+  } */
 }
+
 main();

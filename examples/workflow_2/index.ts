@@ -232,423 +232,424 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 	if (target_page) {
 		const { collection_view_page } = await target_page.createBlocks([
 			{
-				type: 'page',
+				type: 'collection_view_page',
 				properties: {
-					title: [ [ 'Workflow 2' ] ]
+					title: [ [ 'Reading List' ] ]
 				},
 				format: {
-					page_full_width: true
+					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4da.svg'
 				},
-				contents: [
+				views: [
 					{
-						type: 'collection_view_page',
-						properties: {
-							title: [ [ 'Reading List' ] ]
-						},
-						views: [
+						type: 'gallery',
+						name: 'All Books',
+						gallery_cover_size: 'large',
+						gallery_cover: { type: 'property', property: 'cover' },
+						schema_units: [
 							{
-								type: 'gallery',
-								name: 'All Books',
-								gallery_cover_size: 'large',
-								gallery_cover: { type: 'property', property: 'cover' },
-								schema_units: [
-									{
-										type: 'title',
-										name: 'Title',
-										sort: 'ascending'
-									},
-									{
-										type: 'multi_select',
-										name: 'Publisher'
-									},
-									{
-										type: 'text',
-										name: 'Instructor'
-									},
-									{
-										type: 'multi_select',
-										name: 'Subject',
-										format: 200,
-										aggregation: 'unique'
-									},
-									{
-										type: 'select',
-										name: 'Priority',
-										format: 100
-									},
-									{
-										type: 'select',
-										name: 'Status',
-										format: 100
-									},
-									{
-										type: 'select',
-										name: 'Phase',
-										format: 100
-									},
-									{
-										type: 'formula',
-										name: 'Urgency',
-										sort: 'descending',
-										format: false
-									}
-								]
-							}
-						],
-						schema: [
+								type: 'title',
+								name: 'Title',
+								sort: 'ascending'
+							},
 							{
 								type: 'multi_select',
-								name: 'Publisher',
-								options: []
+								name: 'Publisher'
 							},
 							{
 								type: 'text',
 								name: 'Instructor'
 							},
 							{
-								type: 'file',
-								name: 'Cover'
+								type: 'multi_select',
+								name: 'Subject',
+								format: 200,
+								aggregation: 'unique'
 							},
 							{
-								type: 'url',
-								name: 'Source'
-							},
-							...curriculumInfoSchemaUnits,
-							{
-								type: 'number',
-								name: 'Pages'
+								type: 'select',
+								name: 'Priority',
+								format: 100
 							},
 							{
-								type: 'number',
-								name: 'Chapters'
+								type: 'select',
+								name: 'Status',
+								format: 100
+							},
+							{
+								type: 'select',
+								name: 'Phase',
+								format: 100
+							},
+							{
+								type: 'formula',
+								name: 'Urgency',
+								sort: 'descending',
+								format: false
 							}
 						]
+					}
+				],
+				schema: [
+					{
+						type: 'multi_select',
+						name: 'Publisher',
+						options: []
 					},
 					{
-						type: 'collection_view_page',
-						properties: {
-							title: [ [ 'Course List' ] ]
-						},
-						views: [
+						type: 'text',
+						name: 'Instructor'
+					},
+					{
+						type: 'file',
+						name: 'Cover'
+					},
+					{
+						type: 'url',
+						name: 'Source'
+					},
+					...curriculumInfoSchemaUnits,
+					{
+						type: 'number',
+						name: 'Pages'
+					},
+					{
+						type: 'number',
+						name: 'Chapters'
+					}
+				]
+			},
+			{
+				type: 'collection_view_page',
+				properties: {
+					title: [ [ 'Course List' ] ]
+				},
+				format: {
+					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4dd.svg'
+				},
+				views: [
+					{
+						type: 'gallery',
+						name: 'All Books',
+						gallery_cover_size: 'large',
+						gallery_cover: { type: 'property', property: 'cover' },
+						schema_units: [
 							{
-								type: 'gallery',
-								name: 'All Books',
-								gallery_cover_size: 'large',
-								gallery_cover: { type: 'property', property: 'cover' },
-								schema_units: [
-									{
-										type: 'title',
-										name: 'Title',
-										sort: 'ascending'
-									},
-									{
-										type: 'multi_select',
-										name: 'Course Publisher'
-									},
-									{
-										type: 'text',
-										name: 'Instructor'
-									},
-									{
-										type: 'multi_select',
-										name: 'Subject',
-										format: 200,
-										aggregation: 'unique'
-									},
-									{
-										type: 'select',
-										name: 'Priority',
-										format: 100
-									},
-									{
-										type: 'select',
-										name: 'Status',
-										format: 100
-									},
-									{
-										type: 'select',
-										name: 'Phase',
-										format: 100
-									},
-									{
-										type: 'formula',
-										name: 'Urgency',
-										sort: 'descending',
-										format: false
-									}
-								]
-							}
-						],
-						schema: [
+								type: 'title',
+								name: 'Title',
+								sort: 'ascending'
+							},
 							{
 								type: 'multi_select',
-								name: 'Course Publisher',
-								options: []
+								name: 'Course Publisher'
 							},
 							{
 								type: 'text',
 								name: 'Instructor'
 							},
 							{
-								type: 'file',
-								name: 'Cover'
+								type: 'multi_select',
+								name: 'Subject',
+								format: 200,
+								aggregation: 'unique'
 							},
 							{
-								type: 'url',
-								name: 'Source'
-							},
-							...curriculumInfoSchemaUnits,
-							{
-								type: 'number',
-								name: 'Videos'
+								type: 'select',
+								name: 'Priority',
+								format: 100
 							},
 							{
-								type: 'number',
-								name: 'Duration'
+								type: 'select',
+								name: 'Status',
+								format: 100
 							},
 							{
-								type: 'number',
-								name: 'Chapters'
+								type: 'select',
+								name: 'Phase',
+								format: 100
+							},
+							{
+								type: 'formula',
+								name: 'Urgency',
+								sort: 'descending',
+								format: false
+							}
+						]
+					}
+				],
+				schema: [
+					{
+						type: 'multi_select',
+						name: 'Course Publisher',
+						options: []
+					},
+					{
+						type: 'text',
+						name: 'Instructor'
+					},
+					{
+						type: 'file',
+						name: 'Cover'
+					},
+					{
+						type: 'url',
+						name: 'Source'
+					},
+					...curriculumInfoSchemaUnits,
+					{
+						type: 'number',
+						name: 'Videos'
+					},
+					{
+						type: 'number',
+						name: 'Duration'
+					},
+					{
+						type: 'number',
+						name: 'Chapters'
+					}
+				]
+			},
+			{
+				id: goals_cvp_id,
+				type: 'collection_view_page',
+				properties: {
+					title: [ [ 'Goals' ] ]
+				},
+				format: {
+					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f44a-1f3fc.svg'
+				},
+				collection_id: goals_collection_id,
+				views: [
+					{
+						type: 'table',
+						name: 'Current Minimalistic',
+						schema_units: [
+							{
+								type: 'formula',
+								name: 'Progress',
+								format: 150,
+								aggregation: 'average',
+								sort: 'descending'
+							},
+							{
+								type: 'title',
+								name: 'Goal',
+								format: 300,
+								aggregation: 'count'
+							},
+							...CommonMultiSelectSchema
+						],
+						filters: [
+							{
+								type: 'select',
+								name: 'Status',
+								filter: {
+									operator: 'enum_is',
+									value: {
+										type: 'exact',
+										value: 'Completing'
+									}
+								}
 							}
 						]
 					},
 					{
-						id: goals_cvp_id,
-						type: 'collection_view_page',
-						properties: {
-							title: [ [ 'Goals' ] ]
-						},
-						collection_id: goals_collection_id,
-						views: [
+						type: 'table',
+						name: 'Completed',
+						schema_units: [
 							{
-								type: 'table',
-								name: 'Current Minimalistic',
-								schema_units: [
-									{
-										type: 'formula',
-										name: 'Progress',
-										format: 150,
-										aggregation: 'average',
-										sort: 'descending'
-									},
-									{
-										type: 'title',
-										name: 'Goal',
-										format: 300,
-										aggregation: 'count'
-									},
-									...CommonMultiSelectSchema
-								],
-								filters: [
-									{
-										type: 'select',
-										name: 'Status',
-										filter: {
-											operator: 'enum_is',
-											value: {
-												type: 'exact',
-												value: 'Completing'
-											}
-										}
-									}
-								]
+								type: 'date',
+								name: 'Completed At',
+								sort: 'descending',
+								format: 200
 							},
 							{
-								type: 'table',
-								name: 'Completed',
-								schema_units: [
-									{
-										type: 'date',
-										name: 'Completed At',
-										sort: 'descending',
-										format: 200
-									},
-									{
-										type: 'title',
-										name: 'Goal',
-										format: 300,
-										aggregation: 'count'
-									},
-									...CommonMultiSelectSchema
-								],
-								filters: [
-									{
-										type: 'select',
-										name: 'Status',
-										filter: {
-											operator: 'enum_is',
-											value: {
-												type: 'exact',
-												value: 'Completed'
-											}
-										}
-									},
-									{
-										type: 'formula',
-										name: 'Progress',
-										filter: {
-											operator: 'number_less_than',
-											value: {
-												type: 'exact',
-												value: 100
-											}
-										}
-									}
-								]
-							}
+								type: 'title',
+								name: 'Goal',
+								format: 300,
+								aggregation: 'count'
+							},
+							...CommonMultiSelectSchema
 						],
-						schema: [
+						filters: [
 							{
-								type: 'created_time',
-								name: 'Created'
+								type: 'select',
+								name: 'Status',
+								filter: {
+									operator: 'enum_is',
+									value: {
+										type: 'exact',
+										value: 'Completed'
+									}
+								}
 							},
 							{
 								type: 'formula',
 								name: 'Progress',
-								formula: {
-									function: 'if',
-									result_type: 'number',
-									args: [
-										{
-											function: 'equal',
-											args: [ { property: 'Total Steps' }, 0 ]
-										},
-										0,
-										{
-											function: 'round',
-											args: {
-												function: 'multiple',
-												args: [
-													{
-														function: 'divide',
-														args: [
-															{
-																property: 'Completed Steps'
-															},
-															{
-																property: 'Total Steps'
-															}
-														]
-													},
-													100
-												]
-											}
-										}
-									]
+								filter: {
+									operator: 'number_less_than',
+									value: {
+										type: 'exact',
+										value: 100
+									}
 								}
-							},
-							...CommonMultiSelectSchemaInput,
-							{
-								type: 'select',
-								name: 'Status',
-								options: status.map((status) => ({ ...status, id: uuidv4() }))
-							},
-							{
-								type: 'title',
-								name: 'Goal'
-							},
-							{
-								type: 'date',
-								name: 'Completed At'
-							},
-							{
-								type: 'number',
-								name: 'Total Steps'
-							},
-							{
-								type: 'formula',
-								name: 'Status Counter',
-								formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
 							}
 						]
+					}
+				],
+				schema: [
+					{
+						type: 'created_time',
+						name: 'Created'
 					},
 					{
-						id: tasks_cvp_id,
-						type: 'collection_view_page',
-						properties: {
-							title: [ [ 'Tasks' ] ]
-						},
-						collection_id: tasks_collection_id,
-						views: [
-							tasksTableViews('Today', 'today'),
-							tasksTableViews('Yesterday', 'yesterday'),
-							tasksTableViews('Weekly', 'one_week_ago'),
-							tasksBoardViews('Purpose'),
-							tasksBoardViews('Subject'),
-							{
-								type: 'calendar',
-								name: 'Monthly Calendar',
-								calendar_by: 'On',
-								schema_units: [
-									{
-										type: 'multi_select',
-										name: 'Purpose'
-									},
-									{
-										type: 'multi_select',
-										name: 'Subject'
-									},
-									{
-										type: 'formula',
-										name: 'On',
-										sort: 'ascending',
-										format: false
+						type: 'formula',
+						name: 'Progress',
+						formula: {
+							function: 'if',
+							result_type: 'number',
+							args: [
+								{
+									function: 'equal',
+									args: [ { property: 'Total Steps' }, 0 ]
+								},
+								0,
+								{
+									function: 'round',
+									args: {
+										function: 'multiple',
+										args: [
+											{
+												function: 'divide',
+												args: [
+													{
+														property: 'Completed Steps'
+													},
+													{
+														property: 'Total Steps'
+													}
+												]
+											},
+											100
+										]
 									}
-								]
-							}
-						],
-						schema: [
+								}
+							]
+						}
+					},
+					...CommonMultiSelectSchemaInput,
+					{
+						type: 'select',
+						name: 'Status',
+						options: status.map((status) => ({ ...status, id: uuidv4() }))
+					},
+					{
+						type: 'title',
+						name: 'Goal'
+					},
+					{
+						type: 'date',
+						name: 'Completed At'
+					},
+					{
+						type: 'number',
+						name: 'Total Steps'
+					},
+					{
+						type: 'formula',
+						name: 'Status Counter',
+						formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
+					}
+				]
+			},
+			{
+				id: tasks_cvp_id,
+				type: 'collection_view_page',
+				properties: {
+					title: [ [ 'Tasks' ] ]
+				},
+				format: {
+					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg'
+				},
+				collection_id: tasks_collection_id,
+				views: [
+					tasksTableViews('Today', 'today'),
+					tasksTableViews('Yesterday', 'yesterday'),
+					tasksTableViews('Weekly', 'one_week_ago'),
+					tasksBoardViews('Purpose'),
+					tasksBoardViews('Subject'),
+					{
+						type: 'calendar',
+						name: 'Monthly Calendar',
+						calendar_by: 'On',
+						schema_units: [
 							{
-								type: 'title',
-								name: 'Task'
+								type: 'multi_select',
+								name: 'Purpose'
 							},
-							...CommonMultiSelectSchemaInput,
-							goalProgress(1),
-							goalProgress(2),
-							goalProgress(3),
-							task2goalRelation(1),
-							task2goalRelation(2),
-							task2goalRelation(3),
-							task2goalRollup(1),
-							task2goalRollup(2),
-							task2goalRollup(3),
 							{
-								type: 'number',
-								name: 'Goal 1 Steps'
-							},
-							{
-								type: 'number',
-								name: 'Goal 2 Steps'
-							},
-							{
-								type: 'number',
-								name: 'Goal 3 Steps'
-							},
-							{
-								type: 'date',
-								name: 'Custom Date'
-							},
-							{
-								type: 'created_time',
-								name: 'Created'
+								type: 'multi_select',
+								name: 'Subject'
 							},
 							{
 								type: 'formula',
 								name: 'On',
-								formula: {
-									function: 'if',
-									result_type: 'date',
-									args: [
-										{
-											function: 'empty',
-											args: { property: 'Custom Date' }
-										},
-										{ property: 'Created' },
-										{ property: 'Custom Date' }
-									]
-								}
+								sort: 'ascending',
+								format: false
 							}
 						]
+					}
+				],
+				schema: [
+					{
+						type: 'title',
+						name: 'Task'
+					},
+					...CommonMultiSelectSchemaInput,
+					goalProgress(1),
+					goalProgress(2),
+					goalProgress(3),
+					task2goalRelation(1),
+					task2goalRelation(2),
+					task2goalRelation(3),
+					task2goalRollup(1),
+					task2goalRollup(2),
+					task2goalRollup(3),
+					{
+						type: 'number',
+						name: 'Goal 1 Steps'
+					},
+					{
+						type: 'number',
+						name: 'Goal 2 Steps'
+					},
+					{
+						type: 'number',
+						name: 'Goal 3 Steps'
+					},
+					{
+						type: 'date',
+						name: 'Custom Date'
+					},
+					{
+						type: 'created_time',
+						name: 'Created'
+					},
+					{
+						type: 'formula',
+						name: 'On',
+						formula: {
+							function: 'if',
+							result_type: 'date',
+							args: [
+								{
+									function: 'empty',
+									args: { property: 'Custom Date' }
+								},
+								{ property: 'Created' },
+								{ property: 'Custom Date' }
+							]
+						}
 					}
 				]
 			}

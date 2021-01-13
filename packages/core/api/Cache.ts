@@ -1,5 +1,5 @@
 import { RecordMap } from '@nishans/types';
-import { ICache } from '../types';
+import { ICache, UpdateCacheManuallyParam } from '../types';
 
 export default class Cache {
 	cache: ICache;
@@ -29,5 +29,11 @@ export default class Cache {
 					this.cache[key].set(record_id, record_value.value);
 				});
 		});
+	}
+
+	returnNonCachedData (ids: UpdateCacheManuallyParam): UpdateCacheManuallyParam {
+		return ids.filter(
+			(info) => !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
+		);
 	}
 }

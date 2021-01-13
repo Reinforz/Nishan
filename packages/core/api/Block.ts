@@ -79,6 +79,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Update a block's properties and format
    * @param args Block update format and properties options
    */
+	// ? FIX:1:M update local cache
 	update (args: Partial<A>) {
 		const data = this.getCachedData();
 		const { format = data.format, properties = data.properties } = args as any;

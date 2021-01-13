@@ -96,7 +96,12 @@ export interface IPageCreateInput extends IInput {
   contents?: TBlockInput[]
 }
 
-export type IPageUpdateInput = Partial<Omit<IPageCreateInput, "contents">> & {type: "page"};
+export interface IPageUpdateInput {
+  properties: Partial<IPage["properties"]>,
+  format?: Partial<IPage["format"]>,
+  isPrivate?: boolean,
+}
+
 export type ICollectionViewPageUpdateInput = Partial<Pick<ICollectionViewPage, "format">> & {type: "collection_view_page"}
 
 export interface ITextInput extends IInput {

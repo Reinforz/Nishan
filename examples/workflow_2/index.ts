@@ -254,7 +254,8 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 								schema_units: [
 									{
 										type: 'title',
-										name: 'Title'
+										name: 'Title',
+										sort: 'ascending'
 									},
 									{
 										type: 'multi_select',
@@ -316,6 +317,94 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 							{
 								type: 'number',
 								name: 'Pages'
+							},
+							{
+								type: 'number',
+								name: 'Chapters'
+							}
+						]
+					},
+					{
+						type: 'collection_view_page',
+						properties: {
+							title: [ [ 'Course List' ] ]
+						},
+						views: [
+							{
+								type: 'gallery',
+								name: 'All Books',
+								gallery_cover_size: 'large',
+								gallery_cover: { type: 'property', property: 'cover' },
+								schema_units: [
+									{
+										type: 'title',
+										name: 'Title',
+										sort: 'ascending'
+									},
+									{
+										type: 'multi_select',
+										name: 'Course Publisher'
+									},
+									{
+										type: 'text',
+										name: 'Instructor'
+									},
+									{
+										type: 'multi_select',
+										name: 'Subject',
+										format: 200,
+										aggregation: 'unique'
+									},
+									{
+										type: 'select',
+										name: 'Priority',
+										format: 100
+									},
+									{
+										type: 'select',
+										name: 'Status',
+										format: 100
+									},
+									{
+										type: 'select',
+										name: 'Phase',
+										format: 100
+									},
+									{
+										type: 'formula',
+										name: 'Urgency',
+										sort: 'descending',
+										format: false
+									}
+								]
+							}
+						],
+						schema: [
+							{
+								type: 'multi_select',
+								name: 'Course Publisher',
+								options: []
+							},
+							{
+								type: 'text',
+								name: 'Instructor'
+							},
+							{
+								type: 'file',
+								name: 'Cover'
+							},
+							{
+								type: 'url',
+								name: 'Source'
+							},
+							...curriculumInfoSchemaUnits,
+							{
+								type: 'number',
+								name: 'Videos'
+							},
+							{
+								type: 'number',
+								name: 'Duration'
 							},
 							{
 								type: 'number',

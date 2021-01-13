@@ -168,20 +168,6 @@ export default class Space extends Data<ISpace> {
     return collections;
   }
 
-  async updateRootCollection(arg: UpdateType<ICollection, Partial<ICollection>>) {
-    return (await this.updateRootCollections(typeof arg === "function" ? arg : [arg],  false))[0]
-  }
-
-  async updateRootCollections(args: UpdateTypes<ICollection, Partial<ICollection>>, multiple?: boolean) {
-    const collections: Collection[] = [];
-    (await this.updateIterate<ICollection, Partial<ICollection>>(args, {
-      child_ids: this.getCollectionIds(),
-      child_type: "collection",
-      multiple
-    }, (collection_id) => this.cache.collection.get(collection_id), (id)=>collections.push(new Collection({ ...this.getProps(), id }))))
-    return collections;
-  }
-
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {

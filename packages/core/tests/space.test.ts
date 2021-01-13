@@ -1,6 +1,6 @@
 import { ISpace, TData, TDataType } from "@nishans/types";
 import { Collection, Space } from "../dist/api";
-import { ICollectionUpdateInput, ICollectionViewPageUpdateInput, IPageUpdateInput, ITPage } from "../dist/types";
+import { ICollectionViewPageUpdateInput, IPageUpdateInput, ITPage } from "../dist/types";
 import {nishan, COLLECTION_ONE_ID, SPACE_VIEW_ONE_ID, ROOT_COLLECTION_VIEW_PAGE_ONE_ID, USER_ONE_ID, SPACE_ONE_ID, ROOT_PAGE_ONE_ID} from "./constants"
 
 let space: Space = null as any;
@@ -332,28 +332,6 @@ describe("Update methods for space", ()=>{
     })
   })
 
-  it("Update [collection] [id]", async()=>{
-    await space.updateRootCollections([[COLLECTION_ONE_ID, {
-      description: [["test"]]
-    }]]);
-    testUpdateMethod<ICollectionUpdateInput>({
-      child_id: COLLECTION_ONE_ID,
-      child_type: "collection",
-      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
-    })
-  })
-
-  it("Update [collection] cb", async()=>{
-    await space.updateRootCollections((collection) => collection.id === COLLECTION_ONE_ID ? {
-      description: [["test"]]
-    } : undefined);
-    testUpdateMethod<ICollectionUpdateInput>({
-      child_id: COLLECTION_ONE_ID,
-      child_type: "collection",
-      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
-    })
-  })
-
   it("Update root_page id", async ()=>{
     await space.updateRootPage([ROOT_PAGE_ONE_ID, {
       type: "page",
@@ -411,28 +389,6 @@ describe("Update methods for space", ()=>{
       parent_id: SPACE_ONE_ID,
       parent_type: "space",
       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
-    })
-  })
-
-  it("Update collection id", async()=>{
-    await space.updateRootCollection([COLLECTION_ONE_ID, {
-      description: [["test"]]
-    }]);
-    testUpdateMethod<ICollectionUpdateInput>({
-      child_id: COLLECTION_ONE_ID,
-      child_type: "collection",
-      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
-    })
-  })
-
-  it("Update collection cb", async()=>{
-    await space.updateRootCollection((collection) => collection.id === COLLECTION_ONE_ID ? {
-      description: [["test"]]
-    } : undefined);
-    testUpdateMethod<ICollectionUpdateInput>({
-      child_id: COLLECTION_ONE_ID,
-      child_type: "collection",
-      cb: (data) => expect(data?.description?.[0][0]).toBe("test")
     })
   })
 })

@@ -204,10 +204,11 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
-    await this.getIterate<ISpace>(args, {
+    await this.deleteIterate<ISpace>(args, {
       child_ids: this.#getSpaceIds(),
       multiple,
       child_type: "space",
+      manual: true
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
       await this.enqueueTask({
         eventName: "deleteSpace",

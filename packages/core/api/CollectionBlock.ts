@@ -78,7 +78,7 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 			args,
 			{
 				multiple,
-				child_ids: this.getCachedData().view_ids,
+				child_ids: 'view_ids',
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),

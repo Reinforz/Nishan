@@ -151,7 +151,7 @@ export default class Page extends Permissions<IPage> {
     const block_map = createBlockMap();
     await this.updateIterate<TBlock, TBlockInput>(args, {
       multiple,
-      child_ids: this.getCachedData().content,
+      child_ids: "content",
       child_type: "block"
     }, (child_id) => this.cache.block.get(child_id), (_, block) => {
       const block_obj = createBlockClass(block.type, block.id, this.getProps());

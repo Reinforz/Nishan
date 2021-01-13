@@ -49,7 +49,7 @@ class UserRoot extends Data<IUserRoot> {
 		await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(
 			args,
 			{
-				child_ids: this.getCachedData().space_views,
+				child_ids: 'space_views',
 				child_type: 'space_view',
 				multiple
 			},

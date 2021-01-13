@@ -91,7 +91,7 @@ export type NotOperatorFormula = IOperatorFormula<'checkbox', 'not', [TCheckboxR
 
 export type SubtractOperatorFormula = IOperatorFormula<'number', 'subtract', Tuple2<TNumberResultTypeFormula>>;
 export type DivideOperatorFormula = IOperatorFormula<'number', 'divide', Tuple2<TNumberResultTypeFormula>>;
-export type MultipleOperatorFormula = IOperatorFormula<'number', 'multiple', Tuple2<TNumberResultTypeFormula>>;
+export type MultiplyOperatorFormula = IOperatorFormula<'number', 'multiply', Tuple2<TNumberResultTypeFormula>>;
 export type PowOperatorFormula = IOperatorFormula<'number', 'pow', Tuple2<TNumberResultTypeFormula>>;
 export type ModOperatorFormula = IOperatorFormula<'number', 'mod', Tuple2<TNumberResultTypeFormula>>;
 export type UnaryMinusOperatorFormula = IOperatorFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
@@ -120,7 +120,7 @@ export type TNumberOperatorFormula =
 	| NumberAddOperatorFormula
 	| SubtractOperatorFormula
 	| DivideOperatorFormula
-	| MultipleOperatorFormula
+	| MultiplyOperatorFormula
 	| PowOperatorFormula
 	| ModOperatorFormula
 	| UnaryMinusOperatorFormula
@@ -171,7 +171,7 @@ export type THybridFunctionName =
 	| 'unaryPlus'
 	| 'add'
 	| 'subtract'
-	| 'multiple'
+	| 'multiply'
 	| 'divide'
 	| 'pow'
 	| 'mod'
@@ -208,7 +208,7 @@ export type NotFunctionFormula = IFunctionFormula<'checkbox', 'not', [TCheckboxR
 
 export type SubtractFunctionFormula = IFunctionFormula<'number', 'subtract', Tuple2<TNumberResultTypeFormula>>;
 export type DivideFunctionFormula = IFunctionFormula<'number', 'divide', Tuple2<TNumberResultTypeFormula>>;
-export type MultipleFunctionFormula = IFunctionFormula<'number', 'multiple', Tuple2<TNumberResultTypeFormula>>;
+export type MultiplyFunctionFormula = IFunctionFormula<'number', 'multiply', Tuple2<TNumberResultTypeFormula>>;
 export type PowFunctionFormula = IFunctionFormula<'number', 'pow', Tuple2<TNumberResultTypeFormula>>;
 export type ModFunctionFormula = IFunctionFormula<'number', 'mod', Tuple2<TNumberResultTypeFormula>>;
 export type UnaryMinusFunctionFormula = IFunctionFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
@@ -260,7 +260,7 @@ export type TNumberHybridFunctionFormula =
 	| NumberAddFunctionFormula
 	| SubtractFunctionFormula
 	| DivideFunctionFormula
-	| MultipleFunctionFormula
+	| MultiplyFunctionFormula
 	| PowFunctionFormula
 	| ModFunctionFormula
 	| UnaryMinusFunctionFormula

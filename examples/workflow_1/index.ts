@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
 import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
-import { counterFormula, curriculumInfoSchemaUnits, threePropertiesAddition, twoPropertiesAddition } from '../util';
+import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, threePropertiesAddition, twoPropertiesAddition } from '../util';
 
 import '../env';
 
@@ -32,261 +32,261 @@ const daily_sites = [
   );
   const target_page = page.get("Hello");
 	await target_page?.createBlocks([
-    {
-      type: 'collection_view_page',
-      properties: {
-        title: [ [ 'Articles' ] ]
-      },
-      format: {
-        page_full_width: true,
-        page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg'
-      },
-      schema: [
-        {
-          type: 'select',
-          name: 'Provider',
-          options: []
-        },
-        {
-          type: 'url',
-          name: 'Source'
-        },
-        ...curriculumInfoSchemaUnits
-      ],
-      views: [
-        ...[
-          [ 'To Complete', 'Learn' ],
-          [ 'Completing', 'Learn' ],
-          [ 'Completed', 'Learn' ],
-          [ 'To Complete', 'Revise' ],
-          [ 'Completing', 'Revise' ],
-          [ 'Completed', 'Revise' ],
-          [ 'To Complete', 'Practice' ],
-          [ 'Completing', 'Practice' ],
-          [ 'Completed', 'Practice' ]
-        ].map(([ status, phase ]) => {
-          const data: TViewCreateInput = {
-            name: `${status} ${phase} Articles`,
-            type: 'table',
-            schema_units: [
-              {
-                type: 'title',
-                format: 300,
-                name: 'Title',
-                sort: 'ascending'
-              },
-              {
-                type: 'formula',
-                name: 'Urgency',
-                sort: [ 'descending', 0 ],
-                format: 50
-              },
-              {
-                type: 'formula',
-                name: 'Completed',
-                format: 50
-              },
-              {
-                type: 'multi_select',
-                name: 'Subject',
-                format: 150
-              },
-              {
-                type: 'select',
-                name: 'Provider',
-                format: 100
-              },
-              {
-                type: 'url',
-                name: 'Source'
-              },
-              {
-                type: 'select',
-                name: 'Priority',
-                format: 100
-              },
-              {
-                type: 'select',
-                name: 'Status',
-                format: 100
-              },
-              {
-                type: 'select',
-                name: 'Phase',
-                format: 100
-              }
-            ],
-            filters: [
-              {
-                type: 'select',
-                name: 'Phase',
-                filter: {
-                  operator: 'enum_is',
-                  value: {
-                    type: 'exact',
-                    value: phase
-                  }
-                }
-              },
-              {
-                type: 'select',
-                name: 'Status',
-                filter: {
-                  operator: 'enum_is',
-                  value: {
-                    type: 'exact',
-                    value: status
-                  }
-                }
-              }
-            ]
-          };
-          return data;
-        })
-      ]
-    },
-    {
-      type: 'collection_view_page',
-      properties: {
-        title: [ [ 'Todo' ] ]
-      },
-      format: {
-        page_full_width: true,
-        page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg'
-      },
-      schema: [
-        {
-          type: 'title',
-          name: 'Todo'
-        },
-        {
-          type: 'formula',
-          name: 'Urgency',
-          formula: twoPropertiesAddition(['Difficulty Counter', 'Priority Counter'])
-        },
-        {
-          type: 'formula',
-          name: 'Done',
-          formula: {
-            function: 'not',
-            args: {
-              function: 'empty',
-              args: { property: 'Completed At' }
-            }
-          }
-        },
-        {
-          type: 'select',
-          name: 'Priority',
-          options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
-        },
-        {
-          type: 'select',
-          name: 'Difficulty',
-          options: difficulty.map((difficulty) => ({ ...difficulty, id: uuidv4() }))
-        },
-        {
-          type: 'formula',
-          name: 'Priority Counter',
-          formula: counterFormula('Priority', [ 'High', 'Medium' ])
-        },
-        {
-          type: 'formula',
-          name: 'Difficulty Counter',
-          formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
-        },
-        {
-          type: 'date',
-          name: 'Completed At'
-        }
-      ],
-      views: [
-        {
-          name: 'Todo',
-          type: 'table',
-          schema_units: [
-            {
-              type: 'title',
-              format: 350,
-              name: 'Todo'
-            },
-            {
-              type: 'select',
-              name: 'Priority'
-            },
-            {
-              type: 'select',
-              name: 'Difficulty'
-            },
-            {
-              type: 'date',
-              name: 'Completed At'
-            },
-            {
-              type: 'formula',
-              name: 'Urgency',
-              format: false,
-              sort: 'descending'
-            },
-            {
-              type: 'formula',
-              name: 'Done',
-              format: false
-            }
-          ],
-          filters: [
-            {
-              type: 'formula',
-              name: 'Done',
-              filter: {
-                operator: 'checkbox_is',
-                value: {
-                  type: 'exact',
-                  value: false
-                }
-              }
-            }
-          ]
-        },
-        {
-          name: 'Done',
-          type: 'table',
-          schema_units: [
-            {
-              type: 'title',
-              format: 350,
-              name: 'Todo'
-            },
-            {
-              type: 'select',
-              name: 'Priority'
-            },
-            {
-              type: 'select',
-              name: 'Difficulty'
-            },
-            {
-              type: 'date',
-              name: 'Completed At',
-              format: 150,
-              sort: 'descending'
-            },
-            {
-              type: 'formula',
-              name: 'Done',
-              format: false
-            }
-          ],
-          filters: [
-            {
-              type: 'formula',
-              name: 'Done',
-              filter: { operator: 'checkbox_is', value: { type: 'exact', value: true } }
-            }
-          ]
-        }
-      ]
-    },
+    // {
+    //   type: 'collection_view_page',
+    //   properties: {
+    //     title: [ [ 'Articles' ] ]
+    //   },
+    //   format: {
+    //     page_full_width: true,
+    //     page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg'
+    //   },
+    //   schema: [
+    //     {
+    //       type: 'select',
+    //       name: 'Provider',
+    //       options: []
+    //     },
+    //     {
+    //       type: 'url',
+    //       name: 'Source'
+    //     },
+    //     ...curriculumInfoSchemaUnits
+    //   ],
+    //   views: [
+    //     ...[
+    //       [ 'To Complete', 'Learn' ],
+    //       [ 'Completing', 'Learn' ],
+    //       [ 'Completed', 'Learn' ],
+    //       [ 'To Complete', 'Revise' ],
+    //       [ 'Completing', 'Revise' ],
+    //       [ 'Completed', 'Revise' ],
+    //       [ 'To Complete', 'Practice' ],
+    //       [ 'Completing', 'Practice' ],
+    //       [ 'Completed', 'Practice' ]
+    //     ].map(([ status, phase ]) => {
+    //       const data: TViewCreateInput = {
+    //         name: `${status} ${phase} Articles`,
+    //         type: 'table',
+    //         schema_units: [
+    //           {
+    //             type: 'title',
+    //             format: 300,
+    //             name: 'Title',
+    //             sort: 'ascending'
+    //           },
+    //           {
+    //             type: 'formula',
+    //             name: 'Urgency',
+    //             sort: [ 'descending', 0 ],
+    //             format: 50
+    //           },
+    //           {
+    //             type: 'formula',
+    //             name: 'Completed',
+    //             format: 50
+    //           },
+    //           {
+    //             type: 'multi_select',
+    //             name: 'Subject',
+    //             format: 150
+    //           },
+    //           {
+    //             type: 'select',
+    //             name: 'Provider',
+    //             format: 100
+    //           },
+    //           {
+    //             type: 'url',
+    //             name: 'Source'
+    //           },
+    //           {
+    //             type: 'select',
+    //             name: 'Priority',
+    //             format: 100
+    //           },
+    //           {
+    //             type: 'select',
+    //             name: 'Status',
+    //             format: 100
+    //           },
+    //           {
+    //             type: 'select',
+    //             name: 'Phase',
+    //             format: 100
+    //           }
+    //         ],
+    //         filters: [
+    //           {
+    //             type: 'select',
+    //             name: 'Phase',
+    //             filter: {
+    //               operator: 'enum_is',
+    //               value: {
+    //                 type: 'exact',
+    //                 value: phase
+    //               }
+    //             }
+    //           },
+    //           {
+    //             type: 'select',
+    //             name: 'Status',
+    //             filter: {
+    //               operator: 'enum_is',
+    //               value: {
+    //                 type: 'exact',
+    //                 value: status
+    //               }
+    //             }
+    //           }
+    //         ]
+    //       };
+    //       return data;
+    //     })
+    //   ]
+    // },
+    // {
+    //   type: 'collection_view_page',
+    //   properties: {
+    //     title: [ [ 'Todo' ] ]
+    //   },
+    //   format: {
+    //     page_full_width: true,
+    //     page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg'
+    //   },
+    //   schema: [
+    //     {
+    //       type: 'title',
+    //       name: 'Todo'
+    //     },
+    //     {
+    //       type: 'formula',
+    //       name: 'Urgency',
+    //       formula: twoPropertiesAddition(['Difficulty Counter', 'Priority Counter'])
+    //     },
+    //     {
+    //       type: 'formula',
+    //       name: 'Done',
+    //       formula: {
+    //         function: 'not',
+    //         args: {
+    //           function: 'empty',
+    //           args: { property: 'Completed At' }
+    //         }
+    //       }
+    //     },
+    //     {
+    //       type: 'select',
+    //       name: 'Priority',
+    //       options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
+    //     },
+    //     {
+    //       type: 'select',
+    //       name: 'Difficulty',
+    //       options: difficulty.map((difficulty) => ({ ...difficulty, id: uuidv4() }))
+    //     },
+    //     {
+    //       type: 'formula',
+    //       name: 'Priority Counter',
+    //       formula: counterFormula('Priority', [ 'High', 'Medium' ])
+    //     },
+    //     {
+    //       type: 'formula',
+    //       name: 'Difficulty Counter',
+    //       formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
+    //     },
+    //     {
+    //       type: 'date',
+    //       name: 'Completed At'
+    //     }
+    //   ],
+    //   views: [
+    //     {
+    //       name: 'Todo',
+    //       type: 'table',
+    //       schema_units: [
+    //         {
+    //           type: 'title',
+    //           format: 350,
+    //           name: 'Todo'
+    //         },
+    //         {
+    //           type: 'select',
+    //           name: 'Priority'
+    //         },
+    //         {
+    //           type: 'select',
+    //           name: 'Difficulty'
+    //         },
+    //         {
+    //           type: 'date',
+    //           name: 'Completed At'
+    //         },
+    //         {
+    //           type: 'formula',
+    //           name: 'Urgency',
+    //           format: false,
+    //           sort: 'descending'
+    //         },
+    //         {
+    //           type: 'formula',
+    //           name: 'Done',
+    //           format: false
+    //         }
+    //       ],
+    //       filters: [
+    //         {
+    //           type: 'formula',
+    //           name: 'Done',
+    //           filter: {
+    //             operator: 'checkbox_is',
+    //             value: {
+    //               type: 'exact',
+    //               value: false
+    //             }
+    //           }
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       name: 'Done',
+    //       type: 'table',
+    //       schema_units: [
+    //         {
+    //           type: 'title',
+    //           format: 350,
+    //           name: 'Todo'
+    //         },
+    //         {
+    //           type: 'select',
+    //           name: 'Priority'
+    //         },
+    //         {
+    //           type: 'select',
+    //           name: 'Difficulty'
+    //         },
+    //         {
+    //           type: 'date',
+    //           name: 'Completed At',
+    //           format: 150,
+    //           sort: 'descending'
+    //         },
+    //         {
+    //           type: 'formula',
+    //           name: 'Done',
+    //           format: false
+    //         }
+    //       ],
+    //       filters: [
+    //         {
+    //           type: 'formula',
+    //           name: 'Done',
+    //           filter: { operator: 'checkbox_is', value: { type: 'exact', value: true } }
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // },
     {
       type: 'collection_view_page',
       properties: {
@@ -305,7 +305,34 @@ const daily_sites = [
           type: 'date',
           name: 'Created At'
         },
-        ...daily_sites.map((name) => ({ type: 'checkbox', name } as CheckboxSchemaUnit))
+        ...daily_sites.map((name) => ({ type: 'checkbox', name, aggregations: "checked" } as CheckboxSchemaUnit)),
+        {
+          type: "formula",
+          name: "Total Checked",
+          formula: adders(daily_sites.map(site => propertyChecked(site)))
+        },
+        {
+          type: "formula",
+          name: "Percentage Checked",
+          formula: {
+            function: "round",
+            args: {
+              function: "multiply",
+              args: [
+                {
+                  function: "divide",
+                  args: [
+                    {
+                      property: "Total Checked"
+                    },
+                    9
+                  ],
+                },
+                100
+              ]
+            }
+          }
+        }
       ],
       views: [
         {
@@ -317,6 +344,11 @@ const daily_sites = [
               name: 'Date',
               sort: 'descending',
               format: 150
+            },
+            {
+              type: "formula",
+              name: "Percentage Checked",
+              format: 100
             },
             ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
           ]
@@ -334,6 +366,11 @@ const daily_sites = [
               name: 'Created At',
               sort: 'descending',
               format: false
+            },
+            {
+              type: "formula",
+              name: "Percentage Checked",
+              format: 100
             },
             ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
           ],
@@ -359,6 +396,11 @@ const daily_sites = [
               sort: 'descending',
               format: false
             },
+            {
+              type: "formula",
+              name: "Percentage Checked",
+              format: 100
+            },
             ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
           ],
           filters: [
@@ -375,13 +417,19 @@ const daily_sites = [
           schema_units: [
             {
               type: 'title',
-              name: 'Date'
+              name: 'Date',
+              sort: "descending"
             },
             {
               type: 'date',
               name: 'Created At',
               sort: 'descending',
               format: false
+            },
+            {
+              type: "formula",
+              name: "Percentage Checked",
+              format: 100
             },
             ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
           ],

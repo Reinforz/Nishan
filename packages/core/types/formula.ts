@@ -88,7 +88,7 @@ export type SmallerEqFunctionCreateInput = IFunctionCreateInput<'smallerEq', Tup
 export type NotFunctionCreateInput = IFunctionCreateInput<'not', TCheckboxResultType>;
 export type SubtractFunctionCreateInput = IFunctionCreateInput<'subtract', Tuple2<TNumberResultType>>;
 export type DivideFunctionCreateInput = IFunctionCreateInput<'divide', Tuple2<TNumberResultType>>;
-export type MultipleFunctionCreateInput = IFunctionCreateInput<'multiple', Tuple2<TNumberResultType>>;
+export type MultiplyFunctionCreateInput = IFunctionCreateInput<'multiply', Tuple2<TNumberResultType>>;
 export type PowFunctionCreateInput = IFunctionCreateInput<'pow', Tuple2<TNumberResultType>>;
 export type ModFunctionCreateInput = IFunctionCreateInput<'mod', Tuple2<TNumberResultType>>;
 export type UnaryMinusFunctionCreateInput = IFunctionCreateInput<'unaryMinus', TNumberResultType>;
@@ -171,7 +171,7 @@ export type TNumberFunctionCreateInput =
 	| NumberAddFunctionCreateInput
 	| SubtractFunctionCreateInput
 	| DivideFunctionCreateInput
-	| MultipleFunctionCreateInput
+	| MultiplyFunctionCreateInput
 	| PowFunctionCreateInput
 	| ModFunctionCreateInput
 	| UnaryMinusFunctionCreateInput

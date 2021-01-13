@@ -1,6 +1,8 @@
 import {
 	NumberAddFunctionCreateInput,
+	NumberIfFunctionCreateInput,
 	TFormulaCreateInput,
+	TNumberResultType,
 	TSchemaUnitInput,
 	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
@@ -29,6 +31,45 @@ export function counterFormula (property: string, levels: [string, string]): TFo
 					1
 				]
 			}
+		]
+	};
+}
+
+export function adders (args: TNumberResultType[]) {
+	const root_formula: NumberAddFunctionCreateInput = {
+		function: 'add',
+		result_type: 'number',
+		args: [] as any
+	};
+
+	function inner (parent: any, arg_number: number) {
+		if (arg_number < args.length - 1) {
+			const root_formula: NumberAddFunctionCreateInput = {
+				function: 'add',
+				result_type: 'number',
+				args: [] as any
+			};
+			const last_argument = arg_number === args.length - 2;
+			parent.push(args[arg_number], last_argument ? args[arg_number + 1] : root_formula);
+			if (!last_argument) inner(last_argument ? parent : root_formula.args, arg_number + 1);
+		} else parent.push(args[arg_number]);
+	}
+
+	inner(root_formula.args, 0);
+
+	return root_formula;
+}
+
+export function propertyChecked (property: string): NumberIfFunctionCreateInput {
+	return {
+		function: 'if',
+		result_type: 'number',
+		args: [
+			{
+				property
+			},
+			1,
+			0
 		]
 	};
 }

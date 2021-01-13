@@ -17,7 +17,7 @@ const formula_info_map: Map<TFunctionName, TFormulaResultType | 'auto'> = new Ma
 
 	[ 'subtract', 'number' ],
 	[ 'divide', 'number' ],
-	[ 'multiple', 'number' ],
+	[ 'multiply', 'number' ],
 	[ 'pow', 'number' ],
 	[ 'mod', 'number' ],
 	[ 'unaryPlus', 'number' ],

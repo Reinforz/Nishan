@@ -137,6 +137,7 @@ async function main () {
                         name: "Progress",
                         format: 100,
                         aggregation: "average",
+                        sort: "descending"
                       },
                       {
                         type: "title",
@@ -166,10 +167,21 @@ async function main () {
                     ],
                     filters: [
                       {
+                        type: "multi_select",
+                        name: "Subject",
+                        filter:{
+                          operator: "enum_contains",
+                          value: {
+                            value: title,
+                            type: "exact"
+                          }
+                        }
+                      },
+                      {
                         type: "number",
                         name: "Progress",
                         filter:{
-                          operator: "number_does_not_equal",
+                          operator: "number_less_than",
                           value:{
                             value: 100,
                             type: "exact"
@@ -189,19 +201,20 @@ async function main () {
                       }
                     ]
                   },
-                  /* {
+                  {
                     type: "table",
                     name: "Completed Goals",
-                    view: [
+                    schema_units: [
                       {
-                        type: "date",
+                        type: "created_time",
                         name: "Created",
                         format: 200
                       },
                       {
                         type: "date",
                         name: "Completed At",
-                        format: 150
+                        format: 150,
+                        sort: "descending"
                       },
                       {
                         type: "title",
@@ -209,135 +222,139 @@ async function main () {
                         aggregation: "count",
                         format: 300
                       },
+                      ...CommonMultiSelectSchema,
                       {
-                        type: "multi_select",
-                        name: "Purpose",
-                        aggregation: "unique",
-                        format: 100
-                      },
-                      {
-                        type: "multi_select",
-                        name: "Subject",
-                        aggregation: "unique",
-                        format: 250,
-                        filter: [["enum_contains", "exact", title]]
-                      },
-                      {
-                        type: "multi_select",
-                        name: "Source",
-                        aggregation: "unique",
-                        format: 100
-                      },
-                      {
-                        type: "rollup",
+                        type: "formula",
                         name: "Total Tasks",
                         format: 100,
                         aggregation: "sum",
                       },
                       {
                         type: "number",
-                        name: "Steps",
+                        name: "Total Steps",
                         format: 100,
                         aggregation: "sum"
                       },
+                    ],
+                    filters: [
                       {
-                        type: "select",
-                        name: "Status",
-                        format: false,
-                        filter: [["enum_is", "exact", "Completed"]]
+                        type: "multi_select",
+                        name: "Subject",
+                        filter:{
+                          operator: "enum_contains",
+                          value: {
+                            value: title,
+                            type: "exact"
+                          }
+                        }
                       },
                       {
                         type: "number",
                         name: "Progress",
-                        sort: "descending",
-                        format: false,
-                        filter: [["number_equals", "exact", 100]]
-                      },
-                    ]
-                  }
-                ]
-              },
-              createLinkedDB("Course List", "Courses", title),
-              createLinkedDB("Reading List", "EBooks", title),
-              {
-                type: "linked_db",
-                collection_id: collection_ids.Articles,
-                views: [
-                  {
-                    type: "table",
-                    name: "Article Table",
-                    view: [
-                      {
-                        type: "title",
-                        name: "Title",
-                        aggregation: "count"
-                      },
-                      {
-                        type: "formula",
-                        name: "Urgency",
-                        sort: "ascending",
-                        format: 50
-                      },
-                      {
-                        type: "checkbox",
-                        name: "Completed",
-                        format: 100,
-                        aggregation: "percent_checked"
-                      },
-                      {
-                        type: "multi_select",
-                        name: "Subject",
-                        format: 200,
-                        filter: [["enum_contains", "exact", title]]
+                        filter:{
+                          operator: "number_equals",
+                          value:{
+                            value: 100,
+                            type: "exact"
+                          }
+                        }
                       },
                       {
                         type: "select",
-                        name: "Provider",
-                        aggregation: "unique",
-                        format: 150
-                      },
-                      {
-                        type: "url",
-                        name: "Source",
-                        format: 300
-                      },
-                      ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })) as any,
-                      ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })) as any,
+                        name: "Status",
+                        filter:{
+                          operator: "enum_is",
+                          value:{
+                            type: "exact",
+                            value: "Completed"
+                          }
+                        }
+                      }
                     ]
                   }
                 ]
               },
-              {
-                type: "linked_db",
-                collection_id: collection_ids.Tasks,
-                views: [
-                  {
-                    type: "table",
-                    name: "Task Table",
-                    view: [
-                      {
-                        type: "date",
-                        name: "On",
-                        sort: "descending",
-                        format: [true, 250]
-                      },
-                      {
-                        type: "title",
-                        name: "Task",
-                        format: [true, 250],
-                        aggregation: "count"
-                      },
-                      { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
-                      { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
-                      { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", title]] },
-                      { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
-                      { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
-                      { name: "Created", type: "created_time", format: false },
-                      { name: "Custom", type: "formula", format: false },
-                    ]
-                  } */
-                ]
-              },
+              // createLinkedDB("Course List", "Courses", title),
+              // createLinkedDB("Reading List", "EBooks", title),
+              // {
+              //   type: "linked_db",
+              //   collection_id: collection_ids.Articles,
+              //   views: [
+              //     {
+              //       type: "table",
+              //       name: "Article Table",
+              //       view: [
+              //         {
+              //           type: "title",
+              //           name: "Title",
+              //           aggregation: "count"
+              //         },
+              //         {
+              //           type: "formula",
+              //           name: "Urgency",
+              //           sort: "ascending",
+              //           format: 50
+              //         },
+              //         {
+              //           type: "checkbox",
+              //           name: "Completed",
+              //           format: 100,
+              //           aggregation: "percent_checked"
+              //         },
+              //         {
+              //           type: "multi_select",
+              //           name: "Subject",
+              //           format: 200,
+              //           filter: [["enum_contains", "exact", title]]
+              //         },
+              //         {
+              //           type: "select",
+              //           name: "Provider",
+              //           aggregation: "unique",
+              //           format: 150
+              //         },
+              //         {
+              //           type: "url",
+              //           name: "Source",
+              //           format: 300
+              //         },
+              //         ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })) as any,
+              //         ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })) as any,
+              //       ]
+              //     }
+              //   ]
+              // },
+              // {
+              //   type: "linked_db",
+              //   collection_id: collection_ids.Tasks,
+              //   views: [
+              //     {
+              //       type: "table",
+              //       name: "Task Table",
+              //       view: [
+              //         {
+              //           type: "date",
+              //           name: "On",
+              //           sort: "descending",
+              //           format: [true, 250]
+              //         },
+              //         {
+              //           type: "title",
+              //           name: "Task",
+              //           format: [true, 250],
+              //           aggregation: "count"
+              //         },
+              //         { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
+              //         { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
+              //         { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", title]] },
+              //         { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
+              //         { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
+              //         { name: "Created", type: "created_time", format: false },
+              //         { name: "Custom", type: "formula", format: false },
+              //       ]
+              //     }
+              //   ]
+              // },
             ]
           } as Omit<IPageCreateInput, "type">))
       }

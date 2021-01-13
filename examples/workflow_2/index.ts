@@ -13,7 +13,13 @@ import Nishan, {
 } from '@nishans/core';
 
 import { priority, phase, status, purpose, subject, source } from '../data';
-import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, threePropertiesAddition } from '../util';
+import {
+	CommonMultiSelectSchema,
+	counterFormula,
+	curriculumInfoSchemaUnits,
+	goalViewItem,
+	threePropertiesAddition
+} from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{
@@ -40,7 +46,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 		formula: {
 			function: 'round',
 			args: {
-				function: 'multiple',
+				function: 'multiply',
 				args: [
 					{
 						function: 'divide',
@@ -63,29 +69,7 @@ function goalProgress (goal_number: number): FormulaSchemaUnitInput {
 	};
 }
 
-const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
-	return [
-		{
-			type: 'relation',
-			name: `Goal ${index}`,
-			format: true
-		},
-		{
-			type: 'number',
-			name: `Goal ${index} Steps`,
-			format: 100,
-			aggregation: 'sum'
-		},
-		{
-			type: 'number',
-			name: `Goal ${index} Progress`,
-			format: 100,
-			aggregation: 'sum'
-		}
-	];
-};
-
-const tasksTableViews = (name: string, value: DateViewFiltersValue): TViewCreateInput => {
+export const tasksTableViews = (name: string, value: DateViewFiltersValue): TViewCreateInput => {
 	return {
 		type: 'table',
 		name,
@@ -496,7 +480,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 								{
 									function: 'round',
 									args: {
-										function: 'multiple',
+										function: 'multiply',
 										args: [
 											{
 												function: 'divide',

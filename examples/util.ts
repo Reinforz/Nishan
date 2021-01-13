@@ -199,3 +199,25 @@ export const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
 		aggregation: 'unique'
 	}
 ];
+
+export const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
+	return [
+		{
+			type: 'relation',
+			name: `Goal ${index}`,
+			format: true
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Steps`,
+			format: 100,
+			aggregation: 'sum'
+		},
+		{
+			type: 'number',
+			name: `Goal ${index} Progress`,
+			format: 100,
+			aggregation: 'sum'
+		}
+	];
+};

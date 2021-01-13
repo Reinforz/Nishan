@@ -13,7 +13,7 @@ import Nishan, {
 } from '@nishans/core';
 
 import { priority, phase, status, purpose, subject, source } from '../data';
-import { counterFormula, threePropertiesAddition } from '../util';
+import { counterFormula, curriculumInfoSchemaUnits, threePropertiesAddition } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{
@@ -245,12 +245,56 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 						properties: {
 							title: [ [ 'Reading List' ] ]
 						},
-						views: [],
-						schema: [
+						views: [
 							{
-								type: 'title',
-								name: 'Title'
-							},
+								type: 'gallery',
+								name: 'All Books',
+								gallery_cover_size: 'large',
+								gallery_cover: { type: 'property', property: 'cover' },
+								schema_units: [
+									{
+										type: 'title',
+										name: 'Title'
+									},
+									{
+										type: 'multi_select',
+										name: 'Publisher'
+									},
+									{
+										type: 'text',
+										name: 'Instructor'
+									},
+									{
+										type: 'multi_select',
+										name: 'Subject',
+										format: 200,
+										aggregation: 'unique'
+									},
+									{
+										type: 'select',
+										name: 'Priority',
+										format: 100
+									},
+									{
+										type: 'select',
+										name: 'Status',
+										format: 100
+									},
+									{
+										type: 'select',
+										name: 'Phase',
+										format: 100
+									},
+									{
+										type: 'formula',
+										name: 'Urgency',
+										sort: 'descending',
+										format: false
+									}
+								]
+							}
+						],
+						schema: [
 							{
 								type: 'multi_select',
 								name: 'Publisher',
@@ -261,44 +305,14 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 								name: 'Instructor'
 							},
 							{
-								type: 'url',
+								type: 'file',
 								name: 'Cover'
 							},
 							{
-								type: 'select',
-								name: 'Status',
-								options: status.map((status) => ({ ...status, id: uuidv4() }))
+								type: 'url',
+								name: 'Source'
 							},
-							{
-								type: 'formula',
-								name: 'Status Counter',
-								formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
-							},
-							{
-								type: 'select',
-								name: 'Phase',
-								options: phase.map((phase) => ({ ...phase, id: uuidv4() }))
-							},
-							{
-								type: 'formula',
-								name: 'Phase Counter',
-								formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
-							},
-							{
-								type: 'select',
-								name: 'Priority',
-								options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
-							},
-							{
-								type: 'formula',
-								name: 'Priority Counter',
-								formula: counterFormula('Priority', [ 'High', 'Medium' ])
-							},
-							{
-								type: 'multi_select',
-								name: 'Subject',
-								options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
-							},
+							...curriculumInfoSchemaUnits,
 							{
 								type: 'number',
 								name: 'Pages'
@@ -306,18 +320,6 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 							{
 								type: 'number',
 								name: 'Chapters'
-							},
-							{
-								type: 'date',
-								name: 'Learn Range'
-							},
-							{
-								type: 'date',
-								name: 'Revise Range'
-							},
-							{
-								type: 'date',
-								name: 'Practice Range'
 							}
 						]
 					},

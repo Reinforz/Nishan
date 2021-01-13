@@ -55,8 +55,8 @@ const months = [
     
     const yearly_page = page.get("Yearly Overview");
     if(yearly_page){
-      for (let year = 2020; year <= 2020; year++) {
-        const month_page_uuids = Array(1).fill(null).map(() => uuidv4())
+      for (let year = 2020; year <= 2021; year++) {
+        const month_page_uuids = Array(12).fill(null).map(() => uuidv4())
       
         const checkboxSchemaUnit = (name: string) => ({ name, type: "checkbox" as const, format: [true, 100] as [boolean, number] });
         const {page} = await yearly_page.createBlocks([
@@ -255,118 +255,134 @@ const months = [
                         }
                       ]
                     }, 
-                    // {
-                    //   type: "linked_db",
-                    //   collection_id: articles_cvp_id,
-                    //   views: [
-                    //     {
-                    //       filter_operator: "or",
-                    //       type: "table",
-                    //       name: "Article Table",
-                    //       schema_units: [
-                    //         {
-                    //           name: "Title",
-                    //           format: 250,
-                    //           aggregation: "count",
-                    //           type: "title"
-                    //         },
-                    //         {
-                    //           name: "Urgency",
-                    //           format: 50,
-                    //           sort: "descending",
-                    //           aggregation: "average",
-                    //           type: "number"
-                    //         },
-                    //         {
-                    //           name: "Completed",
-                    //           format: 50,
-                    //           aggregation: "percent_checked",
-                    //           type: "formula"
-                    //         },
-                    //         {
-                    //           name: "Subject",
-                    //           format: 150,
-                    //           aggregation: "unique",
-                    //           type: "multi_select"
-                    //         },
-                    //         {
-                    //           name: "Provider",
-                    //           format: 150,
-                    //           aggregation: "unique",
-                    //           type: "select"
-                    //         },
-                    //         {
-                    //           name: "Source",
-                    //           format: 350,
-                    //           type: "url"
-                    //         },
-                    //         {
-                    //           name: "Priority",
-                    //           format: 150,
-                    //           aggregation: "unique",
-                    //           type: "select"
-                    //         },
-                    //         {
-                    //           name: "Status",
-                    //           format: 150,
-                    //           aggregation: "unique",
-                    //           type: "select"
-                    //         },
-                    //         {
-                    //           name: "Phase",
-                    //           format: 150,
-                    //           aggregation: "unique",
-                    //           type: "select"
-                    //         },
-                    //         {
-                    //           name: "Learn Range",
-                    //           format: 150,
-                    //           aggregation: "percent_not_empty",
-                    //           filters: [{operator: "date_is", type: "exact", value: {
-                    //             type: "date",
-                    //             start_date: date
-                    //           }}],
-                    //           type: "date"
-                    //         },
-                    //         {
-                    //           name: "Revise Range",
-                    //           format: 150,
-                    //           aggregation: "percent_not_empty",
-                    //           filters: [{operator: "date_is", type: "exact", value: {
-                    //             type: "date",
-                    //             start_date: date
-                    //           }}],
-                    //           type: "date"
-                    //         },
-                    //         {
-                    //           name: "Practice Range",
-                    //           format: 150,
-                    //           aggregation: "percent_not_empty",
-                    //           filters: [{operator: "date_is", type: "exact", value: {
-                    //             type: "date",
-                    //             start_date: date
-                    //           }}],
-                    //           type: "date"
-                    //         },
-                    //         {
-                    //           name: "Priority Counter",
-                    //           format: false,
-                    //           type: "formula"
-                    //         },
-                    //         {
-                    //           name: "Status Counter",
-                    //           format: false,
-                    //           type: "formula"
-                    //         },
-                    //         {
-                    //           name: "Phase Counter",
-                    //           format: false,
-                    //           type: "formula"
-                    //         },
-                    //       ]
-                    //     }
-                    //   ]
-                    // }
+                    {
+                      type: "linked_db",
+                      collection_id: articles_cvp_id,
+                      views: [
+                        {
+                          filter_operator: "or",
+                          type: "table",
+                          name: "Article Table",
+                          schema_units: [
+                            {
+                              name: "Title",
+                              aggregation: "count",
+                              type: "title"
+                            },
+                            {
+                              name: "Urgency",
+                              format: 50,
+                              sort: "descending",
+                              aggregation: "average",
+                              type: "number"
+                            },
+                            {
+                              name: "Completed",
+                              format: 50,
+                              aggregation: "percent_checked",
+                              type: "formula"
+                            },
+                            {
+                              name: "Subject",
+                              format: 150,
+                              aggregation: "unique",
+                              type: "multi_select"
+                            },
+                            {
+                              name: "Provider",
+                              format: 150,
+                              aggregation: "unique",
+                              type: "select"
+                            },
+                            {
+                              name: "Source",
+                              format: 350,
+                              type: "url"
+                            },
+                            {
+                              name: "Priority",
+                              format: 150,
+                              aggregation: "unique",
+                              type: "select"
+                            },
+                            {
+                              name: "Status",
+                              format: 150,
+                              aggregation: "unique",
+                              type: "select"
+                            },
+                            {
+                              name: "Phase",
+                              format: 150,
+                              aggregation: "unique",
+                              type: "select"
+                            },
+                            {
+                              name: "Learn Range",
+                              format: 150,
+                              aggregation: "percent_not_empty",
+                              type: "date"
+                            },
+                            {
+                              name: "Revise Range",
+                              type: "date",
+                              format: 150,
+                              aggregation: "percent_not_empty"
+                            },
+                            {
+                              name: "Practice Range",
+                              format: 150,
+                              aggregation: "percent_not_empty",
+                              type: "date"
+                            },
+                          ],
+                          filters:[
+                            {
+                              name: "Learn Range",
+                              type: "date",
+                              filter:{
+                                operator: "date_is",
+                                value: {
+                                  type: "exact",
+                                  value:{
+                                    type:"date",
+                                    start_date: date
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              name: "Revise Range",
+                              type: "date",
+                              filter:{
+                                operator: "date_is",
+                                value: {
+                                  type: "exact",
+                                  value:{
+                                    type:"date",
+                                    start_date: date
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              name: "Practice Range",
+                              type: "date",
+                              filter:{
+                                operator: "date_is",
+                                value: {
+                                  type: "exact",
+                                  value:{
+                                    type:"date",
+                                    start_date: date
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 } as TBlockInput
               })

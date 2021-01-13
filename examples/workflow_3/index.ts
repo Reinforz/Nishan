@@ -4,19 +4,21 @@ import '../env';
 import { ecosystems, categories, subject } from '../data';
 import { CommonMultiSelectSchema } from '../util';
 
+const status_phase_combos = [
+  [ 'To Complete', 'Learn', 'Learning' ],
+  [ 'Completing', 'Learn', 'Learning' ],
+  [ 'Completed', 'Learn', 'Learning' ],
+  [ 'Completing', 'Revise', 'Revising' ],
+  [ 'Completed', 'Revise', 'Revising' ],
+  [ 'Completing', 'Practice', 'Practicing' ],
+  [ 'Completed', 'Practice', 'Practicing' ]
+];
+
 function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title: string) {
 	return {
 		type: 'linked_db',
 		collection_id,
-		views: [
-			[ 'To Complete', 'Learn', 'Learning' ],
-			[ 'Completing', 'Learn', 'Learning' ],
-			[ 'Completed', 'Learn', 'Learning' ],
-			[ 'Completing', 'Revise', 'Revising' ],
-			[ 'Completed', 'Revise', 'Revising' ],
-			[ 'Completing', 'Practice', 'Practicing' ],
-			[ 'Completed', 'Practice', 'Practicing' ]
-		].map(
+		views: status_phase_combos.map(
 			([ status, phase, geruund ]) =>
 				({
 					type: 'gallery',
@@ -278,54 +280,101 @@ async function main () {
               },
               createLinkedDB(course_list_cvp_id, "Courses", title),
               createLinkedDB(reading_list_cvp_id, "EBooks", title),
-              // {
-              //   type: "linked_db",
-              //   collection_id: collection_ids.Articles,
-              //   views: [
-              //     {
-              //       type: "table",
-              //       name: "Article Table",
-              //       view: [
-              //         {
-              //           type: "title",
-              //           name: "Title",
-              //           aggregation: "count"
-              //         },
-              //         {
-              //           type: "formula",
-              //           name: "Urgency",
-              //           sort: "ascending",
-              //           format: 50
-              //         },
-              //         {
-              //           type: "checkbox",
-              //           name: "Completed",
-              //           format: 100,
-              //           aggregation: "percent_checked"
-              //         },
-              //         {
-              //           type: "multi_select",
-              //           name: "Subject",
-              //           format: 200,
-              //           filter: [["enum_contains", "exact", title]]
-              //         },
-              //         {
-              //           type: "select",
-              //           name: "Provider",
-              //           aggregation: "unique",
-              //           format: 150
-              //         },
-              //         {
-              //           type: "url",
-              //           name: "Source",
-              //           format: 300
-              //         },
-              //         ...["Priority", "Status", "Phase"].map((name) => ({ type: "select" as any, name, format: 150 })) as any,
-              //         ...["Learn", "Revise", "Practice"].map((name) => ({ type: "date" as any, name: `${name} Range`, format: 150, aggregation: "percent_not_empty", })) as any,
-              //       ]
-              //     }
-              //   ]
-              // },
+              {
+                type: "linked_db",
+                collection_id: articles_cvp_id,
+                views: status_phase_combos.map(([ status, phase, gerund ]) => {
+                    const data: TViewCreateInput = {
+                      name: `${status} ${gerund} Articles`,
+                      type: 'table',
+                      schema_units: [
+                        {
+                          type: 'title',
+                          format: 300,
+                          name: 'Title',
+                          sort: 'ascending',
+                          aggregation: "count"
+                        },
+                        {
+                          type: 'formula',
+                          name: 'Urgency',
+                          sort: [ 'descending', 0 ],
+                          format: 50
+                        },
+                        {
+                          type: 'formula',
+                          name: 'Completed',
+                          format: 50
+                        },
+                        {
+                          type: 'multi_select',
+                          name: 'Subject',
+                          format: 150
+                        },
+                        {
+                          type: 'select',
+                          name: 'Provider',
+                          format: 100
+                        },
+                        {
+                          type: 'url',
+                          name: 'Source'
+                        },
+                        {
+                          type: 'select',
+                          name: 'Priority',
+                          format: 100
+                        },
+                        {
+                          type: 'select',
+                          name: 'Status',
+                          format: 100
+                        },
+                        {
+                          type: 'select',
+                          name: 'Phase',
+                          format: 100
+                        }
+                      ],
+                      filters: [
+                        {
+                          type: "multi_select",
+                          name: "Subject",
+                          filter:{
+                            operator: "enum_contains",
+                            value: {
+                              value: title,
+                              type: "exact"
+                            }
+                          }
+                        },
+                        {
+                          type: 'select',
+                          name: 'Phase',
+                          filter: {
+                            operator: 'enum_is',
+                            value: {
+                              type: 'exact',
+                              value: phase
+                            }
+                          }
+                        },
+                        {
+                          type: 'select',
+                          name: 'Status',
+                          filter: {
+                            operator: 'enum_is',
+                            value: {
+                              type: 'exact',
+                              value: status
+                            }
+                          }
+                        }
+                      ]
+                    };
+                    return data;
+                  })
+              },
               // {
               //   type: "linked_db",
               //   collection_id: collection_ids.Tasks,

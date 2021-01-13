@@ -90,7 +90,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Priority Counter',
-							formula: counterFormula('priority', [ 'High', 'Medium' ])
+							formula: counterFormula('Priority', [ 'High', 'Medium' ])
 						},
 						{
 							type: 'select',
@@ -100,7 +100,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Status Counter',
-							formula: counterFormula('status', [ 'Completing', 'To Complete' ])
+							formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
 						},
 						{
 							type: 'select',
@@ -110,7 +110,7 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Phase Counter',
-							formula: counterFormula('phase', [ 'Practice', 'Revise' ])
+							formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
 						},
 						{
 							type: 'date',
@@ -272,12 +272,12 @@ const daily_sites = [
 						{
 							type: 'formula',
 							name: 'Priority Counter',
-							formula: counterFormula('priority', [ 'High', 'Medium' ])
+							formula: counterFormula('Priority', [ 'High', 'Medium' ])
 						},
 						{
 							type: 'formula',
 							name: 'Difficulty Counter',
-							formula: counterFormula('difficulty', [ 'Easy', 'Medium' ])
+							formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
 						},
 						{
 							type: 'date',

@@ -1,11 +1,11 @@
-import { createSchemaUnitMap, nestedContentPopulate, Operation, parseFormula, slugify, warn } from '../utils';
+import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, parseFormula, slugify, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMap, ISchemaMapValue } from '../types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput,  ISchemaMapValue } from '../types';
 
 /**
  * A class to represent collection of Notion
@@ -27,17 +27,6 @@ class Collection extends Data<ICollection> {
 
   getCachedParentData() {
     return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
-  }
-
-  getSchemaMap = () =>{
-    const data = this.getCachedData(), schema_map: ISchemaMap = new Map();
-    Object.entries(data.schema).forEach(([schema_id, schema_unit])=>{
-      schema_map.set(schema_unit.name, {
-        schema_id,
-        ...schema_unit
-      })
-    })
-    return schema_map;
   }
 
   /**
@@ -182,7 +171,7 @@ class Collection extends Data<ICollection> {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
         if(arg.type === "formula")
-          data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, this.getSchemaMap()) }
+          data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, getSchemaMap(data)) }
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         results[arg.type].set(schema_id, schema_obj);
@@ -207,11 +196,14 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    (await this.getIterate<TSchemaUnit & { schema_id: string }>(args, { child_ids: Object.keys(data.schema) ?? [], child_type: "collection", multiple }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (_, { schema_id, name, type })=>{
+    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData(), schema_map = getSchemaMap(data);
+    (await this.getIterate<ISchemaMapValue>(args, { child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) => {
+      const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
+      return { ...schema_unit_data, schema_id: schema_unit_data.schema_id }
+    }, (_, { schema_id, name, type })=>{
       const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
-      schema_unit_map[type].set(schema_id, schema_obj)  
-      schema_unit_map[type].set(name, schema_obj)  
+      schema_unit_map[type].set(schema_id, schema_obj)
+      schema_unit_map[type].set(name, schema_obj)
     }))
     return schema_unit_map;
   }
@@ -231,13 +223,16 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async updateSchemaUnits(args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
-    const results = createSchemaUnitMap(), data = this.getCachedData();
+    const results = createSchemaUnitMap(), data = this.getCachedData(), schema_map = getSchemaMap(data);
     await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>>(args, {
-      child_ids: Object.keys(data.schema),
+      child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
       multiple,
       manual: true
-    }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (schema_id, {type, name}, updated_data) => {
+    }, (name) => {
+      const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
+      return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };
+    }, (_, {schema_id, type, name}, updated_data) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
       type = updated_data.type ?? type;
       const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
@@ -264,14 +259,17 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async deleteSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-    const data = this.getCachedData();
+    const data = this.getCachedData(), schema_map = getSchemaMap(data);
     await this.deleteIterate<ISchemaMapValue>(args, {
-      child_ids: Object.keys(data.schema),
+      child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
       multiple,
       manual: true
-    }, (schema_id) => ({ ...data.schema[schema_id], schema_id }), (id) => {
-      delete data.schema[id]
+    }, (name) => {
+      const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
+      return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };
+    }, (_, {schema_id}) => {
+      delete data.schema[schema_id]
     });
     this.updateLastEditedProps();
     this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }) )

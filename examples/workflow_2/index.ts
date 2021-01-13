@@ -12,7 +12,7 @@ import Nishan, {
 	TViewSchemaUnitsCreateInput
 } from '@nishans/core';
 
-import { status, purpose, subject, source } from '../data';
+import { priority, phase, status, purpose, subject, source } from '../data';
 import { counterFormula, threePropertiesAddition } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
@@ -241,6 +241,87 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 				},
 				contents: [
 					{
+						type: 'collection_view_page',
+						properties: {
+							title: [ [ 'Reading List' ] ]
+						},
+						views: [],
+						schema: [
+							{
+								type: 'title',
+								name: 'Title'
+							},
+							{
+								type: 'multi_select',
+								name: 'Publisher',
+								options: []
+							},
+							{
+								type: 'text',
+								name: 'Instructor'
+							},
+							{
+								type: 'url',
+								name: 'Cover'
+							},
+							{
+								type: 'select',
+								name: 'Status',
+								options: status.map((status) => ({ ...status, id: uuidv4() }))
+							},
+							{
+								type: 'formula',
+								name: 'Status Counter',
+								formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
+							},
+							{
+								type: 'select',
+								name: 'Phase',
+								options: phase.map((phase) => ({ ...phase, id: uuidv4() }))
+							},
+							{
+								type: 'formula',
+								name: 'Phase Counter',
+								formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
+							},
+							{
+								type: 'select',
+								name: 'Priority',
+								options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
+							},
+							{
+								type: 'formula',
+								name: 'Priority Counter',
+								formula: counterFormula('Priority', [ 'High', 'Medium' ])
+							},
+							{
+								type: 'multi_select',
+								name: 'Subject',
+								options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
+							},
+							{
+								type: 'number',
+								name: 'Pages'
+							},
+							{
+								type: 'number',
+								name: 'Chapters'
+							},
+							{
+								type: 'date',
+								name: 'Learn Range'
+							},
+							{
+								type: 'date',
+								name: 'Revise Range'
+							},
+							{
+								type: 'date',
+								name: 'Practice Range'
+							}
+						]
+					},
+					{
 						id: goals_cvp_id,
 						type: 'collection_view_page',
 						properties: {
@@ -386,7 +467,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 							{
 								type: 'formula',
 								name: 'Status Counter',
-								formula: counterFormula('status', [ 'Completing', 'To Complete' ])
+								formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
 							}
 						]
 					},

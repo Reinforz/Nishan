@@ -9,25 +9,23 @@ function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title
 		type: 'linked_db',
 		collection_id,
 		views: [
-			[ 'To Complete', 'Learn' ],
-			[ 'Completing', 'Learn' ],
-			[ 'Completed', 'Learn' ],
-			[ 'To Complete', 'Revise' ],
-			[ 'Completing', 'Revise' ],
-			[ 'Completed', 'Revise' ],
-			[ 'To Complete', 'Practice' ],
-			[ 'Completing', 'Practice' ],
-			[ 'Completed', 'Practice' ]
+			[ 'To Complete', 'Learn', 'Learning' ],
+			[ 'Completing', 'Learn', 'Learning' ],
+			[ 'Completed', 'Learn', 'Learning' ],
+			[ 'Completing', 'Revise', 'Revising' ],
+			[ 'Completed', 'Revise', 'Revising' ],
+			[ 'Completing', 'Practice', 'Practicing' ],
+			[ 'Completed', 'Practice', 'Practicing' ]
 		].map(
-			([ status, phase ]) =>
+			([ status, phase, geruund ]) =>
 				({
 					type: 'gallery',
-					name: `${status} ${phase} ${cvp}`,
+					name: `${status} ${geruund} ${cvp}`,
 					gallery_cover: { property: 'Cover', type: 'property' },
 					schema_units: [
 						{
 							type: 'title',
-							name: 'Name',
+							name: 'Title',
 							sort: 'ascending'
 						},
 						{
@@ -41,31 +39,24 @@ function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title
 						{
 							type: 'multi_select',
 							name: 'Subject',
-							filter: [ [ 'enum_contains', 'exact', title ] ]
-						},
-						{
-							name: 'Status',
-							type: 'select',
-							format: false,
-							filter: [ [ 'enum_is', 'exact', status as any ] ]
-						},
-						{
-							name: 'Phase',
-							type: 'select',
-							format: false
 						},
 						{
 							name: 'Priority',
 							type: 'select'
 						},
-						{
-							type: 'formula',
-							sort: [ 'descending', 0 ],
-							format: false,
-							name: 'Urgency'
-						}
 					],
 					filters: [
+            {
+              type: "multi_select",
+              name: "Subject",
+              filter:{
+                operator: "enum_contains",
+                value: {
+                  value: title,
+                  type: "exact"
+                }
+              }
+            },
 						{
 							type: 'select',
 							name: 'Phase',
@@ -74,6 +65,17 @@ function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title
 								value: {
 									type: 'exact',
 									value: phase
+								}
+							}
+            },
+            {
+							type: 'select',
+							name: 'Status',
+							filter: {
+								operator: 'enum_is',
+								value: {
+									type: 'exact',
+									value: status
 								}
 							}
 						}
@@ -274,8 +276,8 @@ async function main () {
                   }
                 ]
               },
-              // createLinkedDB("Course List", "Courses", title),
-              // createLinkedDB("Reading List", "EBooks", title),
+              createLinkedDB(course_list_cvp_id, "Courses", title),
+              createLinkedDB(reading_list_cvp_id, "EBooks", title),
               // {
               //   type: "linked_db",
               //   collection_id: collection_ids.Articles,

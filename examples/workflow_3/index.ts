@@ -105,7 +105,7 @@ async function main () {
     const getCollectionId = (title: string) => (collection_view_page.get(title) as CollectionViewPage).getCachedData().collection_id;
     
 		const articles_cvp_id = getCollectionId('Articles'),
-      daily_cvp_id = getCollectionId('Daily'),
+      tasks_cvp_id = getCollectionId('Tasks'),
       goals_cvp_id = getCollectionId('Goals'),
       course_list_cvp_id = getCollectionId('Course List'),
       reading_list_cvp_id = getCollectionId('Reading List');
@@ -375,37 +375,46 @@ async function main () {
                     return data;
                   })
               },
-              // {
-              //   type: "linked_db",
-              //   collection_id: collection_ids.Tasks,
-              //   views: [
-              //     {
-              //       type: "table",
-              //       name: "Task Table",
-              //       view: [
-              //         {
-              //           type: "date",
-              //           name: "On",
-              //           sort: "descending",
-              //           format: [true, 250]
-              //         },
-              //         {
-              //           type: "title",
-              //           name: "Task",
-              //           format: [true, 250],
-              //           aggregation: "count"
-              //         },
-              //         { name: "Purpose", type: "select", format: [true, 100], aggregation: "unique" },
-              //         { name: "Source", type: "select", format: [true, 100], aggregation: "unique" },
-              //         { name: "Subject", type: "multi_select", aggregation: "unique", filter: [["enum_contains", "exact", title]] },
-              //         { name: "Goals", type: "relation", format: [true, 300], aggregation: "count" },
-              //         { name: "Steps", type: "number", format: [true, 50], aggregation: "sum" },
-              //         { name: "Created", type: "created_time", format: false },
-              //         { name: "Custom", type: "formula", format: false },
-              //       ]
-              //     }
-              //   ]
-              // },
+              {
+                type: "linked_db",
+                collection_id: tasks_cvp_id,
+                views: [
+                  {
+                    type: "table",
+                    name: "Task Table",
+                    schema_units: [
+                      {
+                        type: "formula",
+                        name: "On",
+                        sort: "descending",
+                        format: 250
+                      },
+                      {
+                        type: "title",
+                        name: "Task",
+                        format: 250,
+                        aggregation: "count"
+                      },
+                      { name: "Purpose", type: "select", format: 100, aggregation: "unique" },
+                      { name: "Source", type: "select", format: 100, aggregation: "unique" },
+                      { name: "Subject", type: "multi_select", aggregation: "unique"},
+                    ],
+                    filters: [
+                      {
+                        type: "multi_select",
+                        name: "Subject",
+                        filter:{
+                          operator: "enum_contains",
+                          value: {
+                            value: title,
+                            type: "exact"
+                          }
+                        }
+                      },
+                    ]
+                  }
+                ]
+              },
             ]
           } as Omit<IPageCreateInput, "type">))
       }
@@ -473,7 +482,7 @@ async function main () {
     if(Web3CVP){
       const Web3CVP_collection = await Web3CVP.getCollection()
       const total_batch = Math.floor(subject.length / 10);
-      for (let index = 0; index <= 0; index++) {
+      for (let index = 0; index <= total_batch; index++) {
         const start = (10 * index) + 1, end = start + 9;
         await Web3CVP_collection.createPages(returnSubjectSlice(start, end));
         console.log(`Deployed batch ${index + 1}`);

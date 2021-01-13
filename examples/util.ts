@@ -137,3 +137,24 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 		name: 'Practiced'
 	}
 ];
+
+export const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
+	{
+		type: 'multi_select',
+		name: 'Subject',
+		format: 200,
+		aggregation: 'unique'
+	},
+	{
+		type: 'multi_select',
+		name: 'Purpose',
+		format: 200,
+		aggregation: 'unique'
+	},
+	{
+		type: 'multi_select',
+		name: 'Source',
+		format: 200,
+		aggregation: 'unique'
+	}
+];

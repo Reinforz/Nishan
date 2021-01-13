@@ -92,6 +92,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         });
 
         block_map[type].set(block_id, collectionblock);
+        block_map[type].set(content.properties.title[0][0], collectionblock);
         if (content.rows)
           await traverse(content.rows as any, collection_id, "collection")
       } else if (content.type === "factory") {
@@ -165,8 +166,10 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...metadata
         }
         props.stack.push(Operation.block.update(block_id, [], page_data));
-        props.cache.block.set(block_id, page_data)
-        block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
+        props.cache.block.set(block_id, page_data);
+        const block_obj = createBlockClass(content.type, block_id, props)
+        block_map[type].set(block_id, block_obj);
+        block_map[type].set(content.properties.title[0][0], block_obj);
         if (content.contents)
           await traverse(content.contents, block_id, "block");
       }
@@ -215,8 +218,9 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...metadata
         };
         props.stack.push(Operation.block.update(block_id, [], block_data));
-        props.cache.block.set(block_id, block_data)
-        block_map[type].set(block_id, createBlockClass(content.type, block_id, props));
+        props.cache.block.set(block_id, block_data);
+        const block_obj = createBlockClass(content.type, block_id, props)
+        block_map[type].set(block_id,block_obj);
       }
 
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;

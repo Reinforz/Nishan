@@ -13,7 +13,7 @@ import Nishan, {
 } from '@nishans/core';
 
 import { priority, phase, status, purpose, subject, source } from '../data';
-import { counterFormula, curriculumInfoSchemaUnits, threePropertiesAddition } from '../util';
+import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, threePropertiesAddition } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{
@@ -30,27 +30,6 @@ const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 		type: 'multi_select',
 		name: 'Source',
 		options: source.map((source) => ({ ...source, id: uuidv4() }))
-	}
-];
-
-const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
-	{
-		type: 'multi_select',
-		name: 'Subject',
-		format: 200,
-		aggregation: 'unique'
-	},
-	{
-		type: 'multi_select',
-		name: 'Purpose',
-		format: 200,
-		aggregation: 'unique'
-	},
-	{
-		type: 'multi_select',
-		name: 'Source',
-		format: 200,
-		aggregation: 'unique'
 	}
 ];
 

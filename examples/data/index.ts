@@ -6,6 +6,6 @@ import subject from './subject';
 import purpose from './purpose';
 import source from './source';
 export * from './category';
-export * from './for';
+export * from './ecosystem';
 
 export { source, phase, priority, status, subject, difficulty, purpose };

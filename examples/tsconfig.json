@@ -22,6 +22,7 @@
     "noImplicitAny": false
   },
   "include": [
+    "./index.ts",
     "./workflow_1",
     "./workflow_2",
     "./workflow_3",

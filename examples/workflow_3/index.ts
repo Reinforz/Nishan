@@ -2,17 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Nishan, { ILinkedDBInput, IPageCreateInput, TViewCreateInput, ElementType, CollectionViewPage, Page } from '@nishans/core';
 import '../env';
 import { ecosystems, categories, subject } from '../data';
-import { CommonMultiSelectSchema } from '../util';
-
-const status_phase_combos = [
-  ['To Complete', 'Learn', 'Learning'],
-  ['Completing', 'Learn', 'Learning'],
-  ['Completed', 'Learn', 'Learning'],
-  ['Completing', 'Revise', 'Revising'],
-  ['Completed', 'Revise', 'Revising'],
-  ['Completing', 'Practice', 'Practicing'],
-  ['Completed', 'Practice', 'Practicing']
-];
+import { CommonMultiSelectSchema,status_phase_combos } from '../util';
 
 function createLinkedDB(collection_id: string, cvp: 'EBooks' | 'Courses', title: string) {
   return {

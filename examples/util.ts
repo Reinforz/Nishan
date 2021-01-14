@@ -9,6 +9,16 @@ import {
 import { status, phase, priority, subject } from './data';
 import { v4 as uuidv4 } from 'uuid';
 
+export const status_phase_combos = [
+	[ 'To Complete', 'Learn', 'Learning' ],
+	[ 'Completing', 'Learn', 'Learning' ],
+	[ 'Completed', 'Learn', 'Learning' ],
+	[ 'Completing', 'Revise', 'Revising' ],
+	[ 'Completed', 'Revise', 'Revising' ],
+	[ 'Completing', 'Practice', 'Practicing' ],
+	[ 'Completed', 'Practice', 'Practicing' ]
+];
+
 export function counterFormula (property: string, levels: [string, string]): TFormulaCreateInput {
 	return {
 		function: 'if',

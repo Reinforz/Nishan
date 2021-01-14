@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
-import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
+import Nishan, { CheckboxSchemaUnit, Page, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
-import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked } from '../util';
+import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
 
 import '../env';
 
@@ -20,18 +20,21 @@ const daily_sites = [
 	'Stackshare'
 ];
 
-export default async function workflow1() {
+export default async function workflow1(user_family_name: string, space_name: string) {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
 	});
 
-	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
-  const space = await user.getSpace((space) => space.name === 'Developers');
+	const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);
+  const space = await user.getSpace((space) => space.name === space_name);
 	const { page } = await space.createTRootPages([
     {
       type: "page",
       properties: {
         title: [["Examples"]]
+      },
+      format:{
+        page_full_width: true
       }
     }
   ]);
@@ -60,19 +63,9 @@ export default async function workflow1() {
         ...curriculumInfoSchemaUnits
       ],
       views: [
-        ...[
-          [ 'To Complete', 'Learn' ],
-          [ 'Completing', 'Learn' ],
-          [ 'Completed', 'Learn' ],
-          [ 'To Complete', 'Revise' ],
-          [ 'Completing', 'Revise' ],
-          [ 'Completed', 'Revise' ],
-          [ 'To Complete', 'Practice' ],
-          [ 'Completing', 'Practice' ],
-          [ 'Completed', 'Practice' ]
-        ].map(([ status, phase ]) => {
+        ...status_phase_combos.map(([ status, phase, gerund ]) => {
           const data: TViewCreateInput = {
-            name: `${status} ${phase} Articles`,
+            name: `${status} ${gerund} Articles`,
             type: 'table',
             schema_units: [
               {
@@ -450,5 +443,6 @@ export default async function workflow1() {
       ]
     }]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-	await target_page?.executeOperation();
+  await target_page?.executeOperation();
+  return target_page as Page;
 };

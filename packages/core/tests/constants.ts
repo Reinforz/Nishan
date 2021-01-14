@@ -10,12 +10,24 @@ nishan.init_cache = true;
 
 nishan.saveToCache(data.recordMap);
 
-const USER_ONE_ID = 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
-	SPACE_ONE_ID = 'd2498a62-99ed-4ffd-b56d-e986001729f4',
-	SPACE_VIEW_ONE_ID = 'ccfc7afe-c14f-4764-9a89-85659217eed7',
-	ROOT_PAGE_ONE_ID = '6eae77bf-64cd-4ed0-adfb-e97d928a6402',
-	ROOT_COLLECTION_VIEW_PAGE_ONE_ID = '4b4bb21d-f68b-4113-b342-830687a5337a',
-	COLLECTION_ONE_ID = 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b';
+const root_page_ids: string[] = [],
+	non_root_page_ids: string[] = [],
+	root_cvp_ids: string[] = [],
+	non_root_cvp_ids: string[] = [];
+
+Object.values(data.recordMap.block).forEach(({ value: block }) => {
+	if (block.type === 'page' && block.parent_table === 'space') root_page_ids.push(block.id);
+	else if (block.type === 'page' && block.parent_table !== 'space') non_root_page_ids.push(block.id);
+	else if (block.type === 'collection_view_page' && block.parent_table === 'space') root_cvp_ids.push(block.id);
+	else if (block.type === 'collection_view_page' && block.parent_table !== 'space') non_root_cvp_ids.push(block.id);
+});
+
+const USER_ONE_ID = Object.keys(data.recordMap.user_root)[0],
+	SPACE_ONE_ID = Object.keys(data.recordMap.space)[0],
+	SPACE_VIEW_ONE_ID = Object.keys(data.recordMap.space_view)[0],
+	ROOT_PAGE_ONE_ID = root_page_ids[0],
+	ROOT_COLLECTION_VIEW_PAGE_ONE_ID = root_cvp_ids[0],
+	COLLECTION_ONE_ID = Object.keys(data.recordMap.collection)[0];
 
 export {
 	data,

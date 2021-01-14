@@ -40,7 +40,7 @@ describe('iterateAndGetChildren function works property', () => {
 			});
 		});
 
-		describe('Returns iccorrect child from cache', () => {
+		describe('Returns incorrect child from cache', () => {
 			it('Check within the callback', async () => {
 				const child_ids = data.recordMap.user_root[USER_ONE_ID].value.space_views;
 				iterateAndGetChildren<IUserRoot, ISpaceView>(

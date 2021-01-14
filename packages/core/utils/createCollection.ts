@@ -33,8 +33,8 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     format: {
       collection_page_properties: []
     },
-    cover: param?.format?.page_cover ?? "",
-    icon: param?.format?.page_icon ?? "",
+    cover: param?.cover ?? "",
+    icon: param?.icon ?? "",
     parent_id,
     parent_table: 'block',
     alive: true,

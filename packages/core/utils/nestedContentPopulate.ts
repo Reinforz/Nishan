@@ -37,7 +37,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       }; */
 
       const {
-        format = {},
         properties,
         type,
       } = content;
@@ -71,7 +70,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           type: content.type,
           collection_id,
           view_ids,
-          properties: content.properties,
           parent_id,
           parent_table: "block",
           alive: true,
@@ -210,7 +208,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         const block_data: any = {
           id: block_id,
           properties,
-          format,
+          format: content.format,
           type,
           parent_id,
           parent_table,

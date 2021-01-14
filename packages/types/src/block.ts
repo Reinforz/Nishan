@@ -193,18 +193,15 @@ export interface ICollectionBlock extends IBlock {
 	view_ids: string[];
 	collection_id: string;
 	type: 'collection_view' | 'collection_view_page';
-	properties?: Record<string, unknown>;
 }
 
 export interface ICollectionView extends ICollectionBlock {
 	type: 'collection_view';
-	format?: Record<string, unknown>;
 }
 
 export interface ICollectionViewPage extends ICollectionBlock {
 	type: 'collection_view_page';
 	permissions: IPermission[];
-	format?: Partial<PageFormat>;
 }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
@@ -383,6 +380,7 @@ export type TParentType = IPage | ISpace | ICollectionViewPage;
 export interface ICollection extends Node, ParentProps {
 	description?: string[][];
 	icon?: string;
+	cover: string;
 	migrated: boolean;
 	name: string[][];
 	schema: Schema;

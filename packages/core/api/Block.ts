@@ -81,7 +81,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
 	// ? FIX:1:M update local cache
 	update (args: Partial<A>) {
-		const data = this.getCachedData();
+		const data = this.getCachedData() as any;
 		const { format = data.format, properties = data.properties } = args as any;
 		this.logger && this.logger('UPDATE', 'block', data.id);
 		this.stack.push(

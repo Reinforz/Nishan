@@ -380,7 +380,7 @@ export type TParentType = IPage | ISpace | ICollectionViewPage;
 export interface ICollection extends Node, ParentProps {
 	description?: string[][];
 	icon?: string;
-	cover: string;
+	cover?: string;
 	migrated: boolean;
 	name: string[][];
 	schema: Schema;

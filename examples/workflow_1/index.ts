@@ -20,17 +20,23 @@ const daily_sites = [
 	'Stackshare'
 ];
 
-(async function () {
+export default async function workflow1() {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
 	});
 
 	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
-	const space = await user.getSpace((space) => space.name === 'Developers');
-	const { page } = await space.getTRootPage(
-		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
-  );
-  const target_page = page.get("Hello");
+  const space = await user.getSpace((space) => space.name === 'Developers');
+	const { page } = await space.createTRootPages([
+    {
+      type: "page",
+      properties: {
+        title: [["Examples"]]
+      }
+    }
+  ]);
+
+  const target_page = page.get("Examples");
 	await target_page?.createBlocks([
     {
       type: 'collection_view_page',
@@ -445,4 +451,4 @@ const daily_sites = [
     }]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
 	await target_page?.executeOperation();
-})();
+};

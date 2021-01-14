@@ -4,6 +4,7 @@ import '../env';
 import Nishan, {
 	DateViewFiltersValue,
 	FormulaSchemaUnitInput,
+	Page,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
 	slugify,
@@ -123,19 +124,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 	};
 };
 
-(async function () {
-	const nishan = new Nishan({
-		token: process.env.NOTION_TOKEN as string
-	});
-
-	const user = await nishan.getNotionUser((user) => user.family_name === 'Shaheer');
-	const space = await user.getSpace((space) => space.name === 'Developers');
-	const { page } = await space.getTRootPage(
-		(root_page) => root_page.type === 'page' && root_page.properties.title[0][0] === 'Hello'
-	);
-
-	const target_page = page.get('Hello');
-
+export default async function workflow2 (target_page: Page) {
 	const goals_collection_id = uuidv4(),
 		goals_cvp_id = uuidv4(),
 		tasks_collection_id = uuidv4(),
@@ -661,4 +650,4 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 			}
 		}
 	}
-})();
+}

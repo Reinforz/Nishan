@@ -3,16 +3,19 @@ import { FilterTypes, Logger, NishanArg, UpdateTypes } from "../types";
 import { IOperation, TData, TDataType } from "@nishans/types";
 import { Operation } from "../utils";
 
-interface IterateAndGetOptions<T> extends Omit<NishanArg, "id" | "space_id" | "shard_id" | "token" | "interval" | "logger" | "stack" | "user_id">{
+interface IterateOptions<T> extends Omit<NishanArg, "id" | "space_id" | "shard_id" | "token" | "interval" | "logger" | "stack" | "user_id">{
   child_type: TDataType,
   child_ids: string[] | keyof T,
   multiple?: boolean,
   parent_type: TDataType,
   parent_id: string,
-  logger?: Logger
+  logger?: Logger,
+}
+interface IterateAndGetOptions<T, C> extends IterateOptions<T>{
+  container: C
 }
 
-interface IterateAndUpdateOptions<T> extends IterateAndGetOptions<T>{
+interface IterateAndUpdateOptions<T> extends IterateOptions<T>{
   manual?:boolean
   stack: IOperation[],
   user_id: string
@@ -30,14 +33,14 @@ function updateLastEditedProps(block: any, user_id: string){
   block.last_edited_by_id = user_id;
 }
 
-export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndGetOptions<T>, cb?: ((id: string, data: TD) => any)) => {
-  const matched_data: TD[] = [], { parent_id, multiple = true, child_type, logger, cache, parent_type} = options,
+export const iterateAndGetChildren = async<T extends TData, TD, C>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndGetOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
+  const { container, parent_id, multiple = true, child_type, logger, cache, parent_type} = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[];
-  
+  let total_matched = 0;
   const iterateUtil = async (child_id: string, current_data: TD) => {
-    cb && await cb(child_id, current_data);
+    cb && await cb(child_id, current_data, container);
     logger && logger("READ", child_type, child_id);
-    matched_data.push(current_data);
+    total_matched++;
   }
 
   if (Array.isArray(args)) {
@@ -48,7 +51,7 @@ export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterType
       else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
         await iterateUtil(child_id, current_data)
-      if (!multiple && matched_data.length === 1) break;
+      if (!multiple && total_matched === 1) break;
     }
   } else {
     for (let index = 0; index < child_ids.length; index++) {
@@ -59,11 +62,11 @@ export const iterateAndGetChildren = async<T extends TData, TD>(args: FilterType
         if (current_data && matches)
           await iterateUtil(child_id, current_data)
       }
-      if (!multiple && matched_data.length === 1) break;
+      if (!multiple && total_matched === 1) break;
     }
   }
 
-  return matched_data;
+  return container;
 }
 
 export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndDeleteOptions<T>, cb?: ((id: string, data: TD) => any)) => {

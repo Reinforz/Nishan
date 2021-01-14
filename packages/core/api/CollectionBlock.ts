@@ -4,7 +4,7 @@ import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView
 
 import { createViewMap, createViews, Operation } from '../utils';
 import { ICollectionViewPage, ICollection, TView, TViewUpdateInput } from '@nishans/types';
-import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput } from '../types';
+import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput, ITView } from '../types';
 
 const view_class = {
 	board: BoardView,
@@ -51,12 +51,11 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
    * @returns An array of view objects of the collectionblock
    */
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
-		const view_map = createViewMap();
-		await this.getIterate<TView>(
+		return await this.getIterate<TView, ITView>(
 			args,
-			{ multiple, child_ids: 'view_ids', child_type: 'collection_view' },
+			{ multiple, container: createViewMap(), child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
-			(view_id, { type, name }) => {
+			(view_id, { type, name }, view_map) => {
 				const view_obj = new view_class[type]({
 					id: view_id,
 					...this.getProps()
@@ -65,7 +64,6 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 				view_map[type].set(name, view_obj);
 			}
 		);
-		return view_map;
 	}
 
 	async updateView (arg: UpdateType<TView, TViewUpdateInput>) {

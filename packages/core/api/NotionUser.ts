@@ -168,20 +168,19 @@ class NotionUser extends Data<INotionUser> {
    * @returns An array of space objects
    */
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
-    const spaces:Space[] = [];
-    (await this.getIterate<ISpace>(args, {
+    return await this.getIterate<ISpace, Space[]>(args, {
       multiple,
+      container: [],
       child_type: "space",
       child_ids: this.#getSpaceIds(),
-    }, (space_id) => this.cache.space.get(space_id), (id, {shard_id})=>{
+    }, (space_id,) => this.cache.space.get(space_id), (id, {shard_id}, spaces)=>{
       spaces.push(new Space({
         ...this.getProps(),
         space_id: id,
         shard_id,
         id
       }))
-    }));
-    return spaces;
+    });
   }
 
   // FIX:1:H Fix the updateSpace method

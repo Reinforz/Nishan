@@ -5,14 +5,14 @@ import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput,  ISchemaMapValue } from '../types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMapValue, ITSchemaUnit } from '../types';
 
 /**
  * A class to represent collection of Notion
  * @noInheritDoc
  */
 class Collection extends Data<ICollection> {
-  
+
   constructor(args: NishanArg) {
     super({ ...args, type: "collection" });
   }
@@ -54,20 +54,13 @@ class Collection extends Data<ICollection> {
     return (await this.getTemplates(typeof args === "string" ? [args] : args, false))[0]
   }
 
-  /**
-   * Get multiple template pages of the collection
-   * @param args string of ids or a predicate function
-   * @param multiple whether multiple or single item is targeted
-   * @returns An array of template pages object
-   */
   async getTemplates(args?: FilterTypes<IPage>, multiple?: boolean) {
-    const pages: Page[] = [];
-    (await this.getIterate<IPage>(args, {
+    return await this.getIterate<IPage, Page[]>(args, {
       child_ids: "template_pages",
       multiple,
-      child_type: "block"
-    }, (page_id) => this.cache.block.get(page_id) as IPage, (id)=> pages.push(new Page({ ...this.getProps(), id }))));
-    return pages;
+      child_type: "block",
+      container: []
+    }, (page_id) => this.cache.block.get(page_id) as IPage, (id,_,pages) => pages.push(new Page({ ...this.getProps(), id })));
   }
 
   async updateTemplate(args: UpdateType<IPage, IPageUpdateInput>) {
@@ -81,7 +74,7 @@ class Collection extends Data<ICollection> {
       child_ids: "template_pages",
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage, (id)=>pages.push(new Page({ ...this.getProps(), id }))));
+    }, (child_id) => this.cache.block.get(child_id) as IPage, (id) => pages.push(new Page({ ...this.getProps(), id }))));
     return pages;
   }
 
@@ -121,13 +114,12 @@ class Collection extends Data<ICollection> {
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
-    const pages: Page[] = [];
-    (await this.getIterate<IPage>(args, {
+    return await this.getIterate<IPage, Page[]>(args, {
       child_ids: await this.#getRowPages(),
       child_type: "block",
-      multiple
-    }, (id) => this.cache.block.get(id) as IPage, (id)=>pages.push(new Page({ ...this.getProps(), id }))));
-    return pages;
+      multiple,
+      container: []
+    }, (id) => this.cache.block.get(id) as IPage, (id,_,pages) => pages.push(new Page({ ...this.getProps(), id })));
   }
 
   async updatePage(args: UpdateType<IPage, IPageUpdateInput>) {
@@ -140,12 +132,12 @@ class Collection extends Data<ICollection> {
       child_ids: await this.#getRowPages(),
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage, (id)=>pages.push(new Page({ ...this.getProps(), id }))));
+    }, (child_id) => this.cache.block.get(child_id) as IPage, (id) => pages.push(new Page({ ...this.getProps(), id }))));
     return pages;
   }
 
   async deletePage(args?: FilterType<IPage>) {
-    return await this.deletePages(typeof args === "string" ? [args] : args,  false);
+    return await this.deletePages(typeof args === "string" ? [args] : args, false);
   }
 
   /**
@@ -171,8 +163,8 @@ class Collection extends Data<ICollection> {
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
-        if(arg.type === "formula")
-          data.schema[schema_id] = {...arg, formula: parseFormula(arg.formula, getSchemaMap(data)) }
+        if (arg.type === "formula")
+          data.schema[schema_id] = { ...arg, formula: parseFormula(arg.formula, getSchemaMap(data)) }
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         results[arg.type].set(schema_id, schema_obj);
@@ -197,16 +189,13 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData(), schema_map = getSchemaMap(data);
-    (await this.getIterate<ISchemaMapValue>(args, { child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) => {
-      const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
-      return { ...schema_unit_data, schema_id: schema_unit_data.schema_id }
-    }, (_, { schema_id, name, type })=>{
-      const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
-      schema_unit_map[type].set(schema_id, schema_obj)
-      schema_unit_map[type].set(name, schema_obj)
-    }))
-    return schema_unit_map;
+    const data = this.getCachedData(), schema_map = getSchemaMap(data);
+    return await this.getIterate<ISchemaMapValue, ITSchemaUnit>(args, { container: createSchemaUnitMap(), child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) =>
+      schema_map.get(name) as ISchemaMapValue, (_, { schema_id, name, type }, schema_unit_map) => {
+        const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
+        schema_unit_map[type].set(schema_id, schema_obj)
+        schema_unit_map[type].set(name, schema_obj)
+      })
   }
 
   /**
@@ -233,7 +222,7 @@ class Collection extends Data<ICollection> {
     }, (name) => {
       const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
       return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };
-    }, (_, {schema_id, type, name}, updated_data) => {
+    }, (_, { schema_id, type, name }, updated_data) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
       type = updated_data.type ?? type;
       const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
@@ -241,7 +230,7 @@ class Collection extends Data<ICollection> {
       results[type].set(name, schema_obj)
     });
     this.updateLastEditedProps();
-    this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }))
+    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
     return results;
   }
 
@@ -269,11 +258,11 @@ class Collection extends Data<ICollection> {
     }, (name) => {
       const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
       return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };
-    }, (_, {schema_id}) => {
+    }, (_, { schema_id }) => {
       delete data.schema[schema_id]
     });
     this.updateLastEditedProps();
-    this.stack.push(Operation.collection.update(this.id,[], { schema: data.schema }) )
+    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
   }
 }
 

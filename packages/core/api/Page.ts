@@ -1,6 +1,6 @@
 import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import axios from "axios";
-import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes } from "../types";
+import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, ITBlock } from "../types";
 
 import { createBlockClass, createBlockMap, nestedContentPopulate, Operation } from "../utils";
 
@@ -128,8 +128,7 @@ export default class Page extends Permissions<IPage> {
    * @returns An array of block object
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
-    const block_map = createBlockMap();
-    await this.getIterate<TBlock>(args, { multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, (_, block) => {
+    return await this.getIterate<TBlock, ITBlock>(args, { container: createBlockMap(), multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, (_, block, block_map) => {
       const block_obj = createBlockClass(block.type, block.id, this.getProps());
       if(block.type === "page")
         block_map[block.type].set(block.properties.title[0][0], block_obj)
@@ -140,7 +139,6 @@ export default class Page extends Permissions<IPage> {
       }
       block_map[block.type].set(block.id, block_obj)
     });
-    return block_map;
   }
 
   async updateBlock(args: UpdateType<TBlock, TBlockInput>) {

@@ -2,13 +2,17 @@ import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } 
 import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
-interface IterateAndGetOptions<T>{
+
+interface IterateOptions<T>{
   child_type: TDataType,
   child_ids: string[] | keyof T,
   multiple?: boolean,
 }
+interface IterateAndGetOptions<T, C> extends IterateOptions<T>{
+  container: C
+}
 
-interface IterateAndUpdateOptions<T> extends IterateAndGetOptions<T>{
+interface IterateAndUpdateOptions<T> extends IterateOptions<T>{
   manual?:boolean
 }
 
@@ -171,9 +175,9 @@ export default class Data<T extends TData> extends Operations {
     }, cb);
   }
 
-  protected async getIterate<RD>(args: FilterTypes<RD>, options: IterateAndGetOptions<T>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD) => any) {
+  protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD, container: C) => any) {
     await this.initializeCache()
-    return await iterateAndGetChildren<T,RD>(args, transform, {
+    return await iterateAndGetChildren<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),

@@ -7,7 +7,7 @@ import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
-import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput } from '../types';
+import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, ITPage } from '../types';
 
 const trootpage_class = {
   page: Page,
@@ -82,8 +82,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    const trootpage_map = createPageMap();
-    await this.getIterate<TPage>(args, { multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page) => {
+    return await this.getIterate<TPage, ITPage>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page, trootpage_map) => {
       const page_obj: any = new trootpage_class[page.type]({
         id: page.id,
         ...this.getProps()
@@ -95,7 +94,6 @@ export default class Space extends Data<ISpace> {
       }
       trootpage_map[page.type].set(page.id, page_obj)
     });
-    return trootpage_map;
   }
 
   /**
@@ -159,13 +157,12 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
-    const collections: Collection[] = [];
-    (await this.getIterate(args, {
+    return await this.getIterate<ICollection, Collection[]>(args, {
       child_type: "collection",
       multiple,
+      container: [],
       child_ids: this.getRootCollectionIds(),
-    }, (collection_id) => this.cache.collection.get(collection_id), (id)=>collections.push(new Collection({ ...this.getProps(), id }))));
-    return collections;
+    }, (collection_id) => this.cache.collection.get(collection_id), (id,_,collections)=>collections.push(new Collection({ ...this.getProps(), id })));
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {

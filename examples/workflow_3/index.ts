@@ -402,9 +402,7 @@ export default async function workflow3(target_page: Page) {
       properties: {
         title: [['Web 3.0']]
       },
-      format: {
-        page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg'
-      },
+      icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg',
       schema: [
         { name: 'Title', type: 'title' },
         { name: 'Competency', type: 'number' },

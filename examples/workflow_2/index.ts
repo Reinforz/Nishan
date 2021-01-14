@@ -182,9 +182,7 @@ export default async function workflow2 (target_page: Page) {
 				properties: {
 					title: [ [ 'Reading List' ] ]
 				},
-				format: {
-					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4da.svg'
-				},
+				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4da.svg',
 				views: [
 					{
 						type: 'gallery',
@@ -269,9 +267,7 @@ export default async function workflow2 (target_page: Page) {
 				properties: {
 					title: [ [ 'Course List' ] ]
 				},
-				format: {
-					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4dd.svg'
-				},
+				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4dd.svg',
 				views: [
 					{
 						type: 'gallery',
@@ -361,9 +357,7 @@ export default async function workflow2 (target_page: Page) {
 				properties: {
 					title: [ [ 'Goals' ] ]
 				},
-				format: {
-					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f44a-1f3fc.svg'
-				},
+				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f44a-1f3fc.svg',
 				collection_id: goals_collection_id,
 				views: [
 					{
@@ -514,9 +508,7 @@ export default async function workflow2 (target_page: Page) {
 				properties: {
 					title: [ [ 'Tasks' ] ]
 				},
-				format: {
-					page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg'
-				},
+				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg',
 				collection_id: tasks_collection_id,
 				views: [
 					tasksTableViews('Today', 'today'),

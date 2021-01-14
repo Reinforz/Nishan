@@ -46,10 +46,7 @@ export default async function workflow1(user_family_name: string, space_name: st
       properties: {
         title: [ [ 'Articles' ] ]
       },
-      format: {
-        page_full_width: true,
-        page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg'
-      },
+      icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg',
       schema: [
         {
           type: 'select',
@@ -149,10 +146,7 @@ export default async function workflow1(user_family_name: string, space_name: st
       properties: {
         title: [ [ 'Todo' ] ]
       },
-      format: {
-        page_full_width: true,
-        page_icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg'
-      },
+      icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg',
       schema: [
         {
           type: 'title',
@@ -291,10 +285,7 @@ export default async function workflow1(user_family_name: string, space_name: st
       properties: {
         title: [ [ 'Daily' ] ]
       },
-      format: {
-        page_icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/270a-1f3fc.svg",
-        page_full_width: true
-      },
+      icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/270a-1f3fc.svg",
       schema: [
         {
           type: 'title',

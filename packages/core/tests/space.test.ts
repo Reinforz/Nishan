@@ -120,18 +120,17 @@ function checkRootCollection(collection: Collection, status?:boolean){
 // }
 
 describe("Getter methods for space", ()=>{
+  it("Get root collection ids",()=>{
+    const collection_ids = space.getRootCollectionIds();
+    expect(collection_ids.length).toBe(1);
+    expect(collection_ids[0]).toBe(COLLECTION_ONE_ID);
+  })
+
   it("Get space_view",()=>{
     const space_view = space.getSpaceView();
-    expect(space_view).not.toBeNull();
     expect(space_view.id).toBe(SPACE_VIEW_ONE_ID);
   })
   
-  it("Get collection.id",()=>{
-    const collection_ids = space.getCollectionIds();
-    expect(collection_ids.length).toBe(1);
-    expect(collection_ids[0]).toBe(COLLECTION_ONE_ID)
-  })
-
   it("Get collection id", async ()=>{
     checkRootCollection(await space.getRootCollection(COLLECTION_ONE_ID))
   })

@@ -34,7 +34,7 @@ export default class Space extends Data<ISpace> {
     return target_space_view;
   }
 
-  getCollectionIds() {
+  getRootCollectionIds() {
     return (this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page") as ICollectionViewPage[]).map(cvp => cvp.collection_id) as string[]
   }
 
@@ -163,7 +163,7 @@ export default class Space extends Data<ISpace> {
     (await this.getIterate(args, {
       child_type: "collection",
       multiple,
-      child_ids: this.getCollectionIds(),
+      child_ids: this.getRootCollectionIds(),
     }, (collection_id) => this.cache.collection.get(collection_id), (id)=>collections.push(new Collection({ ...this.getProps(), id }))));
     return collections;
   }

@@ -1,22 +1,27 @@
 import { warn } from "./logs";
-import { FilterTypes, NishanArg, UpdateTypes } from "../types";
+import { FilterTypes, Logger, NishanArg, UpdateTypes } from "../types";
 import { IOperation, TData, TDataType } from "@nishans/types";
 import { Operation } from "../utils";
 
-interface IterateAndGetOptions<T> extends Omit<NishanArg, "id">{
+interface IterateAndGetOptions<T> extends Omit<NishanArg, "id" | "space_id" | "shard_id" | "token" | "interval" | "logger" | "stack" | "user_id">{
   child_type: TDataType,
   child_ids: string[] | keyof T,
   multiple?: boolean,
   parent_type: TDataType,
-  parent_id: string
+  parent_id: string,
+  logger?: Logger
 }
 
 interface IterateAndUpdateOptions<T> extends IterateAndGetOptions<T>{
   manual?:boolean
+  stack: IOperation[],
+  user_id: string
 }
 
 interface IterateAndDeleteOptions<T> extends IterateAndUpdateOptions<T>{
   child_path?: keyof T,
+  stack: IOperation[],
+  user_id: string
 }
 
 function updateLastEditedProps(block: any, user_id: string){

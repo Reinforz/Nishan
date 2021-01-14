@@ -74,29 +74,6 @@ export function propertyChecked (property: string): NumberIfFunctionCreateInput 
 	};
 }
 
-export const threePropertiesAddition = (properties: [string, string, string]): NumberAddFunctionCreateInput => {
-	return {
-		function: 'add',
-		result_type: 'number',
-		args: [
-			{ property: properties[0] },
-			{
-				function: 'add',
-				result_type: 'number',
-				args: [ { property: properties[1] }, { property: properties[2] } ]
-			}
-		]
-	};
-};
-
-export const twoPropertiesAddition = (properties: [string, string]): NumberAddFunctionCreateInput => {
-	return {
-		function: 'add',
-		result_type: 'number',
-		args: [ { property: properties[0] }, { property: properties[1] } ]
-	};
-};
-
 export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{ type: 'title', name: 'Title' },
 	{
@@ -107,7 +84,7 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'formula',
 		name: 'Urgency',
-		formula: threePropertiesAddition([ 'Phase Counter', 'Status Counter', 'Priority Counter' ])
+		formula: adders([ { property: 'Phase Counter' }, { property: 'Status Counter' }, { property: 'Priority Counter' } ])
 	},
 	{
 		type: 'formula',

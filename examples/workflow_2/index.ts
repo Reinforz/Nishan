@@ -13,13 +13,7 @@ import Nishan, {
 } from '@nishans/core';
 
 import { priority, phase, status, purpose, subject, source } from '../data';
-import {
-	CommonMultiSelectSchema,
-	counterFormula,
-	curriculumInfoSchemaUnits,
-	goalViewItem,
-	threePropertiesAddition
-} from '../util';
+import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{
@@ -646,12 +640,20 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 					{
 						type: 'formula',
 						name: 'Completed Steps',
-						formula: threePropertiesAddition([ 'Completed Steps 1', 'Completed Steps 2', 'Completed Steps 3' ])
+						formula: adders([
+							{ property: 'Completed Steps 1' },
+							{ property: 'Completed Steps 2' },
+							{ property: 'Completed Steps 3' }
+						])
 					},
 					{
 						type: 'formula',
 						name: 'Total Tasks',
-						formula: threePropertiesAddition([ 'Total Tasks 1', 'Total Tasks 2', 'Total Tasks 3' ])
+						formula: adders([
+							{ property: 'Total Tasks 1' },
+							{ property: 'Total Tasks 2' },
+							{ property: 'Total Tasks 3' }
+						])
 					}
 				]);
 				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');

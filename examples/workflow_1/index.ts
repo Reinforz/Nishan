@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
 import Nishan, { CheckboxSchemaUnit, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
 import { status, phase, priority, subject, difficulty } from '../data';
-import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, threePropertiesAddition, twoPropertiesAddition } from '../util';
+import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked } from '../util';
 
 import '../env';
 
@@ -162,7 +162,7 @@ const daily_sites = [
         {
           type: 'formula',
           name: 'Urgency',
-          formula: twoPropertiesAddition(['Difficulty Counter', 'Priority Counter'])
+          formula: adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}])
         },
         {
           type: 'formula',

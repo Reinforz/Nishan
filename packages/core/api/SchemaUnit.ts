@@ -1,6 +1,6 @@
 import { TSchemaUnit, ICollection } from '@nishans/types';
 import { NishanArg } from '../types';
-import { Operation, shortid } from '../utils';
+import { Operation, createShortId } from '../utils';
 import Data from './Data';
 
 /**
@@ -32,7 +32,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 
 	duplicate () {
 		const data = super.getCachedData(),
-			id = shortid();
+			id = createShortId();
 		data.schema[id] = data.schema[this.schema_id];
 		this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
 		this.logger && this.logger('CREATE', 'collection', id);

@@ -69,13 +69,13 @@ class Collection extends Data<ICollection> {
 
   // ? FEAT:1:H Custom update to take care of new properties, using the name rather than the id
   async updateTemplates(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
-    const pages: Page[] = [];
-    (await this.updateIterate<IPage, IPageUpdateInput>(args, {
+    return await this.updateIterate<IPage, IPageUpdateInput, Page[]>(args, {
       child_ids: "template_pages",
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage, (id) => pages.push(new Page({ ...this.getProps(), id }))));
-    return pages;
+      container: [],
+    }, (child_id) => this.cache.block.get(child_id) as IPage, 
+      (id,_,__,pages) => pages.push(new Page({ ...this.getProps(), id })));
   }
 
   /**
@@ -127,13 +127,12 @@ class Collection extends Data<ICollection> {
   }
 
   async updatePages(args: UpdateTypes<IPage, IPageUpdateInput>, multiple?: boolean) {
-    const pages: Page[] = [];
-    (await this.updateIterate<IPage, IPageUpdateInput>(args, {
+    return await this.updateIterate<IPage, IPageUpdateInput, Page[]>(args, {
       child_ids: await this.#getRowPages(),
       multiple,
       child_type: "block",
-    }, (child_id) => this.cache.block.get(child_id) as IPage, (id) => pages.push(new Page({ ...this.getProps(), id }))));
-    return pages;
+      container: []
+    }, (child_id) => this.cache.block.get(child_id) as IPage, (id,_,__,pages) => pages.push(new Page({ ...this.getProps(), id })));
   }
 
   async deletePage(args?: FilterType<IPage>) {
@@ -213,16 +212,15 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async updateSchemaUnits(args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
-    const results = createSchemaUnitMap(), data = this.getCachedData(), schema_map = getSchemaMap(data);
-    await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>>(args, {
+    const data = this.getCachedData(), schema_map = getSchemaMap(data);
+    const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ITSchemaUnit>(args, {
       child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
       multiple,
-      manual: true
-    }, (name) => {
-      const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
-      return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };
-    }, (_, { schema_id, type, name }, updated_data) => {
+      manual: true,
+      container: createSchemaUnitMap()
+    }, (name) => schema_map.get(name) as ISchemaMapValue,
+      (_, { schema_id, type, name }, updated_data, results) => {
       data.schema[schema_id] = { ...data.schema[schema_id], ...updated_data } as TSchemaUnit;
       type = updated_data.type ?? type;
       const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })

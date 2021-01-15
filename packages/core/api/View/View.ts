@@ -357,7 +357,7 @@ class View<T extends TView> extends Data<T> {
 				manual: true
 			},
 			(name) => format_properties_map.get(name),
-			(name, current_data, updated_data) => {
+			(name, current_data, updated_data, container) => {
 				const target_format_property_index = format_properties.findIndex(
 						(format_property) => format_property.property === current_data.schema_id
 					),

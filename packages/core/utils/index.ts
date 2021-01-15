@@ -1,7 +1,7 @@
 import Operation from './chunk';
 import createTransaction from './createTransaction';
 
-export * from './shortid';
+export * from './ids';
 export * from './logs';
 export * from './uuid';
 export * from './parseFormula';

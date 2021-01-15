@@ -15,13 +15,15 @@ interface IterateAndGetOptions<T, C> extends IterateOptions<T>{
   container: C
 }
 
-interface IterateAndUpdateOptions<T> extends IterateOptions<T>{
+interface IterateAndUpdateOptions<T, C> extends IterateOptions<T>{
   manual?:boolean
   stack: IOperation[],
-  user_id: string
+  user_id: string,
+  container?: C
 }
 
-interface IterateAndDeleteOptions<T> extends IterateAndUpdateOptions<T>{
+interface IterateAndDeleteOptions<T> extends IterateOptions<T>{
+  manual?:boolean
   child_path?: keyof T,
   stack: IOperation[],
   user_id: string
@@ -122,11 +124,13 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
 }
 
 // ! FIX:1:H Update deeply for example now it only replaces the top most properties
-// if page.properties = {key1: value1, key2:value2} and updated properties = {key1: value1} it'll lose {key2:value2}  
-export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateAndUpdateOptions<T>, cb?: ((id: string, current_data: CD, updated_data: RD) => any)) => {
-  const matched_data: CD[] = [], { manual = false, user_id, parent_id, multiple = true, child_type, logger, cache, stack, parent_type } = options,
+// if page.properties = {key1: value1, key2: value2} and updated properties = {key1: value1} it'll lose {key2:value2}  
+export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateAndUpdateOptions<T, C>, cb?: ((id: string, current_data: CD, updated_data: RD, container: C) => any)) => {
+  const { container = [], manual = false, user_id, parent_id, multiple = true, child_type, logger, cache, stack, parent_type } = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[], ops: IOperation[] = [],
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };
+
+  let total_matched = 0;
 
   const iterateUtil = async (child_id: string, current_data: CD, updated_data: RD) => {
     if (child_type && !manual) {
@@ -136,9 +140,9 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
       ops.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
     }
     
-    cb && await cb(child_id, current_data, updated_data);
+    cb && await cb(child_id, current_data, updated_data, container as any);
     logger && logger("UPDATE", child_type, child_id);
-    matched_data.push(current_data);
+    total_matched++;
   }
 
   if (Array.isArray(args)) {
@@ -149,7 +153,7 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
       else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
         iterateUtil(child_id, current_data, updated_data)
-      if (!multiple && matched_data.length === 1) break;
+      if (!multiple && total_matched === 1) break;
     }
   } else {
     for (let index = 0; index < child_ids.length; index++) {
@@ -160,7 +164,7 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
         if (current_data && matches)
           iterateUtil(child_id, current_data, matches)
       }
-      if (!multiple && matched_data.length === 1) break;
+      if (!multiple && total_matched === 1) break;
     }
   }
 
@@ -169,5 +173,5 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD>(args: Upd
   ops.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
   stack.push(...ops);
 
-  return matched_data;
+  return container as C;
 }

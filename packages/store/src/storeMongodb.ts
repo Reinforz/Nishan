@@ -4,7 +4,13 @@ import fs from 'fs';
 import { load } from 'js-yaml';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
-import { CollectionBlockExtracted, CollectionExtracted, LocalFileStructure, TViewExtracted } from './types';
+import {
+	CollectionBlockExtracted,
+	CollectionExtracted,
+	FetchDatabaseDataResult,
+	LocalFileStructure,
+	TViewExtracted
+} from './types';
 import { ICollection, TCollectionBlock, TView } from '@nishans/types';
 
 const extractCollectionBlockData = (block_data: TCollectionBlock) => ({
@@ -32,24 +38,32 @@ const extractViewsData = (views_data: TView[]) =>
 		parent_id: view_data.parent_id
 	}));
 
-export async function storeInLocalMongodbFromNotion (token: string, database_id: string) {
+async function storeToMongodb (arg: LocalFileStructure, extract?: boolean) {
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await client.connect();
-
-		const { block_data, collection_data, views_data } = await fetchDatabaseData(token, database_id);
-
-		const db = client.db(`${collection_data.name}`),
+		const { block, collection, views } = arg;
+		const db = client.db(`${collection.name}`),
 			block_collection = await db.createCollection<CollectionBlockExtracted>('block'),
 			collection_collection = await db.createCollection<CollectionExtracted>('collection'),
 			views_collection = await db.createCollection<TViewExtracted>('views');
 
-		await block_collection.insertOne(extractCollectionBlockData(block_data));
-		await collection_collection.insertOne(extractCollectionData(collection_data));
-		await views_collection.insertMany(extractViewsData(views_data));
+		await block_collection.insertOne(block);
+		await collection_collection.insertOne(collection);
+		await views_collection.insertMany(views);
 	} finally {
 		await client.close();
 	}
+}
+
+export async function storeInLocalMongodbFromNotion (token: string, database_id: string) {
+	const { block_data, collection_data, views_data } = await fetchDatabaseData(token, database_id);
+
+	await storeToMongodb({
+		block: extractCollectionBlockData(block_data),
+		collection: extractCollectionData(collection_data),
+		views: extractViewsData(views_data)
+	});
 }
 
 export async function storeInLocalMongodbFromFile (file_path: string) {
@@ -64,15 +78,7 @@ export async function storeInLocalMongodbFromFile (file_path: string) {
 			data = load(await fs.promises.readFile(file_path, 'utf-8')) as LocalFileStructure;
 		} else
 			throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
-		const { block: block_data, collection: collection_data, views: views_data } = data;
-		const db = client.db(`${collection_data.name}`),
-			block_collection = await db.createCollection<CollectionBlockExtracted>('block'),
-			collection_collection = await db.createCollection<CollectionExtracted>('collection'),
-			views_collection = await db.createCollection<TViewExtracted>('views');
-
-		await block_collection.insertOne(extractCollectionBlockData(block_data));
-		await collection_collection.insertOne(extractCollectionData(collection_data));
-		await views_collection.insertMany(extractViewsData(views_data));
+		await storeToMongodb(data);
 	} finally {
 		await client.close();
 	}

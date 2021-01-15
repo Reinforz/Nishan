@@ -1,6 +1,14 @@
 import axios from 'axios';
-import { ICollection, SyncRecordValuesResult, TCollectionBlock, TView } from '@nishans/types';
+import {
+	ICollection,
+	IPage,
+	QueryCollectionResult,
+	SyncRecordValuesResult,
+	TCollectionBlock,
+	TView
+} from '@nishans/types';
 import { idToUuid } from '../utils';
+import { FetchDatabaseDataResult } from './types';
 
 export async function fetchDatabaseData (token: string, database_id: string) {
 	const headers = {
@@ -40,8 +48,30 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 		},
 		headers
 	);
+	const { data: { recordMap: { block } } } = await axios.post<QueryCollectionResult>(
+		'https://www.notion.so/api/v3/queryCollection',
+		{
+			collectionId: collection_id,
+			collectionViewId: '',
+			query: {},
+			loader: {
+				type: 'table',
+				loadContentCover: true
+			}
+		},
+		headers
+	);
+
+	const row_pages_data = Object.values(block)
+		.filter(({ value }) => value.type === 'page')
+		.map(({ value }) => value) as IPage[];
 
 	const collection_data = recordMap.collection[collection_id].value as ICollection;
 	const views_data = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
-	return [ block_data, collection_data, views_data ] as [TCollectionBlock, ICollection, TView[]];
+	return {
+		block_data,
+		collection_data,
+		views_data,
+		row_pages_data
+	} as FetchDatabaseDataResult;
 }

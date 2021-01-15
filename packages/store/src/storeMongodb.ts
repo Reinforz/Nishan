@@ -37,7 +37,7 @@ export async function storeInLocalMongodbFromNotion (token: string, database_id:
 	try {
 		await client.connect();
 
-		const [ block_data, collection_data, views_data ] = await fetchDatabaseData(token, database_id);
+		const { block_data, collection_data, views_data } = await fetchDatabaseData(token, database_id);
 
 		const db = client.db(`${collection_data.name}`),
 			block_collection = await db.createCollection<CollectionBlockExtracted>('block'),

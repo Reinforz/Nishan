@@ -7,7 +7,7 @@ import { fetchDatabaseData } from './fetchDatabaseData';
 export async function storeInLocalFileSystem (token: string, database_id: string, filepath: string) {
 	const ext = path.extname(filepath);
 
-	const [ block_data, collection_data, views_data ] = await fetchDatabaseData(token, database_id);
+	const { block_data, collection_data, views_data } = await fetchDatabaseData(token, database_id);
 
 	const result_data = {
 		block: block_data,

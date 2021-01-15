@@ -34,7 +34,7 @@ export default class Queries extends Cache {
     this.user_id = user_id;
   }
 
-  protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T, interval?:number): Promise<T> => {
+  returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T, interval?:number): Promise<T> => {
     return new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {

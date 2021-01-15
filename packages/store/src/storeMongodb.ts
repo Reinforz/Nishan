@@ -2,6 +2,7 @@ import { MongoClient } from 'mongodb';
 import path from 'path';
 import fs from 'fs';
 import { load } from 'js-yaml';
+import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
 import {
@@ -11,41 +12,8 @@ import {
 	RowPageExtracted,
 	TViewExtracted
 } from './types';
-import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
 
-const extractCollectionBlockData = ({ id, collection_id, view_ids }: TCollectionBlock) =>
-	({
-		id,
-		collection_id,
-		view_ids
-	} as CollectionBlockExtracted);
-
-const extractCollectionData = ({ name, icon, cover, id, schema, parent_id }: ICollection) =>
-	({
-		name,
-		icon,
-		cover,
-		id,
-		schema,
-		parent_id
-	} as CollectionExtracted);
-
-const extractViewsData = (views_data: TView[]) =>
-	views_data.map(({ id, type, name, format, query2, parent_id }) => ({
-		id,
-		type,
-		name,
-		format,
-		query2,
-		parent_id
-	})) as TViewExtracted[];
-
-const extractRowPagesData = (row_pages: IPage[]) =>
-	row_pages.map(({ id, properties, format }) => ({
-		id,
-		properties,
-		format
-	})) as RowPageExtracted[];
+import { extractCollectionBlockData, extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
 async function storeToMongodb (arg: LocalFileStructure) {
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });

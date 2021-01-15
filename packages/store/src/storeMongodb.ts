@@ -5,8 +5,34 @@ import { load } from 'js-yaml';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
 import { LocalFileStructure } from './types';
+import { ICollection, TCollectionBlock, TView } from '@nishans/types';
 
-export async function storeInLocalMongodbFromRemote (token: string, database_id: string) {
+const extractCollectionBlockData = (block_data: TCollectionBlock) => ({
+	id: block_data.id,
+	collection_id: block_data.collection_id,
+	view_ids: block_data.view_ids
+});
+
+const extractCollectionData = (collection_data: ICollection) => ({
+	name: collection_data.name,
+	icon: collection_data.icon,
+	cover: collection_data.cover,
+	id: collection_data.id,
+	schema: collection_data.schema,
+	parent_id: collection_data.parent_id
+});
+
+const extractViewsData = (views_data: TView[]) =>
+	views_data.map((view_data) => ({
+		id: view_data.id,
+		type: view_data.type,
+		name: view_data.name,
+		format: view_data.format,
+		query2: view_data.query2,
+		parent_id: view_data.parent_id
+	}));
+
+export async function storeInLocalMongodbFromNotion (token: string, database_id: string) {
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await client.connect();
@@ -18,29 +44,9 @@ export async function storeInLocalMongodbFromRemote (token: string, database_id:
 			collection_collection = await db.createCollection('collection'),
 			views_collection = await db.createCollection('views');
 
-		await block_collection.insertOne({
-			id: block_data.id,
-			collection_id: block_data.collection_id,
-			view_ids: block_data.view_ids
-		});
-		await collection_collection.insertOne({
-			name: collection_data.name,
-			icon: collection_data.icon,
-			cover: collection_data.cover,
-			id: collection_data.id,
-			schema: collection_data.schema,
-			parent_id: collection_data.parent_id
-		});
-		await views_collection.insertMany(
-			views_data.map((view_data) => ({
-				id: view_data.id,
-				type: view_data.type,
-				name: view_data.name,
-				format: view_data.format,
-				query2: view_data.query2,
-				parent_id: view_data.parent_id
-			}))
-		);
+		await block_collection.insertOne(extractCollectionBlockData(block_data));
+		await collection_collection.insertOne(extractCollectionData(collection_data));
+		await views_collection.insertMany(extractViewsData(views_data));
 	} finally {
 		await client.close();
 	}
@@ -64,31 +70,9 @@ export async function storeInLocalMongodbFromFile (file_path: string) {
 			collection_collection = await db.createCollection('collection'),
 			views_collection = await db.createCollection('views');
 
-		await block_collection.insertOne({
-			id: block_data.id,
-			collection_id: block_data.collection_id,
-			view_ids: block_data.view_ids
-		});
-
-		await collection_collection.insertOne({
-			name: collection_data.name,
-			icon: collection_data.icon,
-			cover: collection_data.cover,
-			id: collection_data.id,
-			schema: collection_data.schema,
-			parent_id: collection_data.parent_id
-		});
-
-		await views_collection.insertMany(
-			views_data.map((view_data) => ({
-				id: view_data.id,
-				type: view_data.type,
-				name: view_data.name,
-				format: view_data.format,
-				query2: view_data.query2,
-				parent_id: view_data.parent_id
-			}))
-		);
+		await block_collection.insertOne(extractCollectionBlockData(block_data));
+		await collection_collection.insertOne(extractCollectionData(collection_data));
+		await views_collection.insertMany(extractViewsData(views_data));
 	} finally {
 		await client.close();
 	}

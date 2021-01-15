@@ -1,0 +1,29 @@
+{
+  "name": "@nishans/endpoints",
+  "version": "0.0.0",
+  "description": "A package to expose all notion endpoints for queries and mutations",
+  "keywords": [
+    "notion",
+    "notion-endpoints",
+    "rest-api"
+  ],
+  "author": "Devon Reid <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

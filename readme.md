@@ -21,8 +21,9 @@ This monorepo contains/will contain the following packages:-
 6. [@nishans/cli](https://github.com/Devorein/Nishan/tree/master/packages/cli) (WIP): A package to interact with the nishan api from the terminal
 7. [@nishans/typegen](https://github.com/Devorein/Nishan/tree/master/packages/typegen) (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
 8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (WIP): A package to use notion as a database by providing an easy to use orm api
+9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) (WIP): A package to expose all notion endpoints for queries and mutations
 
-***NOTE:***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
+***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 
 Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
 
@@ -35,8 +36,7 @@ Check out the [examples](https://github.com/Devorein/Nishan/tree/master/examples
 
 ## NOTE
 
-1. Right now only the core and types packages have been released, the rest will soon follow.
-2. The documentation still needs a lot of work, please stay patient as I am trying my best.
+1. The documentation still needs a lot of work, please stay patient as I am trying my best.
 
 ## How to contribute
 

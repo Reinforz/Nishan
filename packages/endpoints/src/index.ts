@@ -5,3 +5,4 @@ import Cache from './Cache';
 export { Cache, Queries, Mutations };
 
 export * from './types';
+export * from '../utils';

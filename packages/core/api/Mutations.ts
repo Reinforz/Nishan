@@ -12,9 +12,10 @@ import {
 	SetBookmarkMetadataParams,
 	Request
 } from '@nishans/types';
+
+import { Queries } from '@nishans/endpoints';
 import { NishanArg } from '../types';
 import { createTransaction } from '../utils';
-import Queries from './Queries';
 
 export default class Mutations extends Queries {
 	protected space_id: string;
@@ -22,7 +23,7 @@ export default class Mutations extends Queries {
 	protected createTransaction: (operations: IOperation[]) => Request;
 
 	constructor ({ cache, token, interval, logger, user_id, shard_id, space_id }: NishanArg) {
-		super({ logger, token, interval, user_id, cache });
+		super({ token, interval, user_id, cache });
 		this.shard_id = shard_id;
 		this.space_id = space_id;
 		this.createTransaction = createTransaction.bind(this, shard_id, space_id);

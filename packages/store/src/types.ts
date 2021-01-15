@@ -8,10 +8,17 @@ export interface LocalFileStructure {
 	template_pages: RowPageExtracted[];
 }
 
+export interface SimplePageProps {
+	title: string;
+	[k: string]: string;
+}
+
 export type CollectionBlockExtracted = Pick<TCollectionBlock, 'id' | 'collection_id' | 'view_ids'>;
-export type CollectionExtracted = Pick<ICollection, 'id' | 'name' | 'icon' | 'cover' | 'schema' | 'parent_id'>;
+export type CollectionExtracted = Pick<ICollection, 'id' | 'icon' | 'cover' | 'schema' | 'parent_id'> & {
+	name: string;
+};
 export type TViewExtracted = Pick<TView, 'id' | 'type' | 'name' | 'query2' | 'format' | 'parent_id'>;
-export type RowPageExtracted = Pick<IPage, 'id' | 'properties' | 'format' | 'parent_id'>;
+export type RowPageExtracted = Pick<IPage, 'id' | 'format' | 'parent_id'> & { properties: SimplePageProps };
 
 export interface FetchDatabaseDataResult {
 	block_data: TCollectionBlock;

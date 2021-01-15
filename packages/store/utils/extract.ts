@@ -1,4 +1,10 @@
-import { CollectionBlockExtracted, CollectionExtracted, RowPageExtracted, TViewExtracted } from '../src/types';
+import {
+	CollectionBlockExtracted,
+	CollectionExtracted,
+	RowPageExtracted,
+	SimplePageProps,
+	TViewExtracted
+} from '../src/types';
 import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
 
 export const extractCollectionBlockData = ({ id, collection_id, view_ids }: TCollectionBlock) =>
@@ -10,7 +16,7 @@ export const extractCollectionBlockData = ({ id, collection_id, view_ids }: TCol
 
 export const extractCollectionData = ({ name, icon, cover, id, schema, parent_id }: ICollection) =>
 	({
-		name,
+		name: name[0][0],
 		icon,
 		cover,
 		id,
@@ -28,10 +34,15 @@ export const extractViewsData = (views_data: TView[]) =>
 		parent_id
 	})) as TViewExtracted[];
 
-export const extractRowPagesData = (row_pages: IPage[]) =>
-	row_pages.map(({ id, properties, format, parent_id }) => ({
-		id,
-		properties,
-		format,
-		parent_id
-	})) as RowPageExtracted[];
+export const extractRowPagesData = (row_pages: IPage[]) => {
+	return row_pages.map(({ id, properties, format, parent_id }) => {
+		const simple_page_props: SimplePageProps = {} as any;
+		Object.entries(properties).map(([ key, value ]) => (simple_page_props[key] = value[0][0]));
+		return {
+			id,
+			properties: simple_page_props,
+			format,
+			parent_id
+		};
+	}) as RowPageExtracted[];
+};

@@ -26,7 +26,6 @@ async function storeToMongodb (arg: LocalFileStructure) {
 			views_collection = await db.createCollection<TViewExtracted>('views'),
 			row_pages_collection = await db.createCollection<RowPageExtracted>('row_pages'),
 			template_pages_collection = await db.createCollection<RowPageExtracted>('template_pages');
-
 		await block_collection.insertOne(block);
 		await collection_collection.insertOne(collection);
 		await views_collection.insertMany(views);
@@ -62,9 +61,9 @@ export async function storeInLocalMongodbFromFile (file_path: string) {
 	} else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
 	await storeToMongodb({
 		block: extractCollectionBlockData(data.block as TCollectionBlock),
-		collection: extractCollectionData(data.collection as ICollection),
+		collection: extractCollectionData(data.collection as any),
 		views: extractViewsData(data.views as TView[]),
-		row_pages: extractRowPagesData(data.row_pages as IPage[]),
-		template_pages: extractRowPagesData(data.template_pages as IPage[])
+		row_pages: extractRowPagesData(data.row_pages as any),
+		template_pages: extractRowPagesData(data.template_pages as any)
 	});
 }

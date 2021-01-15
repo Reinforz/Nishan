@@ -32,6 +32,7 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 	);
 
 	const block_data = data.recordMap.block[database_id].value as TCollectionBlock;
+
 	const { collection_id, view_ids } = block_data;
 
 	const { data: { recordMap } } = await axios.post<SyncRecordValuesResult>(
@@ -48,6 +49,9 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 		},
 		headers
 	);
+	const collection_data = recordMap.collection[collection_id].value as ICollection;
+	const views_data = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
+
 	const { data: { recordMap: { block } } } = await axios.post<QueryCollectionResult>(
 		'https://www.notion.so/api/v3/queryCollection',
 		{
@@ -63,15 +67,29 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 	);
 
 	const row_pages_data = Object.values(block)
-		.filter(({ value }) => value.type === 'page' && value.parent_table === "collection" && value.parent_id === collection_id)
+		.filter(
+			({ value }) => value.type === 'page' && value.parent_table === 'collection' && value.parent_id === collection_id
+		)
 		.map(({ value }) => value) as IPage[];
 
-	const collection_data = recordMap.collection[collection_id].value as ICollection;
-	const views_data = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
+	const template_pages_data: IPage[] = [];
+
+	if (collection_data.template_pages) {
+		const { data: { recordMap: { block: template_blocks } } } = await axios.post<SyncRecordValuesResult>(
+			'https://www.notion.so/api/v3/syncRecordValues',
+			{
+				requests: [ ...collection_data.template_pages.map((page_id) => ({ id: page_id, table: 'block', version: 0 })) ]
+			},
+			headers
+		);
+		Object.values(template_blocks).forEach(({ value }) => template_pages_data.push(value as IPage));
+	}
+
 	return {
 		block_data,
 		collection_data,
 		views_data,
-		row_pages_data
+		row_pages_data,
+		template_pages_data
 	} as FetchDatabaseDataResult;
 }

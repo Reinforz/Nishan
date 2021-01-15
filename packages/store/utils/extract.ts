@@ -29,8 +29,9 @@ export const extractViewsData = (views_data: TView[]) =>
 	})) as TViewExtracted[];
 
 export const extractRowPagesData = (row_pages: IPage[]) =>
-	row_pages.map(({ id, properties, format }) => ({
+	row_pages.map(({ id, properties, format, parent_id }) => ({
 		id,
 		properties,
-		format
+		format,
+		parent_id
 	})) as RowPageExtracted[];

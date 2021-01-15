@@ -63,7 +63,7 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 	);
 
 	const row_pages_data = Object.values(block)
-		.filter(({ value }) => value.type === 'page')
+		.filter(({ value }) => value.type === 'page' && value.parent_table === "collection" && value.parent_id === collection_id)
 		.map(({ value }) => value) as IPage[];
 
 	const collection_data = recordMap.collection[collection_id].value as ICollection;

@@ -182,7 +182,7 @@ export interface Node {
 
 export interface ParentProps {
 	parent_id: string;
-	parent_table: 'block' | 'space' | 'user_root';
+	parent_table: 'block' | 'space' | 'user_root' | 'collection';
 }
 
 export interface CreateProps {

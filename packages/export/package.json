@@ -1,0 +1,41 @@
+{
+  "name": "@nishans/export",
+  "version": "0.0.0",
+  "description": "A package to export remote notion data into local file system in various formats",
+  "keywords": [
+    "notion",
+    "notion-export",
+    "notion-download",
+    "notion-local-data"
+  ],
+  "author": "Devon Reid <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/export/README.md",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "@nishans/endpoints": "^0.0.6",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.10",
+    "@types/node": "^14.14.17",
+    "@types/uuid": "^8.3.0",
+    "jest": "^26.6.3"
+  }
+}

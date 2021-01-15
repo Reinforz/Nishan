@@ -1,4 +1,4 @@
-import { IPage } from '@nishans/types';
+import { ICollectionView, IPage } from '@nishans/types';
 import { NishanArg } from '../types';
 import CollectionBlock from './CollectionBlock';
 
@@ -6,7 +6,7 @@ import CollectionBlock from './CollectionBlock';
  * A class to represent collectionview of Notion
  * @noInheritDoc
  */
-class CollectionView extends CollectionBlock {
+class CollectionView extends CollectionBlock<ICollectionView> {
 	constructor (arg: NishanArg) {
 		super({ ...arg, type: 'block' });
 	}

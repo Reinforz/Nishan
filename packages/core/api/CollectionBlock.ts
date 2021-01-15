@@ -1,10 +1,19 @@
 import Collection from './Collection';
-import Permissions from './Permissions';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
 import { createViewMap, createViews, Operation } from '../utils';
-import { ICollectionViewPage, ICollection, TView, TViewUpdateInput } from '@nishans/types';
-import { NishanArg, FilterTypes, UpdateType, UpdateTypes, FilterType, TViewCreateInput, ITView } from '../types';
+import { ICollection, TView, TViewUpdateInput, ICollectionViewPage, ICollectionView } from '@nishans/types';
+import {
+	NishanArg,
+	FilterTypes,
+	UpdateType,
+	UpdateTypes,
+	FilterType,
+	TViewCreateInput,
+	ITView,
+	TCollectionBlockInput
+} from '../types';
+import Block from './Block';
 
 const view_class = {
 	board: BoardView,
@@ -19,7 +28,7 @@ const view_class = {
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
-class CollectionBlock extends Permissions<ICollectionViewPage> {
+class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends Block<T, TCollectionBlockInput> {
 	constructor (arg: NishanArg & { type: 'block' }) {
 		super({ ...arg });
 	}

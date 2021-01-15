@@ -4,7 +4,7 @@ import fs from 'fs';
 import { load } from 'js-yaml';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
-import { LocalFileStructure } from './types';
+import { CollectionBlockExtracted, CollectionExtracted, LocalFileStructure, TViewExtracted } from './types';
 import { ICollection, TCollectionBlock, TView } from '@nishans/types';
 
 const extractCollectionBlockData = (block_data: TCollectionBlock) => ({
@@ -40,9 +40,9 @@ export async function storeInLocalMongodbFromNotion (token: string, database_id:
 		const [ block_data, collection_data, views_data ] = await fetchDatabaseData(token, database_id);
 
 		const db = client.db(`${collection_data.name}`),
-			block_collection = await db.createCollection('block'),
-			collection_collection = await db.createCollection('collection'),
-			views_collection = await db.createCollection('views');
+			block_collection = await db.createCollection<CollectionBlockExtracted>('block'),
+			collection_collection = await db.createCollection<CollectionExtracted>('collection'),
+			views_collection = await db.createCollection<TViewExtracted>('views');
 
 		await block_collection.insertOne(extractCollectionBlockData(block_data));
 		await collection_collection.insertOne(extractCollectionData(collection_data));
@@ -66,9 +66,9 @@ export async function storeInLocalMongodbFromFile (file_path: string) {
 			throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
 		const { block: block_data, collection: collection_data, views: views_data } = data;
 		const db = client.db(`${collection_data.name}`),
-			block_collection = await db.createCollection('block'),
-			collection_collection = await db.createCollection('collection'),
-			views_collection = await db.createCollection('views');
+			block_collection = await db.createCollection<CollectionBlockExtracted>('block'),
+			collection_collection = await db.createCollection<CollectionExtracted>('collection'),
+			views_collection = await db.createCollection<TViewExtracted>('views');
 
 		await block_collection.insertOne(extractCollectionBlockData(block_data));
 		await collection_collection.insertOne(extractCollectionData(collection_data));

@@ -51,10 +51,11 @@ export async function restoreNotionFromLocalFile (
 			shard_id,
 			version: 0
 		};
-		const { views, collection, row_pages } = result_data;
+		const { views, collection, row_pages, template_pages } = result_data;
 		const collection_block_id = uuidv4(),
 			collection_id = uuidv4(),
-			view_ids: string[] = [];
+			view_ids: string[] = [],
+			template_page_ids: string[] = [];
 		const collection_create_block_op = Operations.block.update(collection_block_id, [], {
 			id: collection_block_id,
 			type: 'collection_view_page',
@@ -94,6 +95,30 @@ export async function restoreNotionFromLocalFile (
 			});
 		});
 
+		const template_pages_create_op = template_pages.map((template_page) => {
+			const template_page_id = uuidv4(),
+				properties = {} as any;
+			template_page_ids.push(template_page_id);
+			Object.entries(template_page.properties).forEach(([ key, value ]) => (properties[key] = [ [ value ] ]));
+			return Operations.block.update(template_page_id, [], {
+				parent_id: collection_id,
+				parent_table: 'collection',
+				format: template_page.format,
+				content: [],
+				properties,
+				type: 'page',
+				is_template: true,
+				permissions: [
+					{
+						role: 'editor',
+						type: 'user_permission',
+						user_id
+					}
+				],
+				...metadata
+			});
+		});
+
 		const collection_create_op = Operations.collection.update(collection_id, [], {
 			id: collection_id,
 			parent_id: collection_block_id,
@@ -102,6 +127,7 @@ export async function restoreNotionFromLocalFile (
 			icon: collection.icon,
 			cover: collection.cover,
 			schema: collection.schema,
+			template_pages: template_page_ids,
 			...metadata
 		});
 
@@ -130,6 +156,7 @@ export async function restoreNotionFromLocalFile (
 			collection_create_op,
 			...views_create_ops,
 			...row_pages_create_op,
+			...template_pages_create_op,
 			space_after_op
 		];
 

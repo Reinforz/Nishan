@@ -4,7 +4,7 @@ export interface LocalFileStructure {
 	block: CollectionBlockExtracted;
 	views: TViewExtracted[];
 	collection: CollectionExtracted;
-	// row_pages: RowPageExtracted[]
+	row_pages: RowPageExtracted[];
 }
 
 export type CollectionBlockExtracted = Pick<TCollectionBlock, 'id' | 'collection_id' | 'view_ids'>;

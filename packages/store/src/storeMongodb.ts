@@ -1,53 +1,12 @@
-import axios from 'axios';
-import { ICollection, SyncRecordValuesResult, TCollectionBlock, TView } from '@nishans/types';
 import { MongoClient } from 'mongodb';
-
-import { idToUuid } from '../utils';
+import { fetchDatabaseData } from './fetchDatabaseData';
 
 export async function storeMongodb (token: string, database_id: string) {
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await client.connect();
-		const headers = {
-			headers: {
-				cookie: `token_v2=${token};`
-			}
-		};
-		database_id = idToUuid(database_id);
-		const { data } = await axios.post<SyncRecordValuesResult>(
-			'https://www.notion.so/api/v3/syncRecordValues',
-			{
-				requests: [
-					{
-						id: database_id,
-						table: 'block',
-						version: 0
-					}
-				]
-			},
-			headers
-		);
 
-		const block_data = data.recordMap.block[database_id].value as TCollectionBlock;
-		const { collection_id, view_ids } = block_data;
-
-		const { data: { recordMap } } = await axios.post<SyncRecordValuesResult>(
-			'https://www.notion.so/api/v3/syncRecordValues',
-			{
-				requests: [
-					{
-						id: collection_id,
-						table: 'collection',
-						version: 0
-					},
-					...view_ids.map((view_id) => ({ id: view_id, table: 'collection_view', version: 0 }))
-				]
-			},
-			headers
-		);
-
-		const collection_data = recordMap.collection[collection_id].value as ICollection;
-		const views_data = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
+		const [ block_data, collection_data, views_data ] = await fetchDatabaseData(token, database_id);
 
 		const db = client.db(`${collection_data.name}`);
 		const block_collection = await db.createCollection('block');

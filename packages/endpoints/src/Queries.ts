@@ -21,7 +21,7 @@ export default class Queries extends Cache {
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
   user_id: string;
 
-  constructor({ token, interval, user_id, cache }: NishanArg) {
+  constructor({ token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;

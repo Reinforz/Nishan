@@ -22,6 +22,9 @@
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
   "devDependencies": {
     "@nishans/types": "0.0.10"
   },

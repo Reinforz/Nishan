@@ -1,6 +1,7 @@
 import Queries from './Queries';
+import Mutations from './Mutations';
 import Cache from './Cache';
 
-export { Cache, Queries };
+export { Cache, Queries, Mutations };
 
 export * from './types';

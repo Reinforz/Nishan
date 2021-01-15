@@ -29,5 +29,5 @@ export interface CtorArgs {
 	user_id: string;
 	shard_id: number;
 	space_id: string;
-	cache: ICache;
+	cache?: ICache;
 }

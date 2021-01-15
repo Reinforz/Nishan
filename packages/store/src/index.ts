@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { ICollection, SyncRecordValuesResult, TCollectionBlock, TView } from '@nishans/types';
 import fs from 'fs';
+import path from 'path';
+import { dump } from 'js-yaml';
 
 const idToUuid = (id = '') => {
 	id = id.replace(/\-/g, '');
 	return `${id.substr(0, 8)}-${id.substr(8, 4)}-${id.substr(12, 4)}-${id.substr(16, 4)}-${id.substr(20)}`;
 };
 
-export async function storeLocally (token: string, database_id: string, path: string) {
+export async function storeLocally (token: string, database_id: string, filepath: string) {
+	const ext = path.extname(filepath);
+
 	const headers = {
 		headers: {
 			cookie: `token_v2=${token};`
@@ -54,6 +58,7 @@ export async function storeLocally (token: string, database_id: string, path: st
 		collection: collection_data,
 		views: views_data
 	};
-
-	await fs.promises.writeFile(path, JSON.stringify(result_data, null, 2), 'utf-8');
+	if (ext === '.json') await fs.promises.writeFile(filepath, JSON.stringify(result_data, null, 2), 'utf-8');
+	else if (ext === '.yaml' || ext === '.yml') await fs.promises.writeFile(filepath, dump(result_data), 'utf-8');
+	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
 }

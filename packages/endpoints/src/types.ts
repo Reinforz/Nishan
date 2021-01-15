@@ -22,3 +22,12 @@ export interface ICache {
 	user_root: Map<string, IUserRoot>;
 	user_settings: Map<string, IUserSettings>;
 }
+
+export interface NishanArg {
+	token: string;
+	interval: number;
+	user_id: string;
+	shard_id: number;
+	space_id: string;
+	cache: ICache;
+}

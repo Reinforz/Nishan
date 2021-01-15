@@ -1,7 +1,8 @@
 import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
-import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes } from '../types';
+import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, Logger } from '../types';
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
+import colors from "colors";
 
 interface IterateOptions<T>{
   child_type: TDataType,
@@ -30,13 +31,17 @@ interface IterateAndDeleteOptions<T> extends IterateOptions<T>{
 export default class Data<T extends TData> extends Operations {
   id: string;
   type: TDataType;
-  #init_cache = false;
+  init_cache = false;
+  protected logger: Logger;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
     this.type = arg.type;
     this.id = arg.id;
-    this.#init_cache = false;
+    this.init_cache = false;
+    this.logger = arg.logger === false ? false : function (method, subject, id) {
+      console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
+    };
   }
 
   protected getLastEditedProps() {
@@ -103,7 +108,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async initializeCache() {
-    if (!this.#init_cache) {
+    if (!this.init_cache) {
       const container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
         const data = this.getCachedData() as TBlock;
@@ -153,7 +158,7 @@ export default class Data<T extends TData> extends Operations {
         }
       }
 
-      this.#init_cache = true;
+      this.init_cache = true;
     }
   }
 

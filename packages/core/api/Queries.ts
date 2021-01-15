@@ -1,11 +1,10 @@
 import axios from "axios";
-import colors from "colors";
 
 import Cache from "./Cache";
 
 import { error } from "../utils";
 import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
-import { Logger, NishanArg, UpdateCacheManuallyParam } from "../types";
+import { NishanArg, UpdateCacheManuallyParam } from "../types";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -21,10 +20,9 @@ export default class Queries extends Cache {
     }
   };
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
-  protected logger: Logger;
   user_id: string;
 
-  constructor({ logger, token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack">) {
+  constructor({ token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id" | "id" | "stack">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;
@@ -35,9 +33,6 @@ export default class Queries extends Cache {
       }
     };
     this.user_id = user_id;
-    this.logger = logger === false ? false : function (method, subject, id) {
-      console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
-    };
   }
 
   protected returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T, interval?:number): Promise<T> => {

@@ -12,15 +12,18 @@
   "license": "MIT",
   "main": "dist/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "src",
+    "test": "tests"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.10"
   },
   "scripts": {},
   "bugs": {

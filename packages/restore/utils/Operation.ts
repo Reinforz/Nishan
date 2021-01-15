@@ -41,4 +41,4 @@ tables.forEach((table) => {
 	});
 });
 
-export default Operations;
+export { Operations };

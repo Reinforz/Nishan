@@ -1,5 +1,4 @@
 import Operation from './chunk';
-import createTransaction from './createTransaction';
 
 export * from './ids';
 export * from './logs';
@@ -19,4 +18,4 @@ export * from './iterateChildren';
 export * from './detectChildData';
 export * from './createViewMaps';
 
-export { Operation, createTransaction };
+export { Operation };

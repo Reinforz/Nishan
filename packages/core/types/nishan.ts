@@ -1,29 +1,6 @@
-import {
-	TBlock,
-	ICollection,
-	TView,
-	ISpace,
-	INotionUser,
-	ISpaceView,
-	IUserRoot,
-	IUserSettings,
-	IOperation,
-	TDataType
-} from '@nishans/types';
+import { ICache } from '@nishans/endpoints';
+import { IOperation, TDataType } from '@nishans/types';
 import { Predicate } from './utils';
-
-export type UpdateCacheManuallyParam = (string | [string, TDataType])[];
-
-export interface ICache {
-	block: Map<string, TBlock>;
-	collection: Map<string, ICollection>;
-	collection_view: Map<string, TView>;
-	space: Map<string, ISpace>;
-	notion_user: Map<string, INotionUser>;
-	space_view: Map<string, ISpaceView>;
-	user_root: Map<string, IUserRoot>;
-	user_settings: Map<string, IUserSettings>;
-}
 
 export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
 

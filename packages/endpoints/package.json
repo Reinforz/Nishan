@@ -1,6 +1,6 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "A package to expose all notion endpoints for queries and mutations",
   "keywords": [
     "notion",
@@ -8,9 +8,10 @@
     "rest-api"
   ],
   "author": "Devon Reid <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/endpoints/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"

@@ -23,7 +23,7 @@ export interface ICache {
 	user_settings: Map<string, IUserSettings>;
 }
 
-export interface NishanArg {
+export interface CtorArgs {
 	token: string;
 	interval: number;
 	user_id: string;

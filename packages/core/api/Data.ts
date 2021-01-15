@@ -1,8 +1,9 @@
 import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
-import { NishanArg, RepositionParams, UpdateCacheManuallyParam, FilterTypes, UpdateTypes, Logger } from '../types';
+import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '../types';
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
 import colors from "colors";
+import { UpdateCacheManuallyParam } from '@nishans/endpoints';
 
 interface IterateOptions<T>{
   child_type: TDataType,

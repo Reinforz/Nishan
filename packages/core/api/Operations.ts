@@ -2,7 +2,7 @@ import { IOperation } from '@nishans/types';
 import { NishanArg } from '../types';
 import { warn } from '../utils';
 
-import Mutations from './Mutations';
+import { Mutations } from '@nishans/endpoints';
 
 export default class Operations extends Mutations {
 	stack: IOperation[] = [];

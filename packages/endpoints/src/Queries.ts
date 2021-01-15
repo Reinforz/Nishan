@@ -3,7 +3,7 @@ import axios from "axios";
 import Cache from "./Cache";
 
 import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
-import { NishanArg, UpdateCacheManuallyParam } from "./types";
+import { CtorArgs, UpdateCacheManuallyParam } from "./types";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -21,7 +21,7 @@ export default class Queries extends Cache {
   protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
   user_id: string;
 
-  constructor({ token, interval, user_id, cache }: Omit<NishanArg, "shard_id" | "space_id">) {
+  constructor({ token, interval, user_id, cache }: Omit<CtorArgs, "shard_id" | "space_id">) {
     super(cache);
     this.token = token;
     this.interval = interval || 1000;

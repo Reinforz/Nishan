@@ -1,4 +1,4 @@
-export * from './storeLocally';
-export * from './storeMongodb';
+export * from './storeInFile';
+export * from './storeInMongodb';
 export * from './fetchDatabaseData';
 export * from './types';

@@ -6,7 +6,7 @@ import { fetchDatabaseData } from './fetchDatabaseData';
 import { LocalFileStructure } from './types';
 import { extractCollectionBlockData, extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
-export async function storeInLocalFileSystem (token: string, database_id: string, filepath: string) {
+export async function storeInLocalFileFromNotion (token: string, database_id: string, filepath: string) {
 	const ext = path.extname(filepath);
 
 	const { block_data, collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(

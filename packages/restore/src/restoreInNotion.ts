@@ -51,7 +51,7 @@ export async function restoreNotionFromLocalFile (
 			shard_id,
 			version: 0
 		};
-		const { views, collection } = result_data;
+		const { views, collection, row_pages } = result_data;
 		const collection_block_id = uuidv4(),
 			collection_id = uuidv4(),
 			view_ids: string[] = [];
@@ -70,6 +70,28 @@ export async function restoreNotionFromLocalFile (
 				}
 			],
 			...metadata
+		});
+
+		const row_pages_create_op = row_pages.map((row_page) => {
+			const row_page_id = uuidv4(),
+				properties = {} as any;
+			Object.entries(row_page.properties).forEach(([ key, value ]) => (properties[key] = [ [ value ] ]));
+			return Operations.block.update(row_page_id, [], {
+				parent_id: collection_id,
+				parent_table: 'collection',
+				format: row_page.format,
+				content: [],
+				properties,
+				type: 'page',
+				permissions: [
+					{
+						role: 'editor',
+						type: 'user_permission',
+						user_id
+					}
+				],
+				...metadata
+			});
 		});
 
 		const collection_create_op = Operations.collection.update(collection_id, [], {
@@ -107,6 +129,7 @@ export async function restoreNotionFromLocalFile (
 			collection_create_block_op,
 			collection_create_op,
 			...views_create_ops,
+			...row_pages_create_op,
 			space_after_op
 		];
 

@@ -4,7 +4,7 @@ import { dump } from 'js-yaml';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
 
-export async function storeLocally (token: string, database_id: string, filepath: string) {
+export async function storeInLocalFileSystem (token: string, database_id: string, filepath: string) {
 	const ext = path.extname(filepath);
 
 	const [ block_data, collection_data, views_data ] = await fetchDatabaseData(token, database_id);

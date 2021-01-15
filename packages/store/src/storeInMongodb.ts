@@ -36,6 +36,11 @@ async function storeToMongodb (arg: LocalFileStructure) {
 	}
 }
 
+/**
+ * Stores data from notion collection block into local mongodb instance
+ * @param token Notion token
+ * @param database_id Id of the notion collection block
+ */
 export async function storeInLocalMongodbFromNotion (token: string, database_id: string) {
 	const { block_data, collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(
 		token,
@@ -51,6 +56,10 @@ export async function storeInLocalMongodbFromNotion (token: string, database_id:
 	});
 }
 
+/**
+ * Stores data from local file from file system into local mongodb instance
+ * @param file_path Full path to the output file
+ */
 export async function storeInLocalMongodbFromFile (file_path: string) {
 	const ext = path.extname(file_path);
 	let data: LocalFileStructure = {} as any;

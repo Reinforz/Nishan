@@ -13,6 +13,12 @@ import {
 } from './types';
 import { extractCollectionBlockData, extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
+/**
+ * Stores data from notion collection block into a local file
+ * @param token Notion token
+ * @param database_id Id of the notion collection block
+ * @param filepath full path of the output file
+ */
 export async function storeInLocalFileFromNotion (token: string, database_id: string, filepath: string) {
 	const ext = path.extname(filepath);
 
@@ -33,6 +39,11 @@ export async function storeInLocalFileFromNotion (token: string, database_id: st
 	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
 }
 
+/**
+ * Stores data from local mongodb instance into a local file
+ * @param database_name Name of the local mongodb database
+ * @param filepath full path of the output file
+ */
 export async function storeInLocalFileFromMongodb (database_name: string, filepath: string) {
 	const ext = path.extname(filepath);
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });

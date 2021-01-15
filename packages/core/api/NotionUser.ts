@@ -189,13 +189,11 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {
-    const spaces: Space[] = [];
-    (await this.updateIterate<ISpace, ISpaceUpdateInput>(args, {
+    return await this.updateIterate<ISpace, ISpaceUpdateInput, Space[]>(args, {
       child_ids: this.#getSpaceIds(),
       child_type: "space",
       multiple,
-    }, (child_id) => this.cache.space.get(child_id), (id)=>spaces.push(new Space({ ...this.getProps(), id }))))
-    return spaces;
+    }, (child_id) => this.cache.space.get(child_id), (id, _,__,spaces)=>spaces.push(new Space({ ...this.getProps(), id })))
   }
 
   async deleteSpace(arg: FilterType<ISpace>) {

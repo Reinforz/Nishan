@@ -111,12 +111,12 @@ export default class Space extends Data<ISpace> {
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, multiple?: boolean) {
-    const trootpage_map = createPageMap();
-    await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>(args, {
+    return await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput, ITPage>(args, {
       child_ids: "pages",
       child_type: "block",
-      multiple
-    }, (id) => this.cache.block.get(id) as TPage, (id, page) => {
+      multiple,
+      container: createPageMap()
+    }, (id) => this.cache.block.get(id) as TPage, (id, page,__,trootpage_map) => {
       const page_obj: any = new trootpage_class[page.type]({
         id: page.id,
         ...this.getProps()

@@ -71,22 +71,21 @@ class CollectionBlock extends Permissions<ICollectionViewPage> {
 	}
 
 	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, multiple?: boolean) {
-		const view_map = createViewMap();
-		await this.updateIterate<TView, TViewUpdateInput>(
+		return await this.updateIterate<TView, TViewUpdateInput, ITView>(
 			args,
 			{
+				container: createViewMap(),
 				multiple,
 				child_ids: 'view_ids',
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
-			(id, { type, name }) => {
+			(id, { type, name }, _, view_map) => {
 				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
 				view_map[type].set(id, view_obj);
 				view_map[type].set(name, view_obj);
 			}
 		);
-		return view_map;
 	}
 
 	/**

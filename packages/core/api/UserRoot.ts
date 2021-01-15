@@ -43,18 +43,17 @@ class UserRoot extends Data<IUserRoot> {
 	}
 
 	async updateSpaceViews (args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, multiple?: boolean) {
-		const space_views: SpaceView[] = [];
-		await this.updateIterate<ISpaceView, ISpaceViewUpdateInput>(
+		return await this.updateIterate<ISpaceView, ISpaceViewUpdateInput, SpaceView[]>(
 			args,
 			{
 				child_ids: 'space_views',
 				child_type: 'space_view',
-				multiple
+				multiple,
+				container: []
 			},
 			(id) => this.cache.space_view.get(id),
-			(id) => space_views.push(new SpaceView({ ...this.getProps(), id }))
+			(id, _, __, space_views) => space_views.push(new SpaceView({ ...this.getProps(), id }))
 		);
-		return space_views;
 	}
 }
 

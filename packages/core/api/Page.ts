@@ -146,12 +146,12 @@ export default class Page extends Permissions<IPage> {
   }
 
   async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, multiple?: boolean) {
-    const block_map = createBlockMap();
-    await this.updateIterate<TBlock, TBlockInput>(args, {
+    return await this.updateIterate<TBlock, TBlockInput, ITBlock>(args, {
       multiple,
       child_ids: "content",
-      child_type: "block"
-    }, (child_id) => this.cache.block.get(child_id), (_, block) => {
+      child_type: "block",
+      container: createBlockMap()
+    }, (child_id) => this.cache.block.get(child_id), (_, block,__,block_map) => {
       const block_obj = createBlockClass(block.type, block.id, this.getProps());
       if(block.type === "page")
         block_map[block.type].set(block.properties.title[0][0], block_obj)
@@ -162,7 +162,6 @@ export default class Page extends Permissions<IPage> {
       }
       block_map[block.type].set(block.id, block_obj)
     })
-    return block_map;
   }
 
   /**

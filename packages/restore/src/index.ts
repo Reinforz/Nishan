@@ -1,3 +1,1 @@
-export default () => {
-	console.log('Export package');
-};
+export * from './restoreInNotion';

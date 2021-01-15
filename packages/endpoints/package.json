@@ -7,7 +7,7 @@
     "notion-endpoints",
     "rest-api"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/endpoints/README.md",
   "license": "MIT",
   "main": "dist/index.js",

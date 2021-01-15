@@ -1,15 +1,15 @@
 {
   "name": "@nishans/store",
-  "version": "0.0.0",
-  "description": "A package to export remote notion data into local file system in various formats or in monogdb instance",
+  "version": "0.0.1",
+  "description": "A package to store remote notion data into local file system in various formats or in local monogdb instance",
   "keywords": [
     "notion",
-    "notion-export",
+    "notion-import",
     "notion mongodb",
     "notion-download",
     "notion-local-data"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/store/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -19,7 +19,8 @@
     "test": "tests"
   },
   "files": [
-    "dist/src"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",

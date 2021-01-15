@@ -1,15 +1,15 @@
 {
   "name": "@nishans/restore",
-  "version": "0.0.0",
-  "description": "A package to import local notion data into notion or remote dbaas like Atlas",
+  "version": "0.0.1",
+  "description": "A package to export local notion data into notion or remote dbaas like Atlas",
   "keywords": [
     "notion",
-    "notion-import",
+    "notion-export",
     "notion atlas",
     "notion mongodb",
     "notion-remote-data"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/restore/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -19,7 +19,8 @@
     "test": "tests"
   },
   "files": [
-    "dist/src"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/endpoints": "^0.0.6",
+    "axios": "^0.21.1",
+    "js-yaml": "^4.0.0",
+    "mongodb": "^3.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import path from 'path';
 import fs from 'fs';
 import { load } from 'js-yaml';
-import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
+import { TCollectionBlock, TView } from '@nishans/types';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
 import {

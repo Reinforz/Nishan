@@ -1,24 +1,25 @@
 {
-  "name": "@nishans/export",
+  "name": "@nishans/restore",
   "version": "0.0.0",
-  "description": "A package to export remote notion data into local file system in various formats",
+  "description": "A package to import local notion data into notion or remote dbaas like Atlas",
   "keywords": [
     "notion",
-    "notion-export",
-    "notion-download",
-    "notion-local-data"
+    "notion-import",
+    "notion atlas",
+    "notion mongodb",
+    "notion-remote-data"
   ],
   "author": "Devon Reid <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/export/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/restore/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src"
   ],
   "repository": {
     "type": "git",

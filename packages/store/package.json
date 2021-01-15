@@ -33,6 +33,7 @@
     "@nishans/endpoints": "^0.0.6",
     "axios": "^0.21.1",
     "js-yaml": "^4.0.0",
+    "mongodb": "^3.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

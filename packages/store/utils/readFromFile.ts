@@ -4,7 +4,7 @@ import { load } from 'js-yaml';
 
 import { LocalFileStructure } from '../src/types';
 import { TView } from '@nishans/types';
-import { extractCollectionData, extractViewsData, extractRowPagesData } from './extract';
+import { extractCollectionData, extractViewsData, extractPagesData } from './extract';
 
 export async function readFromFile (file_path: string) {
 	const ext = path.extname(file_path);
@@ -18,7 +18,7 @@ export async function readFromFile (file_path: string) {
 	return {
 		collection: extractCollectionData(data.collection as any),
 		views: extractViewsData(data.views as TView[]),
-		row_pages: extractRowPagesData(data.row_pages as any),
-		template_pages: extractRowPagesData(data.template_pages as any)
+		row_pages: extractPagesData(data.row_pages as any),
+		template_pages: extractPagesData(data.template_pages as any)
 	} as LocalFileStructure;
 }

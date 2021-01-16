@@ -7,7 +7,7 @@ import {
 	TCollectionBlock,
 	TView
 } from '@nishans/types';
-import { extractCollectionData, extractRowPagesData, extractViewsData, idToUuid } from '.';
+import { extractCollectionData, extractPagesData, extractViewsData, idToUuid } from '.';
 import { LocalFileStructure } from '../src/types';
 
 export async function fetchDatabaseData (token: string, database_id: string) {
@@ -88,7 +88,7 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 	return {
 		collection: extractCollectionData(collection_data),
 		views: extractViewsData(views_data),
-		row_pages: extractRowPagesData(row_pages_data),
-		template_pages: extractRowPagesData(template_pages_data)
+		row_pages: extractPagesData(row_pages_data),
+		template_pages: extractPagesData(template_pages_data)
 	} as LocalFileStructure;
 }

@@ -12,7 +12,7 @@ export async function storeInLocalFileFromNotion (token: string, database_id: st
 
 /**
  * Stores data from local mongodb instance into a local file
- * @param database_name Name of the local mongodb database
+ * @param connection_uri Connection uri of the local or remote mongodb instance
  * @param filepath full path of the output file
  */
 export async function storeInLocalFileFromMongodb (connection_uri: string, filepath: string) {

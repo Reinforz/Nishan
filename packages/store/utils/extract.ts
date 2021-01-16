@@ -18,7 +18,7 @@ export const extractViewsData = (views_data: TView[]) =>
 		query2
 	})) as TViewExtracted[];
 
-export const extractRowPagesData = (row_pages: IPage[]) => {
+export const extractPagesData = (row_pages: IPage[]) => {
 	return row_pages.map(({ properties, format }) => {
 		const simple_page_props: SimplePageProps = {} as any;
 		Object.entries(properties).map(

@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 
 import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from '../src/types';
-import { extractCollectionData, extractViewsData, extractRowPagesData } from './extract';
+import { extractCollectionData, extractViewsData, extractPagesData } from './extract';
 
 export async function readFromMongodb (connection_uri: string) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -20,8 +20,8 @@ export async function readFromMongodb (connection_uri: string) {
 		return {
 			collection: extractCollectionData(collection_data[0] as any),
 			views: extractViewsData(views_data as any),
-			row_pages: extractRowPagesData(row_pages_data as any),
-			template_pages: extractRowPagesData(template_pages_data as any)
+			row_pages: extractPagesData(row_pages_data as any),
+			template_pages: extractPagesData(template_pages_data as any)
 		} as LocalFileStructure;
 	} finally {
 		await client.close();

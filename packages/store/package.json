@@ -1,6 +1,6 @@
 {
   "name": "@nishans/store",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A package to store remote notion data into local file system in various formats or in local monogdb instance",
   "keywords": [
     "notion",

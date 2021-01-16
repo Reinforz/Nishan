@@ -11,9 +11,10 @@ A package to export remote notion data into local file system in various formats
 
 ## Usage
 
-This small package exposes four methods to facilitate downloading notion data
+This small package exposes four methods to facilitate downloading notion data and storing locally local 
 
 1. `storeInLocalFileFromNotion`: Stores data from notion collection block into a local file
 2. `storeInLocalFileFromMongodb`: Stores data from local mongodb instance into a local file
 3. `storeInLocalMongodbFromFile`: Stores data from local file from file system into local mongodb instance
 4. `storeInLocalMongodbFromNotion`: Stores data from notion collection block into local mongodb instance
+5. `storeInLocalMongodbFromAtlas`: Stores data from remote atlas instance into local mongodb instance

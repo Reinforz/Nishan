@@ -1,6 +1,4 @@
-import { fetchDatabaseData } from '../utils/fetchDatabaseData';
-
-import { storeInMongodb, readFromFile } from '../utils';
+import { fetchDatabaseData, storeInMongodb, readFromFile, readFromMongodb } from '../utils';
 
 /**
  * Stores data from notion collection block into local mongodb instance
@@ -17,4 +15,12 @@ export async function storeInLocalMongodbFromNotion (token: string, database_id:
  */
 export async function storeInLocalMongodbFromFile (file_path: string) {
 	await storeInMongodb(await readFromFile(file_path));
+}
+
+/**
+ * Stores data from remote atlas instance into local mongodb instance
+ * @param connection_uri Connection uri of the remote atlas instance
+ */
+export async function storeInLocalMongodbFromAtlas (connection_uri: string) {
+	await storeInMongodb(await readFromMongodb(connection_uri));
 }

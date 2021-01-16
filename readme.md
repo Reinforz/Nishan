@@ -13,15 +13,16 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 This monorepo contains/will contain the following packages:-
 
-1. [@nishans/core](https://github.com/Devorein/Nishan/tree/master/packages/core) (Published): Core package for nishan with crud api
-2. [@nishans/types](https://github.com/Devorein/Nishan/tree/master/packages/types) (Published): Typescript typings for Notion only
-3. [@nishans/utils](https://github.com/Devorein/Nishan/tree/master/packages/utils) (Published): Utility package to make working with notion easier
-4. [@nishans/store](https://github.com/Devorein/Nishan/tree/master/packages/store) (WIP): A package to easily backup or download notion data locally or in a remote dbaas
+1. [@nishans/core](https://github.com/Devorein/Nishan/tree/master/packages/core) - [NPM](https://www.npmjs.com/package/@nishans/core): Core package for nishan with all crud api
+2. [@nishans/types](https://github.com/Devorein/Nishan/tree/master/packages/types) - [NPM](https://www.npmjs.com/package/@nishans/types): Typescript typings for Notion only
+3. [@nishans/utils](https://github.com/Devorein/Nishan/tree/master/packages/utils) - [NPM](https://www.npmjs.com/package/@nishans/utils): Utility package to make working with notion easier
+4. [@nishans/sync](https://github.com/Devorein/Nishan/tree/master/packages/sync) - [NPM](https://www.npmjs.com/package/@nishans/sync): A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
 5. [@nishans/graphql](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (WIP): A graphql server and client UI to make working with nishan a breeze
 6. [@nishans/cli](https://github.com/Devorein/Nishan/tree/master/packages/cli) (WIP): A package to interact with the nishan api from the terminal
 7. [@nishans/typegen](https://github.com/Devorein/Nishan/tree/master/packages/typegen) (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
 8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (WIP): A package to use notion as a database by providing an easy to use orm api
-9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) (WIP): A package to expose all notion endpoints for queries and mutations
+9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) - [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
+10. [@nishans/filter](https://github.com/Devorein/Nishan/tree/master/packages/filter): A react component that emulates notions advanced filter
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

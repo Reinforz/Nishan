@@ -15,7 +15,7 @@ import {
 
 import { extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
-async function storeToMongodb (arg: LocalFileStructure) {
+async function storeInMongodb (arg: LocalFileStructure) {
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await client.connect();
@@ -45,7 +45,7 @@ export async function storeInLocalMongodbFromNotion (token: string, database_id:
 		database_id
 	);
 
-	await storeToMongodb({
+	await storeInMongodb({
 		collection: extractCollectionData(collection_data),
 		views: extractViewsData(views_data),
 		row_pages: extractRowPagesData(row_pages_data),
@@ -65,7 +65,7 @@ export async function storeInLocalMongodbFromFile (file_path: string) {
 	} else if (ext === '.yaml' || ext === '.yml') {
 		data = load(await fs.promises.readFile(file_path, 'utf-8')) as LocalFileStructure;
 	} else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
-	await storeToMongodb({
+	await storeInMongodb({
 		collection: extractCollectionData(data.collection as any),
 		views: extractViewsData(data.views as TView[]),
 		row_pages: extractRowPagesData(data.row_pages as any),

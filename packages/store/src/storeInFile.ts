@@ -7,6 +7,13 @@ import { fetchDatabaseData } from './fetchDatabaseData';
 import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from './types';
 import { extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
+async function storeInFile (filepath: string, result_data: LocalFileStructure) {
+	const ext = path.extname(filepath);
+	if (ext === '.json') await fs.promises.writeFile(filepath, JSON.stringify(result_data, null, 2), 'utf-8');
+	else if (ext === '.yaml' || ext === '.yml') await fs.promises.writeFile(filepath, dump(result_data), 'utf-8');
+	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
+}
+
 /**
  * Stores data from notion collection block into a local file
  * @param token Notion token
@@ -14,8 +21,6 @@ import { extractCollectionData, extractViewsData, extractRowPagesData } from '..
  * @param filepath full path of the output file
  */
 export async function storeInLocalFileFromNotion (token: string, database_id: string, filepath: string) {
-	const ext = path.extname(filepath);
-
 	const { collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(
 		token,
 		database_id
@@ -27,9 +32,8 @@ export async function storeInLocalFileFromNotion (token: string, database_id: st
 		row_pages: extractRowPagesData(row_pages_data),
 		template_pages: extractRowPagesData(template_pages_data)
 	} as LocalFileStructure;
-	if (ext === '.json') await fs.promises.writeFile(filepath, JSON.stringify(result_data, null, 2), 'utf-8');
-	else if (ext === '.yaml' || ext === '.yml') await fs.promises.writeFile(filepath, dump(result_data), 'utf-8');
-	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
+
+	await storeInFile(filepath, result_data);
 }
 
 /**
@@ -59,9 +63,7 @@ export async function storeInLocalFileFromMongodb (database_name: string, filepa
 			template_pages: extractRowPagesData(template_pages_data as any)
 		} as LocalFileStructure;
 
-		if (ext === '.json') await fs.promises.writeFile(filepath, JSON.stringify(result_data, null, 2), 'utf-8');
-		else if (ext === '.yaml' || ext === '.yml') await fs.promises.writeFile(filepath, dump(result_data), 'utf-8');
-		else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
+		await storeInFile(filepath, result_data);
 	} finally {
 		await client.close();
 	}

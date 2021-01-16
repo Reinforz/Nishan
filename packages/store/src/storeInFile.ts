@@ -11,7 +11,7 @@ import {
 	RowPageExtracted,
 	TViewExtracted
 } from './types';
-import { extractCollectionBlockData, extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
+import { extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
 /**
  * Stores data from notion collection block into a local file
@@ -22,13 +22,12 @@ import { extractCollectionBlockData, extractCollectionData, extractViewsData, ex
 export async function storeInLocalFileFromNotion (token: string, database_id: string, filepath: string) {
 	const ext = path.extname(filepath);
 
-	const { block_data, collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(
+	const { collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(
 		token,
 		database_id
 	);
 
 	const result_data = {
-		block: extractCollectionBlockData(block_data),
 		collection: extractCollectionData(collection_data),
 		views: extractViewsData(views_data),
 		row_pages: extractRowPagesData(row_pages_data),
@@ -50,9 +49,7 @@ export async function storeInLocalFileFromMongodb (database_name: string, filepa
 	try {
 		await client.connect();
 		const db = client.db(database_name);
-		const block_collection = db.collection<CollectionBlockExtracted>('block'),
-			block_data = await block_collection.find({}).toArray(),
-			collection_collection = db.collection<CollectionExtracted>('collection'),
+		const collection_collection = db.collection<CollectionExtracted>('collection'),
 			collection_data = await collection_collection.find({}).toArray(),
 			views_data_collection = db.collection<TViewExtracted>('views'),
 			views_data = await views_data_collection.find({}).toArray(),
@@ -62,7 +59,6 @@ export async function storeInLocalFileFromMongodb (database_name: string, filepa
 			template_pages_data = await template_pages_collection.find({}).toArray();
 
 		const result_data = {
-			block: extractCollectionBlockData(block_data[0] as any),
 			collection: extractCollectionData(collection_data[0] as any),
 			views: extractViewsData(views_data as any),
 			row_pages: extractRowPagesData(row_pages_data as any),

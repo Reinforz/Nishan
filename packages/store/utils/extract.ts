@@ -1,18 +1,5 @@
-import {
-	CollectionBlockExtracted,
-	CollectionExtracted,
-	RowPageExtracted,
-	SimplePageProps,
-	TViewExtracted
-} from '../src/types';
+import { CollectionExtracted, RowPageExtracted, SimplePageProps, TViewExtracted } from '../src/types';
 import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
-
-export const extractCollectionBlockData = ({ id, collection_id, view_ids }: TCollectionBlock) =>
-	({
-		id,
-		collection_id,
-		view_ids
-	} as CollectionBlockExtracted);
 
 export const extractCollectionData = ({ name, icon, cover, id, schema, parent_id }: ICollection) => {
 	return {

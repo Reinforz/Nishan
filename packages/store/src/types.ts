@@ -1,7 +1,6 @@
 import { ICollection, IPage, TCollectionBlock, TView } from '@nishans/types';
 
 export interface LocalFileStructure {
-	block: CollectionBlockExtracted;
 	views: TViewExtracted[];
 	collection: CollectionExtracted;
 	row_pages: RowPageExtracted[];
@@ -21,7 +20,6 @@ export type TViewExtracted = Pick<TView, 'id' | 'type' | 'name' | 'query2' | 'fo
 export type RowPageExtracted = Pick<IPage, 'id' | 'format' | 'parent_id'> & { properties: SimplePageProps };
 
 export interface FetchDatabaseDataResult {
-	block_data: TCollectionBlock;
 	collection_data: ICollection;
 	views_data: TView[];
 	row_pages_data: IPage[];

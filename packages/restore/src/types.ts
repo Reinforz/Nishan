@@ -27,3 +27,10 @@ export interface FetchDatabaseDataResult {
 	row_pages_data: IPage[];
 	template_pages_data: IPage[];
 }
+
+export interface NotionHeaders {
+	headers: {
+		cookie: string;
+		'x-notion-active-user-header': string;
+	};
+}

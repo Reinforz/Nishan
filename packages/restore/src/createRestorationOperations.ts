@@ -1,6 +1,6 @@
 import { createTransaction, Operations } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
-import { LocalFileStructure, NotionHeaders } from './types';
+import { LocalFileStructure } from './types';
 import { IOperation, ISpace, LoadUserContentResult } from '@nishans/types';
 import axios from 'axios';
 

@@ -1,10 +1,9 @@
 import path from 'path';
 import fs from 'fs';
 import { load } from 'js-yaml';
-import axios from 'axios';
 
 import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from './types';
-import { ISpace, LoadUserContentResult } from '@nishans/types';
+import { ISpace } from '@nishans/types';
 import { MongoClient } from 'mongodb';
 import { createRestorationOperations } from './createRestorationOperations';
 

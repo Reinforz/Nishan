@@ -1,11 +1,11 @@
 import { MongoClient } from 'mongodb';
 import { CollectionExtracted, TViewExtracted, RowPageExtracted, LocalFileStructure } from '../src/types';
 
-export async function getLocalMongodbData (database_name: string) {
-	const localclient = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+export async function getMongodbData (connection_uri: string) {
+	const localclient = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await localclient.connect();
-		const db = localclient.db(database_name);
+		const db = localclient.db();
 		const collection_collection = db.collection<CollectionExtracted>('collection'),
 			collection_data = await collection_collection.find({}).toArray(),
 			views_data_collection = db.collection<TViewExtracted>('views'),

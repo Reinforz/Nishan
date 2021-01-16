@@ -20,14 +20,6 @@ export type CollectionExtracted = Pick<ICollection, 'id' | 'icon' | 'cover' | 's
 export type TViewExtracted = Pick<TView, 'id' | 'type' | 'name' | 'query2' | 'format' | 'parent_id'>;
 export type RowPageExtracted = Pick<IPage, 'id' | 'format' | 'parent_id'> & { properties: SimplePageProps };
 
-export interface FetchDatabaseDataResult {
-	block_data: TCollectionBlock;
-	collection_data: ICollection;
-	views_data: TView[];
-	row_pages_data: IPage[];
-	template_pages_data: IPage[];
-}
-
 export interface NotionHeaders {
 	headers: {
 		cookie: string;

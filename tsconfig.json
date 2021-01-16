@@ -15,10 +15,7 @@
       "path": "./packages/core/tsconfig.json"
     },
     {
-      "path": "./packages/store/tsconfig.json"
-    },
-    {
-      "path": "./packages/restore/tsconfig.json"
+      "path": "./packages/sync/tsconfig.json"
     },
     {
       "path": "./packages/utils/tsconfig.json"

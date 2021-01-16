@@ -18,10 +18,3 @@ export type CollectionExtracted = Pick<ICollection, 'icon' | 'cover' | 'schema'>
 };
 export type TViewExtracted = Pick<TView, 'type' | 'name' | 'query2' | 'format'>;
 export type RowPageExtracted = Pick<IPage, 'format'> & { properties: SimplePageProps };
-
-export interface FetchDatabaseDataResult {
-	collection_data: ICollection;
-	views_data: TView[];
-	row_pages_data: IPage[];
-	template_pages_data: IPage[];
-}

@@ -1,4 +1,4 @@
-import { fetchDatabaseData } from './fetchDatabaseData';
+import { fetchDatabaseData } from '../utils/fetchDatabaseData';
 
 import { storeInMongodb, readFromFile } from '../utils';
 

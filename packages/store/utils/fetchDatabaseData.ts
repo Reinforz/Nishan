@@ -7,8 +7,8 @@ import {
 	TCollectionBlock,
 	TView
 } from '@nishans/types';
-import { extractCollectionData, extractRowPagesData, extractViewsData, idToUuid } from '../utils';
-import { FetchDatabaseDataResult, LocalFileStructure } from './types';
+import { extractCollectionData, extractRowPagesData, extractViewsData, idToUuid } from '.';
+import { LocalFileStructure } from '../src/types';
 
 export async function fetchDatabaseData (token: string, database_id: string) {
 	const headers = {

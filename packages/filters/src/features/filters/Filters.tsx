@@ -5,9 +5,9 @@ import {
   increment,
   incrementByAmount,
   selectCount,
-} from './counterSlice';
+} from './filterSlice';
 
-export function Counter() {
+export function Filters() {
   const count = useSelector(selectCount);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');

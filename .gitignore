@@ -11,3 +11,4 @@ feature.md
 **/coverage
 # OSX files
 .DS_Store
+**/*.eslintcache

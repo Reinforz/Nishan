@@ -7,16 +7,7 @@
   <img src="https://img.shields.io/npm/v/@nishans/sync">
 </p>
 
-A package to export local notion data into notion or remote dbaas like mongodb Atlas
-
-# Usage
-
-This small package exposes four methods to facilitate restoring notion using either local file or remote/local mongodb instances
-
-1. `restoreAtlasFromLocalFile`: Stores notion data from local file to a remote atlas one
-2. `restoreAtlasFromMongodb`: Stores notion data from local mongodb instance to a remote atlas one
-3. `restoreNotionFromMongodb`: Restore notion from data stored in local or remote mongodb instance
-4. `restoreNotionFromLocalFile`: Restore notion from data stored in local file
+A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
 
 ## Note
 

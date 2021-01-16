@@ -5,7 +5,7 @@ import axios from 'axios';
 import { createTransaction, Operations } from './';
 import { LocalFileStructure } from '../src/types';
 
-export async function createRestorationOperations (
+export async function storeInNotion (
 	token: string,
 	space_cb: (space: ISpace) => boolean | undefined,
 	result_data: LocalFileStructure
@@ -63,15 +63,13 @@ export async function createRestorationOperations (
 		});
 
 		const row_pages_create_op = row_pages.map((row_page) => {
-			const row_page_id = uuidv4(),
-				properties = {} as any;
-			Object.entries(row_page.properties).forEach(([ key, value ]) => (properties[key] = [ [ value ] ]));
+			const row_page_id = uuidv4();
 			return Operations.block.update(row_page_id, [], {
 				parent_id: collection_id,
 				parent_table: 'collection',
 				format: row_page.format,
 				content: [],
-				properties,
+				properties: row_page.properties,
 				type: 'page',
 				permissions: [
 					{
@@ -85,16 +83,14 @@ export async function createRestorationOperations (
 		});
 
 		const template_pages_create_op = template_pages.map((template_page) => {
-			const template_page_id = uuidv4(),
-				properties = {} as any;
+			const template_page_id = uuidv4();
 			template_page_ids.push(template_page_id);
-			Object.entries(template_page.properties).forEach(([ key, value ]) => (properties[key] = [ [ value ] ]));
 			return Operations.block.update(template_page_id, [], {
 				parent_id: collection_id,
 				parent_table: 'collection',
 				format: template_page.format,
 				content: [],
-				properties,
+				properties: template_page.properties,
 				type: 'page',
 				is_template: true,
 				permissions: [
@@ -112,7 +108,7 @@ export async function createRestorationOperations (
 			id: collection_id,
 			parent_id: collection_block_id,
 			parent_table: 'block',
-			name: [ [ collection.name ] ],
+			name: collection.name,
 			icon: collection.icon,
 			cover: collection.cover,
 			schema: collection.schema,

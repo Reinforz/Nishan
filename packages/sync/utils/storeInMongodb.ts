@@ -1,16 +1,17 @@
 import { MongoClient } from 'mongodb';
-import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from '../src/types';
+import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../src/types';
+import { extractData } from './extractData';
 
 export async function storeInMongodb (connection_uri: string, result_data: LocalFileStructure) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	const { collection, views, row_pages, template_pages } = result_data;
+	const { collection, views, row_pages, template_pages } = extractData(result_data);
 	try {
 		await client.connect();
 		const db = client.db();
 		const collection_collection = await db.createCollection<CollectionExtracted>('collection'),
 			views_collection = await db.createCollection<TViewExtracted>('views'),
-			row_pages_collection = await db.createCollection<RowPageExtracted>('row_pages'),
-			template_pages_collection = await db.createCollection<RowPageExtracted>('template_pages');
+			row_pages_collection = await db.createCollection<PageExtracted>('row_pages'),
+			template_pages_collection = await db.createCollection<PageExtracted>('template_pages');
 		await collection_collection.insertOne(collection);
 		await views_collection.insertMany(views);
 		await row_pages_collection.insertMany(row_pages);

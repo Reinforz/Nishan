@@ -3,8 +3,7 @@ import fs from 'fs';
 import { load } from 'js-yaml';
 
 import { LocalFileStructure } from '../src/types';
-import { TView } from '@nishans/types';
-import { extractCollectionData, extractViewsData, extractPagesData } from './extract';
+import { extractData } from './extractData';
 
 export async function readFromFile (file_path: string) {
 	const ext = path.extname(file_path);
@@ -15,10 +14,5 @@ export async function readFromFile (file_path: string) {
 		data = load(await fs.promises.readFile(file_path, 'utf-8')) as LocalFileStructure;
 	} else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
 
-	return {
-		collection: extractCollectionData(data.collection as any),
-		views: extractViewsData(data.views as TView[]),
-		row_pages: extractPagesData(data.row_pages as any),
-		template_pages: extractPagesData(data.template_pages as any)
-	} as LocalFileStructure;
+	return extractData(data as any);
 }

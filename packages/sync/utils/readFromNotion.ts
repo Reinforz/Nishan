@@ -9,8 +9,9 @@ import {
 } from '@nishans/types';
 import { extractCollectionData, extractPagesData, extractViewsData, idToUuid } from '.';
 import { LocalFileStructure } from '../src/types';
+import { extractData } from './extractData';
 
-export async function fetchDatabaseData (token: string, database_id: string) {
+export async function readFromNotion (token: string, database_id: string) {
 	const headers = {
 		headers: {
 			cookie: `token_v2=${token};`
@@ -49,8 +50,8 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 		},
 		headers
 	);
-	const collection_data = recordMap.collection[collection_id].value as ICollection;
-	const views_data = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
+	const collection = recordMap.collection[collection_id].value as ICollection;
+	const views = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
 
 	const { data: { recordMap: { block } } } = await axios.post<QueryCollectionResult>(
 		'https://www.notion.so/api/v3/queryCollection',
@@ -66,7 +67,7 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 		headers
 	);
 
-	const row_pages_data = Object.values(block)
+	const row_pages = Object.values(block)
 		.filter(
 			({ value }) => value.type === 'page' && value.parent_table === 'collection' && value.parent_id === collection_id
 		)
@@ -74,21 +75,20 @@ export async function fetchDatabaseData (token: string, database_id: string) {
 
 	const template_pages_data: IPage[] = [];
 
-	if (collection_data.template_pages) {
+	if (collection.template_pages) {
 		const { data: { recordMap: { block: template_blocks } } } = await axios.post<SyncRecordValuesResult>(
 			'https://www.notion.so/api/v3/syncRecordValues',
 			{
-				requests: [ ...collection_data.template_pages.map((page_id) => ({ id: page_id, table: 'block', version: 0 })) ]
+				requests: [ ...collection.template_pages.map((page_id) => ({ id: page_id, table: 'block', version: 0 })) ]
 			},
 			headers
 		);
 		Object.values(template_blocks).forEach(({ value }) => template_pages_data.push(value as IPage));
 	}
-
-	return {
-		collection: extractCollectionData(collection_data),
-		views: extractViewsData(views_data),
-		row_pages: extractPagesData(row_pages_data),
-		template_pages: extractPagesData(template_pages_data)
-	} as LocalFileStructure;
+  return extractData({
+    collection,
+    views,
+    template_pages: collection.template_pages ?? [] as any,
+    row_pages
+  })
 }

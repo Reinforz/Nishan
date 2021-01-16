@@ -1,18 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import { dump } from 'js-yaml';
 import { MongoClient } from 'mongodb';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
 import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from './types';
-import { extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
-
-async function storeInFile (filepath: string, result_data: LocalFileStructure) {
-	const ext = path.extname(filepath);
-	if (ext === '.json') await fs.promises.writeFile(filepath, JSON.stringify(result_data, null, 2), 'utf-8');
-	else if (ext === '.yaml' || ext === '.yml') await fs.promises.writeFile(filepath, dump(result_data), 'utf-8');
-	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
-}
+import { extractCollectionData, extractViewsData, extractRowPagesData, storeInFile } from '../utils';
 
 /**
  * Stores data from notion collection block into a local file
@@ -21,19 +11,7 @@ async function storeInFile (filepath: string, result_data: LocalFileStructure) {
  * @param filepath full path of the output file
  */
 export async function storeInLocalFileFromNotion (token: string, database_id: string, filepath: string) {
-	const { collection_data, views_data, row_pages_data, template_pages_data } = await fetchDatabaseData(
-		token,
-		database_id
-	);
-
-	const result_data = {
-		collection: extractCollectionData(collection_data),
-		views: extractViewsData(views_data),
-		row_pages: extractRowPagesData(row_pages_data),
-		template_pages: extractRowPagesData(template_pages_data)
-	} as LocalFileStructure;
-
-	await storeInFile(filepath, result_data);
+	await storeInFile(filepath, await fetchDatabaseData(token, database_id));
 }
 
 /**
@@ -42,7 +20,6 @@ export async function storeInLocalFileFromNotion (token: string, database_id: st
  * @param filepath full path of the output file
  */
 export async function storeInLocalFileFromMongodb (database_name: string, filepath: string) {
-	const ext = path.extname(filepath);
 	const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 	try {
 		await client.connect();
@@ -62,7 +39,6 @@ export async function storeInLocalFileFromMongodb (database_name: string, filepa
 			row_pages: extractRowPagesData(row_pages_data as any),
 			template_pages: extractRowPagesData(template_pages_data as any)
 		} as LocalFileStructure;
-
 		await storeInFile(filepath, result_data);
 	} finally {
 		await client.close();

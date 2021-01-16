@@ -2,8 +2,8 @@ import { IOperation, ISpace, LoadUserContentResult } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-import { createTransaction, Operations } from '../utils';
-import { LocalFileStructure } from './types';
+import { createTransaction, Operations } from './';
+import { LocalFileStructure } from '../src/types';
 
 export async function createRestorationOperations (
 	token: string,

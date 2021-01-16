@@ -17,3 +17,7 @@ This small package exposes four methods to facilitate restoring notion using eit
 2. `restoreAtlasFromMongodb`: Stores notion data from local mongodb instance to a remote atlas one
 3. `restoreNotionFromMongodb`: Restore notion from data stored in local or remote mongodb instance
 4. `restoreNotionFromLocalFile`: Restore notion from data stored in local file
+
+## Note
+
+Currently this package only supports collection blocks or collection view pages not regular pages or other kinds of blocks

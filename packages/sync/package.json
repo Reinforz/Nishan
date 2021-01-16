@@ -1,0 +1,34 @@
+{
+  "name": "@nishans/sync",
+  "version": "0.0.1",
+  "description": "A package to keep local notion data in sync with remote one by storing and restoring it.",
+  "keywords": [
+    "notion",
+    "notion-import",
+    "notion-export",
+    "notion-data",
+    "notion-download",
+    "notion-sync"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/sync/README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist/src",
+    "dist/utils"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

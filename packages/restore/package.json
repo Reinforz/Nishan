@@ -1,7 +1,7 @@
 {
   "name": "@nishans/restore",
-  "version": "0.0.1",
-  "description": "A package to export local notion data into notion or remote dbaas like mongodb Atlas",
+  "version": "0.0.2",
+  "description": "A package to restore local notion data into notion databases or remote dbaas like mongodb Atlas",
   "keywords": [
     "notion",
     "notion-export",

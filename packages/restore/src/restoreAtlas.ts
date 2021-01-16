@@ -1,4 +1,4 @@
-import { getMongodbData, readLocalFile, storeInMongodb } from '../utils';
+import { readLocalMongodb, readLocalFile, storeInMongodb } from '../utils';
 
 /**
   * Stores notion data from local file to a remote atlas one
@@ -15,5 +15,5 @@ export async function restoreAtlasFromLocalFile (connection_uri: string, filepat
  * @param local_connection_uri Connection uri of the local mongodb instance
  */
 export async function restoreAtlasFromMongodb (remote_connection_uri: string, local_connection_uri: string) {
-	await storeInMongodb(remote_connection_uri, await getMongodbData(local_connection_uri));
+	await storeInMongodb(remote_connection_uri, await readLocalMongodb(local_connection_uri));
 }

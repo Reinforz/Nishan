@@ -1,7 +1,6 @@
 import { ISpace } from '@nishans/types';
 
-import { createRestorationOperations } from './createRestorationOperations';
-import { getMongodbData, readLocalFile } from '../utils';
+import { createRestorationOperations, readLocalMongodb, readLocalFile } from '../utils';
 
 /**
  * Restore notion from data stored in local or remote mongodb instance
@@ -12,9 +11,9 @@ import { getMongodbData, readLocalFile } from '../utils';
 export async function restoreNotionFromMongodb (
 	token: string,
 	connection_uri: string,
-	space_cb: (space: ISpace) => boolean | undefined
+	space_cb: (space: ISpace) => any
 ) {
-	await createRestorationOperations(token, space_cb, await getMongodbData(connection_uri));
+	await createRestorationOperations(token, space_cb, await readLocalMongodb(connection_uri));
 }
 
 /**
@@ -23,10 +22,6 @@ export async function restoreNotionFromMongodb (
  * @param filepath Absolute file path of the local file
  * @param space_cb A callback to get the space where the restoration will take place
  */
-export async function restoreNotionFromLocalFile (
-	token: string,
-	filepath: string,
-	space_cb: (space: ISpace) => boolean | undefined
-) {
+export async function restoreNotionFromLocalFile (token: string, filepath: string, space_cb: (space: ISpace) => any) {
 	await createRestorationOperations(token, space_cb, await readLocalFile(filepath));
 }

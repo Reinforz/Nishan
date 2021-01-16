@@ -12,12 +12,12 @@ export interface SimplePageProps {
 	[k: string]: string;
 }
 
-export type CollectionBlockExtracted = Pick<TCollectionBlock, 'id' | 'collection_id' | 'view_ids'>;
-export type CollectionExtracted = Pick<ICollection, 'id' | 'icon' | 'cover' | 'schema' | 'parent_id'> & {
+export type CollectionBlockExtracted = Pick<TCollectionBlock, 'collection_id' | 'view_ids'>;
+export type CollectionExtracted = Pick<ICollection, 'icon' | 'cover' | 'schema'> & {
 	name: string;
 };
-export type TViewExtracted = Pick<TView, 'id' | 'type' | 'name' | 'query2' | 'format' | 'parent_id'>;
-export type RowPageExtracted = Pick<IPage, 'id' | 'format' | 'parent_id'> & { properties: SimplePageProps };
+export type TViewExtracted = Pick<TView, 'type' | 'name' | 'query2' | 'format'>;
+export type RowPageExtracted = Pick<IPage, 'format'> & { properties: SimplePageProps };
 
 export interface FetchDatabaseDataResult {
 	collection_data: ICollection;

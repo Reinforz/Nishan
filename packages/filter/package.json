@@ -1,0 +1,30 @@
+{
+  "name": "@nishans/filter",
+  "version": "0.0.0",
+  "description": "A react component that emulates notion's advanced filter system",
+  "keywords": [
+    "notion",
+    "notion-react-filter",
+    "react-filter"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/tree/master/packages/filter#README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist/src",
+    "dist/utils"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

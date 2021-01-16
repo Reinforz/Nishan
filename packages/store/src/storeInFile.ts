@@ -4,13 +4,7 @@ import { dump } from 'js-yaml';
 import { MongoClient } from 'mongodb';
 
 import { fetchDatabaseData } from './fetchDatabaseData';
-import {
-	CollectionBlockExtracted,
-	CollectionExtracted,
-	LocalFileStructure,
-	RowPageExtracted,
-	TViewExtracted
-} from './types';
+import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from './types';
 import { extractCollectionData, extractViewsData, extractRowPagesData } from '../utils';
 
 /**

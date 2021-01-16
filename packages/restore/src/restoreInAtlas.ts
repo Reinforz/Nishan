@@ -4,7 +4,7 @@ import fs from 'fs';
 import { MongoClient } from 'mongodb';
 
 import { CollectionExtracted, LocalFileStructure, RowPageExtracted, TViewExtracted } from './types';
-import { getLocalMongodbData } from 'utils';
+import { getLocalMongodbData } from '../utils';
 
 export async function restoreAtlasFromLocalFile (connection_uri: string, filepath: string) {
 	const ext = path.extname(filepath);

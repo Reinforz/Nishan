@@ -5,7 +5,7 @@ import { load } from 'js-yaml';
 import { LocalFileStructure } from './types';
 import { ISpace } from '@nishans/types';
 import { createRestorationOperations } from './createRestorationOperations';
-import { getLocalMongodbData } from 'utils';
+import { getLocalMongodbData } from '../utils';
 
 export async function restoreNotionFromLocalMongodb (
 	token: string,

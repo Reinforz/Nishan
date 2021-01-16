@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { CollectionExtracted, TViewExtracted, RowPageExtracted, LocalFileStructure } from 'src/types';
+import { CollectionExtracted, TViewExtracted, RowPageExtracted, LocalFileStructure } from '../src/types';
 
 export async function getLocalMongodbData (database_name: string) {
 	const localclient = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });

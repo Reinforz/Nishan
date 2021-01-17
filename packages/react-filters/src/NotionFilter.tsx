@@ -1,15 +1,20 @@
-import { IViewFilter, TSchemaUnitType } from '@nishans/types';
+import { IViewFilter, TViewGroupFilterOperator } from '@nishans/types';
 import React, { useState } from 'react';
 import FilterGroup from "./components/Filter/Group";
+import { TSchemaInfo } from './types';
 
 type State = IViewFilter;
 
-const schema_info: [TSchemaUnitType, string, string][] = [["checkbox", "checkbox", "Is Done"]];
+const schema_info: TSchemaInfo = [["checkbox", "checkbox", "Is Done"]];
 
-function NotionFilter() {
+interface Props {
+  initial_operator?: TViewGroupFilterOperator
+}
+
+function NotionFilter(props: Props) {
   const [filters, setFilters] = useState<State>({
     filters: [],
-    operator: "and"
+    operator: props.initial_operator ?? "and"
   });
 
   return (

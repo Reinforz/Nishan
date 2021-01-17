@@ -1,10 +1,11 @@
-import { IViewFilter, TSchemaUnitType } from "@nishans/types";
+import { IViewFilter } from "@nishans/types";
 import React from "react";
+import { TSchemaInfo } from "../../../types";
 import FilterGroupItem from "./Item";
 
 interface Props {
   filters: IViewFilter,
-  schema_info: [TSchemaUnitType, string, string][];
+  schema_info: TSchemaInfo;
 }
 
 export default function FilterGroup(props: Props) {

@@ -1,6 +1,6 @@
 import { DateViewFiltersOperator, EmptyViewFiltersOperator, NumberViewFiltersOperator, PersonViewFiltersOperator, TextViewFiltersOperator, TSchemaUnitType, TViewFiltersOperator, TViewFiltersValue } from "@nishans/types";
 import React from "react";
-import { BasicSelect } from "../../Shared";
+import { BasicSelect } from "../../../Shared";
 
 interface Props {
   schema: [TSchemaUnitType, string, string][]
@@ -73,7 +73,7 @@ function getFilterInfo(schema_type: TSchemaUnitType) {
   }
 }
 
-export default function FilterItem(props: Props, chunk: string) {
+export default function FilterGroupItem(props: Props) {
   return <div>
     <BasicSelect label="Group Operator" value={'and'} onChange={() => { }} items={[{ label: "And", value: 'and' }, { label: "Or", value: 'or' }]} />
     <BasicSelect label="Property" value={'and'} onChange={() => { }} items={props.schema.map(unit => ({ label: unit[2], value: unit[1] }))} />

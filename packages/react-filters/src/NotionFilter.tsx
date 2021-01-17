@@ -1,7 +1,6 @@
 import { IViewFilter, TSchemaUnitType } from '@nishans/types';
 import React, { useState } from 'react';
-import FilterAdd from './components/Filter/Add';
-import FilterItem from "./components/Filter/Item";
+import FilterGroup from "./components/Filter/Group";
 
 type State = IViewFilter;
 
@@ -15,8 +14,7 @@ function NotionFilter() {
 
   return (
     <div className="NotionFilter">
-      {filters.filters.map(() => <FilterItem schema={schema_info} />)}
-      <FilterAdd addFilter={setFilters} />
+      <FilterGroup filters={filters} schema_info={schema_info} />
     </div>
   );
 }

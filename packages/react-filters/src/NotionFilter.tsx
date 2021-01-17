@@ -1,13 +1,22 @@
+import { IViewFilter, TSchemaUnitType } from '@nishans/types';
 import React, { useState } from 'react';
 import FilterAdd from './components/Filter/Add';
 import FilterItem from "./components/Filter/Item";
 
+type State = IViewFilter;
+
+const schema_info: [TSchemaUnitType, string, string][] = [["checkbox", "checkbox", "Is Done"]];
+
 function NotionFilter() {
-  const [total_filters, setTotalFilters] = useState(0);
+  const [filters, setFilters] = useState<State>({
+    filters: [],
+    operator: "and"
+  });
+
   return (
     <div className="NotionFilter">
-      {Array(total_filters).fill(0).map(() => <FilterItem schema={[["checkbox", "checkbox", "Is Done"]]} />)}
-      <FilterAdd addFilter={setTotalFilters} />
+      {filters.filters.map(() => <FilterItem schema={schema_info} />)}
+      <FilterAdd addFilter={setFilters} />
     </div>
   );
 }

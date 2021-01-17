@@ -1,9 +1,15 @@
-import { DateViewFiltersOperator, EmptyViewFiltersOperator, NumberViewFiltersOperator, PersonViewFiltersOperator, TextViewFiltersOperator, TSchemaUnitType } from "@nishans/types";
+import { DateViewFiltersOperator, EmptyViewFiltersOperator, NumberViewFiltersOperator, PersonViewFiltersOperator, TextViewFiltersOperator, TSchemaUnitType, TViewFiltersOperator, TViewFiltersValue } from "@nishans/types";
 import React from "react";
 import { BasicSelect } from "../../Shared";
 
 interface Props {
   schema: [TSchemaUnitType, string, string][]
+}
+
+interface FilterOperator {
+  operator: TViewFiltersOperator,
+  label: string,
+  value: TViewFiltersValue
 }
 
 const string_filter_operators: TextViewFiltersOperator[] = [
@@ -36,7 +42,7 @@ const date_filter_operators: DateViewFiltersOperator[] = [
 const person_filter_operators: PersonViewFiltersOperator[] = ["person_contains", "person_does_not_contain"];
 const empty_filter_operators: EmptyViewFiltersOperator[] = ["is_empty", "is_not_empty"]
 
-function detectFilterOperator(schema_type: TSchemaUnitType) {
+function getFilterInfo(schema_type: TSchemaUnitType) {
   switch (schema_type) {
     case "text":
     case "title":
@@ -67,7 +73,7 @@ function detectFilterOperator(schema_type: TSchemaUnitType) {
   }
 }
 
-export default function FilterItem(props: Props) {
+export default function FilterItem(props: Props, chunk: string) {
   return <div>
     <BasicSelect label="Group Operator" value={'and'} onChange={() => { }} items={[{ label: "And", value: 'and' }, { label: "Or", value: 'or' }]} />
     <BasicSelect label="Property" value={'and'} onChange={() => { }} items={props.schema.map(unit => ({ label: unit[2], value: unit[1] }))} />

@@ -1,6 +1,6 @@
 import { IViewFilter } from "@nishans/types";
 import React from "react";
-import { BasicSelect } from "../../Shared";
+import { BasicSelect } from "../../../Shared";
 
 interface Props {
   addFilter: React.Dispatch<React.SetStateAction<IViewFilter>>
@@ -22,7 +22,7 @@ const returnEmptyFilterGroup = (): any => ({
   operator: "and"
 })
 
-export default function FilterAdd(props: Props) {
+export default function FilterGroupAdd(props: Props) {
   return <div >
     <BasicSelect label={"Add a filter"} value={""} onChange={(e) => {
       switch (e.target.value) {

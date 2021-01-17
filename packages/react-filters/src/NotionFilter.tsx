@@ -5,10 +5,9 @@ import { TSchemaInfo } from './types';
 
 type State = IViewFilter;
 
-const schema_info: TSchemaInfo = [["checkbox", "checkbox", "Is Done"]];
-
 interface Props {
-  initial_operator?: TViewGroupFilterOperator
+  initial_operator?: TViewGroupFilterOperator,
+  schema_info: TSchemaInfo
 }
 
 function NotionFilter(props: Props) {
@@ -19,7 +18,7 @@ function NotionFilter(props: Props) {
 
   return (
     <div className="NotionFilter">
-      <FilterGroup filters={filters} schema_info={schema_info} />
+      <FilterGroup filters={filters} schema_info={props.schema_info} />
     </div>
   );
 }

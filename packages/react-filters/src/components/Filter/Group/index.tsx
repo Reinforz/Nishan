@@ -1,7 +1,9 @@
 import { IViewFilter } from "@nishans/types";
 import React from "react";
 import { TSchemaInfo } from "../../../types";
+import FilterGroupAdd from "./Add";
 import FilterGroupItem from "./Item";
+import FilterGroupOperator from "./Operator";
 
 interface Props {
   filters: IViewFilter,
@@ -10,6 +12,10 @@ interface Props {
 
 export default function FilterGroup(props: Props) {
   return <div className="NotionFilter-Group">
-    {props.filters.filters.map(() => <FilterGroupItem schema={props.schema_info} />)}
+    <FilterGroupOperator />
+    <div className="NotionFilter-Group-Items">
+      {props.filters.filters.map(() => <FilterGroupItem schema={props.schema_info} />)}
+    </div>
+    <FilterGroupAdd addFilter={() => { }} />
   </div>
 }

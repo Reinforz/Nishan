@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function FilterGroupAdd(props: Props) {
-  return <div >
+  return <div className="NotionFilter-Group-Add">
     <BasicSelect label={"Add a filter"} value={""} onChange={(e) => {
       switch (e.target.value) {
         case "filter":

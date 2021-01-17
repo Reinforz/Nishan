@@ -13,11 +13,13 @@ interface Props {
 
 export default function FilterGroup(props: Props) {
   return <div className="NotionFilter-Group">
-    <FilterGroupOperator />
-    <div className="NotionFilter-Group-Items">
-      {props.filters.filters.map(() => <FilterGroupItem schema={props.schema_info} />)}
+    <div style={{ display: "flex" }}>
+      <FilterGroupOperator />
+      <div className="NotionFilter-Group-Items">
+        {props.filters.filters.map(() => <FilterGroupItem schema={props.schema_info} />)}
+      </div>
+      <FilterGroupOptions />
     </div>
-    <FilterGroupOptions />
     <FilterGroupAdd addFilter={() => { }} />
   </div>
 }

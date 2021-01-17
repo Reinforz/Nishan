@@ -1,10 +1,8 @@
 import React from "react";
+import { BasicSelect } from "../../../Shared";
 
 export default function FilterGroupOptions() {
   return <div className="NotionFilter-Group-Options">
-    <div>Remove</div>
-    <div>Duplicate</div>
-    <div>Turn into filter</div>
-    <div>Wrap in group</div>
+    <BasicSelect value="" onChange={() => { }} label="Options" items={[{ label: "Remove", value: "remove" }, { label: "Duplicate", value: "duplicate" }, { label: "Turn into filter", value: "turn_into_filter" }, { label: "Wrap into group", value: "wrap_into_group" }]} />
   </div>
 }

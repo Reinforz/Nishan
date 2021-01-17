@@ -31,7 +31,7 @@ export function BasicSelect(props: Props) {
       value={props.value}
       onChange={props.onChange}
     >
-      {props.items.map(({ value, label }) => <MenuItem value={value}>{label}</MenuItem>)}
+      {props.items.map(({ value, label }) => <MenuItem key={value} value={value}>{label}</MenuItem>)}
     </Select>
   </FormControl>
 }

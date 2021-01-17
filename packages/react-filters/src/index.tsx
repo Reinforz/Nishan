@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import NotionFilter from './NotionFilter';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <NotionFilter />
   </React.StrictMode>,
   document.getElementById('root')
 );

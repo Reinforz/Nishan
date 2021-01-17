@@ -1,4 +1,4 @@
-export const returnEmptyFilter = (): any => ({
+export const createEmptyFilter = (): any => ({
 	property: '',
 	filter: {
 		operator: '',
@@ -9,7 +9,7 @@ export const returnEmptyFilter = (): any => ({
 	}
 });
 
-export const returnEmptyFilterGroup = (): any => ({
+export const createEmptyFilterGroup = (): any => ({
 	filters: [],
 	operator: 'and'
 });

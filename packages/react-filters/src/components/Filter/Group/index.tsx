@@ -9,6 +9,7 @@ import FilterGroupOptions from "./Options";
 interface Props {
   filters: IViewFilter,
   schema_info: TSchemaInfo;
+  trail: number[]
 }
 
 export default function FilterGroup(props: Props) {
@@ -16,10 +17,10 @@ export default function FilterGroup(props: Props) {
     <div style={{ display: "flex" }}>
       <FilterGroupOperator />
       <div className="NotionFilter-Group-Items">
-        {props.filters.filters.map(() => <FilterGroupItem schema={props.schema_info} />)}
+        {props.filters.filters.map((filter, index) => <FilterGroupItem trail={props.trail.concat(index)} filter={filter} schema={props.schema_info} />)}
       </div>
       <FilterGroupOptions />
     </div>
-    <FilterGroupAdd addFilter={() => { }} />
+    <FilterGroupAdd />
   </div>
 }

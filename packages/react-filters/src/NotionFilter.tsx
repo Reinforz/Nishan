@@ -10,9 +10,10 @@ interface Props {
   schema_info: TSchemaInfo
 }
 
-const NotionFilterContext = createContext<{
+export const NotionFilterContext = createContext<{
   filters: State,
-  setFilters: (filter: State) => void
+  setFilters: (filter: State) => void,
+  schema_info: TSchemaInfo
 }>({} as any)
 
 function NotionFilter(props: Props) {
@@ -21,9 +22,9 @@ function NotionFilter(props: Props) {
     operator: props.initial_operator ?? "and"
   });
 
-  return <NotionFilterContext.Provider value={{ filters, setFilters }}>
+  return <NotionFilterContext.Provider value={{ filters, setFilters, schema_info: props.schema_info }}>
     <div className="NotionFilter">
-      <FilterGroup trail={[0]} filters={filters} schema_info={props.schema_info} />
+      <FilterGroup trails={[0]} />
     </div>
   </NotionFilterContext.Provider>
 }

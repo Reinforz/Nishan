@@ -1,26 +1,27 @@
 import { IViewFilter } from "@nishans/types";
-import React from "react";
-import { TSchemaInfo } from "../../../types";
+import React, { useContext } from "react";
+import { NotionFilterContext } from "../../../NotionFilter";
+import { extractNestedFilter } from "../../../utils/extractNestedFilter";
 import FilterGroupAdd from "./Add";
 import FilterGroupItem from "./Item";
 import FilterGroupOperator from "./Operator";
 import FilterGroupOptions from "./Options";
 
 interface Props {
-  filters: IViewFilter,
-  schema_info: TSchemaInfo;
-  trail: number[]
+  trails: number[]
 }
 
 export default function FilterGroup(props: Props) {
+  const { filters } = useContext(NotionFilterContext)
+  const filter = extractNestedFilter(filters.filters, props.trails)
   return <div className="NotionFilter-Group">
-    <div style={{ display: "flex" }}>
+    {filter ? <div style={{ display: "flex" }}>
       <FilterGroupOperator />
       <div className="NotionFilter-Group-Items">
-        {props.filters.filters.map((filter, index) => <FilterGroupItem trail={props.trail.concat(index)} filter={filter} schema={props.schema_info} />)}
+        {(filter as IViewFilter).filters.map((_, index) => <FilterGroupItem trails={props.trails.concat(index)} />)}
       </div>
       <FilterGroupOptions />
-    </div>
+    </div> : <div>No Filters Added</div>}
     <FilterGroupAdd />
   </div>
 }

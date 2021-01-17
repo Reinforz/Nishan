@@ -1,6 +1,7 @@
 import React from "react";
 import { TSchemaInfo } from "../../../../types";
 import FilterGroupItemOperator from "./Operator";
+import FilterGroupItemOptions from "./Options";
 import FilterGroupItemProperty from "./Property";
 import FilterGroupItemValue from "./Value";
 
@@ -13,5 +14,6 @@ export default function FilterGroupItem(props: Props) {
     <FilterGroupItemProperty schema={props.schema} />
     <FilterGroupItemOperator operators={[{ value: "checkbox_is", label: "Is" }]} />
     <FilterGroupItemValue value="string" />
+    <FilterGroupItemOptions />
   </div>
 }

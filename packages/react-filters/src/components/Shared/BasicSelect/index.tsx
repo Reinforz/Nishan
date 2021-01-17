@@ -1,9 +1,9 @@
-import { FormControl, InputLabel, Select, MenuItem, SelectProps } from "@material-ui/core";
+import { FormControl, InputLabel, Select, MenuItem, SelectProps, createStyles, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
 
 interface Props {
   label: string,
-  value: string
+  value: any
   onChange: SelectProps["onChange"],
   items: {
     label: string,
@@ -11,8 +11,21 @@ interface Props {
   }[]
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }),
+);
+
 export function BasicSelect(props: Props) {
-  <FormControl>
+  const classes = useStyles();
+  return <FormControl className={classes.formControl}>
     <InputLabel>{props.label}</InputLabel>
     <Select
       value={props.value}

@@ -5,6 +5,7 @@ let user: NotionUser = null as any;
 
 beforeAll(async ()=>{
   user = await nishan.getNotionUser(USER_ONE_ID)
+  user.init_cache = true;
 })
 
 function checkSpace(space: Space, status?: boolean){

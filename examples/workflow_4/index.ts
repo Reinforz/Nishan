@@ -1,4 +1,4 @@
-import Nishan, { CollectionViewPage, Page, TBlockInput } from '@nishans/core';
+import { CollectionViewPage, Page, TBlockInput } from '@nishans/core';
 import '../env';
 import { v4 as uuidv4 } from 'uuid';
 import { goalViewItem, CommonMultiSelectSchema } from '../util';

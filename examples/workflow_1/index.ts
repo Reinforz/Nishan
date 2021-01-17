@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import fs from "fs";
-import Nishan, { CheckboxSchemaUnit, Page, TFormulaCreateInput, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
-import { status, phase, priority, subject, difficulty } from '../data';
+import Nishan, { CheckboxSchemaUnit, Page, TViewCreateInput, TViewSchemaUnitsCreateInput } from '@nishans/core';
+import { priority, difficulty } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
 
 import '../env';
@@ -23,9 +22,9 @@ const daily_sites = [
 export default async function workflow1(user_family_name: string, space_name: string) {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
-	});
+  });
 
-	const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);
+  const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);
   const space = await user.getSpace((space) => space.name === space_name);
 	const { page } = await space.createTRootPages([
     {

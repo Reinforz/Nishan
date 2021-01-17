@@ -1,19 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
 import '../env';
-import Nishan, {
+import {
 	DateViewFiltersValue,
 	FormulaSchemaUnitInput,
 	Page,
 	RelationSchemaUnit,
 	RollupSchemaUnit,
-	slugify,
 	TSchemaUnitInput,
-	TViewCreateInput,
-	TViewSchemaUnitsCreateInput
+	TViewCreateInput
 } from '@nishans/core';
 
-import { priority, phase, status, purpose, subject, source } from '../data';
+import { status, purpose, subject, source } from '../data';
 import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [

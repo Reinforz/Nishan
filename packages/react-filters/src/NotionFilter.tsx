@@ -6,7 +6,7 @@ function NotionFilter() {
   const [total_filters, setTotalFilters] = useState(0);
   return (
     <div className="NotionFilter">
-      {Array(total_filters).fill(0).map(() => <FilterItem />)}
+      {Array(total_filters).fill(0).map(() => <FilterItem schema={[["checkbox", "checkbox", "Is Done"]]} />)}
       <FilterAdd addFilter={setTotalFilters} />
     </div>
   );

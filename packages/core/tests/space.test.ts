@@ -7,6 +7,7 @@ let space: Space = null as any;
 beforeAll(async ()=>{
   const user = await nishan.getNotionUser(USER_ONE_ID);
   space = await user.getSpace(SPACE_ONE_ID);
+  space.init_cache = true;
 })
 
 function checkRootPages(pages: ITPage, status?:boolean){

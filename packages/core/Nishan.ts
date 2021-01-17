@@ -1,11 +1,12 @@
 import axios from "axios";
 import colors from "colors";
+import {Cache} from "@nishans/endpoints"
 
 import NotionUser from "./api/NotionUser";
 import { error } from "./utils/logs";
 import { GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishans/types";
 import {Logger, NishanArg,FilterType, FilterTypes} from "./types";
-import {Cache} from "@nishans/endpoints"
+
 class Nishan extends Cache {
   token: string;
   interval: number;
@@ -25,16 +26,16 @@ class Nishan extends Cache {
   #initializeCache = async () => {
     if (!this.init_cache) {
       try {
-        const { data } = await axios.post(
+        const {data} = await axios.post<GetSpacesResult>(
           'https://www.notion.so/api/v3/getSpaces',
           {},
           {
             headers: {
-              cookie: `token_v2=${this.token}`
+              cookie: `token_v2=${this.token};`
             }
           }
-        ) as { data: GetSpacesResult };
-
+        );
+        
         const external_notion_users: Set<string> = new Set();
         Object.values(data).forEach(data => {
           Object.values(data.space).forEach(space => space.value.permissions.forEach(permission =>
@@ -43,7 +44,7 @@ class Nishan extends Cache {
           this.saveToCache(data)
         });
 
-        const { data: { recordMap } } = await axios.post(
+        const { data: { recordMap } } = await axios.post<SyncRecordValuesResult>(
           `https://www.notion.so/api/v3/syncRecordValues`,
           {
             requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
@@ -53,10 +54,11 @@ class Nishan extends Cache {
               cookie: `token_v2=${this.token}`
             }
           }
-        ) as { data: SyncRecordValuesResult };
+        )
         this.saveToCache(recordMap);
         this.init_cache = true;
       } catch (err) {
+        console.log(err)
         throw new Error(error(err.response.data))
       }
     }

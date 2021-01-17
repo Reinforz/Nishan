@@ -1,5 +1,5 @@
 {
-  "name": "@nishans/filters",
+  "name": "@nishans/react-filters",
   "version": "0.0.1",
   "description": "A react component that emulates notion's advanced filter system",
   "keywords": [
@@ -8,7 +8,6 @@
     "react-filter"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/tree/master/packages/filter#README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
   "directories": {
@@ -27,22 +26,20 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.2.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-redux": "^7.2.0",
-    "react-scripts": "4.0.1"
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "@types/react-redux": "^7.1.7",
-    "typescript": "~3.8.2"
+    "@types/react": "^16.9.53",
+    "@types/react-dom": "^16.9.8",
+    "typescript": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,7 +47,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [

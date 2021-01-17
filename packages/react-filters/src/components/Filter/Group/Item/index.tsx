@@ -1,7 +1,8 @@
 import React from "react";
 import { TSchemaInfo } from "../../../../types";
-import { BasicSelect } from "../../../Shared";
 import FilterGroupItemOperator from "./Operator";
+import FilterGroupItemProperty from "./Property";
+import FilterGroupItemValue from "./Value";
 
 interface Props {
   schema: TSchemaInfo
@@ -9,8 +10,8 @@ interface Props {
 
 export default function FilterGroupItem(props: Props) {
   return <div className="NotionFilter-Group-Item">
-    <BasicSelect label="Property" value={'and'} onChange={() => { }} items={props.schema.map(unit => ({ label: unit[2], value: unit[1] }))} />
+    <FilterGroupItemProperty schema={props.schema} />
     <FilterGroupItemOperator operators={[{ value: "checkbox_is", label: "Is" }]} />
-    <span>Value</span>
+    <FilterGroupItemValue value="string" />
   </div>
 }

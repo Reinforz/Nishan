@@ -1,26 +1,11 @@
 import { IViewFilter } from "@nishans/types";
 import React from "react";
+import { returnEmptyFilter, returnEmptyFilterGroup } from "../../../../utils/createFilterLiterals";
 import { BasicSelect } from "../../../Shared";
 
 interface Props {
   addFilter: React.Dispatch<React.SetStateAction<IViewFilter>>
 }
-
-const returnEmptyFilter = (): any => ({
-  property: "",
-  filter: {
-    operator: "",
-    value: {
-      type: "",
-      value: ""
-    }
-  }
-})
-
-const returnEmptyFilterGroup = (): any => ({
-  filters: [],
-  operator: "and"
-})
 
 export default function FilterGroupAdd(props: Props) {
   return <div >

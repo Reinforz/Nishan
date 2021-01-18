@@ -30,6 +30,20 @@ export default function FilterGroupOptions({ filter }: Props) {
           filter.filters.push(JSON.parse(JSON.stringify(filter.filters[filter.filters.length - 1])));
           setFilters({ ...filters })
         }
+      },
+      filter.filters.length === 1 ? {
+        label: "Turn into filter",
+        icon: <Svgicon icon="turn_into" />,
+        onClick() {
+
+        }
+      } : null,
+      {
+        label: "Wrap in group",
+        icon: <Svgicon icon="turn_into" />,
+        onClick() {
+
+        }
       }
     ]} />
   </div>

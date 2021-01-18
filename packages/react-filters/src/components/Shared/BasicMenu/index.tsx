@@ -2,13 +2,15 @@ import React from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+interface IMenuItem {
+  icon?: JSX.Element,
+  label: string,
+  onClick: () => void
+}
+
 interface Props {
   label: JSX.Element | string,
-  items: {
-    icon?: JSX.Element,
-    label: string,
-    onClick: () => void
-  }[]
+  items: (IMenuItem | null)[]
 }
 
 export default function BasicMenu(props: Props) {
@@ -41,7 +43,7 @@ export default function BasicMenu(props: Props) {
           horizontal: 'left',
         }}
       >
-        {props.items.map(({ label, onClick, icon }) => <MenuItem key={label} onClick={(e) => {
+        {(props.items.filter(item => item) as IMenuItem[]).map(({ label, onClick, icon }) => <MenuItem key={label} onClick={(e) => {
           handleClose();
           onClick()
         }}>{icon && <span className="BasicMenu-items-icon">{icon}</span>} <span className="BasicMenu-items-label">{label}</span></MenuItem>)}

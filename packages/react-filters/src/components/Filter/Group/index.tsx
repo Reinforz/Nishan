@@ -13,9 +13,9 @@ interface Props {
 export default function FilterGroup({ trails, filter }: Props) {
   return <div className="NotionFilter-Group">
     {filter.filters.length !== 0 ? <div style={{ display: "flex", border: "1px solid black", padding: "10px" }}>
-      <FilterGroupOperator />
+      <FilterGroupOperator filter={filter} />
       <div className="NotionFilter-Group-Items">
-        {filter.filters.map((filter, index) => <FilterGroupItem key={index} filter={filter} trails={trails.concat(index)} />)}
+        {filter.filters.map((child_filter, index) => <FilterGroupItem parent_filter={filter} key={index} filter={child_filter} trails={trails.concat(index)} />)}
       </div>
       <FilterGroupOptions />
     </div> : <div>No Filters Added</div>}

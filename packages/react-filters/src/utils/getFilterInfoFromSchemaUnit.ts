@@ -7,22 +7,76 @@ import {
 	TSchemaUnitType
 } from '@nishans/types';
 
-const string_filter_operators: TextViewFiltersOperator[] = [
-	'string_is',
-	'string_is_not',
-	'string_contains',
-	'string_does_not_contain',
-	'string_starts_with',
-	'string_ends_with'
+type FilterInfo<V> = { value: V; label: string }[];
+
+const string_filter_operators: FilterInfo<TextViewFiltersOperator | EmptyViewFiltersOperator> = [
+	{
+		value: 'string_is',
+		label: 'Is'
+	},
+	{
+		value: 'string_is_not',
+		label: 'Is not'
+	},
+	{
+		value: 'string_contains',
+		label: 'Contains'
+	},
+	{
+		value: 'string_does_not_contain',
+		label: 'Does not contain'
+	},
+	{
+		value: 'string_starts_with',
+		label: 'Starts with'
+	},
+	{
+		value: 'string_ends_with',
+		label: 'Ends with'
+	},
+	{
+		value: 'is_empty',
+		label: 'Is empty'
+	},
+	{
+		value: 'is_not_empty',
+		label: 'Is not empty'
+	}
 ];
 
-const number_filter_operators: NumberViewFiltersOperator[] = [
-	'number_equals',
-	'number_does_not_equal',
-	'number_greater_than',
-	'number_less_than',
-	'number_greater_than_or_equal_to',
-	'number_less_than_or_equal_to'
+const number_filter_operators: FilterInfo<NumberViewFiltersOperator | EmptyViewFiltersOperator> = [
+	{
+		label: '=',
+		value: 'number_equals'
+	},
+	{
+		label: '≠',
+		value: 'number_does_not_equal'
+	},
+	{
+		label: '>',
+		value: 'number_greater_than'
+	},
+	{
+		label: '<',
+		value: 'number_less_than'
+	},
+	{
+		label: '≥',
+		value: 'number_greater_than_or_equal_to'
+	},
+	{
+		label: '≤',
+		value: 'number_less_than_or_equal_to'
+	},
+	{
+		value: 'is_empty',
+		label: 'Is empty'
+	},
+	{
+		value: 'is_not_empty',
+		label: 'Is not empty'
+	}
 ];
 
 const date_filter_operators: DateViewFiltersOperator[] = [

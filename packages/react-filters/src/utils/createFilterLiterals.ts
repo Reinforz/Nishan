@@ -1,9 +1,9 @@
 export const createEmptyFilter = (): any => ({
-	property: '',
+	property: 'title',
 	filter: {
-		operator: '',
+		operator: 'string_is',
 		value: {
-			type: '',
+			type: 'exact',
 			value: ''
 		}
 	}

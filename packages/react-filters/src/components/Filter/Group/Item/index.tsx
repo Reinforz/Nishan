@@ -23,7 +23,7 @@ export default function FilterGroupItem({ parent_filter, filter, trails }: Props
 
   return <div className="NotionFilter-Group-Item" style={{ display: "flex", border: "2px solid black" }}>
     <FilterGroupItemProperty filter={filter as TViewFilters} />
-    <FilterGroupItemOperator operators={[{ value: "checkbox_is", label: "Is" }]} />
+    <FilterGroupItemOperator operators={filter_info} />
     <FilterGroupItemValue value="string" />
     <FilterGroupItemOptions parent_filter={parent_filter} trails={trails} />
   </div>

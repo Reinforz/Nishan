@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function FilterGroupAdd({ filter, trails }: Props) {
-  const { filters, setFilters, nestingLevel } = useContext(NotionFilterContext);
+  const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext);
   return <div className="NotionFilter-Group-Add">
     <BasicMenu label={
       <div style={{ display: "flex" }}>
@@ -32,7 +32,7 @@ export default function FilterGroupAdd({ filter, trails }: Props) {
           label: "Add a filter group",
           icon: <Svgicon icon="stack" />,
           onClick() {
-            filter.filters.push(createEmptyFilterGroup());
+            filter.filters.push(createEmptyFilterGroup(default_group_operator));
             setFilters({ ...filters })
           },
           description: "A group to nest more filters"

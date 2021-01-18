@@ -85,6 +85,6 @@ const schema: Schema = {
 } as any;
 
 ReactDOM.render(
-  <NotionFilter schema={schema} nestingLevel={2} />,
+  <NotionFilter schema={schema} nestingLevel={3} default_group_operator={"or"} />,
   document.getElementById('root')
 );

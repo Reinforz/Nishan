@@ -5,25 +5,26 @@ import FilterGroup from "./components/Filter/Group";
 type State = IViewFilter;
 
 interface Props {
-  root_operator?: TViewGroupFilterOperator,
   schema: Schema,
-  nestingLevel?: number
+  nestingLevel?: number,
+  default_group_operator?: TViewGroupFilterOperator
 }
 
-export const NotionFilterContext = createContext<{
-  filters: State,
+interface INotionFilterContext extends Required<Props> {
   setFilters: (filter: State) => void,
-  schema: Schema,
-  nestingLevel: number
-}>({} as any)
+  filters: State,
+}
+
+export const NotionFilterContext = createContext<INotionFilterContext>({} as any)
 
 function NotionFilter(props: Props) {
+  const default_group_operator = props.default_group_operator ?? "and"
   const [filters, setFilters] = useState<State>({
     filters: [],
-    operator: props.root_operator ?? "and"
+    operator: default_group_operator
   });
 
-  return <NotionFilterContext.Provider value={{ filters, setFilters, schema: props.schema, nestingLevel: props.nestingLevel ?? 5 }}>
+  return <NotionFilterContext.Provider value={{ default_group_operator, filters, setFilters, schema: props.schema, nestingLevel: props.nestingLevel ?? 5 }}>
     <div className="NotionFilter">
       <FilterGroup parent_filter={null} filter={filters} trails={[]} />
     </div>

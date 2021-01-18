@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function FilterGroupOptions({ parent_filter, trails, filter }: Props) {
-  const { filters, setFilters, nestingLevel } = useContext(NotionFilterContext)
+  const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext)
   const last_trail = trails[trails.length - 1];
   return <div className="NotionFilter-Group-Options" style={{ display: "flex", alignItems: "center" }}>
     <BasicMenu label={<Svgicon icon="ellipsis" />} items={[
@@ -50,11 +50,8 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
         onClick() {
           if (parent_filter) {
             parent_filter.filters[last_trail] = {
-              operator: "and",
-              filters: [{
-                operator: "and",
-                filters: filter.filters
-              }]
+              operator: default_group_operator,
+              filters: [filter]
             }
             setFilters({ ...filters })
           }

@@ -1,4 +1,4 @@
-import { TViewFilters } from "@nishans/types";
+import { TViewFilters, TViewGroupFilterOperator } from "@nishans/types";
 
 export const createEmptyFilter = (): TViewFilters => ({
 	property: 'title',
@@ -11,7 +11,7 @@ export const createEmptyFilter = (): TViewFilters => ({
 	}
 });
 
-export const createEmptyFilterGroup = (): any => ({
+export const createEmptyFilterGroup = (operator?: TViewGroupFilterOperator): any => ({
 	filters: [],
-	operator: 'and'
+	operator: operator ?? 'and'
 });

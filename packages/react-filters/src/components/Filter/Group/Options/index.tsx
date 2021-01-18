@@ -2,7 +2,6 @@ import { IViewFilter } from "@nishans/types";
 import React, { useContext } from "react";
 
 import { NotionFilterContext } from "../../../../NotionFilter";
-import { createEmptyFilter } from "../../../../utils/createFilterLiterals";
 import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
@@ -40,7 +39,7 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
         icon: <Svgicon icon="turn_into" />,
         onClick() {
           if (parent_filter) {
-            parent_filter.filters[last_trail] = createEmptyFilter()
+            parent_filter.filters[last_trail] = filter.filters[0]
             setFilters({ ...filters })
           }
         }
@@ -59,7 +58,8 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
             }
             setFilters({ ...filters })
           }
-        }
+        },
+        description: "Create a filter group around this"
       }
     ]} />
   </div>

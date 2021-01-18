@@ -1,4 +1,6 @@
-export const createEmptyFilter = (): any => ({
+import { TViewFilters } from "@nishans/types";
+
+export const createEmptyFilter = (): TViewFilters => ({
 	property: 'title',
 	filter: {
 		operator: 'string_is',

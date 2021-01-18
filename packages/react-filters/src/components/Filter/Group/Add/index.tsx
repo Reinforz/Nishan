@@ -33,7 +33,8 @@ export default function FilterGroupAdd({ filter }: Props) {
           onClick() {
             filter.filters.push(createEmptyFilterGroup());
             setFilters({ ...filters })
-          }
+          },
+          description: "A group to nest more filters"
         }
       ]}
     />

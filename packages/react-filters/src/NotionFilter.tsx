@@ -23,7 +23,7 @@ function NotionFilter(props: Props) {
 
   return <NotionFilterContext.Provider value={{ filters, setFilters, schema: props.schema }}>
     <div className="NotionFilter">
-      <FilterGroup filter={filters} trails={[]} />
+      <FilterGroup parent_filter={null} filter={filters} trails={[]} />
     </div>
   </NotionFilterContext.Provider>
 }

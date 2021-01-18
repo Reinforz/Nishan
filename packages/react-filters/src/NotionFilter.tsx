@@ -7,19 +7,19 @@ type State = IViewFilter;
 interface Props {
   schema: Schema,
   nestingLevel?: number,
-  default_group_operator?: TViewGroupFilterOperator
+  default_group_operator?: TViewGroupFilterOperator,
+  filters?: State
 }
 
 interface INotionFilterContext extends Required<Props> {
   setFilters: (filter: State) => void,
-  filters: State,
 }
 
 export const NotionFilterContext = createContext<INotionFilterContext>({} as any)
 
 function NotionFilter(props: Props) {
   const default_group_operator = props.default_group_operator ?? "and"
-  const [filters, setFilters] = useState<State>({
+  const [filters, setFilters] = useState<State>(props.filters ?? {
     filters: [],
     operator: default_group_operator
   });

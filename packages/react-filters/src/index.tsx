@@ -85,6 +85,18 @@ const schema: Schema = {
 } as any;
 
 ReactDOM.render(
-  <NotionFilter schema={schema} nestingLevel={3} default_group_operator={"or"} />,
+  <NotionFilter schema={schema} nestingLevel={3} default_group_operator={"or"} filters={{
+    filters: [{
+      property: "title",
+      filter: {
+        operator: "string_is",
+        value: {
+          value: "",
+          type: "exact"
+        }
+      }
+    }],
+    operator: "and"
+  }} />,
   document.getElementById('root')
 );

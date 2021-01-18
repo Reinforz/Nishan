@@ -31,7 +31,6 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
           };
           setFilters({ ...filters })
           break;
-
       }
     }} label="Options" items={convertIntoSelectMenuItems(["Remove", "Duplicate", "Turn into group"])} />
   </div>

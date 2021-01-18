@@ -20,6 +20,6 @@ export default function FilterGroup({ parent_filter, trails, filter }: Props) {
       </div>
       {trails.length !== 0 && <FilterGroupOptions parent_filter={parent_filter} trails={trails} filter={filter} />}
     </div> : <div>No Filters Added</div>}
-    <FilterGroupAdd filter={filter} />
+    <FilterGroupAdd trails={trails} filter={filter} />
   </div>
 }

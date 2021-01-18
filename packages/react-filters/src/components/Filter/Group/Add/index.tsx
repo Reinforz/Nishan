@@ -6,11 +6,12 @@ import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
 interface Props {
-  filter: IViewFilter
+  filter: IViewFilter,
+  trails: number[],
 }
 
-export default function FilterGroupAdd({ filter }: Props) {
-  const { filters, setFilters } = useContext(NotionFilterContext);
+export default function FilterGroupAdd({ filter, trails }: Props) {
+  const { filters, setFilters, nestingLevel } = useContext(NotionFilterContext);
   return <div className="NotionFilter-Group-Add">
     <BasicMenu label={
       <div style={{ display: "flex" }}>
@@ -27,7 +28,7 @@ export default function FilterGroupAdd({ filter }: Props) {
             setFilters({ ...filters })
           }
         },
-        {
+        nestingLevel > trails.length + 1 ? {
           label: "Add a filter group",
           icon: <Svgicon icon="stack" />,
           onClick() {
@@ -35,7 +36,7 @@ export default function FilterGroupAdd({ filter }: Props) {
             setFilters({ ...filters })
           },
           description: "A group to nest more filters"
-        }
+        } : null
       ]}
     />
   </div>

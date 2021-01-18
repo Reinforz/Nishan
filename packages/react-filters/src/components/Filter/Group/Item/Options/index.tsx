@@ -11,7 +11,7 @@ interface Props {
 
 export default function FilterGroupItemOptions({ parent_filter, trails }: Props) {
   const last_trail = trails[trails.length - 1];
-  const { filters, setFilters } = useContext(NotionFilterContext)
+  const { filters, setFilters, nestingLevel } = useContext(NotionFilterContext)
 
   return <div className="NotionFilter-Group-Item-Options" style={{ display: "flex", alignItems: "center" }}>
     <BasicMenu items={[
@@ -31,7 +31,7 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
           setFilters({ ...filters })
         }
       },
-      {
+      nestingLevel > trails.length ? {
         label: "Turn into group",
         icon: <Svgicon icon="turn_into" />,
         onClick() {
@@ -41,7 +41,7 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
           };
           setFilters({ ...filters })
         }
-      }
+      } : null
     ]} label={<Svgicon icon="ellipsis" />} />
   </div>
 }

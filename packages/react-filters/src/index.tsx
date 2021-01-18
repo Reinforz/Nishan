@@ -85,6 +85,6 @@ const schema: Schema = {
 } as any;
 
 ReactDOM.render(
-  <NotionFilter schema={schema} />,
+  <NotionFilter schema={schema} nestingLevel={2} />,
   document.getElementById('root')
 );

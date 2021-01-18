@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function FilterGroupOptions({ parent_filter, trails, filter }: Props) {
-  const { filters, setFilters } = useContext(NotionFilterContext)
+  const { filters, setFilters, nestingLevel } = useContext(NotionFilterContext)
   const last_trail = trails[trails.length - 1];
   return <div className="NotionFilter-Group-Options" style={{ display: "flex", alignItems: "center" }}>
     <BasicMenu label={<Svgicon icon="ellipsis" />} items={[
@@ -44,7 +44,7 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
           }
         }
       } : null,
-      {
+      nestingLevel > trails.length + 1 ? {
         label: "Wrap in group",
         icon: <Svgicon icon="turn_into" />,
         onClick() {
@@ -60,7 +60,7 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
           }
         },
         description: "Create a filter group around this"
-      }
+      } : null
     ]} />
   </div>
 }

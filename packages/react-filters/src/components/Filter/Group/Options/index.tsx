@@ -29,8 +29,10 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Pr
         label: "Duplicate",
         icon: <Svgicon icon="duplicate" />,
         onClick() {
-          filter.filters.push(JSON.parse(JSON.stringify(filter.filters[filter.filters.length - 1])));
-          setFilters({ ...filters })
+          if (parent_filter) {
+            parent_filter.filters.push(JSON.parse(JSON.stringify(filter)));
+            setFilters({ ...filters })
+          }
         }
       },
       filter.filters.length === 1 ? {

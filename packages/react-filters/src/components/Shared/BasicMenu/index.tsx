@@ -23,26 +23,25 @@ export default function BasicMenu(props: Props) {
   };
 
   return (
-    <div>
-      <div aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+    <div className="BasicMenu">
+      <div onClick={handleClick}>
         {props.label}
       </div>
       <Menu
-        id="simple-menu"
+        getContentAnchorEl={null}
         anchorEl={anchorEl}
-        keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center',
+          horizontal: 'left',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'center',
+          horizontal: 'left',
         }}
       >
-        {props.items.map(({ label, onClick, value }) => <MenuItem onClick={(e) => {
+        {props.items.map(({ label, onClick, value }) => <MenuItem key={label} onClick={(e) => {
           handleClose();
           onClick(value)
         }}>{label}</MenuItem>)}

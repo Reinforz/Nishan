@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 interface Props {
   label: JSX.Element | string,
   items: {
+    icon?: JSX.Element,
     label: string,
     onClick: () => void
   }[]
@@ -23,7 +24,7 @@ export default function BasicMenu(props: Props) {
 
   return (
     <div className="BasicMenu">
-      <div onClick={handleClick}>
+      <div onClick={handleClick} className="BasicMenu-label">
         {props.label}
       </div>
       <Menu
@@ -40,10 +41,10 @@ export default function BasicMenu(props: Props) {
           horizontal: 'left',
         }}
       >
-        {props.items.map(({ label, onClick }) => <MenuItem key={label} onClick={(e) => {
+        {props.items.map(({ label, onClick, icon }) => <MenuItem key={label} onClick={(e) => {
           handleClose();
           onClick()
-        }}>{label}</MenuItem>)}
+        }}>{icon && <span className="BasicMenu-items-icon">{icon}</span>} <span className="BasicMenu-items-label">{label}</span></MenuItem>)}
       </Menu>
     </div>
   );

@@ -19,7 +19,7 @@ export default function FilterGroupItem({ parent_filter, filter, trails }: Props
 
   if ((filter as IViewFilter).operator) return <FilterGroup filter={filter as IViewFilter} trails={trails} />
   const schema_unit = schema[(filter as TViewFilters).property];
-  const filter_info = getFilterInfo(schema_unit.type);
+  const filter_info = getFilterInfo(schema_unit);
 
   return <div className="NotionFilter-Group-Item" style={{ display: "flex", border: "2px solid black" }}>
     <FilterGroupItemProperty filter={filter as TViewFilters} />

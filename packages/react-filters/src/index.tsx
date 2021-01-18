@@ -5,75 +5,81 @@ import NotionFilter from './NotionFilter';
 
 const schema: Schema = {
   ">bYY": {
-    "name": "Person",
+    "name": "Column 4",
     "type": "person"
   },
   "AEpJ": {
-    "name": "Date",
+    "name": "Column 3",
     "type": "date"
   },
   "ElAW": {
-    "name": "Created Time",
+    "name": "Column 12",
     "type": "created_time"
   },
   "FnXC": {
-    "name": "Formula",
     "type": "formula",
+    "name": "Column 10",
+    "formula": {
+      "type": "property",
+      "result_type": "text",
+      "name": "Column 9",
+      "id": "gnUs"
+    }
   },
   "HlYN": {
-    "name": "Created By",
+    "name": "Column 13",
     "type": "created_by"
   },
   "J<d\\": {
-    "name": "Text",
+    "name": "Column",
     "type": "text"
   },
   "Lk:`": {
-    "name": "Last Edited By",
+    "name": "Column 15",
     "type": "last_edited_by"
   },
   "PXaf": {
-    "name": "Select",
-    "type": "select",
+    "name": "Column 2",
+    "type": "select"
   },
   "R_:}": {
-    "name": "Url",
+    "name": "Column 7",
     "type": "url"
   },
   "SJ={": {
-    "name": "Last Edited Time",
+    "name": "Column 14",
     "type": "last_edited_time"
   },
   "TAcF": {
-    "name": "Number",
+    "name": "Column 1",
     "type": "number"
   },
   "]s]B": {
-    "name": "Email",
+    "name": "Column 8",
     "type": "email"
   },
   "dVZL": {
-    "name": "Rollup",
+    "name": "Column 11",
     "type": "rollup"
   },
   "gnUs": {
-    "name": "Phone",
+    "name": "Column 9",
     "type": "phone_number"
   },
   "pxjC": {
-    "name": "Checkbox",
+    "name": "Column 6",
     "type": "checkbox"
   },
   "xk;g": {
-    "name": "File",
+    "name": "Column 5",
     "type": "file"
   },
   "{TZF": {
-    "name": "Multi Select",
+    "name": "Tags",
     "type": "multi_select"
   },
   "title": {
-    "name": "Title",
+    "name": "Name",
     "type": "title"
   }
 } as any;

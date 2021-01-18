@@ -8,6 +8,7 @@ import {
 	RelationViewFiltersOperator,
 	SelectViewFiltersOperator,
 	TextViewFiltersOperator,
+	TSchemaUnit,
 	TSchemaUnitType,
 	TViewFiltersOperator
 } from '@nishans/types';
@@ -178,35 +179,38 @@ const select_filter_operators: FilterInfo<SelectViewFiltersOperator | EmptyViewF
 	...empty_filter_operators
 ];
 
-export function getFilterInfo (schema_type: TSchemaUnitType): TFilterInfo {
-	switch (schema_type) {
-		case 'text':
-		case 'title':
-		case 'url':
-		case 'email':
-		case 'phone_number':
-			return string_filter_operators;
-		case 'number':
-			return number_filter_operators;
-		case 'select':
-			return select_filter_operators;
-		case 'multi_select':
-			return multi_select_filter_operators;
-		case 'date':
-		case 'created_time':
-		case 'last_edited_time':
-			return date_filter_operators;
-		case 'person':
-		case 'last_edited_by':
-		case 'created_by':
-			return person_filter_operators;
-		case 'file':
-			return empty_filter_operators;
-		case 'checkbox':
-			return checkbox_filter_operators;
-		case 'relation':
-			return relation_filter_operators;
-		default:
-			return empty_filter_operators;
+export function getFilterInfo (schema_unit: TSchemaUnit): TFilterInfo {
+	function inner (schema_type: TSchemaUnitType) {
+		switch (schema_type) {
+			case 'text':
+			case 'title':
+			case 'url':
+			case 'email':
+			case 'phone_number':
+				return string_filter_operators;
+			case 'number':
+				return number_filter_operators;
+			case 'select':
+				return select_filter_operators;
+			case 'multi_select':
+				return multi_select_filter_operators;
+			case 'date':
+			case 'created_time':
+			case 'last_edited_time':
+				return date_filter_operators;
+			case 'person':
+			case 'last_edited_by':
+			case 'created_by':
+				return person_filter_operators;
+			case 'file':
+				return empty_filter_operators;
+			case 'checkbox':
+				return checkbox_filter_operators;
+			case 'relation':
+				return relation_filter_operators;
+			default:
+				return empty_filter_operators;
+		}
 	}
+	return schema_unit.type !== 'formula' ? inner(schema_unit.type) : inner(schema_unit.formula.result_type);
 }

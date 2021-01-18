@@ -1,6 +1,10 @@
 import { Schema, IViewFilter, TViewGroupFilterOperator } from '@nishans/types';
 import React, { createContext, useState } from 'react';
 import FilterGroup from "./components/Filter/Group";
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from "./globalTheme";
+
+import "./index.css";
 
 type State = IViewFilter;
 
@@ -25,9 +29,11 @@ function NotionFilter(props: Props) {
   });
 
   return <NotionFilterContext.Provider value={{ default_group_operator, filters, setFilters, schema: props.schema, nestingLevel: props.nestingLevel ?? 5 }}>
-    <div className="NotionFilter">
-      <FilterGroup parent_filter={null} filter={filters} trails={[]} />
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="NotionFilter" style={{ fontFamily: "Segoe UI" }}>
+        <FilterGroup parent_filter={null} filter={filters} trails={[]} />
+      </div>
+    </ThemeProvider>
   </NotionFilterContext.Provider>
 }
 

@@ -2,7 +2,7 @@ interface Props {
   icon: string
 }
 
-const style: React.CSSProperties = { width: "14px", height: "14px", display: "block", fill: "rgb(202, 204, 206)", flexShrink: 0, backfaceVisibility: "hidden", marginRight: "8px" };
+const style: React.CSSProperties = { width: "14px", fill: "rgb(202, 204, 206)", flexShrink: 0, backfaceVisibility: "hidden", marginRight: "8px" };
 
 export default function Svgicon(props: Props) {
   switch (props.icon) {

@@ -23,7 +23,7 @@ export default function FilterGroupItem({ parent_filter, filter, trails }: Props
 
   return <div className="NotionFilter-Group-Item" style={{ display: "flex", border: "2px solid black" }}>
     <FilterGroupItemProperty filter={filter as TViewFilters} />
-    <FilterGroupItemOperator operators={filter_info} />
+    <FilterGroupItemOperator operators={filter_info} filter={filter as TViewFilters} />
     <FilterGroupItemValue value="string" />
     <FilterGroupItemOptions parent_filter={parent_filter} trails={trails} />
   </div>

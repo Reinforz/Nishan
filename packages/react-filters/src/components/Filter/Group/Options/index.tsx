@@ -1,17 +1,12 @@
-import { IViewFilter } from "@nishans/types";
 import React, { useContext } from "react";
 
 import { NotionFilterContext } from "../../../../NotionFilter";
+import { FilterGroupProps } from "../../../../types";
 import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
-interface Props {
-  filter: IViewFilter,
-  trails: number[],
-  parent_filter: IViewFilter | null
-}
 
-export default function FilterGroupOptions({ parent_filter, trails, filter }: Props) {
+export default function FilterGroupOptions({ parent_filter, trails, filter }: FilterGroupProps) {
   const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext)
   const last_trail = trails[trails.length - 1];
   return <div className="NotionFilter-Group-Options" style={{ display: "flex", alignItems: "center" }}>

@@ -1,16 +1,11 @@
-import { IViewFilter } from "@nishans/types";
 import React, { useContext } from "react";
 import { NotionFilterContext } from "../../../../NotionFilter";
+import { FilterGroupProps } from "../../../../types";
 import { createEmptyFilter, createEmptyFilterGroup } from "../../../../utils/createFilterLiterals";
 import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
-interface Props {
-  filter: IViewFilter,
-  trails: number[],
-}
-
-export default function FilterGroupAdd({ filter, trails }: Props) {
+export default function FilterGroupAdd({ filter, trails }: FilterGroupProps) {
   const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext);
   return <div className="NotionFilter-Group-Add">
     <BasicMenu label={

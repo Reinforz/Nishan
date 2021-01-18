@@ -17,7 +17,7 @@ export default function FilterGroup({ trails, filter }: Props) {
       <div className="NotionFilter-Group-Items">
         {filter.filters.map((child_filter, index) => <FilterGroupItem parent_filter={filter} key={index} filter={child_filter} trails={trails.concat(index)} />)}
       </div>
-      <FilterGroupOptions filter={filter} />
+      {trails.length !== 0 && <FilterGroupOptions filter={filter} />}
     </div> : <div>No Filters Added</div>}
     <FilterGroupAdd filter={filter} />
   </div>

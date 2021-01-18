@@ -24,7 +24,7 @@ function NotionFilter(props: Props) {
 
   return <NotionFilterContext.Provider value={{ filters, setFilters, schema_info: props.schema_info }}>
     <div className="NotionFilter">
-      <FilterGroup filter={filters} />
+      <FilterGroup filter={filters} trails={[]} />
     </div>
   </NotionFilterContext.Provider>
 }

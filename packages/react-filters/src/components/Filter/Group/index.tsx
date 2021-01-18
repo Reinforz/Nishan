@@ -6,15 +6,16 @@ import FilterGroupOperator from "./Operator";
 import FilterGroupOptions from "./Options";
 
 interface Props {
-  filter: IViewFilter
+  filter: IViewFilter,
+  trails: number[]
 }
 
-export default function FilterGroup({ filter }: Props) {
+export default function FilterGroup({ trails, filter }: Props) {
   return <div className="NotionFilter-Group">
-    {filter.filters.length !== 0 ? <div style={{ display: "flex" }}>
+    {filter.filters.length !== 0 ? <div style={{ display: "flex", border: "1px solid black", padding: "10px" }}>
       <FilterGroupOperator />
       <div className="NotionFilter-Group-Items">
-        {filter.filters.map((filter, index) => <FilterGroupItem key={index} filter={filter} />)}
+        {filter.filters.map((filter, index) => <FilterGroupItem key={index} filter={filter} trails={trails.concat(index)} />)}
       </div>
       <FilterGroupOptions />
     </div> : <div>No Filters Added</div>}

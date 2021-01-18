@@ -1,27 +1,23 @@
 import { IViewFilter } from "@nishans/types";
-import React, { useContext } from "react";
-import { NotionFilterContext } from "../../../NotionFilter";
-import { extractNestedFilter } from "../../../utils/extractNestedFilter";
+import React from "react";
 import FilterGroupAdd from "./Add";
 import FilterGroupItem from "./Item";
 import FilterGroupOperator from "./Operator";
 import FilterGroupOptions from "./Options";
 
 interface Props {
-  trails: number[]
+  filter: IViewFilter
 }
 
-export default function FilterGroup(props: Props) {
-  const { filters } = useContext(NotionFilterContext)
-  const filter = extractNestedFilter(filters.filters, props.trails)
+export default function FilterGroup({ filter }: Props) {
   return <div className="NotionFilter-Group">
-    {filter ? <div style={{ display: "flex" }}>
+    {filter.filters.length !== 0 ? <div style={{ display: "flex" }}>
       <FilterGroupOperator />
       <div className="NotionFilter-Group-Items">
-        {(filter as IViewFilter).filters.map((_, index) => <FilterGroupItem trails={props.trails.concat(index)} />)}
+        {filter.filters.map((filter, index) => <FilterGroupItem key={index} filter={filter} />)}
       </div>
       <FilterGroupOptions />
     </div> : <div>No Filters Added</div>}
-    <FilterGroupAdd />
+    <FilterGroupAdd filter={filter} />
   </div>
 }

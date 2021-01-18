@@ -6,7 +6,7 @@ import { TSchemaInfo } from './types';
 type State = IViewFilter;
 
 interface Props {
-  initial_operator?: TViewGroupFilterOperator,
+  root_operator?: TViewGroupFilterOperator,
   schema_info: TSchemaInfo
 }
 
@@ -19,12 +19,12 @@ export const NotionFilterContext = createContext<{
 function NotionFilter(props: Props) {
   const [filters, setFilters] = useState<State>({
     filters: [],
-    operator: props.initial_operator ?? "and"
+    operator: props.root_operator ?? "and"
   });
 
   return <NotionFilterContext.Provider value={{ filters, setFilters, schema_info: props.schema_info }}>
     <div className="NotionFilter">
-      <FilterGroup trails={[0]} />
+      <FilterGroup filter={filters} />
     </div>
   </NotionFilterContext.Provider>
 }

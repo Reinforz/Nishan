@@ -1,22 +1,18 @@
-import { IViewFilter } from "@nishans/types";
-import React, { useContext } from "react";
+import { IViewFilter, TViewFilters } from "@nishans/types";
+import React from "react";
 import FilterGroup from "..";
-import { NotionFilterContext } from "../../../../NotionFilter";
-import { extractNestedFilter } from "../../../../utils/extractNestedFilter";
 import FilterGroupItemOperator from "./Operator";
 import FilterGroupItemOptions from "./Options";
 import FilterGroupItemProperty from "./Property";
 import FilterGroupItemValue from "./Value";
 
 interface Props {
-  trails: number[]
+  filter: IViewFilter | TViewFilters
 }
 
-export default function FilterGroupItem(props: Props) {
-  const { filters } = useContext(NotionFilterContext);
-  const filter = extractNestedFilter(filters.filters, props.trails);
-  if ((filter as IViewFilter).operator) return <FilterGroup trails={props.trails} />
-  return <div className="NotionFilter-Group-Item">
+export default function FilterGroupItem({ filter }: Props) {
+  if ((filter as IViewFilter).operator) return <FilterGroup filter={filter as IViewFilter} />
+  return <div className="NotionFilter-Group-Item" style={{ display: "flex" }}>
     <FilterGroupItemProperty />
     <FilterGroupItemOperator operators={[{ value: "checkbox_is", label: "Is" }]} />
     <FilterGroupItemValue value="string" />

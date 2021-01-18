@@ -11,7 +11,7 @@ interface Props {
   }[]
 }
 
-export default function SimpleMenu(props: Props) {
+export default function BasicMenu(props: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {

@@ -7,7 +7,8 @@ interface Props {
   onChange: SelectProps["onChange"],
   items: {
     label: string,
-    value: any
+    value: any,
+    icon?: JSX.Element
   }[]
 }
 
@@ -31,7 +32,7 @@ export function BasicSelect(props: Props) {
       value={props.value}
       onChange={props.onChange}
     >
-      {props.items.map(({ value, label }) => <MenuItem key={value} value={value}>{label}</MenuItem>)}
+      {props.items.map(({ value, label, icon = null }) => <MenuItem key={value} value={value} >{icon} {label}</MenuItem>)}
     </Select>
   </FormControl>
 }

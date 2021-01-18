@@ -20,7 +20,7 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
           setFilters({ ...filters })
           break;
         case "duplicate":
-          parent_filter.filters.push(parent_filter.filters[last_trail]);
+          parent_filter.filters.push(JSON.parse(JSON.stringify(parent_filter.filters[last_trail])));
           setFilters({ ...filters })
           break;
         case "turn_into_group":

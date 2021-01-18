@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { NotionFilterContext } from "../../../../NotionFilter";
 import { createEmptyFilter, createEmptyFilterGroup } from "../../../../utils/createFilterLiterals";
 import BasicMenu from "../../../Shared/BasicMenu";
+import Svgicon from "../../../Shared/Svgicon";
 
 interface Props {
   filter: IViewFilter
@@ -13,13 +14,14 @@ export default function FilterGroupAdd({ filter }: Props) {
   return <div className="NotionFilter-Group-Add">
     <BasicMenu label={
       <div style={{ display: "flex" }}>
-        <svg viewBox="0 0 16 16" style={{ width: "14px", height: "14px", display: "block", fill: "rgb(46, 170, 220)", flexShrink: 0, backfaceVisibility: "hidden" }}><path d="M7.977 14.963c.407 0 .747-.324.747-.723V8.72h5.362c.399 0 .74-.34.74-.747a.746.746 0 00-.74-.738H8.724V1.706c0-.398-.34-.722-.747-.722a.732.732 0 00-.739.722v5.529h-5.37a.746.746 0 00-.74.738c0 .407.341.747.74.747h5.37v5.52c0 .399.332.723.739.723z"></path></svg>
+        <Svgicon icon="plus" />
         <span>Add a filter</span>
-        <svg viewBox="0 0 30 30" style={{ width: "14px", height: "14px", display: "block", fill: "rgb(46, 170, 220)", flexShrink: 0, backfaceVisibility: "hidden" }}><polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon></svg>
+        <Svgicon icon="down" />
       </div>}
       items={[
         {
           label: "Add a filter",
+          icon: <Svgicon icon="plus" />,
           onClick() {
             filter.filters.push(createEmptyFilter());
             setFilters({ ...filters })
@@ -27,6 +29,7 @@ export default function FilterGroupAdd({ filter }: Props) {
         },
         {
           label: "Add a filter group",
+          icon: <Svgicon icon="stack" />,
           onClick() {
             filter.filters.push(createEmptyFilterGroup());
             setFilters({ ...filters })

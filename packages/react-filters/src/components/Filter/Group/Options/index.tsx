@@ -14,7 +14,7 @@ export default function FilterGroupOptions({ filter }: Props) {
   const { filters, setFilters } = useContext(NotionFilterContext)
 
   return <div className="NotionFilter-Group-Options" style={{ display: "flex", alignItems: "center" }}>
-    <BasicMenu label={<Svgicon icon="elipsis" />} items={[
+    <BasicMenu label={<Svgicon icon="ellipsis" />} items={[
       {
         label: "Remove",
         icon: <Svgicon icon="remove" />,

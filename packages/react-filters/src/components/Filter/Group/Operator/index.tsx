@@ -1,6 +1,7 @@
 import { IViewFilter, TViewGroupFilterOperator } from "@nishans/types";
 import React, { useContext } from "react";
 import { NotionFilterContext } from "../../../../NotionFilter";
+import { convertIntoSelectMenuItems } from "../../../../utils/convertIntoSelectMenuItem";
 
 import { BasicSelect } from "../../../Shared";
 
@@ -14,12 +15,6 @@ export default function FilterGroupOperator({ filter }: Props) {
     <BasicSelect label="Group Operator" value={filter.operator} onChange={(e) => {
       filter.operator = e.target.value as TViewGroupFilterOperator;
       setFilters({ ...filters })
-    }} items={[{
-      label: "And",
-      value: "and"
-    }, {
-      label: "Or",
-      value: "or"
-    }]} />
+    }} items={convertIntoSelectMenuItems(["And", "Or"])} />
   </div>
 }

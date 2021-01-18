@@ -2,6 +2,7 @@ import { IViewFilter } from "@nishans/types";
 import React, { useContext } from "react";
 
 import { NotionFilterContext } from "../../../../NotionFilter";
+import { convertIntoSelectMenuItems } from "../../../../utils/convertIntoSelectMenuItem";
 import { BasicSelect } from "../../../Shared";
 
 interface Props {
@@ -23,6 +24,6 @@ export default function FilterGroupOptions({ filter }: Props) {
           setFilters({ ...filters })
           break;
       }
-    }} label="Options" items={[{ label: "Remove", value: "remove" }, { label: "Duplicate", value: "duplicate" }, { label: "Turn into filter", value: "turn_into_filter" }, { label: "Wrap into group", value: "wrap_into_group" }]} />
+    }} label="Options" items={convertIntoSelectMenuItems(["Remove", "Duplicate", "Turn into filter", "Wrap into group"])} />
   </div>
 }

@@ -6,8 +6,7 @@ interface Props {
   label: JSX.Element | string,
   items: {
     label: string,
-    value: string,
-    onClick: (value: string) => void
+    onClick: () => void
   }[]
 }
 
@@ -41,9 +40,9 @@ export default function BasicMenu(props: Props) {
           horizontal: 'left',
         }}
       >
-        {props.items.map(({ label, onClick, value }) => <MenuItem key={label} onClick={(e) => {
+        {props.items.map(({ label, onClick }) => <MenuItem key={label} onClick={(e) => {
           handleClose();
-          onClick(value)
+          onClick()
         }}>{label}</MenuItem>)}
       </Menu>
     </div>

@@ -19,7 +19,6 @@ export default function FilterGroupAdd({ filter }: Props) {
       </div>}
       items={[
         {
-          value: "add_a_filter",
           label: "Add a filter",
           onClick() {
             filter.filters.push(createEmptyFilter());
@@ -27,7 +26,6 @@ export default function FilterGroupAdd({ filter }: Props) {
           }
         },
         {
-          value: "add_a_filter_group",
           label: "Add a filter group",
           onClick() {
             filter.filters.push(createEmptyFilterGroup());

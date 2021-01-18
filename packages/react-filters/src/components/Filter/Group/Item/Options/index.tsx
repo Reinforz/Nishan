@@ -18,7 +18,6 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
     <BasicMenu items={[
       {
         label: "Remove",
-        value: "remove",
         onClick() {
           parent_filter.filters.splice(last_trail, 1);
           setFilters({ ...filters })
@@ -26,7 +25,6 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
       },
       {
         label: "Duplicate",
-        value: "duplicate",
         onClick() {
           parent_filter.filters.push(JSON.parse(JSON.stringify(parent_filter.filters[last_trail])));
           setFilters({ ...filters })
@@ -34,7 +32,6 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
       },
       {
         label: "Turn into group",
-        value: "turn_into_group",
         onClick() {
           parent_filter.filters[last_trail] = {
             operator: "and",

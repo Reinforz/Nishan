@@ -1,5 +1,6 @@
 import { FormControl, InputLabel, Select, MenuItem, SelectProps, createStyles, makeStyles, Theme } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
+import { NotionFilterContext } from "../../../NotionFilter";
 
 interface Props {
   label: string,
@@ -26,8 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function BasicSelect(props: Props) {
   const classes = useStyles();
+  const { filter_item_label } = useContext(NotionFilterContext)
+
   return <FormControl className={classes.formControl}>
-    <InputLabel>{props.label}</InputLabel>
+    {filter_item_label && <InputLabel>{props.label}</InputLabel>}
     <Select
       value={props.value}
       onChange={props.onChange}

@@ -12,7 +12,8 @@ interface Props {
   schema: Schema,
   nestingLevel?: number,
   default_group_operator?: TViewGroupFilterOperator,
-  filters?: State
+  filters?: State,
+  filter_item_label?:boolean
 }
 
 interface INotionFilterContext extends Required<Props> {
@@ -28,7 +29,7 @@ function NotionFilter(props: Props) {
     operator: default_group_operator
   });
 
-  return <NotionFilterContext.Provider value={{ default_group_operator, filters, setFilters, schema: props.schema, nestingLevel: props.nestingLevel ?? 5 }}>
+  return <NotionFilterContext.Provider value={{ filter_item_label: props.filter_item_label ?? false, default_group_operator, filters, setFilters, schema: props.schema, nestingLevel: props.nestingLevel ?? 5 }}>
     <ThemeProvider theme={theme}>
       <div className="NotionFilter" style={{ fontFamily: "Segoe UI" }}>
         <FilterGroup parent_filter={null} filter={filters} trails={[]} />

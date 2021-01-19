@@ -12,7 +12,7 @@ export default function FilterGroupItemValue(props: Props) {
   let child: any = null;
   const { filter_item_label } = useContext(NotionFilterContext)
   if (Array.isArray(props.value)) {
-    return <BasicAutocomplete label={""} value={""} onChange={() => { }} options={props.value.map(({ value }) => ({ value, label: value }))} />
+    return <BasicAutocomplete label={""} value={""} onChange={() => { }} options={props.value.map(({ value, color }) => ({ value, label: value, label_render: <span style={{ backgroundColor: color }}>{value}</span> }))} />
   }
 
   switch (props.value) {

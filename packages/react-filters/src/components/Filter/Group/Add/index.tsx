@@ -7,12 +7,13 @@ import Svgicon from "../../../Shared/Svgicon";
 
 export default function FilterGroupAdd({ filter, trails }: FilterGroupProps) {
   const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext);
-  return <div className="NotionFilter-Group-Add">
+  return <div className="NotionFilter-Group-Add" style={{ left: 100 * (trails.length) }}>
+    {filter.filters.length === 0 && <div>No Filters Added</div>}
     <BasicMenu label={
       <div style={{ display: "flex" }}>
-        <Svgicon icon="plus" />
+        <Svgicon icon="plus" className="NotionFilter-Group-Add-Icon" />
         <span>Add a filter</span>
-        <Svgicon icon="down" />
+        <Svgicon icon="down" className="NotionFilter-Group-Add-Icon" />
       </div>}
       items={[
         {

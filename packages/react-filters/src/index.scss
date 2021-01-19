@@ -1,12 +1,21 @@
 .NotionFilter{
   font-size: 14px;
   &-Group{
+    &-items{
+      position: relative;
+      overflow: auto;
+    }
     &-Add{
-
+      padding: 5px;
+      cursor: pointer;
+      position: relative;
+      &-Icon{
+        padding: 5px;
+      }
     }
     &-Item{
       display: grid;
-      grid-template-columns: 100px 150px 100px 200px 50px;
+      grid-template-columns: 100px 150px 100px 200px 50px 50px;
 
       .NotionFilter-Group-Operator{
         display: flex;
@@ -51,6 +60,14 @@
     &-Options{
       
     }
+  }
+}
+
+.BasicMenu{
+  &-label{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }
 }
 

@@ -14,7 +14,7 @@ interface Props {
 export default function FilterGroupItemOperator({ operators, filter }: Props) {
   const { filters, setFilters } = useContext(NotionFilterContext)
 
-  return <div className="NotionFilter-Group-Item-Operator">
+  return <div className="NotionFilter-Group-Item-Operator NotionFilter-Group-Item-item">
     <BasicSelect label={"Filter Operator"} onChange={(e) => {
       filter.filter.operator = e.target.value as any;
       setFilters({ ...filters })

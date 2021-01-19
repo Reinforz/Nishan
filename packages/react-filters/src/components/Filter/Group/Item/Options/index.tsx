@@ -13,7 +13,7 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
   const last_trail = trails[trails.length - 1];
   const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext)
 
-  return <div className="NotionFilter-Group-Item-Options" style={{ display: "flex", alignItems: "center" }}>
+  return <div className="NotionFilter-Group-Item-Options NotionFilter-Group-Item-item">
     <BasicMenu items={[
       {
         label: "Remove",

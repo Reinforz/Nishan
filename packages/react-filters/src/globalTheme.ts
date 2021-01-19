@@ -12,7 +12,8 @@ export default createMuiTheme({
 		},
 		MuiFormControl: {
 			root: {
-				justifyContent: 'center'
+        justifyContent: 'center',
+        width: "100%"
 			}
 		}
 	}

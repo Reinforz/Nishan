@@ -18,20 +18,23 @@ export default function FilterGroupItemValue(props: Props) {
   switch (props.type) {
     case "select":
     case "multi_select":
-      return props.value && <TagsAutocomplete label={""} value={""} onChange={() => { }} options={props.value as SelectOption[]} />
+      child = props.value && <TagsAutocomplete label={""} value={""} onChange={() => { }} options={props.value as SelectOption[]} />
   }
 
   switch (props.value) {
     case "checkbox":
-      return <Checkbox
+      child = <Checkbox
         checked={false}
         onChange={() => { }}
       />
+      break;
     case "string":
-      return <TextField label={filter_item_label && "Value"} placeholder="Value" variant="outlined" />
+      child = <TextField label={filter_item_label && "Value"} placeholder="Value" variant="outlined" />
+      break;
     case "number":
-      return <TextField label={filter_item_label && "Value"} type="number" placeholder="Value" variant="outlined" />
+      child = <TextField label={filter_item_label && "Value"} type="number" placeholder="Value" variant="outlined" />
+      break;
   }
 
-  return <div className="NotionFilter-Group-Item-Value">{child}</div>
+  return <div className="NotionFilter-Group-Item-Value NotionFilter-Group-Item-item">{child}</div>
 }

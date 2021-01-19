@@ -5,8 +5,20 @@
 
     }
     &-Item{
-      &-Operator{
+      display: grid;
+      grid-template-columns: 100px 150px 100px 200px 50px;
 
+      .NotionFilter-Group-Operator{
+        display: flex;
+        align-items: center;
+        margin: 5px;
+      }
+      &-item{
+        display: flex;
+        align-items: center;
+      }
+      &-Operator{
+        
       }
       &-Options{
         .BasicMenu{
@@ -26,14 +38,15 @@
         display: flex;
         align-items: center;
         padding: 5px;
-        width: 175px;
       }
       &-Value{
 
       }
     }
     &-Operator{
-
+      &--text{
+        padding-left: 8px;
+      }
     }
     &-Options{
       

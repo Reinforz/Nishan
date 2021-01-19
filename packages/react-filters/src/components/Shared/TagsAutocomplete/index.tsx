@@ -33,8 +33,8 @@ export default function TagsAutocomplete(props: Props) {
       renderOption={({ value, color }) => (
         <span className="TagsAutocomplete-option" style={{ backgroundColor: ColorMapper[color] }}>{value}</span>
       )}
-      getOptionLabel={({ value }) => value}
-      style={{ width: 300 }}
+      getOptionLabel={({ value }) => value ?? ""}
+      style={{ width: 150 }}
       getOptionSelected={(option) => option.value === props.value.value}
       onChange={props.onChange}
       value={props.value}

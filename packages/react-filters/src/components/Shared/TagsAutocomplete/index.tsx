@@ -11,14 +11,14 @@ interface Props {
   onChange: UseAutocompleteProps<SelectOption, false, false, false>["onChange"],
 }
 
-export function TagsAutocomplete(props: Props) {
+export default function TagsAutocomplete(props: Props) {
   return (
     <Autocomplete
       disableClearable={true}
-      className="BasicAutocomplete"
+      className="TagsAutocomplete"
       options={props.options}
-      renderOption={({ value }) => (
-        <span className="BasicAutocomplete-options-label">{value}</span>
+      renderOption={({ value, color }) => (
+        <span className="TagsAutocomplete-option" style={{ backgroundColor: color }}>{value}</span>
       )}
       getOptionLabel={({ value }) => value}
       style={{ width: 300 }}
@@ -27,7 +27,6 @@ export function TagsAutocomplete(props: Props) {
       value={props.value}
       renderInput={(params) =>
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-          {props.value.icon}
           <TextField {...params} label={props.label} />
         </div>
       }

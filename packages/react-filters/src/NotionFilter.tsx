@@ -4,7 +4,7 @@ import FilterGroup from "./components/Filter/Group";
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from "./globalTheme";
 
-import "./index.css";
+import "./index.scss";
 
 type State = IViewFilter;
 

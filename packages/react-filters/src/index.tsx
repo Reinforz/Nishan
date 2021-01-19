@@ -88,7 +88,12 @@ const schema: Schema = {
       {
         color: "red",
         id: "2f25da32-7e8e-4c3c-bc79-a8582d0f869f",
-        value: "123"
+        value: "red"
+      },
+      {
+        color: "green",
+        id: "2f25da32-7e8e-4c3c-bc79-a8582d0f869f",
+        value: "green"
       }
     ]
   },

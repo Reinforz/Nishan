@@ -1,12 +1,12 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 export default createMuiTheme({
+  typography: {
+    fontFamily:[
+      "Segoe UI"
+    ].join(",")
+  },
 	overrides: {
-		MuiInputBase: {
-			root: {
-				fontFamily: 'Segoe UI'
-			}
-		},
 		MuiOutlinedInput: {
 			input: {
 				padding: 5
@@ -15,16 +15,6 @@ export default createMuiTheme({
 		MuiFormControl: {
 			root: {
 				justifyContent: 'center'
-			}
-		},
-		MuiMenuItem: {
-			root: {
-				fontFamily: 'Segoe UI'
-			}
-		},
-		MuiFormLabel: {
-			root: {
-				fontFamily: 'Segoe UI'
 			}
 		}
 	}

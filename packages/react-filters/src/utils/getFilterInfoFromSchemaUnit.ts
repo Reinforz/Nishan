@@ -13,170 +13,202 @@ import {
 	TViewFiltersOperator
 } from '@nishans/types';
 
-type FilterInfo<V extends TViewFiltersOperator> = { value: V; label: string }[];
+import { TFilterItemValue } from '../types';
+
+type IFilterInfo<V extends TViewFiltersOperator> = { operator: V; label: string; value: TFilterItemValue }[];
 
 type TFilterInfo =
-	| FilterInfo<EmptyViewFiltersOperator>
-	| FilterInfo<TextViewFiltersOperator | EmptyViewFiltersOperator>
-	| FilterInfo<NumberViewFiltersOperator | EmptyViewFiltersOperator>
-	| FilterInfo<PersonViewFiltersOperator | EmptyViewFiltersOperator>
-	| FilterInfo<DateViewFiltersOperator | EmptyViewFiltersOperator>
-	| FilterInfo<CheckboxViewFiltersOperator>
-	| FilterInfo<RelationViewFiltersOperator>
-	| FilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator>
-	| FilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator>;
+	| IFilterInfo<EmptyViewFiltersOperator>
+	| IFilterInfo<TextViewFiltersOperator | EmptyViewFiltersOperator>
+	| IFilterInfo<NumberViewFiltersOperator | EmptyViewFiltersOperator>
+	| IFilterInfo<PersonViewFiltersOperator | EmptyViewFiltersOperator>
+	| IFilterInfo<DateViewFiltersOperator | EmptyViewFiltersOperator>
+	| IFilterInfo<CheckboxViewFiltersOperator>
+	| IFilterInfo<RelationViewFiltersOperator>
+	| IFilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator>
+	| IFilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator>;
 
-const empty_filter_operators: FilterInfo<EmptyViewFiltersOperator> = [
+const empty_filter_info: IFilterInfo<EmptyViewFiltersOperator> = [
 	{
-		value: 'is_empty',
-		label: 'Is empty'
+		operator: 'is_empty',
+		label: 'Is empty',
+		value: null
 	},
 	{
-		value: 'is_not_empty',
-		label: 'Is not empty'
+		operator: 'is_not_empty',
+		label: 'Is not empty',
+		value: null
 	}
 ];
 
-const string_filter_operators: FilterInfo<TextViewFiltersOperator | EmptyViewFiltersOperator> = [
+const string_filter_info: IFilterInfo<TextViewFiltersOperator | EmptyViewFiltersOperator> = [
 	{
-		value: 'string_is',
-		label: 'Is'
+		operator: 'string_is',
+		label: 'Is',
+		value: 'string'
 	},
 	{
-		value: 'string_is_not',
-		label: 'Is not'
+		operator: 'string_is_not',
+		label: 'Is not',
+		value: 'string'
 	},
 	{
-		value: 'string_contains',
-		label: 'Contains'
+		operator: 'string_contains',
+		label: 'Contains',
+		value: 'string'
 	},
 	{
-		value: 'string_does_not_contain',
-		label: 'Does not contain'
+		operator: 'string_does_not_contain',
+		label: 'Does not contain',
+		value: 'string'
 	},
 	{
-		value: 'string_starts_with',
-		label: 'Starts with'
+		operator: 'string_starts_with',
+		label: 'Starts with',
+		value: 'string'
 	},
 	{
-		value: 'string_ends_with',
-		label: 'Ends with'
+		operator: 'string_ends_with',
+		label: 'Ends with',
+		value: 'string'
 	},
-	...empty_filter_operators
+	...empty_filter_info
 ];
 
-const number_filter_operators: FilterInfo<NumberViewFiltersOperator | EmptyViewFiltersOperator> = [
+const number_filter_info: IFilterInfo<NumberViewFiltersOperator | EmptyViewFiltersOperator> = [
 	{
 		label: '=',
-		value: 'number_equals'
+		operator: 'number_equals',
+		value: 'number'
 	},
 	{
 		label: '≠',
-		value: 'number_does_not_equal'
+		operator: 'number_does_not_equal',
+		value: 'number'
 	},
 	{
 		label: '>',
-		value: 'number_greater_than'
+		operator: 'number_greater_than',
+		value: 'number'
 	},
 	{
 		label: '<',
-		value: 'number_less_than'
+		operator: 'number_less_than',
+		value: 'number'
 	},
 	{
 		label: '≥',
-		value: 'number_greater_than_or_equal_to'
+		operator: 'number_greater_than_or_equal_to',
+		value: 'number'
 	},
 	{
 		label: '≤',
-		value: 'number_less_than_or_equal_to'
+		operator: 'number_less_than_or_equal_to',
+		value: 'number'
 	},
-	...empty_filter_operators
+	...empty_filter_info
 ];
 
-const date_filter_operators: FilterInfo<DateViewFiltersOperator | EmptyViewFiltersOperator> = [
+const date_filter_info: IFilterInfo<DateViewFiltersOperator | EmptyViewFiltersOperator> = [
 	{
-		value: 'date_is',
+		operator: 'date_is',
+		label: 'Is',
+		value: 'date'
+	},
+	{
+		operator: 'date_is_before',
+		label: 'Is before',
+		value: 'date'
+	},
+	{
+		operator: 'date_is_after',
+		label: 'Is After',
+		value: 'date'
+	},
+	{
+		operator: 'date_is_on_or_before',
+		label: 'Is on or before',
+		value: 'date'
+	},
+	{
+		operator: 'date_is_on_or_after',
+		label: 'Is on or after',
+		value: 'date'
+	},
+	{
+		operator: 'date_is_within',
+		label: 'Is within',
+		value: 'date'
+	},
+	...empty_filter_info
+];
+
+const person_filter_operators: IFilterInfo<PersonViewFiltersOperator | EmptyViewFiltersOperator> = [
+	{
+		operator: 'person_contains',
+		label: 'Contains',
+		value: 'options'
+	},
+	{
+		operator: 'person_does_not_contain',
+		label: 'Does not contain',
+		value: 'options'
+	},
+	...empty_filter_info
+];
+
+const checkbox_filter_operators: IFilterInfo<CheckboxViewFiltersOperator> = [
+	{
+		operator: 'checkbox_is',
+		value: 'checkbox',
 		label: 'Is'
 	},
 	{
-		value: 'date_is_before',
-		label: 'Is before'
-	},
-	{
-		value: 'date_is_after',
-		label: 'Is After'
-	},
-	{
-		value: 'date_is_on_or_before',
-		label: 'Is on or before'
-	},
-	{
-		value: 'date_is_on_or_after',
-		label: 'Is on or after'
-	},
-	{
-		value: 'date_is_within',
-		label: 'Is within'
-	},
-	...empty_filter_operators
-];
-
-const person_filter_operators: FilterInfo<PersonViewFiltersOperator | EmptyViewFiltersOperator> = [
-	{
-		value: 'person_contains',
-		label: 'Contains'
-	},
-	{
-		value: 'person_does_not_contain',
-		label: 'Does not contain'
-	},
-	...empty_filter_operators
-];
-
-const checkbox_filter_operators: FilterInfo<CheckboxViewFiltersOperator> = [
-	{
-		value: 'checkbox_is',
-		label: 'Is'
-	},
-	{
-		value: 'checkbox_is_not',
+		operator: 'checkbox_is_not',
+		value: 'checkbox',
 		label: 'Is not'
 	}
 ];
 
-const relation_filter_operators: FilterInfo<RelationViewFiltersOperator> = [
+const relation_filter_operators: IFilterInfo<RelationViewFiltersOperator> = [
 	{
-		value: 'relation_contains',
+		operator: 'relation_contains',
+		value: 'options',
 		label: 'Contains'
 	},
 	{
-		value: 'relation_does_not_contain',
+		operator: 'relation_does_not_contain',
+		value: 'options',
 		label: 'Does not contain'
 	}
 ];
 
-const multi_select_filter_operators: FilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator> = [
+const multi_select_filter_info: IFilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator> = [
 	{
-		value: 'enum_contains',
+		operator: 'enum_contains',
+		value: 'options',
 		label: 'Contains'
 	},
 	{
-		value: 'enum_does_not_contain',
+		operator: 'enum_does_not_contain',
+		value: 'options',
 		label: 'Does not contain'
 	},
-	...empty_filter_operators
+	...empty_filter_info
 ];
 
-const select_filter_operators: FilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator> = [
+const select_filter_info: IFilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator> = [
 	{
-		value: 'enum_is',
+		operator: 'enum_is',
+		value: 'options',
 		label: 'Is'
 	},
 	{
-		value: 'enum_is_not',
+		operator: 'enum_is_not',
+		value: 'options',
 		label: 'Is not'
 	},
-	...empty_filter_operators
+	...empty_filter_info
 ];
 
 export function getFilterInfo (schema_unit: TSchemaUnit): TFilterInfo {
@@ -187,29 +219,29 @@ export function getFilterInfo (schema_unit: TSchemaUnit): TFilterInfo {
 			case 'url':
 			case 'email':
 			case 'phone_number':
-				return string_filter_operators;
+				return string_filter_info;
 			case 'number':
-				return number_filter_operators;
+				return number_filter_info;
 			case 'select':
-				return select_filter_operators;
+				return select_filter_info;
 			case 'multi_select':
-				return multi_select_filter_operators;
+				return multi_select_filter_info;
 			case 'date':
 			case 'created_time':
 			case 'last_edited_time':
-				return date_filter_operators;
+				return date_filter_info;
 			case 'person':
 			case 'last_edited_by':
 			case 'created_by':
 				return person_filter_operators;
 			case 'file':
-				return empty_filter_operators;
+				return empty_filter_info;
 			case 'checkbox':
 				return checkbox_filter_operators;
 			case 'relation':
 				return relation_filter_operators;
 			default:
-				return empty_filter_operators;
+				return empty_filter_info;
 		}
 	}
 	return schema_unit.type !== 'formula' ? inner(schema_unit.type) : inner(schema_unit.formula.result_type);

@@ -7,6 +7,16 @@ export default createMuiTheme({
 				fontFamily: 'Segoe UI'
 			}
 		},
+		MuiOutlinedInput: {
+			input: {
+				padding: 5
+			}
+		},
+		MuiFormControl: {
+			root: {
+				justifyContent: 'center'
+			}
+		},
 		MuiMenuItem: {
 			root: {
 				fontFamily: 'Segoe UI'

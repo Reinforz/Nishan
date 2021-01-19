@@ -21,12 +21,12 @@ export default function FilterGroupItem({ parent_filter, filter, trails }: Props
   if ((filter as IViewFilter).operator) return <FilterGroup parent_filter={parent_filter} filter={filter as IViewFilter} trails={trails} />
 
   const schema_unit = schema[(filter as TViewFilters).property],
-    filter_info = getFilterInfo(schema_unit);
+    filter_infos = getFilterInfo(schema_unit);
 
   return <div className="NotionFilter-Group-Item" style={{ display: "flex", border: "2px solid black" }}>
     {last_trail === 0 ? null : last_trail === 1 ? <FilterGroupOperator filter={parent_filter} /> : parent_filter.operator}
     <FilterGroupItemProperty filter={filter as TViewFilters} />
-    <FilterGroupItemOperator operators={filter_info} filter={filter as TViewFilters} />
+    <FilterGroupItemOperator operators={(filter_infos as any).map((filter_info: any) => ({ value: filter_info.operator, label: filter_info.label }))} filter={filter as TViewFilters} />
     {!(filter as TViewFilters).filter.operator.match(/(is_empty|is_not_empty)/) && <FilterGroupItemValue value="string" />}
     <FilterGroupItemOptions parent_filter={parent_filter} trails={trails} />
   </div>

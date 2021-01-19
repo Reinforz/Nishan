@@ -19,14 +19,15 @@ export default function FilterGroupItem({ parent_filter, filter, trails }: Props
   const { schema } = useContext(NotionFilterContext)
   const last_trail = trails[trails.length - 1];
   if ((filter as IViewFilter).operator) return <FilterGroup parent_filter={parent_filter} filter={filter as IViewFilter} trails={trails} />
-  const schema_unit = schema[(filter as TViewFilters).property];
-  const filter_info = getFilterInfo(schema_unit);
+
+  const schema_unit = schema[(filter as TViewFilters).property],
+    filter_info = getFilterInfo(schema_unit);
 
   return <div className="NotionFilter-Group-Item" style={{ display: "flex", border: "2px solid black" }}>
     {last_trail === 0 ? null : last_trail === 1 ? <FilterGroupOperator filter={parent_filter} /> : parent_filter.operator}
     <FilterGroupItemProperty filter={filter as TViewFilters} />
     <FilterGroupItemOperator operators={filter_info} filter={filter as TViewFilters} />
-    <FilterGroupItemValue value="string" />
+    {!(filter as TViewFilters).filter.operator.match(/(is_empty|is_not_empty)/) && <FilterGroupItemValue value="string" />}
     <FilterGroupItemOptions parent_filter={parent_filter} trails={trails} />
   </div>
 }

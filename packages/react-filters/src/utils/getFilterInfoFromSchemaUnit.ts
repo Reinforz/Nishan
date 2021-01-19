@@ -2,10 +2,13 @@ import {
 	CheckboxViewFiltersOperator,
 	DateViewFiltersOperator,
 	EmptyViewFiltersOperator,
+	MultiSelectSchemaUnit,
 	MultiSelectViewFiltersOperator,
 	NumberViewFiltersOperator,
 	PersonViewFiltersOperator,
 	RelationViewFiltersOperator,
+	SelectOption,
+	SelectSchemaUnit,
 	SelectViewFiltersOperator,
 	TextViewFiltersOperator,
 	TSchemaUnit,
@@ -183,33 +186,41 @@ const relation_filter_operators: IFilterInfo<RelationViewFiltersOperator> = [
 	}
 ];
 
-const multi_select_filter_info: IFilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator> = [
-	{
-		operator: 'enum_contains',
-		value: 'options',
-		label: 'Contains'
-	},
-	{
-		operator: 'enum_does_not_contain',
-		value: 'options',
-		label: 'Does not contain'
-	},
-	...empty_filter_info
-];
+const createMultiSelectFilterInfos = (
+	options: SelectOption[]
+): IFilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator> => {
+	return [
+		{
+			operator: 'enum_contains',
+			value: options,
+			label: 'Contains'
+		},
+		{
+			operator: 'enum_does_not_contain',
+			value: options,
+			label: 'Does not contain'
+		},
+		...empty_filter_info
+	];
+};
 
-const select_filter_info: IFilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator> = [
-	{
-		operator: 'enum_is',
-		value: 'options',
-		label: 'Is'
-	},
-	{
-		operator: 'enum_is_not',
-		value: 'options',
-		label: 'Is not'
-	},
-	...empty_filter_info
-];
+const createSelectFilterInfos = (
+	options: SelectOption[]
+): IFilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator> => {
+	return [
+		{
+			operator: 'enum_is',
+			value: options,
+			label: 'Is'
+		},
+		{
+			operator: 'enum_is_not',
+			value: options,
+			label: 'Is not'
+		},
+		...empty_filter_info
+	];
+};
 
 export function getFilterInfo (schema_unit: TSchemaUnit): TFilterInfo {
 	function inner (schema_type: TSchemaUnitType) {
@@ -223,9 +234,9 @@ export function getFilterInfo (schema_unit: TSchemaUnit): TFilterInfo {
 			case 'number':
 				return number_filter_info;
 			case 'select':
-				return select_filter_info;
+				return createSelectFilterInfos((schema_unit as SelectSchemaUnit).options);
 			case 'multi_select':
-				return multi_select_filter_info;
+				return createMultiSelectFilterInfos((schema_unit as MultiSelectSchemaUnit).options);
 			case 'date':
 			case 'created_time':
 			case 'last_edited_time':

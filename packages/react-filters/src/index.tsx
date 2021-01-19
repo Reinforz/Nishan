@@ -40,7 +40,14 @@ const schema: Schema = {
   },
   "PXaf": {
     "name": "Select",
-    "type": "select"
+    "type": "select",
+    options: [
+      {
+        color: "red",
+        id: "2f25da32-7e8e-4c3c-bc79-a8582d0f869f",
+        value: "123",
+      }
+    ]
   },
   "R_:}": {
     "name": "Url",
@@ -61,7 +68,7 @@ const schema: Schema = {
   "dVZL": {
     "name": "Rollup",
     "type": "rollup"
-  },
+  } as any,
   "gnUs": {
     "name": "Phone",
     "type": "phone_number"
@@ -76,13 +83,20 @@ const schema: Schema = {
   },
   "{TZF": {
     "name": "Tags",
-    "type": "multi_select"
+    "type": "multi_select",
+    options: [
+      {
+        color: "red",
+        id: "2f25da32-7e8e-4c3c-bc79-a8582d0f869f",
+        value: "123"
+      }
+    ]
   },
   "title": {
     "name": "Title",
     "type": "title"
   }
-} as any;
+};
 
 ReactDOM.render(
   <NotionFilter schema={schema} nestingLevel={3} default_group_operator={"or"} filters={{

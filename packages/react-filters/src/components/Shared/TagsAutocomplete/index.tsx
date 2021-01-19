@@ -4,6 +4,19 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { UseAutocompleteProps } from '@material-ui/lab';
 import { SelectOption } from '@nishans/types';
 
+const ColorMapper: Record<string, string> = {
+  red: "#ff7369",
+  orange: "#ffa344",
+  yellow: "#ffdc49",
+  green: "#4dab9a",
+  blue: "#529cca",
+  violet: "#9a6dd7",
+  pink: "#e255a1",
+  brown: "#937264",
+  gray: "#979a9b",
+  default: "#505558",
+}
+
 interface Props {
   options: SelectOption[]
   value: any
@@ -18,7 +31,7 @@ export default function TagsAutocomplete(props: Props) {
       className="TagsAutocomplete"
       options={props.options}
       renderOption={({ value, color }) => (
-        <span className="TagsAutocomplete-option" style={{ backgroundColor: color }}>{value}</span>
+        <span className="TagsAutocomplete-option" style={{ backgroundColor: ColorMapper[color] }}>{value}</span>
       )}
       getOptionLabel={({ value }) => value}
       style={{ width: 300 }}

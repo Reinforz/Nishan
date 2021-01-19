@@ -41,18 +41,24 @@
   }
 }
 
-.TagsAutocomplete-option{
-  display: inline-flex;
+.TagsAutocomplete{
+
+  display: flex;
   align-items: center;
-  flex-shrink: 1;
-  min-width: 0px;
-  height: 18px;
-  border-radius: 3px;
-  padding-left: 6px;
-  padding-right: 6px;
-  padding-bottom: 2px;
-  font-size: 14px;
-  line-height: 120%;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0px;
+  
+  &-option{
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 1;
+    min-width: 0px;
+    height: 18px;
+    border-radius: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 2px;
+    font-size: 14px;
+    line-height: 120%;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0px;
+  }
 }

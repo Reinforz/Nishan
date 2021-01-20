@@ -10,8 +10,9 @@ type NotionBlock<T extends TBlockType> = {
 export interface HeaderNotionBlock extends NotionBlock<'header'> {}
 export interface SubHeaderNotionBlock extends NotionBlock<'sub_header'> {}
 export interface SubSubHeaderNotionBlock extends NotionBlock<'sub_sub_header'> {}
+export interface TextNotionBlock extends NotionBlock<'text'> {}
 
-export type TNotionBlocks = HeaderNotionBlock | SubHeaderNotionBlock | SubSubHeaderNotionBlock;
+export type TNotionBlocks = HeaderNotionBlock | SubHeaderNotionBlock | SubSubHeaderNotionBlock | TextNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

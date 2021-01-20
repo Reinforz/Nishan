@@ -29,6 +29,8 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
+    "@nishans/endpoints": "^0.0.6",
+    "remark-frontmatter": "^3.0.0",
     "remark-parse": "^9.0.0",
     "unified": "^9.2.0"
   }

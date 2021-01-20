@@ -1,15 +1,22 @@
 import { ISpace } from '@nishans/types';
-import { uploadToNotion, initializeNotion, mdast2NotionBlocks, parseFile } from '../utils';
+import {
+	uploadToNotion,
+	initializeNotion,
+	mdast2NotionBlocks,
+	parseFile,
+	generateNotionBlockOperations
+} from '../utils';
 
-interface UploadMarkdownParams {
+interface UploadMarkdownFileParams {
 	filepath: string;
 	token: string;
 	getSpace?: (space: ISpace) => any;
 }
 
-export async function uploadMarkdown ({ getSpace, filepath, token }: UploadMarkdownParams) {
+export async function uploadMarkdownFile ({ getSpace, filepath, token }: UploadMarkdownFileParams) {
 	const tree = await parseFile(filepath);
-	const { blocks, config } = await mdast2NotionBlocks(tree);
 	const notion_data = await initializeNotion(token, getSpace);
-	await uploadToNotion(notion_data, blocks, config);
+	const { blocks, config } = await mdast2NotionBlocks(tree);
+	const notion_block_ops = await generateNotionBlockOperations(notion_data, blocks, config);
+	await uploadToNotion(notion_data, notion_block_ops);
 }

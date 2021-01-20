@@ -31,6 +31,37 @@ type TFilterInfo =
 	| IFilterInfo<MultiSelectViewFiltersOperator | EmptyViewFiltersOperator>
 	| IFilterInfo<SelectViewFiltersOperator | EmptyViewFiltersOperator>;
 
+const date_values: { value: string; label: string }[] = [
+	{
+		value: 'today',
+		label: 'Today'
+	},
+	{
+		value: 'tomorrow',
+		label: 'Tomorrow'
+	},
+	{
+		value: 'yesterday',
+		label: 'Yesterday'
+	},
+	{
+		value: 'one_week_ago',
+		label: 'One week ago'
+	},
+	{
+		value: 'one_week_from_now',
+		label: 'One week from now'
+	},
+	{
+		value: 'one_month_ago',
+		label: 'One month ago'
+	},
+	{
+		value: 'one_month_from_now',
+		label: 'One month from now'
+	}
+];
+
 const empty_filter_info: IFilterInfo<EmptyViewFiltersOperator> = [
 	{
 		operator: 'is_empty',
@@ -116,32 +147,32 @@ const date_filter_info: IFilterInfo<DateViewFiltersOperator | EmptyViewFiltersOp
 	{
 		operator: 'date_is',
 		label: 'Is',
-		value: 'date'
+		value: date_values
 	},
 	{
 		operator: 'date_is_before',
 		label: 'Is before',
-		value: 'date'
+		value: date_values
 	},
 	{
 		operator: 'date_is_after',
 		label: 'Is After',
-		value: 'date'
+		value: date_values
 	},
 	{
 		operator: 'date_is_on_or_before',
 		label: 'Is on or before',
-		value: 'date'
+		value: date_values
 	},
 	{
 		operator: 'date_is_on_or_after',
 		label: 'Is on or after',
-		value: 'date'
+		value: date_values
 	},
 	{
 		operator: 'date_is_within',
 		label: 'Is within',
-		value: 'date'
+		value: date_values
 	},
 	...empty_filter_info
 ];

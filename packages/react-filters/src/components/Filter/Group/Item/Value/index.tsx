@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 
 import { NotionFilterContext } from "../../../../../NotionFilter";
 import { TFilterItemValue } from "../../../../../types";
+import { BasicSelect } from "../../../../Shared";
 import TagsAutocomplete from "../../../../Shared/TagsAutocomplete";
 
 interface Props {
@@ -19,6 +20,12 @@ export default function FilterGroupItemValue(props: Props) {
     case "select":
     case "multi_select":
       child = props.value && <TagsAutocomplete label={""} value={""} onChange={() => { }} options={props.value as SelectOption[]} />
+      break;
+    case "date":
+    case "last_edited_time":
+    case "created_time":
+      child = props.value && <BasicSelect label={""} value={""} onChange={() => { }} items={props.value as { value: string, label: string }[]} />
+      break;
   }
 
   switch (props.value) {

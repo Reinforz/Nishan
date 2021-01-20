@@ -1,13 +1,13 @@
 import { Node } from 'unist';
 
-import { FrontMatterKeys, TNotionBlocks } from '../src/types';
+import { NotionMarkdownConfig, TNotionBlocks } from '../src/types';
 import {convertFrontMatter2Obj} from "../utils";
 
-let default_front_matter: Record<FrontMatterKeys, any> = {
-  title: "Default Title"
-}
-
 export async function mdast2NotionBlocks (mdast: Node) {
+  let default_front_matter: NotionMarkdownConfig = {
+    title: "Default Title"
+  };
+
   let children: Node[] = (mdast as any).children;
   const contains_frontmatter = (mdast as any)?.children?.[0].type === "yaml", notion_blocks: TNotionBlocks[] = [];
   if(contains_frontmatter){
@@ -27,5 +27,8 @@ export async function mdast2NotionBlocks (mdast: Node) {
     }
   })
   
-  return notion_blocks;
+  return {
+    blocks: notion_blocks,
+    config: default_front_matter
+  };
 }

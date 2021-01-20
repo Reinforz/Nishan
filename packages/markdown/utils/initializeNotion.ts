@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ISpace, LoadUserContentResult } from '@nishans/types';
+import { NotionOperationData } from '../src';
 
 export async function initializeNotion (token: string, getSpace?: (space: ISpace) => any) {
 	const headers = {
@@ -23,7 +24,8 @@ export async function initializeNotion (token: string, getSpace?: (space: ISpace
 		return {
 			space_id,
 			shard_id,
-			user_id
-		};
+			user_id,
+			headers
+		} as NotionOperationData;
 	} else throw new Error('The callback didnot return any space');
 }

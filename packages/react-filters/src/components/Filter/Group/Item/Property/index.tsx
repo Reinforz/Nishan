@@ -52,13 +52,12 @@ interface Props {
 }
 
 export default function FilterGroupItemProperty({ filter }: Props) {
-  const { schema, filters, setFilters } = useContext(NotionFilterContext)
+  const { schema, dispatch } = useContext(NotionFilterContext)
   const ordered_schema = orderSchema(schema),
     ordered_schema_options = ordered_schema.map(({ name, schema_id, type }) => ({ icon: getSvgFile(type), label: name, value: schema_id }));
   return <div className="NotionFilter-Group-Item-Property NotionFilter-Group-Item-item">
     <BasicAutocomplete value={{ icon: getSvgFile(schema[filter.property].type), label: schema[filter.property].name, value: filter.property }} onChange={(e, value) => {
-      filter.property = value?.value as string;
-      setFilters({ ...filters })
+      dispatch({ type: "CHANGE_PROPERTY", filter, property: value?.value as TSchemaUnitType })
     }} options={ordered_schema_options} />
   </div>
 }

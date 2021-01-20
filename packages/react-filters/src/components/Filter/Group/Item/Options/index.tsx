@@ -11,7 +11,7 @@ interface Props {
 
 export default function FilterGroupItemOptions({ parent_filter, trails }: Props) {
   const last_trail = trails[trails.length - 1];
-  const { filters, setFilters, nestingLevel, default_group_operator } = useContext(NotionFilterContext)
+  const { dispatch, nestingLevel } = useContext(NotionFilterContext)
 
   return <div className="NotionFilter-Group-Item-Options NotionFilter-Group-Item-item">
     <BasicMenu items={[
@@ -19,27 +19,21 @@ export default function FilterGroupItemOptions({ parent_filter, trails }: Props)
         label: "Remove",
         icon: <Svgicon icon="remove" />,
         onClick() {
-          parent_filter.filters.splice(last_trail, 1);
-          setFilters({ ...filters })
+          dispatch({ type: "REMOVE_FILTER", filter: parent_filter, index: last_trail })
         }
       },
       {
         label: "Duplicate",
         icon: <Svgicon icon="duplicate" />,
         onClick() {
-          parent_filter.filters.push(JSON.parse(JSON.stringify(parent_filter.filters[last_trail])));
-          setFilters({ ...filters })
+          dispatch({ type: "DUPLICATE_FILTER", filter: parent_filter, index: last_trail })
         }
       },
       nestingLevel > trails.length ? {
         label: "Turn into group",
         icon: <Svgicon icon="turn_into" />,
         onClick() {
-          parent_filter.filters[last_trail] = {
-            operator: default_group_operator,
-            filters: [parent_filter.filters[last_trail]]
-          };
-          setFilters({ ...filters })
+          dispatch({ type: "TURN_INTO_GROUP", filter: parent_filter, index: last_trail })
         }
       } : null
     ]} label={<Svgicon icon="ellipsis" />} />

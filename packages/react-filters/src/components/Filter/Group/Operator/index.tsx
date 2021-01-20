@@ -10,11 +10,10 @@ interface Props {
 }
 
 export default function FilterGroupOperator({ filter }: Props) {
-  const { filters, setFilters } = useContext(NotionFilterContext)
+  const { dispatch } = useContext(NotionFilterContext)
   return <div className="NotionFilter-Group-Operator">
     <BasicSelect label="Group Operator" value={filter.operator} onChange={(e) => {
-      filter.operator = e.target.value as TViewGroupFilterOperator;
-      setFilters({ ...filters })
+      dispatch({ type: "CHANGE_GROUP_OPERATOR", operator: e.target.value as TViewGroupFilterOperator, filter })
     }} items={convertIntoSelectMenuItems(["And", "Or"])} />
   </div>
 }

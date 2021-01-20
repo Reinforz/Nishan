@@ -15,7 +15,13 @@
     }
     &-Item{
       display: grid;
-      grid-template-columns: 100px 150px 100px 200px 50px 50px;
+      position: relative;
+      &--6{
+        grid-template-columns: 100px 100px 150px 100px 200px 50px 50px;
+      }
+      &--5{
+        grid-template-columns: 100px 150px 100px 200px 50px;
+      }
 
       .NotionFilter-Group-Operator{
         display: flex;

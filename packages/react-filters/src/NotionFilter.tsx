@@ -28,27 +28,9 @@ type Action = {
   value: any,
   filter: TViewFilters
 } | {
-  type: "ADD_FILTER",
-  filter: IViewFilter
-} | {
-  type: "ADD_FILTER_GROUP",
-  filter: IViewFilter
-} | {
   type: "CHANGE_OPERATOR",
   filter: TViewFilters,
   operator: TViewFiltersOperator
-} | {
-  type: "REMOVE_FILTER",
-  filter: IViewFilter,
-  index: number
-} | {
-  type: "DUPLICATE_FILTER",
-  filter: IViewFilter,
-  index: number
-} | {
-  type: "TURN_INTO_GROUP",
-  filter: IViewFilter,
-  index: number
 } | {
   type: "CHANGE_PROPERTY",
   filter: TViewFilters,
@@ -58,18 +40,10 @@ type Action = {
   filter: IViewFilter,
   operator: TViewGroupFilterOperator
 } | {
-  type: "REMOVE_GROUP",
+  type: "ADD_FILTER" | "ADD_FILTER_GROUP" | "REMOVE_GROUP",
   filter: IViewFilter
 } | {
-  type: "DUPLICATE_GROUP",
-  filter: IViewFilter,
-  index: number
-} | {
-  type: "TURN_INTO_FILTER",
-  filter: IViewFilter,
-  index: number
-} | {
-  type: "WRAP_IN_GROUP",
+  type: "REMOVE_FILTER" | "DUPLICATE_GROUP" | "TURN_INTO_FILTER" | "WRAP_IN_GROUP" | "TURN_INTO_GROUP" | "DUPLICATE_FILTER",
   filter: IViewFilter,
   index: number
 }

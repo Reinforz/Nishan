@@ -1,5 +1,5 @@
-const FUNCTION_REGEX = /^(if|equal)\((.+)\)/;
-const ARGS_REGEX = /((?:equal)\(.+\))|(\w+)|(e|pi|true|false)|(\d+)/g;
+const FUNCTION_REGEX = /^(concat|join|slice|toNumber|contains|replace|replaceAll|test|empty|abs|cbrt|ceil|exp|floor|ln|log10|log2|min|max|round|sign|sqrt|start|end|now|timestamp|fromTimestamp|dateAdd|dateSubtract|dateBetween|formatDate|minute|hour|day|date|month|year|unaryMinus|unaryPlus|add|subtract|multiply|divide|pow|mod|and|or|larger|largerEq|smaller|smallerEq|not|length|format|equal|unequal|if)\((.+)\)/;
+const ARGS_REGEX = /((?:concat|join|slice|toNumber|contains|replace|replaceAll|test|empty|abs|cbrt|ceil|exp|floor|ln|log10|log2|min|max|round|sign|sqrt|start|end|now|timestamp|fromTimestamp|dateAdd|dateSubtract|dateBetween|formatDate|minute|hour|day|date|month|year|unaryMinus|unaryPlus|add|subtract|multiply|divide|pow|mod|and|or|larger|largerEq|smaller|smallerEq|not|length|format|equal|unequal|if)\(.+\))|(\w+)|(e|pi|true|false)|(\d+)/g;
 
 function parseArg (arg: string) {
 	const function_match = arg.match(FUNCTION_REGEX);

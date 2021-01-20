@@ -15,13 +15,14 @@
     "outDir": "./dist",
     "watch": false,
     "declaration": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
+    "sourceMap": false,
+    "noUnusedLocals": false,
     "incremental": false,
     "experimentalDecorators": true
   },
   "include": [
     "./src/index.ts",
+    "./experiment"
   ],
   "exclude": [
     "./node_modules",

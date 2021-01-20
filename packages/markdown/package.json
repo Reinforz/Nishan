@@ -1,23 +1,24 @@
 {
-  "name": "@nishans/blog",
+  "name": "@nishans/markdown",
   "version": "0.0.0",
   "description": "A package to upload markdown based content into notion",
   "keywords": [
     "notion",
-    "notion-blog",
     "notion-markdown",
     "markdown"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/tree/master/packages/blog#README.md",
+  "homepage": "https://github.com/Devorein/Nishan/tree/master/packages/markdown#README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "src",
+    "test": "tests"
   },
   "files": [
-    "lib"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",

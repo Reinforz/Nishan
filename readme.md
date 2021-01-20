@@ -23,7 +23,7 @@ This monorepo contains/will contain the following packages:-
 8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (WIP): A package to use notion as a database by providing an easy to use orm api
 9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) - [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
 10. [@nishans/filters](https://github.com/Devorein/Nishan/tree/master/packages/filters): A react component that emulates notions advanced filter
-11. [@nishans/blog](https://github.com/Devorein/Nishan/tree/master/packages/blog): A package to upload markdown based content into notion
+11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown): A package to upload markdown content into notion
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

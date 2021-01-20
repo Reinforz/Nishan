@@ -22,7 +22,7 @@ export async function mdast2NotionBlocks (mdast: Node) {
       case "heading":
         notion_blocks.push({
           type: "header",
-          title: (child.children as Node).value as string
+          title: ((child as any).children[0] as Node).value as string
         })
     }
   })

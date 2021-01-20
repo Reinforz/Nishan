@@ -32,7 +32,7 @@ export default function FilterGroupItem({ group_operator_element, group_options_
     {last_trail === 0 ? <div className="NotionFilter-Group-Operator NotionFilter-Group-Operator--text">Where</div> : last_trail === 1 ? <FilterGroupOperator filter={parent_filter} /> : <div className="NotionFilter-Group-Operator NotionFilter-Group-Operator--text">{parent_filter.operator[0].toUpperCase() + parent_filter.operator.slice(1)}</div>}
     <FilterGroupItemProperty filter={filter as TViewFilters} />
     <FilterGroupItemOperator operators={(filter_infos as any).map((filter_info: any) => ({ value: filter_info.operator, label: filter_info.label }))} filter={filter as TViewFilters} />
-    <FilterGroupItemValue type={schema_unit.type} value={(filter_infos as any).find((filter_info: any) => filter_info.operator === (filter as TViewFilters).filter.operator)?.value ?? null} />
+    <FilterGroupItemValue filter={filter as TViewFilters} type={schema_unit.type} value={(filter_infos as any).find((filter_info: any) => filter_info.operator === (filter as TViewFilters).filter.operator)?.value ?? null} />
     <FilterGroupItemOptions parent_filter={parent_filter} trails={trails} />
     {group_options_element}
   </div>

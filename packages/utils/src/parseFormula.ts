@@ -1,7 +1,11 @@
-import { TFunctionName } from '@nishans/types';
+const FUNCTION_REGEX = /^(if|equal)\((.+)\)/;
+const ARGS_REGEX = /((?:equal)\(.+\))|(\w+)|(e|pi|true|false)|(\d+)/g;
 
 function parseArg (arg: string) {
-	if (arg.match(/(true|false)/)) {
+	const function_match = arg.match(FUNCTION_REGEX);
+	if (function_match) {
+		return parseFormula(function_match[0]);
+	} else if (arg.match(/(true|false)/)) {
 		return {
 			type: 'symbol',
 			name: arg,
@@ -29,39 +33,13 @@ export function parseFormula (formula: string) {
 		args: []
 	};
 
-	let current_function = '',
-		is_current_function = true,
-		current_arg = '',
-		is_current_arg = false;
+	const match = formula.match(FUNCTION_REGEX);
+	if (match) {
+		const [ , function_name, args ] = match;
+		result_formula.function = function_name;
+		const args_match = args.match(ARGS_REGEX);
 
-	for (let index = 0; index < formula.length; index++) {
-		const char = formula[index];
-		if (char.match(/[A-Za-z0-9]/)) {
-			if (is_current_function) {
-				current_function += char;
-				is_current_function = true;
-				is_current_arg = false;
-			} else if (is_current_arg) {
-				current_arg += char;
-				is_current_arg = true;
-				is_current_function = false;
-			}
-		} else if (char.match(/,/)) {
-			result_formula.args.push(parseArg(current_arg));
-			is_current_function = false;
-			current_arg = '';
-			is_current_arg = true;
-		} else if (char.match(/(\()/)) {
-			result_formula.function = current_function;
-			current_function = '';
-			is_current_arg = true;
-			is_current_function = false;
-		} else if (char.match(/(\))/)) {
-			result_formula.args.push(parseArg(current_arg));
-			current_arg = '';
-			is_current_arg = false;
-			is_current_function = false;
-		}
+		if (args_match) args_match.forEach((arg) => result_formula.args.push(parseArg(arg)));
 	}
 	return result_formula;
 }

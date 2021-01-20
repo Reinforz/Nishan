@@ -27,5 +27,9 @@
   "scripts": {},
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "remark-parse": "^9.0.0",
+    "unified": "^9.2.0"
   }
 }

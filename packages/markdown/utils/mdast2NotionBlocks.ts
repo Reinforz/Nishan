@@ -15,14 +15,24 @@ export async function mdast2NotionBlocks (mdast: Node) {
     children = children.slice(1)
   }
 
-  // console.log(JSON.stringify(children, null, 2));
-  
   children.forEach(child=>{
     switch(child.type){
       case "heading":
+        const {depth, children: [{value: title}]} = child as any;
+        if(depth === 1)
+          notion_blocks.push({
+            type: "header",
+            title: [[title]]
+          })
+        else if(depth === 2)
+          notion_blocks.push({
+            type: "sub_header",
+            title: [[title]]
+          })
+        else
         notion_blocks.push({
-          type: "header",
-          title: ((child as any).children[0] as Node).value as string
+          type: "sub_sub_header",
+          title: [[title]]
         })
     }
   })

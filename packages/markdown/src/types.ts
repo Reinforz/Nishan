@@ -1,11 +1,17 @@
+import { TBlockType } from '@nishans/types';
+
 export type FrontMatterKeys = 'title';
 
-export type HeaderNotionBlock = {
-	title: string;
-	type: 'header';
+type NotionBlock<T extends TBlockType> = {
+	title: string[][];
+	type: T;
 };
 
-export type TNotionBlocks = HeaderNotionBlock;
+export interface HeaderNotionBlock extends NotionBlock<'header'> {}
+export interface SubHeaderNotionBlock extends NotionBlock<'sub_header'> {}
+export interface SubSubHeaderNotionBlock extends NotionBlock<'sub_sub_header'> {}
+
+export type TNotionBlocks = HeaderNotionBlock | SubHeaderNotionBlock | SubSubHeaderNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

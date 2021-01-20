@@ -21,8 +21,7 @@ interface UploadMarkdownFilesParams {
 }
 
 async function generateNotionBlockOperationsFromMarkdown (filepath: string, notion_data: NotionOperationData) {
-	const tree = await parseFile(filepath);
-	const { blocks, config } = await mdast2NotionBlocks(tree);
+	const { blocks, config } = await mdast2NotionBlocks(await parseFile(filepath));
 	return await generateNotionBlockOperations(notion_data, blocks, config);
 }
 

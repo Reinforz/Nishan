@@ -24,17 +24,17 @@ export async function generateNotionBlockOperations (
 	const operations: IOperation[] = [];
 	const block_id = uuidv4();
 
-	const content_create_ops: IOperation[] = notion_blocks.map((block) => {
+	const content_create_ops: IOperation[] = notion_blocks.map(({ type, title }) => {
 			const content_id = uuidv4();
 			return {
 				table: 'block',
 				args: {
 					id: content_id,
-					type: 'header',
+					type,
 					parent_table: 'block',
 					parent_id: block_id,
 					properties: {
-						title: [ [ block.title ] ]
+						title: title
 					},
 					...metadata
 				},

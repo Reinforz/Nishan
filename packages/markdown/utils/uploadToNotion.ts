@@ -25,7 +25,26 @@ export async function uploadToNotion (
 	const operations: IOperation[] = [];
 	const block_id = uuidv4();
 
-	const content_ids = notion_blocks.map((block) => uuidv4());
+	const content_create_ops: IOperation[] = notion_blocks.map((block) => {
+			const content_id = uuidv4();
+			return {
+				table: 'block',
+				args: {
+					id: content_id,
+					type: 'header',
+					parent_table: 'block',
+					parent_id: block_id,
+					properties: {
+						title: [ [ block.title ] ]
+					},
+					...metadata
+				},
+				command: 'update',
+				id: content_id,
+				path: []
+			};
+		}),
+		content_ids = content_create_ops.map(({ id }) => id);
 
 	operations.push({
 		command: 'update',
@@ -54,6 +73,9 @@ export async function uploadToNotion (
 			...metadata
 		} as IPage
 	});
+
+	// operations.push(...content_create_ops);
+
 	operations.push({
 		command: 'listAfter',
 		table: 'space',

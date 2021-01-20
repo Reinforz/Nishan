@@ -6,7 +6,7 @@ import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
 export default function FilterGroupOptions({ parent_filter, trails, filter }: FilterGroupProps) {
-  const { dispatch, nestingLevel } = useContext(NotionFilterContext)
+  const { dispatch, nestingLevel, default_group_operator } = useContext(NotionFilterContext)
   const last_trail = trails[trails.length - 1];
   return <div className="NotionFilter-Group-Options" style={{ display: "flex", alignItems: "center" }}>
     <BasicMenu label={<Svgicon icon="ellipsis" />} items={[
@@ -35,7 +35,7 @@ export default function FilterGroupOptions({ parent_filter, trails, filter }: Fi
         label: "Wrap in group",
         icon: <Svgicon icon="turn_into" />,
         onClick() {
-          parent_filter && dispatch({ type: "WRAP_IN_GROUP", index: last_trail, filter: parent_filter })
+          parent_filter && dispatch({ type: "WRAP_IN_GROUP", index: last_trail, filter: parent_filter, operator: default_group_operator })
         },
         description: "Create a filter group around this"
       } : null

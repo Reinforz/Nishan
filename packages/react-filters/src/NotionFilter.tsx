@@ -40,12 +40,21 @@ type Action = {
   filter: IViewFilter,
   operator: TViewGroupFilterOperator
 } | {
-  type: "ADD_FILTER" | "ADD_FILTER_GROUP" | "REMOVE_GROUP",
+  type: "ADD_FILTER" | "REMOVE_GROUP",
   filter: IViewFilter
 } | {
-  type: "REMOVE_FILTER" | "DUPLICATE_GROUP" | "TURN_INTO_FILTER" | "WRAP_IN_GROUP" | "TURN_INTO_GROUP" | "DUPLICATE_FILTER",
+  type: "ADD_FILTER_GROUP",
+  filter: IViewFilter,
+  operator: TViewGroupFilterOperator
+} | {
+  type: "REMOVE_FILTER" | "DUPLICATE_GROUP" | "TURN_INTO_FILTER" | "DUPLICATE_FILTER",
   filter: IViewFilter,
   index: number
+} | {
+  type: "TURN_INTO_GROUP" | "WRAP_IN_GROUP",
+  filter: IViewFilter,
+  index: number,
+  operator: TViewGroupFilterOperator
 }
 
 const notionFilterReducer = (state: IViewFilter, action: Action) => {
@@ -57,7 +66,7 @@ const notionFilterReducer = (state: IViewFilter, action: Action) => {
       action.filter.filters.push(createEmptyFilter());
       return { ...state }
     case "ADD_FILTER_GROUP":
-      action.filter.filters.push(createEmptyFilterGroup("and"));
+      action.filter.filters.push(createEmptyFilterGroup(action.operator));
       return { ...state };
     case "CHANGE_OPERATOR":
       action.filter.filter.operator = action.operator as any
@@ -71,7 +80,7 @@ const notionFilterReducer = (state: IViewFilter, action: Action) => {
       return { ...state };
     case "TURN_INTO_GROUP":
       action.filter.filters[action.index] = {
-        operator: "and",
+        operator: action.operator,
         filters: [action.filter.filters[action.index]]
       }
       return { ...state };
@@ -89,7 +98,7 @@ const notionFilterReducer = (state: IViewFilter, action: Action) => {
       return { ...state };
     case "WRAP_IN_GROUP":
       action.filter.filters[action.index] = {
-        operator: "and",
+        operator: action.operator,
         filters: [action.filter.filters[action.index]]
       }
       return { ...state };

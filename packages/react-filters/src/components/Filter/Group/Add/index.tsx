@@ -5,7 +5,7 @@ import BasicMenu from "../../../Shared/BasicMenu";
 import Svgicon from "../../../Shared/Svgicon";
 
 export default function FilterGroupAdd({ filter, trails }: FilterGroupProps) {
-  const { dispatch, nestingLevel } = useContext(NotionFilterContext);
+  const { dispatch, nestingLevel, default_group_operator } = useContext(NotionFilterContext);
   return <div className="NotionFilter-Group-Add" style={{ left: 100 * (trails.length) }}>
     {filter.filters.length === 0 && <div>No Filters Added</div>}
     <BasicMenu label={
@@ -26,7 +26,7 @@ export default function FilterGroupAdd({ filter, trails }: FilterGroupProps) {
           label: "Add a filter group",
           icon: <Svgicon icon="stack" />,
           onClick() {
-            dispatch({ type: "ADD_FILTER_GROUP", filter })
+            dispatch({ type: "ADD_FILTER_GROUP", filter, operator: default_group_operator })
           },
           description: "A group to nest more filters"
         } : null

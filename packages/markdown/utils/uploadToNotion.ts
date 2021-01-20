@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 import { createTransaction, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
-import { IOperation } from '@nishans/types';
+import { IOperation, IPage } from '@nishans/types';
 
 export async function uploadToNotion (
 	notion_data: NotionOperationData,
@@ -23,6 +23,47 @@ export async function uploadToNotion (
 		version: 0
 	};
 	const operations: IOperation[] = [];
+	const block_id = uuidv4();
+
+	const content_ids = notion_blocks.map((block) => uuidv4());
+
+	operations.push({
+		command: 'update',
+		table: 'block',
+		id: block_id,
+		path: [],
+		args: {
+			id: block_id,
+			type: 'page',
+			content: content_ids,
+			parent_id: space_id,
+			parent_table: 'space',
+			properties: {
+				title: [ [ config.title ] ]
+			},
+			permissions: [
+				{
+					role: 'editor',
+					type: 'user_permission',
+					user_id
+				}
+			],
+			format: {
+				page_full_width: true
+			},
+			...metadata
+		} as IPage
+	});
+	operations.push({
+		command: 'listAfter',
+		table: 'space',
+		id: space_id,
+		path: [ 'pages' ],
+		args: {
+			after: '',
+			id: block_id
+		}
+	});
 
 	await axios.post(
 		'https://www.notion.so/api/v3/saveTransactions',

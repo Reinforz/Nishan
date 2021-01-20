@@ -10,7 +10,6 @@ interface UploadMarkdownParams {
 export async function uploadMarkdown ({ getSpace, filepath, token }: UploadMarkdownParams) {
 	const tree = await parseFile(filepath);
 	const { blocks, config } = await mdast2NotionBlocks(tree);
-	const data = await initializeNotion(token, getSpace);
-	await uploadToNotion(data, blocks, config);
-	console.log(data);
+	const notion_data = await initializeNotion(token, getSpace);
+	await uploadToNotion(notion_data, blocks, config);
 }

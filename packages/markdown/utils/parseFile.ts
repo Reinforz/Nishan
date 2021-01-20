@@ -6,6 +6,9 @@ import fs from 'fs';
 const processor = unified().use(markdown).use(frontmatter, [ 'yaml' ]);
 
 export async function parseFile (path: string) {
-	const content = await fs.promises.readFile(path, 'utf-8');
+	return parseContent(await fs.promises.readFile(path, 'utf-8'));
+}
+
+export function parseContent (content: string) {
 	return processor.parse(content);
 }

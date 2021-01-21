@@ -2,7 +2,8 @@ import { TFormatBlockColor } from '@nishans/types';
 import { Node } from 'unist';
 import { inlineText, chunk } from './inlineBlock';
 
-type TTextFormatters = ('b' | 'i' | '_' | 's' | 'c')[];
+type TTextFormatter = ('b' | 'i' | '_' | 's' | 'c')
+type TTextFormatters = TTextFormatter[];
 
 function formatText (formats: TTextFormatters, block: chunk) {
 	formats.forEach((format) => {
@@ -27,14 +28,27 @@ function formatText (formats: TTextFormatters, block: chunk) {
 }
 
 export function parseTextFormatters(text: string, formats: TTextFormatters, block: chunk){
-  const matches = (text as string).match(/(\[(?:\w+=\w+)\]{(?:\w?\s?)+})|(\w?\s?)+/g);
+  const matches = (text as string).match(/(\[(?:(?:\w+=\w+),?)+\]{(\w?\s?)+})|(\w?\s?)+/g);
   matches?.forEach(match=>{
-    const contains_format = match.match(/^\[(\w+=\w+)\]{((?:\w?\s?)+)}/);
+    const contains_format = match.match(/^\[((?:\w+=\w+,?)+)\]{((?:\w?\s?)+)}/);
     if(contains_format) {
-      const [, format, text] = contains_format, [highlight, color] = format.split("=");
+      const [, formats_str, text] = contains_format;
       block.add(text);
-      block.highlight((highlight === "c" ? color : color+"_background") as TFormatBlockColor);
-      formatText(formats, block)
+      formats_str.split(",").forEach(format_str=>{
+        const [format_target, format_value] = format_str.split("=");
+        switch(format_target){
+          case "c":
+            block.highlight(format_value as TFormatBlockColor)
+            break;
+          case "bg":
+            block.highlight(format_value as TFormatBlockColor)
+            break;
+          case "f":
+            formats.push(...format_value.split("") as TTextFormatters)
+            break;
+        }
+      })
+      formatText(Array.from(new Set(formats)), block)
     }else{
       block.add(match);
       formatText(formats, block);

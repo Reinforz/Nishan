@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ISpace, LoadUserContentResult } from '@nishans/types';
 import { NotionOperationData } from '../src';
 
-export async function initializeNotion (token: string, getSpace?: (space: ISpace) => any) {
+export async function getNotionData (token: string, getSpace?: (space: ISpace) => any) {
 	const headers = {
 		headers: {
 			cookie: `token_v2=${token};`,

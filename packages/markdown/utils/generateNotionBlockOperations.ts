@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { createTransaction, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
+import { CodeNotionBlock, createTransaction, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
 import { IOperation, IPage } from '@nishans/types';
 
 export async function generateNotionBlockOperations (
@@ -24,24 +24,33 @@ export async function generateNotionBlockOperations (
 	const operations: IOperation[] = [];
 	const block_id = uuidv4();
 
-	const content_create_ops: IOperation[] = notion_blocks.map(({ type, title }) => {
-			const content_id = uuidv4();
-			return {
-				table: 'block',
-				args: {
+	const content_create_ops: IOperation[] = notion_blocks.map((block) => {
+			const content_id = uuidv4(),
+				{ type, title } = block,
+				common_props: any = {
+					table: 'block',
+					command: 'update',
 					id: content_id,
-					type,
-					parent_table: 'block',
-					parent_id: block_id,
-					properties: {
-						title: title
-					},
-					...metadata
-				},
-				command: 'update',
-				id: content_id,
-				path: []
-			};
+					path: [],
+					args: {
+						id: content_id,
+						type,
+						properties: {
+							title: title
+						},
+						parent_table: 'block',
+						parent_id: block_id,
+						...metadata
+					}
+				};
+
+			switch (type) {
+				case 'code':
+					common_props.args.properties.language = (block as CodeNotionBlock).lang;
+					break;
+			}
+
+			return common_props;
 		}),
 		content_ids = content_create_ops.map(({ id }) => id);
 

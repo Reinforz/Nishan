@@ -2,7 +2,7 @@ import { IOperation, ISpace } from '@nishans/types';
 import { Node } from 'unist';
 import {
 	uploadToNotion,
-	initializeNotion,
+	getNotionData,
 	mdast2NotionBlocks,
 	parseFile,
 	generateNotionBlockOperations,
@@ -33,7 +33,7 @@ export async function uploadMarkdownFile (params: UploadMarkdownFileParams) {
 	if (!params.filepath && !params.content) throw new Error('Neither content nor filepath were provided');
 	else {
 		const operations: IOperation[] = [];
-		const notion_data = await initializeNotion(params.token, params.getSpace);
+		const notion_data = await getNotionData(params.token, params.getSpace);
 		if (params.filepath)
 			operations.push(
 				...(await generateNotionBlockOperationsFromMarkdown(await parseFile(params.filepath), notion_data))
@@ -48,7 +48,7 @@ export async function uploadMarkdownFiles (params: UploadMarkdownFilesParams) {
 	if (!params.filepaths && !params.contents) throw new Error('Neither contents nor filepaths were provided');
 	else {
 		const operations: IOperation[] = [];
-		const notion_data = await initializeNotion(params.token, params.getSpace);
+		const notion_data = await getNotionData(params.token, params.getSpace);
 		if (params.contents) {
 			for (let index = 0; index < params.contents.length; index++) {
 				operations.push(

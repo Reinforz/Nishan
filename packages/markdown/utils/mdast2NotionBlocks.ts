@@ -1,3 +1,4 @@
+import { TCodeLanguage } from '@nishans/types';
 import { Node } from 'unist';
 
 import { NotionMarkdownConfig, TNotionBlocks } from '../src/types';
@@ -41,6 +42,12 @@ export async function mdast2NotionBlocks (mdast: Node) {
           title: [[(child as any).children[0].value]]
         })
         break;
+      case "code":
+        notion_blocks.push({
+          type: "code",
+          title: [[child.value as string]],
+          lang: child.lang as TCodeLanguage
+        })
     }
   })
   

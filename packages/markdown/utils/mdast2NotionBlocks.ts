@@ -17,6 +17,8 @@ export async function mdast2NotionBlocks (mdast: Node) {
   }
 
   children.forEach(child=>{
+    console.log(child.type);
+    
     switch(child.type){
       case "heading":
         const {depth, children: [{value: title}]} = child as any;
@@ -49,6 +51,14 @@ export async function mdast2NotionBlocks (mdast: Node) {
           lang: child.lang as TCodeLanguage
         })
         break
+      case "list":
+        (child as any).children.forEach((child: any)=>{
+          notion_blocks.push({
+            type: "numbered_list",
+            title: [[child.children[0].children[0].value]]
+          })
+        })
+        break;
       case "thematicBreak":
         notion_blocks.push({
           type: "divider"

@@ -14,6 +14,7 @@ export interface TextNotionBlock extends NotionBlock<'text'> {}
 export interface CodeNotionBlock extends NotionBlock<'code'> {
 	lang: TCodeLanguage;
 }
+export interface NumberedListNotionBlock extends NotionBlock<'numbered_list'> {}
 
 export interface DividerNotionBlock {
 	type: 'divider';
@@ -25,7 +26,8 @@ export type TNotionBlocks =
 	| SubSubHeaderNotionBlock
 	| TextNotionBlock
 	| CodeNotionBlock
-	| DividerNotionBlock;
+	| DividerNotionBlock
+	| NumberedListNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

@@ -11,8 +11,8 @@ Utility package to make working with @nishans/core easier
 
 ## Features
 
-1. Easier formatted content creation
-2. Using a string as a formula rather than passing an ast (WIP)
+1. Inline block formatters
+2. Parsing string as a notion formula
 3. Notion, Id to uuid and uuid to id conversion
 
 ## Usage

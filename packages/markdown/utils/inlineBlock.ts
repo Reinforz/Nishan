@@ -1,6 +1,6 @@
 import { TFormatBlockColor } from '@nishans/types';
 
-class Colors {
+export class Colors {
 	text: [[string, string[][]]];
 
 	constructor (text: [[string, string[][]]]) {
@@ -108,7 +108,7 @@ class Colors {
 	}
 }
 
-class chunk extends Colors {
+export class chunk extends Colors {
 	constructor (text: [[string, string[][]]]) {
 		super(text);
 	}

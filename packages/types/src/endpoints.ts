@@ -1,10 +1,11 @@
 import { ViewAggregations } from './aggregator';
 import { BlockData, SpaceData, RecordMap, INotionUser } from './recordMap';
-import { ICredit, IMember, TGenericEmbedBlockType, MediaFormat } from './block';
+import { TGenericEmbedBlockType, MediaFormat } from './block';
 import { IViewFilter } from './filter';
 import { TPermissionRole, IPermission } from './permissions';
 import { TPlanType, Token, GoogleDriveFile, TOperationTable, Cursor } from './types';
 import { ViewSorts } from './view';
+import { TCredit } from './credit';
 
 export interface SetPageNotificationsAsReadParams {
 	navigableBlockId: string;
@@ -100,6 +101,12 @@ export interface GetSubscriptionDataParams {
 	spaceId: string;
 }
 
+export interface IMember {
+	userId: string;
+	role: TPermissionRole;
+	guestPageIds: string[];
+}
+
 export interface GetSubscriptionDataResult {
 	accountBalance: number;
 	availableCredit: number;
@@ -110,9 +117,10 @@ export interface GetSubscriptionDataResult {
 	isDelinquent: boolean;
 	isSubscribed: boolean;
 	joinedMemberIds: string[];
-	credits: ICredit[];
+	credits: TCredit[];
 	members: IMember[];
 	spaceUsers: string[];
+	timelineViewUsage: number;
 	totalCredit: number;
 	type: 'unsubscribed_admin';
 }

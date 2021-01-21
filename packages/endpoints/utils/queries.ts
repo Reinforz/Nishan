@@ -44,3 +44,11 @@ export async function getUserTasks(configs: Configs){
 export async function getPublicPageData(params: GetPublicPageDataParams, configs: ConfigsWithoutUserid){
   return await returnPromise<GetPublicPageDataResult>("getPublicPageData", params, configs)
 }
+
+export async function getPublicSpaceData(params: GetPublicSpaceDataParams, configs: ConfigsWithoutUserid){
+  return await returnPromise<GetPublicSpaceDataResult>("getPublicSpaceData", params, configs);
+}
+
+export async function getSubscriptionData(params: GetSubscriptionDataParams, configs: Configs){
+  return await returnPromise<GetSubscriptionDataResult>("getSubscriptionData", params, configs);
+}

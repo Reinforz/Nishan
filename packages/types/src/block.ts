@@ -1,13 +1,11 @@
 import {
 	ISpace,
-	TCreditType,
 	TFormatBlockColor,
 	TCodeLanguage,
 	IBlock,
 	LastEditedProps,
 	Schema,
 	IPermission,
-	TPermissionRole,
 	Node,
 	ParentProps,
 	CreateProps,
@@ -385,20 +383,4 @@ export interface ICollection extends Node, ParentProps {
 	name: string[][];
 	schema: Schema;
 	template_pages?: string[];
-}
-
-export interface IMember {
-	userId: string;
-	role: TPermissionRole;
-	guestPageIds: string[];
-}
-
-export interface ICredit {
-	activated: boolean;
-	amount: number;
-	created_timestamp: string;
-	id: string;
-	type: TCreditType;
-	user_id: string;
-	version: number;
 }

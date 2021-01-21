@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { getPageVisits, getPublicPageData, getUserSharedPages, getUserTasks } from "../utils";
+import { getPageVisits, getPublicPageData, getPublicSpaceData, getSubscriptionData, getUserSharedPages, getUserTasks } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -78,11 +78,11 @@ export default class Queries extends Cache {
   }
 
   async getPublicSpaceData(arg: GetPublicSpaceDataParams) {
-    return this.returnPromise<GetPublicSpaceDataResult>("getPublicSpaceData", arg);
+    return await getPublicSpaceData(arg, this.#getConfigs());
   }
 
   async getSubscriptionData(arg: GetSubscriptionDataParams) {
-    return this.returnPromise<GetSubscriptionDataResult>("getSubscriptionData", arg);
+    return await getSubscriptionData(arg, this.#getConfigs())
   }
 
   async initializePageTemplate(arg: InitializePageTemplateParams) {
@@ -94,7 +94,7 @@ export default class Queries extends Cache {
   }
 
   async getAllSpaces() {
-    const data = await this.returnPromise<GetSpacesResult>("loadBlockSubtree");
+    const data = await this.returnPromise<GetSpacesResult>("getAllSpaces");
     Object.values(data).forEach(data => this.saveToCache(data));
     return data;
   }

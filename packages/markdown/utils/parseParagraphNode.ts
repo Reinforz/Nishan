@@ -2,7 +2,9 @@ import { TFormatBlockColor } from '@nishans/types';
 import { Node } from 'unist';
 import { inlineText, chunk } from './inlineBlock';
 
-function formatText (formats: ('b' | 'i' | '_' | 's')[], block: chunk) {
+type TTextFormatters = ('b' | 'i' | '_' | 's' | 'c')[];
+
+function formatText (formats: TTextFormatters, block: chunk) {
 	formats.forEach((format) => {
 		switch (format) {
 			case 's':
@@ -16,19 +18,22 @@ function formatText (formats: ('b' | 'i' | '_' | 's')[], block: chunk) {
 				break;
 			case 'b':
 				block.bold;
-				break;
+        break;
+      case 'c':
+        block.code
+        break;
 		}
 	});
 }
 
-export function parseTextFormatters(text: string, formats: ('b' | 'i' | '_' | 's')[], block: chunk){
+export function parseTextFormatters(text: string, formats: TTextFormatters, block: chunk){
   const matches = (text as string).match(/(\[(?:\w+=\w+)\]{(?:\w?\s?)+})|(\w?\s?)+/g);
   matches?.forEach(match=>{
     const contains_format = match.match(/^\[(\w+=\w+)\]{((?:\w?\s?)+)}/);
     if(contains_format) {
       const [, format, text] = contains_format, [highlight, color] = format.split("=");
       block.add(text);
-      block.highlight((highlight === "c" ? color : color+"_background") as TFormatBlockColor)
+      block.highlight((highlight === "c" ? color : color+"_background") as TFormatBlockColor);
       formatText(formats, block)
     }else{
       block.add(match);
@@ -39,7 +44,7 @@ export function parseTextFormatters(text: string, formats: ('b' | 'i' | '_' | 's
 
 export function parseParagraphNode (paragraph: Node): string[][] {
 	const block = inlineText();
-	function inner (block: chunk, parent: Node, formats: ('b' | 'i' | '_' | 's')[]) {
+	function inner (block: chunk, parent: Node, formats: TTextFormatters) {
 		(parent as any).children.forEach((child: Node) => {
 			switch (child.type) {
 				case 'text':
@@ -52,7 +57,7 @@ export function parseParagraphNode (paragraph: Node): string[][] {
 					inner(block, child as any, formats.concat('b'));
 					break;
 				case 'inlineCode':
-          parseTextFormatters(child.value as string, formats, block)
+          parseTextFormatters(child.value as string, formats.concat('c'), block)
 					break;
 			}
 		});

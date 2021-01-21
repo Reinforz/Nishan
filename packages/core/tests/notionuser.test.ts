@@ -41,11 +41,11 @@ it("!Get space !id", async ()=>{
 })
 
 it("Get [space] [id]", async ()=>{
-  checkSpaces(await user.getSpaces([SPACE_ONE_ID]));
+  checkSpaces(await user.getWorkSpaces([SPACE_ONE_ID]));
 })
 
 it("!Get [space] ![id]", async ()=>{
-  checkSpaces(await user.getSpaces([SPACE_ONE_ID.slice(1)]), false);
+  checkSpaces(await user.getWorkSpaces([SPACE_ONE_ID.slice(1)]), false);
 })
 
 it("Get space cb", async ()=>{
@@ -57,15 +57,15 @@ it("!Get space !cb", async ()=>{
 })
 
 it("Get [space] cb", async ()=>{
-  checkSpaces(await user.getSpaces(space=>space.id === SPACE_ONE_ID));
+  checkSpaces(await user.getWorkSpaces(space=>space.id === SPACE_ONE_ID));
 })
 
 it("Get [space] undefined", async ()=>{
-  checkSpaces(await user.getSpaces());
+  checkSpaces(await user.getWorkSpaces());
 })
 
 it("!Get [space] !cb", async ()=>{
-  checkSpaces(await user.getSpaces(space=>space.id === SPACE_ONE_ID.slice(1)), false);
+  checkSpaces(await user.getWorkSpaces(space=>space.id === SPACE_ONE_ID.slice(1)), false);
 })
 
 it("Get user_settings", ()=>{

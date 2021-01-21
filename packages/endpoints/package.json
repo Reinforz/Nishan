@@ -5,19 +5,23 @@
   "keywords": [
     "notion",
     "notion-endpoints",
+    "notion-queries",
+    "notion-mutations",
+    "notion-cache",
     "rest-api"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/endpoints/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",

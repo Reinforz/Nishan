@@ -21,7 +21,8 @@
     "experimentalDecorators": true
   },
   "include": [
-    "index.ts"
+    "./src/index.ts",
+    "experiment"
   ],
   "exclude": [
     "./node_modules",

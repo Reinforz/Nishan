@@ -17,8 +17,6 @@ export async function mdast2NotionBlocks (mdast: Node) {
   }
 
   children.forEach(child=>{
-    console.log(child.type);
-    
     switch(child.type){
       case "heading":
         const {depth, children: [{value: title}]} = child as any;
@@ -52,9 +50,10 @@ export async function mdast2NotionBlocks (mdast: Node) {
         })
         break
       case "list":
+        const type = child.orderd === true ? "numbered_list" : "bulleted_list"; 
         (child as any).children.forEach((child: any)=>{
           notion_blocks.push({
-            type: "numbered_list",
+            type,
             title: [[child.children[0].children[0].value]]
           })
         })

@@ -3,6 +3,7 @@ import { Node } from 'unist';
 
 import { NotionMarkdownConfig, TNotionBlocks } from '../src/types';
 import {convertFrontMatter2Obj} from "../utils";
+import { parseParagraphAST } from './parseParagraphAST';
 
 export async function mdast2NotionBlocks (mdast: Node) {
   let default_config: NotionMarkdownConfig = {
@@ -39,7 +40,7 @@ export async function mdast2NotionBlocks (mdast: Node) {
       case 'paragraph':
         notion_blocks.push({
           type: "text",
-          title: [[(child as any).children[0].value]]
+          title: parseParagraphAST(child)
         })
         break;
       case "code":

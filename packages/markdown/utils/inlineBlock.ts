@@ -1,3 +1,5 @@
+import { TFormatBlockColor } from '@nishans/types';
+
 class Colors {
 	text: [[string, string[][]]];
 
@@ -153,6 +155,5 @@ class chunk extends Colors {
 }
 
 export function inlineText (title: string) {
-	const mod_title: [[string, string[][]]] = [ [ title, [ [ '' ] ] ] ];
-	return new chunk(mod_title);
+	return new chunk([ [ title, [ [ '' ] ] ] ]);
 }

@@ -3,8 +3,8 @@ import { TFormatBlockColor } from '@nishans/types';
 export class Colors {
 	text: [[string, string[][]]];
 
-	constructor (text: [[string, string[][]]]) {
-		this.text = text;
+	constructor (text?: [[string, string[][]]]) {
+		this.text = (text ?? []) as any;
 	}
 
 	get default () {
@@ -109,12 +109,12 @@ export class Colors {
 }
 
 export class chunk extends Colors {
-	constructor (text: [[string, string[][]]]) {
+	constructor (text?: [[string, string[][]]]) {
 		super(text);
 	}
 
 	add (title: string) {
-		this.text.push([ title, [ [ '' ] ] ]);
+		this.text.push([ title, [] ]);
 		return new chunk(this.text);
 	}
 
@@ -154,6 +154,6 @@ export class chunk extends Colors {
 	}
 }
 
-export function inlineText (title: string) {
-	return new chunk([ [ title, [ [ '' ] ] ] ]);
+export function inlineText (title?: string) {
+	return title ? new chunk([ [ title, [] ] ]) : new chunk();
 }

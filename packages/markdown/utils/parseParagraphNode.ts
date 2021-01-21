@@ -21,7 +21,7 @@ function formatText (formats: ('b' | 'i' | '_' | 's')[], block: chunk) {
 }
 
 export function parseParagraphNode (paragraph: Node): string[][] {
-	const block = inlineText('');
+	const block = inlineText();
 
 	function inner (block: chunk, parent: Node, formats: ('b' | 'i' | '_' | 's')[]) {
 		(parent as any).children.forEach((child: Node) => {

@@ -44,3 +44,8 @@ export interface Configs {
 	user_id: string;
 	interval?: number;
 }
+
+export interface ConfigsWithoutUserid {
+	token: string;
+	interval?: number;
+}

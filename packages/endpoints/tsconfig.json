@@ -17,8 +17,7 @@
     "declaration": true,
     "sourceMap": false,
     "noUnusedLocals": false,
-    "incremental": false,
-    "experimentalDecorators": true
+    "incremental": false
   },
   "include": [
     "./src/index.ts",

@@ -48,8 +48,23 @@ export interface GetPageVisitsParams {
 
 export interface GetPageVisitsResult {
 	recordMap: {
-		page_visits: BlockData;
+		page_visit: {
+			[key: string]: {
+				role: TPermissionRole;
+				value: IPageVisit;
+			};
+		};
 	};
+	pageVisits: IPageVisit[];
+}
+
+export interface IPageVisit {
+	id: string;
+	version: number;
+	parent_table: 'block';
+	parent_id: string;
+	user_id: string;
+	visited_at: number;
 }
 
 export interface GetUserSharedPagesResult {

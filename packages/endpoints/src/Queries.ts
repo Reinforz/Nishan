@@ -53,7 +53,7 @@ export default class Queries extends Cache {
     });
   }
 
-  #getConfigs = (): Configs =>{
+  #getConfigs = (): Configs => {
     return {
       token: this.token,
       user_id: this.user_id,

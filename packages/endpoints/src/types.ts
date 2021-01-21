@@ -31,3 +31,16 @@ export interface CtorArgs {
 	space_id: string;
 	cache?: ICache;
 }
+
+export interface NotionHeaders {
+	headers: {
+		cookie: string;
+		['x-notion-active-user-header']: string;
+	};
+}
+
+export interface Configs {
+	token: string;
+	user_id: string;
+	interval?: number;
+}

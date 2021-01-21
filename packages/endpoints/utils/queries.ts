@@ -1,20 +1,9 @@
-import { GetPageVisitsParams } from "@nishans/types";
+import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
 import axios from "axios";
 
+import { Configs } from "../src";
+
 const BASE_NOTION_URL = "https://www.notion.so/api/v3"
-
-export interface NotionHeaders{
-  headers: {
-    cookie: string,
-    ["x-notion-active-user-header"]: string
-  }
-}
-
-interface Configs{
-  token: string,
-  user_id: string,
-  interval?: number
-}
 
 const returnPromise = <T>(url: string, arg: any, {token, user_id, interval}:Configs): Promise<T> => {
   const headers = {
@@ -40,5 +29,6 @@ const returnPromise = <T>(url: string, arg: any, {token, user_id, interval}:Conf
 }
 
 export async function getPageVisits(arg: GetPageVisitsParams, configs: Configs){
-  return await returnPromise("getPageVisits", arg, configs)
+  return await returnPromise<GetPageVisitsResult>("getPageVisits", arg, configs)
 }
+

@@ -3,22 +3,23 @@ import axios from "axios";
 import Cache from "./Cache";
 
 import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
-import { CtorArgs, UpdateCacheManuallyParam } from "./types";
+import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
+import { getPageVisits } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
  * @noInheritDoc
  */
 export default class Queries extends Cache {
-  protected token: string;
-  protected interval: number;
-  protected headers: {
+  token: string;
+  interval: number;
+  headers: {
     headers: {
       cookie: string,
       ["x-notion-active-user-header"]: string
     }
   };
-  protected BASE_NOTION_URL = "https://www.notion.so/api/v3";
+  BASE_NOTION_URL = "https://www.notion.so/api/v3";
   user_id: string;
 
   constructor({ token, interval, user_id, cache }: Omit<CtorArgs, "shard_id" | "space_id">) {
@@ -52,86 +53,94 @@ export default class Queries extends Cache {
     });
   }
 
-  protected async getPageVisits(arg: GetPageVisitsParams) {
-    return this.returnPromise<GetPageVisitsResult>("getPageVisits", arg);
+  #getConfigs = (): Configs =>{
+    return {
+      token: this.token,
+      user_id: this.user_id,
+      interval: this.interval
+    }
   }
 
-  protected async getUserSharedPages(arg: GetUserSharedPagesParams) {
+  async getPageVisits(arg: GetPageVisitsParams) {
+    return await getPageVisits(arg, this.#getConfigs());
+  }
+
+  async getUserSharedPages(arg: GetUserSharedPagesParams) {
     return this.returnPromise<GetUserSharedPagesResult>("getUserSharedPages", arg);
   }
 
-  protected async getUserTasks(): Promise<GetUserTasksResult> {
+  async getUserTasks(): Promise<GetUserTasksResult> {
     return this.returnPromise<GetUserTasksResult>("getUserTasks");
   }
 
-  protected async getPublicPageData(arg: GetPublicPageDataParams) {
+  async getPublicPageData(arg: GetPublicPageDataParams) {
     return this.returnPromise<GetPublicPageDataResult>("getPublicPageData", arg);
   }
 
-  protected async getPublicSpaceData(arg: GetPublicSpaceDataParams) {
+  async getPublicSpaceData(arg: GetPublicSpaceDataParams) {
     return this.returnPromise<GetPublicSpaceDataResult>("getPublicSpaceData", arg);
   }
 
-  protected async getSubscriptionData(arg: GetSubscriptionDataParams) {
+  async getSubscriptionData(arg: GetSubscriptionDataParams) {
     return this.returnPromise<GetSubscriptionDataResult>("getSubscriptionData", arg);
   }
 
-  protected async initializePageTemplate(arg: InitializePageTemplateParams) {
+  async initializePageTemplate(arg: InitializePageTemplateParams) {
     return this.returnPromise<InitializePageTemplateResult>("initializePageTemplate", arg, "recordMap");
   }
 
-  protected async loadBlockSubtree(arg: LoadBlockSubtreeParams) {
+  async loadBlockSubtree(arg: LoadBlockSubtreeParams) {
     return this.returnPromise<LoadBlockSubtreeResult>("loadBlockSubtree", arg, "subtreeRecordMap");
   }
 
-  protected async getAllSpaces() {
+  async getAllSpaces() {
     const data = await this.returnPromise<GetSpacesResult>("loadBlockSubtree");
     Object.values(data).forEach(data => this.saveToCache(data));
     return data;
   }
 
-  protected async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams) {
+  async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams) {
     return this.returnPromise<GetGenericEmbedBlockDataResult>("getGenericEmbedBlockData", arg);
   }
 
-  protected async getUploadFileUrl(arg: GetUploadFileUrlParams) {
+  async getUploadFileUrl(arg: GetUploadFileUrlParams) {
     return this.returnPromise<GetUploadFileUrlResult>("getUploadFileUrl", arg);
   }
 
-  protected async getGoogleDriveAccounts() {
+  async getGoogleDriveAccounts() {
     return this.returnPromise<GetGoogleDriveAccountsResult>("getGoogleDriveAccounts");
   }
 
-  protected async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
+  async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
     return this.returnPromise<InitializeGoogleDriveBlockResult>("initializeGoogleDriveBlock", arg, "recordMap");
   }
 
-  protected async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
+  async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
     return this.returnPromise<GetBackLinksForBlockResult>("getBacklinksForBlock", { blockId }, "recordMap");
   }
 
-  protected async findUser(email: string) {
+  async findUser(email: string) {
     return this.returnPromise<FindUserResult>("findUser", { email });
   }
 
-  protected async syncRecordValues(requests: SyncRecordValuesParams[], interval?:number) {
+  async syncRecordValues(requests: SyncRecordValuesParams[], interval?:number) {
     return this.returnPromise<SyncRecordValuesResult>("syncRecordValues", { requests }, "recordMap", interval);
   }
 
-  protected async queryCollection(arg: QueryCollectionParams, interval?:number) {
+  async queryCollection(arg: QueryCollectionParams, interval?:number) {
     return this.returnPromise<QueryCollectionResult>("queryCollection", arg, "recordMap", interval);
   }
 
-  protected async loadUserContent() {
+  async loadUserContent() {
     return this.returnPromise<LoadUserContentResult>("loadUserContent", {}, "recordMap");
   }
 
-  protected async loadPageChunk(arg: LoadPageChunkParams) {
+  async loadPageChunk(arg: LoadPageChunkParams) {
     return this.returnPromise<LoadPageChunkResult>("loadPageChunk", arg, "recordMap");
   }
 
   // ? TD:2:H GetTaskResult interface
-  protected async getTasks(taskIds: string[]) {
+  async getTasks(taskIds: string[]) {
     return this.returnPromise<any>("getTasks", {
       taskIds
     });

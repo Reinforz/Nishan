@@ -333,7 +333,7 @@ export interface IDrive extends IBlock {
 			last_fetched: number;
 		};
 	};
-	file_id: string;
+	file_id?: string;
 }
 export interface ITweet extends IBlock {
 	type: 'tweet';

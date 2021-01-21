@@ -1,11 +1,12 @@
-import { ViewAggregations } from './aggregator';
+import { TViewAggregationsAggregators, ViewAggregations } from './aggregator';
 import { BlockData, SpaceData, RecordMap, INotionUser } from './recordMap';
-import { TGenericEmbedBlockType, MediaFormat } from './block';
+import { TGenericEmbedBlockType, MediaFormat, IDrive } from './block';
 import { IViewFilter } from './filter';
 import { TPermissionRole, IPermission } from './permissions';
-import { TPlanType, Token, GoogleDriveFile, TOperationTable, Cursor } from './types';
+import { TPlanType, GoogleDriveFile, TOperationTable, Cursor, TViewType } from './types';
 import { ViewSorts } from './view';
 import { TCredit } from './credit';
+import { TSchemaUnitType } from './schema';
 
 export interface SetPageNotificationsAsReadParams {
 	navigableBlockId: string;
@@ -140,7 +141,7 @@ export interface RemoveUsersFromSpaceResult {
 }
 
 export interface InitializePageTemplateParams {
-	recordMap: RecordMap;
+	recordMap: Record<string, unknown>;
 	sourceBlockId: string;
 	spaceId: string;
 	targetBlockId: string;
@@ -205,13 +206,32 @@ export interface QueryCollectionParams {
 		filter?: IViewFilter;
 		sort?: ViewSorts[];
 		aggregations?: ViewAggregations[];
+		aggregate?: {
+			aggregation_type: TViewAggregationsAggregators;
+			id: string;
+			property: string;
+			type: TSchemaUnitType;
+			view_type: TViewType;
+		}[];
 	};
 	loader: {
 		limit?: number;
 		searchQuery?: string;
 		type: 'table';
 		loadContentCover: boolean;
+		userTimeZone?: string;
 	};
+}
+
+export interface Token {
+	id: string;
+	accessToken: string;
+}
+
+export interface Account {
+	accountId: string;
+	accountName: string;
+	token: Token;
 }
 
 export interface GetGoogleDriveAccountsResult {
@@ -227,14 +247,23 @@ export interface InitializeGoogleDriveBlockParams {
 export interface InitializeGoogleDriveBlockResult {
 	file: GoogleDriveFile;
 	recordMap: {
-		block: BlockData;
+		block: {
+			[key: string]: IDrive;
+		};
 	};
 }
 
-export interface SyncRecordValuesParams {
+export interface GetBackLinksForBlockParams {
+	blockId: string;
+}
+
+export interface SyncRecordValues {
 	id: string;
 	table: TOperationTable;
 	version: number;
+}
+export interface SyncRecordValuesParams {
+	requests: SyncRecordValues[];
 }
 
 export interface InviteGuestsToSpaceParams {
@@ -242,9 +271,14 @@ export interface InviteGuestsToSpaceParams {
 	permissionItems: IPermission[];
 	spaceId: string;
 }
+
+export interface FindUserParams {
+	email: string;
+}
+
 export interface FindUserResult {
-	value: {
-		role: 'reader';
+	value?: {
+		role: TPermissionRole;
 		value: INotionUser;
 	};
 }

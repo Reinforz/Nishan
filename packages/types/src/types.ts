@@ -136,17 +136,6 @@ export interface GoogleDriveFile {
 	webViewLink: string;
 }
 
-export interface Token {
-	id: string;
-	accessToken: string;
-}
-
-export interface Account {
-	accountId: string;
-	accountName: string;
-	token: Token;
-}
-
 export interface ValueArg {
 	id: string;
 	value: string;

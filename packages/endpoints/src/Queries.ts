@@ -2,9 +2,9 @@ import axios from "axios";
 
 import Cache from "./Cache";
 
-import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
+import {SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType, FindUserParams } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { getPageVisits, getPublicPageData, getPublicSpaceData, getSubscriptionData, getUserSharedPages, getUserTasks } from "../utils";
+import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserSharedPages, getUserTasks, initializeGoogleDriveBlock, initializePageTemplate, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -44,7 +44,6 @@ export default class Queries extends Cache {
             arg ?? {},
             this.headers
           );
-          if (keyToCache) this.saveToCache(data[keyToCache]);
           resolve(data)
         } catch (err) {
           reject(err.response.data)
@@ -85,58 +84,76 @@ export default class Queries extends Cache {
     return await getSubscriptionData(arg, this.#getConfigs())
   }
 
+  // ! FIX:1:M Doesnot work
   async initializePageTemplate(arg: InitializePageTemplateParams) {
-    return this.returnPromise<InitializePageTemplateResult>("initializePageTemplate", arg, "recordMap");
+    const data = await initializePageTemplate(arg, this.#getConfigs());
+    this.saveToCache(data.recordMap);
+    return data;
   }
 
   async loadBlockSubtree(arg: LoadBlockSubtreeParams) {
-    return this.returnPromise<LoadBlockSubtreeResult>("loadBlockSubtree", arg, "subtreeRecordMap");
+    const data = await loadBlockSubtree(arg, this.#getConfigs());
+    this.saveToCache(data.subtreeRecordMap);
+    return data;
   }
 
-  async getAllSpaces() {
-    const data = await this.returnPromise<GetSpacesResult>("getAllSpaces");
+  async getSpaces() {
+    const data = await getSpaces(this.#getConfigs());
     Object.values(data).forEach(data => this.saveToCache(data));
     return data;
   }
 
   async getGenericEmbedBlockData(arg: GetGenericEmbedBlockDataParams) {
-    return this.returnPromise<GetGenericEmbedBlockDataResult>("getGenericEmbedBlockData", arg);
+    return await getGenericEmbedBlockData(arg,this.#getConfigs())
   }
 
   async getUploadFileUrl(arg: GetUploadFileUrlParams) {
-    return this.returnPromise<GetUploadFileUrlResult>("getUploadFileUrl", arg);
+    return await getUploadFileUrl(arg, this.#getConfigs())
   }
 
   async getGoogleDriveAccounts() {
-    return this.returnPromise<GetGoogleDriveAccountsResult>("getGoogleDriveAccounts");
+    return await getGoogleDriveAccounts(this.#getConfigs());
   }
 
   async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
-    return this.returnPromise<InitializeGoogleDriveBlockResult>("initializeGoogleDriveBlock", arg, "recordMap");
+    const data = await initializeGoogleDriveBlock(arg, this.#getConfigs());
+    this.saveToCache(data.recordMap.block)
+    return data;
   }
 
-  async getBacklinksForBlock(blockId: string): Promise<GetBackLinksForBlockResult> {
-    return this.returnPromise<GetBackLinksForBlockResult>("getBacklinksForBlock", { blockId }, "recordMap");
+  // ? Goes to mutation
+  async getBacklinksForBlock(params: GetBackLinksForBlockParams) {
+    const data = await getBacklinksForBlock(params, this.#getConfigs());
+    this.saveToCache(data.recordMap)
+    return data;
   }
 
-  async findUser(email: string) {
-    return this.returnPromise<FindUserResult>("findUser", { email });
+  async findUser(params: FindUserParams) {
+    return await findUser(params, this.#getConfigs());
   }
 
-  async syncRecordValues(requests: SyncRecordValuesParams[], interval?:number) {
-    return this.returnPromise<SyncRecordValuesResult>("syncRecordValues", { requests }, "recordMap", interval);
+  async syncRecordValues(params: SyncRecordValuesParams) {
+    const data = await syncRecordValues(params, this.#getConfigs());
+    this.saveToCache(data.recordMap)
+    return data;
   }
 
-  async queryCollection(arg: QueryCollectionParams, interval?:number) {
-    return this.returnPromise<QueryCollectionResult>("queryCollection", arg, "recordMap", interval);
+  async queryCollection(params: QueryCollectionParams) {
+    const data = await queryCollection(params, this.#getConfigs());
+    this.saveToCache(data.recordMap)
+    return data;
   }
 
   async loadUserContent() {
-    return this.returnPromise<LoadUserContentResult>("loadUserContent", {}, "recordMap");
+    const data = await loadUserContent(this.#getConfigs());
+    this.saveToCache(data.recordMap)
+    return data;
   }
 
-  async loadPageChunk(arg: LoadPageChunkParams) {
-    return this.returnPromise<LoadPageChunkResult>("loadPageChunk", arg, "recordMap");
+  async loadPageChunk(params: LoadPageChunkParams) {
+    const data = await loadPageChunk(params, this.#getConfigs());
+    this.saveToCache(data.recordMap)
+    return data;
   }
 
   // ? TD:2:H GetTaskResult interface
@@ -146,8 +163,8 @@ export default class Queries extends Cache {
     });
   }
 
-  async updateCacheManually(arg: UpdateCacheManuallyParam | string, interval?: number) {
-    const sync_record_values: SyncRecordValuesParams[] = [];
+  async updateCacheManually(arg: UpdateCacheManuallyParam | string) {
+    const sync_record_values: SyncRecordValues[] = [];
     if (Array.isArray(arg))
       arg.forEach((arg: string | [string, TDataType]) => {
         if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
@@ -155,16 +172,16 @@ export default class Queries extends Cache {
       })
     else if (typeof arg === "string")
       sync_record_values.push({ id: arg, table: "block", version: 0 })
-    return await this.syncRecordValues(sync_record_values, interval);
+    return await this.syncRecordValues({requests: sync_record_values});
   }
 
   async updateCacheIfNotPresent(arg: UpdateCacheManuallyParam) {
-    const sync_record_values: SyncRecordValuesParams[] = [];
+    const sync_record_values: SyncRecordValues[] = [];
     arg.forEach((arg: string | [string, TDataType]) => {
       if (Array.isArray(arg) && !this.cache[arg[1]].get(arg[0])) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
       else if (typeof arg === "string" && !this.cache.block.get(arg)) sync_record_values.push({ id: arg, table: "block", version: 0 })
     })
     if (sync_record_values.length)
-      await this.syncRecordValues(sync_record_values);
+      await this.syncRecordValues({requests: sync_record_values});
   }
 }

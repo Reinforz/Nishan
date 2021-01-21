@@ -22,6 +22,10 @@ export function parseParagraphNode (paragraph: Node): string[][] {
 					break;
 				case 'inlineCode':
 					block.add((child as any).value).code;
+					formats.forEach((format) => {
+						if (format === 'bold') block.bold;
+						else if (format === 'italic') block.italic;
+					});
 					break;
 			}
 		});

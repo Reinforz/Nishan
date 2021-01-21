@@ -48,6 +48,12 @@ export async function mdast2NotionBlocks (mdast: Node) {
           title: [[child.value as string]],
           lang: child.lang as TCodeLanguage
         })
+        break
+      case "thematicBreak":
+        notion_blocks.push({
+          type: "divider"
+        })
+        break
     }
   })
   

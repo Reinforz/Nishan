@@ -15,12 +15,17 @@ export interface CodeNotionBlock extends NotionBlock<'code'> {
 	lang: TCodeLanguage;
 }
 
+export interface DividerNotionBlock {
+	type: 'divider';
+}
+
 export type TNotionBlocks =
 	| HeaderNotionBlock
 	| SubHeaderNotionBlock
 	| SubSubHeaderNotionBlock
 	| TextNotionBlock
-	| CodeNotionBlock;
+	| CodeNotionBlock
+	| DividerNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

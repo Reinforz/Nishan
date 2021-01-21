@@ -26,7 +26,7 @@ export async function generateNotionBlockOperations (
 
 	const content_create_ops: IOperation[] = notion_blocks.map((block) => {
 			const content_id = uuidv4(),
-				{ type, title } = block,
+				{ type } = block,
 				common_props: any = {
 					table: 'block',
 					command: 'update',
@@ -35,14 +35,14 @@ export async function generateNotionBlockOperations (
 					args: {
 						id: content_id,
 						type,
-						properties: {
-							title: title
-						},
+						properties: {},
 						parent_table: 'block',
 						parent_id: block_id,
 						...metadata
 					}
 				};
+
+			if (type !== 'divider') common_props.args.properties.title = (block as any).title;
 
 			switch (type) {
 				case 'code':

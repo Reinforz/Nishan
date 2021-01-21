@@ -4,7 +4,7 @@ import Cache from "./Cache";
 
 import { GetPageVisitsParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { getPageVisits } from "../utils";
+import { getPageVisits, getPublicPageData, getUserSharedPages, getUserTasks } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -66,15 +66,15 @@ export default class Queries extends Cache {
   }
 
   async getUserSharedPages(arg: GetUserSharedPagesParams) {
-    return this.returnPromise<GetUserSharedPagesResult>("getUserSharedPages", arg);
+    return await getUserSharedPages(arg, this.#getConfigs());
   }
 
-  async getUserTasks(): Promise<GetUserTasksResult> {
-    return this.returnPromise<GetUserTasksResult>("getUserTasks");
+  async getUserTasks() {
+    return await getUserTasks(this.#getConfigs());
   }
 
   async getPublicPageData(arg: GetPublicPageDataParams) {
-    return this.returnPromise<GetPublicPageDataResult>("getPublicPageData", arg);
+    return await getPublicPageData(arg, this.#getConfigs());
   }
 
   async getPublicSpaceData(arg: GetPublicSpaceDataParams) {

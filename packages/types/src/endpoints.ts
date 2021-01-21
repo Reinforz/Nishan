@@ -1,5 +1,5 @@
 import { ViewAggregations } from './aggregator';
-import { BlockData, CollectionData, SpaceData, RecordMap, INotionUser } from './recordMap';
+import { BlockData, SpaceData, RecordMap, INotionUser } from './recordMap';
 import { ICredit, IMember, TGenericEmbedBlockType, MediaFormat } from './block';
 import { IViewFilter } from './filter';
 import { TPermissionRole, IPermission } from './permissions';
@@ -49,20 +49,15 @@ export interface GetUserSharedPagesParams {
 
 export interface GetUserSharedPagesResult {
 	pages: { id: string; spaceId: string }[];
-	recordMap: {
-		block: BlockData;
-		collection: CollectionData;
-		space: SpaceData;
-	};
+	recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
 }
 
 export interface GetPublicPageDataParams {
-	// Id of the block
-	blockId: string;
-	name: 'page';
-	saveParent: boolean;
-	showMoveTo: boolean;
-	type: 'block-space';
+	blockId?: string;
+	name?: 'page';
+	saveParent?: boolean;
+	showMoveTo?: boolean;
+	type?: 'block-space';
 }
 
 export interface GetPublicPageDataResult {

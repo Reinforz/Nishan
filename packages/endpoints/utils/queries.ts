@@ -29,10 +29,18 @@ const returnPromise = <T>(url: string, arg: any, configs: Configs | ConfigsWitho
   });
 }
 
-export async function getPageVisits(arg: GetPageVisitsParams, configs: ConfigsWithoutUserid){
-  return await returnPromise<GetPageVisitsResult>("getPageVisits", arg, configs)
+export async function getPageVisits(params: GetPageVisitsParams, configs: ConfigsWithoutUserid){
+  return await returnPromise<GetPageVisitsResult>("getPageVisits", params, configs)
 }
 
-export async function getUserSharedPages(arg: GetUserSharedPagesParams, configs: ConfigsWithoutUserid){
-  return await returnPromise<GetUserSharedPagesResult>("getUserSharedPages", arg, configs);
+export async function getUserSharedPages(params: GetUserSharedPagesParams, configs: ConfigsWithoutUserid){
+  return await returnPromise<GetUserSharedPagesResult>("getUserSharedPages", params, configs);
+}
+
+export async function getUserTasks(configs: Configs){
+  return await returnPromise<GetUserTasksResult>("getUserTasks", {}, configs);
+}
+
+export async function getPublicPageData(params: GetPublicPageDataParams, configs: ConfigsWithoutUserid){
+  return await returnPromise<GetPublicPageDataResult>("getPublicPageData", params, configs)
 }

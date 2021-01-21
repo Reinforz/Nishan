@@ -67,14 +67,15 @@ export interface IPageVisit {
 	visited_at: number;
 }
 
-export interface GetUserSharedPagesResult {
-	includeDeleted: boolean;
+export interface GetUserSharedPagesParams {
+	includeDeleted?: boolean;
 }
 
-export interface GetUserSharedPagesParams {
+export interface GetUserSharedPagesResult {
 	pages: { id: string; spaceId: string }[];
 	recordMap: {
 		block: BlockData;
+		collection: CollectionData;
 		space: SpaceData;
 	};
 }

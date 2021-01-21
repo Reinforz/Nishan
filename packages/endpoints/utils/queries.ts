@@ -33,3 +33,6 @@ export async function getPageVisits(arg: GetPageVisitsParams, configs: ConfigsWi
   return await returnPromise<GetPageVisitsResult>("getPageVisits", arg, configs)
 }
 
+export async function getUserSharedPages(arg: GetUserSharedPagesParams, configs: ConfigsWithoutUserid){
+  return await returnPromise<GetUserSharedPagesResult>("getUserSharedPages", arg, configs);
+}

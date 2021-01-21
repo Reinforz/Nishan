@@ -168,9 +168,10 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value: { value: notion_user } } = await this.findUser(email);
-      if (!notion_user) error(`User does not have a notion account`);
+      const [email, role] = infos[i], { value } = await this.findUser({email});
+      if (!value?.value) error(`User does not have a notion account`);
       else{
+        const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
         this.stack.push({
           args: permission_data,
@@ -180,8 +181,8 @@ export default class Space extends Data<ISpace> {
           table: "space"
         });
         data.permissions.push(permission_data)
+        notion_users.push(notion_user)
       }
-      notion_users.push(notion_user)
       this.logger && this.logger("UPDATE", "space", this.id)
     }
     this.updateLastEditedProps();

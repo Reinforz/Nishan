@@ -159,7 +159,7 @@ class NotionUser extends Data<INotionUser> {
    * @returns The obtained Space object
    */
   async getSpace(arg?: FilterType<ISpace>) {
-    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
+    return (await this.getWorkSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
   }
 
   /**
@@ -167,7 +167,7 @@ class NotionUser extends Data<INotionUser> {
    * @param arg empty or A predicate function or a string array of ids
    * @returns An array of space objects
    */
-  async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
+  async getWorkSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
     return await this.getIterate<ISpace, Space[]>(args, {
       multiple,
       container: [],

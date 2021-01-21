@@ -31,15 +31,17 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
-      const { value: { value: notion_user } } = await this.findUser(email);
-      if (!notion_user) error(`User does not have a notion account`);
-      else
+      const { value } = await this.findUser({email});
+      if (!value?.value) error(`User does not have a notion account`);
+      else{
+        const { value: notion_user } = value;
         permissionItems.push({
           role: permission,
           type: "user_permission",
           user_id: notion_user.id
         });
-      notion_users.push(notion_user)
+        notion_users.push(notion_user)
+      }
     }
     await this.inviteGuestsToSpace({
       blockId: data.id,

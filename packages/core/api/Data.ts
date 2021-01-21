@@ -135,13 +135,13 @@ export default class Data<T extends TData> extends Operations {
             type: "table",
             loadContentCover: true
           }
-        }, 0)
+        })
       }
       else if (this.type === "space_view")
         container.push(...(this.getCachedData() as ISpaceView).bookmarked_pages ?? [])
 
       const non_cached = this.returnNonCachedData(container)
-      await this.updateCacheManually(non_cached, 0);
+      await this.updateCacheManually(non_cached);
 
       // If the block is a page, for all the collection block contents, fetch the collection attached with it as well
       if(this.type === "block"){
@@ -155,7 +155,7 @@ export default class Data<T extends TData> extends Operations {
               collection_blocks_ids.push([content.collection_id, "collection"])
           }
           const non_cached = this.returnNonCachedData(collection_blocks_ids)
-          await this.updateCacheManually(non_cached, 0);
+          await this.updateCacheManually(non_cached);
         }
       }
 

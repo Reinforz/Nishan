@@ -5,4 +5,4 @@ export * from './getNotionData';
 export * from './createTransactions';
 export * from './generateNotionBlockOperations';
 export * from './uploadToNotion';
-export * from './parseParagraphAST';
+export * from './parseParagraphNode';

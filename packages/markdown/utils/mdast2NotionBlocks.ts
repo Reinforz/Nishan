@@ -2,8 +2,7 @@ import { TCodeLanguage } from '@nishans/types';
 import { Node } from 'unist';
 
 import { NotionMarkdownConfig, TNotionBlocks } from '../src/types';
-import {convertFrontMatter2Obj} from "../utils";
-import { parseParagraphAST } from './parseParagraphAST';
+import {parseParagraphNode, convertFrontMatter2Obj} from "../utils";
 
 export async function mdast2NotionBlocks (mdast: Node) {
   let default_config: NotionMarkdownConfig = {
@@ -40,7 +39,7 @@ export async function mdast2NotionBlocks (mdast: Node) {
       case 'paragraph':
         notion_blocks.push({
           type: "text",
-          title: parseParagraphAST(child)
+          title: parseParagraphNode(child)
         })
         break;
       case "code":

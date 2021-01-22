@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "@nishans/types": "0.0.11",
-    "@nishans/core": "0.0.12"
+    "@nishans/core": "0.0.9"
   }
 }

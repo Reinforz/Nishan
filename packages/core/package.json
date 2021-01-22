@@ -2,8 +2,13 @@
   "name": "@nishans/core",
   "version": "0.0.9",
   "description": "Unofficial notion api with all crud functionalities",
+  "keywords": [
+    "notion",
+    "notion client",
+    "notion api"
+  ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
   "license": "MIT",
   "main": "dist/Nishan.js",
   "typings": "dist/Nishan.d.ts",
@@ -20,19 +25,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git",
-    "directory": "packages/core"
+    "url": "git+https://github.com/Devorein/Nishan.git"
   },
   "scripts": {
     "test": "npx jest --runInBand ./tests --collectCoverage"
   },
-  "keywords": [
-    "notion",
-    "notion client",
-    "notion api"
-  ],
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcore"
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.7",

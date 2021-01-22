@@ -16,13 +16,12 @@
     "watch": false,
     "declaration": true,
     "sourceMap": false,
-    "noUnusedLocals": true,
-    "incremental": false,
-    "experimentalDecorators": true
+    "noUnusedLocals": false,
+    "incremental": false
   },
   "include": [
-    "./Nishan.ts",
-    "./experiment"
+    "./src/index.ts",
+    "experiment"
   ],
   "exclude": [
     "./node_modules",

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cli",
-  "version": "0.0.0",
+  "version": "0.0.12",
   "description": "A package to interact with `@nishans/core` from the terminal",
   "keywords": [
     "notion",
@@ -11,8 +11,8 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/cli/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
@@ -30,6 +30,6 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcli"
   },
   "dependencies": {
-    "@nishans/core": "latest"
+    "@nishans/core": "0.0.12"
   }
 }

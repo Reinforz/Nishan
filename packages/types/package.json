@@ -1,6 +1,6 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Typescript typings for notion",
   "keywords": [
     "notion",
@@ -11,7 +11,7 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/types/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "",
   "types": "dist/index.d.ts",
   "directories": {
     "lib": "src"

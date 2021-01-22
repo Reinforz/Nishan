@@ -15,8 +15,9 @@
     "outDir": "./dist",
     "watch": false,
     "declaration": true,
+    "emitDeclarationOnly": true,
     "sourceMap": false,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "incremental": false,
     "experimentalDecorators": true
   },

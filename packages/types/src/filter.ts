@@ -36,7 +36,6 @@ export type PhoneNumberViewFiltersOperator = TextViewFiltersOperator;
 
 export type FormulaViewFiltersOperator = TextViewFiltersOperator;
 export type RelationViewFiltersOperator = 'relation_contains' | 'relation_does_not_contain';
-export type RollupViewFiltersOperator = undefined;
 export type CreatedTimeViewFiltersOperator = DateViewFiltersOperator;
 export type CreatedByViewFiltersOperator = PersonViewFiltersOperator;
 export type LastEditedTimeViewFiltersOperator = DateViewFiltersOperator;
@@ -59,7 +58,6 @@ export type TBasicViewFiltersOperator =
 export type TAdvancedViewFiltersOperator =
 	| FormulaViewFiltersOperator
 	| RelationViewFiltersOperator
-	| RollupViewFiltersOperator
 	| CreatedTimeViewFiltersOperator
 	| CreatedByViewFiltersOperator
 	| LastEditedTimeViewFiltersOperator
@@ -101,7 +99,6 @@ export type TBasicViewFiltersType =
 
 export type FormulaViewFiltersType = 'exact';
 export type RelationViewFiltersType = 'exact';
-export type RollupViewFiltersType = 'exact';
 export type CreatedTimeViewFiltersType = 'exact' | 'relative';
 export type CreatedByViewFiltersType = 'exact';
 export type LastEditedTimeViewFiltersType = 'exact' | 'relative';
@@ -110,7 +107,6 @@ export type LastEditedByViewFiltersType = 'exact';
 export type TAdvancedViewFiltersType =
 	| FormulaViewFiltersType
 	| RelationViewFiltersType
-	| RollupViewFiltersType
 	| CreatedTimeViewFiltersType
 	| CreatedByViewFiltersType
 	| LastEditedTimeViewFiltersType
@@ -146,7 +142,6 @@ export type PhoneNumberViewFiltersValue = string;
 
 export type FormulaViewFiltersValue = string;
 export type RelationViewFiltersValue = string;
-export type RollupViewFiltersValue = undefined;
 export type CreatedTimeViewFiltersValue = DateViewFiltersValue;
 export type CreatedByViewFiltersValue = PersonViewFiltersValue;
 export type LastEditedTimeViewFiltersValue = DateViewFiltersValue;
@@ -169,7 +164,6 @@ export type TBasicViewFiltersValue =
 export type TAdvancedViewFiltersValue =
 	| FormulaViewFiltersValue
 	| RelationViewFiltersValue
-	| RollupViewFiltersValue
 	| CreatedTimeViewFiltersValue
 	| CreatedByViewFiltersValue
 	| LastEditedTimeViewFiltersValue
@@ -254,7 +248,7 @@ export type RelationViewFilters = IViewFilters<
 	RelationViewFiltersType,
 	RelationViewFiltersValue
 >;
-export type RollupViewFilters = NumberViewFilters;
+export type RollupViewFilters = TViewFilters;
 
 export type TBasicViewFilters =
 	| TextViewFilters
@@ -273,7 +267,6 @@ export type TBasicViewFilters =
 export type TAdvancedViewFilters =
 	| FormulaViewFilters
 	| RelationViewFilters
-	| RollupViewFilters
 	| CreatedTimeViewFilters
 	| CreatedByViewFilters
 	| LastEditedTimeViewFilters

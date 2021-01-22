@@ -1,17 +1,25 @@
 {
   "name": "@nishans/graphql",
   "version": "0.0.0",
-  "description": "A graphql server and client UI to make working with nishan a breeze",
+  "description": "A graphql server and client UI to make working with `@nishans/core` a breeze",
+  "keywords": [
+    "notion",
+    "notion-graphql",
+    "apollo-graphql-server",
+    "graphql"
+  ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Nishan-Open-Source/Nishan#readme",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/graphql/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",
@@ -19,10 +27,10 @@
   },
   "scripts": {},
   "bugs": {
-    "url": "https://github.com/Nishan-Open-Source/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fgraphql"
   },
   "dependencies": {
-    "@nishans/types": "0.0.1",
-    "@nishans/core": "0.0.1"
+    "@nishans/types": "0.0.11",
+    "@nishans/core": "0.0.12"
   }
 }

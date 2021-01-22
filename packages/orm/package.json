@@ -4,14 +4,22 @@
   "description": "A package to use notion as a database by providing an easy to use orm api",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan#readme",
+  "keywords": [
+    "notion",
+    "notion-dbaas",
+    "notion-orm",
+    "orm"
+  ],
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",
@@ -19,6 +27,6 @@
   },
   "scripts": {},
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Form"
   }
 }

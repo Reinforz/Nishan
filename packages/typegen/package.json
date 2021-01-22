@@ -3,16 +3,23 @@
   "version": "0.0.0",
   "description": "A package to automatically generate typescript definitions from a remote notion collection schema",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "keywords": [
+    "notion",
+    "notion-remote-schema",
+    "notion-typegen",
+    "typegen"
+  ],
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/typegen/README.md",
   "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",
@@ -20,6 +27,6 @@
   },
   "scripts": {},
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Ftypegen"
   }
 }

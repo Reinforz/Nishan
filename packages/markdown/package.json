@@ -8,7 +8,7 @@
     "markdown"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/tree/master/packages/markdown#README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -26,7 +26,7 @@
   },
   "scripts": {},
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fmarkdown"
   },
   "dependencies": {
     "@nishans/types": "^0.0.10",

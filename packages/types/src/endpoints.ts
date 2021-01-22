@@ -430,3 +430,39 @@ export interface SaveTransactionParams {
 	requestId: string;
 	transactions: Transaction[];
 }
+
+export interface GetJoinableSpacesResult {
+	results: {
+		id: string;
+		name: string;
+		canJoinSpace: boolean;
+		guestPageIds: string[];
+	}[];
+}
+
+export interface IsUserDomainJoinableResult {
+	isJoinable: boolean;
+}
+
+export interface IsEmailEducationResult {
+	isEligible: boolean;
+}
+
+export interface GetUserNotificationsParams {
+	size: number;
+}
+
+export interface GetUserNotificationsResult {
+	recordMap: Record<string, unknown>;
+	results: {
+		spaceId: string;
+		unread: {
+			mentions: number;
+			following: number;
+			nonMentions: number;
+		};
+		unreceived: {
+			notificationIds: string[];
+		};
+	}[];
+}

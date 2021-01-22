@@ -19,20 +19,25 @@ import {
 import { Configs, ConfigsWithoutUserid } from '../src';
 import { sendRequest } from './';
 
-export async function setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs: Configs) {
+export async function setPageNotificationsAsRead (
+	params: SetPageNotificationsAsReadParams,
+	configs: ConfigsWithoutUserid
+) {
 	await sendRequest('setPageNotificationsAsRead', params, configs);
 }
 
-export async function setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs: Configs) {
+export async function setSpaceNotificationsAsRead (
+	params: SetSpaceNotificationsAsReadParams,
+	configs: ConfigsWithoutUserid
+) {
 	await sendRequest('setSpaceNotificationsAsRead', params, configs);
 }
 
-export async function removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: Configs) {
+export async function removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: ConfigsWithoutUserid) {
 	return await sendRequest<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
 }
 
-// TD:1:H Check for data returned from request in devtools and create appropriate tds
-export async function inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: Configs) {
+export async function inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: ConfigsWithoutUserid) {
 	return await sendRequest('inviteGuestsToSpace', params, configs);
 }
 

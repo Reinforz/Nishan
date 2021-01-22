@@ -2,9 +2,9 @@ import axios from "axios";
 
 import Cache from "./Cache";
 
-import {SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
+import {GetUserNotificationsParams, SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserSharedPages, getUserTasks, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
+import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getJoinableSpaces, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserNotifications, getUserSharedPages, getUserTasks, isEmailEducation, isUserDomainJoinable, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -140,6 +140,22 @@ export default class Queries extends Cache {
     const data = await loadPageChunk(params, this.#getConfigs());
     this.saveToCache(data.recordMap)
     return data;
+  }
+
+  async getJoinableSpaces(){
+    return await getJoinableSpaces(this.#getConfigs());
+  }
+
+  async isUserDomainJoinable(){
+    return await isUserDomainJoinable(this.#getConfigs());
+  }
+
+  async isEmailEducation(){
+    return await isEmailEducation(this.#getConfigs())
+  }
+
+  async getUserNotifications(params: GetUserNotificationsParams){
+    return await getUserNotifications(params, this.#getConfigs())
   }
 
   // ? TD:2:H GetTaskResult interface

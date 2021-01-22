@@ -28,7 +28,12 @@ import {
 	LoadPageChunkResult,
 	GetSpacesResult,
 	GetBackLinksForBlockParams,
-	FindUserParams
+	FindUserParams,
+	GetJoinableSpacesResult,
+	IsUserDomainJoinableResult,
+	IsEmailEducationResult,
+	GetUserNotificationsResult,
+	GetUserNotificationsParams
 } from '@nishans/types';
 import { Configs, ConfigsWithoutUserid } from '../src';
 import { sendRequest } from './';
@@ -99,4 +104,21 @@ export async function loadUserContent (configs: ConfigsWithoutUserid) {
 
 export async function loadPageChunk (params: LoadPageChunkParams, configs: ConfigsWithoutUserid) {
 	return await sendRequest<LoadPageChunkResult>('loadPageChunk', params, configs);
+}
+
+// Test starts here
+export async function getJoinableSpaces (configs: Configs) {
+	return await sendRequest<GetJoinableSpacesResult>('getJoinableSpaces', {}, configs);
+}
+
+export async function isUserDomainJoinable (configs: Configs) {
+	return await sendRequest<IsUserDomainJoinableResult>('isUserDomainJoinable', {}, configs);
+}
+
+export async function isEmailEducation (configs: Configs) {
+	return await sendRequest<IsEmailEducationResult>('isEmailEducation', {}, configs);
+}
+
+export async function getUserNotifications (params: GetUserNotificationsParams, configs: Configs) {
+	return await sendRequest<GetUserNotificationsResult>('getUserNotifications', params, configs);
 }

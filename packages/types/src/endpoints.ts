@@ -58,14 +58,16 @@ export interface GetPageVisitsParams {
 
 export interface GetPageVisitsResult {
 	recordMap: {
-		page_visit: {
-			[key: string]: {
-				role: TPermissionRole;
-				value: IPageVisit;
-			};
-		};
+		page_visit: IPageVisitData;
 	};
 	pageVisits: IPageVisit[];
+}
+
+export interface IPageVisitData {
+	[key: string]: {
+		role: TPermissionRole;
+		value: IPageVisit;
+	};
 }
 
 export interface IPageVisit {
@@ -470,3 +472,10 @@ export interface GetUserNotificationsResult {
 export interface GetTasksParams {
 	taskIds: string[];
 }
+
+export interface RecordPageVisitParams {
+	blockId: string;
+	timestamp: number;
+}
+
+export type RecordPageVisitResult = GetPageVisitsResult;

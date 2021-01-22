@@ -1,8 +1,8 @@
 import Cache from "./Cache";
 
-import {GetTasksParams, GetUserNotificationsParams, SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
+import { RecordPageVisitParams, GetTasksParams, GetUserNotificationsParams, SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getJoinableSpaces, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getTasks, getUploadFileUrl, getUserNotifications, getUserSharedPages, getUserTasks, isEmailEducation, isUserDomainJoinable, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
+import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getJoinableSpaces, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getTasks, getUploadFileUrl, getUserNotifications, getUserSharedPages, getUserTasks, isEmailEducation, isUserDomainJoinable, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, recordPageVisit, syncRecordValues } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -140,6 +140,10 @@ export default class Queries extends Cache {
 
   async getTasks(params: GetTasksParams) {
     return await getTasks(params, this.#getConfigs())
+  }
+
+  async recordPageVisit(params: RecordPageVisitParams){
+    return await recordPageVisit(params, this.#getConfigs());
   }
 
   async updateCacheManually(arg: UpdateCacheManuallyParam | string) {

@@ -34,7 +34,9 @@ import {
 	IsEmailEducationResult,
 	GetUserNotificationsResult,
 	GetUserNotificationsParams,
-	GetTasksParams
+	GetTasksParams,
+	RecordPageVisitResult,
+	RecordPageVisitParams
 } from '@nishans/types';
 import { Configs } from '../src';
 import { sendRequest } from './';
@@ -105,6 +107,10 @@ export async function loadUserContent (configs: Configs) {
 
 export async function loadPageChunk (params: LoadPageChunkParams, configs: Configs) {
 	return await sendRequest<LoadPageChunkResult>('loadPageChunk', params, configs);
+}
+
+export async function recordPageVisit (params: RecordPageVisitParams, configs: Configs) {
+	return await sendRequest<RecordPageVisitResult>('recordPageVisit', params, configs);
 }
 
 // Test starts here

@@ -1,5 +1,20 @@
 import { TTextColor, TFormula } from '.';
 
+export type TNumberFormat =
+	| 'number'
+	| 'number_with_commas'
+	| 'percent'
+	| 'dollar'
+	| 'euro'
+	| 'pound'
+	| 'yen'
+	| 'ruble'
+	| 'rupee'
+	| 'won'
+	| 'yuan'
+	| 'real'
+	| 'lira'
+	| 'rupiah';
 export type TBasicSchemaUnitType =
 	| 'text'
 	| 'number'
@@ -45,6 +60,7 @@ export interface TextSchemaUnit extends ISchemaUnit {
 
 export interface NumberSchemaUnit extends ISchemaUnit {
 	type: 'number';
+	number_format?: TNumberFormat;
 }
 
 export interface SelectSchemaUnit extends ISchemaUnit {

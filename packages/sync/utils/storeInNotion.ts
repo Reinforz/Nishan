@@ -1,8 +1,8 @@
-import { IOperation, ISpace, LoadUserContentResult } from '@nishans/types';
+import { IOperation, ISpace, IUserPermission, LoadUserContentResult } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-import { createTransaction, Operations } from './';
+import { createTransaction } from './';
 import { LocalFileStructure } from '../src/types';
 
 export async function storeInNotion (
@@ -40,101 +40,126 @@ export async function storeInNotion (
 			shard_id,
 			version: 0
 		};
+		const editor_user_permission: IUserPermission = {
+			role: 'editor',
+			type: 'user_permission',
+			user_id
+		};
 		const { views, collection, row_pages, template_pages } = result_data;
 		const collection_block_id = uuidv4(),
 			collection_id = uuidv4(),
 			view_ids: string[] = [],
 			template_page_ids: string[] = [];
-		const collection_create_block_op = Operations.block.update(collection_block_id, [], {
+		const collection_create_block_op: IOperation = {
 			id: collection_block_id,
-			type: 'collection_view_page',
-			collection_id,
-			view_ids,
-			parent_id: space_id,
-			parent_table: 'space',
-			permissions: [
-				{
-					role: 'editor',
-					type: 'user_permission',
-					user_id
-				}
-			],
-			...metadata
-		});
+			path: [],
+			table: 'block',
+			args: {
+				id: collection_block_id,
+				type: 'collection_view_page',
+				collection_id,
+				view_ids,
+				parent_id: space_id,
+				parent_table: 'space',
+				permissions: [ editor_user_permission ],
+				...metadata
+			},
+			command: 'update'
+		};
 
 		const row_pages_create_op = row_pages.map((row_page) => {
 			const row_page_id = uuidv4();
-			return Operations.block.update(row_page_id, [], {
-				parent_id: collection_id,
-				parent_table: 'collection',
-				format: row_page.format,
-				content: [],
-				properties: row_page.properties,
-				type: 'page',
-				permissions: [
-					{
-						role: 'editor',
-						type: 'user_permission',
-						user_id
-					}
-				],
-				...metadata
-			});
+			return {
+				args: {
+					id: row_page_id,
+					parent_id: collection_id,
+					parent_table: 'collection',
+					format: row_page.format,
+					content: [],
+					properties: row_page.properties,
+					type: 'page',
+					permissions: [ editor_user_permission ],
+					...metadata
+				},
+				command: 'update',
+				path: [],
+				table: 'block',
+				id: row_page_id
+			} as IOperation;
 		});
 
 		const template_pages_create_op = template_pages.map((template_page) => {
 			const template_page_id = uuidv4();
 			template_page_ids.push(template_page_id);
-			return Operations.block.update(template_page_id, [], {
-				parent_id: collection_id,
-				parent_table: 'collection',
-				format: template_page.format,
-				content: [],
-				properties: template_page.properties,
-				type: 'page',
-				is_template: true,
-				permissions: [
-					{
-						role: 'editor',
-						type: 'user_permission',
-						user_id
-					}
-				],
-				...metadata
-			});
+			return {
+				args: {
+					id: template_page_id,
+					parent_id: collection_id,
+					parent_table: 'collection',
+					format: template_page.format,
+					content: [],
+					properties: template_page.properties,
+					type: 'page',
+					is_template: true,
+					permissions: [ editor_user_permission ],
+					...metadata
+				},
+				path: [],
+				command: 'update',
+				id: template_page_id,
+				table: 'block'
+			} as IOperation;
 		});
 
-		const collection_create_op = Operations.collection.update(collection_id, [], {
+		const collection_create_op: IOperation = {
+			args: {
+				id: collection_id,
+				parent_id: collection_block_id,
+				parent_table: 'block',
+				name: collection.name,
+				icon: collection.icon,
+				cover: collection.cover,
+				schema: collection.schema,
+				template_pages: template_page_ids,
+				...metadata
+			},
+			table: 'collection',
 			id: collection_id,
-			parent_id: collection_block_id,
-			parent_table: 'block',
-			name: collection.name,
-			icon: collection.icon,
-			cover: collection.cover,
-			schema: collection.schema,
-			template_pages: template_page_ids,
-			...metadata
-		});
+			command: 'update',
+			path: []
+		};
 
 		const views_create_ops = views.map((view) => {
 			const view_id = uuidv4();
 			view_ids.push(view_id);
-			return Operations.collection_view.update(view_id, [], {
-				id: view_id,
-				name: view.name,
-				type: view.type,
-				format: view.format,
-				query2: view.query2,
-				parent_table: 'block',
-				parent_id: collection_block_id,
-				...metadata
-			});
+			return {
+				args: {
+					id: view_id,
+					name: view.name,
+					type: view.type,
+					format: view.format,
+					query2: view.query2,
+					parent_table: 'block',
+					parent_id: collection_block_id,
+					...metadata
+				},
+				command: 'update',
+				path: [],
+				table: 'collection_view',
+				id: view_id
+			} as IOperation;
 		});
 
-		const space_after_op = Operations.space.listAfter(space_id, [ 'pages' ], {
-			after: '',
-			id: collection_block_id
-		});
+		const space_after_op: IOperation = {
+			args: {
+				after: '',
+				id: collection_block_id
+			},
+			path: [ 'pages' ],
+			table: 'space',
+			command: 'listAfter',
+			id: space_id
+		};
 
 		const operations: IOperation[] = [
 			collection_create_block_op,

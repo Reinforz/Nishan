@@ -1,4 +1,4 @@
-import { IOperation, Request } from '@nishans/types';
+import { IOperation, SaveTransactionParams } from '@nishans/types';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,5 +13,5 @@ export function createTransaction (shardId: number, spaceId: string, operations:
 				operations
 			}
 		]
-	} as Request;
+	} as SaveTransactionParams;
 }

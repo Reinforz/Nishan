@@ -1,4 +1,4 @@
-import { TTextColor, TFormula } from '.';
+import { TTextColor, TFormula, RollupViewAggregationsAggregator } from '.';
 
 export type TNumberFormat =
 	| 'number'
@@ -122,7 +122,7 @@ export interface RollupSchemaUnit extends ISchemaUnit {
 	relation_property: string;
 	target_property: string;
 	target_property_type: TSchemaUnitType;
-	aggregation: any;
+	aggregation?: RollupViewAggregationsAggregator;
 }
 
 export interface CreatedTimeSchemaUnit extends ISchemaUnit {

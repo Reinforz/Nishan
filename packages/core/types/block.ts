@@ -1,4 +1,4 @@
-import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, ILinkToPage, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings } from "@nishans/types";
+import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, ILinkToPage, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings, TTextFormat } from "@nishans/types";
 import { ElementType } from "./utils";
 import { TViewCreateInput } from "./view";
 import {TSchemaUnitInput} from "./schema"
@@ -12,7 +12,7 @@ export interface ICollectionBlockInput extends IInput {
   views: TViewCreateInput[],
   schema: TSchemaUnitInput[],
   properties: {
-    title: string[][]
+    title: TTextFormat
   },
   icon?: string;
   cover?: string;

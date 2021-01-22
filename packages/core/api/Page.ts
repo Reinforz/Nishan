@@ -1,5 +1,4 @@
 import { IPage, ISpace, ISpaceView, TExportType, TBlock, INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
-import axios from "axios";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, ITBlock, IPageCreateInput } from "../types";
 import { createBlockClass, createBlockMap, error, nestedContentPopulate, Operation } from "../utils";
@@ -86,27 +85,27 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     const {
       taskId
     } = await this.enqueueTask({
-      eventName: 'exportBlock',
-      request: {
-        blockId: data.id,
-        exportOptions: {
-          exportType,
-          locale: "en",
-          timeZone
-        },
-        recursive
+      task: {
+        eventName: 'exportBlock',
+        request: {
+          blockId: data.id,
+          exportOptions: {
+            exportType,
+            locale: "en",
+            timeZone
+          },
+          recursive
+        }
       }
     });
 
-    const {
-      results
-    } = await this.getTasks([taskId]);
+    await this.getTasks({taskIds: [taskId]});
 
-    const response = await axios.get(results[0].status.exportURL, {
+    /* const response = await axios.get(results[0].status.exportURL, {
       responseType: 'arraybuffer'
     });
 
-    return response.data;
+    return response.data; */
   }
 
   /**

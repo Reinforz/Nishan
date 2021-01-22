@@ -45,11 +45,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					})
 				);
 				await this.enqueueTask({
-					eventName: 'duplicateBlock',
-					request: {
-						sourceBlockId: data.id,
-						targetBlockId: block_id,
-						addCopyName: true
+					task: {
+						eventName: 'duplicateBlock',
+						request: {
+							sourceBlockId: data.id,
+							targetBlockId: block_id,
+							addCopyName: true
+						}
 					}
 				});
 				this.logger && this.logger('CREATE', 'block', block_id);

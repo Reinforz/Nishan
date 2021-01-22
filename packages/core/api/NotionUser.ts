@@ -80,7 +80,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({ name, icon });
+      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({initialUseCases: [], planType: "personal", name, icon });
       spaces.push(new Space({
         id: space_id,
         ...this.getProps()
@@ -208,9 +208,11 @@ class NotionUser extends Data<INotionUser> {
       manual: true
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
       await this.enqueueTask({
-        eventName: "deleteSpace",
-        request: {
-          spaceId
+        task: {
+          eventName: "deleteSpace",
+          request: {
+            spaceId
+          }
         }
       })
     });

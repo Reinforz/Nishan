@@ -21,7 +21,7 @@ export function getAggregationsMap(data: ITableView | IBoardView | ITimelineView
       schema_id: aggregation.property,
       ...schema_unit,
       aggregation
-    })
+    } as any)
   });
 
   return [aggregations_map, aggregations] as const;

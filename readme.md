@@ -28,9 +28,7 @@ This monorepo contains/will contain the following packages:-
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 
-Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
-
-Check out the [examples](https://github.com/Devorein/Nishan/tree/master/examples) folder for some examples that I personally use
+Each package has its own docs and examples folder.
 
 ## Contributors
 

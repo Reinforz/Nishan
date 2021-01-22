@@ -77,7 +77,10 @@ export type TViewAdvancedAggregationsAggregators =
 	| LastEditedTimeViewAggregationsAggregator
 	| LastEditedByViewAggregationsAggregator;
 
-export type TViewAggregationsAggregators = TViewBasicAggregationsAggregators | TViewAdvancedAggregationsAggregators;
+export type TViewAggregationsAggregators =
+	| 'show_unique'
+	| TViewBasicAggregationsAggregators
+	| TViewAdvancedAggregationsAggregators;
 
 export interface IViewAggregationsAggregators {
 	title: TitleViewAggregationsAggregator;

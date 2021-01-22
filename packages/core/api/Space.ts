@@ -64,10 +64,12 @@ export default class Space extends Data<ISpace> {
    */
   async delete() {
     await this.enqueueTask({
-      eventName: 'deleteSpace',
-      request:
-      {
-        spaceId: this.id
+      task: {
+        eventName: 'deleteSpace',
+        request:
+        {
+          spaceId: this.id
+        }
       }
     });
     this.logger && this.logger("DELETE", "space", this.id);

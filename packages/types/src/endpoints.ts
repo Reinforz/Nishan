@@ -1,6 +1,5 @@
 import {
 	TViewType,
-	TCredit,
 	TSchemaUnitType,
 	ViewSorts,
 	TPlanType,
@@ -16,7 +15,9 @@ import {
 	INotionUser,
 	TGenericEmbedBlockType,
 	MediaFormat,
-	IDrive
+	IDrive,
+	UnsubscribedSubscriptionData,
+	SubscribedSubscriptionData
 } from './';
 
 export interface GoogleDriveFileUser {
@@ -142,23 +143,7 @@ export interface IMember {
 	guestPageIds: string[];
 }
 
-export interface GetSubscriptionDataResult {
-	accountBalance: number;
-	availableCredit: number;
-	blockUsage: number;
-	bots: string[];
-	creditEnabled: boolean;
-	hasPaidNonzero: boolean;
-	isDelinquent: boolean;
-	isSubscribed: boolean;
-	joinedMemberIds: string[];
-	credits: TCredit[];
-	members: IMember[];
-	spaceUsers: string[];
-	timelineViewUsage: number;
-	totalCredit: number;
-	type: 'unsubscribed_admin';
-}
+export type GetSubscriptionDataResult = UnsubscribedSubscriptionData | SubscribedSubscriptionData;
 
 export interface RemoveUsersFromSpaceParams {
 	removePagePermissions: boolean;

@@ -66,7 +66,7 @@ export default class Mutations extends Queries {
 	}
 
 	async setBookmarkMetadata (arg: SetBookmarkMetadataParams) {
-    return await setBookmarkMetadata(arg, this.#getConfigs());
+    await setBookmarkMetadata(arg, this.#getConfigs());
   }
   
   async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {

@@ -413,7 +413,7 @@ export type TOperationTable =
 
 export interface Transaction {
 	id: string;
-	shardId: number;
+	shardId?: number;
 	spaceId: string;
 	operations: IOperation[];
 }

@@ -16,28 +16,22 @@ import {
 	InitializeGoogleDriveBlockResult
 } from '@nishans/types';
 
-import { Configs, ConfigsWithoutUserid } from '../src';
+import { Configs } from '../src';
 import { sendRequest } from './';
 
-export async function setPageNotificationsAsRead (
-	params: SetPageNotificationsAsReadParams,
-	configs: ConfigsWithoutUserid
-) {
+export async function setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs: Configs) {
 	await sendRequest('setPageNotificationsAsRead', params, configs);
 }
 
-export async function setSpaceNotificationsAsRead (
-	params: SetSpaceNotificationsAsReadParams,
-	configs: ConfigsWithoutUserid
-) {
+export async function setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs: Configs) {
 	await sendRequest('setSpaceNotificationsAsRead', params, configs);
 }
 
-export async function removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: ConfigsWithoutUserid) {
+export async function removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: Configs) {
 	return await sendRequest<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
 }
 
-export async function inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: ConfigsWithoutUserid) {
+export async function inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: Configs) {
 	return await sendRequest('inviteGuestsToSpace', params, configs);
 }
 
@@ -54,16 +48,13 @@ export async function enqueueTask (params: TEnqueueTaskParams, configs: Configs)
 }
 
 export async function setBookmarkMetadata (params: SetBookmarkMetadataParams, configs: Configs) {
-	return await sendRequest('setBookmarkMetadata', params, configs);
+	await sendRequest('setBookmarkMetadata', params, configs);
 }
 
 export async function initializePageTemplate (params: InitializePageTemplateParams, configs: Configs) {
 	return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
 }
 
-export async function initializeGoogleDriveBlock (
-	params: InitializeGoogleDriveBlockParams,
-	configs: ConfigsWithoutUserid
-) {
+export async function initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs: Configs) {
 	return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 }

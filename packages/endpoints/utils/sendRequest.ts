@@ -1,15 +1,15 @@
 import axios from "axios";
 
-import { Configs, ConfigsWithoutUserid } from "../src";
+import { Configs } from "../src";
 
 const BASE_NOTION_URL = "https://www.notion.so/api/v3"
 
-export const sendRequest = <T>(url: string, arg: any, configs: Configs | ConfigsWithoutUserid): Promise<T> => {
+export const sendRequest = <T>(url: string, arg: any, configs: Configs): Promise<T> => {
   const {token, interval} = configs;
   const headers = {
     headers: {
-      cookie: `token_v2=${token}; notion_user_id=${(configs as Configs).user_id ?? ''};`,
-      ["x-notion-active-user-header"]: (configs as Configs).user_id ?? ''
+      cookie: `token_v2=${token}; notion_user_id=${configs.user_id ?? ''};`,
+      ["x-notion-active-user-header"]: configs.user_id ?? ''
     }
   }
 

@@ -36,14 +36,14 @@ import {
 	GetUserNotificationsParams,
 	GetTasksParams
 } from '@nishans/types';
-import { Configs, ConfigsWithoutUserid } from '../src';
+import { Configs } from '../src';
 import { sendRequest } from './';
 
-export async function getPageVisits (params: GetPageVisitsParams, configs: ConfigsWithoutUserid) {
+export async function getPageVisits (params: GetPageVisitsParams, configs: Configs) {
 	return await sendRequest<GetPageVisitsResult>('getPageVisits', params, configs);
 }
 
-export async function getUserSharedPages (params: GetUserSharedPagesParams, configs: ConfigsWithoutUserid) {
+export async function getUserSharedPages (params: GetUserSharedPagesParams, configs: Configs) {
 	return await sendRequest<GetUserSharedPagesResult>('getUserSharedPages', params, configs);
 }
 
@@ -51,59 +51,59 @@ export async function getUserTasks (configs: Configs) {
 	return await sendRequest<GetUserTasksResult>('getUserTasks', {}, configs);
 }
 
-export async function getPublicPageData (params: GetPublicPageDataParams, configs: ConfigsWithoutUserid) {
+export async function getPublicPageData (params: GetPublicPageDataParams, configs: Configs) {
 	return await sendRequest<GetPublicPageDataResult>('getPublicPageData', params, configs);
 }
 
-export async function getPublicSpaceData (params: GetPublicSpaceDataParams, configs: ConfigsWithoutUserid) {
+export async function getPublicSpaceData (params: GetPublicSpaceDataParams, configs: Configs) {
 	return await sendRequest<GetPublicSpaceDataResult>('getPublicSpaceData', params, configs);
 }
 
-export async function getSubscriptionData (params: GetSubscriptionDataParams, configs: ConfigsWithoutUserid) {
+export async function getSubscriptionData (params: GetSubscriptionDataParams, configs: Configs) {
 	return await sendRequest<GetSubscriptionDataResult>('getSubscriptionData', params, configs);
 }
 
-export async function loadBlockSubtree (params: LoadBlockSubtreeParams, configs: ConfigsWithoutUserid) {
+export async function loadBlockSubtree (params: LoadBlockSubtreeParams, configs: Configs) {
 	return await sendRequest<LoadBlockSubtreeResult>('loadBlockSubtree', params, configs);
 }
 
-export async function getSpaces (configs: ConfigsWithoutUserid) {
+export async function getSpaces (configs: Configs) {
 	return await sendRequest<GetSpacesResult>('getSpaces', {}, configs);
 }
 
-export async function getGenericEmbedBlockData (params: GetGenericEmbedBlockDataParams, configs: ConfigsWithoutUserid) {
+export async function getGenericEmbedBlockData (params: GetGenericEmbedBlockDataParams, configs: Configs) {
 	return await sendRequest<GetGenericEmbedBlockDataResult>('getGenericEmbedBlockData', params, configs);
 }
 
-export async function getUploadFileUrl (params: GetUploadFileUrlParams, configs: ConfigsWithoutUserid) {
+export async function getUploadFileUrl (params: GetUploadFileUrlParams, configs: Configs) {
 	return await sendRequest<GetUploadFileUrlResult>('getUploadFileUrl', params, configs);
 }
 
-export async function getGoogleDriveAccounts (configs: ConfigsWithoutUserid) {
+export async function getGoogleDriveAccounts (configs: Configs) {
 	return await sendRequest<GetGoogleDriveAccountsResult>('getGoogleDriveAccounts', {}, configs);
 }
 
-export async function getBacklinksForBlock (params: GetBackLinksForBlockParams, configs: ConfigsWithoutUserid) {
+export async function getBacklinksForBlock (params: GetBackLinksForBlockParams, configs: Configs) {
 	return await sendRequest<GetBackLinksForBlockResult>('getBacklinksForBlock', params, configs);
 }
 
-export async function findUser (params: FindUserParams, configs: ConfigsWithoutUserid) {
+export async function findUser (params: FindUserParams, configs: Configs) {
 	return await sendRequest<FindUserResult>('findUser', params, configs);
 }
 
-export async function syncRecordValues (params: SyncRecordValuesParams, configs: ConfigsWithoutUserid) {
+export async function syncRecordValues (params: SyncRecordValuesParams, configs: Configs) {
 	return await sendRequest<SyncRecordValuesResult>('syncRecordValues', params, configs);
 }
 
-export async function queryCollection (params: QueryCollectionParams, configs: ConfigsWithoutUserid) {
+export async function queryCollection (params: QueryCollectionParams, configs: Configs) {
 	return await sendRequest<QueryCollectionResult>('queryCollection', params, configs);
 }
 
-export async function loadUserContent (configs: ConfigsWithoutUserid) {
+export async function loadUserContent (configs: Configs) {
 	return await sendRequest<LoadUserContentResult>('loadUserContent', {}, configs);
 }
 
-export async function loadPageChunk (params: LoadPageChunkParams, configs: ConfigsWithoutUserid) {
+export async function loadPageChunk (params: LoadPageChunkParams, configs: Configs) {
 	return await sendRequest<LoadPageChunkResult>('loadPageChunk', params, configs);
 }
 

@@ -41,11 +41,6 @@ export interface NotionHeaders {
 
 export interface Configs {
 	token: string;
-	user_id: string;
-	interval?: number;
-}
-
-export interface ConfigsWithoutUserid {
-	token: string;
+	user_id?: string;
 	interval?: number;
 }

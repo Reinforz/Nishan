@@ -7,7 +7,7 @@ import {
 	CreateSpaceParams,
 	CreateSpaceResult,
 	SaveTransactionParams,
-	TEnqueueTaskParams,
+	EnqueueTaskParams,
 	EnqueueTaskResult,
 	SetBookmarkMetadataParams,
 	InitializePageTemplateResult,
@@ -43,7 +43,7 @@ export async function saveTransactions (params: SaveTransactionParams, configs: 
 	await sendRequest('saveTransactions', params, configs);
 }
 
-export async function enqueueTask (params: TEnqueueTaskParams, configs: Configs) {
+export async function enqueueTask (params: EnqueueTaskParams, configs: Configs) {
 	return await sendRequest<EnqueueTaskResult>('enqueueTask', params, configs);
 }
 

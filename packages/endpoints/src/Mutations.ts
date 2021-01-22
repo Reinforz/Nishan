@@ -5,7 +5,7 @@ import {
 	RemoveUsersFromSpaceParams,
 	InviteGuestsToSpaceParams,
 	CreateSpaceParams,
-	TEnqueueTaskParams,
+	EnqueueTaskParams,
 	SetBookmarkMetadataParams,
 	SaveTransactionParams,
   InitializeGoogleDriveBlockParams,
@@ -61,7 +61,7 @@ export default class Mutations extends Queries {
     return await saveTransactions(this.createTransaction(Operations), this.#getConfigs());
 	}
 
-	async enqueueTask (params: TEnqueueTaskParams) {
+	async enqueueTask (params: EnqueueTaskParams) {
     return await enqueueTask(params, this.#getConfigs());
 	}
 

@@ -35,6 +35,7 @@ import {
 	GetUserNotificationsResult,
 	GetUserNotificationsParams,
 	GetTasksParams,
+	GetTasksResult,
 	RecordPageVisitResult,
 	RecordPageVisitParams
 } from '@nishans/types';
@@ -113,7 +114,6 @@ export async function recordPageVisit (params: RecordPageVisitParams, configs: C
 	return await sendRequest<RecordPageVisitResult>('recordPageVisit', params, configs);
 }
 
-// Test starts here
 export async function getJoinableSpaces (configs: Configs) {
 	return await sendRequest<GetJoinableSpacesResult>('getJoinableSpaces', {}, configs);
 }
@@ -130,7 +130,6 @@ export async function getUserNotifications (params: GetUserNotificationsParams, 
 	return await sendRequest<GetUserNotificationsResult>('getUserNotifications', params, configs);
 }
 
-// ? TD:2:H GetTaskResult interface
 export async function getTasks (params: GetTasksParams, configs: Configs) {
-	return await sendRequest('getTasks', params, configs);
+	return await sendRequest<GetTasksResult>('getTasks', params, configs);
 }

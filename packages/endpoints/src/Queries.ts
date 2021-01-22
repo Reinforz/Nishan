@@ -1,10 +1,8 @@
-import axios from "axios";
-
 import Cache from "./Cache";
 
-import {GetUserNotificationsParams, SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
+import {GetTasksParams, GetUserNotificationsParams, SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getJoinableSpaces, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserNotifications, getUserSharedPages, getUserTasks, isEmailEducation, isUserDomainJoinable, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
+import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getJoinableSpaces, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getTasks, getUploadFileUrl, getUserNotifications, getUserSharedPages, getUserTasks, isEmailEducation, isUserDomainJoinable, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -19,7 +17,6 @@ export default class Queries extends Cache {
       ["x-notion-active-user-header"]: string
     }
   };
-  BASE_NOTION_URL = "https://www.notion.so/api/v3";
   user_id: string;
 
   constructor({ token, interval, user_id, cache }: Omit<CtorArgs, "shard_id" | "space_id">) {
@@ -33,23 +30,6 @@ export default class Queries extends Cache {
       }
     };
     this.user_id = user_id;
-  }
-
-  returnPromise = <T>(url: string, arg?: any, keyToCache?: keyof T, interval?:number): Promise<T> => {
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        try {
-          const { data } = await axios.post<T>(
-            `${this.BASE_NOTION_URL}/${url}`,
-            arg ?? {},
-            this.headers
-          );
-          resolve(data)
-        } catch (err) {
-          reject(err.response.data)
-        }
-      }, interval ?? this.interval)
-    });
   }
 
   #getConfigs = (): Configs => {
@@ -158,11 +138,8 @@ export default class Queries extends Cache {
     return await getUserNotifications(params, this.#getConfigs())
   }
 
-  // ? TD:2:H GetTaskResult interface
-  async getTasks(taskIds: string[]) {
-    return this.returnPromise<any>("getTasks", {
-      taskIds
-    });
+  async getTasks(params: GetTasksParams) {
+    return await getTasks(params, this.#getConfigs())
   }
 
   async updateCacheManually(arg: UpdateCacheManuallyParam | string) {

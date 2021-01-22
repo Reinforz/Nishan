@@ -466,3 +466,7 @@ export interface GetUserNotificationsResult {
 		};
 	}[];
 }
+
+export interface GetTasksParams {
+	taskIds: string[];
+}

@@ -33,7 +33,8 @@ import {
 	IsUserDomainJoinableResult,
 	IsEmailEducationResult,
 	GetUserNotificationsResult,
-	GetUserNotificationsParams
+	GetUserNotificationsParams,
+	GetTasksParams
 } from '@nishans/types';
 import { Configs, ConfigsWithoutUserid } from '../src';
 import { sendRequest } from './';
@@ -121,4 +122,9 @@ export async function isEmailEducation (configs: Configs) {
 
 export async function getUserNotifications (params: GetUserNotificationsParams, configs: Configs) {
 	return await sendRequest<GetUserNotificationsResult>('getUserNotifications', params, configs);
+}
+
+// ? TD:2:H GetTaskResult interface
+export async function getTasks (params: GetTasksParams, configs: Configs) {
+	return await sendRequest('getTasks', params, configs);
 }

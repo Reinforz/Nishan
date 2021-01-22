@@ -1,4 +1,4 @@
-import { TTextColor } from '@nishans/core';
+import { TTextColor } from '@nishans/types';
 
 import { TEcosystem } from './ecosystem';
 import { TCategory } from './category';

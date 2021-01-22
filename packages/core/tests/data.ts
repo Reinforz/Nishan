@@ -1,4 +1,4 @@
-import { LoadUserContentResult } from '../dist/Nishan';
+import { LoadUserContentResult } from '@nishans/types';
 
 export default {
 	recordMap: {

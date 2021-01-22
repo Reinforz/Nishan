@@ -1,14 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import '../env';
-import {
-	DateViewFiltersValue,
-	FormulaSchemaUnitInput,
-	Page,
-	RelationSchemaUnit,
-	RollupSchemaUnit,
-	TSchemaUnitInput,
-	TViewCreateInput
-} from '@nishans/core';
+import { DateViewFiltersValue, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
+
+import { FormulaSchemaUnitInput, Page, TSchemaUnitInput, TViewCreateInput } from '../../Nishan';
 
 import { status, purpose, subject, source } from '../data';
 import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';

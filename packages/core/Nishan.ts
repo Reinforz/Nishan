@@ -118,6 +118,4 @@ class Nishan extends Cache {
 export default Nishan;
 export * from "./api";
 export * from "./types";
-export * from "@nishans/types";
-export * from "@nishans/endpoints";
 export * from "./utils";

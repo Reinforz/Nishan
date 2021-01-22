@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ILinkedDBInput, IPageCreateInput, TViewCreateInput, CollectionViewPage, Page } from '@nishans/core';
+import { ILinkedDBInput, IPageCreateInput, TViewCreateInput, CollectionViewPage, Page } from '../../Nishan';
 import '../env';
 import { ecosystems, categories, subject } from '../data';
 import { CommonMultiSelectSchema,status_phase_combos } from '../util';

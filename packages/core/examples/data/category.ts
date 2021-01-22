@@ -1,4 +1,4 @@
-import { TTextColor } from "../../packages/core/dist/Nishan";
+import { TTextColor } from "@nishans/types";
 import { ElementType } from "./utils";
 
 const category = [

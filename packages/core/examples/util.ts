@@ -5,7 +5,7 @@ import {
 	TNumberResultType,
 	TSchemaUnitInput,
 	TViewSchemaUnitsCreateInput
-} from '@nishans/core';
+} from '../Nishan';
 import { status, phase, priority, subject } from './data';
 import { v4 as uuidv4 } from 'uuid';
 

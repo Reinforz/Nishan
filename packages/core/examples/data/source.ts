@@ -1,4 +1,4 @@
-import { SelectOption } from '../../packages/core/dist/Nishan';
+import { SelectOption } from '@nishans/types';
 
 export default [
 	{

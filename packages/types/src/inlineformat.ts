@@ -25,4 +25,4 @@ export type InlineFormat =
 	| InlineEquationFormat
 	| InlinePageFormat;
 
-export type TTextFormat = [string, InlineFormat] | [string];
+export type TTextFormat = Array<[string, Array<InlineFormat>] | [string]>;

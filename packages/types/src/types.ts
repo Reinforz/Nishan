@@ -1,21 +1,8 @@
-import {
-	ISpace,
-	ISpaceView,
-	INotionUser,
-	IUserSettings,
-	IUserRoot,
-	RecordMap,
-	ICollection,
-	ICollectionViewPage,
-	IPage,
-	TBlock,
-	TView
-} from '.';
+import { ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap, ICollection, TBlock, TView } from '.';
 
-export type Args = any /* string | { value: ValueArg } | { schema: Schema } | string[][] | number */;
+export type Args = any;
 
 export type TLocale = 'en-US' | 'ko-KR';
-export type TPage = IPage | ICollectionViewPage;
 export type TCodeLanguage =
 	| 'ABAP'
 	| 'Arduino'
@@ -87,7 +74,6 @@ export type TCodeLanguage =
 	| 'YAML';
 export type TDataType = keyof RecordMap;
 export type TPlanType = 'personal';
-export type TCollectionViewBlock = 'collection_view' | 'collection_view_page';
 export type TSortValue = 'ascending' | 'descending';
 
 export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | IUserRoot | IUserSettings;

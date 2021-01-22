@@ -1,4 +1,4 @@
-import { ISpace, TFormatBlockColor, TCodeLanguage, Schema, IPermission } from '.';
+import { ISpace, TFormatBlockColor, TCodeLanguage, Schema, IPermission, TTextFormat } from '.';
 
 export interface Node {
 	alive: boolean;
@@ -81,8 +81,8 @@ export interface WebBookmarkFormat {
 
 export interface WebBookmarkProps {
 	link: string[][];
-	description: string[][];
-	title: string[][];
+	description: TTextFormat;
+	title: TTextFormat;
 	caption?: string[][];
 }
 
@@ -91,12 +91,12 @@ export interface CodeFormat {
 }
 
 export interface CodeProps {
-	title: string[][];
+	title: TTextFormat;
 	language: TCodeLanguage;
 }
 
 export interface FileProps {
-	title: string[][];
+	title: TTextFormat;
 	source: string[][];
 	caption?: string[][];
 }
@@ -106,7 +106,7 @@ export interface FileFormat {
 }
 
 export interface TodoProps {
-	title: string[][];
+	title: TTextFormat;
 	checked: ('Yes' | 'No')[][];
 }
 
@@ -120,7 +120,7 @@ export interface IMedia {
 
 export interface ICommonText {
 	properties: {
-		title: string[][];
+		title: TTextFormat;
 	};
 	format?: {
 		block_color?: TFormatBlockColor;
@@ -156,8 +156,8 @@ export type TMediaBlock = IVideo | IAudio | IImage | IWebBookmark | ICode | IFil
 
 // Basic IBlock Types
 export interface PageProps {
-	title: string[][];
-	[k: string]: string[][];
+	title: TTextFormat;
+	[k: string]: TTextFormat;
 }
 
 export interface PageFormat {
@@ -297,7 +297,7 @@ export interface ITOC extends IBlock {
 export interface IEquation extends IBlock {
 	type: 'equation';
 	properties: {
-		title: string[][];
+		title: TTextFormat;
 	};
 	format?: {
 		block_color?: TFormatBlockColor;
@@ -312,7 +312,7 @@ export interface IBreadcrumb extends IBlock {
 export interface IFactory extends IBlock {
 	type: 'factory';
 	properties: {
-		title: string[][];
+		title: TTextFormat;
 	};
 	format?: {
 		block_color?: TFormatBlockColor;
@@ -394,11 +394,13 @@ export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock | 
 export type TParentType = IPage | ISpace | ICollectionViewPage;
 
 export interface ICollection extends Node, ParentProps {
-	description?: string[][];
+	description?: TTextFormat;
 	icon?: string;
 	cover?: string;
 	migrated: boolean;
-	name: string[][];
+	name: TTextFormat;
 	schema: Schema;
 	template_pages?: string[];
 }
+
+export type TPage = IPage | ICollectionViewPage;

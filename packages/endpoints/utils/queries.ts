@@ -10,8 +10,6 @@ import {
 	GetPublicSpaceDataResult,
 	GetSubscriptionDataParams,
 	GetSubscriptionDataResult,
-	InitializePageTemplateParams,
-	InitializePageTemplateResult,
 	LoadBlockSubtreeParams,
 	LoadBlockSubtreeResult,
 	GetGenericEmbedBlockDataParams,
@@ -19,8 +17,6 @@ import {
 	GetUploadFileUrlParams,
 	GetUploadFileUrlResult,
 	GetGoogleDriveAccountsResult,
-	InitializeGoogleDriveBlockParams,
-	InitializeGoogleDriveBlockResult,
 	GetBackLinksForBlockResult,
 	FindUserResult,
 	SyncRecordValuesParams,
@@ -30,7 +26,6 @@ import {
 	LoadUserContentResult,
 	LoadPageChunkParams,
 	LoadPageChunkResult,
-	TDataType,
 	GetSpacesResult,
 	GetBackLinksForBlockParams,
 	FindUserParams
@@ -62,11 +57,6 @@ export async function getSubscriptionData (params: GetSubscriptionDataParams, co
 	return await sendRequest<GetSubscriptionDataResult>('getSubscriptionData', params, configs);
 }
 
-// ? RF:1:E Goes to mutation
-export async function initializePageTemplate (params: InitializePageTemplateParams, configs: Configs) {
-	return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
-}
-
 export async function loadBlockSubtree (params: LoadBlockSubtreeParams, configs: ConfigsWithoutUserid) {
 	return await sendRequest<LoadBlockSubtreeResult>('loadBlockSubtree', params, configs);
 }
@@ -85,14 +75,6 @@ export async function getUploadFileUrl (params: GetUploadFileUrlParams, configs:
 
 export async function getGoogleDriveAccounts (configs: ConfigsWithoutUserid) {
 	return await sendRequest<GetGoogleDriveAccountsResult>('getGoogleDriveAccounts', {}, configs);
-}
-
-// Goes to mutation
-export async function initializeGoogleDriveBlock (
-	params: InitializeGoogleDriveBlockParams,
-	configs: ConfigsWithoutUserid
-) {
-	return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 }
 
 export async function getBacklinksForBlock (params: GetBackLinksForBlockParams, configs: ConfigsWithoutUserid) {

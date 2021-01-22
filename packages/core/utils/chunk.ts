@@ -1,4 +1,4 @@
-import { Args, IOperation, TOperationCommand, TOperationTable } from '@nishans/types';
+import { Args, IOperation, TOperationCommand, TDataType } from '@nishans/types';
 
 const tables = [
 	'space',
@@ -6,11 +6,10 @@ const tables = [
 	'collection',
 	'block',
 	'collection_view',
-	'collection_view_page',
 	'notion_user',
 	'user_settings',
 	'user_root'
-] as TOperationTable[];
+] as TDataType[];
 
 const commands = [
 	'setPermissionItem',
@@ -22,7 +21,7 @@ const commands = [
 ] as TOperationCommand[];
 
 const Operations: Record<
-	TOperationTable,
+	TDataType,
 	Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>
 > = {} as any;
 

@@ -2,9 +2,9 @@ import axios from "axios";
 
 import Cache from "./Cache";
 
-import {SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetPageVisitsResult, GetUserSharedPagesParams, GetUserSharedPagesResult, GetUserTasksResult, GetPublicPageDataParams, GetPublicPageDataResult, GetPublicSpaceDataParams, GetPublicSpaceDataResult, GetSubscriptionDataParams, GetSubscriptionDataResult, InitializePageTemplateParams, InitializePageTemplateResult, LoadBlockSubtreeParams, LoadBlockSubtreeResult, GetSpacesResult, GetGenericEmbedBlockDataParams, GetGenericEmbedBlockDataResult, GetUploadFileUrlParams, GetUploadFileUrlResult, GetGoogleDriveAccountsResult, InitializeGoogleDriveBlockParams, InitializeGoogleDriveBlockResult, GetBackLinksForBlockResult, FindUserResult, SyncRecordValuesParams, SyncRecordValuesResult, QueryCollectionParams, QueryCollectionResult, LoadUserContentResult, LoadPageChunkParams, LoadPageChunkResult, TDataType, FindUserParams } from "@nishans/types";
+import {SyncRecordValues, GetPageVisitsParams, GetBackLinksForBlockParams, GetUserSharedPagesParams, GetPublicPageDataParams, GetPublicSpaceDataParams, GetSubscriptionDataParams, LoadBlockSubtreeParams, GetGenericEmbedBlockDataParams, GetUploadFileUrlParams, SyncRecordValuesParams, QueryCollectionParams, LoadPageChunkParams, TDataType, FindUserParams } from "@nishans/types";
 import { Configs, CtorArgs, UpdateCacheManuallyParam } from "./types";
-import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserSharedPages, getUserTasks, initializeGoogleDriveBlock, initializePageTemplate, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
+import { findUser, getBacklinksForBlock, getGenericEmbedBlockData, getGoogleDriveAccounts, getPageVisits, getPublicPageData, getPublicSpaceData, getSpaces, getSubscriptionData, getUploadFileUrl, getUserSharedPages, getUserTasks, loadBlockSubtree, loadPageChunk, loadUserContent, queryCollection, syncRecordValues } from "../utils";
 
 /**
  * A class containing all the api endpoints of Notion
@@ -84,13 +84,6 @@ export default class Queries extends Cache {
     return await getSubscriptionData(arg, this.#getConfigs())
   }
 
-  // ! FIX:1:M Doesnot work
-  async initializePageTemplate(arg: InitializePageTemplateParams) {
-    const data = await initializePageTemplate(arg, this.#getConfigs());
-    this.saveToCache(data.recordMap);
-    return data;
-  }
-
   async loadBlockSubtree(arg: LoadBlockSubtreeParams) {
     const data = await loadBlockSubtree(arg, this.#getConfigs());
     this.saveToCache(data.subtreeRecordMap);
@@ -115,13 +108,6 @@ export default class Queries extends Cache {
     return await getGoogleDriveAccounts(this.#getConfigs());
   }
 
-  async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
-    const data = await initializeGoogleDriveBlock(arg, this.#getConfigs());
-    this.saveToCache(data.recordMap.block)
-    return data;
-  }
-
-  // ? Goes to mutation
   async getBacklinksForBlock(params: GetBackLinksForBlockParams) {
     const data = await getBacklinksForBlock(params, this.#getConfigs());
     this.saveToCache(data.recordMap)

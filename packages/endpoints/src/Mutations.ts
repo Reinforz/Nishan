@@ -7,10 +7,12 @@ import {
 	CreateSpaceParams,
 	TEnqueueTaskParams,
 	SetBookmarkMetadataParams,
-	SaveTransactionParams
+	SaveTransactionParams,
+  InitializeGoogleDriveBlockParams,
+  InitializePageTemplateParams
 } from '@nishans/types';
 import { CtorArgs, Configs } from './types';
-import { createSpace, createTransaction, enqueueTask, inviteGuestsToSpace, removeUsersFromSpace, saveTransactions, setBookmarkMetadata, setPageNotificationsAsRead, setSpaceNotificationsAsRead } from '../utils';
+import { createSpace, createTransaction, enqueueTask, initializeGoogleDriveBlock, initializePageTemplate, inviteGuestsToSpace, removeUsersFromSpace, saveTransactions, setBookmarkMetadata, setPageNotificationsAsRead, setSpaceNotificationsAsRead } from '../utils';
 import Queries from './Queries';
 
 export default class Mutations extends Queries {
@@ -65,5 +67,17 @@ export default class Mutations extends Queries {
 
 	async setBookmarkMetadata (arg: SetBookmarkMetadataParams) {
     return await setBookmarkMetadata(arg, this.#getConfigs());
-	}
+  }
+  
+  async initializeGoogleDriveBlock(arg: InitializeGoogleDriveBlockParams) {
+    const data = await initializeGoogleDriveBlock(arg, this.#getConfigs());
+    this.saveToCache(data.recordMap.block)
+    return data;
+  }
+
+  async initializePageTemplate(arg: InitializePageTemplateParams) {
+    const data = await initializePageTemplate(arg, this.#getConfigs());
+    this.saveToCache(data.recordMap);
+    return data;
+  }
 }

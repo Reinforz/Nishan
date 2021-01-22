@@ -1,5 +1,4 @@
 import {
-	IOperation,
 	SetPageNotificationsAsReadParams,
 	SetSpaceNotificationsAsReadParams,
 	RemoveUsersFromSpaceParams,
@@ -10,7 +9,11 @@ import {
 	SaveTransactionParams,
 	TEnqueueTaskParams,
 	EnqueueTaskResult,
-	SetBookmarkMetadataParams
+	SetBookmarkMetadataParams,
+	InitializePageTemplateResult,
+	InitializePageTemplateParams,
+	InitializeGoogleDriveBlockParams,
+	InitializeGoogleDriveBlockResult
 } from '@nishans/types';
 
 import { Configs, ConfigsWithoutUserid } from '../src';
@@ -47,4 +50,15 @@ export async function enqueueTask (params: TEnqueueTaskParams, configs: Configs)
 
 export async function setBookmarkMetadata (params: SetBookmarkMetadataParams, configs: Configs) {
 	return await sendRequest('setBookmarkMetadata', params, configs);
+}
+
+export async function initializePageTemplate (params: InitializePageTemplateParams, configs: Configs) {
+	return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
+}
+
+export async function initializeGoogleDriveBlock (
+	params: InitializeGoogleDriveBlockParams,
+	configs: ConfigsWithoutUserid
+) {
+	return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 }

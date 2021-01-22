@@ -12,7 +12,8 @@
   "author": "Devon Reid <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-web/README.md",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"

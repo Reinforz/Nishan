@@ -40,4 +40,4 @@ export interface IDateRange extends Date {
 	end_date: string;
 }
 
-export type InlineDateArg = IDate | IDateTime | IDateTimeRange | IDateRange;
+export type InlineDate = IDate | IDateTime | IDateTimeRange | IDateRange;

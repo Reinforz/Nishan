@@ -1,141 +1,127 @@
-import { InlineDateArg, TFormatBlockColor } from '@nishans/types';
+import { InlineDate, InlineFormat, TFormatBlockColor, TTextFormat } from '@nishans/types';
 
-export function inlineDate (arg: InlineDateArg) {
-	const text: [[string, any[][]]] = [ [ '‣', [ [ 'd', arg ] ] ] ];
+export function inlineDate (arg: InlineDate) {
+	const text: TTextFormat = [ [ '‣', [ [ 'd', arg ] ] ] ];
 	return {
 		text,
 		add (title: string) {
-			text.push([ title, [ [ '' ] ] ]);
+			text.push([ title, [  ] ]);
 			return new InlineTextFormatter(text);
 		}
 	};
 }
 
 export function inlineMention (id: string) {
-	const mod_title: [[string, string[][]]] = [ [ '‣', [ [ 'u', id ] ] ] ];
+	const mod_title: TTextFormat = [ [ '‣', [ [ 'u', id ] ] ] ];
 	return new InlineTextFormatter(mod_title);
 }
 
 export function inlinePage (id: string) {
-	const mod_title: [[string, string[][]]] = [ [ '‣', [ [ 'p', id ] ] ] ];
+	const mod_title: TTextFormat = [ [ '‣', [ [ 'p', id ] ] ] ];
 	return new InlineTextFormatter(mod_title);
 }
 
 export function inlineEquation (equation: string) {
-	const mod_title: [[string, string[][]]] = [ [ '⁍', [ [ 'e', equation ] ] ] ];
+	const mod_title: TTextFormat = [ [ '⁍', [ [ 'e', equation ] ] ] ];
 	return new InlineTextFormatter(mod_title);
 }
 
 export class HighlightColors {
-	text: [[string, string[][]]];
+	text: TTextFormat;
 
-	constructor (text?: [[string, string[][]]]) {
-		this.text = (text ?? []) as any;
-	}
+	constructor (text?: TTextFormat) {
+		this.text = (text ?? []);
+  }
+  
+  protected pushToLast(format: InlineFormat){
+    if(!this.text[this.text.length - 1][1]) this.text[this.text.length - 1][1] = [format];
+    else this.text[this.text.length - 1][1]?.push(format)
+    return new InlineTextFormatter(this.text);
+  }
 
 	get default () {
-		this.text[this.text.length - 1][1].push([ 'h', 'default' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'default'])
 	}
 
 	get gray () {
-		this.text[this.text.length - 1][1].push([ 'h', 'gray' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'gray'])
 	}
 
 	get brown () {
-		this.text[this.text.length - 1][1].push([ 'h', 'brown' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'brown'])
 	}
 
 	get orange () {
-		this.text[this.text.length - 1][1].push([ 'h', 'orange' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'orange'])
 	}
 
 	get yellow () {
-		this.text[this.text.length - 1][1].push([ 'h', 'yellow' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'yellow'])
 	}
 
 	get teal () {
-		this.text[this.text.length - 1][1].push([ 'h', 'teal' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'teal' as any])
 	}
 
 	get blue () {
-		this.text[this.text.length - 1][1].push([ 'h', 'blue' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'blue'])
 	}
 
 	get purple () {
-		this.text[this.text.length - 1][1].push([ 'h', 'purple' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'purple'])
 	}
 
 	get pink () {
-		this.text[this.text.length - 1][1].push([ 'h', 'pink' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'pink'])
 	}
 
 	get red () {
-		this.text[this.text.length - 1][1].push([ 'h', 'red' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'red'])
 	}
 
 	get defaultbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'default_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'default_background'])
 	}
 
 	get graybg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'gray_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'gray_background'])
 	}
 
 	get brownbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'brown_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'brown_background'])
 	}
 
 	get orangebg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'orange_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'orange_background'])
 	}
 
 	get yellowbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'yellow_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'yellow_background'])
 	}
 
 	get tealbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'teal_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'teal_background'])
 	}
 
 	get bluebg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'blue_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'blue_background'])
 	}
 
 	get purplebg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'purple_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'purple_background'])
 	}
 
 	get pinkbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'pink_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'pink_background'])
 	}
 
 	get redbg () {
-		this.text[this.text.length - 1][1].push([ 'h', 'red_background' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', 'red_background'])
 	}
 }
 
 export class InlineTextFormatter extends HighlightColors {
-	constructor (text?: [[string, string[][]]]) {
+	constructor (text?: TTextFormat) {
 		super(text);
 	}
 
@@ -145,38 +131,31 @@ export class InlineTextFormatter extends HighlightColors {
 	}
 
 	get strikeThrough () {
-		this.text[this.text.length - 1][1].push([ 's' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['s']);
 	}
 
 	get code () {
-		this.text[this.text.length - 1][1].push([ 'c' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['c']);
 	}
 
 	get bold () {
-		this.text[this.text.length - 1][1].push([ 'b' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['b']);
 	}
 
 	get italic () {
-		this.text[this.text.length - 1][1].push([ 'i' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['i']);
 	}
 
 	get underline () {
-		this.text[this.text.length - 1][1].push([ '_' ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['_']);
 	}
 
 	highlight (color: TFormatBlockColor) {
-		this.text[this.text.length - 1][1].push([ 'h', color ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['h', color]);
 	}
 
 	linkTo (url: string) {
-		this.text[this.text.length - 1][1].push([ 'a', url ]);
-		return new InlineTextFormatter(this.text);
+    return this.pushToLast(['a', url]);
 	}
 }
 

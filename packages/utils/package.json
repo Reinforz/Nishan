@@ -1,6 +1,6 @@
 {
   "name": "@nishans/utils",
-  "version": "0.0.4",
+  "version": "0.0.12",
   "description": "Utility package to make working with @nishans/core easier",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/utils/README.md",
@@ -23,6 +23,6 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Futils"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.11"
+    "@nishans/types": "0.0.12"
   }
 }

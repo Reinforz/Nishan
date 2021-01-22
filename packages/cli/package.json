@@ -1,9 +1,15 @@
 {
   "name": "@nishans/cli",
   "version": "0.0.0",
-  "description": "A package to interact with the nishan api from the terminal",
+  "description": "A package to interact with `@nishans/core` from the terminal",
+  "keywords": [
+    "notion",
+    "notion-cli",
+    "notion-terminal",
+    "cli"
+  ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan#readme",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/cli/README.md",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -12,7 +18,8 @@
     "test": "tests"
   },
   "files": [
-    "dist"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",
@@ -20,7 +27,7 @@
   },
   "scripts": {},
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcli"
   },
   "dependencies": {
     "@nishans/core": "latest"

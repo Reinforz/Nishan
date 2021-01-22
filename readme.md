@@ -24,6 +24,7 @@ This monorepo contains/will contain the following packages:-
 9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) - [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
 10. [@nishans/react-filters](https://github.com/Devorein/Nishan/tree/master/packages/react-filters): A react component that emulates notions advanced filter
 11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown): A package to upload markdown content into notion
+12. [@nishans/markdown-web](https://github.com/Devorein/Nishan/tree/master/packages/markdown-web): A react powered web app to upload markdown content as notion pages
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

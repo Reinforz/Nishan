@@ -3,7 +3,7 @@ import { BlockData, SpaceData, RecordMap, INotionUser } from './recordMap';
 import { TGenericEmbedBlockType, MediaFormat, IDrive } from './block';
 import { IViewFilter } from './filter';
 import { TPermissionRole, IPermission } from './permissions';
-import { TPlanType, GoogleDriveFile, TOperationTable, Cursor, TViewType } from './types';
+import { TPlanType, GoogleDriveFile, TOperationTable, Cursor, TViewType, TOperationCommand, TDataType } from './types';
 import { ViewSorts } from './view';
 import { TCredit } from './credit';
 import { TSchemaUnitType } from './schema';
@@ -346,4 +346,24 @@ export interface GetBackLinksForBlockResult {
 
 export interface GetUserTasksResult {
 	taskIds: string[];
+}
+
+export interface Transaction {
+	id: string;
+	shardId: number;
+	spaceId: string;
+	operations: IOperation[];
+}
+
+export interface IOperation {
+	table: TDataType;
+	id: string;
+	command: TOperationCommand;
+	path: string[];
+	args: any;
+}
+
+export interface SaveTransactionParams {
+	requestId: string;
+	transactions: Transaction[];
 }

@@ -10,16 +10,16 @@ import {
 	TEnqueueTaskParams,
 	EnqueueTaskResult,
 	SetBookmarkMetadataParams,
-	Request
+	SaveTransactionParams
 } from '@nishans/types';
-import { CtorArgs } from './types';
-import { createTransaction } from '../utils';
+import { CtorArgs, Configs } from './types';
+import { createSpace, createTransaction, enqueueTask, inviteGuestsToSpace, removeUsersFromSpace, saveTransactions, setBookmarkMetadata, setPageNotificationsAsRead, setSpaceNotificationsAsRead } from '../utils';
 import Queries from './Queries';
 
 export default class Mutations extends Queries {
 	space_id: string;
 	shard_id: number;
-	createTransaction: (operations: IOperation[]) => Request;
+	createTransaction: (operations: IOperation[]) => SaveTransactionParams;
 
 	constructor ({ cache, token, interval, user_id, shard_id, space_id }: CtorArgs) {
 		super({ token, interval, user_id, cache });
@@ -28,45 +28,45 @@ export default class Mutations extends Queries {
 		this.createTransaction = createTransaction.bind(this, shard_id, space_id);
 	}
 
+  #getConfigs = (): Configs => {
+    return {
+      token: this.token,
+      user_id: this.user_id,
+      interval: this.interval
+    }
+  }
+
 	async setPageNotificationsAsRead (arg: SetPageNotificationsAsReadParams) {
-		return this.returnPromise('setPageNotificationsAsRead', arg);
+    return setPageNotificationsAsRead(arg, this.#getConfigs())
 	}
 
 	async setSpaceNotificationsAsRead (arg: SetSpaceNotificationsAsReadParams) {
-		return this.returnPromise('setSpaceNotificationsAsRead', arg);
+    return setSpaceNotificationsAsRead(arg, this.#getConfigs());
 	}
 
 	async removeUsersFromSpace (arg: RemoveUsersFromSpaceParams) {
-		return this.returnPromise<RemoveUsersFromSpaceResult>('removeUsersFromSpace', arg, 'recordMap');
+    const data = await removeUsersFromSpace(arg, this.#getConfigs());
+    this.saveToCache(data.recordMap);
+    return data;
 	}
 
 	async inviteGuestsToSpace (arg: InviteGuestsToSpaceParams) {
-		return this.returnPromise('inviteGuestsToSpace', arg);
+    return inviteGuestsToSpace(arg, this.#getConfigs());
 	}
 
-	async createSpace (arg: Partial<CreateSpaceParams>): Promise<CreateSpaceResult> {
-		return this.returnPromise<CreateSpaceResult>(
-			'createSpace',
-			{
-				...arg,
-				planType: 'personal',
-				initialUseCases: []
-			},
-			'recordMap'
-		);
+	async createSpace (arg: CreateSpaceParams) {
+    return await createSpace(arg, this.#getConfigs());
 	}
 
 	async saveTransactions (Operations: IOperation[]) {
-		return this.returnPromise('saveTransactions', this.createTransaction(Operations));
+    return await saveTransactions(this.createTransaction(Operations), this.#getConfigs());
 	}
 
-	// ? TD:2:M Add task typedef
-	// ? TD:2:M Add EnqueueTaskResult interface
-	async enqueueTask (task: TEnqueueTaskParams) {
-		return this.returnPromise<EnqueueTaskResult>('enqueueTask', task);
+	async enqueueTask (params: TEnqueueTaskParams) {
+    return await enqueueTask(params, this.#getConfigs());
 	}
 
 	async setBookmarkMetadata (arg: SetBookmarkMetadataParams) {
-		return this.returnPromise('setBookmarkMetadata', arg);
+    return await setBookmarkMetadata(arg, this.#getConfigs());
 	}
 }

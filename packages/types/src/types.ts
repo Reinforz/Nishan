@@ -142,26 +142,6 @@ export interface ValueArg {
 	color: string;
 }
 
-export interface Request {
-	requestId: string;
-	transactions: Transaction[];
-}
-
-export interface Transaction {
-	id: string;
-	shardId: number;
-	spaceId: string;
-	operations: IOperation[];
-}
-
-export interface IOperation {
-	table: TOperationTable;
-	id: string;
-	command: TOperationCommand;
-	path: string[];
-	args: Args;
-}
-
 export interface Node {
 	alive: boolean;
 	version: number;
@@ -201,9 +181,5 @@ export interface Stack {
 	index: number;
 	table: 'block';
 }
-
-/* Api endpoint result */
-
-/* Nishan Specific */
 
 export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | IUserRoot | IUserSettings;

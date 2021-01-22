@@ -1,0 +1,32 @@
+{
+  "name": "markdown-web",
+  "version": "0.0.0",
+  "description": "A react powered web app to upload markdown content as notion pages",
+  "keywords": [
+    "notion",
+    "notion-react-web",
+    "notion-markdown",
+    "notion-markdown-web"
+  ],
+  "author": "Devon Reid <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-web/README.md",
+  "license": "MIT",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

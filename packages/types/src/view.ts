@@ -1,4 +1,7 @@
-import { ParentProps, TViewFormatCover, Node, IViewFilter, ViewAggregations } from './';
+import { ParentProps, Node, IViewFilter, ViewAggregations } from './';
+
+export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
+export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property'; property: string };
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 export type TViewUpdateInput = Partial<TView>;

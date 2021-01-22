@@ -3,12 +3,9 @@ import {
 	SetPageNotificationsAsReadParams,
 	SetSpaceNotificationsAsReadParams,
 	RemoveUsersFromSpaceParams,
-	RemoveUsersFromSpaceResult,
 	InviteGuestsToSpaceParams,
 	CreateSpaceParams,
-	CreateSpaceResult,
 	TEnqueueTaskParams,
-	EnqueueTaskResult,
 	SetBookmarkMetadataParams,
 	SaveTransactionParams
 } from '@nishans/types';

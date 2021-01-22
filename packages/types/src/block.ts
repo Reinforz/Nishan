@@ -1,16 +1,34 @@
-import {
-	ISpace,
-	TFormatBlockColor,
-	TCodeLanguage,
-	IBlock,
-	LastEditedProps,
-	Schema,
-	IPermission,
-	Node,
-	ParentProps,
-	CreateProps,
-	SpaceShardProps
-} from '.';
+import { ISpace, TFormatBlockColor, TCodeLanguage, Schema, IPermission } from '.';
+
+export interface Node {
+	alive: boolean;
+	version: number;
+	id: string;
+}
+
+export interface ParentProps {
+	parent_id: string;
+	parent_table: 'block' | 'space' | 'user_root' | 'collection';
+}
+
+export interface CreateProps {
+	created_by_id: string;
+	created_by_table: 'notion_user';
+	created_time: number;
+}
+
+export interface LastEditedProps {
+	last_edited_by_id: string;
+	last_edited_by_table: 'notion_user';
+	last_edited_time: number;
+}
+
+export interface SpaceShardProps {
+	shard_id: number;
+	space_id: string;
+}
+
+export interface IBlock extends SpaceShardProps, Node, ParentProps, CreateProps, LastEditedProps {}
 
 export type TGenericEmbedBlockType = 'figma' | 'tweet' | 'codepen' | 'gist' | 'maps';
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';

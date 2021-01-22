@@ -1,12 +1,44 @@
-import { TViewAggregationsAggregators, ViewAggregations } from './aggregator';
-import { BlockData, SpaceData, RecordMap, INotionUser } from './recordMap';
-import { TGenericEmbedBlockType, MediaFormat, IDrive } from './block';
-import { IViewFilter } from './filter';
-import { TPermissionRole, IPermission } from './permissions';
-import { TPlanType, GoogleDriveFile, TOperationTable, Cursor, TViewType, TOperationCommand, TDataType } from './types';
-import { ViewSorts } from './view';
-import { TCredit } from './credit';
-import { TSchemaUnitType } from './schema';
+import {
+	TViewType,
+	TCredit,
+	TSchemaUnitType,
+	ViewSorts,
+	TPlanType,
+	TDataType,
+	TPermissionRole,
+	IPermission,
+	IViewFilter,
+	TViewAggregationsAggregators,
+	ViewAggregations,
+	BlockData,
+	SpaceData,
+	RecordMap,
+	INotionUser,
+	TGenericEmbedBlockType,
+	MediaFormat,
+	IDrive
+} from './';
+
+export interface GoogleDriveFileUser {
+	displayName: string;
+	emailAddress: string;
+	kind: 'drive#user';
+	me: boolean;
+	permissionId: string;
+	photoLink: string;
+}
+
+export interface GoogleDriveFile {
+	iconLink: string;
+	id: string;
+	lastModifyingUser: GoogleDriveFileUser;
+	mimeType: string;
+	modifiedTime: string;
+	name: string;
+	thumbnailVersion: '0';
+	trashed: boolean;
+	webViewLink: string;
+}
 
 export interface SetPageNotificationsAsReadParams {
 	navigableBlockId: string;
@@ -325,6 +357,16 @@ export interface SyncRecordValuesResult {
 	recordMap: RecordMap;
 }
 
+export interface Cursor {
+	stack: Stack[][];
+}
+
+export interface Stack {
+	id: string;
+	index: number;
+	table: 'block';
+}
+
 export interface LoadPageChunkParams {
 	chunkNumber: number;
 	cursor: Cursor;
@@ -347,6 +389,27 @@ export interface GetBackLinksForBlockResult {
 export interface GetUserTasksResult {
 	taskIds: string[];
 }
+
+export type TOperationCommand =
+	| 'set'
+	| 'update'
+	| 'keyedObjectListAfter'
+	| 'keyedObjectListUpdate'
+	| 'listAfter'
+	| 'listRemove'
+	| 'listBefore'
+	| 'setPermissionItem';
+export type TOperationTable =
+	| 'space'
+	| 'collection_view'
+	| 'collection'
+	| 'collection_view_page'
+	| 'page'
+	| 'block'
+	| 'space_view'
+	| 'notion_user'
+	| 'user_settings'
+	| 'user_root';
 
 export interface Transaction {
 	id: string;

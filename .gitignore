@@ -2,13 +2,14 @@
 **/feature.md
 **/dist
 /docs/.docusaurus
-/docs/docs/api
 .netlify
 /docs/build
 **/env.ts
 **/*.tgz
 **/experiment
 **/coverage
-# OSX files
 .DS_Store
 **/*.eslintcache
+docs/sidebars/
+docs/docs/
+!docs/docs/Introduction

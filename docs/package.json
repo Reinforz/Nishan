@@ -5,6 +5,7 @@
     "swizzle": "docusaurus swizzle",
     "deploy": "npm run build && netlify deploy --prod"
   },
+  "license": "MIT",
   "dependencies": {
     "@docusaurus/core": "2.0.0-alpha.66",
     "@docusaurus/preset-classic": "2.0.0-alpha.66",

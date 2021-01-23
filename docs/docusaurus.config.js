@@ -73,26 +73,5 @@ module.exports = {
 				}
 			}
 		]
-	],
-	plugins: [
-		[
-			'docusaurus-plugin-typedoc',
-			{
-				inputFiles: [ path.resolve(__dirname, '../Nishan.ts') ],
-				tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-				sidebar: {
-					sidebarFile: './typedoc-sidebars.js',
-					fullNames: false
-				},
-				mode: 'modules',
-				target: `ESNext`,
-				disableOutputCheck: true,
-				excludeExternals: true,
-				excludePrivate: true,
-				excludeProtected: true,
-				ignoreCompilerErrors: false,
-				plugin: [ 'typedoc-plugin-no-inherit' ]
-			}
-		]
 	]
 };

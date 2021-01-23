@@ -28,16 +28,14 @@ This monorepo contains/will contain the following packages:-
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 
-Each package has its own docs and examples folder, please feel free to examine them to learn more about each one.
+Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
+
+Each package has its own examples folder, please feel free to examine them to learn more about each one.
 
 ## Contributors
 
 1. Safwan Shaheer [github](https://github.com/Devorein) Author, Maintainer
 2. Matt Casey [github](https://github.com/mattcasey) Contributor
-
-## NOTE
-
-1. The documentation still needs a lot of work, please stay patient as I am trying my best.
 
 ## How to contribute
 

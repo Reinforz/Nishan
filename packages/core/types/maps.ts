@@ -61,7 +61,7 @@ import {
 	CalendarView,
 	Block,
 	CollectionView
-} from '../api';
+} from '../src';
 import {
 	IEmbedInput,
 	IVideoInput,

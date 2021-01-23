@@ -1,3 +1,4 @@
+import './env';
 import workflow1 from './workflow_1';
 import workflow2 from './workflow_2';
 import workflow3 from './workflow_3';

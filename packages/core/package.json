@@ -10,16 +10,15 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
   "license": "MIT",
-  "main": "dist/Nishan.js",
-  "typings": "dist/Nishan.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
-    "lib": "api",
+    "lib": "src",
     "test": "tests"
   },
   "files": [
-    "dist/api",
+    "dist/src",
     "dist/utils",
-    "dist/Nishan.*",
     "dist/types"
   ],
   "repository": {

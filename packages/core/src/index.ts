@@ -1,11 +1,26 @@
+import Block from "./Block";
+import Collection from "./Collection";
+import CollectionViewPage from "./CollectionViewPage";
+import CollectionView from "./CollectionView";
+import NotionUser from "./NotionUser";
+import Page from "./Page";
+import UserSettings from "./UserSettings";
+import UserRoot from "./UserRoot";
+import SpaceView from "./SpaceView";
+import Space from "./Space";
+import SchemaUnit from "./SchemaUnit";
+import Operations from "./Operations";
+import CollectionBlock from "./CollectionBlock";
+
+export * from "./View";
+
 import axios from "axios";
 import colors from "colors";
 import {Cache} from "@nishans/endpoints"
 
-import NotionUser from "./api/NotionUser";
-import { error } from "./utils/logs";
+import { error } from "../utils/logs";
 import { GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishans/types";
-import {Logger, NishanArg,FilterType, FilterTypes} from "./types";
+import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends Cache {
   token: string;
@@ -14,7 +29,7 @@ class Nishan extends Cache {
   logger: Logger;
 
   constructor(arg: Pick<NishanArg, "token"> & { interval?: number, logger?: Logger }) {
-    super();
+    super(arg);
     this.token = arg.token;
     this.interval = arg.interval || 500;
     this.init_cache = false;
@@ -116,6 +131,21 @@ class Nishan extends Cache {
 }
 
 export default Nishan;
-export * from "./api";
-export * from "./types";
-export * from "./utils";
+export * from "../types";
+export * from "../utils";
+
+export {
+  Block,
+  Collection,
+  CollectionViewPage,
+  CollectionView,
+  NotionUser,
+  Page,
+  UserSettings,
+  UserRoot,
+  SpaceView,
+  Space,
+  SchemaUnit,
+  Operations,
+  CollectionBlock
+}

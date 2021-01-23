@@ -21,7 +21,7 @@
     "experimentalDecorators": true
   },
   "include": [
-    "./Nishan.ts",
+    "./src/index.ts",
     "./experiment",
     "./examples"
   ],

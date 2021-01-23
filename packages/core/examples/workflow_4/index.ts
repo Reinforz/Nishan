@@ -1,6 +1,6 @@
-import { CollectionViewPage, Page, TBlockInput } from '../../Nishan';
-import '../env';
 import { v4 as uuidv4 } from 'uuid';
+
+import { CollectionViewPage, Page, TBlockInput } from '../../src';
 import { goalViewItem, CommonMultiSelectSchema } from '../util';
 
 const months = [

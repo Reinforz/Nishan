@@ -20,8 +20,7 @@
     "dist/api",
     "dist/utils",
     "dist/Nishan.*",
-    "dist/types/*.d.ts",
-    "dist/types/*.js"
+    "dist/types"
   ],
   "repository": {
     "type": "git",

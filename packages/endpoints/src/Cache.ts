@@ -1,5 +1,5 @@
 import { RecordMap, SyncRecordValues, TDataType } from '@nishans/types';
-import { syncRecordValues } from '../src';
+import { getSpaces, syncRecordValues } from '../src';
 import { Configs, CtorArgs, ICache, UpdateCacheManuallyParam } from './types';
 
 export default class Cache {
@@ -61,7 +61,23 @@ export default class Cache {
 		return ids.filter(
 			(info) => !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
 		);
-	}
+  }
+  
+  async initializeCache(){
+    const data = await getSpaces({token: this.token}); 
+    const external_notion_users: Set<string> = new Set();
+    Object.values(data).forEach(recordMap => {
+      Object.values(recordMap.space).forEach(space => space.value.permissions.forEach(permission =>
+        permission.user_id && external_notion_users.add(permission.user_id)
+      ))
+      this.saveToCache(recordMap)
+    });
+
+    const { recordMap } = await syncRecordValues({
+      requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
+    }, {token: this.token});
+    this.saveToCache(recordMap);
+  }
 
 	async updateCacheManually (arg: UpdateCacheManuallyParam | string) {
 		const sync_record_values: SyncRecordValues[] = [];

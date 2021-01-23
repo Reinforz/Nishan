@@ -1,4 +1,4 @@
-import { NotionUser } from "../dist/Nishan";
+import { NotionUser } from "../dist/src";
 import {USER_ONE_ID, nishan} from "./constants"
 
 function checkUser(user: NotionUser, status?: boolean){

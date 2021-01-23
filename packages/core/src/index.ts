@@ -1,3 +1,8 @@
+import axios from "axios";
+import colors from "colors";
+import {syncRecordValues, Cache, getSpaces} from "@nishans/endpoints"
+import { INotionUser, SyncRecordValuesResult } from "@nishans/types";
+
 import Block from "./Block";
 import Collection from "./Collection";
 import CollectionViewPage from "./CollectionViewPage";
@@ -11,15 +16,8 @@ import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
-
 export * from "./View";
-
-import axios from "axios";
-import colors from "colors";
-import {Cache} from "@nishans/endpoints"
-
 import { error } from "../utils/logs";
-import { GetSpacesResult, INotionUser, SyncRecordValuesResult } from "@nishans/types";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends Cache {
@@ -41,36 +39,7 @@ class Nishan extends Cache {
   #initializeCache = async () => {
     if (!this.init_cache) {
       try {
-        const {data} = await axios.post<GetSpacesResult>(
-          'https://www.notion.so/api/v3/getSpaces',
-          {},
-          {
-            headers: {
-              cookie: `token_v2=${this.token};`
-            }
-          }
-        );
-        
-        const external_notion_users: Set<string> = new Set();
-        Object.values(data).forEach(data => {
-          Object.values(data.space).forEach(space => space.value.permissions.forEach(permission =>
-            permission.user_id && external_notion_users.add(permission.user_id)
-          ))
-          this.saveToCache(data)
-        });
-
-        const { data: { recordMap } } = await axios.post<SyncRecordValuesResult>(
-          `https://www.notion.so/api/v3/syncRecordValues`,
-          {
-            requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
-          },
-          {
-            headers: {
-              cookie: `token_v2=${this.token}`
-            }
-          }
-        )
-        this.saveToCache(recordMap);
+        await this.initializeCache();
         this.init_cache = true;
       } catch (err) {
         console.log(err)

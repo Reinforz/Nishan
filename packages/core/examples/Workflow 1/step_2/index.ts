@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DateViewFiltersValue, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
 
-import { FormulaSchemaUnitInput, Page, TSchemaUnitInput, TViewCreateInput } from '../../src';
+import { FormulaSchemaUnitInput, Page, TSchemaUnitInput, TViewCreateInput } from '../../../src';
 import { status, purpose, subject, source } from '../data';
 import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';
 
@@ -113,7 +113,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 	};
 };
 
-export default async function workflow2 (target_page: Page) {
+export default async function step2 (target_page: Page) {
 	const goals_collection_id = uuidv4(),
 		goals_cvp_id = uuidv4(),
 		tasks_collection_id = uuidv4(),

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { ILinkedDBInput, IPageCreateInput, TViewCreateInput, CollectionViewPage, Page } from '../../src';
+import { ILinkedDBInput, IPageCreateInput, TViewCreateInput, CollectionViewPage, Page } from '../../../src';
 import { ecosystems, categories, subject } from '../data';
 import { CommonMultiSelectSchema,status_phase_combos } from '../util';
 
@@ -77,7 +77,7 @@ function createLinkedDB(collection_id: string, cvp: 'EBooks' | 'Courses', title:
   } as ILinkedDBInput;
 }
 
-export default async function workflow3(target_page: Page) {
+export default async function step3(target_page: Page) {
   const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
   const getCollectionId = (title: string) => (collection_view_page.get(title) as CollectionViewPage).getCachedData().collection_id;
 

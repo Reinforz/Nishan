@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { CollectionViewPage, Page, TBlockInput } from '../../src';
+import { CollectionViewPage, Page, TBlockInput } from '../../../src';
 import { goalViewItem, CommonMultiSelectSchema } from '../util';
 
 const months = [
@@ -18,7 +18,7 @@ const months = [
   ['December', 30]
 ] as [string, number][];
 
-export default async function workflow4(target_page: Page) {
+export default async function step4(target_page: Page) {
 
   const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
   const getCollectionId = (title: string) =>

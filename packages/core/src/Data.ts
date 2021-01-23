@@ -1,15 +1,15 @@
-import { TDataType, TData, TBlock, ISpace, IUserRoot, ICollection, ISpaceView } from '@nishans/types';
+import { TDataType, TData } from '@nishans/types';
 import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '../types';
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
 import colors from "colors";
-import { queryCollection, UpdateCacheManuallyParam } from '@nishans/endpoints';
 
 interface IterateOptions<T>{
   child_type: TDataType,
   child_ids: string[] | keyof T,
   multiple?: boolean,
 }
+
 interface IterateAndGetOptions<T, C> extends IterateOptions<T>{
   container: C
 }

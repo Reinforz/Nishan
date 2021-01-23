@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 export async function nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, props: Omit<NishanArg,"id">, this_id: string) {
   const block_map = createBlockMap();
 
-  const CollectionView = require("../api/CollectionView").default;
-  const CollectionViewPage = require('../api/CollectionViewPage').default;
-  const Block = require('../api/Block').default;
+  const CollectionView = require("../src/CollectionView").default;
+  const CollectionViewPage = require('../src/CollectionViewPage').default;
+  const Block = require('../src/Block').default;
 
   const metadata = {
     created_time: Date.now(),

@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import {CheckboxSchemaUnit} from "@nishans/types";
 
-import Nishan, { Page, TViewCreateInput, TViewSchemaUnitsCreateInput } from '../../src';
+import Nishan, { Page, TViewCreateInput, TViewSchemaUnitsCreateInput } from '../../../src';
 import { priority, difficulty } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
 
-import '../env';
+import '../../env';
 
 const daily_sites = [
 	'Github',
@@ -21,7 +21,7 @@ const daily_sites = [
 	'Stackshare'
 ];
 
-export default async function workflow1(user_family_name: string, space_name: string) {
+export default async function step1(user_family_name: string, space_name: string) {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
   });

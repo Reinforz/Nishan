@@ -5,7 +5,7 @@ import { populateFilters } from "./populateFilters";
 
 export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: Omit<NishanArg, "id">, current_id?: string) {
   const name_map: Map<string, { schema_id: string } & TSchemaUnit> = new Map(), view_ids: string[] = [], view_map = createViewMap();
-  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../api/View/index");
+  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
   Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { schema_id, ...schema }));

@@ -1,5 +1,5 @@
-import { RecordMap, SyncRecordValues, TDataType } from '@nishans/types';
-import { getSpaces, syncRecordValues } from '../src';
+import { ICollection, ISpace, ISpaceView, IUserRoot, RecordMap, SyncRecordValues, TBlock, TDataType } from '@nishans/types';
+import { getSpaces, queryCollection, syncRecordValues } from '../src';
 import { Configs, CtorArgs, ICache, UpdateCacheManuallyParam } from './types';
 
 export default class Cache {
@@ -75,7 +75,7 @@ export default class Cache {
 
     const { recordMap } = await syncRecordValues({
       requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
-    }, {token: this.token});
+    }, {token: this.token, interval: 0});
     this.saveToCache(recordMap);
   }
 
@@ -88,7 +88,7 @@ export default class Cache {
 			});
     else if (typeof arg === 'string') sync_record_values.push({ id: arg, table: 'block', version: 0 });
     if (sync_record_values.length){
-      const data = await syncRecordValues({ requests: sync_record_values }, this.getConfigs());
+      const data = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(data.recordMap);
     }
 	}
@@ -102,8 +102,60 @@ export default class Cache {
 				sync_record_values.push({ id: arg, table: 'block', version: 0 });
 		});
 		if (sync_record_values.length) {
-      const data = await syncRecordValues({ requests: sync_record_values }, this.getConfigs());
+      const data = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(data.recordMap);
     }
-	}
+  }
+  
+  async initializeCacheForSpecificData(id: string, type: TDataType){
+    const container: UpdateCacheManuallyParam = [], data = this.cache[type].get(id);
+    if (type === "block") {
+      const temp_data = data as TBlock;
+      if (temp_data.type === "page")
+        container.push(...temp_data.content);
+      if (temp_data.type === "collection_view" || temp_data.type === "collection_view_page") {
+        temp_data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
+        container.push([temp_data.collection_id, "collection"])
+      }
+    } else if (type === "space") {
+      const temp_data = data as ISpace;
+      container.push(...temp_data.pages);
+      temp_data.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
+    } else if (type === "user_root")
+      (data as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"]))) ?? []
+    else if (type === "collection") {
+      container.push(...((data as ICollection).template_pages ?? []))
+      const {recordMap} = await queryCollection({
+        collectionId: id,
+        collectionViewId: "",
+        query: {},
+        loader: {
+          type: "table",
+          loadContentCover: true
+        }
+      }, this.getConfigs())
+      this.saveToCache(recordMap);
+    }
+    else if (type === "space_view")
+      container.push(...(data as ISpaceView).bookmarked_pages ?? [])
+
+    const non_cached = this.returnNonCachedData(container)
+    await this.updateCacheManually(non_cached);
+
+    // If the block is a page, for all the collection block contents, fetch the collection attached with it as well
+    if(type === "block"){
+      const temp_data = data as TBlock;
+      if(temp_data.type === "page"){
+        const collection_blocks_ids: UpdateCacheManuallyParam = [];
+        for (let index = 0; index < temp_data.content.length; index++) {
+          const content_id = temp_data.content[index];
+          const content = this.cache.block.get(content_id)
+          if(content && (content.type === "collection_view_page" || content.type === "collection_view"))
+            collection_blocks_ids.push([content.collection_id, "collection"])
+        }
+        const non_cached = this.returnNonCachedData(collection_blocks_ids)
+        await this.updateCacheManually(non_cached);
+      }
+    }
+  }
 }

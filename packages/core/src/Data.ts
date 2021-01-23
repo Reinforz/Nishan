@@ -108,64 +108,15 @@ export default class Data<T extends TData> extends Operations {
       );
   }
 
-  protected async initializeCacheForSpecificData() {
+  protected async initializeCacheForThisData() {
     if (!this.init_cache) {
-      const container: UpdateCacheManuallyParam = []
-      if (this.type === "block") {
-        const data = this.getCachedData() as TBlock;
-        if (data.type === "page")
-          container.push(...data.content);
-        if (data.type === "collection_view" || data.type === "collection_view_page") {
-          data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
-          container.push([data.collection_id, "collection"])
-        }
-      } else if (this.type === "space") {
-        const space = this.getCachedData() as ISpace;
-        container.push(...space.pages);
-        space.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
-      } else if (this.type === "user_root")
-        (this.getCachedData() as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"]))) ?? []
-      else if (this.type === "collection") {
-        container.push(...((this.getCachedData() as ICollection).template_pages ?? []))
-        const data = await queryCollection({
-          collectionId: this.id,
-          collectionViewId: "",
-          query: {},
-          loader: {
-            type: "table",
-            loadContentCover: true
-          }
-        }, this.getConfigs())
-        this.saveToCache(data.recordMap);
-      }
-      else if (this.type === "space_view")
-        container.push(...(this.getCachedData() as ISpaceView).bookmarked_pages ?? [])
-
-      const non_cached = this.returnNonCachedData(container)
-      await this.updateCacheManually(non_cached);
-
-      // If the block is a page, for all the collection block contents, fetch the collection attached with it as well
-      if(this.type === "block"){
-        const data = this.getCachedData() as TBlock;
-        if(data.type === "page"){
-          const collection_blocks_ids: UpdateCacheManuallyParam = [];
-          for (let index = 0; index < data.content.length; index++) {
-            const content_id = data.content[index];
-            const content = this.cache.block.get(content_id)
-            if(content && (content.type === "collection_view_page" || content.type === "collection_view"))
-              collection_blocks_ids.push([content.collection_id, "collection"])
-          }
-          const non_cached = this.returnNonCachedData(collection_blocks_ids)
-          await this.updateCacheManually(non_cached);
-        }
-      }
-
+      await this.initializeCacheForSpecificData(this.id, this.type)
       this.init_cache = true;
     }
   }
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
-    await this.initializeCacheForSpecificData()
+    await this.initializeCacheForThisData()
     return  await iterateAndDeleteChildren<T, TD>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
@@ -175,7 +126,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD, C = any>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
-    await this.initializeCacheForSpecificData()
+    await this.initializeCacheForThisData()
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
       parent_id: this.id,
@@ -185,7 +136,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD, container: C) => any) {
-    await this.initializeCacheForSpecificData()
+    await this.initializeCacheForThisData()
     return await iterateAndGetChildren<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,

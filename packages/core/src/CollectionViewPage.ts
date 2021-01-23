@@ -2,6 +2,7 @@ import { ISpace, IPage, INotionUser, IPermission, IPublicPermission, IPublicPerm
 import { error, Operation } from '../utils';
 import { NishanArg } from '../types';
 import CollectionBlock from './CollectionBlock';
+import { findUser, inviteGuestsToSpace } from '@nishans/endpoints';
 
 /**
  * A class to represent collectionviewpage of Notion
@@ -31,7 +32,7 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
-      const { value } = await this.findUser({email});
+      const { value } = await findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const { value: notion_user } = value;
@@ -43,11 +44,11 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
         notion_users.push(notion_user)
       }
     }
-    await this.inviteGuestsToSpace({
+    await inviteGuestsToSpace({
       blockId: data.id,
       permissionItems,
       spaceId: data.space_id
-    });
+    }, this.getConfigs());
     await this.updateCacheManually([this.id, [data.space_id, "space"]]);
     return notion_users;
   }

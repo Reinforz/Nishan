@@ -3,7 +3,7 @@ import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '.
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
 import Operations from "./Operations";
 import colors from "colors";
-import { UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { queryCollection, UpdateCacheManuallyParam } from '@nishans/endpoints';
 
 interface IterateOptions<T>{
   child_type: TDataType,
@@ -108,7 +108,7 @@ export default class Data<T extends TData> extends Operations {
       );
   }
 
-  protected async initializeCache() {
+  protected async initializeCacheForSpecificData() {
     if (!this.init_cache) {
       const container: UpdateCacheManuallyParam = []
       if (this.type === "block") {
@@ -127,7 +127,7 @@ export default class Data<T extends TData> extends Operations {
         (this.getCachedData() as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"]))) ?? []
       else if (this.type === "collection") {
         container.push(...((this.getCachedData() as ICollection).template_pages ?? []))
-        await this.queryCollection({
+        const data = await queryCollection({
           collectionId: this.id,
           collectionViewId: "",
           query: {},
@@ -135,7 +135,8 @@ export default class Data<T extends TData> extends Operations {
             type: "table",
             loadContentCover: true
           }
-        })
+        }, this.getConfigs())
+        this.saveToCache(data.recordMap);
       }
       else if (this.type === "space_view")
         container.push(...(this.getCachedData() as ISpaceView).bookmarked_pages ?? [])
@@ -164,7 +165,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async deleteIterate<TD>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
-    await this.initializeCache()
+    await this.initializeCacheForSpecificData()
     return  await iterateAndDeleteChildren<T, TD>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
@@ -174,7 +175,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD, C = any>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
-    await this.initializeCache()
+    await this.initializeCacheForSpecificData()
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
       parent_id: this.id,
@@ -184,7 +185,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD, container: C) => any) {
-    await this.initializeCache()
+    await this.initializeCacheForSpecificData()
     return await iterateAndGetChildren<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,

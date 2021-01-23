@@ -1,3 +1,4 @@
+import { enqueueTask, findUser, inviteGuestsToSpace } from "@nishans/endpoints";
 import { IPage, ISpace, ISpaceView, TExportType, TBlock, INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, ITBlock, IPageCreateInput } from "../types";
@@ -84,7 +85,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     } = arg;
     const {
       taskId
-    } = await this.enqueueTask({
+    } = await enqueueTask({
       task: {
         eventName: 'exportBlock',
         request: {
@@ -97,11 +98,14 @@ export default class Page extends Block<IPage, IPageCreateInput> {
           recursive
         }
       }
+    }, {
+      token: this.token,
+      interval: this.interval
     });
 
-    await this.getTasks({taskIds: [taskId]});
+    /* await this.getTasks({taskIds: [taskId]});
 
-    /* const response = await axios.get(results[0].status.exportURL, {
+    const response = await axios.get(results[0].status.exportURL, {
       responseType: 'arraybuffer'
     });
 
@@ -196,7 +200,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
-      const { value } = await this.findUser({email});
+      const { value } = await findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const { value: notion_user } = value;
@@ -208,11 +212,11 @@ export default class Page extends Block<IPage, IPageCreateInput> {
         notion_users.push(notion_user)
       }
     }
-    await this.inviteGuestsToSpace({
+    await inviteGuestsToSpace({
       blockId: data.id,
       permissionItems,
       spaceId: data.space_id
-    });
+    },this.getConfigs());
     await this.updateCacheManually([this.id, [data.space_id, "space"]]);
     return notion_users;
   }

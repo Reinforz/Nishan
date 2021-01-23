@@ -1,7 +1,6 @@
-import axios from "axios";
 import colors from "colors";
-import {syncRecordValues, Cache, getSpaces} from "@nishans/endpoints"
-import { INotionUser, SyncRecordValuesResult } from "@nishans/types";
+import {Cache} from "@nishans/endpoints"
+import { INotionUser } from "@nishans/types";
 
 import Block from "./Block";
 import Collection from "./Collection";
@@ -17,7 +16,7 @@ import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
 export * from "./View";
-import { error } from "../utils/logs";
+import { error } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends Cache {

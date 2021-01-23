@@ -1,3 +1,4 @@
+import { enqueueTask } from '@nishans/endpoints';
 import { TBlock, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
@@ -44,16 +45,19 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 						alive: true
 					})
 				);
-				await this.enqueueTask({
-					task: {
-						eventName: 'duplicateBlock',
-						request: {
-							sourceBlockId: data.id,
-							targetBlockId: block_id,
-							addCopyName: true
+				await enqueueTask(
+					{
+						task: {
+							eventName: 'duplicateBlock',
+							request: {
+								sourceBlockId: data.id,
+								targetBlockId: block_id,
+								addCopyName: true
+							}
 						}
-					}
-				});
+					},
+					this.getConfigs()
+				);
 				this.logger && this.logger('CREATE', 'block', block_id);
 			} else {
 				this.stack.push(

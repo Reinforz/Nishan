@@ -8,6 +8,7 @@ import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, ITPage } from '../types';
+import { enqueueTask, findUser, removeUsersFromSpace } from '@nishans/endpoints';
 
 const trootpage_class = {
   page: Page,
@@ -63,7 +64,7 @@ export default class Space extends Data<ISpace> {
    * Delete the current workspace
    */
   async delete() {
-    await this.enqueueTask({
+    await enqueueTask({
       task: {
         eventName: 'deleteSpace',
         request:
@@ -71,6 +72,9 @@ export default class Space extends Data<ISpace> {
           spaceId: this.id
         }
       }
+    }, {
+      token: this.token,
+      interval: this.interval
     });
     this.logger && this.logger("DELETE", "space", this.id);
   }
@@ -170,7 +174,7 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value } = await this.findUser({email});
+      const [email, role] = infos[i], { value } = await findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
@@ -198,11 +202,14 @@ export default class Space extends Data<ISpace> {
    */
   async removeUsers(userIds: string[]) {
     const data = this.getCachedData();
-    await this.removeUsersFromSpace({
+    await removeUsersFromSpace({
       removePagePermissions: true,
       revokeUserTokens: false,
       spaceId: data.id,
       userIds
+    }, {
+      token: this.token,
+      interval: this.interval
     });
     data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id))
     this.updateLastEditedProps();

@@ -10,6 +10,7 @@ import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
 import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView } from '@nishans/types';
 import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
+import { createSpace, enqueueTask } from '@nishans/endpoints';
 
 /**
  * A class to represent NotionUser of Notion
@@ -80,7 +81,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await this.createSpace({initialUseCases: [], planType: "personal", name, icon });
+      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
       spaces.push(new Space({
         id: space_id,
         ...this.getProps()
@@ -207,14 +208,14 @@ class NotionUser extends Data<INotionUser> {
       child_type: "space",
       manual: true
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
-      await this.enqueueTask({
+      await enqueueTask({
         task: {
           eventName: "deleteSpace",
           request: {
             spaceId
           }
         }
-      })
+      }, this.getConfigs())
     });
   }
 

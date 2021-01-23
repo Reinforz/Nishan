@@ -34,7 +34,7 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcore"
   },
   "dependencies": {
-    "@nishans/endpoints": "^0.0.7",
+    "@nishans/endpoints": "^0.0.12",
     "axios": "^0.21.1",
     "colors": "^1.4.0",
     "uuid": "^8.3.2"

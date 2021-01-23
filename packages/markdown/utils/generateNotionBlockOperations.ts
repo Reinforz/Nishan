@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { CodeNotionBlock, createTransaction, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
+import { CodeNotionBlock, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
 import { IOperation, IPage } from '@nishans/types';
 
 export async function generateNotionBlockOperations (

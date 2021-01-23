@@ -2485,30 +2485,12 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nishans/core@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.1.tgz#69b45eedc49cc020e908fcbd77a4ef33b9b0abb5"
-  integrity sha512-5NFyNSPZo5w4zd5bqWsmR8JaXHruthRnnApi8swnYz2t6KPsP1KLeC6RaVPBIB045hRU6ESEMZ8afUz+a8Rl4A==
-  dependencies:
-    axios "^0.21.1"
-    colors "^1.4.0"
-    uuid "^8.3.2"
+"@nishans/types@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.11.tgz#8baba2a842b45afd6fd5c48eeaaea95a6d439dc6"
+  integrity sha512-lHZyHUhJHOc/bi/EqIE9etU9UdfJZGT04kzHdqkhFLSEulGgbkoDbOfShfLTXPUeNSigzxWU3D+9tNfkoFJrjA==
 
-"@nishans/core@latest":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.9.tgz#b1e3a64d13dee2d3abaa369eedf16cdd136c8cc7"
-  integrity sha512-5JPlzERLvZc0FirYI75bYu6NlDEF+At3JfOqSxf+47Py5eNr/MBVNWzeR9blIFtHhNqmWCYN9HOr/VIoeTJu9w==
-  dependencies:
-    axios "^0.21.1"
-    colors "^1.4.0"
-    uuid "^8.3.2"
-
-"@nishans/types@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.1.tgz#4edfbdadd6b3ad14446d0c72638431267c3cb394"
-  integrity sha512-VYZSYl09w3P6t4VvypeX87XTY/PK82jKAdutjTjqPWxC0OAjRihO/n1pEwopKHdtpUP5Vs1ZyGrzAOJa31/tlQ==
-
-"@nishans/types@0.0.10", "@nishans/types@^0.0.10":
+"@nishans/types@^0.0.10":
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.10.tgz#4e052e2159a8ad577b78d6ef6a2a43f739413f83"
   integrity sha512-E+BO1gvB70mGhkjotauz6TEkgFBXW1+f1VZk5hKz1KjdFf+y58SlPW8tYkClRzl5hX7sHFE2MoGuhLoW6QJtog==

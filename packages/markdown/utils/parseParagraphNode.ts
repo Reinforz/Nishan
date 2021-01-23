@@ -1,13 +1,10 @@
-import { TFormatBlockColor } from '@nishans/types';
 import { Node } from 'unist';
-import { inlineText, chunk } from './inlineBlock';
+import { inlineText, InlineTextFormatter } from '@nishans/utils';
+import { InlineFormat, TFormatBlockColor, TTextFormat } from '@nishans/types';
 
-type TTextFormatter = ('b' | 'i' | '_' | 's' | 'c')
-type TTextFormatters = TTextFormatter[];
-
-function formatText (formats: TTextFormatters, block: chunk) {
+function formatText (formats: InlineFormat[], block: InlineTextFormatter) {
 	formats.forEach((format) => {
-		switch (format) {
+		switch (format[0]) {
 			case 's':
 				block.strikeThrough;
 				break;
@@ -27,7 +24,7 @@ function formatText (formats: TTextFormatters, block: chunk) {
 	});
 }
 
-export function parseTextFormatters(text: string, formats: TTextFormatters, block: chunk){
+export function parseTextFormatters(text: string, formats: InlineFormat[], block: InlineTextFormatter){
   const matches = (text as string).match(/(\[(?:(?:\w+=\w+),?)+\]{(\w?\s?)+})|(\w?\s?)+/g);
   matches?.forEach(match=>{
     const contains_format = match.match(/^\[((?:\w+=\w+,?)+)\]{((?:\w?\s?)+)}/);
@@ -44,7 +41,7 @@ export function parseTextFormatters(text: string, formats: TTextFormatters, bloc
             block.highlight(format_value as TFormatBlockColor)
             break;
           case "f":
-            formats.push(...format_value.split("") as TTextFormatters)
+            formats.push(...format_value.split("").map((format)=>[format] as InlineFormat))
             break;
         }
       })
@@ -56,27 +53,27 @@ export function parseTextFormatters(text: string, formats: TTextFormatters, bloc
   })
 }
 
-export function parseParagraphNode (paragraph: Node): string[][] {
+export function parseParagraphNode (paragraph: Node) {
 	const block = inlineText();
-	function inner (block: chunk, parent: Node, formats: TTextFormatters) {
+	function inner (block: InlineTextFormatter, parent: Node, formats: InlineFormat[]) {
 		(parent as any).children.forEach((child: Node) => {
 			switch (child.type) {
 				case 'text':
           parseTextFormatters(child.value as string, formats, block)
 					break;
 				case 'emphasis':
-					inner(block, child as any, formats.concat('i'));
+					inner(block, child as any, formats.concat(['i']));
 					break;
 				case 'strong':
-					inner(block, child as any, formats.concat('b'));
+					inner(block, child as any, formats.concat(['b']));
 					break;
 				case 'inlineCode':
-          parseTextFormatters(child.value as string, formats.concat('c'), block)
+          parseTextFormatters(child.value as string, formats.concat(['c']), block)
 					break;
 			}
 		});
 	}
 
 	inner(block, paragraph, []);
-	return block.text as string[][];
+	return block.text;
 }

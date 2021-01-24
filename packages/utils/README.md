@@ -4,9 +4,9 @@ Utility package to make working with @nishans/core easier
 
 <p align="center">
   <img src="https://img.shields.io/bundlephobia/minzip/@nishans/utils?label=minzipped&style=flat"/>
-  <img src="https://img.shields.io/npm/dw/@nishans/utils?style=flat">
-  <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/utils">
-  <img src="https://img.shields.io/npm/v/@nishans/utils">
+  <img src="https://img.shields.io/npm/dw/@nishans/utils?style=flat"/>
+  <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/utils"/>
+  <img src="https://img.shields.io/npm/v/@nishans/utils"/>
 </p>
 
 ## Features

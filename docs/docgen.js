@@ -47,7 +47,7 @@ async function generateSidebar(rootpath){
 }
 
 async function main(){
-  const package_names = ['sync'];
+  const package_names = ['types','core','endpoints','markdown','sync','utils'];
   for (let index = 0; index < package_names.length; index++) {
     await generate(package_names[index])
   }

@@ -2,9 +2,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/bundlephobia/minzip/@nishans/endpoints?label=minzipped&style=flat"/>
-  <img src="https://img.shields.io/npm/dw/@nishans/endpoints?style=flat">
-  <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/endpoints">
-  <img src="https://img.shields.io/npm/v/@nishans/endpoints">
+  <img src="https://img.shields.io/npm/dw/@nishans/endpoints?style=flat"/>
+  <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/endpoints"/>
+  <img src="https://img.shields.io/npm/v/@nishans/endpoints"/>
 </p>
 
 A package to expose all notion endpoints for queries and mutations

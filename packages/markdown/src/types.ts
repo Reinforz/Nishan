@@ -1,9 +1,9 @@
-import { TBlockType, TCodeLanguage } from '@nishans/types';
+import { TTextFormat, TBlockType, TCodeLanguage } from '@nishans/types';
 
 export type FrontMatterKeys = 'title';
 
 type NotionBlock<T extends TBlockType> = {
-	title: string[][];
+	title: TTextFormat;
 	type: T;
 };
 

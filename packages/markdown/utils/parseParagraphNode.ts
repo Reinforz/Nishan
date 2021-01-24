@@ -1,69 +1,58 @@
 import { Node } from 'unist';
 import { inlineText, InlineTextFormatter } from '@nishans/utils';
-import { InlineFormat, TFormatBlockColor, TTextFormat } from '@nishans/types';
+import { InlineFormat } from '@nishans/types';
 
-function formatText (formats: InlineFormat[], block: InlineTextFormatter) {
-	formats.forEach((format) => {
-		switch (format[0]) {
-			case 's':
-				block.strikeThrough;
-				break;
-			case '_':
-				block.underline;
-				break;
-			case 'i':
-				block.italic;
-				break;
-			case 'b':
-				block.bold;
+export function parseTextFormatterString(formats_str: string){
+  const formats: InlineFormat[] = [];
+  formats_str.split(",").forEach(format_str=>{
+    const [format_target, format_value] = format_str.split("=");
+    switch(format_target){
+      case "c":
+        formats.push(['h', format_value as any])
         break;
-      case 'c':
-        block.code
+      case "bg":
+        formats.push(['h', format_value+"_background" as any])
         break;
-		}
-	});
+      case "f":
+        formats.push(...format_value.split("").map((format)=>[format] as InlineFormat))
+        break;
+    }
+  })
+  return formats;
 }
 
-export function parseTextFormatters(text: string, block: InlineTextFormatter){
-  const formats: InlineFormat[] = [];
+export function parseSpecialText(text: string, global_formats: InlineFormat[], block: InlineTextFormatter){
   const matches = text.matchAll(/(?:\[(?<spe_format>(?:(?:\w+=\w+),?)+)\](?<spe_content>".+?"))|(?<reg_content>".+?")+/g);
   if(matches){
     for (const match of matches) {
+      const local_formats: InlineFormat[] = [];
       if(match.groups?.spe_content)
         block.add(match.groups?.spe_content?.replace(/\"/g, ''))
-      if(match.groups?.spe_format){
-        match.groups?.spe_format.split(",").forEach(format_str=>{
-          const [format_target, format_value] = format_str.split("=");
-          switch(format_target){
-            case "c":
-              block.highlight(format_value as TFormatBlockColor)
-              break;
-            case "bg":
-              block.highlight(format_value+"_background" as TFormatBlockColor)
-              break;
-            case "f":
-              formats.push(...format_value.split("").map((format)=>[format] as InlineFormat))
-              break;
-          }
-        })
-      }
+      if(match.groups?.spe_format)
+        local_formats.push(...parseTextFormatterString(match.groups?.spe_format))
       if(match.groups?.reg_content) 
         block.add(match.groups?.reg_content?.replace(/\"/g, ''))
-
-      formatText(Array.from(new Set(formats)), block)
+      Array.from(new Set([...local_formats, ...global_formats])).forEach((format) => {
+        block.pushToLast(format);
+      })
       block.add(" ")
+      global_formats.forEach((format) => {
+        block.pushToLast(format);
+      })
     }
   }else
     throw new Error("Special formatted texts, must follow the rules")
 }
 
 export function parseText(text: string, formats: InlineFormat[], block: InlineTextFormatter){
-  const special_text = text.match(/^::\s(.*)/);
+  const special_text = text.match(/^::\[(?<global_format>(?:(?:\w+=\w+),?)+)\]\s?(?<content>.+)/);
   if(special_text)
-    parseTextFormatters(text, block)
+    parseSpecialText(text, parseTextFormatterString(special_text.groups?.global_format as string), block)
   else{
     block.add(text);
-    formatText(formats, block);
+    formats.forEach((format) => {
+      block.pushToLast(format);
+    })
   }
 }
 
@@ -83,7 +72,7 @@ export function parseParagraphNode (paragraph: Node) {
 					break;
 				case 'inlineCode':
           block.add(child.value as string);
-          formatText(formats.concat(['c']), block);
+          block.pushToLast(['c'])
 					break;
 			}
 		});

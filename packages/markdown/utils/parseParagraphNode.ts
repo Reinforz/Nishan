@@ -24,33 +24,47 @@ function formatText (formats: InlineFormat[], block: InlineTextFormatter) {
 	});
 }
 
-export function parseTextFormatters(text: string, formats: InlineFormat[], block: InlineTextFormatter){
-  const matches = (text as string).match(/(\[(?:(?:\w+=\w+),?)+\]{(\w?\s?)+})|(\w?\s?)+/g);
-  matches?.forEach(match=>{
-    const contains_format = match.match(/^\[((?:\w+=\w+,?)+)\]{((?:\w?\s?)+)}/);
-    if(contains_format) {
-      const [, formats_str, text] = contains_format;
-      block.add(text);
-      formats_str.split(",").forEach(format_str=>{
-        const [format_target, format_value] = format_str.split("=");
-        switch(format_target){
-          case "c":
-            block.highlight(format_value as TFormatBlockColor)
-            break;
-          case "bg":
-            block.highlight(format_value as TFormatBlockColor)
-            break;
-          case "f":
-            formats.push(...format_value.split("").map((format)=>[format] as InlineFormat))
-            break;
-        }
-      })
+export function parseTextFormatters(text: string, block: InlineTextFormatter){
+  const formats: InlineFormat[] = [];
+  const matches = text.matchAll(/(?:\[(?<spe_format>(?:(?:\w+=\w+),?)+)\](?<spe_content>".+?"))|(?<reg_content>".+?")+/g);
+  if(matches){
+    for (const match of matches) {
+      if(match.groups?.spe_content)
+        block.add(match.groups?.spe_content?.replace(/\"/g, ''))
+      if(match.groups?.spe_format){
+        match.groups?.spe_format.split(",").forEach(format_str=>{
+          const [format_target, format_value] = format_str.split("=");
+          switch(format_target){
+            case "c":
+              block.highlight(format_value as TFormatBlockColor)
+              break;
+            case "bg":
+              block.highlight(format_value+"_background" as TFormatBlockColor)
+              break;
+            case "f":
+              formats.push(...format_value.split("").map((format)=>[format] as InlineFormat))
+              break;
+          }
+        })
+      }
+      if(match.groups?.reg_content) 
+        block.add(match.groups?.reg_content?.replace(/\"/g, ''))
+
       formatText(Array.from(new Set(formats)), block)
-    }else{
-      block.add(match);
-      formatText(formats, block);
+      block.add(" ")
     }
-  })
+  }else
+    throw new Error("Special formatted texts, must follow the rules")
+}
+
+export function parseText(text: string, formats: InlineFormat[], block: InlineTextFormatter){
+  const special_text = text.match(/^::\s(.*)/);
+  if(special_text)
+    parseTextFormatters(text, block)
+  else{
+    block.add(text);
+    formatText(formats, block);
+  }
 }
 
 export function parseParagraphNode (paragraph: Node) {
@@ -59,7 +73,7 @@ export function parseParagraphNode (paragraph: Node) {
 		(parent as any).children.forEach((child: Node) => {
 			switch (child.type) {
 				case 'text':
-          parseTextFormatters(child.value as string, formats, block)
+          parseText(child.value as string, formats, block)
 					break;
 				case 'emphasis':
 					inner(block, child as any, formats.concat(['i']));
@@ -68,7 +82,8 @@ export function parseParagraphNode (paragraph: Node) {
 					inner(block, child as any, formats.concat(['b']));
 					break;
 				case 'inlineCode':
-          parseTextFormatters(child.value as string, formats.concat(['c']), block)
+          block.add(child.value as string);
+          formatText(formats.concat(['c']), block);
 					break;
 			}
 		});

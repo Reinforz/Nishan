@@ -49,6 +49,12 @@ export async function mdast2NotionBlocks (mdast: Node) {
           lang: child.lang as TCodeLanguage
         })
         break
+      case "blockquote":
+        notion_blocks.push({
+          type: "quote",
+          title: parseParagraphNode((child as any).children[0])
+        })
+        break;
       case "list":
         const type = child.orderd === true ? "numbered_list" : "bulleted_list"; 
         (child as any).children.forEach((child: any)=>{

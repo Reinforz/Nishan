@@ -19,7 +19,9 @@ export interface NumberedListNotionBlock extends NotionBlock<'numbered_list'> {}
 export interface DividerNotionBlock {
 	type: 'divider';
 }
+
 export interface BulletedListNotionBlock extends NotionBlock<'bulleted_list'> {}
+export interface QuoteNotionBlock extends NotionBlock<'quote'> {}
 export type TNotionBlocks =
 	| HeaderNotionBlock
 	| SubHeaderNotionBlock
@@ -28,7 +30,8 @@ export type TNotionBlocks =
 	| CodeNotionBlock
 	| DividerNotionBlock
 	| NumberedListNotionBlock
-	| BulletedListNotionBlock;
+	| BulletedListNotionBlock
+	| QuoteNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

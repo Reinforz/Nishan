@@ -1,6 +1,7 @@
 import { Node } from 'unist';
 import { inlineText, InlineTextFormatter } from '@nishans/utils';
 import { InlineFormat } from '@nishans/types';
+import { ASTNode } from 'src';
 
 export function parseTextFormatterString(formats_str: string){
   const formats: InlineFormat[] = [];
@@ -41,7 +42,7 @@ export function parseSpecialText(text: string, global_formats: InlineFormat[], b
       })
     }
   }else
-    throw new Error("Special formatted texts, must follow the rules")
+    throw new Error("Special formatted texts must follow the rules")
 }
 
 export function parseText(text: string, formats: InlineFormat[], block: InlineTextFormatter){
@@ -56,19 +57,19 @@ export function parseText(text: string, formats: InlineFormat[], block: InlineTe
   }
 }
 
-export function parseParagraphNode (paragraph: Node) {
+export function parseParagraphNode (paragraph: ASTNode) {
 	const block = inlineText();
-	function inner (block: InlineTextFormatter, parent: Node, formats: InlineFormat[]) {
-		(parent as any).children.forEach((child: Node) => {
+	function inner (block: InlineTextFormatter, parent: ASTNode, formats: InlineFormat[]) {
+		parent.children.forEach((child) => {
 			switch (child.type) {
 				case 'text':
           parseText(child.value as string, formats, block)
 					break;
 				case 'emphasis':
-					inner(block, child as any, formats.concat(['i']));
+					inner(block, child, formats.concat(['i']));
 					break;
 				case 'strong':
-					inner(block, child as any, formats.concat(['b']));
+					inner(block, child, formats.concat(['b']));
 					break;
 				case 'inlineCode':
           block.add(child.value as string);

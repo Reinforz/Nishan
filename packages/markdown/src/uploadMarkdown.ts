@@ -8,7 +8,7 @@ import {
 	generateNotionBlockOperations,
 	parseContent
 } from '../utils';
-import { NotionOperationData } from './types';
+import { ASTNode, NotionOperationData } from './types';
 
 type UploadMarkdownFileParams = {
 	content?: string;
@@ -24,7 +24,7 @@ type UploadMarkdownFilesParams = {
 	getSpace?: UploadMarkdownFileParams['getSpace'];
 };
 
-async function generateNotionBlockOperationsFromMarkdown (content: Node, notion_data: NotionOperationData) {
+async function generateNotionBlockOperationsFromMarkdown (content: ASTNode, notion_data: NotionOperationData) {
 	const { blocks, config } = await mdast2NotionBlocks(content);
 	return await generateNotionBlockOperations(notion_data, blocks, config);
 }
@@ -36,10 +36,12 @@ export async function uploadMarkdownFile (params: UploadMarkdownFileParams) {
 		const notion_data = await getNotionData(params.token, params.getSpace);
 		if (params.filepath)
 			operations.push(
-				...(await generateNotionBlockOperationsFromMarkdown(await parseFile(params.filepath), notion_data))
+				...(await generateNotionBlockOperationsFromMarkdown((await parseFile(params.filepath)) as ASTNode, notion_data))
 			);
 		if (params.content)
-			operations.push(...(await generateNotionBlockOperationsFromMarkdown(parseContent(params.content), notion_data)));
+			operations.push(
+				...(await generateNotionBlockOperationsFromMarkdown(parseContent(params.content) as ASTNode, notion_data))
+			);
 		await uploadToNotion(notion_data, operations);
 	}
 }
@@ -52,13 +54,19 @@ export async function uploadMarkdownFiles (params: UploadMarkdownFilesParams) {
 		if (params.contents) {
 			for (let index = 0; index < params.contents.length; index++) {
 				operations.push(
-					...(await generateNotionBlockOperationsFromMarkdown(parseContent(params.contents[index]), notion_data))
+					...(await generateNotionBlockOperationsFromMarkdown(
+						parseContent(params.contents[index]) as ASTNode,
+						notion_data
+					))
 				);
 			}
 		} else if (params.filepaths) {
 			for (let index = 0; index < params.filepaths.length; index++) {
 				operations.push(
-					...(await generateNotionBlockOperationsFromMarkdown(await parseFile(params.filepaths[index]), notion_data))
+					...(await generateNotionBlockOperationsFromMarkdown(
+						(await parseFile(params.filepaths[index])) as ASTNode,
+						notion_data
+					))
 				);
 			}
 		}

@@ -1,11 +1,14 @@
 import { TTextFormat, TBlockType, TCodeLanguage } from '@nishans/types';
+import { Node } from 'unist';
 
 export type FrontMatterKeys = 'title';
 
 type NotionBlock<T extends TBlockType> = {
 	title: TTextFormat;
 	type: T;
+	id?: string;
 	parent_id?: string;
+	child_ids?: string[];
 };
 
 export interface HeaderNotionBlock extends NotionBlock<'header'> {}
@@ -47,3 +50,7 @@ export interface NotionOperationData {
 }
 
 export type NotionMarkdownConfig = Record<FrontMatterKeys, any>;
+
+export interface ASTNode extends Node {
+	children: ASTNode[];
+}

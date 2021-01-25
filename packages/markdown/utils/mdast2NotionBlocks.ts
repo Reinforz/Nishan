@@ -1,15 +1,15 @@
 import { TCodeLanguage } from '@nishans/types';
 import { Node } from 'unist';
 
-import { NotionMarkdownConfig, TNotionBlocks } from '../src/types';
+import { ASTNode, NotionMarkdownConfig, TNotionBlocks } from '../src/types';
 import {parseParagraphNode, convertFrontMatter2Obj, parseListNode, parseNodes} from "../utils";
 
-export async function mdast2NotionBlocks (mdast: Node) {
+export async function mdast2NotionBlocks (mdast: ASTNode) {
   let default_config: NotionMarkdownConfig = {
     title: "Default Title"
   };
 
-  let children: Node[] = (mdast as any).children;
+  let children = mdast.children;
   const contains_frontmatter = (mdast as any)?.children?.[0].type === "yaml", notion_blocks: TNotionBlocks[] = [];
   if(contains_frontmatter){
     default_config = { ...default_config, ...convertFrontMatter2Obj((mdast as any).children[0].value)}

@@ -1,8 +1,8 @@
-import { parseListNode, parseParagraphNode, TNotionBlocks } from '../src';
+import { ASTNode, parseListNode, parseParagraphNode, TNotionBlocks } from '../src';
 import { Node } from 'unist';
 import { TCodeLanguage } from '@nishans/types';
 
-export function parseNodes (node: Node, notion_blocks: TNotionBlocks[]) {
+export function parseNodes (node: ASTNode, notion_blocks: TNotionBlocks[]) {
 	switch (node.type) {
 		case 'heading':
 			const { depth, children: [ { value: title } ] } = node as any;

@@ -13,20 +13,28 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 This monorepo contains/will contain the following packages:-
 
+## Legend
+
+1. NPM: These packages has been released in npm
+2. WIP: Not yet released but gonna soon
+3. NSY: Package development not started yet
+
+### Packages
+
 1. [@nishans/core](https://github.com/Devorein/Nishan/tree/master/packages/core) - [NPM](https://www.npmjs.com/package/@nishans/core): Core package for nishan with all crud api
 2. [@nishans/types](https://github.com/Devorein/Nishan/tree/master/packages/types) - [NPM](https://www.npmjs.com/package/@nishans/types): Typescript typings for Notion only
 3. [@nishans/utils](https://github.com/Devorein/Nishan/tree/master/packages/utils) - [NPM](https://www.npmjs.com/package/@nishans/utils): Utility package to make working with notion easier
 4. [@nishans/sync](https://github.com/Devorein/Nishan/tree/master/packages/sync) - [NPM](https://www.npmjs.com/package/@nishans/sync): A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
-5. [@nishans/graphql](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (WIP): A graphql server and client UI to make working with nishan a breeze
-6. [@nishans/cli](https://github.com/Devorein/Nishan/tree/master/packages/cli) (WIP): A package to interact with the nishan api from the terminal
-7. [@nishans/typegen](https://github.com/Devorein/Nishan/tree/master/packages/typegen) (WIP): A package to automatically generate typescript definitions from a remote notion collection schema
-8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (WIP): A package to use notion as a database by providing an easy to use orm api
+5. [@nishans/graphql](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (NSY): A graphql server and client UI to make working with nishan a breeze
+6. [@nishans/cli](https://github.com/Devorein/Nishan/tree/master/packages/cli) (NSY): A package to interact with the nishan api from the terminal
+7. [@nishans/typegen](https://github.com/Devorein/Nishan/tree/master/packages/typegen) (NSY): A package to automatically generate typescript definitions from a remote notion collection schema
+8. [@nishans/orm](https://github.com/Devorein/Nishan/tree/master/packages/orm) (NSY): A package to use notion as a database by providing an easy to use orm api
 9. [@nishans/endpoints](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) - [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
-10. [@nishans/react-filters](https://github.com/Devorein/Nishan/tree/master/packages/react-filters): A react component that emulates notions advanced filter
-11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown): A package to upload markdown content into notion
-12. [@nishans/markdown-web](https://github.com/Devorein/Nishan/tree/master/packages/markdown-web): A react powered web app to upload markdown content as notion pages
-13. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
-14. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
+10. [@nishans/react-filters](https://github.com/Devorein/Nishan/tree/master/packages/react-filters) (WIP): A react component that emulates notions advanced filter
+11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown) (WIP): A package to upload markdown content into notion
+12. [@nishans/markdown-web](https://github.com/Devorein/Nishan/tree/master/packages/markdown-web) (NSY): A react powered web app to upload markdown content as notion pages
+13. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) (NSY): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
+14. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

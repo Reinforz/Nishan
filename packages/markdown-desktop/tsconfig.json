@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom",
+    ],
+    "baseUrl": "./",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "watch": false,
+    "declaration": true,
+    "sourceMap": false,
+    "noUnusedLocals": false,
+    "incremental": false
+  },
+  "include": [
+    "./src/index.ts",
+    "experiment"
+  ],
+  "exclude": [
+    "./node_modules",
+  ]
+}

@@ -70,7 +70,10 @@ export function parseParagraphNode (paragraph: ASTNode) {
 					break;
 				case 'strong':
 					inner(block, child, formats.concat(['b']));
-					break;
+          break;
+        case 'delete':
+          inner(block, child, formats.concat(['s']));
+          break;
 				case 'inlineCode':
           block.add(child.value as string);
           block.pushToLast(['c'])

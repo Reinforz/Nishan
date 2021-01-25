@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-node",
+      "type": "node",
       "request": "launch",
-      "name": "Experiment",
+      "name": "Experiment remark-notion",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\experiment\\index.js"
+      "program": "${workspaceFolder}\\packages\\remark-notion\\dist\\experiment\\index.js"
     }
   ]
 }

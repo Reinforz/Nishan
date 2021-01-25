@@ -8,10 +8,11 @@
     "notion-markdown",
     "notion-remark-markdown"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/remark-notion/README.md",
   "license": "MIT",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"
@@ -27,5 +28,9 @@
   "scripts": {},
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "unified": "^9.2.0",
+    "unist-util-visit": "^2.0.3"
   }
 }

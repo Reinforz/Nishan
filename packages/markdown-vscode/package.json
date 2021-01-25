@@ -1,0 +1,31 @@
+{
+  "name": "@nishans/markdown-vscode",
+  "version": "0.0.0",
+  "description": "A vscode extension to upload markdown content as notion pages",
+  "keywords": [
+    "notion",
+    "notion-vscode",
+    "notion-markdown-vscode"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-vscode/README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist/src",
+    "dist/utils"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fmarkdown-vscode"
+  }
+}

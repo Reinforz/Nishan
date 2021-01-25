@@ -2,8 +2,9 @@ import unified from 'unified';
 import markdown from 'remark-parse';
 import frontmatter from 'remark-frontmatter';
 import fs from 'fs';
+import gfm from 'remark-gfm';
 
-const processor = unified().use(markdown).use(frontmatter, [ 'yaml' ]);
+const processor = unified().use(markdown).use(frontmatter, [ 'yaml' ]).use(gfm);
 
 export async function parseFile (path: string) {
 	return parseContent(await fs.promises.readFile(path, 'utf-8'));

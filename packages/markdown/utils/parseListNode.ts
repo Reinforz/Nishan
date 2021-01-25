@@ -12,7 +12,7 @@ export function parseListNode (node: ASTNode, parent_data?: ParseNodesParentData
     notion_blocks.push({
       type,
       id: list_id,
-      title: parseParagraphNode(node.children[0].children[0]),
+      title: parseParagraphNode(child.children[0]),
       child_ids,
       parent_id: parent_data?.parent_id
     });

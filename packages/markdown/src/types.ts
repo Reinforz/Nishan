@@ -3,13 +3,16 @@ import { Node } from 'unist';
 
 export type FrontMatterKeys = 'title';
 
-type NotionBlock<T extends TBlockType> = {
-	title: TTextFormat;
-	type: T;
-	id?: string;
+export interface CommonBlockInfo {
+	id: string;
 	parent_id?: string;
 	child_ids?: string[];
-};
+}
+
+interface NotionBlock<T extends TBlockType> extends CommonBlockInfo {
+	title: TTextFormat;
+	type: T;
+}
 
 export interface HeaderNotionBlock extends NotionBlock<'header'> {}
 export interface SubHeaderNotionBlock extends NotionBlock<'sub_header'> {}
@@ -20,8 +23,9 @@ export interface CodeNotionBlock extends NotionBlock<'code'> {
 }
 export interface NumberedListNotionBlock extends NotionBlock<'numbered_list'> {}
 
-export interface DividerNotionBlock {
+export interface DividerNotionBlock extends CommonBlockInfo {
 	type: 'divider';
+	id: string;
 }
 
 export interface BulletedListNotionBlock extends NotionBlock<'bulleted_list'> {}

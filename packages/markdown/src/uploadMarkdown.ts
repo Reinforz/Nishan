@@ -42,6 +42,8 @@ export async function uploadMarkdownFile (params: UploadMarkdownFileParams) {
 			operations.push(
 				...(await generateNotionBlockOperationsFromMarkdown(parseContent(params.content) as ASTNode, notion_data))
 			);
+
+		// console.log(notion_data, JSON.stringify(operations, null, 2));
 		await uploadToNotion(notion_data, operations);
 	}
 }

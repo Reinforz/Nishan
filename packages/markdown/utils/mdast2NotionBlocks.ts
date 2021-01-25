@@ -1,8 +1,5 @@
-import { TCodeLanguage } from '@nishans/types';
-import { Node } from 'unist';
-
 import { ASTNode, NotionMarkdownConfig, TNotionBlocks } from '../src/types';
-import {parseParagraphNode, convertFrontMatter2Obj, parseListNode, parseNodes} from "../utils";
+import {convertFrontMatter2Obj, parseNodes} from "../utils";
 
 export async function mdast2NotionBlocks (mdast: ASTNode) {
   let default_config: NotionMarkdownConfig = {

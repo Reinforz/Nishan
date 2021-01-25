@@ -22,25 +22,26 @@ export async function generateNotionBlockOperations (
 		version: 0
 	};
 	const operations: IOperation[] = [];
-	const block_id = uuidv4();
+	const block_id = uuidv4(), content_ids: string[] = [];
 
 	const content_create_ops: IOperation[] = notion_blocks.map((block) => {
-			const content_id = uuidv4(),
-				{ type } = block,
+			const { type, id } = block,
 				common_props: any = {
 					table: 'block',
 					command: 'update',
-					id: content_id,
+					id,
 					path: [],
 					args: {
-						id: content_id,
+						id,
 						type,
 						properties: {},
 						parent_table: 'block',
-						parent_id: block_id,
+            parent_id: block.parent_id ?? block_id,
+            content: block.child_ids ?? [],
 						...metadata
 					}
-				};
+        };
+      if(!block.parent_id) content_ids.push(id) 
 
 			if (type !== 'divider') common_props.args.properties.title = (block as any).title;
 
@@ -51,8 +52,7 @@ export async function generateNotionBlockOperations (
 			}
 
 			return common_props;
-		}),
-		content_ids = content_create_ops.map(({ id }) => id);
+		});
 
 	operations.push({
 		command: 'update',

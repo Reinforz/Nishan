@@ -12,6 +12,15 @@
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}\\packages\\remark-notion\\dist\\experiment\\index.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Experiment markdown",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\packages\\markdown\\dist\\experiment\\index.js"
     }
   ]
 }

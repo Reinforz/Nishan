@@ -30,6 +30,10 @@ export interface DividerNotionBlock extends CommonBlockInfo {
 
 export interface BulletedListNotionBlock extends NotionBlock<'bulleted_list'> {}
 export interface QuoteNotionBlock extends NotionBlock<'quote'> {}
+export interface TodoNotionBlock extends NotionBlock<'to_do'> {
+	checked: [[string]];
+}
+
 export type TNotionBlocks =
 	| HeaderNotionBlock
 	| SubHeaderNotionBlock
@@ -39,7 +43,8 @@ export type TNotionBlocks =
 	| DividerNotionBlock
 	| NumberedListNotionBlock
 	| BulletedListNotionBlock
-	| QuoteNotionBlock;
+	| QuoteNotionBlock
+	| TodoNotionBlock;
 
 export interface NotionOperationData {
 	shard_id: number;

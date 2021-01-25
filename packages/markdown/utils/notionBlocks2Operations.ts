@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { CodeNotionBlock, NotionMarkdownConfig, NotionOperationData, TNotionBlocks } from '../src';
+import { CodeNotionBlock, NotionMarkdownConfig, NotionOperationData, TNotionBlocks, TodoNotionBlock } from '../src';
 import { IOperation, IPage } from '@nishans/types';
 
 export async function generateNotionBlockOperations (
@@ -48,7 +48,10 @@ export async function generateNotionBlockOperations (
 			switch (type) {
 				case 'code':
 					common_props.args.properties.language = (block as CodeNotionBlock).lang;
-					break;
+          break;
+        case 'to_do':
+          common_props.args.properties.checked = (block as TodoNotionBlock).checked;
+          break;
 			}
 
 			return common_props;

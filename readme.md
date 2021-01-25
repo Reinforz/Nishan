@@ -25,6 +25,8 @@ This monorepo contains/will contain the following packages:-
 10. [@nishans/react-filters](https://github.com/Devorein/Nishan/tree/master/packages/react-filters): A react component that emulates notions advanced filter
 11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown): A package to upload markdown content into notion
 12. [@nishans/markdown-web](https://github.com/Devorein/Nishan/tree/master/packages/markdown-web): A react powered web app to upload markdown content as notion pages
+13. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
+14. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

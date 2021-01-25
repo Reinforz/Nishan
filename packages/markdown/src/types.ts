@@ -5,6 +5,7 @@ export type FrontMatterKeys = 'title';
 type NotionBlock<T extends TBlockType> = {
 	title: TTextFormat;
 	type: T;
+	parent_id?: string;
 };
 
 export interface HeaderNotionBlock extends NotionBlock<'header'> {}

@@ -4,7 +4,7 @@ import { InlineFormat } from '@nishans/types';
 
 export function parseTextFormatterString(formats_str: string){
   const formats: InlineFormat[] = [];
-  formats_str.split(",").forEach(format_str=>{
+  formats_str && formats_str.split(",").forEach(format_str=>{
     const [format_target, format_value] = format_str.split("=");
     switch(format_target){
       case "c":
@@ -45,7 +45,7 @@ export function parseSpecialText(text: string, global_formats: InlineFormat[], b
 }
 
 export function parseText(text: string, formats: InlineFormat[], block: InlineTextFormatter){
-  const special_text = text.match(/^::\[(?<global_format>(?:(?:\w+=\w+),?)+)\]\s?(?<content>.+)/);
+  const special_text = text.match(/^::(?:\[(?<global_format>(?:(?:\w+=\w+),?)+)\])?\s?(?<content>.+)/);
   if(special_text)
     parseSpecialText(text, parseTextFormatterString(special_text.groups?.global_format as string), block)
   else{

@@ -1,7 +1,38 @@
+import { INotionUser } from '@nishans/types';
 import { NotionUser } from '../dist/src';
 import { USER_ONE, nishan } from './constants';
 
-function checkUser (user: NotionUser, result: 'correct' | 'incorrect') {
+type TAmount = 'single' | 'multiple';
+type TResult = 'correct' | 'incorrect';
+
+interface TestInfo<D, C, M extends [string, string]> {
+	single: {
+		correct: {
+			id: string;
+			cb: (data: D) => any;
+		};
+		incorrect: {
+			id: string;
+			cb: (data: D) => any;
+		};
+		method: M[0];
+		checker: (data: C, result: TResult) => void;
+	};
+	multiple: {
+		correct: {
+			id: [string];
+			cb: (data: D) => any;
+		};
+		incorrect: {
+			id: [string];
+			cb: (data: D) => any;
+		};
+		method: M[1];
+		checker: (data: C[], result: TResult) => void;
+	};
+}
+
+function checkUser (user: NotionUser, result: TResult) {
 	if (result === 'correct') {
 		expect(user).not.toBeNull();
 		expect(user.id).toBe(USER_ONE.id.correct);
@@ -11,7 +42,7 @@ function checkUser (user: NotionUser, result: 'correct' | 'incorrect') {
 	}
 }
 
-function checkUsers (users: NotionUser[], result: 'correct' | 'incorrect') {
+function checkUsers (users: NotionUser[], result: TResult) {
 	if (result === 'correct') {
 		expect(users.length).toBe(1);
 		expect(users[0]).not.toBeNull();
@@ -27,15 +58,15 @@ it('Sets up default configuration for Nishan', () => {
 	expect(nishan.interval).toBe(500);
 });
 
-const info = {
+const info: TestInfo<INotionUser, NotionUser, ['getNotionUser', 'getNotionUsers']> = {
 	single: {
 		correct: {
 			id: USER_ONE.id.correct,
-			cb: (user: any) => user.id === USER_ONE.id.correct
+			cb: (user) => user.id === USER_ONE.id.correct
 		},
 		incorrect: {
 			id: USER_ONE.id.incorrect,
-			cb: (user: any) => user.id === USER_ONE.id.incorrect
+			cb: (user) => user.id === USER_ONE.id.incorrect
 		},
 		method: 'getNotionUser',
 		checker: checkUser
@@ -52,7 +83,7 @@ const info = {
 		method: 'getNotionUsers',
 		checker: checkUsers
 	}
-} as any;
+};
 
 [ 'single', 'multiple' ].map((amount) => {
 	[ 'correct', 'incorrect' ].map((result) => {

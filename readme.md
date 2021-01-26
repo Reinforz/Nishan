@@ -35,8 +35,9 @@ This monorepo contains/will contain the following packages:-
 12. [@nishans/markdown-web](https://github.com/Devorein/Nishan/tree/master/packages/markdown-web) (NSY): A react powered web app to upload markdown content as notion pages
 13. [@nishans/markdown-desktop](https://github.com/Devorein/Nishan/tree/master/packages/markdown-desktop) (NSY): An electron powered desktop app to upload markdown content as notion pages
 14. [@nishans/markdown-vscode](https://github.com/Devorein/Nishan/tree/master/packages/markdown-vscode) (NSY): A vscode extension to upload markdown content as notion pages
-15. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) (NSY): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
-16. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
+15. [@nishans/markdown-native](https://github.com/Devorein/Nishan/tree/master/packages/markdown-native) (NSY): A react native powered mobile app to upload markdown content as notion pages
+16. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) (WIP): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
+17. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

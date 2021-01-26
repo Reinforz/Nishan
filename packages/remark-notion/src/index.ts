@@ -1,94 +1,49 @@
-// handles different types of whitespace
-import unified from 'unified';
-import visit from 'unist-util-visit';
-import { Node } from 'unist';
+const regex = /^\|>\s?\[(?<config>(?:.+?=.+?,?)+)\]$/m;
 
-const NEWLINE = '\n';
+export default function plugin () {
+	function defaultTokenizer (eat, value: string) {
+		if (value.trim().startsWith('|>')) {
+			const m = regex.exec(value.trim());
+			if (m) {
+				const config = m?.groups?.config;
+				const container: string[] = [];
 
-// default options for plugin
-const default_options = {
-	tag: '|>'
-};
+        let i = 0;
+        const lines = value.split('\n')
 
-// escape regex special characters
-function escapeRegExp (s) {
-	return s.replace(new RegExp(`[-[\\]{}()*+?.\\\\^$|/]`, 'g'), '\\$&');
-}
+        while(i <= lines.length){
+          const line = lines[i++]
+          container.push(line)
+          // found end of nested container
+          if (line.trim() === '|>') break;
+        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const self = this;
+        const exit = self.enterBlock();
+				const body = container.slice(1, container.length - 1).join('\n');
+				const add = eat(container.join('\n'));
 
-// create a node that will compile to HTML
-const element = (value: string, children: Node[]) => {
-	return {
-		type: 'callout',
-		value,
-		children
-	};
-};
+				const node = {
+					type: 'callout',
+          config,
+					children: self.tokenizeBlock(body, eat.now())
+				};
 
-// passed to unified.use()
-// you have to use a named function for access to `this` :(
-export default function attacher () {
-	const config = default_options;
-	const regex = new RegExp(/\|>\s?\[((?:.+?=.+?,?)+)\]/g);
-	const escapeTag = new RegExp(escapeRegExp(`\\${config.tag}`), 'g');
-
-	// the tokenizer is called on blocks to determine if there is an callout present and create tags for it
-	function blockTokenizer (eat, value: string) {
-		// stop if no match or match does not start at beginning of line
-		const match = regex.exec(value);
-		if (!match || match.index !== 0) return false;
-
-		const [ opening, options ] = match;
-		const food: string[] = [],
-			content: string[] = [];
-
-		// consume lines until a closing tag
-		let idx = 0;
-		while ((idx = value.indexOf(NEWLINE)) !== -1) {
-			// grab this line and eat it
-			const next = value.indexOf(NEWLINE, idx + 1);
-			const line = next !== -1 ? value.slice(idx + 1, next) : value.slice(idx + 1);
-			food.push(line);
-			value = value.slice(idx + 1);
-			// the closing tag is NOT part of the content
-			if (line.startsWith(config.tag)) break;
-			content.push(line);
+				add(node);
+				exit();
+			}
 		}
-
-		// consume the processed tag and replace escape sequences
-		const content_string = content.join(NEWLINE).replace(escapeTag, config.tag);
-		const add = eat(opening + food.join(NEWLINE));
-
-		// parse the content in block mode
-		const exit = this.enterBlock();
-		const contentNodes = element(content_string, this.tokenizeBlock(content_string));
-		exit();
-
-		return add(contentNodes);
 	}
 
-	const _this = this as unified.Processor;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+	const Parser = this.Parser;
+	const blockTokenizers = Parser.prototype.blockTokenizers;
+	const blockMethods = Parser.prototype.blockMethods;
 
-	// add tokenizer to parser after fenced code blocks
-	const Parser = _this.Parser.prototype;
-	Parser.blockTokenizers.callout = blockTokenizer;
+	const insertPoint = blockMethods.indexOf('fencedCode') + 1;
 
-	Parser.blockMethods.splice(Parser.blockMethods.indexOf('fencedCode') + 1, 0, 'callout');
-	Parser.interruptParagraph.splice(
-		Parser.interruptParagraph.map((block: string[]) => block[0]).indexOf('fencedCode') + 1,
-		0,
-		[ 'callout' ]
-	);
-
-	return function transformer (tree: Node) {
-		visit(
-			tree,
-			(node: Node) => {
-				return node.type !== 'callout';
-			},
-			function visitor (node: Node) {
-				if (node.value) node.value = (node.value as string).replace(escapeTag, config.tag);
-				return node;
-			} as any
-		);
-	};
+	blockTokenizers.container = defaultTokenizer;
+	blockMethods.splice(insertPoint, 0, 'container');
 }

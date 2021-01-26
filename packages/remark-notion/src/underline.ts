@@ -12,22 +12,22 @@ export default function plugin () {
 	const DOUBLE_LEFT = CHAR_LEFT + CHAR_LEFT;
 	const DOUBLE_RIGHT = CHAR_RIGHT + CHAR_RIGHT;
 
-	function locator (value, fromIndex) {
+	function locator (value: string, fromIndex: number) {
 		const index = value.indexOf(DOUBLE_LEFT, fromIndex);
 		return index;
 	}
 
-	function inlineTokenizer (eat, value) {
+	function inlineTokenizer (eat, value: string) {
 		if (
-			!this.options.gfm ||
-			value.substr(0, 2) !== DOUBLE_LEFT ||
-			value.substr(0, 4) === DOUBLE_LEFT + DOUBLE_RIGHT ||
+			// Checks to see if value starts with
+			!value.startsWith(DOUBLE_LEFT) ||
+			value.startsWith(DOUBLE_LEFT + DOUBLE_RIGHT) ||
 			whitespace(value.charAt(2))
 		) {
 			return;
 		}
 
-		let character = '';
+		let current = '';
 		let previous = '';
 		let preceding = '';
 		let subvalue = '';
@@ -38,9 +38,9 @@ export default function plugin () {
 		now.offset += 2;
 
 		while (++index < length) {
-			character = value.charAt(index);
+			current = value.charAt(index);
 
-			if (character === CHAR_RIGHT && previous === CHAR_RIGHT && (!preceding || !whitespace(preceding))) {
+			if (current === CHAR_RIGHT && previous === CHAR_RIGHT && (!preceding || !whitespace(preceding))) {
 				return eat(DOUBLE_LEFT + subvalue + DOUBLE_RIGHT)({
 					type: 'underline',
 					children: this.tokenizeInline(subvalue, now)
@@ -49,7 +49,7 @@ export default function plugin () {
 
 			subvalue += previous;
 			preceding = previous;
-			previous = character;
+			previous = current;
 		}
 	}
 
@@ -61,5 +61,3 @@ export default function plugin () {
 	const inlineMethods = Parser.inlineMethods;
 	inlineMethods.splice(inlineMethods.indexOf('text'), 0, 'underline');
 }
-
-module.exports = plugin;

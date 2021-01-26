@@ -80,7 +80,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async createTRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
-    return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
+    return await nestedContentPopulate(contents, this.id, this.type as "space", this.getProps(), this.id)
   }
 
   async getTRootPage(args?: FilterType<IPage | ICollectionViewPage>) {

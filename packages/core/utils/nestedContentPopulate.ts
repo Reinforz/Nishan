@@ -1,9 +1,9 @@
-import { TDataType, ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
+import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
 import { TBlockCreateInput, NishanArg } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, props: Omit<NishanArg,"id">, this_id: string) {
+export async function nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg,"id">, this_id: string) {
   const block_map = createBlockMap();
 
   const CollectionView = require("../src/CollectionView").default;
@@ -22,7 +22,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
     version: 0
   } as const;
 
-  const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: TDataType, parent_content_id?: string) => {
+  const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space', parent_content_id?: string) => {
     parent_content_id = parent_content_id ?? parent_id;
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index], block_id = generateId(content.id);
@@ -71,8 +71,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           collection_id,
           view_ids,
           parent_id,
-          // ? FIX:1:M Parent table for cvp could be space as well
-          parent_table: "block",
+          parent_table,
           alive: true,
           ...metadata
         };
@@ -159,7 +158,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           format: content.format,
           type: content.type,
           parent_id,
-          parent_table: parent_table as any,
+          parent_table,
           alive: true,
           permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
           ...metadata

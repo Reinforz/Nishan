@@ -118,7 +118,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @returns Array of newly created block content objects
    */
   async createBlocks(contents: TBlockCreateInput[]) {
-    return await nestedContentPopulate(contents, this.id, this.type, this.getProps(), this.id)
+    return await nestedContentPopulate(contents, this.id, this.type as "block", this.getProps(), this.id)
   }
 
   async getBlock(arg?: FilterType<TBlock>) {

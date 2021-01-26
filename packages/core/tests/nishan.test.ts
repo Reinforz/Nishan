@@ -1,66 +1,66 @@
-import { NotionUser } from "../dist/src";
-import {USER_ONE, nishan} from "./constants"
+import { NotionUser } from '../dist/src';
+import { USER_ONE, nishan } from './constants';
 
-function checkUser(user: NotionUser, status?: boolean){
-  status = status ?? true;
-  if(status){
-    expect(user).not.toBeNull();
-    expect(user.id).toBe(USER_ONE.id.correct);
-    expect(user.type).toBe("notion_user");
-  }else{
-    expect(user).toBeUndefined();
-  }
+function checkUser (user: NotionUser, result: 'correct' | 'incorrect') {
+	if (result === 'correct') {
+		expect(user).not.toBeNull();
+		expect(user.id).toBe(USER_ONE.id.correct);
+		expect(user.type).toBe('notion_user');
+	} else {
+		expect(user).toBeUndefined();
+	}
 }
 
-function checkUsers(users: NotionUser[], status?:boolean){
-  status = status ?? true;
-  if(status){
-    expect(users.length).toBe(1);
-    expect(users[0]).not.toBeNull();
-    expect(users[0].id).toBe(USER_ONE.id.correct);
-    expect(users[0].type).toBe("notion_user");
-  }else{
-    expect(users.length).toBe(0);
-    expect(users[0]).toBeUndefined();
-  }
+function checkUsers (users: NotionUser[], result: 'correct' | 'incorrect') {
+	if (result === 'correct') {
+		expect(users.length).toBe(1);
+		expect(users[0]).not.toBeNull();
+		expect(users[0].id).toBe(USER_ONE.id.correct);
+		expect(users[0].type).toBe('notion_user');
+	} else {
+		expect(users.length).toBe(0);
+		expect(users[0]).toBeUndefined();
+	}
 }
 
-it("Sets up default configuration for Nishan",()=>{
-  expect(nishan.interval).toBe(500);
-})
+it('Sets up default configuration for Nishan', () => {
+	expect(nishan.interval).toBe(500);
+});
 
-it("Get notion_user id", async ()=>{
-  checkUser(await nishan.getNotionUser(USER_ONE.id.correct))
-})
+const info = {
+	single: {
+		correct: {
+			id: USER_ONE.id.correct,
+			cb: (user: any) => user.id === USER_ONE.id.correct
+		},
+		incorrect: {
+			id: USER_ONE.id.incorrect,
+			cb: (user: any) => user.id === USER_ONE.id.incorrect
+		},
+		method: 'getNotionUser',
+		checker: checkUser
+	},
+	multiple: {
+		correct: {
+			id: [ USER_ONE.id.correct ],
+			cb: (user: any) => user.id === USER_ONE.id.correct
+		},
+		incorrect: {
+			id: [ USER_ONE.id.incorrect ],
+			cb: (user: any) => user.id === USER_ONE.id.incorrect
+		},
+		method: 'getNotionUsers',
+		checker: checkUsers
+	}
+} as any;
 
-it("!Get notion_user !id", async ()=>{
-  checkUser(await nishan.getNotionUser(USER_ONE.id.incorrect), false)
-})
-
-it("!Get notion_user !cb", async ()=>{
-  checkUser(await nishan.getNotionUser((user)=>user.id === USER_ONE.id.incorrect), false);
-})
-
-it("Get notion_user cb", async ()=>{
-  checkUser(await nishan.getNotionUser((user)=>user.id === USER_ONE.id.correct));
-})
-
-it("Get [notion_user] cb", async ()=>{
-  checkUsers(await nishan.getNotionUsers((user)=>user.id === USER_ONE.id.correct));
-})
-
-it("Get [notion_user] [id]", async ()=>{
-  checkUsers(await nishan.getNotionUsers([USER_ONE.id.correct]));
-})
-
-it("!Get [notion_user] ![id]", async ()=>{
-  checkUsers( await nishan.getNotionUsers([USER_ONE.id.incorrect]), false)
-})
-
-it("Get [notion_user] undefined", async ()=>{
-  checkUsers(await nishan.getNotionUsers());
-})
-
-it("!Get [notion_user] !cb", async ()=>{
-  checkUsers(await nishan.getNotionUsers((user)=>user.id === USER_ONE.id.incorrect), false)
-})
+[ 'single', 'multiple' ].map((amount) => {
+	[ 'correct', 'incorrect' ].map((result) => {
+		[ 'id', 'cb' ].map((way) => {
+			const msg = `Get ${amount} ${result} notion_user using ${result} ${way}`;
+			it(msg, async () => {
+				info[amount].checker(await (nishan as any)[info[amount].method](info[amount][result][way]), result);
+			});
+		});
+	});
+});

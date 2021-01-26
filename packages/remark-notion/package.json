@@ -30,7 +30,6 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "unified": "^9.2.0",
-    "unist-util-visit": "^2.0.3"
+    "unified": "^9.2.0"
   }
 }

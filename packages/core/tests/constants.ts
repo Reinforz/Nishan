@@ -22,12 +22,21 @@ Object.values(data.recordMap.block).forEach(({ value: block }) => {
 	else if (block.type === 'collection_view_page' && block.parent_table !== 'space') non_root_cvp_ids.push(block.id);
 });
 
-const USER_ONE_ID = Object.keys(data.recordMap.user_root)[0],
+const USER_ONE_DATA = Object.values(data.recordMap.user_root)[0].value;
+const USER_ONE_ID = USER_ONE_DATA.id,
 	SPACE_ONE_ID = Object.keys(data.recordMap.space)[0],
 	SPACE_VIEW_ONE_ID = Object.keys(data.recordMap.space_view)[0],
 	ROOT_PAGE_ONE_ID = root_page_ids[0],
 	ROOT_COLLECTION_VIEW_PAGE_ONE_ID = root_cvp_ids[0],
 	COLLECTION_ONE_ID = Object.keys(data.recordMap.collection)[0];
+
+export const USER_ONE = {
+	data: USER_ONE_DATA,
+	id: {
+		correct: USER_ONE_ID,
+		incorrect: USER_ONE_ID.slice(1)
+	}
+};
 
 export {
 	data,

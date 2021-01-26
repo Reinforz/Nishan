@@ -1,5 +1,4 @@
 import { IOperation, ISpace } from '@nishans/types';
-import { Node } from 'unist';
 import {
 	uploadToNotion,
 	getNotionData,

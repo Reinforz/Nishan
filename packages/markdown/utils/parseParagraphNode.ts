@@ -1,4 +1,3 @@
-import { Node } from 'unist';
 import { inlineText, InlineTextFormatter } from '@nishans/utils';
 import { InlineFormat } from '@nishans/types';
 import { ASTNode } from 'src';
@@ -73,6 +72,9 @@ export function parseParagraphNode (paragraph: ASTNode) {
           break;
         case 'delete':
           inner(block, child, formats.concat(['s']));
+          break;
+        case 'underline':
+          inner(block, child, formats.concat(['_']));
           break;
 				case 'inlineCode':
           block.add(child.value as string);

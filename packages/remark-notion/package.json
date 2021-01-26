@@ -28,7 +28,5 @@
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   },
-  "dependencies": {
-    "unified": "^9.2.0"
-  }
+  "dependencies": {}
 }

@@ -2485,6 +2485,15 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/core@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.9.tgz#b1e3a64d13dee2d3abaa369eedf16cdd136c8cc7"
+  integrity sha512-5JPlzERLvZc0FirYI75bYu6NlDEF+At3JfOqSxf+47Py5eNr/MBVNWzeR9blIFtHhNqmWCYN9HOr/VIoeTJu9w==
+  dependencies:
+    axios "^0.21.1"
+    colors "^1.4.0"
+    uuid "^8.3.2"
+
 "@nishans/types@0.0.11":
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.11.tgz#8baba2a842b45afd6fd5c48eeaaea95a6d439dc6"

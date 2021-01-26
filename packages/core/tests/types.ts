@@ -1,5 +1,6 @@
 export type TAmount = 'single' | 'multiple';
 export type TResult = 'correct' | 'incorrect';
+export type TWay = 'id' | 'cb';
 
 type SingleInfo<D> = {
 	id: string;

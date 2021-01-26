@@ -35,7 +35,7 @@ function parseArg (arg: string) {
   else
 		return {
 			type: 'constant',
-			value: arg.replace(/("|")/g, ''),
+			value: arg.replace(/"/g, ''),
 			value_type: 'string',
 			result_type: 'text'
 		};

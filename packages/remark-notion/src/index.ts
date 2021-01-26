@@ -1,30 +1,13 @@
 // handles different types of whitespace
 import unified from 'unified';
+import visit from 'unist-util-visit';
+import { Node } from 'unist';
 
 const NEWLINE = '\n';
 
-// natively supported types
-const types = {
-	// base types
-	note: {
-		keyword: 'note',
-		emoji: 'ℹ️', // '&#x2139;'
-		svg: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"></svg>'
-	}
-};
-
 // default options for plugin
 const default_options = {
-	tag: ':::'
-};
-
-// override default options
-const configure = (custom_options) => {
-	return {
-		...default_options,
-		...custom_options,
-		types
-	};
+	tag: '|>'
 };
 
 // escape regex special characters
@@ -33,35 +16,28 @@ function escapeRegExp (s) {
 }
 
 // create a node that will compile to HTML
-const element = (value: string) => {
+const element = (value: string, children: Node[]) => {
 	return {
 		type: 'callout',
-		value
+		value,
+		children
 	};
 };
 
-// changes the first character of a keyword to uppercase so that custom title
-// styles may omit `text-transform: uppercase`.
-const formatKeyword = (keyword) => keyword.charAt(0).toUpperCase() + keyword.slice(1);
-
 // passed to unified.use()
 // you have to use a named function for access to `this` :(
-export default function attacher (options) {
-	const config = configure(options);
-
-	// match to determine if the line is an opening tag
-	const keywords = Object.keys(config.types).map(escapeRegExp).join('|');
-	const tag = escapeRegExp(config.tag);
-	const regex = new RegExp(`${tag}(${keywords})(?: *(.*))?\n`);
+export default function attacher () {
+	const config = default_options;
+	const regex = new RegExp(/\|>\s?\[((?:.+?=.+?,?)+)\]/g);
 	const escapeTag = new RegExp(escapeRegExp(`\\${config.tag}`), 'g');
 
-	// the tokenizer is called on blocks to determine if there is an admonition present and create tags for it
-	function blockTokenizer (eat, value) {
+	// the tokenizer is called on blocks to determine if there is an callout present and create tags for it
+	function blockTokenizer (eat, value: string) {
 		// stop if no match or match does not start at beginning of line
 		const match = regex.exec(value);
 		if (!match || match.index !== 0) return false;
 
-		const [ opening ] = match;
+		const [ opening, options ] = match;
 		const food: string[] = [],
 			content: string[] = [];
 
@@ -84,7 +60,7 @@ export default function attacher (options) {
 
 		// parse the content in block mode
 		const exit = this.enterBlock();
-		const contentNodes = element(content_string);
+		const contentNodes = element(content_string, this.tokenizeBlock(content_string));
 		exit();
 
 		return add(contentNodes);
@@ -94,7 +70,25 @@ export default function attacher (options) {
 
 	// add tokenizer to parser after fenced code blocks
 	const Parser = _this.Parser.prototype;
-	Parser.blockTokenizers.admonition = blockTokenizer;
+	Parser.blockTokenizers.callout = blockTokenizer;
 
-	Parser.blockMethods.splice(Parser.blockMethods.indexOf('fencedCode') + 1, 0, 'admonition');
+	Parser.blockMethods.splice(Parser.blockMethods.indexOf('fencedCode') + 1, 0, 'callout');
+	Parser.interruptParagraph.splice(
+		Parser.interruptParagraph.map((block: string[]) => block[0]).indexOf('fencedCode') + 1,
+		0,
+		[ 'callout' ]
+	);
+
+	return function transformer (tree: Node) {
+		visit(
+			tree,
+			(node: Node) => {
+				return node.type !== 'callout';
+			},
+			function visitor (node: Node) {
+				if (node.value) node.value = (node.value as string).replace(escapeTag, config.tag);
+				return node;
+			} as any
+		);
+	};
 }

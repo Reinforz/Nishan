@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Unofficial notion api with all crud functionalities",
   "keywords": [
     "notion",
@@ -32,7 +32,7 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcore"
   },
   "dependencies": {
-    "@nishans/endpoints": "^0.0.12",
+    "@nishans/endpoints": "^0.0.13",
     "colors": "^1.4.0",
     "uuid": "^8.3.2"
   },

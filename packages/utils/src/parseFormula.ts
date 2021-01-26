@@ -4,7 +4,7 @@ const ARGS_REGEX = /((?:concat|join|slice|toNumber|contains|replace|replaceAll|t
 function parseArg (arg: string) {
 	const function_match = arg.match(FUNCTION_REGEX);
 	if (function_match) {
-		return parseFormula(function_match[0]);
+		return parseFormulaFromString(function_match[0]);
   } else if(arg.match(/^(e|pi)$/)){
     return {
 			type: 'symbol',
@@ -41,7 +41,7 @@ function parseArg (arg: string) {
 		};
 }
 
-export function parseFormula (formula: string) {
+export function parseFormulaFromString (formula: string) {
 	const result_formula: any = {
 		function: '',
 		args: []

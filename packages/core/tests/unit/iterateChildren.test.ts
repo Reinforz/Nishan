@@ -1,6 +1,5 @@
 import { ISpace, ISpaceView, IUserRoot, TPage } from '@nishans/types';
-import { ITPage } from '../../dist/types';
-import { createPageMap, iterateAndGetChildren } from '../../dist/utils';
+import { createPageMap, iterateAndGetChildren, ITPage } from '../../src';
 import { nishan, SPACE_ONE_ID, USER_ONE_ID } from '../constants';
 import data from '../data';
 

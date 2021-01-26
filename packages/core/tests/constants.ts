@@ -1,4 +1,4 @@
-import Nishan from '../dist/src';
+import Nishan from '../src';
 import data from './data';
 
 const nishan = new Nishan({

@@ -1,4 +1,4 @@
-import { NotionUser, Space } from "../dist/src";
+import { NotionUser, Space } from "../src";
 import {nishan, USER_ONE_ID, SPACE_ONE_ID} from "./constants"
 
 let user: NotionUser = null as any;

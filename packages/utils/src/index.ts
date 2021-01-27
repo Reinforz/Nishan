@@ -1,3 +1,3 @@
 export * from './inlineBlocks';
 export * from './uuidConversion';
-export * from './parseFormula';
+export * from './generateFormulaFromString';

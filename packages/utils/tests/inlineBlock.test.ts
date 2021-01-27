@@ -1,5 +1,5 @@
 import { TTextFormat } from '@nishans/types';
-import { inlineDate, inlineEquation, inlineMention, inlinePage, inlineText } from '../src';
+import { inlineEquation, inlineMention, inlinePage, inlineText } from '../src';
 
 function testAfterStringifying (source: TTextFormat, text: string, format: string[]) {
 	expect(JSON.stringify(source)).toBe(`[["${text}",[[${format.map((format) => `"${format}"`).join(',')}]]]]`);

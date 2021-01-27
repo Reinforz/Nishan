@@ -1,9 +1,9 @@
 import { TData } from '@nishans/types';
-import { NotionUser } from '../../src';
+import { NotionUser, Space } from '../../src';
 import { ITestData, TestInfo } from '../types';
 import { checkSingle, checkMultiple } from './checker';
 
-export function generateTestInfo<D extends TData, C extends NotionUser, M extends [string, string]> (
+export function generateTestInfo<D extends TData, C extends NotionUser | Space, M extends [string, string]> (
 	methods: [string, string],
 	test_data: ITestData[]
 ): TestInfo<D, C, M> {

@@ -45,7 +45,7 @@ import {
 	TDataType,
 	TView
 } from '@nishans/types';
-import { NotionUser } from '../src';
+import { NotionUser, Space } from '../src';
 
 export type TAmount = 'single' | 'multiple';
 export type TResult = 'correct' | 'incorrect';
@@ -60,7 +60,7 @@ type MultipleInfo<D> = {
 	id: [string];
 	cb: (data: D) => any;
 };
-export interface TestInfo<D extends TData, C extends NotionUser, M extends [string, string]> {
+export interface TestInfo<D extends TData, C extends NotionUser | Space, M extends [string, string]> {
 	single: {
 		correct: SingleInfo<D>;
 		incorrect: SingleInfo<D>;

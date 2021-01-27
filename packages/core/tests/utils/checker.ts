@@ -1,7 +1,7 @@
-import { NotionUser } from '../../src';
+import { NotionUser, Space } from '../../src';
 import { ITestData, TResult } from '../types';
 
-export function checkSingle<I extends NotionUser> (data: ITestData) {
+export function checkSingle<I extends NotionUser | Space> (data: ITestData) {
 	return function (instance: I, result: TResult) {
 		if (result === 'correct') {
 			expect(instance).not.toBeNull();
@@ -13,7 +13,7 @@ export function checkSingle<I extends NotionUser> (data: ITestData) {
 	};
 }
 
-export function checkMultiple<I extends NotionUser[]> (data: ITestData) {
+export function checkMultiple<I extends (NotionUser | Space)[]> (data: ITestData) {
 	return function (instance: I, result: TResult) {
 		if (result === 'correct') {
 			expect(instance.length).toBe(1);

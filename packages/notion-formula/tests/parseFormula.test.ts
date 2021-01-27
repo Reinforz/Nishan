@@ -1,4 +1,4 @@
-import { parseFormula } from '../src';
+import { parseFormulaFromObject } from '../src';
 import deepEqual from 'deep-equal';
 
 it('Abs method should work correctly', () => {
@@ -17,7 +17,7 @@ it('Abs method should work correctly', () => {
 					}
 				]
 			},
-			parseFormula(
+			parseFormulaFromObject(
 				{
 					function: 'abs',
 					args: 1

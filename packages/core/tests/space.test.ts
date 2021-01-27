@@ -13,12 +13,12 @@ function checkRootPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
     expect(pages.page.size).toBe(2);
-    expect(pages.page.get(ROOT_PAGE_ONE_ID)).not.toBeNull();
-    expect(pages.page.get(ROOT_PAGE_ONE_ID)?.id).toBe(ROOT_PAGE_ONE_ID);
-    expect(pages.page.get(ROOT_PAGE_ONE_ID)?.type).toBe("block");
+    expect(pages.page.get(TEST_DATA.block.page[0].data.id)).not.toBeNull();
+    expect(pages.page.get(TEST_DATA.block.page[0].data.id)?.id).toBe(TEST_DATA.block.page[0].data.id);
+    expect(pages.page.get(TEST_DATA.block.page[0].data.id)?.type).toBe("block");
   }else{
     expect(pages.page.size).toBe(0);
-    expect(pages.page.get(ROOT_PAGE_ONE_ID)).toBeUndefined();
+    expect(pages.page.get(TEST_DATA.block.page[0].data.id)).toBeUndefined();
   }
 }
 
@@ -26,12 +26,12 @@ function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
   status = status ?? true;
   if(status){
     expect(pages.collection_view_page.size).toBe(2);
-    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)).not.toBeNull();
-    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.id).toBe(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
-    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)?.type).toBe("block");
+    expect(pages.collection_view_page.get(TEST_DATA.block.collection_view_page[0].data.id)).not.toBeNull();
+    expect(pages.collection_view_page.get(TEST_DATA.block.collection_view_page[0].data.id)?.id).toBe(TEST_DATA.block.collection_view_page[0].data.id);
+    expect(pages.collection_view_page.get(TEST_DATA.block.collection_view_page[0].data.id)?.type).toBe("block");
   }else{
     expect(pages.collection_view_page.size).toBe(0);
-    expect(pages.collection_view_page.get(ROOT_COLLECTION_VIEW_PAGE_ONE_ID)).toBeUndefined();
+    expect(pages.collection_view_page.get(TEST_DATA.block.collection_view_page[0].data.id)).toBeUndefined();
   }
 }
 
@@ -160,7 +160,7 @@ describe("Getter methods for space", ()=>{
   })
   
   it("Get [collection] cb.parent_id", async ()=>{
-    checkRootCollection((await space.getRootCollections(collection=>collection.parent_id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID))[0]);
+    checkRootCollection((await space.getRootCollections(collection=>collection.parent_id === TEST_DATA.block.collection_view_page[0].data.id))[0]);
   })
   
   it("Get [collection] undefined", async ()=>{
@@ -172,31 +172,31 @@ describe("Getter methods for space", ()=>{
   })
   
   it("Get root_page id", async ()=>{
-    checkRootPages(await space.getTRootPage(ROOT_PAGE_ONE_ID))
+    checkRootPages(await space.getTRootPage(TEST_DATA.block.page[0].data.id))
   })
   
   it("!Get root_page !id", async ()=>{
-    checkRootPages(await space.getTRootPage(ROOT_PAGE_ONE_ID.slice(1)), false)
+    checkRootPages(await space.getTRootPage(TEST_DATA.block.page[0].data.id.slice(1)), false)
   })
   
   it("Get [root_page] [id]", async ()=>{
-    checkRootPages(await space.getTRootPages([ROOT_PAGE_ONE_ID]));
+    checkRootPages(await space.getTRootPages([TEST_DATA.block.page[0].data.id]));
   })
   
   it("!Get [root_page] ![id]", async ()=>{
-    checkRootPages(await space.getTRootPages([ROOT_PAGE_ONE_ID.slice(1)]), false);
+    checkRootPages(await space.getTRootPages([TEST_DATA.block.page[0].data.id.slice(1)]), false);
   })
   
   it("Get root_page cb", async ()=>{
-    checkRootPages(await space.getTRootPage(root_page=>root_page.id === ROOT_PAGE_ONE_ID));
+    checkRootPages(await space.getTRootPage(root_page=>root_page.id === TEST_DATA.block.page[0].data.id));
   })
   
   it("!Get root_page !cb", async ()=>{
-    checkRootPages(await space.getTRootPage(root_page=>root_page.id === ROOT_PAGE_ONE_ID.slice(1)), false);
+    checkRootPages(await space.getTRootPage(root_page=>root_page.id === TEST_DATA.block.page[0].data.id.slice(1)), false);
   })
   
   it("Get [root_page] cb.id", async ()=>{
-    checkRootPages(await space.getTRootPages(root_page=>root_page.id === ROOT_PAGE_ONE_ID));
+    checkRootPages(await space.getTRootPages(root_page=>root_page.id === TEST_DATA.block.page[0].data.id));
   })
   
   it("Get [root_page] cb.type", async ()=>{
@@ -208,36 +208,36 @@ describe("Getter methods for space", ()=>{
   })
   
   it("!Get [root_page] !cb", async ()=>{
-    checkRootPages(await space.getTRootPages(root_page=>root_page.id === ROOT_PAGE_ONE_ID.slice(1)), false);
+    checkRootPages(await space.getTRootPages(root_page=>root_page.id === TEST_DATA.block.page[0].data.id.slice(1)), false);
   })
   
   
   it("Get root_cvp id", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPage(ROOT_COLLECTION_VIEW_PAGE_ONE_ID))
+    checkRootCollectionViewPages(await space.getTRootPage(TEST_DATA.block.collection_view_page[0].data.id))
   })
   
   it("!Get root_cvp !id", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPage(ROOT_COLLECTION_VIEW_PAGE_ONE_ID.slice(1)), false)
+    checkRootCollectionViewPages(await space.getTRootPage(TEST_DATA.block.collection_view_page[0].data.id.slice(1)), false)
   })
   
   it("Get [root_cvp] [id]", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPages([ROOT_COLLECTION_VIEW_PAGE_ONE_ID]));
+    checkRootCollectionViewPages(await space.getTRootPages([TEST_DATA.block.collection_view_page[0].data.id]));
   })
   
   it("!Get [root_cvp] ![id]", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPages([ROOT_COLLECTION_VIEW_PAGE_ONE_ID.slice(1)]), false);
+    checkRootCollectionViewPages(await space.getTRootPages([TEST_DATA.block.collection_view_page[0].data.id.slice(1)]), false);
   })
   
   it("Get root_cvp cb", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPage(root_cvp=>root_cvp.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID));
+    checkRootCollectionViewPages(await space.getTRootPage(root_cvp=>root_cvp.id === TEST_DATA.block.collection_view_page[0].data.id));
   })
   
   it("!Get root_cvp !cb", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPage(root_cvp=>root_cvp.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID.slice(1)), false);
+    checkRootCollectionViewPages(await space.getTRootPage(root_cvp=>root_cvp.id === TEST_DATA.block.collection_view_page[0].data.id.slice(1)), false);
   })
   
   it("Get [root_cvp] cb.id", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID));
+    checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.id === TEST_DATA.block.collection_view_page[0].data.id));
   })
   
   it("Get [root_cvp] cb.type", async ()=>{
@@ -249,7 +249,7 @@ describe("Getter methods for space", ()=>{
   })
   
   it("!Get [root_cvp] !cb", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID.slice(1)), false);
+    checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.id === TEST_DATA.block.collection_view_page[0].data.id.slice(1)), false);
   })
 })
 
@@ -271,13 +271,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update [root_page] [id]", async ()=>{
-//     await space.updateRootPages([[ROOT_PAGE_ONE_ID, {
+//     await space.updateRootPages([[TEST_DATA.block.page[0].data.id, {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     }]]);
 //     testUpdateMethod<IPageUpdateInput>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -285,13 +285,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update [root_page] cb", async ()=>{
-//     await space.updateRootPages((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID ? {
+//     await space.updateRootPages((page)=>page.type === "page" && page.id === TEST_DATA.block.page[0].data.id ? {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     } : undefined)
 //     testUpdateMethod<IPageUpdateInput>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -299,13 +299,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update [root_cvp] [id]", async()=>{
-//     await space.updateRootPages([[ROOT_COLLECTION_VIEW_PAGE_ONE_ID, {
+//     await space.updateRootPages([[TEST_DATA.block.collection_view_page[0].data.id, {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     }]]);
 //     testUpdateMethod<ICollectionViewPageUpdateInput>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -313,13 +313,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update [root_cvp] cb", async()=>{
-//     await space.updateRootPages(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID ? {
+//     await space.updateRootPages(page=>page.type === "collection_view_page" && page.id === TEST_DATA.block.collection_view_page[0].data.id ? {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     } : undefined);
 //     testUpdateMethod<ICollectionViewPageUpdateInput>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -327,13 +327,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update root_page id", async ()=>{
-//     await space.updateRootPage([ROOT_PAGE_ONE_ID, {
+//     await space.updateRootPage([TEST_DATA.block.page[0].data.id, {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     }]);
 //     testUpdateMethod<IPageUpdateInput>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -341,13 +341,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update root_page cb", async ()=>{
-//     await space.updateRootPage((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID ? {
+//     await space.updateRootPage((page)=>page.type === "page" && page.id === TEST_DATA.block.page[0].data.id ? {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     } : undefined)
 //     testUpdateMethod<IPageUpdateInput>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -355,13 +355,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update root_cvp id", async()=>{
-//     await space.updateRootPage([ROOT_COLLECTION_VIEW_PAGE_ONE_ID, {
+//     await space.updateRootPage([TEST_DATA.block.collection_view_page[0].data.id, {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     }]);
 //     testUpdateMethod<ICollectionViewPageUpdateInput>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -369,13 +369,13 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Update root_cvp cb", async()=>{
-//     await space.updateRootPage(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID ? {
+//     await space.updateRootPage(page=>page.type === "collection_view_page" && page.id === TEST_DATA.block.collection_view_page[0].data.id ? {
 //       format: {
 //         page_icon: "icon"
 //       }
 //     } : undefined);
 //     testUpdateMethod<ICollectionViewPageUpdateInput>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       cb: (data) => expect(data?.format?.page_icon).toBe("icon")
@@ -389,9 +389,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete [root_page] [id]", async () => {
-//     await space.deleteTRootPages([ROOT_PAGE_ONE_ID]);
+//     await space.deleteTRootPages([TEST_DATA.block.page[0].data.id]);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -401,7 +401,7 @@ describe("Getter methods for space", ()=>{
 //   it("Delete [root_page] cb", async ()=>{
 //     await space.deleteTRootPages((page)=>console.log(page))
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -409,9 +409,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete [root_cvp] [id]", async()=>{
-//     await space.deleteTRootPages([ROOT_COLLECTION_VIEW_PAGE_ONE_ID]);
+//     await space.deleteTRootPages([TEST_DATA.block.collection_view_page[0].data.id]);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -419,9 +419,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete [root_cvp] cb", async()=>{
-//     await space.deleteTRootPages(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+//     await space.deleteTRootPages(page=>page.type === "collection_view_page" && page.id === TEST_DATA.block.collection_view_page[0].data.id);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -429,9 +429,9 @@ describe("Getter methods for space", ()=>{
 //   })
   
 //   it("Delete root_page id", async () => {
-//     await space.deleteTRootPage(ROOT_PAGE_ONE_ID);
+//     await space.deleteTRootPage(TEST_DATA.block.page[0].data.id);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -439,9 +439,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete root_page cb", async ()=>{
-//     await space.deleteTRootPage((page)=>page.type === "page" && page.id === ROOT_PAGE_ONE_ID)
+//     await space.deleteTRootPage((page)=>page.type === "page" && page.id === TEST_DATA.block.page[0].data.id)
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -449,9 +449,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete root_cvp id", async()=>{
-//     await space.deleteTRootPage(ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+//     await space.deleteTRootPage(TEST_DATA.block.collection_view_page[0].data.id);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"
@@ -459,9 +459,9 @@ describe("Getter methods for space", ()=>{
 //   })
 
 //   it("Delete root_cvp cb", async()=>{
-//     await space.deleteTRootPage(page=>page.type === "collection_view_page" && page.id === ROOT_COLLECTION_VIEW_PAGE_ONE_ID);
+//     await space.deleteTRootPage(page=>page.type === "collection_view_page" && page.id === TEST_DATA.block.collection_view_page[0].data.id);
 //     testDeleteMethod<ISpace>({
-//       child_id: ROOT_COLLECTION_VIEW_PAGE_ONE_ID,
+//       child_id: TEST_DATA.block.collection_view_page[0].data.id,
 //       parent_id: TEST_DATA.space[0].data.id,
 //       parent_type: "space",
 //       child_path: "pages"

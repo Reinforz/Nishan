@@ -1,5 +1,5 @@
-import { FormulaSchemaUnitInput, ISchemaMap } from '../types';
+import { FormulaArraySchemaUnitInput, ISchemaMap } from '../types';
 
-export function parseFormulaFromArray (formula: FormulaSchemaUnitInput['formula'], schema_map: ISchemaMap) {
+export function parseFormulaFromArray (formula: FormulaArraySchemaUnitInput['formula'], schema_map: ISchemaMap) {
 	return false;
 }

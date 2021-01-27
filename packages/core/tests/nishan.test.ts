@@ -20,7 +20,7 @@ const info: TestInfo<INotionUser, NotionUser, ['getNotionUser', 'getNotionUsers'
 			cb: (user) => user.id === TEST_DATA.notion_user[0].id.incorrect
 		},
 		method: 'getNotionUser',
-		checker: checkSingle
+		checker: checkSingle(TEST_DATA.notion_user[0])
 	},
 	multiple: {
 		correct: {
@@ -32,7 +32,7 @@ const info: TestInfo<INotionUser, NotionUser, ['getNotionUser', 'getNotionUsers'
 			cb: (user) => user.id === TEST_DATA.notion_user[0].id.incorrect
 		},
 		method: 'getNotionUsers',
-		checker: checkMultiple
+		checker: checkMultiple(TEST_DATA.notion_user[0])
 	}
 };
 

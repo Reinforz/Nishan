@@ -75,7 +75,7 @@ export interface TestInfo<D, C, M extends [string, string]> {
 	};
 }
 
-export interface ITestData<D extends TData, T extends TDataType> {
+export interface ITestData<D extends TData = TData, T extends TDataType = TDataType> {
 	data: D;
 	id: {
 		correct: string;

@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom",
+    ],
+    "baseUrl": ".",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2015",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "watch": false,
+    "declaration": true,
+    "sourceMap": false,
+    "noUnusedLocals": false,
+    "incremental": false,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "./src/index.ts",
+    "./experiment"
+  ],
+  "exclude": [
+    "./node_modules",
+  ],
+  "typedocOptions": {
+    "mode": "modules",
+    "out": "docs"
+  }
+}

@@ -1,23 +1,24 @@
 {
-  "name": "markdown-native",
+  "name": "@nishans/schema-builder",
   "version": "0.0.0",
-  "description": "A react native powered mobile app to upload markdown content as notion pages",
+  "description": "A package to create notion collection schema painlessly",
   "keywords": [
     "notion",
-    "notion-markdown",
-    "notion-markdown-native",
-    "react-native"
+    "notion-collection-schema",
+    "notion-schema-builder"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-native/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/schema-builder/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "sec",
+    "test": "tests"
   },
   "files": [
-    "lib"
+    "dist/src",
+    "dist/utils"
   ],
   "repository": {
     "type": "git",

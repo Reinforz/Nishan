@@ -9,7 +9,7 @@
     "notion-upload",
     "notion-markdown-web"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-web/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",

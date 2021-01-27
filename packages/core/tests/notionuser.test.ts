@@ -32,7 +32,7 @@ function checkSpaces(spaces: Space[], status?:boolean){
   }
 }
 
-it("Get space id", async ()=>{
+/* it("Get space id", async ()=>{
   checkSpace(await user.getSpace(TEST_DATA.space[0].data.id))
 })
 
@@ -73,7 +73,7 @@ it("Get user_settings", ()=>{
   expect(user_settings).not.toBeNull();
   expect(user_settings.id).toBe(TEST_DATA.notion_user[0].data.id);
   expect(user_settings.type).toBe("user_settings")
-})
+}) */
 
 it("Get user_root", ()=>{
   const user_root = user.getUserRoot();

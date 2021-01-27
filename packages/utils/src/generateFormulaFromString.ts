@@ -1,10 +1,70 @@
-const FUNCTION_REGEX = /^(concat|join|slice|toNumber|contains|replace|replaceAll|test|empty|abs|cbrt|ceil|exp|floor|ln|log10|log2|min|max|round|sign|sqrt|start|end|now|timestamp|fromTimestamp|dateAdd|dateSubtract|dateBetween|formatDate|minute|hour|day|date|month|year|unaryMinus|unaryPlus|add|subtract|multiply|divide|pow|mod|and|or|larger|largerEq|smaller|smallerEq|not|length|format|equal|unequal|if)\((.+)\)/;
-const ARGS_REGEX = /((?:concat|join|slice|toNumber|contains|replace|replaceAll|test|empty|abs|cbrt|ceil|exp|floor|ln|log10|log2|min|max|round|sign|sqrt|start|end|now|timestamp|fromTimestamp|dateAdd|dateSubtract|dateBetween|formatDate|minute|hour|day|date|month|year|unaryMinus|unaryPlus|add|subtract|multiply|divide|pow|mod|and|or|larger|largerEq|smaller|smallerEq|not|length|format|equal|unequal|if)\(([^()]+)\))|"(\w+)"|(e|pi|true|false)|(\d+)|prop\("(?:(\w*\s*\d*)+)"\)/g;
+const function_names =[
+  "concat",
+  "join",
+  "slice",
+  "toNumber",
+  "contains",
+  "replace",
+  "replaceAll",
+  "test",
+  "empty",
+  "abs",
+  "cbrt",
+  "ceil",
+  "exp",
+  "floor",
+  "ln",
+  "log10",
+  "log2",
+  "min",
+  "max",
+  "round",
+  "sign",
+  "sqrt",
+  "start",
+  "end",
+  "now",
+  "timestamp",
+  "fromTimestamp",
+  "dateAdd",
+  "dateSubtract",
+  "dateBetween",
+  "formatDate",
+  "minute",
+  "hour",
+  "day",
+  "date",
+  "month",
+  "year",
+  "unaryMinus",
+  "unaryPlus",
+  "add",
+  "subtract",
+  "multiply",
+  "divide",
+  "pow",
+  "mod",
+  "and",
+  "or",
+  "larger",
+  "largerEq",
+  "smaller",
+  "smallerEq",
+  "not",
+  "length",
+  "format",
+  "equal",
+  "unequal",
+  "if"
+];
+
+const FUNCTION_REGEX = new RegExp(`^(${function_names.join("|")})\((.+)\)`);
+const ARGS_REGEX = new RegExp(`((?:${function_names.join("|")})\(([^()]+)\))|"(\w+)"|(e|pi|true|false)|(\d+)|prop\("(?:(\w*\s*\d*)+)"\)`);
 
 function parseArg (arg: string) {
 	const function_match = arg.match(FUNCTION_REGEX);
 	if (function_match) {
-		return parseFormulaFromString(function_match[0]);
+		return generateFormulaFromString(function_match[0]);
   } else if(arg.match(/^(e|pi)$/)){
     return {
 			type: 'symbol',
@@ -41,7 +101,7 @@ function parseArg (arg: string) {
 		};
 }
 
-export function parseFormulaFromString (formula: string) {
+export function generateFormulaFromString (formula: string) {
 	const result_formula: any = {
 		function: '',
 		args: []

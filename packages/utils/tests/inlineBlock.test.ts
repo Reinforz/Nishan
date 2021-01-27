@@ -38,3 +38,45 @@ describe('Should create correct formatting', () => {
 		testAfterStringifying(inlineText('text').linkTo('www.google.com').text, [ 'a', 'www.google.com' ]);
 	});
 });
+
+describe('Should create correct highlight formatting', () => {
+	it('Should support default highlight formatting', () => {
+		testAfterStringifying(inlineText('text').default.text, [ 'h', 'default' ]);
+	});
+
+	it('Should support gray highlight formatting', () => {
+		testAfterStringifying(inlineText('text').gray.text, [ 'h', 'gray' ]);
+	});
+
+	it('Should support brown highlight formatting', () => {
+		testAfterStringifying(inlineText('text').brown.text, [ 'h', 'brown' ]);
+	});
+
+	it('Should support orange highlight formatting', () => {
+		testAfterStringifying(inlineText('text').orange.text, [ 'h', 'orange' ]);
+	});
+
+	it('Should support yellow highlight formatting', () => {
+		testAfterStringifying(inlineText('text').yellow.text, [ 'h', 'yellow' ]);
+	});
+
+	it('Should support teal highlight formatting', () => {
+		testAfterStringifying(inlineText('text').teal.text, [ 'h', 'teal' ]);
+	});
+
+	it('Should support blue highlight formatting', () => {
+		testAfterStringifying(inlineText('text').blue.text, [ 'h', 'blue' ]);
+	});
+
+	it('Should support purple highlight formatting', () => {
+		testAfterStringifying(inlineText('text').purple.text, [ 'h', 'purple' ]);
+	});
+
+	it('Should support pink highlight formatting', () => {
+		testAfterStringifying(inlineText('text').pink.text, [ 'h', 'pink' ]);
+	});
+
+	it('Should support red highlight formatting', () => {
+		testAfterStringifying(inlineText('text').red.text, [ 'h', 'red' ]);
+	});
+});

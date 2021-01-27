@@ -1,5 +1,5 @@
 import { TFormula, TFormulaResultType } from "@nishans/types";
-import { formulateResultTypeFromSchemaType, formula_rt_map } from "../utils/returnFormulaResultType";
+import { formulateResultTypeFromSchemaType, formula_rt_map, generateFormulaArgs } from "../utils";
 import { FormulaSchemaUnitInput, ISchemaMap, TResultType, TFormulaCreateInput } from "../types";
 
 export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map: ISchemaMap): TFormula {
@@ -21,27 +21,7 @@ export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula
 			if (Array.isArray(args))
 				for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
 			else traverseFormula(temp_args, args);
-		} else if (typeof formula === 'number') {
-			parent.push({
-				type: 'constant',
-				value: formula.toString(),
-				value_type: 'number',
-				result_type: 'number'
-			});
-		} else if (typeof formula === 'boolean') {
-			parent.push({
-				type: 'symbol',
-				name: formula.toString(),
-				result_type: 'checkbox'
-			});
-		} else if (typeof formula === 'string') {
-			parent.push({
-				type: 'constant',
-				value: formula.toString(),
-				value_type: 'string',
-				result_type: 'text'
-			});
-		} else {
+		} else if((formula as { property: string }).property){
 			const schema_name = (formula as { property: string }).property,
 				result = schema_map.get(schema_name);
 			if (result) {
@@ -56,7 +36,8 @@ export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula
 					result_type
 				});
 			}
-		}
+    }else 
+      parent.push(generateFormulaArgs(formula))
 	}
 
 	traverseFormula(res_formula.args, formula);

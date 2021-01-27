@@ -22,6 +22,8 @@ Object.values(data.recordMap.block).forEach(({ value: block }) => {
 	else if (block.type === 'collection_view_page' && block.parent_table !== 'space') non_root_cvp_ids.push(block.id);
 });
 
+Object.values(data.recordMap).forEach((recordMap) => {});
+
 const USER_ONE_DATA = Object.values(data.recordMap.user_root)[0].value;
 const USER_ONE_ID = USER_ONE_DATA.id,
 	SPACE_ONE_ID = Object.keys(data.recordMap.space)[0],

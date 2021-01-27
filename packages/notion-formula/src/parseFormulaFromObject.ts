@@ -1,6 +1,6 @@
 import { TFormula, TFormulaResultType } from "@nishans/types";
 import { formulateResultTypeFromSchemaType, formula_rt_map } from "../utils/returnFormulaResultType";
-import { FormulaSchemaUnitInput, ISchemaMap, TResultType, TFormulaCreateInput } from "./types";
+import { FormulaSchemaUnitInput, ISchemaMap, TResultType, TFormulaCreateInput } from "../types";
 
 export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map: ISchemaMap): TFormula {
 	const res_formula = {

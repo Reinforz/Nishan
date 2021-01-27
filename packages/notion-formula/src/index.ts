@@ -1,2 +1,2 @@
-export * from './parseFormulaFromObject';
-export * from './parseFormulaFromArray';
+export * from './generateASTFromObject';
+export * from './generateASTFromArray';

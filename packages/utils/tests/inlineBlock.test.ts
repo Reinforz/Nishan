@@ -1,5 +1,5 @@
 import { TTextFormat } from '@nishans/types';
-import { inlineText } from '../src';
+import { inlineDate, inlineEquation, inlineMention, inlinePage, inlineText } from '../src';
 
 function testAfterStringifying (source: TTextFormat, text: string, format: string[]) {
 	expect(JSON.stringify(source)).toBe(`[["${text}",[[${format.map((format) => `"${format}"`).join(',')}]]]]`);
@@ -127,7 +127,9 @@ it('pushToLast method should work correctly', () => {
 	testAfterStringifying(inlineText('text').pushToLast([ 'h', 'red' ]).text, 'text', [ 'h', 'red' ]);
 	testAfterStringifying(inlineText('text').pushToLast([ 'c' ]).text, 'text', [ 'c' ]);
 });
-/* 
-describe('Should create correct other inline formatters', () => {
-  
-}) */
+
+describe('Other inline block functions should work correctly', () => {
+	testAfterStringifying(inlineMention('123').text, '‣', [ 'u', '123' ]);
+	testAfterStringifying(inlinePage('123').text, '‣', [ 'p', '123' ]);
+	testAfterStringifying(inlineEquation('123').text, '⁍', [ 'e', '123' ]);
+});

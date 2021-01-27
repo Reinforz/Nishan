@@ -39,7 +39,7 @@ describe('Should create correct formatting', () => {
 	});
 });
 
-describe('Should create correct highlight formatting', () => {
+describe('Should create correct color highlight formatting', () => {
 	it('Should support default highlight formatting', () => {
 		testAfterStringifying(inlineText('text').default.text, [ 'h', 'default' ]);
 	});
@@ -78,5 +78,47 @@ describe('Should create correct highlight formatting', () => {
 
 	it('Should support red highlight formatting', () => {
 		testAfterStringifying(inlineText('text').red.text, [ 'h', 'red' ]);
+	});
+});
+
+describe('Should create correct background highlight formatting', () => {
+	it('Should support default background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').defaultbg.text, [ 'h', 'default_background' ]);
+	});
+
+	it('Should support gray background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').graybg.text, [ 'h', 'gray_background' ]);
+	});
+
+	it('Should support brown background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').brownbg.text, [ 'h', 'brown_background' ]);
+	});
+
+	it('Should support orange background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').orangebg.text, [ 'h', 'orange_background' ]);
+	});
+
+	it('Should support yellow background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').yellowbg.text, [ 'h', 'yellow_background' ]);
+	});
+
+	it('Should support teal background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').tealbg.text, [ 'h', 'teal_background' ]);
+	});
+
+	it('Should support blue background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').bluebg.text, [ 'h', 'blue_background' ]);
+	});
+
+	it('Should support purple background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').purplebg.text, [ 'h', 'purple_background' ]);
+	});
+
+	it('Should support pink background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').pinkbg.text, [ 'h', 'pink_background' ]);
+	});
+
+	it('Should support red background highlight formatting', () => {
+		testAfterStringifying(inlineText('text').redbg.text, [ 'h', 'red_background' ]);
 	});
 });

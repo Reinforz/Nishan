@@ -1,5 +1,7 @@
+import { TDataType, TData } from '@nishans/types';
 import Nishan from '../src';
 import data from './data';
+import { TestData } from './types';
 
 const nishan = new Nishan({
 	token: ''
@@ -22,7 +24,22 @@ Object.values(data.recordMap.block).forEach(({ value: block }) => {
 	else if (block.type === 'collection_view_page' && block.parent_table !== 'space') non_root_cvp_ids.push(block.id);
 });
 
-Object.values(data.recordMap).forEach((recordMap) => {});
+const TEST_DATA: TestData = {} as any;
+
+Object.entries(data.recordMap).forEach((entries) => {
+	const key = entries[0] as TDataType;
+	TEST_DATA[key] = [];
+	Object.entries(entries[1]).forEach(([ type, { value } ]) => {
+		TEST_DATA[key].push({
+			data: value,
+			id: {
+				correct: (value as TData).id,
+				incorrect: (value as TData).id.slice(1)
+			},
+			type
+		} as any);
+	});
+});
 
 const USER_ONE_DATA = Object.values(data.recordMap.user_root)[0].value;
 const USER_ONE_ID = USER_ONE_DATA.id,

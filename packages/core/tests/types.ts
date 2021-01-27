@@ -50,7 +50,7 @@ export interface ITestData<D extends TData, T extends TDataType> {
 	type: T;
 }
 
-type TestData = {
+export type TestData = {
 	block: ITestData<TBlock, 'block'>[];
 	collection: ITestData<ICollection, 'collection'>[];
 	collection_view: ITestData<TView, 'collection_view'>[];

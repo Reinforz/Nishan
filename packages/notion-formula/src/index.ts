@@ -1,7 +1,7 @@
 import { TFormula, TFormulaResultType, TFunctionName, TSchemaUnitType } from '@nishans/types';
 import { FormulaSchemaUnitInput, ISchemaMap, TFormulaCreateInput, TResultType } from './types';
 
-const formula_info_map: Map<TFunctionName, TFormulaResultType | 'auto'> = new Map([
+const formula_info_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'equal', 'checkbox' ],
 	[ 'unequal', 'checkbox' ],
 	[ 'and', 'checkbox' ],

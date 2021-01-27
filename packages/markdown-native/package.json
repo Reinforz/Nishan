@@ -1,0 +1,32 @@
+{
+  "name": "markdown-native",
+  "version": "0.0.0",
+  "description": "A react native powered mobile app to upload markdown content as notion pages",
+  "keywords": [
+    "notion",
+    "notion-markdown",
+    "notion-markdown-native",
+    "react-native"
+  ],
+  "author": "Devon Reid <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-native/README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

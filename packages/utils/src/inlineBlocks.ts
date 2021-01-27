@@ -1,29 +1,19 @@
 import { InlineDate, InlineFormat, TFormatBlockColor, TTextFormat } from '@nishans/types';
 
 export function inlineDate (arg: InlineDate) {
-	const text: TTextFormat = [ [ '‣', [ [ 'd', arg ] ] ] ];
-	return {
-		text,
-		add (title: string) {
-			text.push([ title, [  ] ]);
-			return new InlineTextFormatter(text);
-		}
-	};
+  return new InlineTextFormatter([ [ '‣', [ [ 'd', arg ] ] ] ]);
 }
 
 export function inlineMention (id: string) {
-	const mod_title: TTextFormat = [ [ '‣', [ [ 'u', id ] ] ] ];
-	return new InlineTextFormatter(mod_title);
+	return new InlineTextFormatter([ [ '‣', [ [ 'u', id ] ] ] ]);
 }
 
 export function inlinePage (id: string) {
-	const mod_title: TTextFormat = [ [ '‣', [ [ 'p', id ] ] ] ];
-	return new InlineTextFormatter(mod_title);
+	return new InlineTextFormatter([ [ '‣', [ [ 'p', id ] ] ] ]);
 }
 
 export function inlineEquation (equation: string) {
-	const mod_title: TTextFormat = [ [ '⁍', [ [ 'e', equation ] ] ] ];
-	return new InlineTextFormatter(mod_title);
+	return new InlineTextFormatter([ [ '⁍', [ [ 'e', equation ] ] ] ]);
 }
 
 export class HighlightColors {

@@ -38,6 +38,7 @@ This monorepo contains/will contain the following packages:-
 15. [@nishans/markdown-native](https://github.com/Devorein/Nishan/tree/master/packages/markdown-native) (NSY): A react native powered mobile app to upload markdown content as notion pages
 16. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) (WIP): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
 17. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
+18. [@nishans/notion-filter](https://github.com/Devorein/Nishan/tree/master/packages/notion-filter) (WIP): A package to convert string into notion formula and vice versa
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

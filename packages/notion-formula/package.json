@@ -1,0 +1,32 @@
+{
+  "name": "@nishans/notion-formula",
+  "version": "0.0.0",
+  "description": "A package to convert string into notion formula and vice versa",
+  "keywords": [
+    "notion",
+    "notion-formula",
+    "notion-formula-ast",
+    "notion-formula-builder"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/notion-filter/README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist/src",
+    "dist/utils"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fnotion-filter"
+  }
+}

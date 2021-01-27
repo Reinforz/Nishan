@@ -1,10 +1,10 @@
 import { NotionUser, Space } from "../src";
-import {nishan, USER_ONE_ID, SPACE_ONE_ID} from "./constants"
+import {nishan, TEST_DATA} from "./constants"
 
 let user: NotionUser = null as any;
 
 beforeAll(async ()=>{
-  user = await nishan.getNotionUser(USER_ONE_ID)
+  user = await nishan.getNotionUser(TEST_DATA.notion_user[0].id.correct)
   user.init_cache = true;
 })
 
@@ -12,7 +12,7 @@ function checkSpace(space: Space, status?: boolean){
   status = status ?? true;
   if(status){
     expect(space).not.toBeNull();
-    expect(space.id).toBe(SPACE_ONE_ID);
+    expect(space.id).toBe(TEST_DATA.space[0].data.id);
     expect(space.type).toBe("space");
   }else{
     expect(space).toBeUndefined();
@@ -24,7 +24,7 @@ function checkSpaces(spaces: Space[], status?:boolean){
   if(status){
     expect(spaces.length).toBe(1);
     expect(spaces[0]).not.toBeNull();
-    expect(spaces[0].id).toBe(SPACE_ONE_ID);
+    expect(spaces[0].id).toBe(TEST_DATA.space[0].data.id);
     expect(spaces[0].type).toBe("space");
   }else{
     expect(spaces.length).toBe(0);
@@ -33,31 +33,31 @@ function checkSpaces(spaces: Space[], status?:boolean){
 }
 
 it("Get space id", async ()=>{
-  checkSpace(await user.getSpace(SPACE_ONE_ID))
+  checkSpace(await user.getSpace(TEST_DATA.space[0].data.id))
 })
 
 it("!Get space !id", async ()=>{
-  checkSpace(await user.getSpace(SPACE_ONE_ID.slice(1)), false)
+  checkSpace(await user.getSpace(TEST_DATA.space[0].data.id.slice(1)), false)
 })
 
 it("Get [space] [id]", async ()=>{
-  checkSpaces(await user.getWorkSpaces([SPACE_ONE_ID]));
+  checkSpaces(await user.getWorkSpaces([TEST_DATA.space[0].data.id]));
 })
 
 it("!Get [space] ![id]", async ()=>{
-  checkSpaces(await user.getWorkSpaces([SPACE_ONE_ID.slice(1)]), false);
+  checkSpaces(await user.getWorkSpaces([TEST_DATA.space[0].data.id.slice(1)]), false);
 })
 
 it("Get space cb", async ()=>{
-  checkSpace(await user.getSpace(space=>space.id === SPACE_ONE_ID));
+  checkSpace(await user.getSpace(space=>space.id === TEST_DATA.space[0].data.id));
 })
 
 it("!Get space !cb", async ()=>{
-  checkSpace(await user.getSpace(space=>space.id === SPACE_ONE_ID.slice(1)), false);
+  checkSpace(await user.getSpace(space=>space.id === TEST_DATA.space[0].data.id.slice(1)), false);
 })
 
 it("Get [space] cb", async ()=>{
-  checkSpaces(await user.getWorkSpaces(space=>space.id === SPACE_ONE_ID));
+  checkSpaces(await user.getWorkSpaces(space=>space.id === TEST_DATA.space[0].data.id));
 })
 
 it("Get [space] undefined", async ()=>{
@@ -65,19 +65,19 @@ it("Get [space] undefined", async ()=>{
 })
 
 it("!Get [space] !cb", async ()=>{
-  checkSpaces(await user.getWorkSpaces(space=>space.id === SPACE_ONE_ID.slice(1)), false);
+  checkSpaces(await user.getWorkSpaces(space=>space.id === TEST_DATA.space[0].data.id.slice(1)), false);
 })
 
 it("Get user_settings", ()=>{
   const user_settings = user.getUserSettings();
   expect(user_settings).not.toBeNull();
-  expect(user_settings.id).toBe(USER_ONE_ID);
+  expect(user_settings.id).toBe(TEST_DATA.notion_user[0].data.id);
   expect(user_settings.type).toBe("user_settings")
 })
 
 it("Get user_root", ()=>{
   const user_root = user.getUserRoot();
   expect(user_root).not.toBeNull();
-  expect(user_root.id).toBe(USER_ONE_ID);
+  expect(user_root.id).toBe(TEST_DATA.notion_user[0].data.id);
   expect(user_root.type).toBe("user_root")
 })

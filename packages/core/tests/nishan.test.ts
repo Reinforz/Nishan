@@ -1,6 +1,6 @@
 import { INotionUser } from '@nishans/types';
 import { NotionUser } from '../src';
-import { USER_ONE, nishan } from './constants';
+import { TEST_DATA, nishan } from './constants';
 import { TestInfo } from './types';
 import { checkMultiple, checkSingle } from './utils/checker';
 import { amount_arr, result_arr, way_arr } from './utils/testinfos';
@@ -12,24 +12,24 @@ it('Sets up default configuration for Nishan', () => {
 const info: TestInfo<INotionUser, NotionUser, ['getNotionUser', 'getNotionUsers']> = {
 	single: {
 		correct: {
-			id: USER_ONE.id.correct,
-			cb: (user) => user.id === USER_ONE.id.correct
+			id: TEST_DATA.notion_user[0].id.correct,
+			cb: (user) => user.id === TEST_DATA.notion_user[0].id.correct
 		},
 		incorrect: {
-			id: USER_ONE.id.incorrect,
-			cb: (user) => user.id === USER_ONE.id.incorrect
+			id: TEST_DATA.notion_user[0].id.incorrect,
+			cb: (user) => user.id === TEST_DATA.notion_user[0].id.incorrect
 		},
 		method: 'getNotionUser',
 		checker: checkSingle
 	},
 	multiple: {
 		correct: {
-			id: [ USER_ONE.id.correct ],
-			cb: (user) => user.id === USER_ONE.id.correct
+			id: [ TEST_DATA.notion_user[0].id.correct ],
+			cb: (user) => user.id === TEST_DATA.notion_user[0].id.correct
 		},
 		incorrect: {
-			id: [ USER_ONE.id.incorrect ],
-			cb: (user) => user.id === USER_ONE.id.incorrect
+			id: [ TEST_DATA.notion_user[0].id.incorrect ],
+			cb: (user) => user.id === TEST_DATA.notion_user[0].id.incorrect
 		},
 		method: 'getNotionUsers',
 		checker: checkMultiple

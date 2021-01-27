@@ -18,11 +18,14 @@
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "npx jest --runInBand ./tests"
+  },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Futils"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.12"
+    "@nishans/types": "0.0.12",
+    "jest": "^26.6.3"
   }
 }

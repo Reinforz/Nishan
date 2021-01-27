@@ -9,6 +9,7 @@
     "examples/"
   ],
   "devDependencies": {
+    "@types/dedent": "^0.7.0",
     "@types/jest": "^26.0.19",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
@@ -43,5 +44,8 @@
   },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dedent": "^0.7.0"
+  }
 }

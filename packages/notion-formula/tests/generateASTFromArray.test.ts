@@ -2,9 +2,13 @@ import { TFunctionName } from '@nishans/types';
 import deepEqual from 'deep-equal';
 
 import { parseFormulaFromArray } from '../src';
-import { generateFunction } from './utils/generateFormulaParts';
-import { generateFunctionFormulaASTArguments, generateFunctionFormulaArrayArguments } from './utils/generateFunction';
-import { function_formula_info, test_schema_map } from './utils/functionFormulaInfo';
+import {
+	function_formula_info,
+	test_schema_map,
+	generateFunction,
+	generateFunctionFormulaASTArguments,
+	generateFunctionFormulaArrayArguments
+} from './utils';
 
 function_formula_info.forEach(({ function_name, return_type, args }) => {
 	args.forEach((arg) => {

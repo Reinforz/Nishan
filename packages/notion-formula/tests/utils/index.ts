@@ -1,7 +1,7 @@
 import { ISchemaMap } from '../../src';
 
 export * from './generateFormulaParts';
-export * from './generateFunction';
+export * from './generateFunctionFormulaArguments';
 
 export const test_schema_map: ISchemaMap = new Map([
 	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],

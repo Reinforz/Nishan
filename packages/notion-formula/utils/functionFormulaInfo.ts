@@ -2,7 +2,7 @@ import { TFormulaResultType, TFunctionName } from '@nishans/types';
 
 interface IFunctionFormulaInfo {
 	return_type: TFormulaResultType;
-	args: TFormulaResultType[][];
+	args?: TFormulaResultType[][];
 	function_name: TFunctionName;
 }
 
@@ -169,8 +169,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	},
 	{
 		function_name: 'now',
-		return_type: 'date',
-		args: []
+		return_type: 'date'
 	},
 	{
 		function_name: 'fromTimestamp',

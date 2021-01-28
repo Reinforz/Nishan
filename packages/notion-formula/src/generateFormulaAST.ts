@@ -30,9 +30,9 @@ function generateFormulaAST (
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
       else{
-        const is_argument_length_mismatch = function_info.args.findIndex(arg_info=>arg_info.length === args?.length) === -1;
+        const is_argument_length_mismatch = function_info.args?.findIndex((arg_info: any)=>arg_info.length === args?.length) === -1;
         if(is_argument_length_mismatch)
-          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.args.map(arg=>arg.length))).join(',')} arguments, given ${args?.length ?? 0}`)
+          throw new Error(`Function ${function_name} takes ${function_info.args && Array.from(new Set(function_info.args.map((arg: any)=>arg.length))).join(',') || 0} arguments, given ${args?.length ?? 0}`)
         const function_formula = {
           name: function_name,
           type: 'function',
@@ -64,5 +64,6 @@ export function generateFormulaASTFromArray (
 	formula: FormulaArraySchemaUnitInput['formula'],
 	schema_map?: ISchemaMap
 ): TFormula {
+  // console.log(formula);
 	return generateFormulaAST(formula, schema_map);
 }

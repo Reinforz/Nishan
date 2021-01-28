@@ -10,7 +10,7 @@ export function generateFunction (
 		result_type,
 		name
 	} as TFunctionFormula;
-	if (args) formula.args = args;
+	if (args) (formula as any).args = args;
 	return formula;
 }
 

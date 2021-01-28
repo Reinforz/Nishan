@@ -3,8 +3,8 @@ import deepEqual from 'deep-equal';
 import { generateNumberFunction, generateNumberConstant } from './utils/generateFunction';
 
 describe('Single number argument formulas with number return type should work correctly', () => {
-  // Single argument number return_type formulas
-  const arg1_nrt_formula_names = [
+  // Single number argument number return_type formulas
+  const narg1_nrt_formula_names = [
 		'unaryMinus',
 		'unaryPlus',
 		'abs',
@@ -22,16 +22,16 @@ describe('Single number argument formulas with number return type should work co
     'sqrt',
 	] as const;
 
-	arg1_nrt_formula_names.forEach((arg1_nrt_formula_name) => {
-		it(`Should work for ${arg1_nrt_formula_name} function`, () => {
+	narg1_nrt_formula_names.forEach((narg1_nrt_formula_name) => {
+		it(`Should work for ${narg1_nrt_formula_name} function when argument is number constant`, () => {
 			expect(
 				deepEqual(
-					generateNumberFunction(arg1_nrt_formula_name).arg([
+					generateNumberFunction(narg1_nrt_formula_name).arg([
             generateNumberConstant(1)
           ]),
-					parseFormulaFromArray([ arg1_nrt_formula_name, [ 1 ] ], new Map())
+					parseFormulaFromArray([ narg1_nrt_formula_name, [ 1 ] ], new Map())
 				)
 			).toBe(true);
 		});
-	});
+  });
 });

@@ -9,7 +9,7 @@
     "notion-formula-builder"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/notion-filter/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
@@ -29,6 +29,6 @@
     "test": "npx jest --runInBand ./tests --collectCoverage"
   },
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fnotion-filter"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fnotion-formula"
   }
 }

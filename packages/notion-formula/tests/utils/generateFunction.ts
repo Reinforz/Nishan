@@ -9,7 +9,6 @@ import {
 	generateNumberFunction,
 	generateNumberProperty,
 	generateNumberSymbol,
-	generateProperty,
 	generateTextConstant,
 	generateTextFunction,
 	generateTextProperty

@@ -2,7 +2,7 @@ import { parseFormulaFromArray } from '../src';
 import deepEqual from 'deep-equal';
 import { generateNumberFunction, generateNumberConstant } from './utils/generateFunction';
 
-describe('Single number argument formulas with number return type should work correctly', () => {
+describe('Single number argument formulas with number return type should work correctly for array ast', () => {
   // Single number argument number return_type formulas
   const narg1_nrt_formula_names = [
 		'unaryMinus',
@@ -29,9 +29,22 @@ describe('Single number argument formulas with number return type should work co
 					generateNumberFunction(narg1_nrt_formula_name).arg([
             generateNumberConstant(1)
           ]),
-					parseFormulaFromArray([ narg1_nrt_formula_name, [ 1 ] ], new Map())
+					parseFormulaFromArray([ narg1_nrt_formula_name, [ 1 ] ] as any, new Map())
 				)
 			).toBe(true);
 		});
   });
+  
+  narg1_nrt_formula_names.forEach((narg1_nrt_formula_name) => {
+		it(`Should work for ${narg1_nrt_formula_name} function when argument is number function`, () => {
+			expect(
+				deepEqual(
+					generateNumberFunction(narg1_nrt_formula_name).arg([
+            generateNumberFunction('abs').arg([generateNumberConstant(1)])
+          ]),
+					parseFormulaFromArray([ narg1_nrt_formula_name, [['abs', [ 1 ]]] ] as any, new Map())
+				)
+			).toBe(true);
+		});
+	});
 });

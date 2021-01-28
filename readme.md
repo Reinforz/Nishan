@@ -34,7 +34,7 @@ This monorepo contains/will contain the following packages:-
 11. [@nishans/markdown](https://github.com/Devorein/Nishan/tree/master/packages/markdown) (WIP): A package to upload markdown content into notion
 12. [@nishans/remark-notion](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) (WIP): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
 13. [@nishans/discord-bot](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
-14. [@nishans/notion-filter](https://github.com/Devorein/Nishan/tree/master/packages/notion-filter) (WIP): A package to convert string into notion formula and vice versa
+14. [@nishans/notion-formula](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) (WIP): A package generate notion formula with ease
 15. [@nishans/schema-builder](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder) (WIP): A package to create notion collection schema painlessly
 
 ### Apps

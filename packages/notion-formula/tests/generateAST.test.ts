@@ -26,6 +26,7 @@ function_formula_info.forEach(({ function_name, return_type, args }) => {
 				return_type,
 				function_formula_ast_args[arg_type]
 			);
+
 			it(`type:array fn:${function_name} rt:${return_type} arg:${JSON.stringify(
 				arg.map((arg) => `${arg}.${arg_type}`)
 			)}`, () => {

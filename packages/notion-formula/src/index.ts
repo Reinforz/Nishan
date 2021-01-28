@@ -1,3 +1,2 @@
-export * from './generateASTFromObject';
-export * from './generateASTFromArray';
+export * from './generateFormulaAST';
 export * from '../types';

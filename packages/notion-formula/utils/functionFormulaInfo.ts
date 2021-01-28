@@ -1,5 +1,4 @@
 import { TFormulaResultType, TFunctionName } from '@nishans/types';
-import { ISchemaMap } from '../../src';
 
 interface IFunctionFormulaInfo {
 	return_type: TFormulaResultType;
@@ -77,7 +76,7 @@ function generateNrt1Dafs (function_names: TFunctionName[]) {
 	return function_names.map(generateNrt1Daf);
 }
 
-export const function_formula_info: IFunctionFormulaInfo[] = [
+export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	...generateNrt1Nafs([
 		'abs',
 		'cbrt',
@@ -193,12 +192,17 @@ export const function_formula_info: IFunctionFormulaInfo[] = [
 		return_type: 'number',
 		args: [ [ 'date', 'text' ] ]
 	},
+	{
+		function_name: 'formatDate',
+		return_type: 'date',
+		args: [ [ 'date', 'text' ] ]
+	},
 	...generateNrt1Dafs([ 'timestamp', 'minute', 'hour', 'date', 'day', 'month', 'year' ])
 ];
 
-export const test_schema_map: ISchemaMap = new Map([
-	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],
-	[ 'text', { schema_id: 'text', type: 'text', name: 'text' } ],
-	[ 'checkbox', { schema_id: 'checkbox', type: 'checkbox', name: 'checkbox' } ],
-	[ 'date', { schema_id: 'date', type: 'date', name: 'date' } ]
-]);
+export const function_formula_info_map: Map<TFunctionName, IFunctionFormulaInfo> = new Map(
+	function_formula_info_arr.map((function_formula_info) => [
+		function_formula_info.function_name,
+		function_formula_info
+	])
+);

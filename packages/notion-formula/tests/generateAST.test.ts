@@ -2,8 +2,8 @@ import { TFunctionName } from '@nishans/types';
 import deepEqual from 'deep-equal';
 
 import { parseFormulaFromArray, parseFormulaFromObject } from '../src';
+import { function_formula_info_arr } from '../utils';
 import {
-	function_formula_info,
 	test_schema_map,
 	generateFunction,
 	generateFunctionFormulaASTArguments,
@@ -11,14 +11,12 @@ import {
 	generateFunctionFormulaObjectArguments
 } from './utils';
 
-function_formula_info.forEach(({ function_name, return_type, args }) => {
+function_formula_info_arr.forEach(({ function_name, return_type, args }) => {
 	args.forEach((arg) => {
-		const function_formula_ast_args = generateFunctionFormulaASTArguments(arg);
-		const function_formula_arr_args = generateFunctionFormulaArrayArguments(arg);
-		const function_formula_obj_args = generateFunctionFormulaObjectArguments(arg);
-		const arg_types = Object.keys(function_formula_ast_args).filter(
-			(key) => function_formula_ast_args[key].length !== 0
-		);
+		const function_formula_ast_args = generateFunctionFormulaASTArguments(arg),
+			function_formula_arr_args = generateFunctionFormulaArrayArguments(arg),
+			function_formula_obj_args = generateFunctionFormulaObjectArguments(arg),
+			arg_types = Object.keys(function_formula_ast_args).filter((key) => function_formula_ast_args[key].length !== 0);
 
 		arg_types.forEach((arg_type) => {
 			const formula_ast = generateFunction(

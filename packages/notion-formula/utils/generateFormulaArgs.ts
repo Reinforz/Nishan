@@ -2,7 +2,7 @@ import { TFormulaResultType } from '@nishans/types';
 import { ISchemaMap } from '../types/formula-object';
 import { formulateResultTypeFromSchemaType } from './returnFormulaResultType';
 
-export function generateFormulaArgs (value: any) {
+export function generateFormulaArgsFromLiterals (value: number | string | boolean) {
 	if (typeof value === 'boolean')
 		return {
 			type: 'symbol',

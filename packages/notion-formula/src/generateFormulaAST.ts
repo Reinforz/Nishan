@@ -1,5 +1,5 @@
 import { TFormula, TFunctionName } from '@nishans/types';
-import { generateFormulaArgFromProperty, formula_rt_map, generateFormulaArgs } from '../utils';
+import { generateFormulaArgFromProperty, function_formula_info_map, generateFormulaArgsFromLiterals } from '../utils';
 import {
 	FormulaSchemaUnitInput,
 	ISchemaMap,
@@ -11,50 +11,54 @@ import {
 
 function generateFormulaAST (
 	input_formula: FormulaSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'],
-	schema_map: ISchemaMap
+	schema_map?: ISchemaMap
 ): TFormula {
 	const output_formula = {
 		args: []
 	};
 
-	function traverseFormula (parent: any, arg: TResultType | AnyArrayResultType | undefined) {
-		if ((arg as TFormulaCreateInput).function || Array.isArray(arg)) {
-			let function_name: TFunctionName = '' as any,
-				args: any[] | undefined = undefined;
-			if ((arg as TFormulaCreateInput).function) {
-				function_name = (arg as TFormulaCreateInput).function;
-				args = (arg as TFormulaCreateInput).args;
-			} else if (Array.isArray(arg)) {
-				function_name = arg[0];
-				args = arg[1] as any[];
-			}
-			const temp_args = [] as any,
-				function_formula = {
-					name: function_name,
-					type: 'function',
-					result_type: formula_rt_map.get(function_name)
-				};
-			parent.push(function_formula);
+	function traverseFormula (parent_arg_container: any, arg: TResultType | AnyArrayResultType | undefined) {
+		const is_arg_array_function = Array.isArray(arg),
+			is_arg_object_function = (arg as TFormulaCreateInput).function;
+		if (is_arg_array_function || is_arg_object_function) {
+			// The argument is a function
+			const function_name: TFunctionName = is_arg_object_function
+					? (arg as TFormulaCreateInput).function
+					: (arg as any)[0],
+				args: any[] | undefined = is_arg_object_function ? (arg as TFormulaCreateInput).args : (arg as any)[1];
+      const arg_container = [] as any, function_info = function_formula_info_map.get(function_name);
+      if(!function_info)
+        throw new Error(`Function ${function_name} is not supported`);
+
+      const function_formula = {
+        name: function_name,
+        type: 'function',
+        result_type: function_formula_info_map.get(function_name)?.return_type
+      };
+			parent_arg_container.push(function_formula);
+			// Go through each arguments of the function if any
 			if (args) {
-				(function_formula as any).args = temp_args;
-				for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
+				(function_formula as any).args = arg_container;
+				for (let index = 0; index < args.length; index++) traverseFormula(arg_container, args[index] as any);
 			}
-		} else if ((arg as { property: string }).property)
-			parent.push(generateFormulaArgFromProperty(arg as { property: string }, schema_map));
-		else parent.push(generateFormulaArgs(arg));
+		} else if ((arg as { property: string }).property) {
+			if (!schema_map)
+				throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`);
+			parent_arg_container.push(generateFormulaArgFromProperty(arg as { property: string }, schema_map));
+		} else parent_arg_container.push(generateFormulaArgsFromLiterals(arg as any));
 	}
 
 	traverseFormula(output_formula.args, input_formula);
 	return output_formula.args[0];
 }
 
-export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map: ISchemaMap): TFormula {
+export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map?: ISchemaMap): TFormula {
 	return generateFormulaAST(formula, schema_map);
 }
 
 export function parseFormulaFromArray (
 	formula: FormulaArraySchemaUnitInput['formula'],
-	schema_map: ISchemaMap
+	schema_map?: ISchemaMap
 ): TFormula {
 	return generateFormulaAST(formula, schema_map);
 }

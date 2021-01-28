@@ -29,18 +29,22 @@ function generateFormulaAST (
       const arg_container = [] as any, function_info = function_formula_info_map.get(function_name);
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
-
-      const function_formula = {
-        name: function_name,
-        type: 'function',
-        result_type: function_formula_info_map.get(function_name)?.return_type
-      };
-			parent_arg_container.push(function_formula);
-			// Go through each arguments of the function if any
-			if (args) {
-				(function_formula as any).args = arg_container;
-				for (let index = 0; index < args.length; index++) traverseFormula(arg_container, args[index] as any);
-			}
+      else{
+        const is_argument_length_mismatch = function_info.args.findIndex(arg_info=>arg_info.length === args?.length) === -1;
+        if(is_argument_length_mismatch)
+          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.args.map(arg=>arg.length))).join(',')} arguments, given ${args?.length ?? 0}`)
+        const function_formula = {
+          name: function_name,
+          type: 'function',
+          result_type: function_info.return_type
+        };
+        parent_arg_container.push(function_formula);
+        // Go through each arguments of the function if any
+        if (args) {
+          (function_formula as any).args = arg_container;
+          for (let index = 0; index < args.length; index++) traverseFormula(arg_container, args[index] as any);
+        }
+      }
 		} else if ((arg as { property: string }).property) {
 			if (!schema_map)
 				throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`);
@@ -52,11 +56,11 @@ function generateFormulaAST (
 	return output_formula.args[0];
 }
 
-export function parseFormulaFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map?: ISchemaMap): TFormula {
+export function generateFormulaASTFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map?: ISchemaMap): TFormula {
 	return generateFormulaAST(formula, schema_map);
 }
 
-export function parseFormulaFromArray (
+export function generateFormulaASTFromArray (
 	formula: FormulaArraySchemaUnitInput['formula'],
 	schema_map?: ISchemaMap
 ): TFormula {

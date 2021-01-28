@@ -1,7 +1,7 @@
 import { TFunctionName } from '@nishans/types';
 import deepEqual from 'deep-equal';
 
-import { parseFormulaFromArray, parseFormulaFromObject } from '../src';
+import { generateFormulaASTFromObject, generateFormulaASTFromArray } from '../src';
 import { function_formula_info_arr } from '../utils';
 import {
 	test_schema_map,
@@ -31,7 +31,7 @@ function_formula_info_arr.forEach(({ function_name, return_type, args }) => {
 				expect(
 					deepEqual(
 						formula_ast,
-						parseFormulaFromArray([ function_name as any, function_formula_arr_args[arg_type] ], test_schema_map)
+						generateFormulaASTFromArray([ function_name as any, function_formula_arr_args[arg_type] ], test_schema_map)
 					)
 				).toBe(true);
 			});
@@ -41,7 +41,7 @@ function_formula_info_arr.forEach(({ function_name, return_type, args }) => {
 				expect(
 					deepEqual(
 						formula_ast,
-						parseFormulaFromObject(
+						generateFormulaASTFromObject(
 							{ function: function_name as any, args: function_formula_obj_args[arg_type] },
 							test_schema_map
 						)

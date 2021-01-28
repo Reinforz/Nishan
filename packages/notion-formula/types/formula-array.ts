@@ -51,8 +51,8 @@ export type SliceFunctionArrayCreateInput = [
 	'slice',
 
 
-		| [TTextArrayResultType, TNumberArrayResultType | TNumberArrayResultType]
-		| [TTextArrayResultType | TNumberArrayResultType]
+		| [TTextArrayResultType, TNumberArrayResultType, TNumberArrayResultType]
+		| [TTextArrayResultType, TNumberArrayResultType]
 ];
 export type FormatFunctionArrayCreateInput = ['format', [AnyArrayResultType]];
 export type AndFunctionArrayCreateInput = ['and', Tuple2<TCheckboxArrayResultType>];

@@ -115,7 +115,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	{
 		function_name: 'slice',
 		return_type: 'text',
-		args: [ [ 'text', 'number', 'number' ], [ 'text', 'number' ] ]
+		args: [ [ 'text', 'number' ], [ 'text', 'number', 'number' ] ]
 	},
 	{
 		function_name: 'length',

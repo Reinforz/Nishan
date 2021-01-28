@@ -32,12 +32,14 @@ export type NumberAddFunctionArrayCreateInput = ['add', Tuple2<TNumberArrayResul
 export type ReplaceAllFunctionArrayCreateInput = [
 	'replaceAll',
 
+
 		| Tuple12<TNumberArrayResultType, TTextArrayResultType>
 		| Tuple12<TTextArrayResultType, TTextArrayResultType>
 		| Tuple12<TCheckboxArrayResultType, TTextArrayResultType>
 ];
 export type ReplaceFunctionArrayCreateInput = [
 	'replace',
+
 
 		| Tuple12<TNumberArrayResultType, TTextArrayResultType>
 		| Tuple12<TTextArrayResultType, TTextArrayResultType>
@@ -47,7 +49,9 @@ export type ConcatFunctionArrayCreateInput = ['concat', Tuple2<TTextArrayResultT
 export type JoinFunctionArrayCreateInput = ['join', [TTextArrayResultType]];
 export type SliceFunctionArrayCreateInput = [
 	'slice',
-	[TTextArrayResultType, TNumberArrayResultType] | [TNumberArrayResultType]
+
+		| [TTextArrayResultType, TNumberArrayResultType | TNumberArrayResultType]
+		| [TTextArrayResultType | TNumberArrayResultType]
 ];
 export type FormatFunctionArrayCreateInput = ['format', [AnyArrayResultType]];
 export type AndFunctionArrayCreateInput = ['and', Tuple2<TCheckboxArrayResultType>];
@@ -67,6 +71,7 @@ export type UnaryPlusFunctionArrayCreateInput = ['unaryPlus', [TNumberArrayResul
 export type ContainsFunctionArrayCreateInput = ['contains', Tuple2<TTextArrayResultType>];
 export type TestFunctionArrayCreateInput = [
 	'test',
+
 
 		| [TNumberArrayResultType, TTextArrayResultType]
 		| [TTextArrayResultType, TTextArrayResultType]

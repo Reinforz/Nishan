@@ -1,96 +1,42 @@
 import { TFormulaResultType, TFunctionName } from '@nishans/types';
 import { ISchemaMap } from '../../src';
 
-export const function_formula_info: {
+interface IFunctionFormulaInfo {
 	return_type: TFormulaResultType;
 	args: TFormulaResultType[][];
 	function_name: TFunctionName;
-}[] = [
-	{
-		function_name: 'abs',
+}
+
+function generateNrt1NAF (function_name: TFunctionName): IFunctionFormulaInfo {
+	return {
+		function_name,
 		return_type: 'number',
 		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'cbrt',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'unaryMinus',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'unaryPlus',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'abs',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'cbrt',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'ceil',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'exp',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'floor',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'ln',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'log10',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'log2',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'max',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'min',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'round',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'sign',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'sqrt',
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	}
+	};
+}
+
+function generateNrt1NAFs (function_names: TFunctionName[]) {
+	return function_names.map(generateNrt1NAF);
+}
+
+export const function_formula_info: IFunctionFormulaInfo[] = [
+	...generateNrt1NAFs([
+		'abs',
+		'cbrt',
+		'unaryMinus',
+		'unaryPlus',
+		'ceil',
+		'exp',
+		'floor',
+		'ln',
+		'log10',
+		'log2',
+		'max',
+		'min',
+		'round',
+		'sign',
+		'sqrt'
+	])
 ];
 
 export const test_schema_map: ISchemaMap = new Map([

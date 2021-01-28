@@ -19,7 +19,7 @@ export function parseFormulaFromArray (
 				result_type: formula_rt_map.get(function_name),
 				args: temp_args
 			});
-			for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
+			if (args) for (let index = 0; index < args.length; index++) traverseFormula(temp_args, args[index] as any);
 		} else if ((formula as { property: string }).property)
 			parent.push(generateFormulaArgFromProperty(formula as { property: string }, schema_map));
 		else parent.push(generateFormulaArgs(formula));

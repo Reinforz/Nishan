@@ -34,7 +34,7 @@ describe('Single number argument formulas with number return type should work co
           parseFormulaFromObject(
             {
               function: narg1_nrt_formula_name,
-              args: 1
+              args: [1]
             },
             schema_map
           )
@@ -53,10 +53,10 @@ describe('Single number argument formulas with number return type should work co
 					parseFormulaFromObject(
             {
               function: narg1_nrt_formula_name,
-              args:{
+              args:[{
                 function: 'abs',
-                args: 1
-              } 
+                args: [1]
+              } ]
             },
             schema_map
           )
@@ -73,9 +73,9 @@ describe('Single number argument formulas with number return type should work co
 					parseFormulaFromObject(
             {
               function: narg1_nrt_formula_name,
-              args:{
+              args:[{
                 property: "number"
-              } 
+              } ]
             },
             schema_map
           )

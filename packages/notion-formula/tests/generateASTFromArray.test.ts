@@ -5,18 +5,97 @@ import { ISchemaMap } from '../types';
 import { TFormulaResultType, TFunctionName } from '@nishans/types';
 import { generateFunctionFormulaASTArguments, generateFunctionFormulaArrayArguments } from './utils/generateFunction';
 
-export const function_formula_info: Record<
-	TFunctionName,
+export const function_formula_info: {
+	return_type: TFormulaResultType;
+	args: TFormulaResultType[][];
+	function_name: TFunctionName;
+}[] = [
 	{
-		return_type: TFormulaResultType;
-		args: TFormulaResultType[][];
-	}
-> = {
-	abs: {
+		function_name: 'abs',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'cbrt',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'unaryMinus',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'unaryPlus',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'abs',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'cbrt',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'ceil',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'exp',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'floor',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'ln',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'log10',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'log2',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'max',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'min',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'round',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'sign',
+		return_type: 'number',
+		args: [ [ 'number' ] ]
+	},
+	{
+		function_name: 'sqrt',
 		return_type: 'number',
 		args: [ [ 'number' ] ]
 	}
-} as any;
+];
 
 const schema_map: ISchemaMap = new Map([
 	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],
@@ -25,7 +104,7 @@ const schema_map: ISchemaMap = new Map([
 	[ 'date', { schema_id: 'date', type: 'date', name: 'date' } ]
 ]);
 
-Object.entries(function_formula_info).forEach(([ function_name, { return_type, args } ]) => {
+function_formula_info.forEach(({ function_name, return_type, args }) => {
 	args.forEach((arg) => {
 		const function_formula_ast_args = generateFunctionFormulaASTArguments(arg);
 		const function_formula_arr_args = generateFunctionFormulaArrayArguments(arg);
@@ -47,61 +126,3 @@ Object.entries(function_formula_info).forEach(([ function_name, { return_type, a
 		});
 	});
 });
-
-/* describe('Single number argument formulas with number return type should work correctly for array ast', () => {
-  // Single number argument number return_type formulas
-  const narg1_nrt_formula_names = [
-		'unaryMinus',
-		'unaryPlus',
-		'abs',
-		'cbrt',
-		'ceil',
-		'exp',
-		'floor',
-		'ln',
-		'log10',
-		'log2',
-		'max',
-		'min',
-		'round',
-		'sign',
-    'sqrt',
-  ] as const;
-
-	narg1_nrt_formula_names.forEach((narg1_nrt_formula_name) => {
-		it(`Should work for ${narg1_nrt_formula_name} function when argument is number constant`, () => {
-			expect(
-				deepEqual(
-					generateNumberFunction(narg1_nrt_formula_name, [
-            generateNumberConstant(1)
-          ]),
-					parseFormulaFromArray([ narg1_nrt_formula_name, [ 1 ] ] as any, schema_map)
-				)
-			).toBe(true);
-		});
-  });
-  
-  narg1_nrt_formula_names.forEach((narg1_nrt_formula_name) => {
-		it(`Should work for ${narg1_nrt_formula_name} function when argument is number function`, () => {
-			expect(
-				deepEqual(
-					generateNumberFunction(narg1_nrt_formula_name, [
-            generateNumberFunction('abs', [generateNumberConstant(1)])
-          ]),
-					parseFormulaFromArray([ narg1_nrt_formula_name, [['abs', [ 1 ]]] ] as any, schema_map)
-				)
-			).toBe(true);
-		});
-  });
-  
-  narg1_nrt_formula_names.forEach((narg1_nrt_formula_name) => {
-		it(`Should work for ${narg1_nrt_formula_name} function when argument is number property`, () => {
-			expect(
-				deepEqual(
-					generateNumberFunction(narg1_nrt_formula_name, [ generateNumberProperty('number')]),
-					parseFormulaFromArray([ narg1_nrt_formula_name, [{property: "number"} ] ] as any, schema_map)
-				)
-			).toBe(true);
-		});
-  });
-}); */

@@ -8,7 +8,7 @@ interface IFunctionFormulaInfo {
 }
 
 // Generate number return type 2 number arguments formula
-function generateNrt2NAF (function_name: TFunctionName): IFunctionFormulaInfo {
+function generateNrt2Naf (function_name: TFunctionName): IFunctionFormulaInfo {
 	return {
 		function_name,
 		return_type: 'number',
@@ -17,12 +17,12 @@ function generateNrt2NAF (function_name: TFunctionName): IFunctionFormulaInfo {
 }
 
 // Generate number return type 2 number arguments formulas
-function generateNrt2NAFs (function_names: TFunctionName[]) {
-	return function_names.map(generateNrt2NAF);
+function generateNrt2Nafs (function_names: TFunctionName[]) {
+	return function_names.map(generateNrt2Naf);
 }
 
 // Generate number return type 1 number argument formula
-function generateNrt1NAF (function_name: TFunctionName): IFunctionFormulaInfo {
+function generateNrt1Naf (function_name: TFunctionName): IFunctionFormulaInfo {
 	return {
 		function_name,
 		return_type: 'number',
@@ -31,12 +31,12 @@ function generateNrt1NAF (function_name: TFunctionName): IFunctionFormulaInfo {
 }
 
 // Generate number return type 1 number argument formulas
-function generateNrt1NAFs (function_names: TFunctionName[]) {
-	return function_names.map(generateNrt1NAF);
+function generateNrt1Nafs (function_names: TFunctionName[]) {
+	return function_names.map(generateNrt1Naf);
 }
 
 // Generate checkbox return type 2 checkbox arguments formula
-function generateCrt2CAF (function_name: TFunctionName): IFunctionFormulaInfo {
+function generateCrt2Caf (function_name: TFunctionName): IFunctionFormulaInfo {
 	return {
 		function_name,
 		return_type: 'checkbox',
@@ -45,12 +45,40 @@ function generateCrt2CAF (function_name: TFunctionName): IFunctionFormulaInfo {
 }
 
 // Generate checkbox return type 2 checkbox arguments formulas
-function generateCrt2CAFs (function_names: TFunctionName[]) {
-	return function_names.map(generateCrt2CAF);
+function generateCrt2Cafs (function_names: TFunctionName[]) {
+	return function_names.map(generateCrt2Caf);
+}
+
+// Generate checkbox return type 2 any arguments formula
+function generateCrt2Aaf (function_name: TFunctionName): IFunctionFormulaInfo {
+	return {
+		function_name,
+		return_type: 'checkbox',
+		args: [ [ 'text', 'text' ], [ 'date', 'date' ], [ 'checkbox', 'checkbox' ], [ 'number', 'number' ] ]
+	};
+}
+
+// Generate checkbox return type 2 checkbox arguments formulas
+function generateCrt2Aafs (function_names: TFunctionName[]) {
+	return function_names.map(generateCrt2Aaf);
+}
+
+// Generate number return type 2 date arguments formula
+function generateNrt1Daf (function_name: TFunctionName): IFunctionFormulaInfo {
+	return {
+		function_name,
+		return_type: 'number',
+		args: [ [ 'date' ] ]
+	};
+}
+
+// Generate number return type 2 date arguments formulas
+function generateNrt1Dafs (function_names: TFunctionName[]) {
+	return function_names.map(generateNrt1Daf);
 }
 
 export const function_formula_info: IFunctionFormulaInfo[] = [
-	...generateNrt1NAFs([
+	...generateNrt1Nafs([
 		'abs',
 		'cbrt',
 		'unaryMinus',
@@ -67,23 +95,14 @@ export const function_formula_info: IFunctionFormulaInfo[] = [
 		'sign',
 		'sqrt'
 	]),
-	{
-		function_name: 'equal',
-		return_type: 'checkbox',
-		args: [ [ 'text', 'text' ], [ 'date', 'date' ], [ 'checkbox', 'checkbox' ], [ 'number', 'number' ] ]
-	},
-	{
-		function_name: 'unequal',
-		return_type: 'checkbox',
-		args: [ [ 'text', 'text' ], [ 'date', 'date' ], [ 'checkbox', 'checkbox' ], [ 'number', 'number' ] ]
-	},
-	...generateCrt2CAFs([ 'and', 'or', 'larger', 'largerEq', 'smaller', 'smallerEq' ]),
+	...generateCrt2Aafs([ 'equal', 'unequal' ]),
+	...generateCrt2Cafs([ 'and', 'or', 'larger', 'largerEq', 'smaller', 'smallerEq' ]),
 	{
 		function_name: 'not',
 		return_type: 'checkbox',
 		args: [ [ 'checkbox' ] ]
 	},
-	...generateNrt2NAFs([ 'subtract', 'multiply', 'divide', 'pow', 'mod' ]),
+	...generateNrt2Nafs([ 'subtract', 'multiply', 'divide', 'pow', 'mod' ]),
 	{
 		function_name: 'concat',
 		return_type: 'text',
@@ -155,45 +174,11 @@ export const function_formula_info: IFunctionFormulaInfo[] = [
 		args: []
 	},
 	{
-		function_name: 'timestamp',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
 		function_name: 'fromTimestamp',
 		return_type: 'date',
 		args: [ [ 'number' ] ]
 	},
-	{
-		function_name: 'minute',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'hour',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'date',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'date',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'month',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'year',
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	}
+	...generateNrt1Dafs([ 'timestamp', 'minute', 'hour', 'date', 'day', 'month', 'year' ])
 ];
 
 export const test_schema_map: ISchemaMap = new Map([

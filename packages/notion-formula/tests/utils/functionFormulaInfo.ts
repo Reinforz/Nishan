@@ -36,7 +36,12 @@ export const function_formula_info: IFunctionFormulaInfo[] = [
 		'round',
 		'sign',
 		'sqrt'
-	])
+	]),
+	{
+		function_name: 'equal',
+		return_type: 'checkbox',
+		args: [ [ 'text', 'text' ], [ 'date', 'date' ], [ 'checkbox', 'checkbox' ], [ 'number', 'number' ] ]
+	}
 ];
 
 export const test_schema_map: ISchemaMap = new Map([

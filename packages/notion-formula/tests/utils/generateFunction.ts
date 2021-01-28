@@ -46,7 +46,7 @@ export function generateFunctionFormulaASTArguments (arg_return_types: TFormulaR
 				break;
 			case 'date':
 				arg_types.property.push(generateDateProperty('date'));
-				arg_types.function.push(generateDateFunction('year', [ generateDateFunction('now') ]));
+				arg_types.function.push(generateDateFunction('end', [ generateDateFunction('now') ]));
 				break;
 		}
 	});
@@ -82,7 +82,7 @@ export function generateFunctionFormulaArrayArguments (arg_return_types: TFormul
 				break;
 			case 'date':
 				arg_types.property.push({ property: 'date' });
-				arg_types.function.push([ 'year', [ 'now' ] ]);
+				arg_types.function.push([ 'end', [ [ 'now' ] ] ]);
 				break;
 		}
 	});
@@ -121,7 +121,7 @@ export function generateFunctionFormulaObjectArguments (arg_return_types: TFormu
 				break;
 			case 'date':
 				arg_types.property.push({ property: 'date' });
-				arg_types.function.push({ function: 'year', args: [ { function: 'now' } ] });
+				arg_types.function.push({ function: 'end', args: [ { function: 'now' } ] });
 				break;
 		}
 	});

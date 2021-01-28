@@ -9,7 +9,7 @@ export function generateFormulaArgs (value: any) {
 			name: value.toString(),
 			result_type: 'checkbox'
 		};
-	else if (value.toString().match(/(e|pi)/))
+	else if (value.toString().match(/^(e|pi)$/))
 		return {
 			type: 'symbol',
 			name: value,

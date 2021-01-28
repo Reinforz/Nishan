@@ -9,6 +9,7 @@ module.exports = {
   organizationName: 'Nishan',
   projectName: '@nishans/notion-formula',
   themeConfig: {
+    hideableSidebar: true,
     navbar: {
       title: 'Notion Formula',
       logo: {
@@ -27,39 +28,18 @@ module.exports = {
           label: 'GitHub',
           position: 'right',
         },
+        {
+          position: 'right',
+          label: 'Discord',
+          href: 'https://discord.gg/SpwHCz8ysx',
+        },
+        {
+          label: 'Discussions',
+          href: 'https://github.com/Devorein/Nishan/discussions',
+        },
       ],
     },
     footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Getting Started',
-              to: 'docs/',
-            },
-            {
-              label: 'Formula Transformation',
-              to: 'docs/doc2/',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Discord',
-              href: 'https://discord.gg/SpwHCz8ysx',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/Devorein/Nishan/discussions',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} Nishan Inc. Built with Docusaurus.`,
     },
   },
   presets: [

@@ -46,9 +46,10 @@ export type ReplaceFunctionArrayCreateInput = [
 		| Tuple12<TCheckboxArrayResultType, TTextArrayResultType>
 ];
 export type ConcatFunctionArrayCreateInput = ['concat', Tuple2<TTextArrayResultType>];
-export type JoinFunctionArrayCreateInput = ['join', [TTextArrayResultType]];
+export type JoinFunctionArrayCreateInput = ['join', TTextArrayResultType[]];
 export type SliceFunctionArrayCreateInput = [
 	'slice',
+
 
 		| [TTextArrayResultType, TNumberArrayResultType | TNumberArrayResultType]
 		| [TTextArrayResultType | TNumberArrayResultType]

@@ -317,13 +317,13 @@ export type TPureFunctionName =
 	| 'year';
 
 export type ConcatFunctionFormula = IFunctionFormula<'text', 'concat', Tuple2<TTextResultTypeFormula>>;
-export type JoinFunctionFormula = IFunctionFormula<'text', 'join', Array<IConstantFormula<'text', 'string'>>>;
+export type JoinFunctionFormula = IFunctionFormula<'text', 'join', Array<TTextResultTypeFormula>>;
 export type SliceFunctionFormula = IFunctionFormula<
 	'text',
 	'slice',
-	Tuple12<ITextConstantFormula, INumberConstantFormula>
+	Tuple12<TTextResultTypeFormula, TNumberResultTypeFormula> | [TTextResultTypeFormula, TNumberResultTypeFormula]
 >;
-export type LengthFunctionFormula = IFunctionFormula<'number', 'length', [ITextConstantFormula]>;
+export type LengthFunctionFormula = IFunctionFormula<'number', 'length', [TTextResultTypeFormula]>;
 export type FormatFunctionFormula = IFunctionFormula<'text', 'format', [TResultTypeFormula]>;
 export type ToNumberFunctionFormula = IFunctionFormula<'number', 'toNumber', [TResultTypeFormula]>;
 export type ContainsFunctionFormula = IFunctionFormula<'checkbox', 'contains', Tuple2<TTextResultTypeFormula>>;
@@ -373,7 +373,6 @@ export type NowFunctionFormula = {
 	type: 'function';
 	result_type: 'date';
 	name: 'now';
-	args: [];
 };
 export type TimestampFunctionFormula = IFunctionFormula<'number', 'timestamp', [TDateResultTypeFormula]>;
 export type FromTimestampFunctionFormula = IFunctionFormula<'date', 'fromTimestamp', [TNumberResultTypeFormula]>;

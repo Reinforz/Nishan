@@ -49,7 +49,7 @@ export type ReplaceFunctionCreateInput = IFunctionCreateInput<
 	| Tuple12<TCheckboxResultType, TTextResultType>
 >;
 export type ConcatFunctionCreateInput = IFunctionCreateInput<'concat', Tuple2<TTextResultType>>;
-export type JoinFunctionCreateInput = IFunctionCreateInput<'join', [TTextResultType]>;
+export type JoinFunctionCreateInput = IFunctionCreateInput<'join', TTextResultType[]>;
 export type SliceFunctionCreateInput = IFunctionCreateInput<
 	'slice',
 	[TTextResultType, TNumberResultType, TNumberResultType] | [TTextResultType, TNumberResultType]

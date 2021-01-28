@@ -178,6 +178,21 @@ export const function_formula_info: IFunctionFormulaInfo[] = [
 		return_type: 'date',
 		args: [ [ 'number' ] ]
 	},
+	{
+		function_name: 'dateAdd',
+		return_type: 'date',
+		args: [ [ 'date', 'number', 'text' ] ]
+	},
+	{
+		function_name: 'dateSubtract',
+		return_type: 'date',
+		args: [ [ 'date', 'date', 'text' ] ]
+	},
+	{
+		function_name: 'dateBetween',
+		return_type: 'number',
+		args: [ [ 'date', 'text' ] ]
+	},
 	...generateNrt1Dafs([ 'timestamp', 'minute', 'hour', 'date', 'day', 'month', 'year' ])
 ];
 

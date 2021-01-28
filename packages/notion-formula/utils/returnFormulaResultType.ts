@@ -50,8 +50,7 @@ export const formula_rt_map: Map<TFunctionName, TFormulaResultType> = new Map([
 	[ 'fromTimestamp', 'date' ],
 	[ 'dateAdd', 'date' ],
 	[ 'dateSubtract', 'date' ],
-	[ 'dateBetween', 'date' ],
-	[ 'dateBetween', 'date' ],
+	[ 'dateBetween', 'number' ],
 	[ 'formatDate', 'date' ],
 
 	[ 'concat', 'text' ],

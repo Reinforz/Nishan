@@ -1,18 +1,18 @@
-import { TFormulaResultType } from '@nishans/types';
+import { TConstantFormula, TFormulaResultType, TPropertyFormula, TSymbolFormula } from '@nishans/types';
 import { ISchemaMap } from '../types/formula-object';
 import { formulateResultTypeFromSchemaType } from './returnFormulaResultType';
 
-export function generateFormulaArgsFromLiterals (value: number | string | boolean) {
+export function generateFormulaArgsFromLiterals (value: number | string | boolean): TSymbolFormula | TConstantFormula {
 	if (typeof value === 'boolean')
 		return {
 			type: 'symbol',
-			name: value.toString(),
+			name: value.toString() as any,
 			result_type: 'checkbox'
 		};
 	else if (value.toString().match(/^(e|pi)$/))
 		return {
 			type: 'symbol',
-			name: value,
+			name: value as any,
 			result_type: 'number'
 		};
 	else if (typeof value === 'number')
@@ -29,9 +29,10 @@ export function generateFormulaArgsFromLiterals (value: number | string | boolea
 			value_type: 'string',
 			result_type: 'text'
 		};
+	else throw new Error(`${value} is a malformed value`);
 }
 
-export function generateFormulaArgFromProperty (arg: { property: string }, schema_map: ISchemaMap) {
+export function generateFormulaArgFromProperty (arg: { property: string }, schema_map: ISchemaMap): TPropertyFormula {
 	const schema_name = arg.property,
 		result = schema_map.get(schema_name);
 	if (result) {
@@ -45,5 +46,5 @@ export function generateFormulaArgFromProperty (arg: { property: string }, schem
 			name: result.name,
 			result_type
 		};
-	}
+	} else throw new Error(`Property ${schema_name} does not exist on the given schema_map`);
 }

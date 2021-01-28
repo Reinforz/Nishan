@@ -9,18 +9,10 @@
     "notion-electron-markdown"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-desktop/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/apps/markdown-desktop/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
-  "directories": {
-    "lib": "src",
-    "test": "tests"
-  },
-  "files": [
-    "dist/src",
-    "dist/utils"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"

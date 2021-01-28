@@ -2,6 +2,11 @@ import { TConstantFormula, TFormulaResultType, TPropertyFormula, TSymbolFormula 
 import { ISchemaMap } from '../types/formula-object';
 import { formulateResultTypeFromSchemaType } from './returnFormulaResultType';
 
+/**
+ * Generate function formula arg based on certain criterias 
+ * @param value The value to check
+ * @returns The appropriate function formula argument chunk
+ */
 export function generateFormulaArgsFromLiterals (value: number | string | boolean): TSymbolFormula | TConstantFormula {
 	if (typeof value === 'boolean')
 		return {
@@ -32,6 +37,12 @@ export function generateFormulaArgsFromLiterals (value: number | string | boolea
 	else throw new Error(`${value} is a malformed value`);
 }
 
+/**
+ * Generate function formula argument using information from the passed schema_map
+ * @param arg A object with the key property and value matching the name of the property referencing
+ * @param schema_map The schema map used to deduce information for the function formula argument chunk
+ * @returns The appropriate property based function formula argument chunk
+ */
 export function generateFormulaArgFromProperty (arg: { property: string }, schema_map: ISchemaMap): TPropertyFormula {
 	const schema_name = arg.property,
 		result = schema_map.get(schema_name);

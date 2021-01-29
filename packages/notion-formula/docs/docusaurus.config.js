@@ -29,12 +29,12 @@ module.exports = {
           label: 'Theory',
           position: 'left',
         },
-        {
+        /* {
           to: 'docs/api/',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
-        },
+        }, */
         {
           to: 'docs/examples/',
           activeBasePath: 'docs',
@@ -89,7 +89,7 @@ module.exports = {
         entryPoints: ['../src/index.ts'],
         tsconfig: '../tsconfig.json',
         plugin: [],
-
+        mode: "node",
         // Plugin options
         docsRoot: 'docs',
         out: 'api',

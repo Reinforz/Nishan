@@ -8,7 +8,7 @@ module.exports = {
     {
       type: "category",
       label: "Theory",
-      items: ["Theory/notion_formula", "Theory/notion_functions"]
+      items: ["Theory/notion_formula", "Theory/notion_functions", "Theory/notion_operators"]
     },
     {
       type: "category",

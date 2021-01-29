@@ -9,5 +9,4 @@ A package to generate notion formula with ease
   <img src="https://img.shields.io/npm/v/@nishans/notion-formula"/>
 </p>
 
-
 Please visit [documentation](https://notion-formula.netlify.app/) to learn more.

@@ -12,7 +12,7 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        This package provides api to generate notion formula with ease and little overhead
+        Generate notion formula with ease through object, array or string representation
       </>
     ),
   },
@@ -26,11 +26,11 @@ const features = [
     ),
   },
   {
-    title: 'Overpowered Transformation',
+    title: 'Typescript Support',
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Notion formula exposes api to convert actual notion formula into much simpler representation and vice versa
+        Typescript support right out of the box for static typechecking.
       </>
     ),
   },
@@ -51,7 +51,7 @@ function Home() {
   const {siteConfig = {}} = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">

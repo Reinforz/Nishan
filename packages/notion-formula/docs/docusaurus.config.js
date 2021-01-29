@@ -30,6 +30,12 @@ module.exports = {
           position: 'left',
         },
         {
+          to: 'docs/api/',
+          activeBasePath: 'docs',
+          label: 'API',
+          position: 'left',
+        },
+        {
           to: 'docs/examples/',
           activeBasePath: 'docs',
           label: 'Examples',
@@ -37,18 +43,18 @@ module.exports = {
         },
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md',
-          label: 'GitHub',
           position: 'right',
+          class: "header-github-link header-link"
         },
         {
           href: 'https://www.npmjs.com/package/@nishans/notion-formula',
-          label: 'NPM',
           position: 'right',
+          class: "header-npm-link header-link"
         },
         {
           position: 'right',
-          label: 'Discord',
           href: 'https://discord.gg/SpwHCz8ysx',
+          class: "header-discord-link header-link"
         },
         {
           label: 'Discussions',

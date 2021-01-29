@@ -1,15 +1,11 @@
 import { TFormulaResultType, TFunctionName } from '@nishans/types';
 
-type IFunctionForumlaSignature =
-	| {
-			arity: TFormulaResultType[];
-			result_type: TFormulaResultType;
-		}
-	| {
-			variadic: TFormulaResultType;
-			result_type: TFormulaResultType;
-		};
-interface IFunctionFormulaInfo {
+export type IFunctionForumlaSignature = {
+	arity?: TFormulaResultType[];
+	result_type: TFormulaResultType;
+	variadic?: TFormulaResultType;
+};
+export interface IFunctionFormulaInfo {
 	signatures: IFunctionForumlaSignature[];
 	function_name: TFunctionName;
 }

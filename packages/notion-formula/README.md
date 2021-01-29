@@ -1,11 +1,5 @@
-# `notion-formula`
+# `@nishans/notion-formula`
 
-> TODO: description
+A package generate notion formula with ease
 
-## Usage
-
-```
-const notionFormula = require('notion-formula');
-
-// TODO: DEMONSTRATE API
-```
+Please visit [documentation](https://notion-formula.netlify.app/) to learn more.

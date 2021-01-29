@@ -76,6 +76,9 @@ function generateNrt1Dafs (function_names: TFunctionName[]) {
 	return function_names.map(generateNrt1Daf);
 }
 
+/**
+ * An array that contains the return_type and the variations of arguments (number and types) supported by all the notion formulas
+ */
 export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	...generateNrt1Nafs([
 		'abs',

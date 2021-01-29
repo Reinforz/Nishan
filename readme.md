@@ -45,6 +45,7 @@ A few apps built using the above packages
 2. [markdown-desktop](https://github.com/Devorein/Nishan/tree/master/apps/markdown-desktop) (NSY): An electron powered desktop app to upload markdown content as notion pages using `@nishans/markdown`
 3. [markdown-vscode](https://github.com/Devorein/Nishan/tree/master/apps/markdown-vscode) (NSY): A vscode extension to upload markdown content as notion pages using `@nishans/markdown`
 4. [markdown-native](https://github.com/Devorein/Nishan/tree/master/apps/markdown-native) (NSY): A react native powered mobile app to upload markdown content as notion pages using `@nishans/markdown`
+5. [notion-formula-web](https://github.com/Devorein/Nishan/tree/master/apps/notion-formula-web) (NSY): A react powered web app to view the generated notion formula ast from array, object or string representation using `@nishans/notion-formula` package
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 

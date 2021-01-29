@@ -12,28 +12,25 @@ const features = [
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        This package provides api to generate notion formula with ease and little overhead
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Emulates Original Parser',
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Notion formula emulates and mimics the action formula parser and provide useful and intuitive error messages
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Overpowered Transformation',
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Notion formula exposes api to convert actual notion formula into much simpler representation and vice versa
       </>
     ),
   },
@@ -43,11 +40,6 @@ function Feature({imageUrl, title, description}) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={clsx('col col--4', styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
-        </div>
-      )}
       <h3>{title}</h3>
       <p>{description}</p>
     </div>

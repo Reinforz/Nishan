@@ -9,16 +9,9 @@
     "react-native"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/markdown-native/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/apps/markdown-native/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"

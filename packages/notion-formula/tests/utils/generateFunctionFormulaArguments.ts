@@ -27,6 +27,8 @@ interface IArguments {
 	object: IArgument['object'][];
 	array: IArgument['array'][];
 	message: string;
+	variants: TFormulaType[];
+	return_types: TFormulaResultType[];
 }
 
 interface IArgument {
@@ -75,10 +77,15 @@ function generateArgumentsFromCombos (combos: string[]) {
 				message: combo,
 				ast: [],
 				array: [],
-				object: []
+				object: [],
+				variants: [],
+				return_types: []
 			};
 		chunks.forEach((chunk) => {
-			const argument = generateArgumentsFromResultTypesAndVariants(chunk);
+			const [ return_type, variant ] = chunk.split('.'),
+				argument = generateArgumentsFromResultTypesAndVariants(chunk);
+			result.variants.push(variant as TFormulaType);
+			result.return_types.push(return_type as TFormulaResultType);
 			result.ast.push(argument.ast);
 			result.array.push(argument.array);
 			result.object.push(argument.object);

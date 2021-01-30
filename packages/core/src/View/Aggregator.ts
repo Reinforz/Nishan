@@ -23,7 +23,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       // ? FIX:1:E Warning if schema_map.get(name) returns undefined
       aggregations.push({
         property: schema_map.get(name)?.schema_id ?? name,
-        aggregator
+        aggregator: aggregator as any
       })
     };
 
@@ -45,7 +45,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       multiple
     }, (name) => aggregations_map.get(name), (_, original_data, updated_data) => {
       const aggregation = aggregations[aggregations.findIndex(data => data.property === original_data.schema_id)], { aggregator } = updated_data;
-      aggregation.aggregator = aggregator;
+      aggregation.aggregator = aggregator as any;
     })
 
     this.stack.push(Operation.collection_view.update(this.id, [], {

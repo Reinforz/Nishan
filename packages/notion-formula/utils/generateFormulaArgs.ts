@@ -50,7 +50,7 @@ export function generateFormulaArgFromProperty (arg: { property: string }, schem
 		const { schema_id, type } = result;
 		let result_type: TFormulaResultType = '' as any;
 		if (result.type === 'formula') result_type = result.formula.result_type;
-		else result_type = formulateResultTypeFromSchemaType(type);
+		else result_type = formulateResultTypeFromSchemaType(result.type === 'rollup' ? result.target_property_type : type);
 		return {
 			type: 'property',
 			id: schema_id,

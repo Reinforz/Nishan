@@ -10,12 +10,15 @@ function_formula_info_arr.forEach(({ function_name, signatures }) => {
 		expect(() => generateFormulaASTFromArray([ function_name + '_unknown' ] as any, test_schema_map)).toThrow();
 		expect(() =>
 			generateFormulaASTFromObject({ function: function_name + '_unknown' } as any, test_schema_map)
-		).toThrow();
+		).toThrow(`Function ${function_name}_unknown is not supported`);
 	});
 
+  const all_supported_arity_length = Array.from(new Set(signatures.map(signature=>signature?.arity?.length)));
+  
 	signatures.forEach((signature) => {
 		if (signature.arity) {
 			const generated_arguments = generateFunctionFormulaArguments(signature.arity);
+      
 			generated_arguments.forEach((generated_argument) => {
 				const formula_ast = generateFunction(
 					function_name as TFunctionName,
@@ -32,9 +35,27 @@ function_formula_info_arr.forEach(({ function_name, signatures }) => {
 				);
 
 				const formula_arr = generateFormulaASTFromArray(
-					[ function_name, generated_argument.object ] as any,
+					[ function_name, generated_argument.array ] as any,
 					test_schema_map
 				);
+        
+        it(`Should throw argument length error for array ${function_name}`, ()=>{
+          expect(()=>{
+            generateFormulaASTFromArray(
+              [ function_name, generated_argument.array.concat(['test', true, 'e']) ] as any,
+              test_schema_map
+            )
+          }).toThrow()
+        })
+
+        it(`Should throw argument length error for object ${function_name}`, ()=>{
+          expect(()=>{
+            generateFormulaASTFromObject(
+              [ function_name, generated_argument.object.concat(['test', true, 'e']) ] as any,
+              test_schema_map
+            )
+          }).toThrow()
+        })
 
 				it(`Should match for obj ${function_name} [${generated_argument.message}]`, () => {
 					expect(deepEqual(formula_ast, formula_obj)).toBe(true);
@@ -45,26 +66,5 @@ function_formula_info_arr.forEach(({ function_name, signatures }) => {
 				});
 			});
 		}
-		// if (function_formula_arr_wrong_args[arg_type].length !== arg.length) {
-		// 	it(`type:array fn:${function_name} should throw error for mismatched ${arg_type} argument`, () => {
-		// 		expect(() =>
-		// 			generateFormulaASTFromArray(
-		// 				[ function_name as any, function_formula_arr_wrong_args[arg_type] ],
-		// 				test_schema_map
-		// 			)
-		// 		).toThrow();
-		// 	});
-		// }
-
-		// if (function_formula_obj_wrong_args[arg_type].length !== arg.length) {
-		// 	it(`type:object fn:${function_name} should throw error for mismatched ${arg_type} argument`, () => {
-		// 		expect(() =>
-		// 			generateFormulaASTFromObject(
-		// 				{ function: function_name as any, args: function_formula_obj_wrong_args[arg_type] },
-		// 				test_schema_map
-		// 			)
-		// 		).toThrow();
-		// 	});
-		// }
 	});
 });

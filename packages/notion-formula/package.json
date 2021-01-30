@@ -25,7 +25,9 @@
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "npx jest --runInBand ./tests --collectCoverage"
+  },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fnotion-formula"
   }

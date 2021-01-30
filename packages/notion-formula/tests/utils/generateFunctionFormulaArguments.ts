@@ -44,7 +44,7 @@ const rt_arg_variant_mapper: Record<TFormulaResultType, TFormulaType[]> = {
 
 function generateCombos (rts: TFormulaResultType[]) {
 	function generateCombos (lhs: string[], rhs: string[]) {
-		const res = [];
+		const res: string[] = [];
 		lhs.forEach((lhs) => {
 			rhs.forEach((rhs) => res.push(`${lhs} x ${rhs}`));
 		});
@@ -125,9 +125,9 @@ function generateArgumentsFromResultTypesAndVariants (chunk: string) {
 			res.object = 'text';
 			break;
 		case 'text.function':
-			res.ast = generateTextFunction('concat', [ generateTextConstant('0'), generateTextConstant('1') ]);
-			res.array = [ 'concat', [ '0', '1' ] ];
-			res.object = { function: 'concat', args: [ '0', '1' ] };
+			res.ast = generateTextFunction('format', [ generateTextConstant('0') ]);
+			res.array = [ 'format', [ '0' ] ];
+			res.object = { function: 'format', args: [ '0' ] };
 			break;
 		case 'checkbox.property':
 			res.ast = generateCheckboxProperty('checkbox');
@@ -150,7 +150,7 @@ function generateArgumentsFromResultTypesAndVariants (chunk: string) {
 			res.object = { property: 'date' };
 			break;
 		case 'date.function':
-			res.ast = generateCheckboxFunction('equal', [ generateTextConstant('0'), generateTextConstant('1') ]);
+			res.ast = generateDateFunction('end', [ generateDateFunction('now') ]);
 			res.array = [ 'end', [ [ 'now' ] ] ];
 			res.object = { function: 'end', args: [ { function: 'now' } ] };
 			break;

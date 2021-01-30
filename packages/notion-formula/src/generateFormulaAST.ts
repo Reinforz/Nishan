@@ -34,10 +34,8 @@ function generateFormulaAST (
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
       else{
-        // Some function might allow variadic arity
-        const is_argument_length_variadic = function_info.signatures.find((signature)=>signature?.variadic);
         // Checks if the number of arguments, supported by the function matches with the passed representation
-        const is_argument_length_mismatch = !is_argument_length_variadic && function_info.signatures.findIndex((signature)=>signature?.arity?.length === input_args?.length) === -1;
+        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature?.variadic || signature.arity?.length === 0 || signature.arity?.length === input_args?.length)));
         if(is_argument_length_mismatch)
           throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>signature?.arity?.length))).join(',') || 0} arguments, given ${input_args?.length ?? 0}`)
         const function_formula_arg: TFunctionFormula = {
@@ -46,26 +44,25 @@ function generateFormulaAST (
         } as any;
 
         // Go through each arguments of the function if any and pass parent function specific data used for capturing error information
-        if (input_args) {
-          // since now take no arguments there is no need to even go any further into parsing arguments
-          if(function_name !== "now"){
-            (function_formula_arg as any).args = arg_container;
-            const input_arities: TFormulaResultType[] = [],
-              {signatures} = function_info;
-            let matched_signature : IFunctionForumlaSignature | undefined = undefined;
-            for (let index = 0; index < input_args.length; index++) {
-              const parsed_argument = traverseArguments(input_args[index]);
-              input_arities.push(parsed_argument.result_type);
-              matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>signature?.arity?.[index] === input_arity))
-              if(!matched_signature)
-                // Throw an error if the given signature doesnt match any of the allowed signatures
-                throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)
-              else
-                (function_formula_arg as any).args.push(parsed_argument)
-            };
-            function_formula_arg.result_type = (matched_signature as IFunctionForumlaSignature).result_type
-          }
-        }
+        // since now take no arguments there is no need to even go any further into parsing arguments
+        if(input_args && function_name !== "now"){
+          (function_formula_arg as any).args = arg_container;
+          const input_arities: TFormulaResultType[] = [],
+            {signatures} = function_info;
+          let matched_signature : IFunctionForumlaSignature | undefined = undefined;
+          for (let index = 0; index < input_args.length; index++) {
+            const parsed_argument = traverseArguments(input_args[index]);
+            input_arities.push(parsed_argument.result_type);
+            matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>signature?.arity?.[index] === input_arity))
+            if(!matched_signature)
+              // Throw an error if the given signature doesnt match any of the allowed signatures
+              throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)
+            else
+              (function_formula_arg as any).args.push(parsed_argument)
+          };
+          function_formula_arg.result_type = (matched_signature as IFunctionForumlaSignature).result_type
+        }else
+          function_formula_arg.result_type = "date"
 
         return function_formula_arg;
       }

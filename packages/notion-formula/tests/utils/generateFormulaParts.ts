@@ -101,7 +101,7 @@ export function generateNumberSymbol (name: 'e' | 'pi'): TNumberSymbolFormula {
 
 export function generateCheckboxSymbol (name: boolean): TCheckboxSymbolFormula {
 	return {
-		name: name.toString(),
+		name: name.toString() as any,
 		result_type: 'checkbox',
 		type: 'symbol'
 	};

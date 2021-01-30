@@ -45,7 +45,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	generateFormulaInfo('ln', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('log10', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('log2', [ [ 'number', [ 'number' ] ] ]),
-	{
+	/* {
 		function_name: 'max',
 		signatures: [
 			{
@@ -62,7 +62,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 				variadic: 'number'
 			}
 		]
-	},
+	}, */
 	generateFormulaInfo('round', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('sign', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('sqrt', [ [ 'number', [ 'number' ] ] ]),
@@ -110,7 +110,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	generateFormulaInfo('divide', [ [ 'number', [ 'number', 'number' ] ] ]),
 	generateFormulaInfo('pow', [ [ 'number', [ 'number', 'number' ] ] ]),
 	generateFormulaInfo('mod', [ [ 'number', [ 'number', 'number' ] ] ]),
-	{
+	/* {
 		function_name: 'concat',
 		signatures: [
 			{
@@ -127,7 +127,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 				variadic: 'text'
 			}
 		]
-	},
+	}, */
 	generateFormulaInfo('slice', [ [ 'text', [ 'text', 'number' ] ], [ 'text', [ 'text', 'number', 'number' ] ] ]),
 	generateFormulaInfo('length', [ [ 'number', [ 'text' ] ] ]),
 	generateFormulaInfo('format', [

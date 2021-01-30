@@ -88,7 +88,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
 
         if (aggregation) aggregations.push({
           property: property_info.schema_id,
-          aggregator: aggregation
+          aggregator: aggregation as any
         })
 
         properties.push(property)

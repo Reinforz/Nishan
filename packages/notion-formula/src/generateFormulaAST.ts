@@ -1,5 +1,5 @@
-import { TFormula, TFormulaResultType, TFunctionName } from '@nishans/types';
-import { generateFormulaArgFromProperty, function_formula_info_map, generateFormulaArgsFromLiterals } from '../utils';
+import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
+import { generateFormulaArgFromProperty, function_formula_info_map, generateFormulaArgsFromLiterals, IFunctionForumlaSignature } from '../utils';
 import {
 	FormulaSchemaUnitInput,
 	ISchemaMap,
@@ -19,11 +19,7 @@ function generateFormulaAST (
 	input_formula: FormulaSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'],
 	schema_map?: ISchemaMap
 ): TFormula {
-	const output_formula = {
-		args: []
-	};
-
-	function traverseFormula (parent_arg_container: any, arg: TResultType | AnyArrayResultType | undefined, allowed_rt?: TFormulaResultType[], arg_no?: number, parent_function_name?: TFunctionName) {
+	function traverseArguments (arg: TResultType | AnyArrayResultType | undefined): TFormula {
     // Check whether an array based or object based function formula is used
 		const is_arg_array_function = Array.isArray(arg),
 			is_arg_object_function = (arg as TFormulaCreateInput).function;
@@ -32,30 +28,43 @@ function generateFormulaAST (
 			const function_name: TFunctionName = is_arg_object_function
 					? (arg as TFormulaCreateInput).function
 					: (arg as any)[0],
-				args: any[] | undefined = is_arg_object_function ? (arg as TFormulaCreateInput).args : (arg as any)[1];
+				input_args = is_arg_object_function ? (arg as TFormulaCreateInput).args : (arg as any)[1];
       const arg_container = [] as any, function_info = function_formula_info_map.get(function_name);
       // Throws error when an invalid function is used
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
       else{
-        // Checks if the number of arguments, supported by the function matches with the passed representation 
-        const is_argument_length_mismatch = function_info.args?.findIndex((arg_info: any)=>arg_info.length === args?.length) === -1;
+        // Checks if the number of arguments, supported by the function matches with the passed representation
+        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature?.variadic || signature.arity?.length === 0 || signature.arity?.length === input_args?.length)));
         if(is_argument_length_mismatch)
-          throw new Error(`Function ${function_name} takes ${function_info.args && Array.from(new Set(function_info.args.map((arg: any)=>arg.length))).join(',') || 0} arguments, given ${args?.length ?? 0}`)
-        const function_formula_arg = {
+          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>signature?.arity?.length))).join(',') || 0} arguments, given ${input_args?.length ?? 0}`)
+        const function_formula_arg: TFunctionFormula = {
           name: function_name,
-          type: 'function',
-          result_type: function_info.return_type
-        };
-        parent_arg_container.push(function_formula_arg);
+          type: 'function'
+        } as any;
+
         // Go through each arguments of the function if any and pass parent function specific data used for capturing error information
-        if (args) {
+        // since now take no arguments there is no need to even go any further into parsing arguments
+        if(input_args && function_name !== "now"){
           (function_formula_arg as any).args = arg_container;
-          for (let index = 0; index < args.length; index++) {
-            const allowed_rt = function_info.args?.map((arg=>arg[index])).filter(arg=>arg) ?? undefined;
-            traverseFormula(arg_container, args[index] as any, allowed_rt, index, function_name)
+          const input_arities: TFormulaResultType[] = [],
+            {signatures} = function_info;
+          let matched_signature : IFunctionForumlaSignature | undefined = undefined;
+          for (let index = 0; index < input_args.length; index++) {
+            const parsed_argument = traverseArguments(input_args[index]);
+            input_arities.push(parsed_argument.result_type);
+            matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>signature?.arity?.[index] === input_arity))
+            if(!matched_signature)
+              // Throw an error if the given signature doesnt match any of the allowed signatures
+              throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)
+            else
+              (function_formula_arg as any).args.push(parsed_argument)
           };
-        }
+          function_formula_arg.result_type = (matched_signature as IFunctionForumlaSignature).result_type
+        }else
+          function_formula_arg.result_type = "date"
+
+        return function_formula_arg;
       }
     }
     // The argument is a property reference 
@@ -63,22 +72,12 @@ function generateFormulaAST (
       // If a schema_map is not provided but a property of the schema is referenced, throw an error, as the schema_map is required to deduce information for that specific property argument
 			if (!schema_map)
         throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`);
-      const property_arg = generateFormulaArgFromProperty(arg as { property: string }, schema_map);
-      // Throw an error if the return type of the property referenced does not match with the type of the positional argument type allowed
-      if(allowed_rt && !allowed_rt.includes(property_arg.result_type))
-        throw new Error(`Argument of type ${property_arg.result_type} can't be used as argument ${arg_no && arg_no+ 1} for function ${parent_function_name}, allowed types for argument ${arg_no && arg_no + 1} are ${Array.from(new Set(allowed_rt)).join(',')}`)
-			parent_arg_container.push(property_arg);
-		} else {
-      const constant_arg = generateFormulaArgsFromLiterals(arg as any);
-      // Throw an error if the return type of the literal ie symbol and constants, does not match with the type of the positional argument type allowed
-      if(allowed_rt && !allowed_rt.includes(constant_arg.result_type))
-        throw new Error(`Argument of type ${constant_arg.result_type} can't be used as argument ${arg_no && arg_no+ 1} for function ${parent_function_name}, allowed types for argument ${arg_no && arg_no + 1} are ${Array.from(new Set(allowed_rt)).join(',')}`)
-      parent_arg_container.push(constant_arg)
-    };
+      return generateFormulaArgFromProperty(arg as { property: string }, schema_map);
+		} else 
+      return generateFormulaArgsFromLiterals(arg as any);
 	}
 
-	traverseFormula(output_formula.args, input_formula);
-	return output_formula.args[0];
+	return traverseArguments(input_formula);
 }
 
 /**

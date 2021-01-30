@@ -21,6 +21,15 @@
         "<node_internals>/**"
       ],
       "program": "${workspaceFolder}\\packages\\markdown\\dist\\experiment\\index.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Experiment notion-formula",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\packages\\notion-formula\\dist\\experiment\\index.js"
     }
   ]
 }

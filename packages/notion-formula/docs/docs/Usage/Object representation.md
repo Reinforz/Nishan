@@ -2,5 +2,5 @@
 id: object_representation
 title: Simple Object representation of notion formula 
 sidebar_label: Object Representation
-slug: /theory/object_representation
+slug: /usage/object_representation
 ---

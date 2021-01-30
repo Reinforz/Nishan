@@ -1,205 +1,184 @@
 import { TFormulaResultType, TFunctionName } from '@nishans/types';
 
-interface IFunctionFormulaInfo {
-	return_type: TFormulaResultType;
-	args?: TFormulaResultType[][];
+export type IFunctionForumlaSignature = {
+	arity?: TFormulaResultType[];
+	result_type: TFormulaResultType;
+	variadic?: TFormulaResultType;
+};
+export interface IFunctionFormulaInfo {
+	signatures: IFunctionForumlaSignature[];
 	function_name: TFunctionName;
 }
 
-// Generate number return type 2 number arguments formula
-function generateNrt2Naf (function_name: TFunctionName): IFunctionFormulaInfo {
+function generateFormulaInfo (
+	function_name: TFunctionName,
+	signatures: [TFormulaResultType, TFormulaResultType[]][]
+): IFunctionFormulaInfo {
 	return {
 		function_name,
-		return_type: 'number',
-		args: [ [ 'number', 'number' ] ]
+		signatures: signatures.map(([ result_type, arity ]) => ({ arity, result_type }))
 	};
-}
-
-// Generate number return type 2 number arguments formulas
-function generateNrt2Nafs (function_names: TFunctionName[]) {
-	return function_names.map(generateNrt2Naf);
-}
-
-// Generate number return type 1 number argument formula
-function generateNrt1Naf (function_name: TFunctionName): IFunctionFormulaInfo {
-	return {
-		function_name,
-		return_type: 'number',
-		args: [ [ 'number' ] ]
-	};
-}
-
-// Generate number return type 1 number argument formulas
-function generateNrt1Nafs (function_names: TFunctionName[]) {
-	return function_names.map(generateNrt1Naf);
-}
-
-// Generate checkbox return type 2 checkbox arguments formula
-function generateCrt2Caf (function_name: TFunctionName): IFunctionFormulaInfo {
-	return {
-		function_name,
-		return_type: 'checkbox',
-		args: [ [ 'checkbox', 'checkbox' ] ]
-	};
-}
-
-// Generate checkbox return type 2 checkbox arguments formulas
-function generateCrt2Cafs (function_names: TFunctionName[]) {
-	return function_names.map(generateCrt2Caf);
-}
-
-// Generate checkbox return type 2 any arguments formula
-function generateCrt2Aaf (function_name: TFunctionName): IFunctionFormulaInfo {
-	return {
-		function_name,
-		return_type: 'checkbox',
-		args: [ [ 'text', 'text' ], [ 'date', 'date' ], [ 'checkbox', 'checkbox' ], [ 'number', 'number' ] ]
-	};
-}
-
-// Generate checkbox return type 2 checkbox arguments formulas
-function generateCrt2Aafs (function_names: TFunctionName[]) {
-	return function_names.map(generateCrt2Aaf);
-}
-
-// Generate number return type 2 date arguments formula
-function generateNrt1Daf (function_name: TFunctionName): IFunctionFormulaInfo {
-	return {
-		function_name,
-		return_type: 'number',
-		args: [ [ 'date' ] ]
-	};
-}
-
-// Generate number return type 2 date arguments formulas
-function generateNrt1Dafs (function_names: TFunctionName[]) {
-	return function_names.map(generateNrt1Daf);
 }
 
 /**
- * An array that contains the return_type and the variations of arguments (number and types) supported by all the notion formulas
+ * An array that contains the result_type and the variations of arguments (number and types) supported by all the notion formulas
  */
 export const function_formula_info_arr: IFunctionFormulaInfo[] = [
-	...generateNrt1Nafs([
-		'abs',
-		'cbrt',
-		'unaryMinus',
-		'unaryPlus',
-		'ceil',
-		'exp',
-		'floor',
-		'ln',
-		'log10',
-		'log2',
-		'max',
-		'min',
-		'round',
-		'sign',
-		'sqrt'
+	generateFormulaInfo('if', [
+		[ 'number', [ 'checkbox', 'number', 'number' ] ],
+		[ 'text', [ 'checkbox', 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox', 'checkbox' ] ],
+		[ 'date', [ 'checkbox', 'date', 'date' ] ]
 	]),
-	...generateCrt2Aafs([ 'equal', 'unequal' ]),
-	...generateCrt2Cafs([ 'and', 'or', 'larger', 'largerEq', 'smaller', 'smallerEq' ]),
-	{
-		function_name: 'not',
-		return_type: 'checkbox',
-		args: [ [ 'checkbox' ] ]
+	generateFormulaInfo('add', [ [ 'text', [ 'text', 'text' ] ], [ 'number', [ 'number', 'number' ] ] ]),
+	generateFormulaInfo('abs', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('cbrt', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('unaryMinus', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('unaryPlus', [
+		[ 'number', [ 'checkbox' ] ],
+		[ 'number', [ 'text' ] ],
+		[ 'number', [ 'number' ] ]
+	]),
+	generateFormulaInfo('ceil', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('exp', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('floor', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('ln', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('log10', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('log2', [ [ 'number', [ 'number' ] ] ]),
+	/* {
+		function_name: 'max',
+		signatures: [
+			{
+				result_type: 'number',
+				variadic: 'number'
+			}
+		]
 	},
-	...generateNrt2Nafs([ 'subtract', 'multiply', 'divide', 'pow', 'mod' ]),
 	{
+		function_name: 'min',
+		signatures: [
+			{
+				result_type: 'number',
+				variadic: 'number'
+			}
+		]
+	}, */
+	generateFormulaInfo('round', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('sign', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('sqrt', [ [ 'number', [ 'number' ] ] ]),
+	generateFormulaInfo('equal', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('unequal', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('and', [ [ 'checkbox', [ 'checkbox', 'checkbox' ] ] ]),
+	generateFormulaInfo('or', [ [ 'checkbox', [ 'checkbox', 'checkbox' ] ] ]),
+	generateFormulaInfo('larger', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('largerEq', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('smaller', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('smallerEq', [
+		[ 'checkbox', [ 'number', 'number' ] ],
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+		[ 'checkbox', [ 'date', 'date' ] ]
+	]),
+	generateFormulaInfo('not', [ [ 'checkbox', [ 'checkbox' ] ] ]),
+	generateFormulaInfo('subtract', [ [ 'number', [ 'number', 'number' ] ] ]),
+	generateFormulaInfo('multiply', [ [ 'number', [ 'number', 'number' ] ] ]),
+	generateFormulaInfo('divide', [ [ 'number', [ 'number', 'number' ] ] ]),
+	generateFormulaInfo('pow', [ [ 'number', [ 'number', 'number' ] ] ]),
+	generateFormulaInfo('mod', [ [ 'number', [ 'number', 'number' ] ] ]),
+	/* {
 		function_name: 'concat',
-		return_type: 'text',
-		args: [ [ 'text', 'text' ] ]
+		signatures: [
+			{
+				result_type: 'text',
+				variadic: 'text'
+			}
+		]
 	},
 	{
 		function_name: 'join',
-		return_type: 'text',
-		args: [ [ 'text', 'text', 'text' ] ]
-	},
-	{
-		function_name: 'slice',
-		return_type: 'text',
-		args: [ [ 'text', 'number' ], [ 'text', 'number', 'number' ] ]
-	},
-	{
-		function_name: 'length',
-		return_type: 'number',
-		args: [ [ 'text' ] ]
-	},
-	{
-		function_name: 'format',
-		return_type: 'text',
-		args: [ [ 'text' ], [ 'date' ], [ 'number' ], [ 'checkbox' ] ]
-	},
-	{
-		function_name: 'toNumber',
-		return_type: 'number',
-		args: [ [ 'text' ], [ 'date' ], [ 'number' ], [ 'checkbox' ] ]
-	},
-	{
-		function_name: 'contains',
-		return_type: 'checkbox',
-		args: [ [ 'text', 'text' ] ]
-	},
-	{
-		function_name: 'replace',
-		return_type: 'text',
-		args: [ [ 'text', 'text', 'text' ], [ 'number', 'text', 'text' ], [ 'checkbox', 'text', 'text' ] ]
-	},
-	{
-		function_name: 'replaceAll',
-		return_type: 'text',
-		args: [ [ 'text', 'text', 'text' ], [ 'number', 'text', 'text' ], [ 'checkbox', 'text', 'text' ] ]
-	},
-	{
-		function_name: 'test',
-		return_type: 'checkbox',
-		args: [ [ 'text', 'text' ], [ 'number', 'text' ], [ 'checkbox', 'text' ] ]
-	},
-	{
-		function_name: 'empty',
-		return_type: 'checkbox',
-		args: [ [ 'text' ], [ 'date' ], [ 'number' ], [ 'checkbox' ] ]
-	},
-	{
-		function_name: 'start',
-		return_type: 'date',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'end',
-		return_type: 'date',
-		args: [ [ 'date' ] ]
-	},
-	{
-		function_name: 'now',
-		return_type: 'date'
-	},
-	{
-		function_name: 'fromTimestamp',
-		return_type: 'date',
-		args: [ [ 'number' ] ]
-	},
-	{
-		function_name: 'dateAdd',
-		return_type: 'date',
-		args: [ [ 'date', 'number', 'text' ] ]
-	},
-	{
-		function_name: 'dateSubtract',
-		return_type: 'date',
-		args: [ [ 'date', 'date', 'text' ] ]
-	},
-	{
-		function_name: 'dateBetween',
-		return_type: 'number',
-		args: [ [ 'date', 'text' ] ]
-	},
-	{
-		function_name: 'formatDate',
-		return_type: 'date',
-		args: [ [ 'date', 'text' ] ]
-	},
-	...generateNrt1Dafs([ 'timestamp', 'minute', 'hour', 'date', 'day', 'month', 'year' ])
+		signatures: [
+			{
+				result_type: 'text',
+				variadic: 'text'
+			}
+		]
+	}, */
+	generateFormulaInfo('slice', [ [ 'text', [ 'text', 'number' ] ], [ 'text', [ 'text', 'number', 'number' ] ] ]),
+	generateFormulaInfo('length', [ [ 'number', [ 'text' ] ] ]),
+	generateFormulaInfo('format', [
+		[ 'text', [ 'text' ] ],
+		[ 'text', [ 'date' ] ],
+		[ 'text', [ 'number' ] ],
+		[ 'text', [ 'checkbox' ] ]
+	]),
+	generateFormulaInfo('toNumber', [
+		[ 'number', [ 'text' ] ],
+		[ 'number', [ 'date' ] ],
+		[ 'number', [ 'number' ] ],
+		[ 'number', [ 'checkbox' ] ]
+	]),
+	generateFormulaInfo('contains', [ [ 'checkbox', [ 'text', 'text' ] ] ]),
+	generateFormulaInfo('replace', [
+		[ 'text', [ 'text', 'text', 'text' ] ],
+		[ 'text', [ 'number', 'text', 'text' ] ],
+		[ 'text', [ 'checkbox', 'text', 'text' ] ]
+	]),
+	generateFormulaInfo('replaceAll', [
+		[ 'text', [ 'text', 'text', 'text' ] ],
+		[ 'text', [ 'number', 'text', 'text' ] ],
+		[ 'text', [ 'checkbox', 'text', 'text' ] ]
+	]),
+	generateFormulaInfo('test', [
+		[ 'checkbox', [ 'text', 'text' ] ],
+		[ 'checkbox', [ 'number', 'text' ] ],
+		[ 'checkbox', [ 'checkbox', 'text' ] ]
+	]),
+	generateFormulaInfo('empty', [
+		[ 'checkbox', [ 'text' ] ],
+		[ 'checkbox', [ 'number' ] ],
+		[ 'checkbox', [ 'checkbox' ] ],
+		[ 'checkbox', [ 'date' ] ]
+	]),
+	generateFormulaInfo('start', [ [ 'date', [ 'date' ] ] ]),
+	generateFormulaInfo('end', [ [ 'date', [ 'date' ] ] ]),
+	generateFormulaInfo('now', [ [ 'date', [] ] ]),
+	generateFormulaInfo('fromTimestamp', [ [ 'date', [ 'number' ] ] ]),
+	generateFormulaInfo('dateAdd', [ [ 'date', [ 'date', 'number', 'text' ] ] ]),
+	generateFormulaInfo('dateSubtract', [ [ 'date', [ 'date', 'number', 'text' ] ] ]),
+	generateFormulaInfo('dateBetween', [ [ 'number', [ 'date', 'date', 'text' ] ] ]),
+	generateFormulaInfo('formatDate', [ [ 'text', [ 'date', 'text' ] ] ]),
+	generateFormulaInfo('timestamp', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('minute', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('hour', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('date', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('day', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('month', [ [ 'number', [ 'date' ] ] ]),
+	generateFormulaInfo('year', [ [ 'number', [ 'date' ] ] ])
 ];
 
 export const function_formula_info_map: Map<TFunctionName, IFunctionFormulaInfo> = new Map(

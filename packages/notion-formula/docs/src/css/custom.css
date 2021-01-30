@@ -1,19 +1,15 @@
 /* stylelint-disable docusaurus/copyright-header */
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-color-primary: #aeaeae;
+  --ifm-color-primary-dark: #9d9d9d;
+  --ifm-color-primary-darker: #949494;
+  --ifm-color-primary-darkest: #7a7a7a;
+  --ifm-color-primary-light: #bfbfbf;
+  --ifm-color-primary-lighter: #c8c8c8;
+  --ifm-color-primary-lightest: #e2e2e2;
+  --ifm-code-font-size: 95%;
+  --ifm-menu-color-active: #636363;
+  --ifm-link-color: #757575;
   --ifm-code-font-size: 95%;
   --ifm-footer-padding-vertical: 0px;
 }
@@ -25,3 +21,155 @@
   padding: 0 var(--ifm-pre-padding);
 }
 
+a{
+  font-weight: 500;
+}
+
+.table-of-contents__link:hover, .table-of-contents__link:hover code, .table-of-contents__link--active, .table-of-contents__link--active code{
+  color: var(--ifm-link-color);
+  font-weight: bolder;
+}
+
+.container{
+  margin: 0px;
+  max-width: 100%;
+}
+
+.row .col.col--3{
+  padding: 0px;
+}
+
+/* classic admonition */
+
+.admonition {
+  border: 0px;
+  color: var(--ifm-font-color-base);
+}
+
+.admonition h5 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.admonition-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.2em;
+}
+
+.admonition-icon svg {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  stroke-width: 0;
+}
+
+.admonition-content > :last-child {
+  margin-bottom: 0;
+}
+
+/* native types */
+.admonition-caution {
+  background-color: rgba(230, 126, 34, 0.1);
+  border-left: 8px solid #e67e22;
+}
+
+.admonition-caution h5 {
+  color: #e67e22;
+}
+
+.admonition-caution .admonition-icon svg {
+  stroke: #e67e22;
+  fill: #e67e22;
+}
+
+.admonition-tip {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-left: 8px solid #2ecc71;
+}
+
+.admonition-tip h5 {
+  color: #2ecc71;
+}
+
+.admonition-tip .admonition-icon svg {
+  stroke: #2ecc71;
+  fill: #2ecc71;
+}
+
+.admonition-warning {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-left: 8px solid #e74c3c;
+}
+
+.admonition-warning h5 {
+  color: #e74c3c;
+}
+
+.admonition-warning .admonition-icon svg {
+  stroke: #e74c3c;
+  fill: #e74c3c;
+}
+
+.admonition-important {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-left: 8px solid #3498db;
+}
+
+.admonition-important h5 {
+  color: #3498db;
+}
+
+.admonition-important .admonition-icon svg {
+  stroke: #3498db;
+  fill: #3498db;
+}
+
+.admonition-note {
+  background-color: rgba(241, 196, 15, 0.1);
+  border-left: 8px solid #f1c40f;
+}
+
+.admonition-note h5 {
+  color: #f1c40f;
+}
+
+.admonition-note .admonition-icon svg {
+  stroke: #f1c40f;
+  fill: #f1c40f;
+}
+
+.header-github-link:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E")
+    no-repeat;
+}
+
+.header-link{
+  padding: 5px;
+  margin: 0px 5px;
+}
+
+.header-discord-link:before{
+  content: '';
+  width: 32px;
+  height: 32px;
+  display: flex;
+  background: url("data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2224pt%22%20height%3D%2224pt%22%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%3E%0A%3Cg%20id%3D%22surface1%22%3E%0A%3Cpath%20style%3D%22%20stroke%3Anone%3Bfill-rule%3Anonzero%3Bfill%3Argb%2854.901961%25%2C61.960784%25%2C100%25%29%3Bfill-opacity%3A1%3B%22%20d%3D%22M%2020%206%20C%2020%206%2017.707031%204.203125%2015%204%20L%2014.757812%204.488281%20C%2017.203125%205.089844%2018.324219%205.945312%2019.5%207%20C%2017.476562%205.96875%2015.480469%205%2012%205%20C%208.519531%205%206.523438%205.96875%204.5%207%20C%205.675781%205.945312%207.011719%204.992188%209.242188%204.488281%20L%209%204%20C%206.160156%204.265625%204%206%204%206%20C%204%206%201.441406%209.714844%201%2017%20C%203.578125%2019.976562%207.5%2020%207.5%2020%20L%208.320312%2018.90625%20C%206.929688%2018.425781%205.359375%2017.558594%204%2016%20C%205.617188%2017.226562%208.0625%2018.5%2012%2018.5%20C%2015.9375%2018.5%2018.382812%2017.226562%2020%2016%20C%2018.640625%2017.558594%2017.074219%2018.425781%2015.679688%2018.90625%20L%2016.5%2020%20C%2016.5%2020%2020.421875%2019.976562%2023%2017%20C%2022.558594%209.714844%2020%206%2020%206%20Z%20M%208.75%2015%20C%207.78125%2015%207%2014.105469%207%2013%20C%207%2011.894531%207.78125%2011%208.75%2011%20C%209.71875%2011%2010.5%2011.894531%2010.5%2013%20C%2010.5%2014.105469%209.71875%2015%208.75%2015%20Z%20M%2015.25%2015%20C%2014.28125%2015%2013.5%2014.105469%2013.5%2013%20C%2013.5%2011.894531%2014.28125%2011%2015.25%2011%20C%2016.21875%2011%2017%2011.894531%2017%2013%20C%2017%2014.105469%2016.21875%2015%2015.25%2015%20Z%20M%2015.25%2015%20%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A")
+}
+
+.header-npm-link:before{
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%0A%20%20%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%0A%20%20%20%20%3Crect%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22%23D40001%22%2F%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M16.7179487%2C7.92840493%20L12.2051282%2C7.92840493%20L12.2051282%2C20.2494172%20L4%2C20.2494172%20L4%2C3%20L12.2051282%2C3%20L20%2C3%20L20%2C7.92840493%20L20%2C20.2494172%20L16.7179487%2C20.2494172%20L16.7179487%2C7.92840493%20Z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E")
+}
+
+.navbar__link--active{
+  color: inherit
+}

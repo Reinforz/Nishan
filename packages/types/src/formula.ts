@@ -1,11 +1,10 @@
-export type TFormulaType = 'operator' | 'property' | 'function' | 'symbol' | 'constant';
+export type TFormulaType = 'operator' | 'property' | 'function' | 'symbol' | 'constant' | 'conditional';
 export type TFormulaResultType = 'number' | 'checkbox' | 'text' | 'date';
 export type TConstantFormulaValueType = 'number' | 'string';
 export type TFormulaSymbolName = 'false' | 'true' | 'pi' | 'e';
 
-export type Tuple2<T extends any> = [T, T];
-export type Tuple12<T1 extends any, T2 extends any> = [T1, T2, T2];
-export type Tuple3<T extends any> = [T, T, T];
+type Tuple2<T extends any> = [T, T];
+type Tuple12<T1 extends any, T2 extends any> = [T1, T2, T2];
 
 // Result types
 
@@ -70,41 +69,77 @@ export type INumberPropertyFormula = IPropertyFormula<'number'>;
 
 // Operators
 
-export type TOperatorName = THybridFunctionName;
-export interface IOperatorFormula<RT extends TFormulaResultType, O extends TOperatorName, A extends any> {
+export type TOperator =
+	| '+'
+	| '-'
+	| '*'
+	| '/'
+	| '^'
+	| '%'
+	| 'not'
+	| 'and'
+	| 'or'
+	| '=='
+	| '!='
+	| '>'
+	| '>='
+	| '<'
+	| '<=';
+export interface IOperatorFormula<
+	RT extends TFormulaResultType,
+	O extends TOperator,
+	F extends THybridFunctionName,
+	A extends any
+> {
 	type: 'operator';
 	result_type: RT;
 	operator: O;
-	name: O;
+	name: F;
 	args: A;
 }
 
-export type EqualOperatorFormula = IOperatorFormula<'checkbox', 'equal', Tuple2AnyResultType>;
-export type UnequalOperatorFormula = IOperatorFormula<'checkbox', 'unequal', Tuple2AnyResultType>;
-export type AndOperatorFormula = IOperatorFormula<'checkbox', 'and', Tuple2<TCheckboxResultTypeFormula>>;
-export type OrOperatorFormula = IOperatorFormula<'checkbox', 'or', Tuple2<TCheckboxResultTypeFormula>>;
-export type LargerOperatorFormula = IOperatorFormula<'checkbox', 'larger', Tuple2<TCheckboxResultTypeFormula>>;
-export type LargerEqOperatorFormula = IOperatorFormula<'checkbox', 'largerEq', Tuple2<TCheckboxResultTypeFormula>>;
-export type SmallerOperatorFormula = IOperatorFormula<'checkbox', 'smaller', Tuple2<TCheckboxResultTypeFormula>>;
-export type SmallerEqOperatorFormula = IOperatorFormula<'checkbox', 'smallerEq', Tuple2<TCheckboxResultTypeFormula>>;
-export type NotOperatorFormula = IOperatorFormula<'checkbox', 'not', [TCheckboxResultTypeFormula]>;
+export type EqualOperatorFormula = IOperatorFormula<'checkbox', '==', 'equal', Tuple2AnyResultType>;
+export type UnequalOperatorFormula = IOperatorFormula<'checkbox', '!=', 'unequal', Tuple2AnyResultType>;
+export type AndOperatorFormula = IOperatorFormula<'checkbox', 'and', 'and', Tuple2<TCheckboxResultTypeFormula>>;
+export type OrOperatorFormula = IOperatorFormula<'checkbox', 'or', 'or', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerOperatorFormula = IOperatorFormula<'checkbox', '>', 'larger', Tuple2<TCheckboxResultTypeFormula>>;
+export type LargerEqOperatorFormula = IOperatorFormula<
+	'checkbox',
+	'>=',
+	'largerEq',
+	Tuple2<TCheckboxResultTypeFormula>
+>;
+export type SmallerOperatorFormula = IOperatorFormula<'checkbox', '<', 'smaller', Tuple2<TCheckboxResultTypeFormula>>;
+export type SmallerEqOperatorFormula = IOperatorFormula<
+	'checkbox',
+	'<=',
+	'smallerEq',
+	Tuple2<TCheckboxResultTypeFormula>
+>;
+export type NotOperatorFormula = IOperatorFormula<'checkbox', 'not', 'not', [TCheckboxResultTypeFormula]>;
+export type SubtractOperatorFormula = IOperatorFormula<'number', '-', 'subtract', Tuple2<TNumberResultTypeFormula>>;
+export type DivideOperatorFormula = IOperatorFormula<'number', '/', 'divide', Tuple2<TNumberResultTypeFormula>>;
+export type MultiplyOperatorFormula = IOperatorFormula<'number', '*', 'multiply', Tuple2<TNumberResultTypeFormula>>;
+export type PowOperatorFormula = IOperatorFormula<'number', '^', 'pow', Tuple2<TNumberResultTypeFormula>>;
+export type ModOperatorFormula = IOperatorFormula<'number', '%', 'mod', Tuple2<TNumberResultTypeFormula>>;
+export type UnaryMinusOperatorFormula = IOperatorFormula<'number', '-', 'unaryMinus', [TNumberResultTypeFormula]>;
+export type UnaryPlusOperatorFormula = IOperatorFormula<'number', '+', 'unaryPlus', [TNumberResultTypeFormula]>;
+export type TextAddOperatorFormula = IOperatorFormula<'text', '+', 'add', Tuple2<TTextResultTypeFormula>>;
+export type NumberAddOperatorFormula = IOperatorFormula<'number', '+', 'add', Tuple2<TNumberResultTypeFormula>>;
+export interface IConditionalFormula<RT extends TFormulaResultType, TF extends TResultTypeFormula> {
+	result_type: RT;
+	condition: TCheckboxResultTypeFormula;
+	type: 'conditional';
+	true: TF;
+	false: TF;
+}
+export type TextIfOperatorFormula = IConditionalFormula<'text', TTextResultTypeFormula>;
+export type NumberIfOperatorFormula = IConditionalFormula<'number', TNumberResultTypeFormula>;
+export type DateIfOperatorFormula = IConditionalFormula<'date', TDateResultTypeFormula>;
+export type CheckboxIfOperatorFormula = IConditionalFormula<'checkbox', TCheckboxResultTypeFormula>;
 
-export type SubtractOperatorFormula = IOperatorFormula<'number', 'subtract', Tuple2<TNumberResultTypeFormula>>;
-export type DivideOperatorFormula = IOperatorFormula<'number', 'divide', Tuple2<TNumberResultTypeFormula>>;
-export type MultiplyOperatorFormula = IOperatorFormula<'number', 'multiply', Tuple2<TNumberResultTypeFormula>>;
-export type PowOperatorFormula = IOperatorFormula<'number', 'pow', Tuple2<TNumberResultTypeFormula>>;
-export type ModOperatorFormula = IOperatorFormula<'number', 'mod', Tuple2<TNumberResultTypeFormula>>;
-export type UnaryMinusOperatorFormula = IOperatorFormula<'number', 'unaryMinus', [TNumberResultTypeFormula]>;
-export type UnaryPlusOperatorFormula = IOperatorFormula<'number', 'unaryPlus', [TNumberResultTypeFormula]>;
-
-export type TextAddOperatorFormula = IOperatorFormula<'text', 'add', Tuple2<TTextResultTypeFormula>>;
-
-export type NumberAddOperatorFormula = IOperatorFormula<'number', 'add', Tuple2<TNumberResultTypeFormula>>;
-
-export type IfOperatorFormula = IOperatorFormula<'text', 'if', Tuple3AnyResultType<TCheckboxResultTypeFormula>>;
-
-export type TTextOperatorFormula = TextAddOperatorFormula | IfOperatorFormula;
-
+export type TTextOperatorFormula = TextAddOperatorFormula | TextIfOperatorFormula;
+export type TDateOperatorFormula = DateIfOperatorFormula;
 export type TCheckboxOperatorFormula =
 	| AndOperatorFormula
 	| OrOperatorFormula
@@ -114,7 +149,8 @@ export type TCheckboxOperatorFormula =
 	| LargerEqOperatorFormula
 	| SmallerOperatorFormula
 	| SmallerEqOperatorFormula
-	| NotOperatorFormula;
+	| NotOperatorFormula
+	| CheckboxIfOperatorFormula;
 
 export type TNumberOperatorFormula =
 	| NumberAddOperatorFormula
@@ -124,9 +160,14 @@ export type TNumberOperatorFormula =
 	| PowOperatorFormula
 	| ModOperatorFormula
 	| UnaryMinusOperatorFormula
-	| UnaryPlusOperatorFormula;
+	| UnaryPlusOperatorFormula
+	| NumberIfOperatorFormula;
 
-export type TOperatorFormula = TTextOperatorFormula | TCheckboxOperatorFormula | TNumberOperatorFormula;
+export type TOperatorFormula =
+	| TDateOperatorFormula
+	| TTextOperatorFormula
+	| TCheckboxOperatorFormula
+	| TNumberOperatorFormula;
 
 // Symbols
 

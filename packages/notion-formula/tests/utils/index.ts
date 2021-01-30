@@ -1,8 +1,4 @@
 import { ISchemaMap } from '../../src';
-import { generateNumberConstant, generateNumberFunction } from './generateFormulaParts';
-
-export * from './generateFormulaParts';
-export * from './generateFunctionFormulaArguments';
 
 export const test_schema_map: ISchemaMap = new Map([
 	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],
@@ -15,8 +11,20 @@ export const test_schema_map: ISchemaMap = new Map([
 			schema_id: 'formula',
 			type: 'formula',
 			name: 'formula',
-			formula: generateNumberFunction('abs', [ generateNumberConstant(1) ])
-		}
+			formula: {
+				type: 'function',
+				name: 'abs',
+				result_type: 'number',
+				args: [
+					{
+						type: 'constant',
+						value: '1',
+						value_type: 'number',
+						retunr_type: 'number'
+					}
+				]
+			}
+		} as any
 	],
 	[
 		'Rollup',

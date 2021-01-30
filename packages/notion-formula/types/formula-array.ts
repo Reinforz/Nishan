@@ -45,7 +45,7 @@ export type ReplaceFunctionArrayCreateInput = [
 		| Tuple12<TTextArrayResultType, TTextArrayResultType>
 		| Tuple12<TCheckboxArrayResultType, TTextArrayResultType>
 ];
-export type ConcatFunctionArrayCreateInput = ['concat', Tuple2<TTextArrayResultType>];
+export type ConcatFunctionArrayCreateInput = ['concat', TTextArrayResultType[]];
 export type JoinFunctionArrayCreateInput = ['join', TTextArrayResultType[]];
 export type SliceFunctionArrayCreateInput = [
 	'slice',
@@ -88,8 +88,8 @@ export type FloorFunctionArrayCreateInput = ['floor', [TNumberArrayResultType]];
 export type LnFunctionArrayCreateInput = ['ln', [TNumberArrayResultType]];
 export type Log10FunctionArrayCreateInput = ['log10', [TNumberArrayResultType]];
 export type Log2FunctionArrayCreateInput = ['log2', [TNumberArrayResultType]];
-export type MaxFunctionArrayCreateInput = ['max', [TNumberArrayResultType]];
-export type MinFunctionArrayCreateInput = ['min', [TNumberArrayResultType]];
+export type MaxFunctionArrayCreateInput = ['max', TNumberArrayResultType[]];
+export type MinFunctionArrayCreateInput = ['min', TNumberArrayResultType[]];
 export type RoundFunctionArrayCreateInput = ['round', [TNumberArrayResultType]];
 export type SignFunctionArrayCreateInput = ['sign', [TNumberArrayResultType]];
 export type SqrtFunctionArrayCreateInput = ['sqrt', [TNumberArrayResultType]];

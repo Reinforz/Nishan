@@ -104,6 +104,10 @@ describe('Checking constant type formula part', () => {
 	});
 });
 
+it('Should throw error when unsupported literal is used', () => {
+	expect(() => generateFormulaArgsFromLiterals({} as any)).toThrow(`${{}} is a malformed value`);
+});
+
 describe('Checking property type formula part', () => {
 	it('Should output correctly for correct text property reference', () => {
 		expect(

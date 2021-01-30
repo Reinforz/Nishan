@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
 
-import { generateFormulaASTFromArray } from '../src';
+import { generateFormulaASTFromArray, generateFormulaASTFromObject } from '../src';
 import { test_schema_map } from './utils';
 
 describe('Function formula parsing error', () => {
@@ -25,9 +25,162 @@ describe('Function formula parsing error', () => {
 			`Argument of type text can't be used as argument 1 for function ceil`
 		);
 	});
+
+	it('Should throw for improper property argument type', () => {
+		expect(() => generateFormulaASTFromArray([ 'abs', [ { property: 'text' } ] as any ])).toThrow(
+			`A property is referenced in the formula, but schema_map argument was not passed`
+		);
+	});
 });
 
-describe('Function formula parsing success', () => {
+describe('Variadic argument array representation parsing', () => {
+	it(`Should parse correctly when passed correct types`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'max',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						},
+						{
+							type: 'symbol',
+							name: 'e',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ function: 'max', args: [ 1, 'e' ] }, test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it('Should throw for improper variadic argument type', () => {
+		expect(() => generateFormulaASTFromArray([ 'max', [ '1', 'e' ] as any ])).toThrow(
+			`Argument of type text can't be used as argument 1 for function max`
+		);
+	});
+});
+
+describe('Zero arity function parsing', () => {
+	it(`Should parse correctly when passed correct types`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'now',
+					type: 'function',
+					result_type: 'date'
+				},
+				generateFormulaASTFromObject({ function: 'now' }, test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it('Should throw for improper zero arity function', () => {
+		expect(() => generateFormulaASTFromArray([ 'now', [ '1', 'e' ] ] as any)).toThrow(
+			`Argument of type text can't be used as argument 1 for function now`
+		);
+	});
+});
+
+describe('Function formula object representation parsing success', () => {
+	it(`Should match output for constant argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ function: 'abs', args: [ 1 ] }, test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for symbol argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'symbol',
+							name: 'e',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ function: 'abs', args: [ 'e' ] }, test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for property argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'property',
+							name: 'number',
+							id: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ function: 'abs', args: [ { property: 'number' } ] }, test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for function argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							name: 'ceil',
+							type: 'function',
+							args: [
+								{
+									type: 'constant',
+									value: '1',
+									value_type: 'number',
+									result_type: 'number'
+								}
+							],
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ function: 'abs', args: [ { function: 'ceil', args: [ 1 ] } ] }, test_schema_map)
+			)
+		).toBe(true);
+	});
+});
+
+describe('Function formula array representation parsing success', () => {
 	it(`Should match output for constant argument type`, () => {
 		expect(
 			deepEqual(

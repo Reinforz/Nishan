@@ -48,7 +48,7 @@ export type ReplaceFunctionCreateInput = IFunctionCreateInput<
 	| Tuple12<TTextResultType, TTextResultType>
 	| Tuple12<TCheckboxResultType, TTextResultType>
 >;
-export type ConcatFunctionCreateInput = IFunctionCreateInput<'concat', Tuple2<TTextResultType>>;
+export type ConcatFunctionCreateInput = IFunctionCreateInput<'concat', TTextResultType[]>;
 export type JoinFunctionCreateInput = IFunctionCreateInput<'join', TTextResultType[]>;
 export type SliceFunctionCreateInput = IFunctionCreateInput<
 	'slice',
@@ -83,8 +83,8 @@ export type FloorFunctionCreateInput = IFunctionCreateInput<'floor', [TNumberRes
 export type LnFunctionCreateInput = IFunctionCreateInput<'ln', [TNumberResultType]>;
 export type Log10FunctionCreateInput = IFunctionCreateInput<'log10', [TNumberResultType]>;
 export type Log2FunctionCreateInput = IFunctionCreateInput<'log2', [TNumberResultType]>;
-export type MaxFunctionCreateInput = IFunctionCreateInput<'max', [TNumberResultType]>;
-export type MinFunctionCreateInput = IFunctionCreateInput<'min', [TNumberResultType]>;
+export type MaxFunctionCreateInput = IFunctionCreateInput<'max', TNumberResultType[]>;
+export type MinFunctionCreateInput = IFunctionCreateInput<'min', TNumberResultType[]>;
 export type RoundFunctionCreateInput = IFunctionCreateInput<'round', [TNumberResultType]>;
 export type SignFunctionCreateInput = IFunctionCreateInput<'sign', [TNumberResultType]>;
 export type SqrtFunctionCreateInput = IFunctionCreateInput<'sqrt', [TNumberResultType]>;

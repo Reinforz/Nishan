@@ -25,7 +25,9 @@ jobs:
         with:
           files: ./packages/core/coverage/clover.xml
           flags: core
+          name: "@nishans/core"
       - uses: codecov/codecov-action@v1
         with:
           files: ./packages/notion-formula/coverage/clover.xml
           flags: notion_formula
+          name: "@nishans/notion-formula"

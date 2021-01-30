@@ -23,17 +23,5 @@ jobs:
       - run: yarn test
       - uses: codecov/codecov-action@v1
         with:
-          files: ./packages/core/coverage/clover.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: core
-          name: "@nishans/core"
-          fail_ci_if_error: false
-          verbose: false
-      - uses: codecov/codecov-action@v1
-        with:
-          files: ./packages/notion-formula/coverage/clover.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: core
-          name: "@nishans/notion-formula"
-          fail_ci_if_error: false
-          verbose: false
+          files: ./packages/core/coverage/clover.xml,./packages/notion-formula/coverage/clover.xml
+          flags: core,notion-formula

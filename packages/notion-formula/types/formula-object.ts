@@ -16,8 +16,8 @@ type Tuple2<T extends TResultType> = [T, T];
 type Tuple12<T1 extends TResultType, T2 extends TResultType> = [T1, T2, T2];
 
 export type TCheckboxResultType = boolean | TCheckboxFunctionCreateInput | { property: string };
-export type TNumberResultType = number | TNumberFunctionCreateInput | { property: string };
-export type TDateResultType = Date | TDateFunctionCreateInput | { property: string };
+export type TNumberResultType = 'pi' | 'e' | number | TNumberFunctionCreateInput | { property: string };
+export type TDateResultType = TDateFunctionCreateInput | { property: string };
 export type TTextResultType = string | TTextFunctionCreateInput | { property: string };
 
 interface IFunctionCreateInput<F extends TFunctionName, A extends any[]> {

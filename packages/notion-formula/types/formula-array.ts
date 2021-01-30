@@ -17,8 +17,8 @@ type Tuple2<T extends AnyArrayResultType> = [T, T];
 type Tuple12<T1 extends AnyArrayResultType, T2 extends AnyArrayResultType> = [T1, T2, T2];
 
 export type TCheckboxArrayResultType = boolean | TCheckboxFunctionArrayCreateInput | { property: string };
-export type TNumberArrayResultType = number | TNumberFunctionArrayCreateInput | { property: string };
-export type TDateArrayResultType = Date | TDateFunctionArrayCreateInput | { property: string };
+export type TNumberArrayResultType = 'e' | 'pi' | number | TNumberFunctionArrayCreateInput | { property: string };
+export type TDateArrayResultType = TDateFunctionArrayCreateInput | { property: string };
 export type TTextArrayResultType = string | TTextFunctionArrayCreateInput | { property: string };
 
 export type NumberIfFunctionArrayCreateInput = ['if', Tuple12<TCheckboxArrayResultType, TNumberArrayResultType>];

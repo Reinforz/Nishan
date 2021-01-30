@@ -1,6 +1,6 @@
 import { TConstantFormula, TFormulaResultType, TPropertyFormula, TSymbolFormula } from '@nishans/types';
 import { ISchemaMap } from '../types/formula-object';
-import { formulateResultTypeFromSchemaType } from './returnFormulaResultType';
+import { formulateResultTypeFromSchemaType } from './formulateResultTypeFromSchemaType';
 
 /**
  * Generate function formula arg based on certain criterias 

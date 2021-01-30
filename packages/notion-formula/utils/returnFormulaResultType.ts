@@ -23,11 +23,10 @@ export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TForm
 		case 'url':
 		case 'title':
 		case 'text':
-		case 'relation':
 			return 'text';
 		case 'number':
 			return 'number';
 		default:
-			return 'number';
+			throw new Error(`Unsupported schema type ${type}`);
 	}
 }

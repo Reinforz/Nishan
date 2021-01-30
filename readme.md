@@ -1,10 +1,11 @@
-<p align="center"><a href="https://nishan-docs.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="125" src="https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg" alt="Vue logo"></a></p>
+<p align="center"><a href="https://nishan-docs.netlify.app/" target="_blank" rel="noopener noreferrer"><img width="125" src="https://raw.githubusercontent.com/Devorein/Nishan/655689d3d66210126c0a19be473074d790d33e0a/public/Logo.svg" alt="Nishan logo"></a></p>
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/actions?query=workflow%3A%22Lint%2C+Build+and+Test%22"><img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/></a>
   <img src="https://img.shields.io/github/commit-activity/m/devorein/nishan?color=yellow" />
   <img src="https://img.shields.io/github/repo-size/devorein/nishan?style=flat-square&color=orange"/>
   <img src="https://img.shields.io/github/contributors/devorein/nishan?label=contributors&color=red">
+  <img src="https://img.shields.io/codecov/c/github/devorein/Nishan">
 </p>
 
 # Nishan
@@ -13,7 +14,7 @@ Unofficial Notion api for node.js with all crud functionalities for Space, User,
 
 This monorepo contains/will contain the following packages:-
 
-## Legend
+### Legend
 
 1. NPM: These packages has been released in npm
 2. WIP: Not yet released but gonna soon

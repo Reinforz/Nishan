@@ -7,6 +7,7 @@ A package to generate notion formula with ease
   <img src="https://img.shields.io/npm/dw/@nishans/notion-formula?style=flat"/>
   <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/notion-formula"/>
   <img src="https://img.shields.io/npm/v/@nishans/notion-formula"/>
+  <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=notion_formula"/>
 </p>
 
-Please visit [documentation](https://notion-formula.netlify.app/) to learn more.
+Please visit [documentation](https://nishans-notion-formula.netlify.app/) to learn more.

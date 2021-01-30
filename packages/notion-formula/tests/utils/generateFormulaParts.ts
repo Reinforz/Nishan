@@ -1,4 +1,22 @@
-import { TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
+import {
+	ICheckboxPropertyFormula,
+	IDatePropertyFormula,
+	INumberConstantFormula,
+	INumberPropertyFormula,
+	ITextConstantFormula,
+	ITextPropertyFormula,
+	TCheckboxFunctionFormula,
+	TCheckboxSymbolFormula,
+	TDateFunctionFormula,
+	TFormulaResultType,
+	TFunctionFormula,
+	TFunctionName,
+	TNumberFunctionFormula,
+	TNumberSymbolFormula,
+	TPropertyFormula,
+	TSymbolFormula,
+	TTextFunctionFormula
+} from '@nishans/types';
 
 export function generateFunction (
 	name: TFunctionName,
@@ -15,22 +33,22 @@ export function generateFunction (
 }
 
 export function generateNumberFunction (name: TFunctionName, args?: any[]) {
-	return generateFunction(name, 'number', args);
+	return generateFunction(name, 'number', args) as TNumberFunctionFormula;
 }
 
 export function generateTextFunction (name: TFunctionName, args?: any[]) {
-	return generateFunction(name, 'text', args);
+	return generateFunction(name, 'text', args) as TTextFunctionFormula;
 }
 
 export function generateCheckboxFunction (name: TFunctionName, args?: any[]) {
-	return generateFunction(name, 'checkbox', args);
+	return generateFunction(name, 'checkbox', args) as TCheckboxFunctionFormula;
 }
 
 export function generateDateFunction (name: TFunctionName, args?: any[]) {
-	return generateFunction(name, 'date', args);
+	return generateFunction(name, 'date', args) as TDateFunctionFormula;
 }
 
-export function generateTextConstant (value: string) {
+export function generateTextConstant (value: string): ITextConstantFormula {
 	return {
 		type: 'constant',
 		result_type: 'text',
@@ -39,7 +57,7 @@ export function generateTextConstant (value: string) {
 	};
 }
 
-export function generateNumberConstant (value: number) {
+export function generateNumberConstant (value: number): INumberConstantFormula {
 	return {
 		type: 'constant',
 		result_type: 'number',
@@ -48,7 +66,7 @@ export function generateNumberConstant (value: number) {
 	};
 }
 
-export function generateProperty (result_type: TFormulaResultType, name: string) {
+export function generateProperty (result_type: TFormulaResultType, name: string): TPropertyFormula {
 	return {
 		type: 'property',
 		id: name.toLowerCase(),
@@ -58,22 +76,22 @@ export function generateProperty (result_type: TFormulaResultType, name: string)
 }
 
 export function generateNumberProperty (name: string) {
-	return generateProperty('number', name);
+	return generateProperty('number', name) as INumberPropertyFormula;
 }
 
 export function generateTextProperty (name: string) {
-	return generateProperty('text', name);
+	return generateProperty('text', name) as ITextPropertyFormula;
 }
 
 export function generateCheckboxProperty (name: string) {
-	return generateProperty('checkbox', name);
+	return generateProperty('checkbox', name) as ICheckboxPropertyFormula;
 }
 
 export function generateDateProperty (name: string) {
-	return generateProperty('date', name);
+	return generateProperty('date', name) as IDatePropertyFormula;
 }
 
-export function generateNumberSymbol (name: 'e' | 'pi') {
+export function generateNumberSymbol (name: 'e' | 'pi'): TNumberSymbolFormula {
 	return {
 		name,
 		result_type: 'number',
@@ -81,7 +99,7 @@ export function generateNumberSymbol (name: 'e' | 'pi') {
 	};
 }
 
-export function generateCheckboxSymbol (name: boolean) {
+export function generateCheckboxSymbol (name: boolean): TCheckboxSymbolFormula {
 	return {
 		name: name.toString(),
 		result_type: 'checkbox',

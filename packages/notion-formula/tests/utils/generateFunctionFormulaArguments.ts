@@ -1,4 +1,12 @@
-import { TFormulaResultType } from '@nishans/types';
+import {
+	TConstantFormula,
+	TFormulaResultType,
+	TFormulaType,
+	TFunctionFormula,
+	TPropertyFormula,
+	TSymbolFormula
+} from '@nishans/types';
+import { TFormulaArrayCreateInput, TFormulaCreateInput } from '../../src';
 import {
 	generateCheckboxFunction,
 	generateCheckboxProperty,
@@ -14,117 +22,138 @@ import {
 	generateTextProperty
 } from './generateFormulaParts';
 
-export function generateFunctionFormulaASTArguments (arg_return_types: TFormulaResultType[]) {
-	const arg_types = {
-		property: [],
-		symbol: [],
-		constant: [],
-		function: []
-	} as any;
-
-	arg_return_types.forEach((arg_return_type) => {
-		switch (arg_return_type) {
-			case 'number':
-				arg_types.property.push(generateNumberProperty('number'));
-				arg_types.symbol.push(generateNumberSymbol('e'));
-				arg_types.constant.push(generateNumberConstant(1));
-				arg_types.function.push(generateNumberFunction('abs', [ generateNumberConstant(1) ]));
-				break;
-			case 'text':
-				arg_types.property.push(generateTextProperty('text'));
-				arg_types.constant.push(generateTextConstant('text'));
-				arg_types.function.push(
-					generateTextFunction('concat', [ generateTextConstant('0'), generateTextConstant('1') ])
-				);
-				break;
-			case 'checkbox':
-				arg_types.property.push(generateCheckboxProperty('checkbox'));
-				arg_types.symbol.push(generateCheckboxSymbol(true));
-				arg_types.function.push(
-					generateCheckboxFunction('equal', [ generateTextConstant('0'), generateTextConstant('1') ])
-				);
-				break;
-			case 'date':
-				arg_types.property.push(generateDateProperty('date'));
-				arg_types.function.push(generateDateFunction('end', [ generateDateFunction('now') ]));
-				break;
-		}
-	});
-
-	return arg_types;
+interface IArguments {
+	ast: IArgument['ast'][];
+	object: IArgument['object'][];
+	array: IArgument['array'][];
+	message: string;
 }
 
-export function generateFunctionFormulaArrayArguments (arg_return_types: TFormulaResultType[]) {
-	const arg_types = {
-		property: [],
-		symbol: [],
-		constant: [],
-		function: []
-	} as any;
-
-	arg_return_types.forEach((arg_return_type) => {
-		switch (arg_return_type) {
-			case 'number':
-				arg_types.property.push({ property: 'number' });
-				arg_types.symbol.push('e');
-				arg_types.constant.push(1);
-				arg_types.function.push([ 'abs', [ 1 ] ]);
-				break;
-			case 'text':
-				arg_types.property.push({ property: 'text' });
-				arg_types.constant.push('text');
-				arg_types.function.push([ 'concat', [ '0', '1' ] ]);
-				break;
-			case 'checkbox':
-				arg_types.property.push({ property: 'checkbox' });
-				arg_types.symbol.push(true);
-				arg_types.function.push([ 'equal', [ '0', '1' ] ]);
-				break;
-			case 'date':
-				arg_types.property.push({ property: 'date' });
-				arg_types.function.push([ 'end', [ [ 'now' ] ] ]);
-				break;
-		}
-	});
-
-	return arg_types;
+interface IArgument {
+	ast: TPropertyFormula | TSymbolFormula | TConstantFormula | TFunctionFormula;
+	object: { property: string } | boolean | 'e' | 'pi' | number | string | TFormulaCreateInput;
+	array: { property: string } | boolean | 'e' | 'pi' | number | string | TFormulaArrayCreateInput;
 }
 
-export function generateFunctionFormulaObjectArguments (arg_return_types: TFormulaResultType[]) {
-	const arg_types = {
-		property: [],
-		symbol: [],
-		constant: [],
-		function: []
-	} as any;
+const rt_arg_variant_mapper: Record<TFormulaResultType, TFormulaType[]> = {
+	number: [ 'property', 'symbol', 'constant', 'function' ],
+	text: [ 'property', 'constant', 'function' ],
+	checkbox: [ 'property', 'symbol', 'function' ],
+	date: [ 'property', 'function' ]
+};
 
-	arg_return_types.forEach((arg_return_type) => {
-		switch (arg_return_type) {
-			case 'number':
-				arg_types.property.push({ property: 'number' });
-				arg_types.symbol.push('e');
-				arg_types.constant.push(1);
-				arg_types.function.push({
-					function: 'abs',
-					args: [ 1 ]
-				});
-				break;
-			case 'text':
-				arg_types.property.push({ property: 'text' });
-				arg_types.constant.push('text');
-				arg_types.function.push({ function: 'concat', args: [ '0', '1' ] });
-				break;
-			case 'checkbox':
-				arg_types.property.push({ property: 'checkbox' });
-				arg_types.symbol.push(true);
-				arg_types.function.push({ function: 'equal', args: [ '0', '1' ] });
-				break;
-			case 'date':
-				arg_types.property.push({ property: 'date' });
-				arg_types.function.push({ function: 'end', args: [ { function: 'now' } ] });
-				break;
-		}
+function generateCombos (rts: TFormulaResultType[]) {
+	function generateCombos (lhs: string[], rhs: string[]) {
+		const res = [];
+		lhs.forEach((lhs) => {
+			rhs.forEach((rhs) => res.push(`${lhs} x ${rhs}`));
+		});
+		return res;
+	}
+
+	let final_combos: string[] = [];
+	rts.forEach((rt, index) => {
+		const source: string[] = [];
+		const supported_rt_variants = rt_arg_variant_mapper[rt];
+		supported_rt_variants.forEach((supported_rt_variant) => source.push(`${rt}.${supported_rt_variant}`));
+		if (index !== 0) final_combos = generateCombos(final_combos, source);
+		else final_combos = source;
 	});
+	return final_combos;
+}
 
-	return arg_types;
+export function generateFunctionFormulaArguments (arg_return_types: TFormulaResultType[]): IArguments[] {
+	return generateArgumentsFromCombos(generateCombos(arg_return_types));
+}
+
+function generateArgumentsFromCombos (combos: string[]) {
+	const results: IArguments[] = [];
+
+	combos.forEach((combo) => {
+		const chunks = combo.split(' x '),
+			result: IArguments = {
+				message: combo,
+				ast: [],
+				array: [],
+				object: []
+			};
+		chunks.forEach((chunk) => {
+			const argument = generateArgumentsFromResultTypesAndVariants(chunk);
+			result.ast.push(argument.ast);
+			result.array.push(argument.array);
+			result.object.push(argument.object);
+		});
+		results.push(result);
+	});
+	return results;
+}
+
+function generateArgumentsFromResultTypesAndVariants (chunk: string) {
+	const res: IArgument = {} as any;
+	switch (chunk) {
+		case 'number.property':
+			res.ast = generateNumberProperty('number');
+			res.array = { property: 'number' };
+			res.object = { property: 'number' };
+			break;
+		case 'number.symbol':
+			res.ast = generateNumberSymbol('e');
+			res.array = 'e';
+			res.object = 'e';
+			break;
+		case 'number.constant':
+			res.ast = generateNumberConstant(1);
+			res.array = 1;
+			res.object = 1;
+			break;
+		case 'number.function':
+			res.ast = generateNumberFunction('abs', [ generateNumberConstant(1) ]);
+			res.array = [ 'abs', [ 1 ] ];
+			res.object = {
+				function: 'abs',
+				args: [ 1 ]
+			};
+			break;
+		case 'text.property':
+			res.ast = generateTextProperty('text');
+			res.array = { property: 'text' };
+			res.object = { property: 'text' };
+			break;
+		case 'text.constant':
+			res.ast = generateTextConstant('text');
+			res.array = 'text';
+			res.object = 'text';
+			break;
+		case 'text.function':
+			res.ast = generateTextFunction('concat', [ generateTextConstant('0'), generateTextConstant('1') ]);
+			res.array = [ 'concat', [ '0', '1' ] ];
+			res.object = { function: 'concat', args: [ '0', '1' ] };
+			break;
+		case 'checkbox.property':
+			res.ast = generateCheckboxProperty('checkbox');
+			res.array = { property: 'checkbox' };
+			res.object = { property: 'checkbox' };
+			break;
+		case 'checkbox.symbol':
+			res.ast = generateCheckboxSymbol(true);
+			res.array = true;
+			res.object = true;
+			break;
+		case 'checkbox.function':
+			res.ast = generateCheckboxFunction('equal', [ generateTextConstant('0'), generateTextConstant('1') ]);
+			res.array = [ 'equal', [ '0', '1' ] ];
+			res.object = { function: 'equal', args: [ '0', '1' ] };
+			break;
+		case 'date.property':
+			res.ast = generateDateProperty('date');
+			res.array = { property: 'date' };
+			res.object = { property: 'date' };
+			break;
+		case 'date.function':
+			res.ast = generateCheckboxFunction('equal', [ generateTextConstant('0'), generateTextConstant('1') ]);
+			res.array = [ 'end', [ [ 'now' ] ] ];
+			res.object = { function: 'end', args: [ { function: 'now' } ] };
+			break;
+	}
+	return res;
 }

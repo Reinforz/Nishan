@@ -1,14 +1,22 @@
 # `@nishans/sync`
 
 <p align="center">
+  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/packages/sync/docs/static/img/logo.svg"/>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/bundlephobia/minzip/@nishans/sync?label=minzipped&style=flat"/>
   <img src="https://img.shields.io/npm/dw/@nishans/sync?style=flat"/>
   <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/sync"/>
   <img src="https://img.shields.io/npm/v/@nishans/sync"/>
+  <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=sync"/>
 </p>
 
-A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
+<p align="center">
+  <a href="https://github.com/Devorein/Nishan/tree/master/packages/sync">Github</a>
+  <a href="nishan-docs.netlify.app/">Docs</a>
+  <a href="https://www.npmjs.com/package/@nishans/sync">NPM</a>
+  <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
+</p>
 
-## Note
-
-Currently this package only supports collection blocks or collection view pages not regular pages or other kinds of blocks
+<p align="center"><b>A package to keep local notion data in sync with remote one by storing and restoring it.</b></p>

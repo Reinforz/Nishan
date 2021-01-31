@@ -1,7 +1,5 @@
 # `@nishans/types`
 
-Package to contain notion typescript type definitions
-
 <p align="center">
   <img src="https://img.shields.io/bundlephobia/minzip/@nishans/types?label=minzipped&style=flat"/>
   <img src="https://img.shields.io/npm/dw/@nishans/types?style=flat"/>
@@ -9,8 +7,11 @@ Package to contain notion typescript type definitions
   <img src="https://img.shields.io/npm/v/@nishans/types"/>
 </p>
 
-## Installation
+<p align="center">
+  <a href="https://github.com/Devorein/Nishan/tree/master/packages/types">Github</a>
+  <a href="nishan-docs.netlify.app/">Docs</a>
+  <a href="https://www.npmjs.com/package/@nishans/types">NPM</a>
+  <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
+</p>
 
-```shell
-npm install --save @nishans/types
-```
+Package to contain notion typescript type definitions

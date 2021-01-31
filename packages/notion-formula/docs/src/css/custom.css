@@ -173,3 +173,16 @@ a{
 .navbar__link--active{
   color: inherit
 }
+
+li.tabs__item{
+  padding: 5px;
+}
+
+.tab-item--lang{
+  display: flex;
+  align-items: center;
+}
+
+.tab-item--lang img{
+  margin: 0px 5px;
+}

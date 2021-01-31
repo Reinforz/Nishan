@@ -17,6 +17,7 @@
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
     "docusaurus-plugin-typedoc": "^0.8.1",
+    "prism-react-renderer": "^1.1.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "typedoc": "^0.20.19",

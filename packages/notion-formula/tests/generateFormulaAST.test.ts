@@ -89,7 +89,7 @@ describe('Zero arity function parsing', () => {
 
 	it('Should throw for improper zero arity function', () => {
 		expect(() => generateFormulaASTFromArray([ 'now', [ '1', 'e' ] ] as any)).toThrow(
-			`Argument of type text can't be used as argument 1 for function now`
+			`Function now takes 0 arguments, given 2`
 		);
 	});
 });

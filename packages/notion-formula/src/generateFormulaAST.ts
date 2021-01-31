@@ -35,9 +35,9 @@ function generateFormulaAST (
         throw new Error(`Function ${function_name} is not supported`);
       else{
         // Checks if the number of arguments, supported by the function matches with the passed representation
-        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature?.variadic || signature.arity?.length === 0 || signature.arity?.length === input_args?.length)));
+        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature?.variadic || signature.arity?.length === (input_args?.length ?? 0))));
         if(is_argument_length_mismatch)
-          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>signature?.arity?.length))).join(',') || 0} arguments, given ${input_args?.length ?? 0}`)
+          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>signature?.arity?.length))).join(',')} arguments, given ${input_args?.length ?? 0}`)
         const function_formula_arg: TFunctionFormula = {
           name: function_name,
           type: 'function'

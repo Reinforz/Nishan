@@ -15,19 +15,28 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			last_arg = '';
 			context = 'prop';
 		} else if (function_match && char === '(') {
-			parents.push([ last_arg, [] ]);
+			parents.push([ last_arg ]);
+			if (last_arg !== 'now') parents[parents.length - 1].push([]);
 			last_arg = '';
 			context = 'function';
 		} else if (checkbox_symbol_match) {
+			if (!parents[parents.length - 1][1])
+				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
 			parents[parents.length - 1][1].push(checkbox_symbol_match[1] === 'true' ? true : false);
 			last_arg = '';
 		} else if (number_symbol_match) {
+			if (!parents[parents.length - 1][1])
+				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
 			parents[parents.length - 1][1].push(number_symbol_match[1]);
 			last_arg = '';
 		} else if (number_constant_match) {
+			if (!parents[parents.length - 1][1])
+				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
 			parents[parents.length - 1][1].push(Number(number_constant_match[1]));
 			last_arg = '';
 		} else if (text_constant_match) {
+			if (!parents[parents.length - 1][1])
+				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
 			parents[parents.length - 1][1].push(
 				context === 'function' ? text_constant_match[1] : { property: text_constant_match[1] }
 			);

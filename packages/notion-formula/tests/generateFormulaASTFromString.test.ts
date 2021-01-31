@@ -65,3 +65,114 @@ describe('Variadic argument string representation parsing', () => {
 		);
 	});
 });
+
+describe('Zero arity function formula string parsing', () => {
+	it(`Should parse correctly when passed correct types`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'now',
+					type: 'function',
+					result_type: 'date'
+				},
+				generateFormulaASTFromString('now()', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it('Should throw for improper zero arity function', () => {
+		expect(() => generateFormulaASTFromString('now("1", e)')).toThrow(`Too many arguments in function now`);
+	});
+});
+
+describe('Function formula string representation parsing success', () => {
+	it(`Should match output for constant argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('abs(1)', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for symbol argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'symbol',
+							name: 'e',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('abs(e)', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for property argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'property',
+							name: 'number',
+							id: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('abs(prop("number"))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for function argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							name: 'ceil',
+							type: 'function',
+							args: [
+								{
+									type: 'constant',
+									value: '1',
+									value_type: 'number',
+									result_type: 'number'
+								}
+							],
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('abs(ceil(1))', test_schema_map)
+			)
+		).toBe(true);
+	});
+});

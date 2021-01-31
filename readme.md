@@ -50,9 +50,7 @@ A few apps built using the above packages
 
 ***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
 
-Please visit [Nishan doc](https://nishan-docs.netlify.app/) to learn more.
-
-Each package has its own examples folder, please feel free to examine them to learn more about each one.
+Each package has its own docs and examples folder, please feel free to examine them to learn more about each one.
 
 ## Contributors
 

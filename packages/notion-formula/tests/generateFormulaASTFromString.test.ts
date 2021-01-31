@@ -80,8 +80,20 @@ describe('Zero arity function formula string parsing', () => {
 		).toBe(true);
 	});
 
-	it('Should throw for improper zero arity function', () => {
-		expect(() => generateFormulaASTFromString('now("1", e)')).toThrow(`Too many arguments in function now`);
+	it('Should throw for improper zero arity function text constant argument', () => {
+		expect(() => generateFormulaASTFromString('now("1")')).toThrow(`Too many arguments in function now`);
+	});
+
+	it('Should throw for improper zero arity function number constant argument', () => {
+		expect(() => generateFormulaASTFromString('now(1)')).toThrow(`Too many arguments in function now`);
+	});
+
+	it('Should throw for improper zero arity function number symbol argument', () => {
+		expect(() => generateFormulaASTFromString('now(e)')).toThrow(`Too many arguments in function now`);
+	});
+
+	it('Should throw for improper zero arity function checkbox symbol argument', () => {
+		expect(() => generateFormulaASTFromString('now(true)')).toThrow(`Too many arguments in function now`);
 	});
 });
 
@@ -144,6 +156,31 @@ describe('Function formula string representation parsing success', () => {
 					result_type: 'number'
 				},
 				generateFormulaASTFromString('abs(prop("number"))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for checkbox symbol argument type`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'and',
+					type: 'function',
+					args: [
+						{
+							type: 'symbol',
+							name: 'true',
+							result_type: 'checkbox'
+						},
+						{
+							type: 'symbol',
+							name: 'false',
+							result_type: 'checkbox'
+						}
+					],
+					result_type: 'checkbox'
+				},
+				generateFormulaASTFromString('and(true, false)', test_schema_map)
 			)
 		).toBe(true);
 	});

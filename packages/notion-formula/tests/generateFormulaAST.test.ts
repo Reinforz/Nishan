@@ -8,10 +8,14 @@ describe('Function formula parsing error', () => {
 		expect(() => generateFormulaASTFromArray([ 'unknown' ] as any, test_schema_map)).toThrow();
 	});
 
-	it('Should throw for improper function argument length', () => {
+	it('Should throw for more function arguments', () => {
 		expect(() => generateFormulaASTFromArray([ 'abs', [ 1, 2 ] as any ])).toThrow(
 			`Function abs takes 1 arguments, given 2`
 		);
+	});
+
+	it('Should throw for fewer function arguments', () => {
+		expect(() => generateFormulaASTFromArray([ 'abs' ] as any)).toThrow(`Function abs takes 1 arguments, given 0`);
 	});
 
 	it('Should throw for improper function argument (constant) type', () => {

@@ -11,6 +11,9 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			number_symbol_match = last_arg.match(/^(e|pi)$/),
 			checkbox_symbol_match = last_arg.match(/^(true|false)$/),
 			function_match = Boolean(function_formula_info_map.get(last_arg));
+
+		const parent_args = parents[parents.length - 1]?.[1],
+			parent_fn = parents[parents.length - 1]?.[0];
 		if (last_arg === 'prop' && char === '(') {
 			last_arg = '';
 			context = 'prop';
@@ -20,26 +23,20 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			last_arg = '';
 			context = 'function';
 		} else if (checkbox_symbol_match) {
-			if (!parents[parents.length - 1][1])
-				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
-			parents[parents.length - 1][1].push(checkbox_symbol_match[1] === 'true' ? true : false);
+			if (!parent_args) throw new Error(`Too many arguments in function ${parent_fn}`);
+			parent_args.push(checkbox_symbol_match[1] === 'true' ? true : false);
 			last_arg = '';
 		} else if (number_symbol_match) {
-			if (!parents[parents.length - 1][1])
-				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
-			parents[parents.length - 1][1].push(number_symbol_match[1]);
+			if (!parent_args) throw new Error(`Too many arguments in function ${parent_fn}`);
+			parent_args.push(number_symbol_match[1]);
 			last_arg = '';
 		} else if (number_constant_match) {
-			if (!parents[parents.length - 1][1])
-				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
-			parents[parents.length - 1][1].push(Number(number_constant_match[1]));
+			if (!parent_args) throw new Error(`Too many arguments in function ${parent_fn}`);
+			parent_args.push(Number(number_constant_match[1]));
 			last_arg = '';
 		} else if (text_constant_match) {
-			if (!parents[parents.length - 1][1])
-				throw new Error(`Too many arguments in function ${parents[parents.length - 1][0]}`);
-			parents[parents.length - 1][1].push(
-				context === 'function' ? text_constant_match[1] : { property: text_constant_match[1] }
-			);
+			if (!parent_args) throw new Error(`Too many arguments in function ${parent_fn}`);
+			parent_args.push(context === 'function' ? text_constant_match[1] : { property: text_constant_match[1] });
 			last_arg = '';
 		}
 

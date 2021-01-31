@@ -35,9 +35,9 @@ function generateFormulaAST (
         throw new Error(`Function ${function_name} is not supported`);
       else{
         // Checks if the number of arguments, supported by the function matches with the passed representation
-        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature?.variadic || signature.arity?.length === (input_args?.length ?? 0))));
+        const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature.variadic || (signature.arity as any).length === (input_args?.length ?? 0))));
         if(is_argument_length_mismatch)
-          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>signature?.arity?.length))).join(',')} arguments, given ${input_args?.length ?? 0}`)
+          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>(signature.arity as any).length))).join(',')} arguments, given ${input_args?.length ?? 0}`)
         const function_formula_arg: TFunctionFormula = {
           name: function_name,
           type: 'function'
@@ -52,7 +52,7 @@ function generateFormulaAST (
           for (let index = 0; index < input_args.length; index++) {
             const parsed_argument = traverseArguments(input_args[index]);
             input_arities.push(parsed_argument.result_type);
-            matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>(signature.variadic || signature?.arity?.[index]) === input_arity))
+            matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>(signature.variadic || (signature.arity as any)[index]) === input_arity))
             if(!matched_signature)
               // Throw an error if the given signature doesnt match any of the allowed signatures
               throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)

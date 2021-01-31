@@ -21,8 +21,14 @@ describe('Function formula parsing error', () => {
 	});
 
 	it('Should throw for improper function argument (function) type', () => {
-		expect(() => generateFormulaASTFromArray([ 'abs', [ [ 'ceil', '1' ] ] as any ])).toThrow(
-			`Argument of type text can't be used as argument 1 for function ceil`
+		expect(() => generateFormulaASTFromArray([ 'abs', [ [ 'concat', '1', '1' ] ] as any ])).toThrow(
+			`Argument of type text can't be used as argument 1 for function abs`
+		);
+	});
+
+	it('Should throw for improper function argument (property) type', () => {
+		expect(() => generateFormulaASTFromArray([ 'abs', [ { property: 'text' } ] as any ], test_schema_map)).toThrow(
+			`Argument of type text can't be used as argument 1 for function abs`
 		);
 	});
 

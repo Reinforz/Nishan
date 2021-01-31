@@ -9,9 +9,9 @@ module.exports = {
   organizationName: 'Nishan',
   projectName: '@nishans/notion-formula',
   themeConfig: {
-    /* prism: {
-      theme: require('prism-react-renderer/themes/dracula'),
-    }, */
+    prism: {
+      theme: require('prism-react-renderer/themes/vsDark'),
+    },
     hideableSidebar: true,
     navbar: {
       title: 'Notion Formula',

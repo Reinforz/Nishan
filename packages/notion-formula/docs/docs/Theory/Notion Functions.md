@@ -13,7 +13,7 @@ The table below provides description of all the functions notion provides.
 
 Checks if the first argument is true or false and based on that chooses either the 2nd ( if `true` ) or 3rd ( if `false` ) argument.
 
-### Arguments
+### Signatures
 
 1. `(checkbox, text, text)`
 2. `(checkbox, boolean, boolean)`

@@ -15,7 +15,9 @@ Checks if the first argument is true or false and based on that chooses either t
 
 ### Signatures
 
-1. `(checkbox, text, text)`
-2. `(checkbox, boolean, boolean)`
-3. `(checkbox, number, number)`
-4. `(checkbox, text, text)`
+| Arity       | Result Type |
+| ----------- | ----------- |
+| `(checkbox, text, text)` | `text`     |
+| `(checkbox, boolean, boolean)` | `boolean`     |
+| `(checkbox, number, number)` | `number`     |
+| `(checkbox, checkbox, checkbox)` | `checkbox`     |

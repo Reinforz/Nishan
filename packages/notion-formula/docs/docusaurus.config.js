@@ -83,25 +83,5 @@ module.exports = {
         },
       },
     ],
-  ],
-  plugins: [
-    [
-      'docusaurus-plugin-typedoc',
-      {
-        // TypeDoc options
-        entryPoints: ['../src/index.ts'],
-        tsconfig: '../tsconfig.json',
-        plugin: [],
-        mode: "node",
-        // Plugin options
-        docsRoot: 'docs',
-        out: 'api',
-        sidebar: {
-          sidebarFile: 'notion-formula.js',
-          fullNames: true,
-          readmeLabel: 'Overview'
-        },
-      },
-    ],
-  ],
+  ]
 };

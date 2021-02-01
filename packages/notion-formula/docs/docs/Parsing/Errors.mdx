@@ -37,9 +37,7 @@ generateFormulaASTFromArray(['add', [1, 2, 3]]);
 
 ## Arguments `result_type` mismatch
 
-Take a look [here](../theory/notion_formula#result_type) to know learn more about result_type in notion formula.
-
-Continuing witg the above example, the function add will take on two arguments both of which has to be the type of either `text` or `number`.
+Continuing with the above example, the function add will take on two arguments both of which has to be the type of either `text` or `number`.
 
 Thus if a different type of argument is passed then the function would throw an error.
 
@@ -64,7 +62,6 @@ generateFormulaASTFromArray(['plus', [1, 2]]);
 Notion formula gives the superpower of using arguments that could be another property of the schema. In that case the formula uses the value of that particular cell to formulate the final value. But if the property doesnot exist in the provided schema_map then it makes sense to throw an error, as thats also the native nature of the actual client.
 
 We can take a look at an example of when this error will be raised using the same function `add`,
-
 
 <Tabs
   defaultValue="js"

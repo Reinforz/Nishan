@@ -1,4 +1,4 @@
-import { TFormulaResultType, TFunctionName } from '@nishans/types';
+import { TFormulaResultType, TFunctionName, TOperator } from '@nishans/types';
 
 export type IFunctionForumlaSignature = {
 	arity?: TFormulaResultType[];
@@ -9,15 +9,18 @@ export interface IFunctionFormulaInfo {
 	signatures: IFunctionForumlaSignature[];
 	function_name: TFunctionName;
 	description: string;
+	operator?: TOperator;
 }
 
 function generateFormulaInfo (
 	description: string,
 	function_name: TFunctionName,
-	signatures: [TFormulaResultType, TFormulaResultType[]][]
+	signatures: [TFormulaResultType, TFormulaResultType[]][],
+	operator?: TOperator
 ): IFunctionFormulaInfo {
 	return {
 		description,
+		operator,
 		function_name,
 		signatures: signatures.map(([ result_type, arity ]) => ({ arity, result_type }))
 	};
@@ -33,10 +36,12 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 		[ 'checkbox', [ 'checkbox', 'checkbox', 'checkbox' ] ],
 		[ 'date', [ 'checkbox', 'date', 'date' ] ]
 	]),
-	generateFormulaInfo('Adds two numbers and returns their sum, or concatenates two strings.', 'add', [
-		[ 'text', [ 'text', 'text' ] ],
-		[ 'number', [ 'number', 'number' ] ]
-	]),
+	generateFormulaInfo(
+		'Adds two numbers and returns their sum, or concatenates two strings.',
+		'add',
+		[ [ 'text', [ 'text', 'text' ] ], [ 'number', [ 'number', 'number' ] ] ],
+		'+'
+	),
 	generateFormulaInfo('Returns the absolute value of a number', 'abs', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('Returns the cube root of a number.', 'cbrt', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('Negates a number.', 'unaryMinus', [ [ 'number', [ 'number' ] ] ]),
@@ -86,64 +91,115 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 		[ 'number', [ 'number' ] ]
 	]),
 	generateFormulaInfo('Returns the positive square root of a number.', 'sqrt', [ [ 'number', [ 'number' ] ] ]),
-	generateFormulaInfo('Returns true if its arguments are equal, and false otherwise.', 'equal', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns false if its arguments are equal, and true otherwise.', 'unequal', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns the logical AND of its two arguments.', 'and', [
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ]
-	]),
-	generateFormulaInfo('Returns the logical OR of its two arguments.', 'or', [
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ]
-	]),
-	generateFormulaInfo('Returns true if the first argument is larger than the second.', 'larger', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns true if the first argument is larger than or equal to than the second.', 'largerEq', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns true if the first argument is smaller than the second.', 'smaller', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns true if the first argument is smaller than or equal to than the second.', 'smallerEq', [
-		[ 'checkbox', [ 'number', 'number' ] ],
-		[ 'checkbox', [ 'text', 'text' ] ],
-		[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
-		[ 'checkbox', [ 'date', 'date' ] ]
-	]),
-	generateFormulaInfo('Returns the logical NOT of its argument.', 'not', [ [ 'checkbox', [ 'checkbox' ] ] ]),
-	generateFormulaInfo('Subtracts two numbers and returns their difference.', 'subtract', [
-		[ 'number', [ 'number', 'number' ] ]
-	]),
-	generateFormulaInfo('Multiplies two numbers and returns their product.', 'multiply', [
-		[ 'number', [ 'number', 'number' ] ]
-	]),
-	generateFormulaInfo('Divides two numbers and returns their quotient.', 'divide', [
-		[ 'number', [ 'number', 'number' ] ]
-	]),
-	generateFormulaInfo('Returns base to the exponent power, that is, baseexponent.', 'pow', [
-		[ 'number', [ 'number', 'number' ] ]
-	]),
-	generateFormulaInfo('Divides two numbers and returns their remainder.', 'mod', [
-		[ 'number', [ 'number', 'number' ] ]
-	]),
+	generateFormulaInfo(
+		'Returns true if its arguments are equal, and false otherwise.',
+		'equal',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'=='
+	),
+	generateFormulaInfo(
+		'Returns false if its arguments are equal, and true otherwise.',
+		'unequal',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'!='
+	),
+	generateFormulaInfo(
+		'Returns the logical AND of its two arguments.',
+		'and',
+		[ [ 'checkbox', [ 'checkbox', 'checkbox' ] ] ],
+		'and'
+	),
+	generateFormulaInfo(
+		'Returns the logical OR of its two arguments.',
+		'or',
+		[ [ 'checkbox', [ 'checkbox', 'checkbox' ] ] ],
+		'or'
+	),
+	generateFormulaInfo(
+		'Returns true if the first argument is larger than the second.',
+		'larger',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'>'
+	),
+	generateFormulaInfo(
+		'Returns true if the first argument is larger than or equal to than the second.',
+		'largerEq',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'>='
+	),
+	generateFormulaInfo(
+		'Returns true if the first argument is smaller than the second.',
+		'smaller',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'<'
+	),
+	generateFormulaInfo(
+		'Returns true if the first argument is smaller than or equal to than the second.',
+		'smallerEq',
+		[
+			[ 'checkbox', [ 'number', 'number' ] ],
+			[ 'checkbox', [ 'text', 'text' ] ],
+			[ 'checkbox', [ 'checkbox', 'checkbox' ] ],
+			[ 'checkbox', [ 'date', 'date' ] ]
+		],
+		'<='
+	),
+	generateFormulaInfo('Returns the logical NOT of its argument.', 'not', [ [ 'checkbox', [ 'checkbox' ] ] ], 'not'),
+	generateFormulaInfo(
+		'Subtracts two numbers and returns their difference.',
+		'subtract',
+		[ [ 'number', [ 'number', 'number' ] ] ],
+		'-'
+	),
+	generateFormulaInfo(
+		'Multiplies two numbers and returns their product.',
+		'multiply',
+		[ [ 'number', [ 'number', 'number' ] ] ],
+		'*'
+	),
+	generateFormulaInfo(
+		'Divides two numbers and returns their quotient.',
+		'divide',
+		[ [ 'number', [ 'number', 'number' ] ] ],
+		'/'
+	),
+	generateFormulaInfo(
+		'Returns base to the exponent power, that is, baseexponent.',
+		'pow',
+		[ [ 'number', [ 'number', 'number' ] ] ],
+		'^'
+	),
+	generateFormulaInfo(
+		'Divides two numbers and returns their remainder.',
+		'mod',
+		[ [ 'number', [ 'number', 'number' ] ] ],
+		'%'
+	),
 	{
 		description: 'Concatenates its arguments and returns the result.',
 		function_name: 'concat',

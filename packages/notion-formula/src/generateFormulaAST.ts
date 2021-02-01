@@ -16,7 +16,7 @@ import {
  * @returns The generated formula ast
  */
 function generateFormulaAST (
-	input_formula: FormulaSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'],
+	input_formula: FormulaSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
 	schema_map?: ISchemaMap
 ): TFormula {
 	function traverseArguments (arg: TResultType | AnyArrayResultType | undefined): TFormula {
@@ -84,7 +84,7 @@ function generateFormulaAST (
   * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
   * @returns The generated formula ast
  */
-export function generateFormulaASTFromObject (formula: FormulaSchemaUnitInput['formula'], schema_map?: ISchemaMap): TFormula {
+export function generateFormulaASTFromObject (formula: FormulaSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string}, schema_map?: ISchemaMap): TFormula {
 	return generateFormulaAST(formula, schema_map);
 }
 
@@ -95,7 +95,7 @@ export function generateFormulaASTFromObject (formula: FormulaSchemaUnitInput['f
  * @returns The generated formula ast
  */
 export function generateFormulaASTFromArray (
-	formula: FormulaArraySchemaUnitInput['formula'],
+	formula: FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
 	schema_map?: ISchemaMap
 ): TFormula {
 	return generateFormulaAST(formula, schema_map);

@@ -36,5 +36,3 @@ import {generateFormulaASTFromString} from "@nishans/notion-formula";
 generateFormulaASTFromString("abs(1)")
 generateFormulaASTFromString("add(abs(1), 2)")
 ```
-
-Take a look at [examples](../Examples/) to see more examples of every argument combinations. 

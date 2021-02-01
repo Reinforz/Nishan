@@ -24,12 +24,7 @@ module.exports = {
       type: "category",
       label: "Parsing",
       items: ["Parsing/Errors"]
-    },
-    {
-      type: "category",
-      label: "Examples",
-      items: ["Examples/Examples"]
-    },
+    }
     /* {
       type: "category",
       label: "API",

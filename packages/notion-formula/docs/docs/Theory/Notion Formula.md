@@ -24,11 +24,11 @@ const formula = {
 
 ## Parts of a formula argument
 
-1. `type`: This is the variant of the formula argument, which could have the values `function | symbol | constant | property | operator`.
+1. `type`: This is the `type` of the formula argument, which could have the values `function | symbol | constant | property | operator`.
 
 2. `result_type`: The computated type of the argument, which has the following values `text | checkbox | date | number`.
 
-3. `name`: Indicates either a property, operator,function or symbol name, this is absent in constant variant
+3. `name`: Indicates either a property, operator,function or symbol name, this is absent in constant `type`
 
 ## Formula Argument Result type
 
@@ -100,7 +100,7 @@ This is how notion stores a function formula argument
 A formula argument which is used to indicate a literal constant value like a number or a text.
 
 :::note Different from Symbol
-Constants are different from symbols as symbols can only contain four possible values, while constants con contain infinity combinations of values
+Constants are different from symbols as symbols can only contain four possible values, while constants con contain infinity variants of values
 :::
 
 This is how notion stores a constant formula argument
@@ -164,44 +164,44 @@ This is how notion stores a symbol formula argument
 }
 ```
 
-## Combinations of formula arguments
+## Variants of formula arguments
 
-Due to the existence of `result_type` and `type`, the following combinations of arguments arises
+Due to the existence of `result_type` and `type`, the following variants of arguments arises
 
-### Number x variant combinations
+### Number x `type` variants
 
-1. **number x symbol**: A `symbol` variant argument that returns `number` as `result_type`. Eg: `e | pi`
-2. **number x constant**: A `symbol` variant argument that returns `number` as `result_type`. Eg: `1 | 10`
-3. **number x property**: A `property` variant argument that returns `number` as `result_type`. Eg: `prop("Number")`
-4. **number x function**: A `property` variant argument that returns `number` as `result_type`. Eg: `abs(1)`
-5. **number x operator**: A `property` variant argument that returns `number` as `result_type`. Eg: `1 + 1`
+1. **number x symbol**: A `symbol` `type` argument that returns `number` as `result_type`. Eg: `e | pi`
+2. **number x constant**: A `symbol` `type` argument that returns `number` as `result_type`. Eg: `1 | 10`
+3. **number x property**: A `property` `type` argument that returns `number` as `result_type`. Eg: `prop("Number")`
+4. **number x function**: A `property` `type` argument that returns `number` as `result_type`. Eg: `abs(1)`
+5. **number x operator**: A `property` `type` argument that returns `number` as `result_type`. Eg: `1 + 1`
 
-### Text x variant combinations
+### Text x `type` variants
 
-1. **text x constant**: A `constant` variant argument that returns `text` as `result_type`. Eg: `"1" | "a"`
-2. **text x property**: A `property` variant argument that returns `text` as `result_type`. Eg: `prop("Text")`
-3. **text x function**: A `property` variant argument that returns `text` as `result_type`. Eg: `concat("a", "b")`
-4. **text x operator**: A `property` variant argument that returns `text` as `result_type`. Eg: `"b" + "a"`
+1. **text x constant**: A `constant` `type` argument that returns `text` as `result_type`. Eg: `"1" | "a"`
+2. **text x property**: A `property` `type` argument that returns `text` as `result_type`. Eg: `prop("Text")`
+3. **text x function**: A `property` `type` argument that returns `text` as `result_type`. Eg: `concat("a", "b")`
+4. **text x operator**: A `property` `type` argument that returns `text` as `result_type`. Eg: `"b" + "a"`
 
 :::important No symbol for `text`
-Text `result_type` arguments does not have a `symbol` variant
+Text `result_type` arguments does not have a `symbol` `type`
 :::
 
-### Checkbox x variant combinations
+### Checkbox x `type` variants
 
-1. **checkbox x symbol**: A `symbol` variant argument that returns `checkbox` as `result_type`. Eg: `true  | false`
-2. **checkbox x property**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `prop("Checkbox")`
-3. **checkbox x function**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `and(true, false)`
-4. **checkbox x operator**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `true and false`
+1. **checkbox x symbol**: A `symbol` `type` argument that returns `checkbox` as `result_type`. Eg: `true  | false`
+2. **checkbox x property**: A `property` `type` argument that returns `checkbox` as `result_type`. Eg: `prop("Checkbox")`
+3. **checkbox x function**: A `property` `type` argument that returns `checkbox` as `result_type`. Eg: `and(true, false)`
+4. **checkbox x operator**: A `property` `type` argument that returns `checkbox` as `result_type`. Eg: `true and false`
 
 :::important No constant for `text`
-Checkbox `result_type` arguments does not have a `constant` variant
+Checkbox `result_type` arguments does not have a `constant` `type`
 :::
 
-### Date x variant combinations
+### Date x `type` variants
 
-1. **date x property**: A `property` variant argument that returns `date` as `result_type`. Eg: `prop("Date")`
-2. **date x function**: A `property` variant argument that returns `date` as `result_type`. Eg: `now()`
+1. **date x property**: A `property` `type` argument that returns `date` as `result_type`. Eg: `prop("Date")`
+2. **date x function**: A `property` `type` argument that returns `date` as `result_type`. Eg: `now()`
 
 :::important No constant,symbol for `date`
 Date `result_type` arguments does not have `constant` and `symbol` variants

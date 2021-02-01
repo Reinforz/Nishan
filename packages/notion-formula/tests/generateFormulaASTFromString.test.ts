@@ -97,6 +97,76 @@ describe('Zero arity function formula string parsing', () => {
 	});
 });
 
+describe('Function formula string parsing success for literal arguments', () => {
+	it('Should match output for number x symbol argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'symbol',
+					name: 'e',
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('e')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for checkbox x symbol argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'symbol',
+					name: 'true',
+					result_type: 'checkbox'
+				},
+				generateFormulaASTFromString('true')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for string x constant argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'constant',
+					value: 'text',
+					result_type: 'text',
+					value_type: 'string'
+				},
+				generateFormulaASTFromString('"text"')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for number x constant argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'constant',
+					value: '1',
+					result_type: 'number',
+					value_type: 'number'
+				},
+				generateFormulaASTFromString('1')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for number x property argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'property',
+					name: 'number',
+					id: 'number',
+					result_type: 'number'
+				},
+				generateFormulaASTFromString('prop("number")', test_schema_map)
+			)
+		).toBe(true);
+	});
+});
+
 describe('Function formula string representation parsing success', () => {
 	it(`Should match output for constant argument type`, () => {
 		expect(

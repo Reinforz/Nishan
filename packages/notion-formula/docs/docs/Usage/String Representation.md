@@ -8,9 +8,9 @@ There are two parts(keys) to the array representation syntax and its based on it
 1. `function_name`: This is a string that denotes the name of the function.
 2. `args`: A `()` surrounded and `,` separated list of arguments.
 
-## Arguments `result_type` x `type` Combinations syntax
+## Arguments `result_type` x `type` variants syntax
 
-The following syntax's are used as arguments for specific combinations.
+The following syntax's are used as arguments for specific variants.
 
 * **number x symbol**: `'e' | 'pi'`
 * **number x constant**: `1 | 2`

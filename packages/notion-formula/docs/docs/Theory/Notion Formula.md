@@ -22,9 +22,26 @@ const formula = {
 }
 ```
 
-## Types of formula arguments
+## Parts of a formula argument
 
-A notion formula consists of the following types of arguments
+1. `type`: This is the variant of the formula argument, which could have the values `function | symbol | constant | property | operator`.
+
+2. `result_type`: The computated type of the argument, which has the following values `text | checkbox | date | number`.
+
+3. `name`: Indicates either a property, operator,function or symbol name, this is absent in constant variant
+
+## Formula Argument Result type
+
+Based on an arguments `result_type` it can be divided into the following types:
+
+1. `checkbox`: This sort of arguments return a boolean value.
+2. `text`: This sort of arguments return a string value.
+3. `date`: This sort of arguments return a date value
+4. `number`: This sort of arguments return a number value, which could either be integer or float.
+
+## Formula argument variants
+
+Based on an arguments `type` it can be divided into the following types:
 
 1. [Symbol](#symbol): A formula argument which is used to indicate fixed constant values like `true`, `false`, `e` and `pi`
 2. [Property](#property): A formula argument which is used to reference the value of another property of the schema
@@ -32,7 +49,11 @@ A notion formula consists of the following types of arguments
 4. [Function](#function): A formula argument which is used to create a function.
 5. [Operator](#operator): A separate representation of functions, by using symbols like `+`, `-` instead of `add` and `subtract` respectively.
 
-### Property
+:::note All variants have `result_type`
+Each of the variants return an argument of a specific `result_type`.
+:::
+
+### Property Reference Argument
 
 The computed value of a property can be used as a formula argument. Inside notion it works by using the schema unit name inside the `prop` function, eg `prop("Title")`, would return the value stored in that cell.
 
@@ -51,7 +72,7 @@ This is how notion stores a property formula argument
 Even though there are multiple schema unit types, all of them are coerced into the types supported by the `result_type`.
 :::
 
-### Function
+### Nested Function Argument
 
 Functions gives formulas superpowers and thus notion provides a handful of them. Visit [notion functions](./notion_functions), to learn in details about everything function.
 
@@ -74,7 +95,7 @@ This is how notion stores a function formula argument
 }
 ```
 
-### Constant
+### Constant Literal Argument
 
 A formula argument which is used to indicate a literal constant value like a number or a text.
 
@@ -93,7 +114,7 @@ This is how notion stores a constant formula argument
 }
 ```
 
-### Operator
+### Operator Function Argument
 
 A separate representation of functions, by using operators like `+`, `-` instead of keywords like `add` and `subtract` respectively. Internally all operators except for the ternary operator `?:` maps to a function. Checkout the [notion operators](./notion_operators) argument to learn more about them.
 
@@ -122,7 +143,7 @@ This is how notion stores a constant formula argument
 }
 ```
 
-### Symbol
+### Symbol Literal Argument
 
 A formula argument which is used to indicate fixed constant values like `true`, `false`, `e` and `pi`
 
@@ -143,10 +164,45 @@ This is how notion stores a symbol formula argument
 }
 ```
 
-## Parts of a formula argument
+## Combinations of formula arguments
 
-1. `type`: This is the type of the formula argument, which could have the values `function | symbol | constant | property | operator`.
+Due to the existence of `result_type` and `type`, the following combinations of arguments arises
 
-2. `result_type`: The computated type of the argument, which has the following values `text | checkbox | date | number`.
+### Number x variant combinations
 
-3. `name`: Indicates either a property, function or symbol name
+1. **number x symbol**: A `symbol` variant argument that returns `number` as `result_type`. Eg: `e | pi`
+2. **number x constant**: A `symbol` variant argument that returns `number` as `result_type`. Eg: `1 | 10`
+3. **number x property**: A `property` variant argument that returns `number` as `result_type`. Eg: `prop("Number")`
+4. **number x function**: A `property` variant argument that returns `number` as `result_type`. Eg: `abs(1)`
+5. **number x operator**: A `property` variant argument that returns `number` as `result_type`. Eg: `1 + 1`
+
+### Text x variant combinations
+
+1. **text x constant**: A `constant` variant argument that returns `text` as `result_type`. Eg: `"1" | "a"`
+2. **text x property**: A `property` variant argument that returns `text` as `result_type`. Eg: `prop("Text")`
+3. **text x function**: A `property` variant argument that returns `text` as `result_type`. Eg: `concat("a", "b")`
+4. **text x operator**: A `property` variant argument that returns `text` as `result_type`. Eg: `"b" + "a"`
+
+:::important No symbol for `text`
+Text `result_type` arguments does not have a `symbol` variant
+:::
+
+### Checkbox x variant combinations
+
+1. **checkbox x symbol**: A `symbol` variant argument that returns `checkbox` as `result_type`. Eg: `true  | false`
+2. **checkbox x property**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `prop("Checkbox")`
+3. **checkbox x function**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `and(true, false)`
+4. **checkbox x operator**: A `property` variant argument that returns `checkbox` as `result_type`. Eg: `true and false`
+
+:::important No constant for `text`
+Checkbox `result_type` arguments does not have a `constant` variant
+:::
+
+### Date x variant combinations
+
+1. **date x property**: A `property` variant argument that returns `date` as `result_type`. Eg: `prop("Date")`
+2. **date x function**: A `property` variant argument that returns `date` as `result_type`. Eg: `now()`
+
+:::important No constant,symbol for `date`
+Date `result_type` arguments does not have `constant` and `symbol` variants
+:::

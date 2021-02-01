@@ -26,24 +26,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {
-          to: 'docs/theory/',
-          activeBasePath: 'docs',
-          label: 'Theory',
-          position: 'left',
-        },
         /* {
           to: 'docs/api/',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
         }, */
-        {
-          to: 'docs/examples/',
-          activeBasePath: 'docs',
-          label: 'Examples',
-          position: 'left',
-        },
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md',
           position: 'right',

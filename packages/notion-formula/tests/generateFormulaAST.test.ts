@@ -98,7 +98,77 @@ describe('Zero arity function parsing', () => {
 	});
 });
 
-describe('Function formula object representation parsing success', () => {
+describe('Function formula parsing success for literal arguments', () => {
+	it('Should match output for number x symbol argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'symbol',
+					name: 'e',
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject('e')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for checkbox x symbol argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'symbol',
+					name: 'true',
+					result_type: 'checkbox'
+				},
+				generateFormulaASTFromObject(true)
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for string x constant argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'constant',
+					value: 'text',
+					result_type: 'text',
+					value_type: 'string'
+				},
+				generateFormulaASTFromObject('text')
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for number x constant argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'constant',
+					value: '1',
+					result_type: 'number',
+					value_type: 'number'
+				},
+				generateFormulaASTFromObject(1)
+			)
+		).toBe(true);
+	});
+
+	it('Should match output for number x property argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'property',
+					name: 'number',
+					id: 'number',
+					result_type: 'number'
+				},
+				generateFormulaASTFromObject({ property: 'number' }, test_schema_map)
+			)
+		).toBe(true);
+	});
+});
+
+describe('Function formula object representation parsing success for function argument', () => {
 	it(`Should match output for constant argument type`, () => {
 		expect(
 			deepEqual(

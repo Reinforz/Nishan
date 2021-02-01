@@ -13,7 +13,7 @@ module.exports = {
     {
       type: "category",
       label: "Reference",
-      items: ["Reference/Notion Functions", "Reference/Notion Operators"]
+      items: ["Reference/Notion Functions"]
     },
     {
       type: "category",

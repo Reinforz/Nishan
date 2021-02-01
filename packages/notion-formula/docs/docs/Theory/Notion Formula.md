@@ -1,5 +1,4 @@
 ---
-title: Understanding Notion Formula
 slug: /theory/
 ---
 

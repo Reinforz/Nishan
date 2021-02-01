@@ -44,12 +44,13 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	),
 	generateFormulaInfo('Returns the absolute value of a number', 'abs', [ [ 'number', [ 'number' ] ] ]),
 	generateFormulaInfo('Returns the cube root of a number.', 'cbrt', [ [ 'number', [ 'number' ] ] ]),
-	generateFormulaInfo('Negates a number.', 'unaryMinus', [ [ 'number', [ 'number' ] ] ]),
-	generateFormulaInfo('Converts its argument into a number.', 'unaryPlus', [
-		[ 'number', [ 'checkbox' ] ],
-		[ 'number', [ 'text' ] ],
-		[ 'number', [ 'number' ] ]
-	]),
+	generateFormulaInfo('Negates a number.', 'unaryMinus', [ [ 'number', [ 'number' ] ] ], '-'),
+	generateFormulaInfo(
+		'Converts its argument into a number.',
+		'unaryPlus',
+		[ [ 'number', [ 'checkbox' ] ], [ 'number', [ 'text' ] ], [ 'number', [ 'number' ] ] ],
+		'+'
+	),
 	generateFormulaInfo('Returns the smallest integer greater than or equal to a number.', 'ceil', [
 		[ 'number', [ 'number' ] ]
 	]),

@@ -10,8 +10,11 @@ slug: /
 ## Usage
 
 ```js
-const {generateFormulaASTFromObject, generateFormulaASTFromArray,
-generateFormulaASTFromString} = require("@nishans/notion-formula");
+const {
+  generateFormulaASTFromObject, 
+  generateFormulaASTFromArray,
+  generateFormulaASTFromString
+} = require("@nishans/notion-formula");
 
 // Generate notion formula from simple object representation
 console.log(JSON.stringify(generateFormulaASTFromObject({function: "abs", args: [1]}), null, 2));

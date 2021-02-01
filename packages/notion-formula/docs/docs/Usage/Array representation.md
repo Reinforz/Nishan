@@ -52,3 +52,5 @@ generateFormulaASTFromArray(
   ];
 )
 ```
+
+Take a look at [examples](../Examples/) to see more examples of every argument combinations.

@@ -225,3 +225,13 @@ li.tabs__item{
   border-left: 3px solid var(--ifm-color-primary-dark);
   transition: 150ms all ease-in-out;
 }
+
+.flex{
+  display: flex;
+  justify-content: center;
+}
+
+.mx-3{
+  margin-left: 3px;
+  margin-right: 3px;
+}

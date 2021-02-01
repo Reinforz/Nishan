@@ -1,6 +1,6 @@
 module.exports = {
   title: '@nishans/notion-formula',
-  tagline: 'A package to convert string into notion formula and vice versa',
+  tagline: 'A package to generate notion formula with ease',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -56,6 +56,40 @@ module.exports = {
       ],
     },
     footer: {
+      style: 'dark',
+      links: [
+          {
+              title: 'Docs',
+              items: [
+                  {
+                      label: 'Get Started',
+                      to: 'docs/',
+                  }
+              ],
+          },
+          {
+              title: 'Community',
+              items: [
+                  {
+                      label: 'Stack Overflow',
+                      href: 'https://stackoverflow.com/questions/tagged/notion-formula',
+                  },
+                  {
+                    label: 'Github Discussions',
+                    href: 'https://github.com/Devorein/Nishan/discussions',
+                  },
+                  {
+                      label: 'Discord',
+                      href: 'https://discord.gg/SpwHCz8ysx',
+                  },
+                  {
+                      label: 'Twitter',
+                      href: 'https://twitter.com/devorein',
+                  },
+              ],
+          }
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} Devorein`,
     },
   },
   presets: [
@@ -64,6 +98,8 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          showLastUpdateAuthor: false,
+          showLastUpdateTime: true,
           editUrl:
             'https://github.com/Devorein/Nishan/edit/master/packages/notion-formula/docs',
         },

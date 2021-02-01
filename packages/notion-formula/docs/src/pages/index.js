@@ -52,11 +52,11 @@ function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="Formulas are like superpowers in Notion. But formulas are difficult to create, in the way notion stores them. This package provides an api to create notion formulas with ease.">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <p className="hero__subtitle"><b>{siteConfig.tagline}</b></p>
           <div className={styles.buttons}>
             <Link
               className={clsx(
@@ -67,6 +67,11 @@ function Home() {
               Get Started
             </Link>
           </div>
+
+          <a href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">
+            <img height="25" src="https://img.shields.io/github/stars/devorein/nishan?style=social"/>
+          </a>
+
         </div>
       </header>
       <main>

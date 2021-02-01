@@ -27,12 +27,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        /* {
+        {
           to: 'docs/api/',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
-        }, */
+        },
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md',
           position: 'right',
@@ -58,36 +58,36 @@ module.exports = {
     footer: {
       style: 'dark',
       links: [
-          {
-              title: 'Docs',
-              items: [
-                  {
-                      label: 'Get Started',
-                      to: 'docs/',
-                  }
-              ],
-          },
-          {
-              title: 'Community',
-              items: [
-                  {
-                      label: 'Stack Overflow',
-                      href: 'https://stackoverflow.com/questions/tagged/notion-formula',
-                  },
-                  {
-                    label: 'Github Discussions',
-                    href: 'https://github.com/Devorein/Nishan/discussions',
-                  },
-                  {
-                      label: 'Discord',
-                      href: 'https://discord.gg/SpwHCz8ysx',
-                  },
-                  {
-                      label: 'Twitter',
-                      href: 'https://twitter.com/devorein',
-                  },
-              ],
-          }
+        {
+          title: 'Docs',
+          items: [
+            {
+              label: 'Get Started',
+              to: 'docs/',
+            }
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'Stack Overflow',
+              href: 'https://stackoverflow.com/questions/tagged/notion-formula',
+            },
+            {
+              label: 'Github Discussions',
+              href: 'https://github.com/Devorein/Nishan/discussions',
+            },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/SpwHCz8ysx',
+            },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/devorein',
+            },
+          ],
+        }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Devorein`,
     },

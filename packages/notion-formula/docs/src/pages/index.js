@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
+    imageUrl: 'img/Easy.svg',
     description: (
       <>
         Generate notion formula with ease through object, array or string representation
@@ -18,7 +18,7 @@ const features = [
   },
   {
     title: 'Emulates Original Parser',
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
+    imageUrl: 'img/emulate_parser.svg',
     description: (
       <>
         Notion formula emulates and mimics the action formula parser and provide useful and intuitive error messages
@@ -27,7 +27,7 @@ const features = [
   },
   {
     title: 'Typescript Support',
-    imageUrl: 'img/undraw_docusaurus_react.svg',
+    imageUrl: 'img/ts_support.svg',
     description: (
       <>
         Typescript support right out of the box for static typechecking.
@@ -40,6 +40,7 @@ function Feature({imageUrl, title, description}) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={clsx('col col--4', styles.feature)}>
+      <img src={imgUrl}/>
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
@@ -68,7 +69,7 @@ function Home() {
             </Link>
           </div>
 
-          <a href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">
+          <a className="github-star" href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">
             <img height="25" src="https://img.shields.io/github/stars/devorein/nishan?style=social"/>
           </a>
 

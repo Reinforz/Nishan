@@ -1,12 +1,12 @@
 /* stylelint-disable docusaurus/copyright-header */
 :root {
-  --ifm-color-primary: #aeaeae;
-  --ifm-color-primary-dark: #9d9d9d;
-  --ifm-color-primary-darker: #949494;
-  --ifm-color-primary-darkest: #7a7a7a;
-  --ifm-color-primary-light: #bfbfbf;
-  --ifm-color-primary-lighter: #c8c8c8;
-  --ifm-color-primary-lightest: #e2e2e2;
+  --ifm-color-primary: #3b3b3b;
+  --ifm-color-primary-dark: #353535;
+  --ifm-color-primary-darker: #323232;
+  --ifm-color-primary-darkest: #292929;
+  --ifm-color-primary-light: #414141;
+  --ifm-color-primary-lighter: #444444;
+  --ifm-color-primary-lightest: #4d4d4d;
   --ifm-code-font-size: 95%;
   --ifm-menu-color-active: #636363;
   --ifm-link-color: #757575;
@@ -15,6 +15,55 @@
   --ifm-code-padding-vertical: 2px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-border-radius: 3px;
+  --ifm-footer-background-color: #3b3b3b;
+}
+
+.hero__title{
+  color: white;
+}
+
+.hero__subtitle{
+  color: #ddd;
+}
+
+.github-star{
+  margin-top: 10px;
+  display: block;
+}
+
+.row .col.col--4 img {
+  height: 300px;
+}
+
+.row .col.col--4 h3 {
+  margin-top: 20px;
+}
+
+section.features_src-pages- {
+  padding: 20px 25px;
+}
+
+.button.button--secondary.button--outline:not(.button--active):not(:hover){
+  color: white;
+}
+
+.col.footer__col {
+  margin-top: 20px;
+}
+
+.button.button--secondary.button--outline{
+  background-color: var(--ifm-color-primary-darkest);
+  border: none;
+  margin: 5px;
+}
+
+.button.button--secondary.button--outline:hover{
+  color: white;
+  background-color: var(--ifm-color-primary-lightest);
+}
+
+.footer--dark{
+  background-color: #3b3b3b;
 }
 
 .docusaurus-highlight-code-line {
@@ -58,7 +107,7 @@ a{
 .admonition-icon {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0.2em;
+  margin-right: .5em;
 }
 
 .admonition-icon svg {
@@ -189,7 +238,7 @@ html[data-theme="dark"] .header-npm-link:before{
   background: url("../../static/img/npm_light_24.png") no-repeat;
 }
 
-  .navbar__link--active{
+.navbar__link--active{
   color: inherit
 }
 

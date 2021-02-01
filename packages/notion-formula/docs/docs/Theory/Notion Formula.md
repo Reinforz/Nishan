@@ -1,7 +1,5 @@
 ---
-id: notion_formula
 title: Understanding Notion Formula
-sidebar_label: Notion Formula
 slug: /theory/
 ---
 

@@ -1,10 +1,3 @@
----
-id: typescript_support
-title: Typescript Support
-sidebar_label: Typescript Support
-slug: /introduction/typescript_support
----
-
 This package provides out of the box typescript support for both object and array representation.
 
 ## Array representation

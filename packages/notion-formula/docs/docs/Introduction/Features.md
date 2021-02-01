@@ -1,10 +1,3 @@
----
-id: features
-title: Features
-sidebar_label: Features
-slug: /introduction/features
----
-
 ## Easy to use api
 
 Generate notion formula with ease through object, array or string representation.

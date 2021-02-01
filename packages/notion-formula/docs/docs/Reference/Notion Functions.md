@@ -1,8 +1,4 @@
 ---
-id: notion_functions
-title: Understanding Notion Functions
-sidebar_label: Notion Functions
-slug: /theory/notion_functions
 ---
 
 Notion provides a vast array of functions capable of some extremely powerful stuffs.

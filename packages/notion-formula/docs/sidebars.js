@@ -3,27 +3,32 @@ module.exports = {
     {
       type: "category",
       label: "Introduction",
-      items: ["Introduction/getting_started", "Introduction/features",  "Introduction/typescript_support"]
+      items: ["Introduction/Getting Started", "Introduction/Features",  "Introduction/Typescript Support"]
     },
     {
       type: "category",
       label: "Theory",
-      items: ["Theory/notion_formula", "Theory/notion_functions", "Theory/notion_operators"]
+      items: ["Theory/Notion Formula"]
+    },
+    {
+      type: "category",
+      label: "Reference",
+      items: ["Reference/Notion Functions", "Reference/Notion Operators"]
     },
     {
       type: "category",
       label: "Usage",
-      items: ["Usage/object_representation", "Usage/array_representation", "Usage/string_representation", ]
+      items: ["Usage/Object Representation", "Usage/Array Representation", "Usage/String Representation", ]
     },
     {
       type: "category",
       label: "Parsing",
-      items: ["Parsing/errors"]
+      items: ["Parsing/Errors"]
     },
     {
       type: "category",
       label: "Examples",
-      items: ["Examples/examples"]
+      items: ["Examples/Examples"]
     },
     /* {
       type: "category",

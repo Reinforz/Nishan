@@ -2,6 +2,12 @@ import { TFunctionName } from '@nishans/types';
 import { ISchemaMap, function_formula_info_map } from '../src';
 import { generateFormulaASTFromArray } from './generateFormulaAST';
 
+/**
+ * Generate notion client compatible formula ast from string 
+ * @param formula The formula string required to be parsed
+ * @param schema_map The schema_map used to resolve property reference
+ * @returns Notion compatible formula ast
+ */
 export function generateFormulaASTFromString (formula: string, schema_map?: ISchemaMap) {
 	let last_arg = '';
   const parents = [] as any;
@@ -10,9 +16,11 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
   for (let index = 0; index < formula.length; index++) {
     const char = formula[index];
     // adds to the last_arg only if its not a bracket, comma
+    const is_part_of_string = last_arg.match(/".+?/);
     if (!char.match(/(\(|\)|,|\s)/)) last_arg += char;
+    if(is_part_of_string && char === " ") last_arg += char;
     // checks to see if any of the argument variants matches with last_arg
-    const text_constant_match = last_arg.match(/^"(\w+)"$/),
+    const text_constant_match = last_arg.match(/^"(.+?)"$/),
 			number_constant_match = last_arg.match(/^(\d+)$/),
 			number_symbol_match = last_arg.match(/^(e|pi)$/),
 			checkbox_symbol_match = last_arg.match(/^(true|false)$/),

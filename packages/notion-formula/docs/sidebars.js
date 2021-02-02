@@ -1,5 +1,9 @@
 module.exports = {
-  Introduction: [
+  API: {
+    modules: ["API/modules"],
+    interfaces: ["API/interfaces/ifunctionformulainfo"],
+  },
+  docs: [
     {
       type: "category",
       label: "Introduction",
@@ -25,10 +29,5 @@ module.exports = {
       label: "Parsing",
       items: ["Parsing/Errors"]
     }
-    /* {
-      type: "category",
-      label: "API",
-      items: require("./notion-formula")
-    } */
-  ],
+  ]
 }

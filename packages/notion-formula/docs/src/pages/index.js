@@ -56,7 +56,8 @@ function Home() {
       description="Formulas are like superpowers in Notion. But formulas are difficult to create, in the way notion stores them. This package provides an api to create notion formulas with ease.">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
+          <img height="250" src={`${siteConfig.favicon}`}/>
+          <pre className="hero__code"><div>npm install {siteConfig.title}</div></pre>
           <p className="hero__subtitle"><b>{siteConfig.tagline}</b></p>
           <div className={styles.buttons}>
             <Link

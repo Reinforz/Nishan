@@ -13,6 +13,10 @@ module.exports = {
       theme: require('prism-react-renderer/themes/github'),
       darkTheme: require('prism-react-renderer/themes/vsDark'),
     },
+    algolia: {
+      apiKey: 'YOUR_API_KEY',
+      indexName: 'YOUR_INDEX_NAME',
+    },
     hideableSidebar: true,
     navbar: {
       title: 'Notion Formula',
@@ -27,12 +31,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        /* {
-          to: 'docs/api/',
+        {
+          to: 'docs/API/modules',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
-        }, */
+        },
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md',
           position: 'right',
@@ -64,6 +68,10 @@ module.exports = {
             {
               label: 'Get Started',
               to: 'docs/',
+            },
+            {
+              label: 'Notion Functions Reference',
+              to: 'docs/Reference/Notion%20Functions',
             }
           ],
         },

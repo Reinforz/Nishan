@@ -1,9 +1,13 @@
 import { TTextFormat } from '@nishans/types';
-import { inlineEquation, inlineMention, inlinePage, inlineText } from '../src';
+import { inlineEquation, inlineDate, inlineMention, inlinePage, inlineText, HighlightColors } from '../src';
 
 function testAfterStringifying (source: TTextFormat, text: string, format: string[]) {
 	expect(JSON.stringify(source)).toBe(`[["${text}",[[${format.map((format) => `"${format}"`).join(',')}]]]]`);
 }
+
+it('Should create correct text formatting', () => {
+	expect(JSON.stringify(inlineDate({} as any).text)).toBe('[["‣",[["d",{}]]]]');
+});
 
 describe('Should create correct formatting', () => {
 	it('Should be able to add new text', () => {
@@ -142,6 +146,7 @@ describe('Should create correct background highlight formatting', () => {
 it('pushToLast method should work correctly', () => {
 	testAfterStringifying(inlineText('text').pushToLast([ 'h', 'red' ]).text, 'text', [ 'h', 'red' ]);
 	testAfterStringifying(inlineText('text').pushToLast([ 'c' ]).text, 'text', [ 'c' ]);
+	expect(JSON.stringify(new HighlightColors([ [ 'text' ] ]).pushToLast([ 'c' ]).text)).toBe(`[["text",[["c"]]]]`);
 });
 
 describe('Other inline block functions should work correctly', () => {

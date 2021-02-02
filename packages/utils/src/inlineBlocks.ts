@@ -25,7 +25,7 @@ export class HighlightColors {
   
   pushToLast(format: InlineFormat){
     if(!this.text[this.text.length - 1][1]) this.text[this.text.length - 1][1] = [format];
-    else this.text[this.text.length - 1][1]?.push(format)
+    else (this.text[this.text.length - 1][1] as any).push(format)
     return new InlineTextFormatter(this.text);
   }
 

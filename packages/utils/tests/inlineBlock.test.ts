@@ -6,6 +6,22 @@ function testAfterStringifying (source: TTextFormat, text: string, format: strin
 }
 
 describe('Should create correct formatting', () => {
+	it('Should be able to add new text', () => {
+		expect(JSON.stringify(inlineText('text').add('new text').text)).toBe(`[["text",[]],["new text",[]]]`);
+	});
+
+	it('Should be able to add new text format', () => {
+		expect(JSON.stringify(inlineText('text').add('new text').strikeThrough.text)).toBe(
+			`[["text",[]],["new text",[["s"]]]]`
+		);
+	});
+
+	it('Should be able to add old and new text format', () => {
+		expect(JSON.stringify(inlineText('text').bold.add('new text').strikeThrough.text)).toBe(
+			`[["text",[["b"]]],["new text",[["s"]]]]`
+		);
+	});
+
 	it('Should support empty text', () => {
 		expect(JSON.stringify(inlineText().text)).toBe(`[]`);
 	});

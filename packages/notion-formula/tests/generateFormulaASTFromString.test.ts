@@ -138,6 +138,20 @@ describe('Function formula string parsing success for literal arguments', () => 
 		).toBe(true);
 	});
 
+	it('Should match output for string(with space) x constant argument variant', () => {
+		expect(
+			deepEqual(
+				{
+					type: 'constant',
+					value: 'text with space',
+					result_type: 'text',
+					value_type: 'string'
+				},
+				generateFormulaASTFromString('"text with space"')
+			)
+		).toBe(true);
+	});
+
 	it('Should match output for number x constant argument variant', () => {
 		expect(
 			deepEqual(
@@ -279,6 +293,91 @@ describe('Function formula string representation parsing success', () => {
 					result_type: 'number'
 				},
 				generateFormulaASTFromString('abs(ceil(1))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for string x constant argument variant`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'constant',
+							value: 'b',
+							value_type: 'string',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a", "b")', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for string(with spaces) x constant argument variant`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a space',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'constant',
+							value: 'b space',
+							value_type: 'string',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a space", "b space")', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should match output for string(with spaces) x property argument variant`, () => {
+		console.log(
+			JSON.stringify(generateFormulaASTFromString('concat("a space", prop("text space"))', test_schema_map), null, 2)
+		);
+
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a space',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'property',
+							id: 'text',
+							name: 'text space',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a space", prop("text space"))', test_schema_map)
 			)
 		).toBe(true);
 	});

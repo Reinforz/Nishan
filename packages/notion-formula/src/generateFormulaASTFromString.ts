@@ -16,9 +16,10 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
   for (let index = 0; index < formula.length; index++) {
     const char = formula[index];
     // adds to the last_arg only if its not a bracket, comma
-    const is_part_of_string = last_arg.match(/".+?/);
-    if (!char.match(/(\(|\)|,|\s)/)) last_arg += char;
-    if(is_part_of_string && char === " ") last_arg += char;
+    // If the current character is a space add it if its part of of string
+    const is_part_of_string = last_arg.match(/".+?/), is_special_character = char.match(/(\(|\)|,|\s)/);
+    if(is_part_of_string) last_arg += char;
+    else if(!is_special_character) last_arg += char;
     // checks to see if any of the argument variants matches with last_arg
     const text_constant_match = last_arg.match(/^"(.+?)"$/),
 			number_constant_match = last_arg.match(/^(\d+)$/),
@@ -64,9 +65,9 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			last_arg = '';
 		}
 
-		if (char === ')') {
+		if (!is_part_of_string && char === ')') {
       // if any ) char is encountered and there is a parent and context is not a prop, 
-      // append the last_element of the parent stack as the last argument of the last function of the parent
+      // append the last element of the parent stack as the last argument of the last function of the parent
 			if (parents.length !== 1 && context !== 'prop') {
 				const arg = parents.pop();
 				parents[parents.length - 1][1].push(arg);

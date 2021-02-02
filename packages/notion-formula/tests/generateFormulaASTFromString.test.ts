@@ -350,12 +350,10 @@ describe('Function formula string representation parsing success', () => {
 			)
 		).toBe(true);
 	});
+});
 
-	it(`Should match output for string(with spaces) x property argument variant`, () => {
-		console.log(
-			JSON.stringify(generateFormulaASTFromString('concat("a space", prop("text space"))', test_schema_map), null, 2)
-		);
-
+describe('Test parsing of special characters inside text constants', () => {
+	it(`Should parse and match output correctly for [string(with space) x constant & string(with space) x property] argument variant`, () => {
 		expect(
 			deepEqual(
 				{
@@ -378,6 +376,87 @@ describe('Function formula string representation parsing success', () => {
 					result_type: 'text'
 				},
 				generateFormulaASTFromString('concat("a space", prop("text space"))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should parse and match output correctly for [string(with commas) x constant & string(with commas) x property] argument variant`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a,commas',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'property',
+							id: 'text',
+							name: 'text,commas',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a,commas", prop("text,commas"))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should parse and match output correctly for [string(with left parenthesis) x constant & string(with left parenthesis) x property] argument variant`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a(left parenthesis',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'property',
+							id: 'text',
+							name: 'text(left parenthesis',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a(left parenthesis", prop("text(left parenthesis"))', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should parse and match output correctly for [string(with right parenthesis) x constant & string(with right parenthesis) x property] argument variant`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'concat',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: 'a)right parenthesis',
+							value_type: 'string',
+							result_type: 'text'
+						},
+						{
+							type: 'property',
+							id: 'text',
+							name: 'text)right parenthesis',
+							result_type: 'text'
+						}
+					],
+					result_type: 'text'
+				},
+				generateFormulaASTFromString('concat("a)right parenthesis", prop("text)right parenthesis"))', test_schema_map)
 			)
 		).toBe(true);
 	});

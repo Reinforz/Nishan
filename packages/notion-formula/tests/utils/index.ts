@@ -4,6 +4,9 @@ export const test_schema_map: ISchemaMap = new Map([
 	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],
 	[ 'text', { schema_id: 'text', type: 'text', name: 'text' } ],
 	[ 'text space', { schema_id: 'text', type: 'text', name: 'text space' } ],
+	[ 'text,commas', { schema_id: 'text', type: 'text', name: 'text,commas' } ],
+	[ 'text(left parenthesis', { schema_id: 'text', type: 'text', name: 'text(left parenthesis' } ],
+	[ 'text)right parenthesis', { schema_id: 'text', type: 'text', name: 'text)right parenthesis' } ],
 	[ 'checkbox', { schema_id: 'checkbox', type: 'checkbox', name: 'checkbox' } ],
 	[ 'date', { schema_id: 'date', type: 'date', name: 'date' } ],
 	[

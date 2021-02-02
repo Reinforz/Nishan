@@ -1,0 +1,137 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Schema is an object that notion uses to define the structure of a database. It looks something like this
+
+```js
+const schema = {
+  "LXec": {
+    "name": "Number",
+    "type": "number"
+  },
+  // schema_key/schema_id
+  "title": {
+    // schema_info
+    "name": "Title",
+    "type": "title"
+  }
+}
+```
+
+## Parts of a schema
+
+1. **schema_id**: The schema id is the key used to store the schema, the schema ids in the above schema object are `LXec` and `title`.
+2. **name**: The name stores the name of the column/property/schema_unit
+3. **type**: The type key contains the type of data stored.
+
+## Schema Map
+
+To verify and obtain the property referenced in the formula, all the exposed methods expect an optional second argument that is a map of the schema hence named schema map.
+
+It has the following structure
+
+1. `schema_id`: string
+2. `name`: string
+3. `type`: TSchemaUnitType
+
+:::important Different schema_map structure
+Schema Unit types like `multi_select`, `select`, `formula`, and `relation`, `rollup` are a bit more complex than the above mentioned structure
+:::
+
+## Example
+
+Lets see an example of a simple `schema_map`:
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: <div className="tab-item--lang">
+      <img width="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/480px-Unofficial_JavaScript_logo_2.svg.png"/><span>JS</span>
+      </div>, value: 'js', },
+    { label: <div className="tab-item--lang">
+      <img width="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/1200px-Typescript_logo_2020.svg.png"/><span>TS</span>
+      </div>, value: 'ts', }
+  ]
+}>
+<TabItem value="js">
+
+```js
+const schema_map = new Map([
+	[ 'Checkbox', { schema_id: 'checkbox', type: 'checkbox', name: 'Checkbox' } ],
+	[ 'Number', { schema_id: 'number', type: 'number', name: 'Number' } ]
+]);
+```
+
+</TabItem>
+<TabItem value="ts">
+
+```ts
+const schema_map: ISchemaMap = new Map([
+	[ 'Checkbox', { schema_id: 'checkbox', type: 'checkbox', name: 'Checkbox' } ],
+	[ 'Number', { schema_id: 'number', type: 'number', name: 'Number' } ]
+]);
+```
+
+</TabItem>
+</Tabs>
+
+Notice the syntax used to create a map. The `Map` constructor takes an array of entries, where the first item is the key and the second item is the value stored in that particular key.
+
+:::caution Name and Key
+Remember to keep the name and the key of each entries the same. For example this wont work
+
+```js
+const schema_map = new Map([
+  // the key is Checkbox but the name is 'checkbox name'
+	[ 'Checkbox', { schema_id: 'checkbox', type: 'checkbox', name: 'checkbox name' } ],
+]);
+```
+:::
+
+## Creation
+
+There are two ways you can create a schema_map
+
+1. You can create a schema_map manually, using the `Map` constructor
+2. You can use the `@nishans/utils` package to create a `schema_map` dynamically from the remote schema.
+
+<Tabs
+  defaultValue="js"
+  values={[
+    { label: <div className="tab-item--lang">
+      <img width="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/480px-Unofficial_JavaScript_logo_2.svg.png"/><span>JS</span>
+      </div>, value: 'js', },
+    { label: <div className="tab-item--lang">
+      <img width="20px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/1200px-Typescript_logo_2020.svg.png"/><span>TS</span>
+      </div>, value: 'ts', }
+  ]
+}>
+<TabItem value="js">
+
+```js
+const { generateSchemaMap } = require("@nishans/utils");
+
+async function main(){
+  const schema_map = await generateSchemaMap(TOKEN, cvp_id);
+  console.log(schema_map);
+}
+
+main()
+```
+
+</TabItem>
+<TabItem value="ts">
+
+```ts
+import { generateSchemaMap } from "@nishans/utils";
+
+async function main(){
+  const schema_map = await generateSchemaMap(TOKEN, cvp_id);
+  console.log(schema_map);
+}
+
+main()
+```
+
+</TabItem>
+</Tabs>

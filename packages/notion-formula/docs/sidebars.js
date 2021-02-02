@@ -12,7 +12,7 @@ module.exports = {
     {
       type: "category",
       label: "Theory",
-      items: ["Theory/Notion Formula"]
+      items: ["Theory/Notion Formula", "Theory/Schema Map"]
     },
     {
       type: "category",

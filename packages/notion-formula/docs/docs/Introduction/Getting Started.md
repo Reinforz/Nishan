@@ -2,6 +2,11 @@
 slug: /
 ---
 
+## Requirements
+
+1. You must have atleast node v12 installed
+2. If you have node installed npm will also be installed, you can either use npm or download yarn and use it.
+
 ## Installing
 
 1. Open up your terminal and navigate to the directory you wanna install the package at.

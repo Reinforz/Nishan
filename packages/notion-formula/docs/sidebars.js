@@ -22,7 +22,7 @@ module.exports = {
     {
       type: "category",
       label: "Usage",
-      items: ["Usage/Object Representation", "Usage/Array Representation", "Usage/String Representation", ]
+      items: ["Usage/Object Representation", "Usage/Array Representation", "Usage/String Representation", "Usage/Integration"]
     },
     {
       type: "category",

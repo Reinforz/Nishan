@@ -74,7 +74,7 @@ Even though there are multiple schema unit types, all of them are coerced into t
 
 ### Nested Function Argument
 
-Functions gives formulas superpowers and thus notion provides a handful of them. Visit [notion functions](./notion_functions), to learn in details about everything function.
+Functions gives formulas superpowers and thus notion provides a handful of them. Visit [notion functions](../Reference/Notion%20Functions), to learn in details about everything function.
 
 This is how notion stores a function formula argument
 
@@ -116,7 +116,7 @@ This is how notion stores a constant formula argument
 
 ### Operator Function Argument
 
-A separate representation of functions, by using operators like `+`, `-` instead of keywords like `add` and `subtract` respectively. Internally all operators except for the ternary operator `?:` maps to a function. Checkout the [notion operators](./notion_operators) argument to learn more about them.
+A separate representation of functions, by using operators like `+`, `-` instead of keywords like `add` and `subtract` respectively. Internally all operators except for the ternary operator `?:` maps to a function.
 
 This is how notion stores a constant formula argument
 

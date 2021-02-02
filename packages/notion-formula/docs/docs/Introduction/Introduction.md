@@ -22,7 +22,7 @@
 
 <p align="center">
   <a class="mx-3" href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">Github</a>
-  <a class="mx-3" href="nishans-notion-formula.netlify.app/">Docs</a>
+  <a class="mx-3" href="https://nishans-notion-formula.netlify.app/">Docs</a>
   <a class="mx-3" href="https://www.npmjs.com/package/@nishans/notion-formula">NPM</a>
   <a class="mx-3" href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

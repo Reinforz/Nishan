@@ -3,7 +3,7 @@ module.exports = {
   tagline: 'A package to generate notion formula with ease',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'log',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/logo.svg',
   organizationName: 'Nishan',
@@ -27,12 +27,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {
+        /* {
           to: 'docs/api/',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
-        },
+        }, */
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/README.md',
           position: 'right',

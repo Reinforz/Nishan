@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">Github</a>
-  <a href="nishans-notion-formula.netlify.app/">Docs</a>
+  <a href="https://nishans-notion-formula.netlify.app/">Docs</a>
   <a href="https://www.npmjs.com/package/@nishans/notion-formula">NPM</a>
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

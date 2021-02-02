@@ -1,6 +1,6 @@
 {
   "name": "@nishans/notion-formula",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "description": "A package to generate notion formula with ease",
   "keywords": [
     "notion",

@@ -1,21 +1,44 @@
 import { InlineDate, InlineFormat, TFormatBlockColor, TTextFormat } from '@nishans/types';
 
+/**
+ * Generate inline Date formatter
+ * @param arg The inline date format
+ * @returns Generated inline Date formatter
+ */
 export function inlineDate (arg: InlineDate) {
   return new InlineTextFormatter([ [ '‣', [ [ 'd', arg ] ] ] ]);
 }
 
+/**
+ * Generate inline mention formatter
+ * @param id The id of the mentioned user
+ * @returns Generated inline mention formatter
+ */
 export function inlineMention (id: string) {
 	return new InlineTextFormatter([ [ '‣', [ [ 'u', id ] ] ] ]);
 }
 
+/**
+ * Generate inline page formatter
+ * @param id The id of the page
+ * @returns Generated inline page formatter
+ */
 export function inlinePage (id: string) {
 	return new InlineTextFormatter([ [ '‣', [ [ 'p', id ] ] ] ]);
 }
 
+/**
+ * Generate inline equation formatter
+ * @param arg The inline equation format
+ * @returns Generated inline equation formatter
+ */
 export function inlineEquation (equation: string) {
 	return new InlineTextFormatter([ [ '⁍', [ [ 'e', equation ] ] ] ]);
 }
 
+/**
+ * A class used to format inline text by highlighting their colors and background colors 
+ */
 export class HighlightColors {
 	text: TTextFormat;
 
@@ -110,6 +133,9 @@ export class HighlightColors {
 	}
 }
 
+/**
+ * A class to add inline text formatters
+ */
 export class InlineTextFormatter extends HighlightColors {
 	constructor (text?: TTextFormat) {
 		super(text);
@@ -149,6 +175,11 @@ export class InlineTextFormatter extends HighlightColors {
 	}
 }
 
+/**
+ * Generates an InlineTextFormatter instance using the passed text string
+ * @param title The initial content used for formatting
+ * @returns An InlineTextFormatter instance
+ */
 export function inlineText (title?: string) {
 	return title ? new InlineTextFormatter([ [ title, [] ] ]) : new InlineTextFormatter();
 }

@@ -1,7 +1,7 @@
 {
   "name": "@nishans/utils",
   "version": "0.0.5",
-  "description": "Utility package to make working with @nishans/core easier",
+  "description": "Utility package to make working with nishans ecosystem easier",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/utils/README.md",
   "license": "MIT",
@@ -29,8 +29,7 @@
   "devDependencies": {
     "@nishans/types": "0.0.12",
     "axios-mock-adapter": "^1.19.0",
-    "jest": "^26.6.3",
-    "jest-mock-axios": "^4.2.1"
+    "jest": "^26.6.3"
   },
   "dependencies": {
     "axios": "^0.21.1"

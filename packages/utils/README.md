@@ -19,4 +19,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>
 
-<p align="center"><b>Utility package to make working with `@nishans/core` easier</b></p>
+<p align="center"><b>Utility package to make working with nishans ecosystem easier</b></p>

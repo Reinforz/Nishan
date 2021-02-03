@@ -6,6 +6,11 @@ import { idToUuid, uuidToId } from './uuidConversion';
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
 
+/**
+ * Construct a header suited to be used in notion api request
+ * @param token The token used to inject into the header cookie
+ * @returns A header object with cookie set using the passed token string
+ */
 export function constructHeaders (token: string) {
 	if (!token) throw new Error(`Empty token provided`);
 	return {
@@ -15,12 +20,18 @@ export function constructHeaders (token: string) {
 	};
 }
 
-export function getCollectionBlock (token: string, cvp_id: string) {
+/**
+ * Get a remote collection block data
+ * @param token The token used to verify in notion
+ * @param cb_id Id of the collection block
+ * @returns remote collection block data
+ */
+export function getCollectionBlock (token: string, cb_id: string) {
 	const headers = constructHeaders(token);
 
-	if (!cvp_id) throw new Error(`Empty id provided`);
+	if (!cb_id) throw new Error(`Empty id provided`);
 
-	const id = idToUuid(uuidToId(cvp_id));
+	const id = idToUuid(uuidToId(cb_id));
 
 	return axios.post<SyncRecordValuesResult>(
 		`https://www.notion.so/api/v3/syncRecordValues`,
@@ -37,6 +48,12 @@ export function getCollectionBlock (token: string, cvp_id: string) {
 	);
 }
 
+/**
+ * Get a remote collection data
+ * @param token The token used to verify in notion
+ * @param collection_id Id of the collection
+ * @returns remote collection data
+ */
 export function getCollection (token: string, collection_id: string) {
 	const headers = constructHeaders(token);
 
@@ -57,6 +74,11 @@ export function getCollection (token: string, collection_id: string) {
 	);
 }
 
+/**
+ * Generates a schema_map from the passed schema
+ * @param schema The collection schema used to generate the schema_map
+ * @returns The generated schema map
+ */
 export function generateSchemaMapFromCollectionSchema (schema: Schema) {
 	const schema_map: ISchemaMap = new Map();
 	Object.entries(schema).forEach(([ schema_id, value ]) => {
@@ -68,16 +90,18 @@ export function generateSchemaMapFromCollectionSchema (schema: Schema) {
 	return schema_map;
 }
 
-export async function generateSchemaMap (token: string, cvp_id: string) {
-	const id = idToUuid(uuidToId(cvp_id));
-
-	const { data } = await getCollectionBlock(token, cvp_id);
-
-	const { collection_id } = data.recordMap.block[id].value as TCollectionBlock;
-
-	const { data: { recordMap } } = await getCollection(token, collection_id);
-
-	const { schema } = recordMap.collection[collection_id].value;
+/**
+ * Generates a schema_map from a remote collection schema
+ * @param token The token used to verify in notion
+ * @param cb_id Id of the collection block
+ * @returns The generated schema_map from the remote collection schema
+ */
+export async function generateSchemaMap (token: string, cb_id: string) {
+	const id = idToUuid(uuidToId(cb_id)),
+		{ data } = await getCollectionBlock(token, cb_id),
+		{ collection_id } = data.recordMap.block[id].value as TCollectionBlock,
+		{ data: { recordMap } } = await getCollection(token, collection_id),
+		{ schema } = recordMap.collection[collection_id].value;
 
 	return generateSchemaMapFromCollectionSchema(schema);
 }

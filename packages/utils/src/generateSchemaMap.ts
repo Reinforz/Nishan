@@ -1,4 +1,4 @@
-import { SyncRecordValuesResult, TCollectionBlock, TSchemaUnit } from '@nishans/types';
+import { Schema, SyncRecordValuesResult, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import axios from 'axios';
 
 import { idToUuid, uuidToId } from './uuidConversion';
@@ -57,6 +57,17 @@ export function getCollection (token: string, collection_id: string) {
 	);
 }
 
+export function generateSchemaMapFromCollectionSchema (schema: Schema) {
+	const schema_map: ISchemaMap = new Map();
+	Object.entries(schema).forEach(([ schema_id, value ]) => {
+		schema_map.set(value.name, {
+			schema_id,
+			...value
+		});
+	});
+	return schema_map;
+}
+
 export async function generateSchemaMap (token: string, cvp_id: string) {
 	const id = idToUuid(uuidToId(cvp_id));
 
@@ -67,12 +78,6 @@ export async function generateSchemaMap (token: string, cvp_id: string) {
 	const { data: { recordMap } } = await getCollection(token, collection_id);
 
 	const { schema } = recordMap.collection[collection_id].value;
-	const schema_map: ISchemaMap = new Map();
-	Object.entries(schema).forEach(([ schema_id, value ]) => {
-		schema_map.set(value.name, {
-			schema_id,
-			...value
-		});
-	});
-	return schema_map;
+
+	return generateSchemaMapFromCollectionSchema(schema);
 }

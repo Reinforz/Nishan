@@ -2,8 +2,14 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import deepEqual from 'deep-equal';
 
-import { getCollectionBlock, getCollection, constructHeaders } from '../src/generateSchemaMap';
+import {
+	getCollectionBlock,
+	getCollection,
+	constructHeaders,
+	generateSchemaMapFromCollectionSchema
+} from '../src/generateSchemaMap';
 import { idToUuid } from '../src';
+import { Schema } from '@nishans/types';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
@@ -42,6 +48,17 @@ const get_collection_block_response = {
 	}
 };
 
+const collection_schema: Schema = {
+	';pxx': {
+		name: 'Date',
+		type: 'date'
+	},
+	title: {
+		name: 'Name',
+		type: 'title'
+	}
+};
+
 const get_collection_response = {
 	collection: {
 		'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b': {
@@ -51,16 +68,7 @@ const get_collection_response = {
 				version: 89,
 				cover: '',
 				name: [ [ 'Collection View Page' ] ],
-				schema: {
-					';pxx': {
-						name: 'Date',
-						type: 'date'
-					},
-					title: {
-						name: 'Name',
-						type: 'title'
-					}
-				},
+				schema: collection_schema,
 				parent_id: '4b4bb21d-f68b-4113-b342-830687a5337a',
 				parent_table: 'block',
 				alive: true,
@@ -146,5 +154,30 @@ describe('getCollection', () => {
 	it('Should throw an error if id is empty or not provided', () => {
 		expect(() => getCollection('token', '')).toThrow('Empty id provided');
 		expect(() => getCollection('token', undefined as any)).toThrow('Empty id provided');
+	});
+});
+
+describe('collectionSchemaToSchemaMap', () => {
+	it('Should create correct schema_map keys', () => {
+		expect(
+			deepEqual(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).keys()), [ 'Date', 'Name' ])
+		).toBe(true);
+	});
+
+	it('Should create correct schema_map values', () => {
+		expect(
+			deepEqual(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).values()), [
+				{
+					name: 'Date',
+					schema_id: ';pxx',
+					type: 'date'
+				},
+				{
+					name: 'Name',
+					schema_id: 'title',
+					type: 'title'
+				}
+			])
+		).toBe(true);
 	});
 });

@@ -8,6 +8,7 @@
     "examples/"
   ],
   "devDependencies": {
+    "axios-mock-adapter": "1.19.0",
     "@types/dedent": "^0.7.0",
     "@types/deep-equal": "^1.0.1",
     "@types/jest": "^26.0.19",

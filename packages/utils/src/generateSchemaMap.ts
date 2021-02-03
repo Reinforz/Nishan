@@ -6,6 +6,32 @@ import { idToUuid, uuidToId } from './uuidConversion';
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
 
+export function getCollectionBlock (token: string, cvp_id: string) {
+	if (!token) throw new Error(`Empty token provided`);
+	if (!cvp_id) throw new Error(`Empty id provided`);
+
+	const id = idToUuid(uuidToId(cvp_id));
+	const headers = {
+		headers: {
+			cookie: `token_v2=${token};`
+		}
+	};
+
+	return axios.post<SyncRecordValuesResult>(
+		`https://www.notion.so/api/v3/syncRecordValues`,
+		{
+			requests: [
+				{
+					table: 'block',
+					id,
+					version: 0
+				}
+			]
+		},
+		headers
+	);
+}
+
 export async function generateSchemaMap (token: string, cvp_id: string) {
 	const id = idToUuid(uuidToId(cvp_id));
 	const headers = {

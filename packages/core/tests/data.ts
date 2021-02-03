@@ -111,11 +111,6 @@ export default {
 							role: 'editor',
 							type: 'user_permission',
 							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
-						},
-						{
-							role: 'read_and_write',
-							type: 'user_permission',
-							user_id: 'ac853891-9600-4dbe-ad42-4f8487df9bec'
 						}
 					],
 					created_time: 1602390407523,

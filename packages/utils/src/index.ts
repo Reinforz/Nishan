@@ -1,3 +1,4 @@
 export * from './inlineBlocks';
 export * from './uuidConversion';
-export * from './generateSchemaMap';
+import { generateSchemaMap } from './generateSchemaMap';
+export { generateSchemaMap };

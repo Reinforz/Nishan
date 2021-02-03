@@ -1,7 +1,7 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.13",
-  "description": "A package to expose all notion endpoints for queries and mutations and cache response",
+  "version": "0.0.14",
+  "description": "A package to expose all notion endpoints for queries and mutations and for caching response",
   "keywords": [
     "notion",
     "notion-endpoints",
@@ -32,9 +32,13 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.12"
+    "@nishans/types": "0.0.14"
   },
-  "scripts": {},
+  "scripts": {
+    "prebuild": "npm run test",
+    "build": "del-cli ./dist && tsc --sourceMap false",
+    "test": "npx jest --runInBand ./tests --collectCoverage"
+  },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fendpoints"
   }

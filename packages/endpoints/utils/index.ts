@@ -1,4 +1,6 @@
 export * from './createTransaction';
 export * from './queries';
 export * from './mutations';
-export * from './sendRequest';
+import { sendRequest } from './sendRequest';
+
+export { sendRequest };

@@ -9,19 +9,19 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/Easy.svg',
+    imageUrl: 'img/easy.svg',
     description: (
       <>
-        Generate notion formula with ease through object, array or string representation
+        Every functions exported by the package are straight forward and easy to use
       </>
     ),
   },
   {
-    title: 'Emulates Original Parser',
-    imageUrl: 'img/emulate_parser.svg',
+    title: 'Multi purpose',
+    imageUrl: 'img/multi_purpose.svg',
     description: (
       <>
-        Notion formula emulates and mimics the action formula parser and provide useful and intuitive error messages
+        Integrates nicely with a lot of packages from Nishan's ecosystem
       </>
     ),
   },
@@ -53,7 +53,7 @@ function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Various utility functions to make working with nishans ecosystem a lot easier">
+      description="A lightweight package that exports various utility functions to make working with notion's and nishan's ecosystem a lot easier">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <img height="250" src={`${siteConfig.favicon}`}/>

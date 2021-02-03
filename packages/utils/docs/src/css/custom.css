@@ -66,6 +66,7 @@ button.DocSearch.DocSearch-Button{
   font-size: 1rem;
   background: var(--ifm-color-primary-darkest);
   max-width: 500px;
+  margin-bottom: 10px;
 }
 
 section.features_src-pages- {
@@ -96,7 +97,7 @@ html[data-theme="dark"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-nex
 
 .button.button--secondary.button--outline:hover{
   color: white;
-  background-color: var(--ifm-color-primary-lightest);
+  background-color: var(--ifm-color-primary-dark);
 }
 
 .docusaurus-highlight-code-line {

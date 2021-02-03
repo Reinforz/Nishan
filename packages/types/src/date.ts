@@ -13,8 +13,8 @@ export interface Date {
 	date_format: TDateFormat;
 	type: TDateType;
 	start_date: string;
-	time_format: TTimeFormat;
-	reminder: IDateReminder;
+	time_format?: TTimeFormat;
+	reminder?: IDateReminder;
 }
 
 export interface IDate extends Date {

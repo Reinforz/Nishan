@@ -181,6 +181,10 @@ export class InlineTextFormatter extends HighlightColors {
  * @param title The initial content used for formatting
  * @returns An InlineTextFormatter instance
  */
-export function inlineText (title?: string) {
-	return title ? new InlineTextFormatter([ [ title, [] ] ]) : new InlineTextFormatter();
+export function inlineText (title?: string | TTextFormat) {
+  if(typeof title === "string")
+    return new InlineTextFormatter([ [ title, [] ] ])
+  else if(Array.isArray(title))
+    return new InlineTextFormatter(title)
+	return new InlineTextFormatter();
 }

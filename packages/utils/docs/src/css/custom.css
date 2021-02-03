@@ -19,6 +19,13 @@
   --ifm-footer-link-icon-hover-color: var(--ifm-color-primary-lightest);
 }
 
+@media (min-width: 997px){
+  .docSidebarContainer_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocPage-{
+    width: 500px;
+  }
+}
+
+
 .hero--primary{
   background-color: var(--ifm-color-primary-darker)
 }

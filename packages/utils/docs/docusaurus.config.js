@@ -31,12 +31,12 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        /* {
+        {
           to: 'docs/API/modules',
           activeBasePath: 'docs',
           label: 'API',
           position: 'left',
-        }, */
+        },
         {
           href: 'https://github.com/Devorein/Nishan/blob/master/packages/utils/README.md',
           position: 'right',

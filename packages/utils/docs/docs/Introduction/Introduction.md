@@ -20,7 +20,7 @@ slug: /
     <img src="https://img.shields.io/npm/v/@nishans/utils"/>
   </div>
   <div class="mx-3">
-    <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=notion_formula"/>
+    <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=utils"/>
   </div>
 </p>
 

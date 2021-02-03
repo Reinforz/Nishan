@@ -1,18 +1,27 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
+  title: '@nishans/utils',
+  tagline: 'Utility package to make working with nishans ecosystem easier',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'log',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  favicon: 'img/logo.svg',
+  organizationName: 'Nishan',
+  projectName: '@nishans/utils',
   themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/github'),
+      darkTheme: require('prism-react-renderer/themes/vsDark'),
+    },
+    /* algolia: {
+      apiKey: 'YOUR_API_KEY',
+      indexName: 'YOUR_INDEX_NAME',
+    }, */
+    hideableSidebar: true,
     navbar: {
-      title: 'My Site',
+      title: 'Utils',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'utils logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -22,10 +31,30 @@ module.exports = {
           label: 'Docs',
           position: 'left',
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
+        /* {
+          to: 'docs/API/modules',
+          activeBasePath: 'docs',
+          label: 'API',
+          position: 'left',
+        }, */
         {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
+          href: 'https://github.com/Devorein/Nishan/blob/master/packages/utils/README.md',
+          position: 'right',
+          class: "header-github-link header-link"
+        },
+        {
+          href: 'https://www.npmjs.com/package/@nishans/utils',
+          position: 'right',
+          class: "header-npm-link header-link"
+        },
+        {
+          position: 'right',
+          href: 'https://discord.gg/SpwHCz8ysx',
+          class: "header-discord-link header-link"
+        },
+        {
+          label: 'Discussions',
+          href: 'https://github.com/Devorein/Nishan/discussions',
           position: 'right',
         },
       ],
@@ -37,47 +66,30 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Style Guide',
+              label: 'Get Started',
               to: 'docs/',
-            },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
-            },
+            }
           ],
         },
         {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Github Discussions',
+              href: 'https://github.com/Devorein/Nishan/discussions',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              href: 'https://discord.gg/SpwHCz8ysx',
             },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              href: 'https://twitter.com/devorein',
             },
           ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
+        }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Devorein`,
     },
   },
   presets: [
@@ -86,20 +98,15 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
+          showLastUpdateAuthor: false,
+          showLastUpdateTime: true,
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+            'https://github.com/Devorein/Nishan/edit/master/packages/utils/docs',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
       },
     ],
-  ],
+  ]
 };

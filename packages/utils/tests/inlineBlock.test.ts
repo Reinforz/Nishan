@@ -14,6 +14,10 @@ describe('Should create correct formatting', () => {
 		expect(JSON.stringify(inlineText('text').add('new text').text)).toBe(`[["text",[]],["new text",[]]]`);
 	});
 
+	it('Should be able to add new text', () => {
+		expect(JSON.stringify(inlineText([ [ 'text' ] ]).text)).toBe(`[["text"]]`);
+	});
+
 	it('Should be able to add new text format', () => {
 		expect(JSON.stringify(inlineText('text').add('new text').strikeThrough.text)).toBe(
 			`[["text",[]],["new text",[["s"]]]]`

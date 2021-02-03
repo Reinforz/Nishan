@@ -88,21 +88,23 @@ section.features_src-pages- {
   margin-top: 20px;
 }
 
-html[data-theme="light"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar- .button.button--secondary.button--outline{
+html[data-theme="light"] .button.button--secondary.button--outline{
   background-color: #eee;
 }
 
-html[data-theme="dark"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar- .button.button--secondary.button--outline{
+html[data-theme="dark"] .button.button--secondary.button--outline{
   background-color: #111;
 }
 
-.button.button--secondary.button--outline{
+html[data-theme="light"] .hero--primary .button.button--secondary.button--outline,
+html[data-theme="dark"] .hero--primary .button.button--secondary.button--outline{
   background-color: var(--ifm-color-primary-darkest);
   border: none;
   margin: 5px;
 }
 
-.button.button--secondary.button--outline:hover{
+html[data-theme="light"] .hero--primary .button.button--secondary.button--outline:hover,
+html[data-theme="dark"] .hero--primary .button.button--secondary.button--outline:hover{
   color: white;
   background-color: var(--ifm-color-primary-dark);
 }

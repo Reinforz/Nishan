@@ -12,7 +12,9 @@ export type ISchemaMap = Map<string, ISchemaMapValue>;
  * @returns A header object with cookie set using the passed token string
  */
 export function constructHeaders (token: string) {
+	// Throw an error if the token was not provided
 	if (!token) throw new Error(`Empty token provided`);
+	// return the constructed header object with the cookie key set using the passed token
 	return {
 		headers: {
 			cookie: `token_v2=${token};`
@@ -31,8 +33,10 @@ export function getCollectionBlock (token: string, cb_id: string) {
 
 	if (!cb_id) throw new Error(`Empty id provided`);
 
+	// Convert the passed id to id, cuz it might be invalid, then transform it to uuid
 	const id = idToUuid(uuidToId(cb_id));
 
+	// Sent a post api request to notion's server to get the collection block only
 	return axios.post<SyncRecordValuesResult>(
 		`https://www.notion.so/api/v3/syncRecordValues`,
 		{
@@ -59,6 +63,7 @@ export function getCollection (token: string, collection_id: string) {
 
 	if (!collection_id) throw new Error(`Empty id provided`);
 
+	// Sent a post api request to notion's server to get the collection only
 	return axios.post<SyncRecordValuesResult>(
 		`https://www.notion.so/api/v3/syncRecordValues`,
 		{
@@ -81,6 +86,7 @@ export function getCollection (token: string, collection_id: string) {
  */
 export function generateSchemaMapFromCollectionSchema (schema: Schema) {
 	const schema_map: ISchemaMap = new Map();
+	// Map through each key of the passed schema and use its name property to act as a key to the map
 	Object.entries(schema).forEach(([ schema_id, value ]) => {
 		schema_map.set(value.name, {
 			schema_id,

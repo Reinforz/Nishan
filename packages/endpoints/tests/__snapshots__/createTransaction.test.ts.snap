@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createTransaction Should create correct request 1`] = `
+Object {
+  "id": Any<String>,
+  "operations": Any<Array>,
+  "shardId": 123,
+  "spaceId": "space_id",
+}
+`;

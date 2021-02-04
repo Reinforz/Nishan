@@ -50,7 +50,7 @@ describe('constructHeaders', () => {
 	});
 });
 
-describe.only('sendRequest', () => {
+describe('sendRequest', () => {
 	it('Should contain correct request url,data and response data ', async () => {
 		const request_data = {
 				req: 'request_data'

@@ -22,7 +22,7 @@ console.log(inlineText("text").add(" extra").text);
 // [["text"],[" extra"]]
 ```
 
-![Text Extra Image](../../static/img/inlineblocks/text_extra.png)
+![Text Extra Image](../../../static/img/utils/inlineblocks/text_extra.png)
 
 ### Adding Links
 
@@ -42,7 +42,7 @@ console.log(inlineText("text bold").bold.add(" extra italic").italic.text);
 // [["text bold", [["b"]]],[" extra italic", [["i"]]]]
 ```
 
-![Text Bold Extra Italic Image](../../static/img/inlineblocks/text_bold_extra_italic.png)
+![Text Bold Extra Italic Image](../../../static/img/utils/inlineblocks/text_bold_extra_italic.png)
 
 ### Adding highlight colors
 
@@ -53,7 +53,7 @@ console.log(inlineText("text red background").redbg.add(" extra blue bold").blue
 // [["text red background",[["h","red_background"]]],[" extra blue bold",[["h","blue"],["b"]]]]
 ```
 
-![Text Red Extra Blue Bold Image](../../static/img/inlineblocks/text_red_bg_extra_blue_bold.png)
+![Text Red Extra Blue Bold Image](../../../static/img/utils/inlineblocks/text_red_bg_extra_blue_bold.png)
 
 :::note How `add` works
 All the format methods called after `add` will work on that chuck of inline block. For example

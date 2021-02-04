@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
 	title: 'Nishan Docs',
 	tagline: 'Documentation for nishan, an ecosystem of packages for notion',
@@ -36,6 +34,12 @@ module.exports = {
 					to: 'docs/types',
 					activeBasePath: 'docs',
 					label: 'Types',
+					position: 'left'
+        },
+        {
+					to: 'docs/notion-formula',
+					activeBasePath: 'docs',
+					label: 'NF',
 					position: 'left'
         },
         {
@@ -85,7 +89,7 @@ module.exports = {
           ],
         }
 			],
-			copyright: `Copyright © ${new Date().getFullYear()}. Made with ❤️ by devorein, hosted on netlify.`
+			copyright: `Copyright © ${new Date().getFullYear()}. Made by devorein, hosted on netlify.`
 		}
 	},
 	presets: [

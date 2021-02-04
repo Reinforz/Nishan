@@ -21,7 +21,7 @@ async function generate (package_name) {
   const api_dir = `docs/${package_name}/api`
   if (project) await app.generateDocs(project, api_dir);
   const sidebar = await generateSidebar(api_dir);
-  await fs.promises.writeFile(`sidebars/${package_name}.js`, `module.exports = ${JSON.stringify(sidebar, null, 2)}`)
+  await fs.promises.writeFile(`sidebars/${package_name}.json`, `${JSON.stringify(sidebar, null, 2)}`)
 }
 
 async function generateSidebar(rootpath){
@@ -48,7 +48,7 @@ async function generateSidebar(rootpath){
   return sidebar;
 }
 
-const package_names = ['types','endpoints','core'/* ,'markdown','sync','utils', 'notion-formula' */];
+const package_names = ['types','endpoints','core','markdown','sync','utils', 'notion-formula'];
 
 async function main(){
   for (let index = 0; index < package_names.length; index++) {

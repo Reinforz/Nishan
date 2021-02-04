@@ -256,27 +256,27 @@ a{
 }
 
 html[data-theme="dark"] .header-github-link:before{
-  background: url("./img/logos/github_light_24.png") no-repeat;
+  background: url("../../static/img/logos/github_light_24.png") no-repeat;
 }
 
 html[data-theme="light"] .header-github-link:before{
-  background: url("./img/logos/github_dark_24.png") no-repeat;
+  background: url("../../static/img/logos/github_dark_24.png") no-repeat;
 }
 
 html[data-theme="light"] .header-discord-link:before{
-  background: url("./img/logos/discord_dark_24.png") no-repeat;
+  background: url("../../static/img/logos/discord_dark_24.png") no-repeat;
 }
 
 html[data-theme="dark"] .header-discord-link:before{
-  background: url("./img/logos/discord_light_24.png") no-repeat;
+  background: url("../../static/img/logos/discord_light_24.png") no-repeat;
 }
 
 html[data-theme="light"] .header-npm-link:before{
-  background: url("./img/logos/npm_dark_24.png") no-repeat;
+  background: url("../../static/img/logos/npm_dark_24.png") no-repeat;
 }
 
 html[data-theme="dark"] .header-npm-link:before{
-  background: url("./img/logos/npm_light_24.png") no-repeat;
+  background: url("../../static/img/logos/npm_light_24.png") no-repeat;
 }
 
 .navbar__link--active{

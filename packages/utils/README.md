@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/tree/master/packages/utils">Github</a>
-  <a href=https://nishans-utils.netlify.app>Docs</a>
+  <a href="https://nishans-utils.netlify.app">Docs</a>
   <a href="https://www.npmjs.com/package/@nishans/utils">NPM</a>
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

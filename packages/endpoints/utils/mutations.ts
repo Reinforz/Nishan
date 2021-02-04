@@ -20,11 +20,11 @@ import { Configs } from '../src';
 import { sendRequest } from './';
 
 export async function setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs: Configs) {
-	await sendRequest('setPageNotificationsAsRead', params, configs);
+	return await sendRequest('setPageNotificationsAsRead', params, configs);
 }
 
 export async function setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs: Configs) {
-	await sendRequest('setSpaceNotificationsAsRead', params, configs);
+	return await sendRequest('setSpaceNotificationsAsRead', params, configs);
 }
 
 export async function removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: Configs) {
@@ -40,7 +40,7 @@ export async function createSpace (params: CreateSpaceParams, configs: Configs) 
 }
 
 export async function saveTransactions (params: SaveTransactionParams, configs: Configs) {
-	await sendRequest('saveTransactions', params, configs);
+	return await sendRequest('saveTransactions', params, configs);
 }
 
 export async function enqueueTask (params: EnqueueTaskParams, configs: Configs) {
@@ -48,7 +48,7 @@ export async function enqueueTask (params: EnqueueTaskParams, configs: Configs) 
 }
 
 export async function setBookmarkMetadata (params: SetBookmarkMetadataParams, configs: Configs) {
-	await sendRequest('setBookmarkMetadata', params, configs);
+	return await sendRequest('setBookmarkMetadata', params, configs);
 }
 
 export async function initializePageTemplate (params: InitializePageTemplateParams, configs: Configs) {

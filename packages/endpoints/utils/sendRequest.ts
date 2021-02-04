@@ -1,10 +1,10 @@
 import axios from "axios";
 
-import { Configs } from "../src";
+import { Configs, NotionHeaders } from "../src";
 
 const BASE_NOTION_URL = "https://www.notion.so/api/v3"
 
-export function constructHeaders(configs: Configs){
+export function constructHeaders(configs: Configs): NotionHeaders{
   const {token, user_id = ''} = configs;
   if(!token)
     throw new Error('Token not provided')
@@ -29,10 +29,10 @@ export const sendRequest = <T>(url: string, arg: any, configs: Configs): Promise
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
       try {
-        const {data} = await sendApiRequest<T>(url, arg, configs);
-        resolve(data)
+        const response = await sendApiRequest<T>(url, arg, configs);
+        resolve(response.data)
       } catch (err) {
-        reject(err.response.data)
+        reject(err)
       }
     }, configs.interval ?? 500)
   });

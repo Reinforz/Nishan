@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
-import { sendRequest } from '../src';
-import { sendApiRequest, constructHeaders } from '../utils/sendRequest';
+import { sendRequest } from '../../src';
+import { sendApiRequest, constructHeaders } from '../../utils/sendRequest';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { SyncRecordValuesResult } from '@nishans/types';
@@ -50,8 +50,8 @@ describe('constructHeaders', () => {
 	});
 });
 
-describe('sendRequest', () => {
-	it('Should contain correct request url,data and response data ', async () => {
+describe('sendApiRequest', () => {
+	it('Should contain correct request url,data and response data', async () => {
 		const request_data = {
 				req: 'request_data'
 			},
@@ -66,5 +66,51 @@ describe('sendRequest', () => {
 		expect(deepEqual(JSON.parse(response.config.data), request_data)).toBe(true);
 		expect(response.request.responseURL).toBe(`https://www.notion.so/api/v3/syncRecordValues`);
 		expect(deepEqual(response.data, response_data)).toBe(true);
+	});
+});
+
+describe('sendRequest', () => {
+	it(`Should contain correct request url,data and response data with default interval`, async () => {
+		const request_data = {
+				req: 'request_data'
+			},
+			response_data = {
+				res: 'response_data'
+			};
+		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
+		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
+			token: 'token'
+		});
+		expect(deepEqual(response, response_data)).toBe(true);
+	});
+
+	it(`Should contain correct request url,data and response data`, async () => {
+		const request_data = {
+				req: 'request_data'
+			},
+			response_data = {
+				res: 'response_data'
+			};
+		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
+		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
+			token: 'token',
+			interval: 500
+		});
+		expect(deepEqual(response, response_data)).toBe(true);
+	});
+
+	it(`Should respond to request error`, async () => {
+		const request_data = {
+			req: 'request_data'
+		};
+		mock.onPost('/syncRecordValues').networkErrorOnce();
+		try {
+			await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
+				token: 'token',
+				interval: 500
+			});
+		} catch (err) {
+			expect(err).toBeTruthy();
+		}
 	});
 });

@@ -4,7 +4,6 @@ import {
 	RecordPageVisitParams,
 	GetTasksParams,
 	GetUserNotificationsParams,
-	SyncRecordValues,
 	GetPageVisitsParams,
 	GetBackLinksForBlockParams,
 	GetUserSharedPagesParams,
@@ -17,10 +16,9 @@ import {
 	SyncRecordValuesParams,
 	QueryCollectionParams,
 	LoadPageChunkParams,
-	TDataType,
 	FindUserParams
 } from '@nishans/types';
-import { Configs, CtorArgs, UpdateCacheManuallyParam } from './types';
+import { CtorArgs } from './types';
 import {
 	findUser,
 	getBacklinksForBlock,

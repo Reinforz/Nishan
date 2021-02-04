@@ -11,5 +11,5 @@
 .DS_Store
 **/*.eslintcache
 docs/sidebars/
-docs/docs/
+docs/**/api
 !docs/docs/Introduction

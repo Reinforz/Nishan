@@ -1,25 +1,27 @@
 const TypeDoc = require('typedoc');
 const path = require('path');
 const fs = require('fs');
+const colors = require('colors');
 
 async function generate (package_name) {
 	const app = new TypeDoc.Application();
-	app.options.addReader(new TypeDoc.TSConfigReader());
+  app.options.addReader(new TypeDoc.TSConfigReader());
+  const package_dir = path.resolve(__dirname, `../packages/${package_name}`)
 	app.bootstrap({
-		entryPoints: [ path.resolve(__dirname, `../packages/${package_name}/src/index.ts`) ],
+		entryPoints: [ path.join(package_dir, 'src', 'index.ts') ],
 		excludeExternals: true,
-    excludePrivate: true,
+    excludePrivate: false,
     categorizeByGroup: true,
-    excludeProtected: true,
-    readme: `../packages/${package_name}/README.md`,
+    excludeProtected: false,
+    readme: path.join(package_dir, "README.md"),
     plugin: ['typedoc-plugin-markdown' ]
 	});
 
 	const project = app.convert();
-
-  if (project) await app.generateDocs(project, `docs/${package_name}`);
-  const sidebar = await generateSidebar(`docs/${package_name}`);
-  await fs.promises.writeFile(`sidebars/${package_name}.js`, `module.exports = ${JSON.stringify(sidebar)}`)
+  const api_dir = `docs/${package_name}/api`
+  if (project) await app.generateDocs(project, api_dir);
+  const sidebar = await generateSidebar(api_dir);
+  await fs.promises.writeFile(`sidebars/${package_name}.js`, `module.exports = ${JSON.stringify(sidebar, null, 2)}`)
 }
 
 async function generateSidebar(rootpath){
@@ -46,10 +48,12 @@ async function generateSidebar(rootpath){
   return sidebar;
 }
 
+const package_names = ['types','endpoints','core'/* ,'markdown','sync','utils', 'notion-formula' */];
+
 async function main(){
-  const package_names = ['types','core','endpoints','markdown','sync','utils'];
   for (let index = 0; index < package_names.length; index++) {
     await generate(package_names[index])
+    console.log(`Done with ${colors.red.bold(package_names[index])}`);
   }
 }
 

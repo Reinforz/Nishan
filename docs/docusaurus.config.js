@@ -2,60 +2,88 @@ const path = require('path');
 
 module.exports = {
 	title: 'Nishan Docs',
-	tagline: 'Documentation for nishan, an unofficial notion api for Typescript',
+	tagline: 'Documentation for nishan, an ecosystem of packages for notion',
 	url: 'https://nishan-docs.netlify.app/',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	favicon: 'img/logo.svg',
-	organizationName: 'Devorein',
-	projectName: 'Nishan-Docs',
+	organizationName: 'Nishan',
+	projectName: 'Nishan',
 	themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/github'),
+      darkTheme: require('prism-react-renderer/themes/vsDark'),
+    },
+    algolia: {
+      apiKey: 'fee719740e392ae5f55e18c139ea1e12',
+      indexName: 'nishan',
+    },
+    hideableSidebar: true,
 		navbar: {
-			title: 'Nishan Docs',
+			title: 'Nishan',
 			logo: {
 				alt: 'Nishan Logo',
 				src: 'img/logo.svg'
 			},
 			items: [
 				{
-					to: 'docs/',
+					to: 'docs/core',
 					activeBasePath: 'docs',
-					label: 'Docs',
+					label: 'Core',
 					position: 'left'
-				},
-				{
-					href: 'https://github.com/Devorein/Nishan/tree/master/docs',
-					label: 'GitHub',
-					position: 'right'
-				},
-				{
-					href: 'https://github.com/Devorein/Nishan',
-					label: 'Nishan',
+        },
+        {
+					to: 'docs/types',
+					activeBasePath: 'docs',
+					label: 'Types',
 					position: 'left'
-				}
+        },
+        {
+          href: 'https://github.com/Devorein/Nishan',
+          position: 'right',
+          class: "header-github-link header-link"
+        },
+        {
+          href: 'https://www.npmjs.com/search?q=%40nishans',
+          position: 'right',
+          class: "header-npm-link header-link"
+        },
+        {
+          position: 'right',
+          href: 'https://discord.gg/SpwHCz8ysx',
+          class: "header-discord-link header-link"
+        },
+        {
+          label: 'Discussions',
+          href: 'https://github.com/Devorein/Nishan/discussions',
+          position: 'right',
+        }
 			]
 		},
 		footer: {
 			style: 'dark',
 			links: [
 				{
-					title: 'Docs',
-					items: [
-						{
-							label: 'Getting Started',
-							to: 'docs/'
-						}
-					]
-				},
-				{
-					title: 'More',
-					items: [
-						{
-							label: 'GitHub',
-							href: 'https://github.com/Devorein/Nishan/tree/master/docs'
-						}
-					]
-				}
+          title: 'Community',
+          items: [
+            {
+              label: 'Stack Overflow',
+              href: 'https://stackoverflow.com/questions/tagged/nishan',
+            },
+            {
+              label: 'Github Discussions',
+              href: 'https://github.com/Devorein/Nishan/discussions',
+            },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/SpwHCz8ysx',
+            },
+            {
+              label: 'Twitter',
+              href: 'https://twitter.com/devorein',
+            },
+          ],
+        }
 			],
 			copyright: `Copyright © ${new Date().getFullYear()}. Made with ❤️ by devorein, hosted on netlify.`
 		}
@@ -65,6 +93,8 @@ module.exports = {
 			'@docusaurus/preset-classic',
 			{
 				docs: {
+          showLastUpdateAuthor: false,
+          showLastUpdateTime: true,
 					sidebarPath: require.resolve('./sidebars.js'),
 					editUrl: 'https://github.com/Devorein/Nishan/edit/master/docs/'
 				},

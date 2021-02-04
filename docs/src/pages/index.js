@@ -9,10 +9,10 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/easy.svg',
+    imageUrl: 'img/Easy.svg',
     description: (
       <>
-        Nishan was designed to be easy to use and intuitive.
+        Generate notion formula with ease through object, array or string representation
       </>
     ),
   },
@@ -26,11 +26,11 @@ const features = [
     ),
   },
   {
-    title: 'Minimum overhead',
-    imageUrl: 'img/feathers.svg',
+    title: 'Typescript Support',
+    imageUrl: 'img/ts_support.svg',
     description: (
       <>
-        All you need is your notion token and you are ready to go.
+        Typescript support right out of the box for static typechecking.
       </>
     ),
   },
@@ -57,11 +57,12 @@ function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description={siteConfig.tagline}>
+      description="A whole ecosystem of npm packages to automate notion using typescript or javascript">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <img height="250" src={`${siteConfig.favicon}`}/>
+          <pre className="hero__code"><div>npm install {siteConfig.title}</div></pre>
+          <p className="hero__subtitle"><b>{siteConfig.tagline}</b></p>
           <div className={styles.buttons}>
             <Link
               className={clsx(
@@ -69,9 +70,12 @@ function Home() {
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/')}>
-              Start automating
+              Get Started
             </Link>
           </div>
+          <a className="github-star" href="https://github.com/Devorein/Nishan">
+            <img height="25" src="https://img.shields.io/github/stars/devorein/nishan?style=social"/>
+          </a>
         </div>
       </header>
       <main>

@@ -7,6 +7,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "prism-react-renderer": "^1.1.1",
     "@docusaurus/core": "2.0.0-alpha.66",
     "@docusaurus/preset-classic": "2.0.0-alpha.66",
     "@mdx-js/react": "^1.6.22",

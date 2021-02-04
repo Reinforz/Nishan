@@ -9,25 +9,25 @@ import styles from './styles.module.css';
 const features = [
   {
     title: 'Easy to Use',
-    imageUrl: 'img/Easy.svg',
+    imageUrl: 'img/root/easy.svg',
     description: (
       <>
-        Generate notion formula with ease through object, array or string representation
+        All the packages are well documented and crafted with ease of use in mind
       </>
     ),
   },
   {
-    title: 'Automate everything',
-    imageUrl: 'img/automation.svg',
+    title: 'Multi Purpose',
+    imageUrl: 'img/root/multi_purpose.svg',
     description: (
       <>
-        Almost everything that is possible in Notion can be done through nishan.
+        Nishan's ecosystem provides various packages to do almost anything with notion
       </>
     ),
   },
   {
     title: 'Typescript Support',
-    imageUrl: 'img/ts_support.svg',
+    imageUrl: 'img/root/ts_support.svg',
     description: (
       <>
         Typescript support right out of the box for static typechecking.
@@ -40,12 +40,8 @@ function Feature({imageUrl, title, description}) {
   const imgUrl = useBaseUrl(imageUrl);
   return (
     <div className={clsx('col col--4', styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
-        </div>
-      )}
-      <h3>{title}</h3>
+      <img src={imgUrl} alt={title} />
+      <h3 className="features__title">{title}</h3>
       <p>{description}</p>
     </div>
   );
@@ -61,7 +57,6 @@ function Home() {
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <img height="250" src={`${siteConfig.favicon}`}/>
-          <pre className="hero__code"><div>npm install {siteConfig.title}</div></pre>
           <p className="hero__subtitle"><b>{siteConfig.tagline}</b></p>
           <div className={styles.buttons}>
             <Link

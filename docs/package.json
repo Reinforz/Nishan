@@ -2,21 +2,22 @@
   "scripts": {
     "start": "docusaurus start",
     "build": "docusaurus build",
+    "serve": "docusaurus serve",
     "swizzle": "docusaurus swizzle",
     "deploy": "npm run build && netlify deploy --prod"
   },
   "license": "MIT",
   "dependencies": {
-    "prism-react-renderer": "^1.1.1",
-    "@docusaurus/core": "2.0.0-alpha.66",
-    "@docusaurus/preset-classic": "2.0.0-alpha.66",
+    "@docusaurus/core": "2.0.0-alpha.70",
+    "@docusaurus/preset-classic": "2.0.0-alpha.70",
     "@mdx-js/react": "^1.6.22",
     "clsx": "^1.1.1",
-    "docusaurus-plugin-typedoc": "^0.5.0",
+    "docusaurus-plugin-typedoc": "^0.9.0",
+    "prism-react-renderer": "^1.1.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "typedoc": "^0.20.6",
-    "typedoc-plugin-markdown": "^3.2.1"
+    "typedoc": "^0.20.20",
+    "typedoc-plugin-markdown": "^3.4.5"
   },
   "browserslist": {
     "production": [

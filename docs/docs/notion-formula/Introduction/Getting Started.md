@@ -1,7 +1,3 @@
----
-slug: /
----
-
 ## Requirements
 
 1. You must have atleast node v12 installed

@@ -36,3 +36,8 @@ jobs:
           files: ./packages/utils/coverage/clover.xml
           flags: utils
           name: "@nishans/utils"
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./packages/endpoints/coverage/clover.xml
+          flags: endpoints
+          name: "@nishans/endpoints"

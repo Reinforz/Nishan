@@ -1,7 +1,3 @@
----
-slug: /
----
-
 <p align="center">
   <img width="125" src="../../img/logo.svg"/>
 </p>

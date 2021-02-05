@@ -11,7 +11,6 @@ import styles from './styles.module.css';
 const LINK_CLASS_NAME = 'table-of-contents__link';
 const ACTIVE_LINK_CLASS_NAME = 'table-of-contents__link--active';
 const TOP_OFFSET = 100;
-/* eslint-disable jsx-a11y/control-has-associated-label */
 
 function Headings({
   toc,
@@ -24,7 +23,6 @@ function Headings({
   return <ul className={isChild ? '' : 'table-of-contents table-of-contents__left-border'}>
       {toc.map(heading => <li key={heading.id}>
           <a href={`#${heading.id}`} className={LINK_CLASS_NAME} // Developer provided the HTML, so assume it's safe.
-      // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: heading.value
       }} />

@@ -1,6 +1,4 @@
-a{
-  font-weight: 500;
-}
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
 
 :root {
   --ifm-color-primary: #3b3b3b;
@@ -30,6 +28,10 @@ a{
   --ifm-code-padding-vertical: 2px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-border-radius: 3px;
+}
+
+a{
+  font-weight: 500;
 }
 
 .hero--primary{
@@ -69,12 +71,14 @@ button.DocSearch.DocSearch-Button{
   color: var(--ifm-color-secondary-dark);
   font-size: 1rem;
   font-weight: bolder;
+  text-transform: uppercase;
 }
 
 .features__title,.footer__title{
   color: var(--ifm-color-secondary-dark);
   font-weight: bolder;
   font-size: 1.25rem;
+  width: 100%;
 }
 
 .footer__link-item{
@@ -134,6 +138,20 @@ html[data-theme="light"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-ne
 
 a{
   font-weight: 500;
+}
+
+@media (max-width: 996px){
+  .col.col--4{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .features__title{
+    text-align: center;
+    font-size: 1.25rem;
+  }
 }
 
 .table-of-contents__link:hover, .table-of-contents__link:hover code, .table-of-contents__link--active, .table-of-contents__link--active code{

@@ -4,7 +4,7 @@ module.exports = {
 	url: 'https://nishan-docs.netlify.app/',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
-	favicon: 'img/logo.svg',
+	favicon: 'img/root/logo.svg',
 	organizationName: 'Nishan',
 	projectName: 'Nishan',
 	themeConfig: {
@@ -21,7 +21,7 @@ module.exports = {
 			title: 'Nishan',
 			logo: {
 				alt: 'Nishan Logo',
-				src: 'img/logo.svg'
+				src: 'img/root/logo.svg'
 			},
 			items: [
         {

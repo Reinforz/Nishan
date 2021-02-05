@@ -1,7 +1,7 @@
 # `@nishans/core`
 
 <p align="center">
-  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/packages/core/docs/static/img/logo.svg"/>
+  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/core/logo.svg"/>
 </p>
 
 <p align="center">
@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/tree/master/packages/core">Github</a>
-  <a href="https://nishan-docs.netlify.app">Docs</a>
+  <a href="https://nishan-docs.netlify.app/docs/core/">Docs</a>
   <a href="https://www.npmjs.com/package/@nishans/core">NPM</a>
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

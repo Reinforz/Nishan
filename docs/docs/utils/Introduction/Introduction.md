@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="125" src="../../img/logo.svg"/>
+  <img width="125" src="../../../static/img/utils/logo.svg"/>
 </p>
 
 <p class="flex">
@@ -22,7 +22,7 @@
 
 <p align="center">
   <a class="mx-3" href="https://github.com/Devorein/Nishan/tree/master/packages/utils">Github</a>
-  <a class="mx-3" href="https://nishans-utils.netlify.app/">Docs</a>
+  <a class="mx-3" href="https://nishan-docs.netlify.app/docs/utils/">Docs</a>
   <a class="mx-3" href="https://www.npmjs.com/package/@nishans/utils">NPM</a>
   <a class="mx-3" href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

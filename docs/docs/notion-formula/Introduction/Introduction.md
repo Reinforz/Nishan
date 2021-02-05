@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="125" src="../../static/img/logo.svg"/>
+  <img width="125" src="../../../static/img/notion-formula/logo.svg"/>
 </p>
 
 <p class="flex">

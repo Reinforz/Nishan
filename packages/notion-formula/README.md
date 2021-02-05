@@ -1,7 +1,7 @@
 # `@nishans/notion-formula`
 
 <p align="center">
-  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/packages/notion-formula/docs/static/img/logo.svg"/>
+  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/notion-formula/logo.svg"/>
 </p>
 
 <p align="center">
@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://github.com/Devorein/Nishan/tree/master/packages/notion-formula">Github</a>
-  <a href="https://nishans-notion-formula.netlify.app/">Docs</a>
+  <a href="https://nishan-docs.netlify.app/docs/notion-formula/">Docs</a>
   <a href="https://www.npmjs.com/package/@nishans/notion-formula">NPM</a>
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>

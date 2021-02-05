@@ -5,6 +5,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
+import Head from "@docusaurus/Head";
 
 const features = [
   {
@@ -54,6 +55,10 @@ function Home() {
     <Layout
       title={`${siteConfig.title}`}
       description="A whole ecosystem of npm packages to automate notion using typescript or javascript">
+      <Head>
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+      </Head>
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <img height="250" src={`${siteConfig.favicon}`}/>

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
-
 :root {
   --ifm-color-primary: #3b3b3b;
   --ifm-color-primary-dark: #353535;
@@ -28,10 +26,13 @@
   --ifm-code-padding-vertical: 2px;
   --ifm-code-padding-horizontal: 4px;
   --ifm-code-border-radius: 3px;
+
+  --ifm-font-family-base: 'Nunito Sans', sans-serif;
 }
 
+
 a{
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .hero--primary{
@@ -113,12 +114,20 @@ section.features_src-pages- {
   margin-top: 20px;
 }
 
-html[data-theme="light"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar- .button.button--secondary.button--outline{
+html[data-theme="light"] .DocSidebar__button.button.button--secondary.button--outline{
+  background-color: #eee;
+}
+
+html[data-theme="light"] .DocSidebar__button.button.button--secondary.button--outline:hover{
   background-color: #ddd;
 }
 
-html[data-theme="light"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocSidebar- .button.button--secondary.button--outline:hover{
-  background-color: #ccc;
+html[data-theme="dark"] .DocSidebar__button.button.button--secondary.button--outline{
+  background-color: #222;
+}
+
+html[data-theme="dark"] .DocSidebar__button.button.button--secondary.button--outline:hover{
+  background-color: #111;
 }
 
 .navbar__link:hover{
@@ -134,10 +143,6 @@ html[data-theme="light"] .sidebar_node_modules-\@docusaurus-theme-classic-lib-ne
 .button.button--secondary.button--outline:hover{
   color: white;
   background-color: var(--ifm-color-secondary-darkest);
-}
-
-a{
-  font-weight: 500;
 }
 
 @media (max-width: 996px){
@@ -319,8 +324,9 @@ html[data-theme="dark"] .header-npm-link:before{
   background: url("../../static/img/logos/npm_light_24.png") no-repeat;
 }
 
-.navbar__link--active{
-  color: inherit
+.navbar__link{
+  color: inherit;
+  font-weight: 600;
 }
 
 li.tabs__item{
@@ -334,6 +340,15 @@ li.tabs__item{
 
 .tab-item--lang img{
   margin: 0px 5px;
+}
+
+time{
+  color: var(--ifm-color-secondary-dark);
+  font-weight: bold;
+}
+
+.react-toggle-track{
+  border-radius: 15px;
 }
 
 .menu__link--active:not(.menu__link--sublist){

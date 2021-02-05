@@ -288,9 +288,15 @@ html[data-theme="dark"] .DocSidebar__button.button.button--secondary.button--out
   fill: #f1c40f;
 }
 
+.header-link:hover{
+  transform: scale(1.25);
+  transition: transform 150ms ease-in-out;
+}
+
 .header-link{
   padding: 5px;
   margin: 0px 5px;
+  transition: transform 150ms ease-in-out;
 }
 
 .header-link:before{

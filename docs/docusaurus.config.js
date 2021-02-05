@@ -42,6 +42,7 @@ module.exports = {
             {
               to: 'docs/core/',
               label: 'Core',
+              icon: "<img width='25' src='/img/core/logo_standalone.svg'/>",
               position: 'left'
             },
             {

@@ -4,7 +4,7 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "swizzle": "docusaurus swizzle",
-    "deploy": "npm run build && netlify deploy --prod"
+    "deploy": "npm run build && netlify deploy --dir build --site 5bfd8efd-d458-406f-bc01-f381bac68a66 --message \"Deployed nishans doc\" --prod"
   },
   "license": "MIT",
   "dependencies": {

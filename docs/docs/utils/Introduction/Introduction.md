@@ -3,7 +3,7 @@ slug: /utils
 ---
 
 <p align="center">
-  <img width="125" src="../../../static/img/utils/logo.svg"/>
+  <img width="125" src="/img/utils/logo.svg"/>
 </p>
 
 <p class="flex">

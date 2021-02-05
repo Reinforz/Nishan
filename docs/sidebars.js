@@ -8,13 +8,16 @@ module.exports = {
     ]
 	},
   "types": {
-    API: require("./sidebars/types")
+    API: require("./sidebars/types"),
+    Introduction: ['types/Introduction/Introduction']
   },
   "endpoints": {
-    API: require("./sidebars/endpoints")
+    API: require("./sidebars/endpoints"),
+    Introduction: ['endpoints/Introduction/Introduction']
   },
   "core": {
-    API: require("./sidebars/core")
+    API: require("./sidebars/core"),
+    Introduction: ['core/Introduction/Introduction']
   },
   "notion-formula": {
     Introduction: ["notion-formula/Introduction/Introduction", "notion-formula/Introduction/Getting Started", "notion-formula/Introduction/Features",  "notion-formula/Introduction/Typescript Support"],
@@ -30,9 +33,11 @@ module.exports = {
     Modules: ["utils/Modules/InlineBlocks", "utils/Modules/uuidConversion", "utils/Modules/generateSchemaMap"],
   },
   "sync": {
-    API: require("./sidebars/sync")
+    API: require("./sidebars/sync"),
+    Introduction: ['sync/Introduction/Introduction']
   },
   "markdown": {
-    API: require("./sidebars/markdown")
+    API: require("./sidebars/markdown"),
+    Introduction: ['markdown/Introduction/Introduction']
   }
 };

@@ -10,6 +10,7 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import { useLocation } from '@docusaurus/router';
 import { isSamePath } from '@docusaurus/theme-common';
+import styles from './styles.module.css';
 
 function NavLink({
   activeBasePath,
@@ -22,8 +23,6 @@ function NavLink({
   prependBaseUrlToHref,
   ...props
 }) {
-  // TODO all this seems hacky
-  // {to: 'version'} should probably be forbidden, in favor of {to: '/version'}
   const toUrl = useBaseUrl(to);
   const activeBaseUrl = useBaseUrl(activeBasePath);
   const normalizedHref = useBaseUrl(href, {
@@ -41,7 +40,12 @@ function NavLink({
       isActive: (_match, location) => activeBaseRegex ? new RegExp(activeBaseRegex).test(location.pathname) : location.pathname.startsWith(activeBaseUrl)
     } : null)
   }} {...props}>
-      {icon && <span className={`${activeClassName}_icon`} dangerouslySetInnerHTML={{__html: icon}}/>} {label}
+    <div className={`${styles.dropdownItem} ${activeClassName}_item`}>
+      {icon && <div className={`${activeClassName}_item_icon`}>
+        <img src={icon}/>
+      </div>}
+      <div className={`${activeClassName}_item_label ${styles.dropdownItemLabel}`}>{label}</div>
+    </div>
     </Link>;
 }
 

@@ -330,9 +330,16 @@ html[data-theme="dark"] .header-npm-link:before{
   background: url("../../static/img/logos/npm_light_24.png") no-repeat;
 }
 
+.dropdown__link--active_item_icon{
+  width: 20px;
+}
+
 .navbar__link{
   color: inherit;
   font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 li.tabs__item{

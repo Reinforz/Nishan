@@ -42,36 +42,42 @@ module.exports = {
             {
               to: 'docs/core/',
               label: 'Core',
-              icon: "<img width='25' src='/img/core/logo_standalone.svg'/>",
+              icon: "/img/core/logo_standalone.svg",
               position: 'left'
             },
             {
               to: 'docs/types/',
+              icon: "/img/types/logo_standalone.svg",
               label: 'Types',
               position: 'left'
             },
             {
               to: 'docs/endpoints/',
+              icon: "/img/endpoints/logo_standalone.svg",
               label: 'Endpoints',
               position: 'left'
             },
             {
               to: 'docs/sync/',
+              icon: "/img/sync/logo_standalone.svg",
               label: 'Sync',
               position: 'left'
             },
             {
               to: 'docs/markdown/',
+              icon: "/img/markdown/logo_standalone.svg",
               label: 'Markdown',
               position: 'left'
             },
             {
               to: 'docs/notion-formula/',
-              label: 'NF',
+              icon: "/img/notion-formula/logo_standalone.svg",
+              label: 'Notion Formula',
               position: 'left'
             },
             {
               to: 'docs/utils/',
+              icon: "/img/utils/logo_standalone.svg",
               label: 'Utils',
               position: 'left'
             },

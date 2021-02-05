@@ -6,7 +6,7 @@ slug: /core
   <img width="125" src="/img/core/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/core?label=minzipped&style=flat"/>
   </div>
@@ -24,7 +24,7 @@ slug: /core
   </div>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <a href="https://github.com/Devorein/Nishan/tree/master/packages/core">Github</a>
   </div>

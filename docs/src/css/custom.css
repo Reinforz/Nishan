@@ -30,6 +30,13 @@
   --ifm-font-family-base: 'Nunito Sans', sans-serif;
 }
 
+@media (max-width: 500px){
+  .shieldsio_badges{
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 a{
   font-weight: 600;
 }

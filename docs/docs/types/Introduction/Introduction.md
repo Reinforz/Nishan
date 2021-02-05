@@ -6,7 +6,7 @@ slug: /types
   <img width="125" src="/img/types/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/types?label=minzipped&style=flat"/>
   </div>
@@ -22,7 +22,7 @@ slug: /types
 
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <a href="https://github.com/Devorein/Nishan/tree/master/packages/types">Github</a>
   </div>

@@ -6,7 +6,7 @@ slug: /utils
   <img width="125" src="/img/utils/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/utils?label=minzipped&style=flat"/>
   </div>

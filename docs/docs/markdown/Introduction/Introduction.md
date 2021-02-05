@@ -6,7 +6,7 @@ slug: /markdown
   <img width="125" src="/img/markdown/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/markdown?label=minzipped&style=flat"/>
   </div>
@@ -21,7 +21,7 @@ slug: /markdown
   </div>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <a href="https://github.com/Devorein/Nishan/tree/master/packages/markdown">Github</a>
   </div>

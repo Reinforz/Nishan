@@ -6,7 +6,7 @@ slug: /notion-formula
   <img width="125" src="/img/notion-formula/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/notion-formula?label=minzipped&style=flat"/>
   </div>

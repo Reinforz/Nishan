@@ -6,7 +6,7 @@ slug: /sync
   <img width="125" src="/img/sync/logo.svg"/>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <img src="https://img.shields.io/bundlephobia/minzip/@nishans/sync?label=minzipped&style=flat"/>
   </div>
@@ -24,7 +24,7 @@ slug: /sync
   </div>
 </p>
 
-<p class="flex">
+<p class="flex shieldsio_badges">
   <div class="mx-3">
     <a href="https://github.com/Devorein/Nishan/tree/master/packages/sync">Github</a>
   </div>

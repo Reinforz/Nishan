@@ -14,7 +14,7 @@ module.exports = {
     },
     algolia: {
       apiKey: 'fee719740e392ae5f55e18c139ea1e12',
-      indexName: 'nishan',
+      indexName: 'notion-formula',
     },
     hideableSidebar: true,
 		navbar: {
@@ -25,46 +25,50 @@ module.exports = {
 			},
 			items: [
         {
-					to: 'docs/core/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Core',
-					position: 'left'
+          label: 'Docs',
+          position: 'left',
+          to: 'docs/root/'
         },
         {
-					to: 'docs/types/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Types',
-					position: 'left'
-        },
-        {
-					to: 'docs/endpoints/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Endpoints',
-					position: 'left'
-        },
-        {
-					to: 'docs/sync/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Sync',
-					position: 'left'
-        },
-        {
-					to: 'docs/markdown/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Markdown',
-					position: 'left'
-        },
-        {
-					to: 'docs/notion-formula/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'NF',
-					position: 'left'
-        },
-        {
-					to: 'docs/utils/Introduction/Introduction',
-					activeBasePath: 'docs',
-					label: 'Utils',
-					position: 'left'
+          label: 'Packages',
+          position: 'left',
+          items: [
+            {
+              to: 'docs/core/',
+              label: 'Core',
+              position: 'left'
+            },
+            {
+              to: 'docs/types/',
+              label: 'Types',
+              position: 'left'
+            },
+            {
+              to: 'docs/endpoints/',
+              label: 'Endpoints',
+              position: 'left'
+            },
+            {
+              to: 'docs/sync/',
+              label: 'Sync',
+              position: 'left'
+            },
+            {
+              to: 'docs/markdown/',
+              label: 'Markdown',
+              position: 'left'
+            },
+            {
+              to: 'docs/notion-formula/',
+              label: 'NF',
+              position: 'left'
+            },
+            {
+              to: 'docs/utils/',
+              label: 'Utils',
+              position: 'left'
+            },
+          ]
         },
         {
           href: 'https://github.com/Devorein/Nishan',

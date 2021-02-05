@@ -8,6 +8,11 @@ module.exports = {
 	organizationName: 'Nishan',
 	projectName: 'Nishan',
 	themeConfig: {
+    announcementBar: {
+      id: 'support_nishan',
+      content:
+        'If you like Nishan, do give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/devorein/Nishan">GitHub</a>!',
+    },
     prism: {
       theme: require('prism-react-renderer/themes/github'),
       darkTheme: require('prism-react-renderer/themes/vsDark'),
@@ -23,6 +28,7 @@ module.exports = {
 				alt: 'Nishan Logo',
 				src: 'img/root/logo.svg'
 			},
+      hideOnScroll: true,
 			items: [
         {
           label: 'Docs',
@@ -117,7 +123,7 @@ module.exports = {
           ],
         }
 			],
-			copyright: `Copyright © ${new Date().getFullYear()}. Made by devorein, hosted on netlify.`
+			copyright: `Copyright © ${new Date().getFullYear()}. Made by <a href="https://github.com/devorein" target="_blank">devorein</a>, hosted on netlify.`
 		}
 	},
 	presets: [

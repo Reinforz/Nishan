@@ -2,13 +2,24 @@ import { Cache } from '../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import deepEqual from 'deep-equal';
-import { GetSpacesData, LoadUserContentData } from './data';
+import { ExternalNotionUser, ExternalNotionUserData, GetSpacesData, LoadUserContentData } from '../utils/data';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
 const mock = new MockAdapter(axios);
 
 describe('Cache class', () => {
+	it(`constructor`, () => {
+		expect(
+			() =>
+				new Cache({
+					cache: {
+						block: new Map()
+					}
+				} as any)
+		).toThrow();
+	});
+
 	it(`getConfigs method`, () => {
 		const cache = new Cache({
 			token: 'token'
@@ -47,14 +58,21 @@ describe('Cache class', () => {
 		cache.saveToCache(LoadUserContentData.recordMap);
 		const non_cached_data = cache.returnNonCachedData([
 			[ 'd94caf87-a207-45c3-b3d5-03d157b5b39b', 'notion_user' ],
-			[ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ]
+			[ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ],
+			'd94caf87-a207-45c3-b3d5-03d157b5b39d'
 		]);
 
-		expect(deepEqual(non_cached_data, [ [ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ] ])).toBe(true);
+		expect(
+			deepEqual(non_cached_data, [
+				[ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ],
+				'd94caf87-a207-45c3-b3d5-03d157b5b39d'
+			])
+		).toBe(true);
 	});
 
 	it(`initializeCache method`, async () => {
 		mock.onPost(`/getSpaces`).replyOnce(200, GetSpacesData);
+		mock.onPost(`/syncRecordValues`).replyOnce(200, { recordMap: { notion_user: ExternalNotionUserData } });
 
 		const cache = new Cache({
 			token: 'token'
@@ -63,5 +81,25 @@ describe('Cache class', () => {
 		await cache.initializeCache();
 		expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
 		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+		expect(cache.cache.notion_user.get(ExternalNotionUser.id)).not.toBeUndefined();
+	});
+
+	it(`updateCacheManually method`, async () => {
+		const cache = new Cache({
+			token: 'token'
+		});
+		mock.onPost(`/syncRecordValues`).replyOnce(200, LoadUserContentData);
+
+		await cache.updateCacheManually([
+			'4b4bb21d-f68b-4113-b342-830687a5337a',
+			[ 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b', 'collection' ]
+		]);
+		expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+
+		mock.onPost(`/syncRecordValues`).replyOnce(200, LoadUserContentData);
+
+		cache.updateCacheManually('6eae77bf-64cd-4ed0-adfb-e97d928a6402');
+		expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
 	});
 });

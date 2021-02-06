@@ -24,7 +24,7 @@ export default class Cache {
 		this.headers = constructNotionHeaders({token, user_id});
 		this.token = token;
 		this.interval = interval ?? 500;
-		this.user_id = user_id ?? '';
+		this.user_id = this.headers.headers["x-notion-active-user-header"];
 	}
 
 	getConfigs = (): Configs => {
@@ -42,7 +42,7 @@ export default class Cache {
 	saveToCache (recordMap: Partial<RecordMap>) {
 		(Object.keys(this.cache) as (keyof ICache)[]).forEach((key) => {
 			if (recordMap[key])
-				Object.entries(recordMap[key] || {}).forEach(([ record_id, record_value ]) => {
+				Object.entries(recordMap[key] as Record<any, any>).forEach(([ record_id, record_value ]) => {
 					this.cache[key].set(record_id, record_value.value);
 				});
 		});
@@ -66,10 +66,12 @@ export default class Cache {
     });
 
     const external_notion_users_arr = Array.from(external_notion_users.values());
+
     if(external_notion_users_arr.length !== 0){
       const { recordMap } = await syncRecordValues({
         requests: external_notion_users_arr.map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
       }, {token: this.token, interval: 0});
+      
       this.saveToCache(recordMap);
     }
   }

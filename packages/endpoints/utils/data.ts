@@ -1,5 +1,21 @@
-import { GetSpacesResult, LoadUserContentResult, TView, ViewData } from '@nishans/types';
+import { GetSpacesResult, INotionUser, LoadUserContentResult, NotionUserData, TView, ViewData } from '@nishans/types';
 
+export const ExternalNotionUser: INotionUser = {
+	id: 'd94caf87-a207-45c3-b3d5-03d157b5b39c',
+	version: 3,
+	email: 'johndoe@gmail.com',
+	given_name: 'John',
+	family_name: 'Doe',
+	profile_photo: 'https://img.john.doe.jpg',
+	onboarding_completed: true
+};
+
+export const ExternalNotionUserData: NotionUserData = {
+	'd94caf87-a207-45c3-b3d5-03d157b5b39c': {
+		role: 'editor',
+		value: ExternalNotionUser
+	}
+};
 export const LoadUserContentData: LoadUserContentResult = {
 	recordMap: {
 		notion_user: {
@@ -76,6 +92,11 @@ export const LoadUserContentData: LoadUserContentResult = {
 							role: 'editor',
 							type: 'user_permission',
 							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
+						},
+						{
+							role: 'comment_only',
+							type: 'user_permission',
+							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39c'
 						}
 					],
 					beta_enabled: false,

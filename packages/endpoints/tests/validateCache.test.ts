@@ -1,4 +1,4 @@
-import { ICache, validatePassedCacheArgument } from '../src';
+import { ICache, validateCache } from '../src';
 
 const correct_cache: ICache = {
 	block: new Map(),
@@ -11,10 +11,10 @@ const correct_cache: ICache = {
 	user_settings: new Map()
 };
 
-describe('validatePassedCacheArgument', () => {
+describe('validateCache', () => {
 	it(`Should fail if cache_item is not a Map`, () => {
 		expect(() =>
-			validatePassedCacheArgument({
+			validateCache({
 				...correct_cache,
 				block: true
 			} as any)
@@ -23,7 +23,7 @@ describe('validatePassedCacheArgument', () => {
 
 	it(`Should fail if cache_item is not passed`, () => {
 		expect(() =>
-			validatePassedCacheArgument({
+			validateCache({
 				block: new Map(),
 				collection: new Map(),
 				space: new Map(),
@@ -35,12 +35,46 @@ describe('validatePassedCacheArgument', () => {
 		).toThrow(`user_settings must be present in Cache argument`);
 	});
 
-	it(`Should fail an unknown cache_item is passed`, () => {
+	it(`Should fail if an unknown cache_item is passed`, () => {
 		expect(() =>
-			validatePassedCacheArgument({
+			validateCache({
 				...correct_cache,
 				unknown: new Map()
 			} as any)
 		).toThrow(`Unknown key unknown passed`);
+	});
+
+	it.only(`Should fail if the passed value is not of correct structure`, () => {
+		expect(() =>
+			validateCache({
+				...correct_cache,
+				block: new Map([
+					[
+						'123',
+						{
+							value: {}
+						}
+					]
+				])
+			} as any)
+		).toThrow(`No role key present`);
+
+		expect(() =>
+			validateCache({
+				...correct_cache,
+				block: new Map([
+					[
+						'123',
+						{
+							role: 123
+						}
+					]
+				])
+			} as any)
+		).toThrow(`No value key present`);
+	});
+
+	it(`Should return cache if no error is thrown`, () => {
+		expect(() => validateCache(correct_cache)).toBeTruthy();
 	});
 });

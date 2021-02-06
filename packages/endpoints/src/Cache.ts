@@ -1,5 +1,5 @@
 import { ICollection, ISpace, ISpaceView, IUserRoot, RecordMap, SyncRecordValues, TBlock, TDataType } from '@nishans/types';
-import { validatePassedCacheArgument, constructNotionHeaders } from '../utils';
+import { validateCache, constructNotionHeaders } from '../utils';
 import { getSpaces, queryCollection, syncRecordValues } from '../src';
 import { Configs, CtorArgs, ICache, NotionHeaders, UpdateCacheManuallyParam } from './types';
 
@@ -11,7 +11,7 @@ export default class Cache {
 	user_id: string;
 
 	constructor ({ cache, token, interval, user_id }: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
-		this.cache = (cache && validatePassedCacheArgument(cache)) || {
+		this.cache = (cache && validateCache(cache)) || {
 			block: new Map(),
 			collection: new Map(),
 			space: new Map(),

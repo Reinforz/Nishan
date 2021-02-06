@@ -4,7 +4,7 @@ import { Configs, NotionHeaders } from "../src";
 
 const BASE_NOTION_URL = "https://www.notion.so/api/v3"
 
-export function constructHeaders(configs: Configs): NotionHeaders{
+export function constructNotionHeaders(configs: Configs): NotionHeaders{
   const {token, user_id = ''} = configs;
   if(!token)
     throw new Error('Token not provided')
@@ -17,7 +17,7 @@ export function constructHeaders(configs: Configs): NotionHeaders{
 }
 
 export function sendApiRequest<T>(url: string, arg: any, configs: Configs ){
-  const headers = constructHeaders(configs)
+  const headers = constructNotionHeaders(configs)
   return axios.post<T>(
     `${BASE_NOTION_URL}/${url}`,
     arg,

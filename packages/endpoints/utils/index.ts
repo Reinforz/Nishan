@@ -1,6 +1,7 @@
 export * from './createTransaction';
 export * from './queryRequests';
 export * from './mutationRequests';
-import { sendRequest } from './sendRequest';
+export * from './validatePassedCacheArgument';
+import { constructNotionHeaders, sendRequest } from './sendRequest';
 
-export { sendRequest };
+export { sendRequest, constructNotionHeaders };

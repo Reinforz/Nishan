@@ -1,21 +1,17 @@
 import { ICollection, ISpace, ISpaceView, IUserRoot, RecordMap, SyncRecordValues, TBlock, TDataType } from '@nishans/types';
+import { validatePassedCacheArgument, constructNotionHeaders } from '../utils';
 import { getSpaces, queryCollection, syncRecordValues } from '../src';
-import { Configs, CtorArgs, ICache, UpdateCacheManuallyParam } from './types';
+import { Configs, CtorArgs, ICache, NotionHeaders, UpdateCacheManuallyParam } from './types';
 
 export default class Cache {
 	cache: ICache;
 	token: string;
 	interval: number;
-	headers: {
-		headers: {
-			cookie: string;
-			['x-notion-active-user-header']: string;
-		};
-	};
+	headers: NotionHeaders;
 	user_id: string;
 
 	constructor ({ cache, token, interval, user_id }: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
-		this.cache = cache || {
+		this.cache = (cache && validatePassedCacheArgument(cache)) || {
 			block: new Map(),
 			collection: new Map(),
 			space: new Map(),
@@ -25,18 +21,13 @@ export default class Cache {
 			user_root: new Map(),
 			user_settings: new Map()
 		};
+		this.headers = constructNotionHeaders({token, user_id});
 		this.token = token;
-		this.interval = interval ?? 1000;
-		this.headers = {
-			headers: {
-				cookie: `token_v2=${token};notion_user_id=${user_id};`,
-				['x-notion-active-user-header']: user_id ?? ''
-			}
-		};
+		this.interval = interval ?? 500;
 		this.user_id = user_id ?? '';
 	}
 
-	protected getConfigs = (): Configs => {
+	getConfigs = (): Configs => {
 		return {
 			token: this.token,
 			user_id: this.user_id,

@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
 import { sendRequest } from '../src';
-import { sendApiRequest, constructHeaders } from '../utils/sendRequest';
+import { sendApiRequest, constructNotionHeaders } from '../utils/sendRequest';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { SyncRecordValuesResult } from '@nishans/types';
@@ -9,10 +9,10 @@ axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
 const mock = new MockAdapter(axios);
 
-describe('constructHeaders', () => {
+describe('constructNotionHeaders', () => {
 	it(`Should throw an error if token not provided`, () => {
 		expect(() =>
-			constructHeaders({
+			constructNotionHeaders({
 				token: ''
 			})
 		).toThrow('Token not provided');
@@ -21,7 +21,7 @@ describe('constructHeaders', () => {
 	it(`Should return properly constructed header`, () => {
 		expect(
 			deepEqual(
-				constructHeaders({
+				constructNotionHeaders({
 					token: 'token'
 				}),
 				{
@@ -35,7 +35,7 @@ describe('constructHeaders', () => {
 
 		expect(
 			deepEqual(
-				constructHeaders({
+				constructNotionHeaders({
 					token: 'token',
 					user_id: '123'
 				}),

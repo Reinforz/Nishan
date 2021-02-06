@@ -143,6 +143,28 @@ export const LoadUserContentData: LoadUserContentResult = {
 					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
 				}
 			},
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6401': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6401',
+					version: 16,
+					type: 'header',
+					properties: {
+						title: [ [ 'Header' ] ]
+					},
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: '6eae77bf-64cd-4ed0-adfb-e97d928a6402',
+					parent_table: 'block',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
 			'6eae77bf-64cd-4ed0-adfb-e97d928a6402': {
 				role: 'editor',
 				value: {
@@ -152,7 +174,7 @@ export const LoadUserContentData: LoadUserContentResult = {
 					properties: {
 						title: [ [ 'Page' ] ]
 					},
-					content: [ '041173d7-8168-42b9-9440-c0b287573da9' ],
+					content: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6401' ],
 					permissions: [
 						{
 							role: 'editor',

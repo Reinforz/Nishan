@@ -136,7 +136,8 @@ export default class Cache {
     else if (type === "space_view")
       container.push(...(data as ISpaceView).bookmarked_pages ?? [])
 
-    const non_cached = this.returnNonCachedData(container)
+    const non_cached = this.returnNonCachedData(container);
+    
     await this.updateCacheManually(non_cached);
 
     // If the block is a page, for all the collection block contents, fetch the collection attached with it as well
@@ -150,8 +151,7 @@ export default class Cache {
           if(content && (content.type === "collection_view_page" || content.type === "collection_view"))
             collection_blocks_ids.push([content.collection_id, "collection"])
         }
-        const non_cached = this.returnNonCachedData(collection_blocks_ids)
-        await this.updateCacheManually(non_cached);
+        await this.updateCacheManually(this.returnNonCachedData(collection_blocks_ids));
       }
     }
   }

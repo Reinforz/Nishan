@@ -58,8 +58,9 @@ export default class Cache {
     const data = await getSpaces({token: this.token, interval: 0}); 
     const external_notion_users: Set<string> = new Set();
     Object.values(data).forEach(recordMap => {
+      const user_root_id = Object.keys(recordMap.user_root)[0];
       Object.values(recordMap.space).forEach(space => space.value.permissions.forEach(permission =>
-        permission.user_id && external_notion_users.add(permission.user_id)
+        permission.user_id && permission.user_id !== user_root_id && external_notion_users.add(permission.user_id)
       ))
       this.saveToCache(recordMap)
     });

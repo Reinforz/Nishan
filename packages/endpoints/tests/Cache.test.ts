@@ -2,7 +2,7 @@ import { Cache } from '../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import deepEqual from 'deep-equal';
-import { LoadUserContentData } from './data';
+import { GetSpacesData, LoadUserContentData } from './data';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
@@ -53,14 +53,15 @@ describe('Cache class', () => {
 		expect(deepEqual(non_cached_data, [ [ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ] ])).toBe(true);
 	});
 
-	/* it(`initializeCache method`, async () => {
+	it(`initializeCache method`, async () => {
+		mock.onPost(`/getSpaces`).replyOnce(200, GetSpacesData);
+
 		const cache = new Cache({
 			token: 'token'
 		});
-		mock.onPost(`/getSpaces`).replyOnce(200, LoadUserContentResult.recordMap);
 
 		await cache.initializeCache();
-
-		expect(deepEqual(non_cached_data, [ [ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ] ])).toBe(true);
-	}); */
+		expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+	});
 });

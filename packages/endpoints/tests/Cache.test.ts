@@ -102,4 +102,30 @@ describe('Cache class', () => {
 		cache.updateCacheManually('6eae77bf-64cd-4ed0-adfb-e97d928a6402');
 		expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
 	});
+
+	it(`updateCacheIfNotPresent method`, async () => {
+		const cache = new Cache({
+			token: 'token'
+		});
+
+		cache.saveToCache({
+			collection: LoadUserContentData.recordMap.collection
+		});
+
+		mock
+			.onPost(`/syncRecordValues`)
+			.replyOnce(200, {
+				recordMap: { block: LoadUserContentData.recordMap.block, space: LoadUserContentData.recordMap.space }
+			});
+
+		await cache.updateCacheIfNotPresent([
+			'4b4bb21d-f68b-4113-b342-830687a5337a',
+			[ 'd2498a62-99ed-4ffd-b56d-e986001729f4', 'space' ],
+			[ 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b', 'collection' ]
+		]);
+
+		expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+		expect(cache.cache.space.get('d2498a62-99ed-4ffd-b56d-e986001729f4')).not.toBeUndefined();
+		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+	});
 });

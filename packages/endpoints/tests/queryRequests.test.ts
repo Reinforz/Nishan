@@ -1,4 +1,4 @@
-import * as queries from '../utils/queries';
+import * as queries from '../utils/queryRequests';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import deepEqual from 'deep-equal';

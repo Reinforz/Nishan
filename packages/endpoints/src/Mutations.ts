@@ -11,7 +11,7 @@ import {
 	InitializeGoogleDriveBlockParams,
 	InitializePageTemplateParams
 } from '@nishans/types';
-import { CtorArgs, Configs } from './types';
+import { CtorArgs } from './types';
 import {
 	createSpace,
 	createTransaction,
@@ -40,11 +40,11 @@ export default class Mutations extends Queries {
 	}
 
 	async setPageNotificationsAsRead (arg: SetPageNotificationsAsReadParams) {
-		return setPageNotificationsAsRead(arg, this.getConfigs());
+		return await setPageNotificationsAsRead(arg, this.getConfigs());
 	}
 
 	async setSpaceNotificationsAsRead (arg: SetSpaceNotificationsAsReadParams) {
-		return setSpaceNotificationsAsRead(arg, this.getConfigs());
+		return await setSpaceNotificationsAsRead(arg, this.getConfigs());
 	}
 
 	async removeUsersFromSpace (arg: RemoveUsersFromSpaceParams) {
@@ -54,7 +54,7 @@ export default class Mutations extends Queries {
 	}
 
 	async inviteGuestsToSpace (arg: InviteGuestsToSpaceParams) {
-		return inviteGuestsToSpace(arg, this.getConfigs());
+		return await inviteGuestsToSpace(arg, this.getConfigs());
 	}
 
 	async createSpace (arg: CreateSpaceParams) {
@@ -70,7 +70,7 @@ export default class Mutations extends Queries {
 	}
 
 	async setBookmarkMetadata (arg: SetBookmarkMetadataParams) {
-		await setBookmarkMetadata(arg, this.getConfigs());
+		return await setBookmarkMetadata(arg, this.getConfigs());
 	}
 
 	async initializeGoogleDriveBlock (arg: InitializeGoogleDriveBlockParams) {

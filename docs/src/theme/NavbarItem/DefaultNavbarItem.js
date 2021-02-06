@@ -38,7 +38,7 @@ function NavLink({
       {icon && <div className={`${activeClassName}_item_icon`}>
         <img src={icon}/>
       </div>}
-      <div className={`${activeClassName}_item_label ${styles.dropdownItemLabel}`}>{label}</div>
+      <div className={`${activeClassName}_item_label ml-2 ${styles.dropdownItemLabel}`}>{label}</div>
     </div>
     </Link>;
 }

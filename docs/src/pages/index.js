@@ -62,8 +62,8 @@ function Home() {
       </Head>
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <img height="250" src={`${siteConfig.favicon}`}/>
-          <p className="hero__subtitle"><b>{siteConfig.tagline}</b></p>
+          <img className="hero__image mx-auto" height="250" src={`${siteConfig.favicon}`}/>
+          <p className="hero__subtitle my-2"><b>{siteConfig.tagline}</b></p>
           <div className={styles.buttons}>
             <Link
               className={clsx(
@@ -74,7 +74,7 @@ function Home() {
               Get Started
             </Link>
           </div>
-          <a className="github-star" href="https://github.com/Devorein/Nishan">
+          <a className="github-star flex justify-center mt-3" href="https://github.com/Devorein/Nishan">
             <img height="25" src="https://img.shields.io/github/stars/devorein/nishan?style=social"/>
           </a>
         </div>

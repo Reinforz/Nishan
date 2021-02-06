@@ -34,7 +34,8 @@ const mock = new MockAdapter(axios);
 			};
 		mock.onPost(`/${method}`).replyOnce(200, response_data);
 		const response = await (queries as any)[method](request_data, {
-			token: 'token'
+			token: 'token',
+			interval: 0
 		});
 		expect(deepEqual(response_data, response)).toBe(true);
 	});

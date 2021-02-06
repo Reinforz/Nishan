@@ -22,45 +22,40 @@ const mutations = new Mutations({
 });
 
 describe('Mutations class', () => {
-	it(`setPageNotificationsAsRead should work correctly`, async () => {
-		mock.onPost(`/setPageNotificationsAsRead`).replyOnce(200, response_data);
-		const response = await mutations.setPageNotificationsAsRead(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
+	[
+		'setPageNotificationsAsRead',
+		'setSpaceNotificationsAsRead',
+		'inviteGuestsToSpace',
+		'createSpace',
+		'saveTransactions',
+		'enqueueTask',
+		'setBookmarkMetadata'
+	].map((method) => {
+		it(`${method}`, async () => {
+			mock.onPost(`/${method}`).replyOnce(200, response_data);
+			const response = await (mutations as any)[method](request_data);
+			expect(deepEqual(response_data, response)).toBe(true);
+		});
 	});
 
-	it(`setSpaceNotificationsAsRead should work correctly`, async () => {
-		mock.onPost(`/setSpaceNotificationsAsRead`).replyOnce(200, response_data);
-		const response = await mutations.setSpaceNotificationsAsRead(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
-	});
-
-	it(`inviteGuestsToSpace should work correctly`, async () => {
-		mock.onPost(`/inviteGuestsToSpace`).replyOnce(200, response_data);
-		const response = await mutations.inviteGuestsToSpace(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
-	});
-
-	it(`createSpace should work correctly`, async () => {
-		mock.onPost(`/createSpace`).replyOnce(200, response_data);
-		const response = await mutations.createSpace(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
-	});
-
-	it(`saveTransactions should work correctly`, async () => {
-		mock.onPost(`/saveTransactions`).replyOnce(200, response_data);
-		const response = await mutations.saveTransactions(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
-	});
-
-	it(`enqueueTask should work correctly`, async () => {
-		mock.onPost(`/enqueueTask`).replyOnce(200, response_data);
-		const response = await mutations.enqueueTask(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
-	});
-
-	it(`setBookmarkMetadata should work correctly`, async () => {
-		mock.onPost(`/setBookmarkMetadata`).replyOnce(200, response_data);
-		const response = await mutations.setBookmarkMetadata(request_data);
-		expect(deepEqual(response_data, response)).toBe(true);
+	[ 'initializeGoogleDriveBlock', 'initializePageTemplate', 'removeUsersFromSpace' ].map((method) => {
+		it(`${method}`, async () => {
+			mock.onPost(`/${method}`).replyOnce(200, {
+				recordMap: {
+					block: response_data
+				}
+			});
+			const response = await (mutations as any)[method](request_data);
+			expect(
+				deepEqual(
+					{
+						recordMap: {
+							block: response_data
+						}
+					},
+					response
+				)
+			).toBe(true);
+		});
 	});
 });

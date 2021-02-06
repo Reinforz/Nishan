@@ -26,7 +26,7 @@ export default class Cache {
 			user_settings: new Map()
 		};
 		this.token = token;
-		this.interval = interval || 1000;
+		this.interval = interval ?? 1000;
 		this.headers = {
 			headers: {
 				cookie: `token_v2=${token};notion_user_id=${user_id};`,

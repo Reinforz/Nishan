@@ -142,7 +142,6 @@ export default class Cache {
         container.push(...(data as ISpaceView).bookmarked_pages as string[])
 
     const non_cached = this.returnNonCachedData(container);
-    console.log(non_cached);
     
     await this.updateCacheManually(non_cached);
 

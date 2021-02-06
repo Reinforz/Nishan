@@ -134,17 +134,18 @@ describe('Cache class', () => {
 			});
 			const copied_block_data = JSON.parse(JSON.stringify(LoadUserContentData.recordMap.block));
 			delete copied_block_data['6eae77bf-64cd-4ed0-adfb-e97d928a6401'];
+			delete copied_block_data['4b4bb21d-f68b-4113-b342-830687a5337b'];
 			cache.saveToCache({ block: copied_block_data });
 			mock.onPost(`/syncRecordValues`).replyOnce(200, {
 				recordMap: {
-					block: {
-						'6eae77bf-64cd-4ed0-adfb-e97d928a6401':
-							LoadUserContentData.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6401']
-					}
+					block: LoadUserContentData.recordMap.block,
+					collection: LoadUserContentData.recordMap.collection
 				}
 			});
 			await cache.initializeCacheForSpecificData('6eae77bf-64cd-4ed0-adfb-e97d928a6402', 'block');
 			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6401')).not.toBeUndefined();
+			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337b')).not.toBeUndefined();
+			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c')).not.toBeUndefined();
 		});
 
 		it(`Should work for type collection_view_page`, async () => {

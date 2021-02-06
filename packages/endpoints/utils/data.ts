@@ -115,6 +115,27 @@ export const LoadUserContentData: LoadUserContentResult = {
 			}
 		},
 		block: {
+			'4b4bb21d-f68b-4113-b342-830687a5337b': {
+				role: 'editor',
+				value: {
+					id: '4b4bb21d-f68b-4113-b342-830687a5337b',
+					version: 23,
+					type: 'collection_view',
+					view_ids: [],
+					collection_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c',
+					created_time: 1602390407523,
+					last_edited_time: 1609505580000,
+					parent_id: '6eae77bf-64cd-4ed0-adfb-e97d928a6402',
+					parent_table: 'block',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
 			'4b4bb21d-f68b-4113-b342-830687a5337a': {
 				role: 'editor',
 				value: {
@@ -174,7 +195,7 @@ export const LoadUserContentData: LoadUserContentResult = {
 					properties: {
 						title: [ [ 'Page' ] ]
 					},
-					content: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6401' ],
+					content: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6401', '4b4bb21d-f68b-4113-b342-830687a5337b' ],
 					permissions: [
 						{
 							role: 'editor',
@@ -203,7 +224,7 @@ export const LoadUserContentData: LoadUserContentResult = {
 					version: 16,
 					type: 'page',
 					properties: {
-						title: [ [ 'Page' ] ]
+						title: [ [ 'Row Page' ] ]
 					},
 					content: [],
 					permissions: [
@@ -234,7 +255,7 @@ export const LoadUserContentData: LoadUserContentResult = {
 					version: 16,
 					type: 'page',
 					properties: {
-						title: [ [ 'Page' ] ]
+						title: [ [ 'Template Page' ] ]
 					},
 					content: [],
 					permissions: [],
@@ -259,12 +280,8 @@ export const LoadUserContentData: LoadUserContentResult = {
 					id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b',
 					version: 89,
 					cover: '',
-					name: [ [ 'Collection View Page' ] ],
+					name: [ [ 'Collection View Page 1' ] ],
 					schema: {
-						';pxx': {
-							name: 'Date',
-							type: 'date'
-						},
 						title: {
 							name: 'Name',
 							type: 'title'
@@ -272,6 +289,26 @@ export const LoadUserContentData: LoadUserContentResult = {
 					},
 					template_pages: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6404' ],
 					parent_id: '4b4bb21d-f68b-4113-b342-830687a5337a',
+					parent_table: 'block',
+					alive: true,
+					migrated: true
+				}
+			},
+			'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c': {
+				role: 'editor',
+				value: {
+					id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c',
+					version: 89,
+					cover: '',
+					name: [ [ 'Collection View Page 2' ] ],
+					schema: {
+						title: {
+							name: 'Name',
+							type: 'title'
+						}
+					},
+					template_pages: [],
+					parent_id: '4b4bb21d-f68b-4113-b342-830687a5337b',
 					parent_table: 'block',
 					alive: true,
 					migrated: true

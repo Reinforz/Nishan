@@ -1,4 +1,5 @@
 import { ICache, validateCache } from '../src';
+import { LoadUserContentData } from '../utils/data';
 
 const correct_cache: ICache = {
 	block: new Map(),
@@ -44,37 +45,17 @@ describe('validateCache', () => {
 		).toThrow(`Unknown key unknown passed`);
 	});
 
-	it(`Should fail if the passed value is not of correct structure`, () => {
-		expect(() =>
-			validateCache({
-				...correct_cache,
-				block: new Map([
-					[
-						'123',
-						{
-							value: {}
-						}
-					]
-				])
-			} as any)
-		).toThrow(`No role key present`);
-
-		expect(() =>
-			validateCache({
-				...correct_cache,
-				block: new Map([
-					[
-						'123',
-						{
-							role: 123
-						}
-					]
-				])
-			} as any)
-		).toThrow(`No value key present`);
-	});
-
 	it(`Should return cache if no error is thrown`, () => {
-		expect(() => validateCache(correct_cache)).toBeTruthy();
+		expect(
+			validateCache({
+				...correct_cache,
+				block: new Map([
+					[
+						'4b4bb21d-f68b-4113-b342-830687a5337b',
+						{ ...LoadUserContentData.recordMap.block['4b4bb21d-f68b-4113-b342-830687a5337b'].value }
+					]
+				])
+			})
+		).toBeTruthy();
 	});
 });

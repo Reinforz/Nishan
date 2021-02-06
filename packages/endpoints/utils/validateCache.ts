@@ -1,11 +1,6 @@
 import { TBlock, TPermissionRole } from '@nishans/types';
 import { ICache } from '../src';
 
-interface data {
-	role: TPermissionRole;
-	value: TBlock;
-}
-
 export function validateCache (cache: ICache) {
 	const cache_keys: (keyof ICache)[] = [
 		'block',
@@ -28,11 +23,6 @@ export function validateCache (cache: ICache) {
 		if (!cache_keys.includes(cache_item)) throw new Error(`Unknown key ${cache_key} passed`);
 		const is_map = cache[cache_item] instanceof Map;
 		if (!is_map) throw new Error(`${cache_item} is not an instance of Map`);
-		const values = Array.from(((cache as any)[cache_item] as Map<string, data>).values());
-		values.forEach((value) => {
-			if (!value.value) throw new Error(`No value key present`);
-			if (!value.role) throw new Error(`No role key present`);
-		});
 	});
 	return cache;
 }

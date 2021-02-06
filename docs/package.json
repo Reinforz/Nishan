@@ -1,10 +1,12 @@
 {
   "scripts": {
     "start": "docusaurus start",
+    "prebuild": "npm run build:css",
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "swizzle": "docusaurus swizzle",
-    "deploy": "npm run build && netlify deploy --dir build --site 5bfd8efd-d458-406f-bc01-f381bac68a66 --message \"Deployed nishans doc\" --prod"
+    "deploy": "npm run build && netlify deploy --dir build --site 5bfd8efd-d458-406f-bc01-f381bac68a66 --message \"Deployed nishans doc\" --prod",
+    "build:css": "tailwindcss-cli build ./src/css/tailwind.css -o ./static/css/tailwind.css"
   },
   "license": "MIT",
   "dependencies": {
@@ -19,7 +21,8 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "typedoc": "^0.20.20",
-    "typedoc-plugin-markdown": "^3.4.5"
+    "typedoc-plugin-markdown": "^3.4.5",
+    "tailwindcss-cli": "0.1.2"
   },
   "browserslist": {
     "production": [

@@ -58,6 +58,7 @@ function Home() {
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+        <link href="/css/tailwind.css" rel="stylesheet"/>
       </Head>
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">

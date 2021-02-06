@@ -1,0 +1,115 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.toggle {
+  align-items: center;
+  display: flex;
+  height: 10px;
+  justify-content: center;
+  width: 10px;
+}
+.toggle::before {
+  position: absolute;
+}
+
+:global(.react-toggle_icon){
+  display: block;
+  width: 75%;
+  height: 75%;
+}
+
+/**
+ * styles for React Toggle
+ * copied over because we want to allow user to swizzle it and modify the css
+ * and also to make sure its compatible with our dark mode
+ * https://github.com/aaronshaf/react-toggle/blob/master/style.css
+ */
+
+:global(.react-toggle) {
+  touch-action: pan-x;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:global(.react-toggle-screenreader-only) {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}
+
+:global(.react-toggle--disabled) {
+  cursor: not-allowed;
+}
+
+:global(.react-toggle-track) {
+  width: 50px;
+  height: 24px;
+  border-radius: 15px;
+  background-color: #4d4d4d;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+:global(.react-toggle-track > div){
+  transition: opacity 0.25s ease;
+  width: 50%;
+  height: 100%;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.react-toggle-track-check) {
+  opacity: 0;
+}
+
+:global([data-theme='dark'] .react-toggle .react-toggle-track-check),
+:global(.react-toggle--checked .react-toggle-track-check) {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+:global(.react-toggle-track-x) {
+  opacity: 1;
+}
+
+:global([data-theme='dark'] .react-toggle .react-toggle-track-x),
+:global(.react-toggle--checked .react-toggle-track-x) {
+  opacity: 0;
+}
+
+:global(.react-toggle-thumb) {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--ifm-color-secondary);
+  transition: all 0.25s ease;
+}
+
+:global([data-theme='dark'] .react-toggle .react-toggle-thumb),
+:global(.react-toggle--checked .react-toggle-thumb) {
+  left: 30px;
+}
+
+:global(.react-toggle--focus .react-toggle-thumb) {
+  box-shadow: 0px 0px 2px 3px var(--ifm-color-primary);
+}
+
+:global(.react-toggle:active:not(.react-toggle--disabled) .react-toggle-thumb) {
+  box-shadow: 0px 0px 5px 5px var(--ifm-color-primary);
+}

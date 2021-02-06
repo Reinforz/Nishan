@@ -60,7 +60,8 @@ describe('sendApiRequest', () => {
 			};
 		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
 		const response = await sendApiRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
-			token: 'token'
+			token: 'token',
+			interval: 0
 		});
 
 		expect(deepEqual(JSON.parse(response.config.data), request_data)).toBe(true);
@@ -79,7 +80,8 @@ describe('sendRequest', () => {
 			};
 		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
 		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
-			token: 'token'
+			token: 'token',
+			interval: 0
 		});
 		expect(deepEqual(response, response_data)).toBe(true);
 	});
@@ -94,7 +96,7 @@ describe('sendRequest', () => {
 		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
 		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
 			token: 'token',
-			interval: 500
+			interval: 0
 		});
 		expect(deepEqual(response, response_data)).toBe(true);
 	});
@@ -107,7 +109,7 @@ describe('sendRequest', () => {
 		try {
 			await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
 				token: 'token',
-				interval: 500
+				interval: 0
 			});
 		} catch (err) {
 			expect(err).toBeTruthy();

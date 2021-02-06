@@ -119,7 +119,7 @@ export default class Cache {
       container.push(...temp_data.pages);
       temp_data.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
     } else if (type === "user_root")
-      (data as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"]))) ?? []
+      (data as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"])))
     else if (type === "collection") {
       container.push(...((data as ICollection).template_pages ?? []))
       const {recordMap} = await queryCollection({
@@ -149,8 +149,8 @@ export default class Cache {
       if(temp_data.type === "page"){
         const collection_blocks_ids: UpdateCacheManuallyParam = [];
         for (let index = 0; index < temp_data.content.length; index++) {
-          const content_id = temp_data.content[index];
-          const content = this.cache.block.get(content_id)
+          const content_id = temp_data.content[index],
+            content = this.cache.block.get(content_id)
           if(content && (content.type === "collection_view_page" || content.type === "collection_view"))
             collection_blocks_ids.push([content.collection_id, "collection"])
         }

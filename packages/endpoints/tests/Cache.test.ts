@@ -127,7 +127,7 @@ describe('Cache class', () => {
 		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
 	});
 
-	describe.only('initializeCacheForSpecificData', () => {
+	describe('initializeCacheForSpecificData', () => {
 		it(`Should work for type block`, async () => {
 			const cache = new Cache({
 				token: 'token'
@@ -174,6 +174,35 @@ describe('Cache class', () => {
 				}
 			});
 			await cache.initializeCacheForSpecificData('d2498a62-99ed-4ffd-b56d-e986001729f4', 'space');
+			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
+			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+		});
+
+		it(`Should work for type user_root`, async () => {
+			const cache = new Cache({
+				token: 'token'
+			});
+			cache.saveToCache({ user_root: LoadUserContentData.recordMap.user_root });
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					space_view: LoadUserContentData.recordMap.space_view
+				}
+			});
+			await cache.initializeCacheForSpecificData('d94caf87-a207-45c3-b3d5-03d157b5b39b', 'user_root');
+			expect(cache.cache.space_view.get('ccfc7afe-c14f-4764-9a89-85659217eed7')).not.toBeUndefined();
+		});
+
+		it(`Should work for type space_view`, async () => {
+			const cache = new Cache({
+				token: 'token'
+			});
+			cache.saveToCache({ space_view: LoadUserContentData.recordMap.space_view });
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					block: LoadUserContentData.recordMap.block
+				}
+			});
+			await cache.initializeCacheForSpecificData('ccfc7afe-c14f-4764-9a89-85659217eed7', 'space_view');
 			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
 			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
 		});

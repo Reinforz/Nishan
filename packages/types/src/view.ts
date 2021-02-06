@@ -1,4 +1,4 @@
-import { ParentProps, Node, IViewFilter, ViewAggregations } from './';
+import { ParentProps, Node, IViewFilter, ViewAggregations, SpaceShardProps } from './';
 
 export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
 export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property'; property: string };
@@ -24,8 +24,8 @@ export interface ITableViewFormat {
 	table_properties: ViewFormatProperties[];
 }
 
-export type ITableViewQuery2 = IViewQuery2;
-export interface ITableView extends Node, ParentProps {
+export type ITableViewQuery2 = Partial<IViewQuery2>;
+export interface ITableView extends Node, ParentProps, SpaceShardProps {
 	name: string;
 	type: 'table';
 	page_sort: string[];
@@ -37,8 +37,8 @@ export interface IListViewFormat {
 	list_properties: ViewFormatProperties[];
 }
 
-export type IListViewQuery2 = Omit<IViewQuery2, 'aggregations'>;
-export interface IListView extends Node, ParentProps {
+export type IListViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>>;
+export interface IListView extends Node, ParentProps, SpaceShardProps {
 	name: string;
 	type: 'list';
 	format: IListViewFormat;
@@ -53,11 +53,11 @@ export interface IBoardViewFormat {
 	board_properties: ViewFormatProperties[];
 }
 
-export type IBoardViewQuery2 = IViewQuery2 & {
+export type IBoardViewQuery2 = Partial<IViewQuery2> & {
 	group_by: string;
 };
 
-export interface IBoardView extends Node, ParentProps {
+export interface IBoardView extends Node, ParentProps, SpaceShardProps {
 	type: 'board';
 	name: string;
 	format: IBoardViewFormat;
@@ -71,9 +71,9 @@ export interface IGalleryViewFormat {
 	gallery_properties: ViewFormatProperties[];
 }
 
-export type IGalleryViewQuery2 = Omit<IViewQuery2, 'aggregations'>;
+export type IGalleryViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>>;
 
-export interface IGalleryView extends Node, ParentProps {
+export interface IGalleryView extends Node, ParentProps, SpaceShardProps {
 	type: 'gallery';
 	name: string;
 	format: IGalleryViewFormat;
@@ -84,11 +84,11 @@ export interface ICalendarViewFormat {
 	calendar_properties: ViewFormatProperties[];
 }
 
-export type ICalendarViewQuery2 = Omit<IViewQuery2, 'aggregations'> & {
+export type ICalendarViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>> & {
 	calendar_by: string;
 };
 
-export interface ICalendarView extends Node, ParentProps {
+export interface ICalendarView extends Node, ParentProps, SpaceShardProps {
 	type: 'calendar';
 	name: string;
 	format: ICalendarViewFormat;
@@ -107,10 +107,10 @@ export interface ITimelineViewFormat {
 	timeline_table_properties: ViewFormatProperties[];
 }
 
-export type ITimelineViewQuery2 = IViewQuery2 & {
+export type ITimelineViewQuery2 = Partial<IViewQuery2> & {
 	timeline_by: TTimelineViewTimelineby;
 };
-export interface ITimelineView extends Node, ParentProps {
+export interface ITimelineView extends Node, ParentProps, SpaceShardProps {
 	type: 'timeline';
 	name: string;
 	format: ITimelineViewFormat;

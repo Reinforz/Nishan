@@ -44,7 +44,7 @@ describe('validateCache', () => {
 		).toThrow(`Unknown key unknown passed`);
 	});
 
-	it.only(`Should fail if the passed value is not of correct structure`, () => {
+	it(`Should fail if the passed value is not of correct structure`, () => {
 		expect(() =>
 			validateCache({
 				...correct_cache,

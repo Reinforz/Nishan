@@ -48,14 +48,14 @@ export default class Cache {
 		});
 	}
 
-	returnNonCachedData (ids: UpdateCacheManuallyParam): UpdateCacheManuallyParam {
-		return ids.filter(
+	returnNonCachedData (update_cache_param: UpdateCacheManuallyParam): UpdateCacheManuallyParam {
+		return update_cache_param.filter(
 			(info) => !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
 		);
   }
   
   async initializeCache(){
-    const data = await getSpaces({token: this.token}); 
+    const data = await getSpaces({token: this.token, interval: 0}); 
     const external_notion_users: Set<string> = new Set();
     Object.values(data).forEach(recordMap => {
       Object.values(recordMap.space).forEach(space => space.value.permissions.forEach(permission =>
@@ -64,10 +64,13 @@ export default class Cache {
       this.saveToCache(recordMap)
     });
 
-    const { recordMap } = await syncRecordValues({
-      requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
-    }, {token: this.token, interval: 0});
-    this.saveToCache(recordMap);
+    const external_notion_users_arr = Array.from(external_notion_users.values());
+    if(external_notion_users_arr.length !== 0){
+      const { recordMap } = await syncRecordValues({
+        requests: external_notion_users_arr.map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
+      }, {token: this.token, interval: 0});
+      this.saveToCache(recordMap);
+    }
   }
 
 	async updateCacheManually (arg: UpdateCacheManuallyParam | string) {

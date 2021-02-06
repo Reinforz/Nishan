@@ -28,8 +28,8 @@ export function validateCache (cache: ICache) {
 		if (!cache_keys.includes(cache_item)) throw new Error(`Unknown key ${cache_key} passed`);
 		const is_map = cache[cache_item] instanceof Map;
 		if (!is_map) throw new Error(`${cache_item} is not an instance of Map`);
-		const entries = Array.from(((cache as any)[cache_item] as Map<string, data>).entries());
-		entries.forEach(([ _, value ]) => {
+		const values = Array.from(((cache as any)[cache_item] as Map<string, data>).values());
+		values.forEach((value) => {
 			if (!value.value) throw new Error(`No value key present`);
 			if (!value.role) throw new Error(`No role key present`);
 		});

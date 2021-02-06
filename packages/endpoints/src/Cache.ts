@@ -76,18 +76,25 @@ export default class Cache {
     }
   }
 
-	async updateCacheManually (arg: UpdateCacheManuallyParam | string) {
+	async updateCacheManually (args: UpdateCacheManuallyParam | string) {
 		const sync_record_values: SyncRecordValues[] = [];
-		if (Array.isArray(arg))
-			arg.forEach((arg: string | [string, TDataType]) => {
+		if (Array.isArray(args))
+      args.forEach((arg: string | [string, TDataType]) => {
 				if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
-				else if (typeof arg === 'string') sync_record_values.push({ id: arg, table: 'block', version: 0 });
+				else if (typeof arg === 'string')
+          sync_record_values.push({ id: arg, table: 'block', version: 0 })
+        else
+          throw new Error(`Unsupported argument passed`)
 			});
-    else if (typeof arg === 'string') sync_record_values.push({ id: arg, table: 'block', version: 0 });
+    else if (typeof args === 'string') sync_record_values.push({ id: args, table: 'block', version: 0 });
+    else
+      throw new Error(`Unsupported argument passed`);
+
     if (sync_record_values.length){
       const data = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(data.recordMap);
-    }
+    } else
+      console.log('Empty sync_record_values')
 	}
 
 	async updateCacheIfNotPresent (arg: UpdateCacheManuallyParam) {
@@ -101,28 +108,32 @@ export default class Cache {
 		if (sync_record_values.length) {
       const data = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(data.recordMap);
-    }
+    } else
+      console.log('Empty sync_record_values')
   }
   
   async initializeCacheForSpecificData(id: string, type: TDataType){
-    const container: UpdateCacheManuallyParam = [], data = this.cache[type].get(id);
+    const container: UpdateCacheManuallyParam = [];
     if (type === "block") {
-      const temp_data = data as TBlock;
-      if (temp_data.type === "page")
-        container.push(...temp_data.content);
-      if (temp_data.type === "collection_view" || temp_data.type === "collection_view_page") {
-        temp_data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
-        container.push([temp_data.collection_id, "collection"])
+      const data = this.cache[type].get(id) as TBlock;
+      if (data.type === "page")
+        container.push(...data.content);
+      if (data.type === "collection_view" || data.type === "collection_view_page") {
+        data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
+        container.push([data.collection_id, "collection"])
       }
     } else if (type === "space") {
-      const temp_data = data as ISpace;
-      container.push(...temp_data.pages);
-      temp_data.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
-    } else if (type === "user_root")
-      (data as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"])))
+      const data = this.cache[type].get(id) as ISpace;
+      container.push(...data.pages);
+      data.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
+    } else if (type === "user_root"){
+      const data = this.cache[type].get(id) as IUserRoot;
+      data.space_views.map((space_view => container.push([space_view, "space_view"])))
+    }
     else if (type === "collection") {
+      const data = this.cache[type].get(id) as ICollection;
       if((data as ICollection).template_pages)
-        container.push(...(data as ICollection).template_pages as string[])
+        container.push(...data.template_pages as string[])
       const {recordMap} = await queryCollection({
         collectionId: id,
         collectionViewId: "",
@@ -137,9 +148,13 @@ export default class Cache {
       })
       this.saveToCache(recordMap);
     }
-    else if (type === "space_view")
-      if((data as ISpaceView).bookmarked_pages)
-        container.push(...(data as ISpaceView).bookmarked_pages as string[])
+    else if (type === "space_view"){
+      const data = this.cache[type].get(id) as ISpaceView;
+      if(data.bookmarked_pages)
+        container.push(...data.bookmarked_pages)
+    }
+    else
+      throw new Error(`${type} data is not supported`);
 
     const non_cached = this.returnNonCachedData(container);
     
@@ -147,11 +162,11 @@ export default class Cache {
 
     // If the block is a page, for all the collection block contents, fetch the collection attached with it as well
     if(type === "block"){
-      const temp_data = data as TBlock;
-      if(temp_data.type === "page"){
+      const data = this.cache[type].get(id) as TBlock;
+      if(data.type === "page"){
         const collection_blocks_ids: UpdateCacheManuallyParam = [];
-        for (let index = 0; index < temp_data.content.length; index++) {
-          const content_id = temp_data.content[index],
+        for (let index = 0; index < data.content.length; index++) {
+          const content_id = data.content[index],
             content = this.cache.block.get(content_id)
           if(content && (content.type === "collection_view_page" || content.type === "collection_view"))
             collection_blocks_ids.push([content.collection_id, "collection"])

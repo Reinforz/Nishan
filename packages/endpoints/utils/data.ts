@@ -1,4 +1,12 @@
-import { GetSpacesResult, INotionUser, LoadUserContentResult, NotionUserData, TView, ViewData } from '@nishans/types';
+import {
+	GetSpacesResult,
+	INotionUser,
+	LoadUserContentResult,
+	NotionUserData,
+	SpaceData,
+	TView,
+	ViewData
+} from '@nishans/types';
 
 export const ExternalNotionUser: INotionUser = {
 	id: 'd94caf87-a207-45c3-b3d5-03d157b5b39c',
@@ -16,6 +24,7 @@ export const ExternalNotionUserData: NotionUserData = {
 		value: ExternalNotionUser
 	}
 };
+
 export const LoadUserContentData: LoadUserContentResult = {
 	recordMap: {
 		notion_user: {
@@ -247,6 +256,30 @@ export const LoadUserContentData: LoadUserContentResult = {
 					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
 				}
 			},
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6400': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6400',
+					version: 16,
+					type: 'page',
+					properties: {
+						title: [ [ 'Row Page' ] ]
+					},
+					content: [],
+					permissions: [],
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c',
+					parent_table: 'collection',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
 			// template page
 			'6eae77bf-64cd-4ed0-adfb-e97d928a6404': {
 				role: 'editor',
@@ -307,7 +340,6 @@ export const LoadUserContentData: LoadUserContentResult = {
 							type: 'title'
 						}
 					},
-					template_pages: [],
 					parent_id: '4b4bb21d-f68b-4113-b342-830687a5337b',
 					parent_table: 'block',
 					alive: true,
@@ -360,6 +392,114 @@ export const GetSpacesData: GetSpacesResult = {
 					},
 					shard_id: 731776,
 					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			}
+		}
+	},
+	'd2498a62-99ed-4ffd-b56d-e986001729f3': {
+		space: {
+			'd2498a62-99ed-4ffd-b56d-e986001729f3': {
+				role: 'editor',
+				value: {
+					id: 'd2498a62-99ed-4ffd-b56d-e986001729f3',
+					version: 56,
+					name: 'John',
+					permissions: [
+						{
+							role: 'editor',
+							type: 'user_permission',
+							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
+						}
+					],
+					beta_enabled: false,
+					pages: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6402' ],
+					created_time: 1566572400000,
+					last_edited_time: 1609505700000,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					plan_type: 'personal',
+					invite_link_code: '866cefd9532d61996c30dfb46166765a499eb7a6',
+					invite_link_enabled: false
+				}
+			}
+		},
+		collection: {},
+		collection_view: {},
+		notion_user: {
+			'd94caf87-a207-45c3-b3d5-03d157b5b39b': {
+				role: 'editor',
+				value: {
+					id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					version: 3,
+					email: 'johndoe@gmail.com',
+					given_name: 'John',
+					family_name: 'Doe',
+					profile_photo: 'https://img.john.doe.jpg',
+					onboarding_completed: true
+				}
+			}
+		},
+		user_root: {
+			'd94caf87-a207-45c3-b3d5-03d157b5b39b': {
+				role: 'editor',
+				value: {
+					id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					version: 22,
+					space_views: [ 'd2498a62-99ed-4ffd-b56d-e986001729f1' ]
+				}
+			}
+		},
+		space_view: {
+			'd2498a62-99ed-4ffd-b56d-e986001729f1': {
+				role: 'editor',
+				value: {
+					id: 'd2498a62-99ed-4ffd-b56d-e986001729f1',
+					version: 4,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f3',
+					parent_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					parent_table: 'user_root',
+					alive: true,
+					notify_mobile: true,
+					notify_desktop: true,
+					notify_email: true,
+					created_getting_started: true,
+					joined: true
+				}
+			}
+		},
+		user_settings: {},
+		block: {
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6402': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6402',
+					version: 16,
+					type: 'page',
+					properties: {
+						title: [ [ 'Page' ] ]
+					},
+					content: [],
+					permissions: [
+						{
+							role: 'editor',
+							type: 'user_permission',
+							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
+						}
+					],
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4',
+					parent_table: 'space',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f3'
 				}
 			}
 		}

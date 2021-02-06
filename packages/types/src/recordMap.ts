@@ -117,7 +117,7 @@ export interface ISpaceView extends Node {
 	sidebar_hidden_templates?: string[];
 	space_id: string;
 	visited_templates?: string[];
-	bookmarked_pages: string[];
+	bookmarked_pages?: string[];
 	parent_table: 'user_root';
 	parent_id: string;
 }

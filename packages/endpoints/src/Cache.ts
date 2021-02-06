@@ -121,7 +121,8 @@ export default class Cache {
     } else if (type === "user_root")
       (data as IUserRoot).space_views.map((space_view => container.push([space_view, "space_view"])))
     else if (type === "collection") {
-      container.push(...((data as ICollection).template_pages ?? []))
+      if((data as ICollection).template_pages)
+        container.push(...(data as ICollection).template_pages as string[])
       const {recordMap} = await queryCollection({
         collectionId: id,
         collectionViewId: "",
@@ -137,9 +138,11 @@ export default class Cache {
       this.saveToCache(recordMap);
     }
     else if (type === "space_view")
-      container.push(...(data as ISpaceView).bookmarked_pages ?? [])
+      if((data as ISpaceView).bookmarked_pages)
+        container.push(...(data as ISpaceView).bookmarked_pages as string[])
 
     const non_cached = this.returnNonCachedData(container);
+    console.log(non_cached);
     
     await this.updateCacheManually(non_cached);
 

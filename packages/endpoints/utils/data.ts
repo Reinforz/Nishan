@@ -194,6 +194,62 @@ export const LoadUserContentData: LoadUserContentResult = {
 					shard_id: 227383,
 					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
 				}
+			},
+			// row page
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6403': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6403',
+					version: 16,
+					type: 'page',
+					properties: {
+						title: [ [ 'Page' ] ]
+					},
+					content: [],
+					permissions: [
+						{
+							role: 'editor',
+							type: 'user_permission',
+							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
+						}
+					],
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b',
+					parent_table: 'collection',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
+			// template page
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6404': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6404',
+					version: 16,
+					type: 'page',
+					properties: {
+						title: [ [ 'Page' ] ]
+					},
+					content: [],
+					permissions: [],
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b',
+					parent_table: 'collection',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
 			}
 		},
 		collection: {
@@ -214,6 +270,7 @@ export const LoadUserContentData: LoadUserContentResult = {
 							type: 'title'
 						}
 					},
+					template_pages: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6404' ],
 					parent_id: '4b4bb21d-f68b-4113-b342-830687a5337a',
 					parent_table: 'block',
 					alive: true,

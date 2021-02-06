@@ -146,5 +146,36 @@ describe('Cache class', () => {
 			await cache.initializeCacheForSpecificData('6eae77bf-64cd-4ed0-adfb-e97d928a6402', 'block');
 			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6401')).not.toBeUndefined();
 		});
+
+		it(`Should work for type collection_view_page`, async () => {
+			const cache = new Cache({
+				token: 'token'
+			});
+			cache.saveToCache({ block: LoadUserContentData.recordMap.block });
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					collection_view: GetSpacesData['d2498a62-99ed-4ffd-b56d-e986001729f4'].collection_view,
+					collection: LoadUserContentData.recordMap.collection
+				}
+			});
+			await cache.initializeCacheForSpecificData('4b4bb21d-f68b-4113-b342-830687a5337a', 'block');
+			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+			expect(cache.cache.collection_view.get('451a024a-f6f8-476d-9a5a-1c98ffdf5a38')).not.toBeUndefined();
+		});
+
+		it(`Should work for type space`, async () => {
+			const cache = new Cache({
+				token: 'token'
+			});
+			cache.saveToCache({ space: LoadUserContentData.recordMap.space });
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					block: LoadUserContentData.recordMap.block
+				}
+			});
+			await cache.initializeCacheForSpecificData('d2498a62-99ed-4ffd-b56d-e986001729f4', 'space');
+			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
+			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+		});
 	});
 });

@@ -130,7 +130,10 @@ export default class Cache {
           type: "table",
           loadContentCover: true
         }
-      }, this.getConfigs())
+      }, {
+        token: this.token,
+        interval: 0
+      })
       this.saveToCache(recordMap);
     }
     else if (type === "space_view")

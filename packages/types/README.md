@@ -18,4 +18,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a>
 </p>
 
-Package to contain notion typescript type definitions
+<p align="center"><b>Package containing notion typescript type definitions</b></p>

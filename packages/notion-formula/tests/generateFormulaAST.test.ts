@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
 
-import { generateFormulaASTFromArray, generateFormulaASTFromObject } from '../src';
+import { generateFormulaAST, generateFormulaASTFromArray, generateFormulaASTFromObject } from '../src';
 import { test_schema_map } from './utils';
 
 describe('Function formula parsing error', () => {
@@ -347,6 +347,71 @@ describe('Function formula array representation parsing success', () => {
 					result_type: 'number'
 				},
 				generateFormulaASTFromArray([ 'abs', [ [ 'ceil', [ 1 ] ] ] ], test_schema_map)
+			)
+		).toBe(true);
+	});
+});
+
+describe('generateFormulaAST', () => {
+	it(`Should work for string representation`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaAST('abs(1)', 'string', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should work for array representation`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaAST([ 'abs', [ 1 ] ], 'array', test_schema_map)
+			)
+		).toBe(true);
+	});
+
+	it(`Should work for array representation`, () => {
+		expect(
+			deepEqual(
+				{
+					name: 'abs',
+					type: 'function',
+					args: [
+						{
+							type: 'constant',
+							value: '1',
+							value_type: 'number',
+							result_type: 'number'
+						}
+					],
+					result_type: 'number'
+				},
+				generateFormulaAST({ function: 'abs', args: [ 1 ] }, 'object', test_schema_map)
 			)
 		).toBe(true);
 	});

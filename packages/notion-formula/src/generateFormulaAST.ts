@@ -1,12 +1,12 @@
 import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
 import { generateFormulaArgFromProperty, function_formula_info_map, generateFormulaArgsFromLiterals, IFunctionForumlaSignature } from '../utils';
 import {
-	FormulaSchemaUnitInput,
+	FormulaObjectSchemaUnitInput,
 	ISchemaMap,
-	TResultType,
-	TFormulaCreateInput,
 	FormulaArraySchemaUnitInput,
-	AnyArrayResultType
+  TFormulaArrayArgument,
+  TFormulaObject,
+  TFormulaObjectArgument,
 } from '../types';
 
 /**
@@ -16,19 +16,19 @@ import {
  * @returns The generated formula ast
  */
 function generateFormulaAST (
-	input_formula: FormulaSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
+	input_formula: FormulaObjectSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
 	schema_map?: ISchemaMap
 ): TFormula {
-	function traverseArguments (arg: TResultType | AnyArrayResultType | undefined): TFormula {
+	function traverseArguments (arg: TFormulaObjectArgument | TFormulaArrayArgument | undefined): TFormula {
     // Check whether an array based or object based function formula is used
 		const is_arg_array_function = Array.isArray(arg),
-			is_arg_object_function = (arg as TFormulaCreateInput).function;
+			is_arg_object_function = (arg as TFormulaObject).function;
 		if (is_arg_array_function || is_arg_object_function) {
 			// The argument is a function formula, rather than a property reference or a constant|symbol
 			const function_name: TFunctionName = is_arg_object_function
-					? (arg as TFormulaCreateInput).function
+					? (arg as TFormulaObject).function
 					: (arg as any)[0],
-				input_args = is_arg_object_function ? (arg as TFormulaCreateInput).args : (arg as any)[1];
+				input_args = is_arg_object_function ? (arg as TFormulaObject).args : (arg as any)[1];
       const arg_container = [] as any, function_info = function_formula_info_map.get(function_name);
       // Throws error when an unsupported function is used
       if(!function_info)
@@ -94,7 +94,7 @@ function generateFormulaAST (
   * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
   * @returns The generated formula ast
  */
-export function generateFormulaASTFromObject (formula: FormulaSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string}, schema_map?: ISchemaMap): TFormula {
+export function generateFormulaASTFromObject (formula: FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string}, schema_map?: ISchemaMap): TFormula {
 	return generateFormulaAST(formula, schema_map);
 }
 

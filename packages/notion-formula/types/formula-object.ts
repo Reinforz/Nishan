@@ -4,198 +4,201 @@ export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
 
 // Formula Inputs
-export type TResultType = TCheckboxResultType | TTextResultType | TNumberResultType | TDateResultType;
+export type TFormulaObjectArgument =
+	| TCheckboxObjectArgument
+	| TTextObjectArgument
+	| TNumberObjectArgument
+	| TDateObjectArgument;
 
-type Tuple2AnyResultType =
-	| Tuple2<TTextResultType>
-	| Tuple2<TCheckboxResultType>
-	| Tuple2<TDateResultType>
-	| Tuple2<TNumberResultType>;
+type Tuple2AnyObjectArgument =
+	| Tuple2<TTextObjectArgument>
+	| Tuple2<TCheckboxObjectArgument>
+	| Tuple2<TDateObjectArgument>
+	| Tuple2<TNumberObjectArgument>;
 
-type Tuple2<T extends TResultType> = [T, T];
-type Tuple12<T1 extends TResultType, T2 extends TResultType> = [T1, T2, T2];
+type Tuple2<T extends TFormulaObjectArgument> = [T, T];
+type Tuple12<T1 extends TFormulaObjectArgument, T2 extends TFormulaObjectArgument> = [T1, T2, T2];
 
-export type TCheckboxResultType = boolean | TCheckboxFunctionCreateInput | { property: string };
-export type TNumberResultType = 'pi' | 'e' | number | TNumberFunctionCreateInput | { property: string };
-export type TDateResultType = TDateFunctionCreateInput | { property: string };
-export type TTextResultType = string | TTextFunctionCreateInput | { property: string };
+export type TCheckboxObjectArgument = boolean | TCheckboxFunctionObject | { property: string };
+export type TNumberObjectArgument = 'pi' | 'e' | number | TNumberFunctionObject | { property: string };
+export type TDateObjectArgument = TDateFunctionObject | { property: string };
+export type TTextObjectArgument = string | TTextFunctionObject | { property: string };
 
-interface IFunctionCreateInput<F extends TFunctionName, A extends any[]> {
+interface IFunctionObject<F extends TFunctionName, A extends any[]> {
 	function: F;
 	args: A;
 }
 
-export type NumberIfFunctionCreateInput = IFunctionCreateInput<'if', Tuple12<TCheckboxResultType, TNumberResultType>>;
-export type TextIfFunctionCreateInput = IFunctionCreateInput<'if', Tuple12<TCheckboxResultType, TTextResultType>>;
-export type CheckboxIfFunctionCreateInput = IFunctionCreateInput<
-	'if',
-	Tuple12<TCheckboxResultType, TCheckboxResultType>
->;
-export type DateIfFunctionCreateInput = IFunctionCreateInput<'if', Tuple12<TCheckboxResultType, TDateResultType>>;
-export type EqualFunctionCreateInput = IFunctionCreateInput<'equal', Tuple2AnyResultType>;
-export type UnequalFunctionCreateInput = IFunctionCreateInput<'unequal', Tuple2AnyResultType>;
-export type TextAddFunctionCreateInput = IFunctionCreateInput<'add', Tuple2<TTextResultType>>;
-export type NumberAddFunctionCreateInput = IFunctionCreateInput<'add', Tuple2<TNumberResultType>>;
-export type ReplaceAllFunctionCreateInput = IFunctionCreateInput<
+export type NumberIfFunctionObject = IFunctionObject<'if', Tuple12<TCheckboxObjectArgument, TNumberObjectArgument>>;
+export type TextIfFunctionObject = IFunctionObject<'if', Tuple12<TCheckboxObjectArgument, TTextObjectArgument>>;
+export type CheckboxIfFunctionObject = IFunctionObject<'if', Tuple12<TCheckboxObjectArgument, TCheckboxObjectArgument>>;
+export type DateIfFunctionObject = IFunctionObject<'if', Tuple12<TCheckboxObjectArgument, TDateObjectArgument>>;
+export type EqualFunctionObject = IFunctionObject<'equal', Tuple2AnyObjectArgument>;
+export type UnequalFunctionObject = IFunctionObject<'unequal', Tuple2AnyObjectArgument>;
+export type TextAddFunctionObject = IFunctionObject<'add', Tuple2<TTextObjectArgument>>;
+export type NumberAddFunctionObject = IFunctionObject<'add', Tuple2<TNumberObjectArgument>>;
+export type ReplaceAllFunctionObject = IFunctionObject<
 	'replaceAll',
-	| Tuple12<TNumberResultType, TTextResultType>
-	| Tuple12<TTextResultType, TTextResultType>
-	| Tuple12<TCheckboxResultType, TTextResultType>
+	| Tuple12<TNumberObjectArgument, TTextObjectArgument>
+	| Tuple12<TTextObjectArgument, TTextObjectArgument>
+	| Tuple12<TCheckboxObjectArgument, TTextObjectArgument>
 >;
-export type ReplaceFunctionCreateInput = IFunctionCreateInput<
+export type ReplaceFunctionObject = IFunctionObject<
 	'replace',
-	| Tuple12<TNumberResultType, TTextResultType>
-	| Tuple12<TTextResultType, TTextResultType>
-	| Tuple12<TCheckboxResultType, TTextResultType>
+	| Tuple12<TNumberObjectArgument, TTextObjectArgument>
+	| Tuple12<TTextObjectArgument, TTextObjectArgument>
+	| Tuple12<TCheckboxObjectArgument, TTextObjectArgument>
 >;
-export type ConcatFunctionCreateInput = IFunctionCreateInput<'concat', TTextResultType[]>;
-export type JoinFunctionCreateInput = IFunctionCreateInput<'join', TTextResultType[]>;
-export type SliceFunctionCreateInput = IFunctionCreateInput<
+export type ConcatFunctionObject = IFunctionObject<'concat', TTextObjectArgument[]>;
+export type JoinFunctionObject = IFunctionObject<'join', TTextObjectArgument[]>;
+export type SliceFunctionObject = IFunctionObject<
 	'slice',
-	[TTextResultType, TNumberResultType, TNumberResultType] | [TTextResultType, TNumberResultType]
+	[TTextObjectArgument, TNumberObjectArgument, TNumberObjectArgument] | [TTextObjectArgument, TNumberObjectArgument]
 >;
-export type FormatFunctionCreateInput = IFunctionCreateInput<'format', [TResultType]>;
-export type AndFunctionCreateInput = IFunctionCreateInput<'and', Tuple2<TCheckboxResultType>>;
-export type OrFunctionCreateInput = IFunctionCreateInput<'or', Tuple2<TCheckboxResultType>>;
-export type LargerFunctionCreateInput = IFunctionCreateInput<'larger', Tuple2<TCheckboxResultType>>;
-export type LargerEqFunctionCreateInput = IFunctionCreateInput<'largerEq', Tuple2<TCheckboxResultType>>;
-export type SmallerFunctionCreateInput = IFunctionCreateInput<'smaller', Tuple2<TCheckboxResultType>>;
-export type SmallerEqFunctionCreateInput = IFunctionCreateInput<'smallerEq', Tuple2<TCheckboxResultType>>;
-export type NotFunctionCreateInput = IFunctionCreateInput<'not', [TCheckboxResultType]>;
-export type SubtractFunctionCreateInput = IFunctionCreateInput<'subtract', Tuple2<TNumberResultType>>;
-export type DivideFunctionCreateInput = IFunctionCreateInput<'divide', Tuple2<TNumberResultType>>;
-export type MultiplyFunctionCreateInput = IFunctionCreateInput<'multiply', Tuple2<TNumberResultType>>;
-export type PowFunctionCreateInput = IFunctionCreateInput<'pow', Tuple2<TNumberResultType>>;
-export type ModFunctionCreateInput = IFunctionCreateInput<'mod', Tuple2<TNumberResultType>>;
-export type UnaryMinusFunctionCreateInput = IFunctionCreateInput<'unaryMinus', [TNumberResultType]>;
-export type UnaryPlusFunctionCreateInput = IFunctionCreateInput<'unaryPlus', [TNumberResultType]>;
-export type ContainsFunctionCreateInput = IFunctionCreateInput<'contains', Tuple2<TTextResultType>>;
-export type TestFunctionCreateInput = IFunctionCreateInput<
+export type FormatFunctionObject = IFunctionObject<'format', [TFormulaObjectArgument]>;
+export type AndFunctionObject = IFunctionObject<'and', Tuple2<TCheckboxObjectArgument>>;
+export type OrFunctionObject = IFunctionObject<'or', Tuple2<TCheckboxObjectArgument>>;
+export type LargerFunctionObject = IFunctionObject<'larger', Tuple2<TCheckboxObjectArgument>>;
+export type LargerEqFunctionObject = IFunctionObject<'largerEq', Tuple2<TCheckboxObjectArgument>>;
+export type SmallerFunctionObject = IFunctionObject<'smaller', Tuple2<TCheckboxObjectArgument>>;
+export type SmallerEqFunctionObject = IFunctionObject<'smallerEq', Tuple2<TCheckboxObjectArgument>>;
+export type NotFunctionObject = IFunctionObject<'not', [TCheckboxObjectArgument]>;
+export type SubtractFunctionObject = IFunctionObject<'subtract', Tuple2<TNumberObjectArgument>>;
+export type DivideFunctionObject = IFunctionObject<'divide', Tuple2<TNumberObjectArgument>>;
+export type MultiplyFunctionObject = IFunctionObject<'multiply', Tuple2<TNumberObjectArgument>>;
+export type PowFunctionObject = IFunctionObject<'pow', Tuple2<TNumberObjectArgument>>;
+export type ModFunctionObject = IFunctionObject<'mod', Tuple2<TNumberObjectArgument>>;
+export type UnaryMinusFunctionObject = IFunctionObject<'unaryMinus', [TNumberObjectArgument]>;
+export type UnaryPlusFunctionObject = IFunctionObject<'unaryPlus', [TNumberObjectArgument]>;
+export type ContainsFunctionObject = IFunctionObject<'contains', Tuple2<TTextObjectArgument>>;
+export type TestFunctionObject = IFunctionObject<
 	'test',
-	[TNumberResultType, TTextResultType] | [TTextResultType, TTextResultType] | [TCheckboxResultType, TTextResultType]
+	| [TNumberObjectArgument, TTextObjectArgument]
+	| [TTextObjectArgument, TTextObjectArgument]
+	| [TCheckboxObjectArgument, TTextObjectArgument]
 >;
-export type EmptyFunctionCreateInput = IFunctionCreateInput<'empty', [TResultType]>;
-export type AbsFunctionCreateInput = IFunctionCreateInput<'abs', [TNumberResultType]>;
-export type CbrtFunctionCreateInput = IFunctionCreateInput<'cbrt', [TNumberResultType]>;
-export type CeilFunctionCreateInput = IFunctionCreateInput<'ceil', [TNumberResultType]>;
-export type ExpFunctionCreateInput = IFunctionCreateInput<'exp', [TNumberResultType]>;
-export type FloorFunctionCreateInput = IFunctionCreateInput<'floor', [TNumberResultType]>;
-export type LnFunctionCreateInput = IFunctionCreateInput<'ln', [TNumberResultType]>;
-export type Log10FunctionCreateInput = IFunctionCreateInput<'log10', [TNumberResultType]>;
-export type Log2FunctionCreateInput = IFunctionCreateInput<'log2', [TNumberResultType]>;
-export type MaxFunctionCreateInput = IFunctionCreateInput<'max', TNumberResultType[]>;
-export type MinFunctionCreateInput = IFunctionCreateInput<'min', TNumberResultType[]>;
-export type RoundFunctionCreateInput = IFunctionCreateInput<'round', [TNumberResultType]>;
-export type SignFunctionCreateInput = IFunctionCreateInput<'sign', [TNumberResultType]>;
-export type SqrtFunctionCreateInput = IFunctionCreateInput<'sqrt', [TNumberResultType]>;
-export type StartFunctionCreateInput = IFunctionCreateInput<'start', [TDateResultType]>;
-export type EndFunctionCreateInput = IFunctionCreateInput<'end', [TDateResultType]>;
-export type DateAddFunctionCreateInput = IFunctionCreateInput<
+export type EmptyFunctionObject = IFunctionObject<'empty', [TFormulaObjectArgument]>;
+export type AbsFunctionObject = IFunctionObject<'abs', [TNumberObjectArgument]>;
+export type CbrtFunctionObject = IFunctionObject<'cbrt', [TNumberObjectArgument]>;
+export type CeilFunctionObject = IFunctionObject<'ceil', [TNumberObjectArgument]>;
+export type ExpFunctionObject = IFunctionObject<'exp', [TNumberObjectArgument]>;
+export type FloorFunctionObject = IFunctionObject<'floor', [TNumberObjectArgument]>;
+export type LnFunctionObject = IFunctionObject<'ln', [TNumberObjectArgument]>;
+export type Log10FunctionObject = IFunctionObject<'log10', [TNumberObjectArgument]>;
+export type Log2FunctionObject = IFunctionObject<'log2', [TNumberObjectArgument]>;
+export type MaxFunctionObject = IFunctionObject<'max', TNumberObjectArgument[]>;
+export type MinFunctionObject = IFunctionObject<'min', TNumberObjectArgument[]>;
+export type RoundFunctionObject = IFunctionObject<'round', [TNumberObjectArgument]>;
+export type SignFunctionObject = IFunctionObject<'sign', [TNumberObjectArgument]>;
+export type SqrtFunctionObject = IFunctionObject<'sqrt', [TNumberObjectArgument]>;
+export type StartFunctionObject = IFunctionObject<'start', [TDateObjectArgument]>;
+export type EndFunctionObject = IFunctionObject<'end', [TDateObjectArgument]>;
+export type DateAddFunctionObject = IFunctionObject<
 	'dateAdd',
-	[TDateResultType, TNumberResultType, TDateConstantValueType]
+	[TDateObjectArgument, TNumberObjectArgument, TDateConstantValueType]
 >;
-export type DateSubtractFunctionCreateInput = IFunctionCreateInput<
+export type DateSubtractFunctionObject = IFunctionObject<
 	'dateSubtract',
-	[TDateResultType, TNumberResultType, TDateConstantValueType]
+	[TDateObjectArgument, TNumberObjectArgument, TDateConstantValueType]
 >;
-export type DateBetweenFunctionCreateInput = IFunctionCreateInput<
+export type DateBetweenFunctionObject = IFunctionObject<
 	'dateBetween',
-	Tuple12<TDateResultType, TDateConstantValueType>
+	Tuple12<TDateObjectArgument, TDateConstantValueType>
 >;
-export type FormatDateFunctionCreateInput = IFunctionCreateInput<'formatDate', [TDateResultType, TTextResultType]>;
-export type TimestampFunctionCreateInput = IFunctionCreateInput<'timestamp', [TDateResultType]>;
-export type FromTimestampFunctionCreateInput = IFunctionCreateInput<'fromTimestamp', [TNumberResultType]>;
-export type MinuteFunctionCreateInput = IFunctionCreateInput<'minute', [TDateResultType]>;
-export type HourFunctionCreateInput = IFunctionCreateInput<'hour', [TDateResultType]>;
-export type DayFunctionCreateInput = IFunctionCreateInput<'day', [TDateResultType]>;
-export type DateFunctionCreateInput = IFunctionCreateInput<'date', [TDateResultType]>;
-export type MonthFunctionCreateInput = IFunctionCreateInput<'month', [TDateResultType]>;
-export type YearFunctionCreateInput = IFunctionCreateInput<'year', [TDateResultType]>;
-export type LengthFunctionCreateInput = IFunctionCreateInput<'length', [TTextResultType]>;
-export type ToNumberFunctionCreateInput = IFunctionCreateInput<'toNumber', [TResultType]>;
-export type NowFunctionCreateInput = {
+export type FormatDateFunctionObject = IFunctionObject<'formatDate', [TDateObjectArgument, TTextObjectArgument]>;
+export type TimestampFunctionObject = IFunctionObject<'timestamp', [TDateObjectArgument]>;
+export type FromTimestampFunctionObject = IFunctionObject<'fromTimestamp', [TNumberObjectArgument]>;
+export type MinuteFunctionObject = IFunctionObject<'minute', [TDateObjectArgument]>;
+export type HourFunctionObject = IFunctionObject<'hour', [TDateObjectArgument]>;
+export type DayFunctionObject = IFunctionObject<'day', [TDateObjectArgument]>;
+export type DateFunctionObject = IFunctionObject<'date', [TDateObjectArgument]>;
+export type MonthFunctionObject = IFunctionObject<'month', [TDateObjectArgument]>;
+export type YearFunctionObject = IFunctionObject<'year', [TDateObjectArgument]>;
+export type LengthFunctionObject = IFunctionObject<'length', [TTextObjectArgument]>;
+export type ToNumberFunctionObject = IFunctionObject<'toNumber', [TFormulaObjectArgument]>;
+export type NowFunctionObject = {
 	function: 'now';
 	args?: [];
 };
 
-export type TTextFunctionCreateInput =
-	| TextIfFunctionCreateInput
-	| TextAddFunctionCreateInput
-	| ReplaceAllFunctionCreateInput
-	| ReplaceFunctionCreateInput
-	| ConcatFunctionCreateInput
-	| JoinFunctionCreateInput
-	| SliceFunctionCreateInput
-	| FormatFunctionCreateInput;
+export type TTextFunctionObject =
+	| TextIfFunctionObject
+	| TextAddFunctionObject
+	| ReplaceAllFunctionObject
+	| ReplaceFunctionObject
+	| ConcatFunctionObject
+	| JoinFunctionObject
+	| SliceFunctionObject
+	| FormatFunctionObject;
 
-export type TCheckboxFunctionCreateInput =
-	| CheckboxIfFunctionCreateInput
-	| EqualFunctionCreateInput
-	| UnequalFunctionCreateInput
-	| AndFunctionCreateInput
-	| OrFunctionCreateInput
-	| LargerFunctionCreateInput
-	| LargerEqFunctionCreateInput
-	| SmallerFunctionCreateInput
-	| SmallerEqFunctionCreateInput
-	| NotFunctionCreateInput
-	| EmptyFunctionCreateInput
-	| TestFunctionCreateInput
-	| ContainsFunctionCreateInput;
+export type TCheckboxFunctionObject =
+	| CheckboxIfFunctionObject
+	| EqualFunctionObject
+	| UnequalFunctionObject
+	| AndFunctionObject
+	| OrFunctionObject
+	| LargerFunctionObject
+	| LargerEqFunctionObject
+	| SmallerFunctionObject
+	| SmallerEqFunctionObject
+	| NotFunctionObject
+	| EmptyFunctionObject
+	| TestFunctionObject
+	| ContainsFunctionObject;
 
-export type TNumberFunctionCreateInput =
-	| NumberAddFunctionCreateInput
-	| SubtractFunctionCreateInput
-	| DivideFunctionCreateInput
-	| MultiplyFunctionCreateInput
-	| PowFunctionCreateInput
-	| ModFunctionCreateInput
-	| UnaryMinusFunctionCreateInput
-	| UnaryPlusFunctionCreateInput
-	| NumberIfFunctionCreateInput
-	| DateBetweenFunctionCreateInput
-	| TimestampFunctionCreateInput
-	| SqrtFunctionCreateInput
-	| SignFunctionCreateInput
-	| RoundFunctionCreateInput
-	| MinFunctionCreateInput
-	| MaxFunctionCreateInput
-	| Log2FunctionCreateInput
-	| Log10FunctionCreateInput
-	| LnFunctionCreateInput
-	| FloorFunctionCreateInput
-	| ExpFunctionCreateInput
-	| CeilFunctionCreateInput
-	| CbrtFunctionCreateInput
-	| AbsFunctionCreateInput
-	| ToNumberFunctionCreateInput
-	| LengthFunctionCreateInput;
+export type TNumberFunctionObject =
+	| NumberAddFunctionObject
+	| SubtractFunctionObject
+	| DivideFunctionObject
+	| MultiplyFunctionObject
+	| PowFunctionObject
+	| ModFunctionObject
+	| UnaryMinusFunctionObject
+	| UnaryPlusFunctionObject
+	| NumberIfFunctionObject
+	| DateBetweenFunctionObject
+	| TimestampFunctionObject
+	| SqrtFunctionObject
+	| SignFunctionObject
+	| RoundFunctionObject
+	| MinFunctionObject
+	| MaxFunctionObject
+	| Log2FunctionObject
+	| Log10FunctionObject
+	| LnFunctionObject
+	| FloorFunctionObject
+	| ExpFunctionObject
+	| CeilFunctionObject
+	| CbrtFunctionObject
+	| AbsFunctionObject
+	| ToNumberFunctionObject
+	| LengthFunctionObject;
 
-export type TDateFunctionCreateInput =
-	| DateIfFunctionCreateInput
-	| FormatDateFunctionCreateInput
-	| DateSubtractFunctionCreateInput
-	| DateAddFunctionCreateInput
-	| NowFunctionCreateInput
-	| StartFunctionCreateInput
-	| EndFunctionCreateInput
-	| TimestampFunctionCreateInput
-	| FromTimestampFunctionCreateInput
-	| MinuteFunctionCreateInput
-	| HourFunctionCreateInput
-	| DayFunctionCreateInput
-	| DateFunctionCreateInput
-	| MonthFunctionCreateInput
-	| YearFunctionCreateInput;
+export type TDateFunctionObject =
+	| DateIfFunctionObject
+	| FormatDateFunctionObject
+	| DateSubtractFunctionObject
+	| DateAddFunctionObject
+	| NowFunctionObject
+	| StartFunctionObject
+	| EndFunctionObject
+	| TimestampFunctionObject
+	| FromTimestampFunctionObject
+	| MinuteFunctionObject
+	| HourFunctionObject
+	| DayFunctionObject
+	| DateFunctionObject
+	| MonthFunctionObject
+	| YearFunctionObject;
 
-export type TFormulaCreateInput =
-	| TDateFunctionCreateInput
-	| TTextFunctionCreateInput
-	| TNumberFunctionCreateInput
-	| TCheckboxFunctionCreateInput;
+export type TFormulaObject =
+	| TDateFunctionObject
+	| TTextFunctionObject
+	| TNumberFunctionObject
+	| TCheckboxFunctionObject;
 
-export type FormulaSchemaUnitInput = {
+export type FormulaObjectSchemaUnitInput = {
 	type: 'formula';
 	name: string;
-	formula: TFormulaCreateInput;
+	formula: TFormulaObject;
 };

@@ -1,204 +1,192 @@
 import { TDateConstantValueType } from '@nishans/types';
 
 // Formula Inputs
-export type AnyArrayResultType =
-	| TCheckboxArrayResultType
-	| TTextArrayResultType
-	| TNumberArrayResultType
-	| TDateArrayResultType;
+export type TFormulaArrayArgument =
+	| TCheckboxArrayArgument
+	| TTextArrayArgument
+	| TNumberArrayArgument
+	| TDateArrayArgument;
 
-type Tuple2AnyArrayResultType =
-	| Tuple2<TTextArrayResultType>
-	| Tuple2<TCheckboxArrayResultType>
-	| Tuple2<TDateArrayResultType>
-	| Tuple2<TNumberArrayResultType>;
+type Tuple2TFormulaArrayArgument =
+	| Tuple2<TTextArrayArgument>
+	| Tuple2<TCheckboxArrayArgument>
+	| Tuple2<TDateArrayArgument>
+	| Tuple2<TNumberArrayArgument>;
 
-type Tuple2<T extends AnyArrayResultType> = [T, T];
-type Tuple12<T1 extends AnyArrayResultType, T2 extends AnyArrayResultType> = [T1, T2, T2];
+type Tuple2<T extends TFormulaArrayArgument> = [T, T];
+type Tuple12<T1 extends TFormulaArrayArgument, T2 extends TFormulaArrayArgument> = [T1, T2, T2];
 
-export type TCheckboxArrayResultType = boolean | TCheckboxFunctionArrayCreateInput | { property: string };
-export type TNumberArrayResultType = 'e' | 'pi' | number | TNumberFunctionArrayCreateInput | { property: string };
-export type TDateArrayResultType = TDateFunctionArrayCreateInput | { property: string };
-export type TTextArrayResultType = string | TTextFunctionArrayCreateInput | { property: string };
+export type TCheckboxArrayArgument = boolean | TCheckboxFunctionArray | { property: string };
+export type TNumberArrayArgument = 'e' | 'pi' | number | TNumberFunctionArray | { property: string };
+export type TDateArrayArgument = TDateFunctionArray | { property: string };
+export type TTextArrayArgument = string | TTextFunctionArray | { property: string };
 
-export type NumberIfFunctionArrayCreateInput = ['if', Tuple12<TCheckboxArrayResultType, TNumberArrayResultType>];
-export type TextIfFunctionArrayCreateInput = ['if', Tuple12<TCheckboxArrayResultType, TTextArrayResultType>];
-export type CheckboxIfFunctionArrayCreateInput = ['if', Tuple12<TCheckboxArrayResultType, TCheckboxArrayResultType>];
-export type DateIfFunctionArrayCreateInput = ['if', Tuple12<TCheckboxArrayResultType, TCheckboxArrayResultType>];
-export type EqualFunctionArrayCreateInput = ['equal', Tuple2AnyArrayResultType];
-export type UnequalFunctionArrayCreateInput = ['unequal', Tuple2AnyArrayResultType];
-export type TextAddFunctionArrayCreateInput = ['add', Tuple2<TTextArrayResultType>];
-export type NumberAddFunctionArrayCreateInput = ['add', Tuple2<TNumberArrayResultType>];
-export type ReplaceAllFunctionArrayCreateInput = [
+export type NumberIfFunctionArray = ['if', Tuple12<TCheckboxArrayArgument, TNumberArrayArgument>];
+export type TextIfFunctionArray = ['if', Tuple12<TCheckboxArrayArgument, TTextArrayArgument>];
+export type CheckboxIfFunctionArray = ['if', Tuple12<TCheckboxArrayArgument, TCheckboxArrayArgument>];
+export type DateIfFunctionArray = ['if', Tuple12<TCheckboxArrayArgument, TCheckboxArrayArgument>];
+export type EqualFunctionArray = ['equal', Tuple2TFormulaArrayArgument];
+export type UnequalFunctionArray = ['unequal', Tuple2TFormulaArrayArgument];
+export type TextAddFunctionArray = ['add', Tuple2<TTextArrayArgument>];
+export type NumberAddFunctionArray = ['add', Tuple2<TNumberArrayArgument>];
+export type ReplaceAllFunctionArray = [
 	'replaceAll',
 
 
-		| Tuple12<TNumberArrayResultType, TTextArrayResultType>
-		| Tuple12<TTextArrayResultType, TTextArrayResultType>
-		| Tuple12<TCheckboxArrayResultType, TTextArrayResultType>
+		| Tuple12<TNumberArrayArgument, TTextArrayArgument>
+		| Tuple12<TTextArrayArgument, TTextArrayArgument>
+		| Tuple12<TCheckboxArrayArgument, TTextArrayArgument>
 ];
-export type ReplaceFunctionArrayCreateInput = [
+export type ReplaceFunctionArray = [
 	'replace',
 
 
-		| Tuple12<TNumberArrayResultType, TTextArrayResultType>
-		| Tuple12<TTextArrayResultType, TTextArrayResultType>
-		| Tuple12<TCheckboxArrayResultType, TTextArrayResultType>
+		| Tuple12<TNumberArrayArgument, TTextArrayArgument>
+		| Tuple12<TTextArrayArgument, TTextArrayArgument>
+		| Tuple12<TCheckboxArrayArgument, TTextArrayArgument>
 ];
-export type ConcatFunctionArrayCreateInput = ['concat', TTextArrayResultType[]];
-export type JoinFunctionArrayCreateInput = ['join', TTextArrayResultType[]];
-export type SliceFunctionArrayCreateInput = [
+export type ConcatFunctionArray = ['concat', TTextArrayArgument[]];
+export type JoinFunctionArray = ['join', TTextArrayArgument[]];
+export type SliceFunctionArray = [
 	'slice',
 
-
-		| [TTextArrayResultType, TNumberArrayResultType, TNumberArrayResultType]
-		| [TTextArrayResultType, TNumberArrayResultType]
+	[TTextArrayArgument, TNumberArrayArgument, TNumberArrayArgument] | [TTextArrayArgument, TNumberArrayArgument]
 ];
-export type FormatFunctionArrayCreateInput = ['format', [AnyArrayResultType]];
-export type AndFunctionArrayCreateInput = ['and', Tuple2<TCheckboxArrayResultType>];
-export type OrFunctionArrayCreateInput = ['or', Tuple2<TCheckboxArrayResultType>];
-export type LargerFunctionArrayCreateInput = ['larger', Tuple2<TCheckboxArrayResultType>];
-export type LargerEqFunctionArrayCreateInput = ['largerEq', Tuple2<TCheckboxArrayResultType>];
-export type SmallerFunctionArrayCreateInput = ['smaller', Tuple2<TCheckboxArrayResultType>];
-export type SmallerEqFunctionArrayCreateInput = ['smallerEq', Tuple2<TCheckboxArrayResultType>];
-export type NotFunctionArrayCreateInput = ['not', TCheckboxArrayResultType];
-export type SubtractFunctionArrayCreateInput = ['subtract', Tuple2<TNumberArrayResultType>];
-export type DivideFunctionArrayCreateInput = ['divide', Tuple2<TNumberArrayResultType>];
-export type MultiplyFunctionArrayCreateInput = ['multiply', Tuple2<TNumberArrayResultType>];
-export type PowFunctionArrayCreateInput = ['pow', Tuple2<TNumberArrayResultType>];
-export type ModFunctionArrayCreateInput = ['mod', Tuple2<TNumberArrayResultType>];
-export type UnaryMinusFunctionArrayCreateInput = ['unaryMinus', [TNumberArrayResultType]];
-export type UnaryPlusFunctionArrayCreateInput = ['unaryPlus', [TNumberArrayResultType]];
-export type ContainsFunctionArrayCreateInput = ['contains', Tuple2<TTextArrayResultType>];
-export type TestFunctionArrayCreateInput = [
+export type FormatFunctionArray = ['format', [TFormulaArrayArgument]];
+export type AndFunctionArray = ['and', Tuple2<TCheckboxArrayArgument>];
+export type OrFunctionArray = ['or', Tuple2<TCheckboxArrayArgument>];
+export type LargerFunctionArray = ['larger', Tuple2<TCheckboxArrayArgument>];
+export type LargerEqFunctionArray = ['largerEq', Tuple2<TCheckboxArrayArgument>];
+export type SmallerFunctionArray = ['smaller', Tuple2<TCheckboxArrayArgument>];
+export type SmallerEqFunctionArray = ['smallerEq', Tuple2<TCheckboxArrayArgument>];
+export type NotFunctionArray = ['not', [TCheckboxArrayArgument]];
+export type SubtractFunctionArray = ['subtract', Tuple2<TNumberArrayArgument>];
+export type DivideFunctionArray = ['divide', Tuple2<TNumberArrayArgument>];
+export type MultiplyFunctionArray = ['multiply', Tuple2<TNumberArrayArgument>];
+export type PowFunctionArray = ['pow', Tuple2<TNumberArrayArgument>];
+export type ModFunctionArray = ['mod', Tuple2<TNumberArrayArgument>];
+export type UnaryMinusFunctionArray = ['unaryMinus', [TNumberArrayArgument]];
+export type UnaryPlusFunctionArray = ['unaryPlus', [TNumberArrayArgument]];
+export type ContainsFunctionArray = ['contains', Tuple2<TTextArrayArgument>];
+export type TestFunctionArray = [
 	'test',
 
 
-		| [TNumberArrayResultType, TTextArrayResultType]
-		| [TTextArrayResultType, TTextArrayResultType]
-		| [TCheckboxArrayResultType, TTextArrayResultType]
+		| [TNumberArrayArgument, TTextArrayArgument]
+		| [TTextArrayArgument, TTextArrayArgument]
+		| [TCheckboxArrayArgument, TTextArrayArgument]
 ];
 
-export type EmptyFunctionArrayCreateInput = ['empty', [AnyArrayResultType]];
-export type AbsFunctionArrayCreateInput = ['abs', [TNumberArrayResultType]];
-export type CbrtFunctionArrayCreateInput = ['cbrt', [TNumberArrayResultType]];
-export type CeilFunctionArrayCreateInput = ['ceil', [TNumberArrayResultType]];
-export type ExpFunctionArrayCreateInput = ['exp', [TNumberArrayResultType]];
-export type FloorFunctionArrayCreateInput = ['floor', [TNumberArrayResultType]];
-export type LnFunctionArrayCreateInput = ['ln', [TNumberArrayResultType]];
-export type Log10FunctionArrayCreateInput = ['log10', [TNumberArrayResultType]];
-export type Log2FunctionArrayCreateInput = ['log2', [TNumberArrayResultType]];
-export type MaxFunctionArrayCreateInput = ['max', TNumberArrayResultType[]];
-export type MinFunctionArrayCreateInput = ['min', TNumberArrayResultType[]];
-export type RoundFunctionArrayCreateInput = ['round', [TNumberArrayResultType]];
-export type SignFunctionArrayCreateInput = ['sign', [TNumberArrayResultType]];
-export type SqrtFunctionArrayCreateInput = ['sqrt', [TNumberArrayResultType]];
-export type StartFunctionArrayCreateInput = ['start', [TDateArrayResultType]];
-export type EndFunctionArrayCreateInput = ['end', [TDateArrayResultType]];
-export type DateAddFunctionArrayCreateInput = [
-	'dateAdd',
-	[TDateArrayResultType, TNumberArrayResultType, TDateConstantValueType]
-];
-export type DateSubtractFunctionArrayCreateInput = [
+export type EmptyFunctionArray = ['empty', [TFormulaArrayArgument]];
+export type AbsFunctionArray = ['abs', [TNumberArrayArgument]];
+export type CbrtFunctionArray = ['cbrt', [TNumberArrayArgument]];
+export type CeilFunctionArray = ['ceil', [TNumberArrayArgument]];
+export type ExpFunctionArray = ['exp', [TNumberArrayArgument]];
+export type FloorFunctionArray = ['floor', [TNumberArrayArgument]];
+export type LnFunctionArray = ['ln', [TNumberArrayArgument]];
+export type Log10FunctionArray = ['log10', [TNumberArrayArgument]];
+export type Log2FunctionArray = ['log2', [TNumberArrayArgument]];
+export type MaxFunctionArray = ['max', TNumberArrayArgument[]];
+export type MinFunctionArray = ['min', TNumberArrayArgument[]];
+export type RoundFunctionArray = ['round', [TNumberArrayArgument]];
+export type SignFunctionArray = ['sign', [TNumberArrayArgument]];
+export type SqrtFunctionArray = ['sqrt', [TNumberArrayArgument]];
+export type StartFunctionArray = ['start', [TDateArrayArgument]];
+export type EndFunctionArray = ['end', [TDateArrayArgument]];
+export type DateAddFunctionArray = ['dateAdd', [TDateArrayArgument, TNumberArrayArgument, TDateConstantValueType]];
+export type DateSubtractFunctionArray = [
 	'dateSubtract',
-	[TDateArrayResultType, TNumberArrayResultType, TDateConstantValueType]
+	[TDateArrayArgument, TNumberArrayArgument, TDateConstantValueType]
 ];
-export type DateBetweenFunctionArrayCreateInput = [
-	'dateBetween',
-	Tuple12<TDateArrayResultType, TDateConstantValueType>
-];
-export type FormatDateFunctionArrayCreateInput = ['formatDate', [TDateArrayResultType, TTextArrayResultType]];
+export type DateBetweenFunctionArray = ['dateBetween', Tuple12<TDateArrayArgument, TDateConstantValueType>];
+export type FormatDateFunctionArray = ['formatDate', [TDateArrayArgument, TTextArrayArgument]];
 
-export type TimestampFunctionArrayCreateInput = ['timestamp', [TDateArrayResultType]];
-export type FromTimestampFunctionArrayCreateInput = ['fromTimestamp', [TNumberArrayResultType]];
-export type MinuteFunctionArrayCreateInput = ['minute', [TDateArrayResultType]];
-export type HourFunctionArrayCreateInput = ['hour', [TDateArrayResultType]];
-export type DayFunctionArrayCreateInput = ['day', [TDateArrayResultType]];
-export type DateFunctionArrayCreateInput = ['date', [TDateArrayResultType]];
-export type MonthFunctionArrayCreateInput = ['month', [TDateArrayResultType]];
-export type YearFunctionArrayCreateInput = ['year', [TDateArrayResultType]];
-export type LengthFunctionArrayCreateInput = ['length', [TTextArrayResultType]];
-export type ToNumberFunctionArrayCreateInput = ['toNumber', [AnyArrayResultType]];
-export type NowFunctionArrayCreateInput = ['now'];
+export type TimestampFunctionArray = ['timestamp', [TDateArrayArgument]];
+export type FromTimestampFunctionArray = ['fromTimestamp', [TNumberArrayArgument]];
+export type MinuteFunctionArray = ['minute', [TDateArrayArgument]];
+export type HourFunctionArray = ['hour', [TDateArrayArgument]];
+export type DayFunctionArray = ['day', [TDateArrayArgument]];
+export type DateFunctionArray = ['date', [TDateArrayArgument]];
+export type MonthFunctionArray = ['month', [TDateArrayArgument]];
+export type YearFunctionArray = ['year', [TDateArrayArgument]];
+export type LengthFunctionArray = ['length', [TTextArrayArgument]];
+export type ToNumberFunctionArray = ['toNumber', [TFormulaArrayArgument]];
+export type NowFunctionArray = ['now'];
 
-export type TTextFunctionArrayCreateInput =
-	| TextIfFunctionArrayCreateInput
-	| TextAddFunctionArrayCreateInput
-	| ReplaceAllFunctionArrayCreateInput
-	| ReplaceFunctionArrayCreateInput
-	| ConcatFunctionArrayCreateInput
-	| JoinFunctionArrayCreateInput
-	| SliceFunctionArrayCreateInput
-	| FormatFunctionArrayCreateInput;
+export type TTextFunctionArray =
+	| TextIfFunctionArray
+	| TextAddFunctionArray
+	| ReplaceAllFunctionArray
+	| ReplaceFunctionArray
+	| ConcatFunctionArray
+	| JoinFunctionArray
+	| SliceFunctionArray
+	| FormatFunctionArray;
 
-export type TCheckboxFunctionArrayCreateInput =
-	| CheckboxIfFunctionArrayCreateInput
-	| EqualFunctionArrayCreateInput
-	| UnequalFunctionArrayCreateInput
-	| AndFunctionArrayCreateInput
-	| OrFunctionArrayCreateInput
-	| LargerFunctionArrayCreateInput
-	| LargerEqFunctionArrayCreateInput
-	| SmallerFunctionArrayCreateInput
-	| SmallerEqFunctionArrayCreateInput
-	| NotFunctionArrayCreateInput
-	| EmptyFunctionArrayCreateInput
-	| TestFunctionArrayCreateInput
-	| ContainsFunctionArrayCreateInput;
+export type TCheckboxFunctionArray =
+	| CheckboxIfFunctionArray
+	| EqualFunctionArray
+	| UnequalFunctionArray
+	| AndFunctionArray
+	| OrFunctionArray
+	| LargerFunctionArray
+	| LargerEqFunctionArray
+	| SmallerFunctionArray
+	| SmallerEqFunctionArray
+	| NotFunctionArray
+	| EmptyFunctionArray
+	| TestFunctionArray
+	| ContainsFunctionArray;
 
-export type TNumberFunctionArrayCreateInput =
-	| NumberAddFunctionArrayCreateInput
-	| SubtractFunctionArrayCreateInput
-	| DivideFunctionArrayCreateInput
-	| MultiplyFunctionArrayCreateInput
-	| PowFunctionArrayCreateInput
-	| ModFunctionArrayCreateInput
-	| UnaryMinusFunctionArrayCreateInput
-	| UnaryPlusFunctionArrayCreateInput
-	| NumberIfFunctionArrayCreateInput
-	| DateBetweenFunctionArrayCreateInput
-	| TimestampFunctionArrayCreateInput
-	| SqrtFunctionArrayCreateInput
-	| SignFunctionArrayCreateInput
-	| RoundFunctionArrayCreateInput
-	| MinFunctionArrayCreateInput
-	| MaxFunctionArrayCreateInput
-	| Log2FunctionArrayCreateInput
-	| Log10FunctionArrayCreateInput
-	| LnFunctionArrayCreateInput
-	| FloorFunctionArrayCreateInput
-	| ExpFunctionArrayCreateInput
-	| CeilFunctionArrayCreateInput
-	| CbrtFunctionArrayCreateInput
-	| AbsFunctionArrayCreateInput
-	| ToNumberFunctionArrayCreateInput
-	| LengthFunctionArrayCreateInput;
+export type TNumberFunctionArray =
+	| NumberAddFunctionArray
+	| SubtractFunctionArray
+	| DivideFunctionArray
+	| MultiplyFunctionArray
+	| PowFunctionArray
+	| ModFunctionArray
+	| UnaryMinusFunctionArray
+	| UnaryPlusFunctionArray
+	| NumberIfFunctionArray
+	| DateBetweenFunctionArray
+	| TimestampFunctionArray
+	| SqrtFunctionArray
+	| SignFunctionArray
+	| RoundFunctionArray
+	| MinFunctionArray
+	| MaxFunctionArray
+	| Log2FunctionArray
+	| Log10FunctionArray
+	| LnFunctionArray
+	| FloorFunctionArray
+	| ExpFunctionArray
+	| CeilFunctionArray
+	| CbrtFunctionArray
+	| AbsFunctionArray
+	| ToNumberFunctionArray
+	| LengthFunctionArray;
 
-export type TDateFunctionArrayCreateInput =
-	| DateIfFunctionArrayCreateInput
-	| FormatDateFunctionArrayCreateInput
-	| DateSubtractFunctionArrayCreateInput
-	| DateAddFunctionArrayCreateInput
-	| NowFunctionArrayCreateInput
-	| StartFunctionArrayCreateInput
-	| EndFunctionArrayCreateInput
-	| TimestampFunctionArrayCreateInput
-	| FromTimestampFunctionArrayCreateInput
-	| MinuteFunctionArrayCreateInput
-	| HourFunctionArrayCreateInput
-	| DayFunctionArrayCreateInput
-	| DateFunctionArrayCreateInput
-	| MonthFunctionArrayCreateInput
-	| YearFunctionArrayCreateInput;
+export type TDateFunctionArray =
+	| DateIfFunctionArray
+	| FormatDateFunctionArray
+	| DateSubtractFunctionArray
+	| DateAddFunctionArray
+	| NowFunctionArray
+	| StartFunctionArray
+	| EndFunctionArray
+	| TimestampFunctionArray
+	| FromTimestampFunctionArray
+	| MinuteFunctionArray
+	| HourFunctionArray
+	| DayFunctionArray
+	| DateFunctionArray
+	| MonthFunctionArray
+	| YearFunctionArray;
 
-export type TFormulaArrayCreateInput =
-	| TDateFunctionArrayCreateInput
-	| TTextFunctionArrayCreateInput
-	| TNumberFunctionArrayCreateInput
-	| TCheckboxFunctionArrayCreateInput;
+export type TFormulaArray = TDateFunctionArray | TTextFunctionArray | TNumberFunctionArray | TCheckboxFunctionArray;
 
 export type FormulaArraySchemaUnitInput = {
 	type: 'formula';
 	name: string;
-	formula: TFormulaArrayCreateInput;
+	formula: TFormulaArray;
 };

@@ -2,11 +2,6 @@ import {
 	CreatedBySchemaUnit,
 	CreatedTimeSchemaUnit,
 	IViewFilter,
-	LastEditedBySchemaUnit,
-	LastEditedTimeSchemaUnit,
-	RelationSchemaUnit,
-	RollupSchemaUnit,
-	TBasicSchemaUnit,
 	TSchemaUnit,
 	ViewAggregations,
 	ViewFormatProperties,
@@ -30,11 +25,4 @@ export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 
 export type SchemaFormalPropertiesUpdateInput = Partial<{ position: number; visible: boolean; width: number }>;
 
-export type TSchemaUnitInput =
-	| TBasicSchemaUnit
-	| RelationSchemaUnit
-	| RollupSchemaUnit
-	| CreatedTimeSchemaUnit
-	| CreatedBySchemaUnit
-	| LastEditedTimeSchemaUnit
-	| LastEditedBySchemaUnit;
+export type TSchemaUnitInput = TSchemaUnit;

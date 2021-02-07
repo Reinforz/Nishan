@@ -6,6 +6,7 @@ import { priority, difficulty } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
 
 import '../../env';
+import { generateFormulaASTFromArray } from '@nishans/notion-formula';
 
 const daily_sites = [
 	'Github',
@@ -156,18 +157,14 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: 'formula',
           name: 'Urgency',
-          formula: adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}])
+          formula: generateFormulaASTFromArray(adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}]))
         },
         {
           type: 'formula',
           name: 'Done',
-          formula: {
-            function: 'not',
-            args: {
-              function: 'empty',
-              args: { property: 'Completed At' }
-            }
-          }
+          formula: generateFormulaASTFromArray(
+            [ 'not', [['empty', [{ property: 'Completed At' }]]]]
+          )
         },
         {
           type: 'select',
@@ -182,12 +179,12 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: 'formula',
           name: 'Priority Counter',
-          formula: counterFormula('Priority', [ 'High', 'Medium' ])
+          formula: generateFormulaASTFromArray(counterFormula('Priority', [ 'High', 'Medium' ]))
         },
         {
           type: 'formula',
           name: 'Difficulty Counter',
-          formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
+          formula: generateFormulaASTFromArray(counterFormula('Difficulty', [ 'Easy', 'Medium' ]))
         },
         {
           type: 'date',
@@ -300,29 +297,24 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: "formula",
           name: "Total Checked",
-          formula: adders(daily_sites.map(site => propertyChecked(site)))
+          formula: generateFormulaASTFromArray(adders(daily_sites.map(site => propertyChecked(site))))
         },
         {
           type: "formula",
           name: "Percentage Checked",
-          formula: {
-            function: "round",
-            args: {
-              function: "multiply",
-              args: [
-                {
-                  function: "divide",
-                  args: [
-                    {
-                      property: "Total Checked"
-                    },
-                    9
-                  ],
-                },
+          formula: generateFormulaASTFromArray([
+            'round', [
+              ['multiply', [
+                ['divide', [
+                  {
+                    property: "Total Checked"
+                  },
+                  9
+                ]],
                 100
               ]
-            }
-          }
+            ]]
+          ])
         }
       ],
       views: [

@@ -9,10 +9,10 @@ export function constructNotionHeaders(configs: Configs): NotionHeaders{
   if(!token)
     throw new Error('Token not provided')
   return  {
-    headers: {
+    headers: token ? {
       cookie: `token_v2=${token};notion_user_id=${user_id};`,
       ["x-notion-active-user-header"]: user_id
-    }
+    } : {}
   }
 }
 

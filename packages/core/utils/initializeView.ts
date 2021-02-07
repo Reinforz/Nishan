@@ -3,7 +3,7 @@ import {IBoardView, ITableView, ITimelineView, IViewFilter, TView, TViewQuery2, 
 export function initializeViewFilters (data: TView){
   if (!data.query2) data.query2 = { sort: [], aggregations: [], filter: { operator: "and", filters: [] } } as any;
   if (!data.query2?.filter) (data.query2 as TViewQuery2).filter = { operator: "and", filters: [] };
-  if (!data.query2?.filter.filters) (data.query2 as TViewQuery2).filter.filters = [];
+  if (!data.query2?.filter?.filters) (data.query2 as any).filter.filters = [];
   return (data.query2 as any).filter as IViewFilter
 }
 

@@ -57,10 +57,14 @@ export default class Page extends Block<IPage, IPageCreateInput> {
         break;
       }
     };
-    const is_bookmarked = target_space_view?.bookmarked_pages?.includes(data.id);
-    if(is_bookmarked)
-      target_space_view.bookmarked_pages = target_space_view.bookmarked_pages.filter(id=>id !== this.id);
-    else target_space_view.bookmarked_pages.push(this.id);
+
+    let is_bookmarked = false;
+    if(target_space_view.bookmarked_pages){
+      is_bookmarked = target_space_view.bookmarked_pages?.includes(data.id);
+      if(is_bookmarked)
+        target_space_view.bookmarked_pages = target_space_view.bookmarked_pages.filter(id=>id !== this.id);
+      else target_space_view.bookmarked_pages.push(this.id);
+    }
 
     this.stack.push(
       (is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {

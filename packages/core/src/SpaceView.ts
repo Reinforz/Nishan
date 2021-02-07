@@ -58,7 +58,7 @@ class SpaceView extends Data<ISpaceView> {
 
   async getBookmarkedPages(args: FilterTypes<TPage>, multiple?: boolean) {
     return await this.getIterate<TPage, ITPage>(args, {
-      child_ids: this.getCachedData().bookmarked_pages,
+      child_ids: this.getCachedData().bookmarked_pages ?? [],
       child_type: "block",
       multiple,
       container: createPageMap()
@@ -98,10 +98,10 @@ class SpaceView extends Data<ISpaceView> {
       child_type: "block",
       multiple,
       manual: true
-    }, (id) => this.cache.block.get(id) as TPage, (id, tpage, new_favourite_status) => {
-      if(!new_favourite_status) data.bookmarked_pages = data.bookmarked_pages.filter(page_id=>page_id !== id);
-      else data.bookmarked_pages.push(id)
-      this.stack.push((!new_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
+    }, (id) => this.cache.block.get(id) as TPage, (id, tpage, updated_favourite_status) => {
+      if(!updated_favourite_status) data.bookmarked_pages = data?.bookmarked_pages?.filter(page_id=>page_id !== id);
+      else data?.bookmarked_pages?.push(id)
+      this.stack.push((!updated_favourite_status ? Operation.space_view.listRemove : Operation.space_view.listBefore)(data.id, ["bookmarked_pages"], {
         id
       }))
     });

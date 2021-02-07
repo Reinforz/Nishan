@@ -47,7 +47,7 @@ export function getFiltersMap(data: TView, collection: ICollection){
   const filters = initializeViewFilters(data),
     filters_map: ISchemaFiltersMap = new Map();
 
-  data.query2?.filter.filters.forEach(filter => {
+  data.query2?.filter?.filters.forEach(filter => {
     if((filter as TViewFilters).property){
       const target_filter = filter as TViewFilters;
       const schema_unit = collection.schema[target_filter.property];

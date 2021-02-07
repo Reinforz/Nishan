@@ -80,8 +80,7 @@ describe('sendRequest', () => {
 			};
 		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
 		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data, {
-			token: 'token',
-			interval: 0
+			token: 'token'
 		});
 		expect(deepEqual(response, response_data)).toBe(true);
 	});

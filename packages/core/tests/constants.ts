@@ -4,7 +4,7 @@ import data from './data';
 import { generateTestData } from './utils/generateTestData';
 
 const nishan = new Nishan({
-	token: ''
+	token: 'empty'
 });
 
 nishan.logger = false;

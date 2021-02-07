@@ -36,7 +36,7 @@
   },
   "scripts": {
     "prebuild": "npm run test",
-    "build": "del-cli ./dist && tsc --sourceMap false",
+    "build": "npx del-cli ./dist && tsc --sourceMap false",
     "test": "npx jest --runInBand ./tests --collectCoverage"
   },
   "bugs": {

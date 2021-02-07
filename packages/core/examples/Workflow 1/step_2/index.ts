@@ -39,7 +39,7 @@ function goalProgress (goal_number: number): TFormulaSchemaUnitInput {
 								function: 'divide',
 								args: [
 									{
-										property: `Goal ${goal_number} Step`
+										property: `Goal ${goal_number} Steps`
 									},
 									{
 										function: 'toNumber',
@@ -279,7 +279,7 @@ export default async function step2 (target_page: Page) {
 							},
 							{
 								type: 'multi_select',
-								name: 'Course Publisher'
+								name: 'Publisher'
 							},
 							{
 								type: 'text',
@@ -318,7 +318,7 @@ export default async function step2 (target_page: Page) {
 				schema: [
 					{
 						type: 'multi_select',
-						name: 'Course Publisher',
+						name: 'Publisher',
 						options: []
 					},
 					{
@@ -361,13 +361,14 @@ export default async function step2 (target_page: Page) {
 						type: 'table',
 						name: 'Current Minimalistic',
 						schema_units: [
-							{
+							// Progress schema_unit was referenced later
+							/* {
 								type: 'formula',
 								name: 'Progress',
 								format: 150,
 								aggregation: 'average',
 								sort: 'descending'
-							},
+							}, */
 							{
 								type: 'title',
 								name: 'Goal',
@@ -419,8 +420,8 @@ export default async function step2 (target_page: Page) {
 										value: 'Completed'
 									}
 								}
-							},
-							{
+							}
+							/* {
 								type: 'formula',
 								name: 'Progress',
 								filter: {
@@ -430,7 +431,7 @@ export default async function step2 (target_page: Page) {
 										value: 100
 									}
 								}
-							}
+							} */
 						]
 					}
 				],
@@ -438,45 +439,6 @@ export default async function step2 (target_page: Page) {
 					{
 						type: 'created_time',
 						name: 'Created'
-					},
-					{
-						type: 'formula',
-						name: 'Progress',
-						formula: [
-							{
-								function: 'if',
-								args: [
-									{
-										function: 'equal',
-										args: [ { property: 'Total Steps' }, 0 ]
-									},
-									0,
-									{
-										function: 'round',
-										args: [
-											{
-												function: 'multiply',
-												args: [
-													{
-														function: 'divide',
-														args: [
-															{
-																property: 'Completed Steps'
-															},
-															{
-																property: 'Total Steps'
-															}
-														]
-													},
-													100
-												]
-											}
-										]
-									}
-								]
-							},
-							'object'
-						]
 					},
 					...CommonMultiSelectSchemaInput,
 					{
@@ -511,43 +473,13 @@ export default async function step2 (target_page: Page) {
 				},
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg',
 				collection_id: tasks_collection_id,
-				views: [
-					tasksTableViews('Today', 'today'),
-					tasksTableViews('Yesterday', 'yesterday'),
-					tasksTableViews('Weekly', 'one_week_ago'),
-					tasksBoardViews('Purpose'),
-					tasksBoardViews('Subject'),
-					{
-						type: 'calendar',
-						name: 'Monthly Calendar',
-						calendar_by: 'On',
-						schema_units: [
-							{
-								type: 'multi_select',
-								name: 'Purpose'
-							},
-							{
-								type: 'multi_select',
-								name: 'Subject'
-							},
-							{
-								type: 'formula',
-								name: 'On',
-								sort: 'ascending',
-								format: false
-							}
-						]
-					}
-				],
 				schema: [
 					{
 						type: 'title',
 						name: 'Task'
 					},
 					...CommonMultiSelectSchemaInput,
-					goalProgress(1),
-					goalProgress(2),
-					goalProgress(3),
+
 					task2goalRelation(1),
 					task2goalRelation(2),
 					task2goalRelation(3),
@@ -591,6 +523,37 @@ export default async function step2 (target_page: Page) {
 							},
 							'object'
 						]
+					},
+					goalProgress(1),
+					goalProgress(2),
+					goalProgress(3)
+				],
+				views: [
+					tasksTableViews('Today', 'today'),
+					tasksTableViews('Yesterday', 'yesterday'),
+					tasksTableViews('Weekly', 'one_week_ago'),
+					tasksBoardViews('Purpose'),
+					tasksBoardViews('Subject'),
+					{
+						type: 'calendar',
+						name: 'Monthly Calendar',
+						calendar_by: 'On',
+						schema_units: [
+							{
+								type: 'multi_select',
+								name: 'Purpose'
+							},
+							{
+								type: 'multi_select',
+								name: 'Subject'
+							},
+							{
+								type: 'formula',
+								name: 'On',
+								sort: 'ascending',
+								format: false
+							}
+						]
 					}
 				]
 			}
@@ -613,14 +576,13 @@ export default async function step2 (target_page: Page) {
 							false;
 					}
 				});
-
 				goals_collection.createSchemaUnits([
-					goal2taskTotalTasksRollup(1),
-					goal2taskTotalTasksRollup(2),
-					goal2taskTotalTasksRollup(3),
 					goal2taskCompletedStepsRollup(1),
 					goal2taskCompletedStepsRollup(2),
 					goal2taskCompletedStepsRollup(3),
+					goal2taskTotalTasksRollup(1),
+					goal2taskTotalTasksRollup(2),
+					goal2taskTotalTasksRollup(3),
 					{
 						type: 'formula',
 						name: 'Completed Steps',
@@ -638,6 +600,45 @@ export default async function step2 (target_page: Page) {
 							{ property: 'Total Tasks 2' },
 							{ property: 'Total Tasks 3' }
 						])
+					},
+					{
+						type: 'formula',
+						name: 'Progress',
+						formula: [
+							{
+								function: 'if',
+								args: [
+									{
+										function: 'equal',
+										args: [ { property: 'Total Steps' }, 0 ]
+									},
+									0,
+									{
+										function: 'round',
+										args: [
+											{
+												function: 'multiply',
+												args: [
+													{
+														function: 'divide',
+														args: [
+															{
+																property: 'Completed Steps'
+															},
+															{
+																property: 'Total Steps'
+															}
+														]
+													},
+													100
+												]
+											}
+										]
+									}
+								]
+							},
+							'object'
+						]
 					}
 				]);
 				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');

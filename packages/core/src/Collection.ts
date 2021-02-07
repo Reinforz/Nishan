@@ -159,10 +159,11 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   createSchemaUnits(args: TSchemaUnitInput[]) {
-    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData(), schema_map = generateSchemaMapFromCollectionSchema(data.schema);
+    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
+        const schema_map = generateSchemaMapFromCollectionSchema(data.schema);
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: generateFormulaAST(arg.formula[0] as any, arg.formula[1] as any, schema_map)}
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })

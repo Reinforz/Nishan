@@ -45,7 +45,7 @@ export default class Data<T extends TData> extends Operations {
       console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
     };
     // Throw error here if user_id not provided
-    this.user_id = super.user_id ?? '';
+    this.user_id = arg.user_id ?? '';
   }
 
   protected getLastEditedProps() {
@@ -112,7 +112,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async initializeCacheForThisData() {
-    if (!this.init_cache) {
+    if (!this.init_cache && this.type !== "notion_user") {
       await this.initializeCacheForSpecificData(this.id, this.type)
       this.init_cache = true;
     }

@@ -1,29 +1,32 @@
-import { Schema, TSchemaUnit } from "@nishans/types";
+import { generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
+import { Schema } from "@nishans/types";
 import { ICollectionBlockInput, ITView, NishanArg } from "../types";
 import { createViews, Operation, generateId } from "../utils";
 import { slugify } from "./slugify";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
-  const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: Map<string, TSchemaUnit & {schema_id: string}> = new Map();
+  const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: ISchemaMap = new Map();
 
+  // Generate the schema first since formula will need the whole schema_map
   param.schema.forEach(opt => {
     const schema_id = slugify(opt.type === "title" ? "Title" : opt.name);
-    schema[schema_id] = opt as any;
-    schema_map.set(opt.name,  {...opt, schema_id} as any)
-  });
-
-  Object.entries(schema).forEach(([schema_id, schema_unit])=>{
-    if(schema_unit.type === "relation"){
-      const collection = props.cache.collection.get(schema_unit.collection_id);
+    if(opt.type === "formula"){
+      const parsed_formula = generateFormulaAST(opt.formula[0] as any, opt.formula[1] as any, schema_map)
+      schema[schema_id] = {...opt, formula: parsed_formula};
+    } else if(opt.type === "relation"){
+      const collection = props.cache.collection.get(opt.collection_id);
       if(collection)
-        collection.schema[schema_unit.property] = {
+        collection.schema[opt.property] = {
           type: "relation",
           collection_id,
-          name: `Related to ${param.properties.title} (${schema_unit.name})`,
+          name: `Related to ${param.properties.title} (${opt.name})`,
           property: schema_id
         }
+      schema[schema_id] = opt;
     }
-  })
+    else schema[schema_id] = opt;
+    schema_map.set(opt.name,  {...schema[schema_id], schema_id})
+  });
 
   const [view_ids, view_map] = createViews(schema, param.views, collection_id, parent_id, props);
   const collection_data = {

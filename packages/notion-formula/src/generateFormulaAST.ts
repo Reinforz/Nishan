@@ -36,7 +36,8 @@ export function generateFormulaAST (
   representation: 'array' | 'object' | 'string',
 	schema_map?: ISchemaMap,
 ): TFormula {
-	function traverseArguments (arg: TFormulaObjectArgument | TFormulaArrayArgument | undefined): TFormula {
+  
+  function traverseArguments (arg: TFormulaObjectArgument | TFormulaArrayArgument | undefined): TFormula {
     // Check whether an array based or object based function formula is used
 		const is_arg_array_function = Array.isArray(arg),
 			is_arg_object_function = (arg as TFormulaObject).function;

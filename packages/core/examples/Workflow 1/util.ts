@@ -72,17 +72,9 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 		options: subject.map(({ title, color }) => ({ value: title, color, id: uuidv4() }))
 	},
 	{
-		type: 'formula',
-		name: 'Urgency',
-		formula: adders([ { property: 'Phase Counter' }, { property: 'Status Counter' }, { property: 'Priority Counter' } ])
-	},
-	{
-		type: 'formula',
-		name: 'Completed',
-		formula: [
-			[ 'and', [ [ 'and', [ { property: 'Practiced' }, { property: 'Learned' } ] ], { property: 'Revised' } ] ],
-			'array'
-		]
+		type: 'select',
+		name: 'Status',
+		options: status.slice(0, 1).map((status) => ({ ...status, id: uuidv4() }))
 	},
 	{
 		type: 'select',
@@ -90,29 +82,9 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 		options: priority.map((priority) => ({ ...priority, id: uuidv4() }))
 	},
 	{
-		type: 'formula',
-		name: 'Priority Counter',
-		formula: counterFormula('Priority', [ 'High', 'Medium' ])
-	},
-	{
-		type: 'select',
-		name: 'Status',
-		options: status.map((status) => ({ ...status, id: uuidv4() }))
-	},
-	{
-		type: 'formula',
-		name: 'Status Counter',
-		formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
-	},
-	{
 		type: 'select',
 		name: 'Phase',
 		options: phase.map((phase) => ({ ...phase, id: uuidv4() }))
-	},
-	{
-		type: 'formula',
-		name: 'Phase Counter',
-		formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
 	},
 	{
 		type: 'date',
@@ -137,6 +109,34 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'checkbox',
 		name: 'Practiced'
+	},
+	{
+		type: 'formula',
+		name: 'Status Counter',
+		formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
+	},
+	{
+		type: 'formula',
+		name: 'Phase Counter',
+		formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
+	},
+	{
+		type: 'formula',
+		name: 'Priority Counter',
+		formula: counterFormula('Priority', [ 'High', 'Medium' ])
+	},
+	{
+		type: 'formula',
+		name: 'Urgency',
+		formula: adders([ { property: 'Status Counter' }, { property: 'Phase Counter' }, { property: 'Priority Counter' } ])
+	},
+	{
+		type: 'formula',
+		name: 'Completed',
+		formula: [
+			[ 'and', [ [ 'and', [ { property: 'Practiced' }, { property: 'Learned' } ] ], { property: 'Revised' } ] ],
+			'array'
+		]
 	}
 ];
 

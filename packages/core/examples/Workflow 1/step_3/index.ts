@@ -2,92 +2,93 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { ILinkedDBInput, IPageCreateInput, TViewCreateInput, CollectionViewPage, Page } from '../../../src';
 import { ecosystems, categories, subject } from '../data';
-import { CommonMultiSelectSchema,status_phase_combos } from '../util';
+import { CommonMultiSelectSchema, status_phase_combos } from '../util';
 
-function createLinkedDB(collection_id: string, cvp: 'EBooks' | 'Courses', title: string) {
-  return {
-    type: 'linked_db',
-    collection_id,
-    views: status_phase_combos.map(
-      ([status, phase, geruund]) =>
-      ({
-        type: 'gallery',
-        name: `${status} ${geruund} ${cvp}`,
-        gallery_cover: { property: 'Cover', type: 'property' },
-        schema_units: [
-          {
-            type: 'title',
-            name: 'Title',
-            sort: 'ascending'
-          },
-          {
-            type: 'text',
-            name: 'Instructor'
-          },
-          {
-            type: 'select',
-            name: 'Publisher'
-          },
-          {
-            type: 'multi_select',
-            name: 'Subject',
-          },
-          {
-            name: 'Priority',
-            type: 'select'
-          },
-        ],
-        filters: [
-          {
-            type: "multi_select",
-            name: "Subject",
-            filter: {
-              operator: "enum_contains",
-              value: {
-                value: title,
-                type: "exact"
-              }
-            }
-          },
-          {
-            type: 'select',
-            name: 'Phase',
-            filter: {
-              operator: 'enum_is',
-              value: {
-                type: 'exact',
-                value: phase
-              }
-            }
-          },
-          {
-            type: 'select',
-            name: 'Status',
-            filter: {
-              operator: 'enum_is',
-              value: {
-                type: 'exact',
-                value: status
-              }
-            }
-          }
-        ]
-      } as TViewCreateInput)
-    )
-  } as ILinkedDBInput;
+function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title: string) {
+	return {
+		type: 'linked_db',
+		collection_id,
+		views: status_phase_combos.map(
+			([ status, phase, gerund ]) =>
+				({
+					type: 'gallery',
+					name: `${status} ${gerund} ${cvp}`,
+					gallery_cover: { property: 'Cover', type: 'property' },
+					schema_units: [
+						{
+							type: 'title',
+							name: 'Title',
+							sort: 'ascending'
+						},
+						{
+							type: 'text',
+							name: 'Instructor'
+						},
+						{
+							type: 'select',
+							name: 'Publisher'
+						},
+						{
+							type: 'multi_select',
+							name: 'Subject'
+						},
+						{
+							name: 'Priority',
+							type: 'select'
+						}
+					],
+					filters: [
+						{
+							type: 'multi_select',
+							name: 'Subject',
+							filter: {
+								operator: 'enum_contains',
+								value: {
+									value: title,
+									type: 'exact'
+								}
+							}
+						},
+						{
+							type: 'select',
+							name: 'Phase',
+							filter: {
+								operator: 'enum_is',
+								value: {
+									type: 'exact',
+									value: phase
+								}
+							}
+						},
+						{
+							type: 'select',
+							name: 'Status',
+							filter: {
+								operator: 'enum_is',
+								value: {
+									type: 'exact',
+									value: status
+								}
+							}
+						}
+					]
+				} as TViewCreateInput)
+		)
+	} as ILinkedDBInput;
 }
 
-export default async function step3(target_page: Page) {
-  const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
-  const getCollectionId = (title: string) => (collection_view_page.get(title) as CollectionViewPage).getCachedData().collection_id;
+export default async function step3 (target_page: Page) {
+	const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
+	const getCollectionId = (title: string) =>
+		(collection_view_page.get(title) as CollectionViewPage).getCachedData().collection_id;
 
-  const articles_cvp_id = getCollectionId('Articles'),
-    tasks_cvp_id = getCollectionId('Tasks'),
-    goals_cvp_id = getCollectionId('Goals'),
-    course_list_cvp_id = getCollectionId('Course List'),
-    reading_list_cvp_id = getCollectionId('Reading List');
+	const articles_cvp_id = getCollectionId('Articles'),
+		tasks_cvp_id = getCollectionId('Tasks'),
+		goals_cvp_id = getCollectionId('Goals'),
+		course_list_cvp_id = getCollectionId('Course List'),
+		reading_list_cvp_id = getCollectionId('Reading List');
 
-  function returnSubjectSlice(start: number, end: number) {
+	function returnSubjectSlice(start: number, end: number) {
     return subject.slice(start, end).map(({ ecosystem, image, title, category }) => (
       {
         format: {

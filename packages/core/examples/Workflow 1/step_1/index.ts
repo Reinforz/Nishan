@@ -28,6 +28,7 @@ export default async function step1(user_family_name: string, space_name: string
   });
 
   const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);
+  
   const space = await user.getSpace((space) => space.name === space_name);
 	const { page } = await space.createTRootPages([
     {
@@ -154,18 +155,7 @@ export default async function step1(user_family_name: string, space_name: string
           type: 'title',
           name: 'Todo'
         },
-        {
-          type: 'formula',
-          name: 'Urgency',
-          formula: adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}])
-        },
-        {
-          type: 'formula',
-          name: 'Done',
-          formula: [
-            [ 'not', [['empty', [{ property: 'Completed At' }]]]]
-          , 'array']
-        },
+        
         {
           type: 'select',
           name: 'Priority',
@@ -175,6 +165,17 @@ export default async function step1(user_family_name: string, space_name: string
           type: 'select',
           name: 'Difficulty',
           options: difficulty.map((difficulty) => ({ ...difficulty, id: uuidv4() }))
+        },
+        {
+          type: 'date',
+          name: 'Completed At'
+        },
+        {
+          type: 'formula',
+          name: 'Done',
+          formula: [
+            [ 'not', [['empty', [{ property: 'Completed At' }]]]]
+          , 'array']
         },
         {
           type: 'formula',
@@ -187,9 +188,10 @@ export default async function step1(user_family_name: string, space_name: string
           formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
         },
         {
-          type: 'date',
-          name: 'Completed At'
-        }
+          type: 'formula',
+          name: 'Urgency',
+          formula: adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}])
+        },
       ],
       views: [
         {
@@ -425,7 +427,8 @@ export default async function step1(user_family_name: string, space_name: string
           ]
         }
       ]
-    }]);
+    }
+  ]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
   await target_page?.executeOperation();
   return target_page as Page;

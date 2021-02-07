@@ -8,6 +8,7 @@ import {
   TFormulaObject,
   TFormulaObjectArgument,
 } from '../types';
+import { generateFormulaASTFromString } from './generateFormulaASTFromString';
 
 /**
  * Generates a notion formula fully compatible with the client, using either an easier array or object representation
@@ -15,9 +16,25 @@ import {
  * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
  * @returns The generated formula ast
  */
-function generateFormulaAST (
-	input_formula: FormulaObjectSchemaUnitInput['formula'] | FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
-	schema_map?: ISchemaMap
+export function generateFormulaAST (
+	input_formula: FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
+  representation: 'array',
+	schema_map?: ISchemaMap,
+): TFormula;
+export function generateFormulaAST (
+	input_formula: FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
+  representation: 'object',
+	schema_map?: ISchemaMap,
+): TFormula
+export function generateFormulaAST (
+	input_formula: string,
+  representation: 'string',
+	schema_map?: ISchemaMap,
+): TFormula
+export function generateFormulaAST (
+	input_formula: FormulaArraySchemaUnitInput['formula'] | FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
+  representation: 'array' | 'object' | 'string',
+	schema_map?: ISchemaMap,
 ): TFormula {
 	function traverseArguments (arg: TFormulaObjectArgument | TFormulaArrayArgument | undefined): TFormula {
     // Check whether an array based or object based function formula is used
@@ -85,7 +102,7 @@ function generateFormulaAST (
       return generateFormulaArgsFromLiterals(arg as any);
 	}
 
-	return traverseArguments(input_formula);
+	return (representation === "string" && typeof input_formula === "string") ? generateFormulaASTFromString(input_formula, schema_map) : traverseArguments(input_formula);
 }
 
 /**
@@ -95,7 +112,7 @@ function generateFormulaAST (
   * @returns The generated formula ast
  */
 export function generateFormulaASTFromObject (formula: FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string}, schema_map?: ISchemaMap): TFormula {
-	return generateFormulaAST(formula, schema_map);
+	return generateFormulaAST(formula, 'object', schema_map);
 }
 
 /**
@@ -108,5 +125,5 @@ export function generateFormulaASTFromArray (
 	formula: FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
 	schema_map?: ISchemaMap
 ): TFormula {
-	return generateFormulaAST(formula, schema_map);
+	return generateFormulaAST(formula, 'array', schema_map);
 }

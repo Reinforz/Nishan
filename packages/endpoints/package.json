@@ -1,6 +1,6 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A package to expose all notion endpoints for queries and mutations and for caching response",
   "keywords": [
     "notion",

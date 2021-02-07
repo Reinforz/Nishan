@@ -10,15 +10,7 @@ axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
 
 describe('constructNotionHeaders', () => {
-	it(`Should throw an error if token not provided`, () => {
-		expect(() =>
-			constructNotionHeaders({
-				token: ''
-			})
-		).toThrow('Token not provided');
-	});
-
-	it(`Should return properly constructed header`, () => {
+	it(`Should return token attached header`, () => {
 		expect(
 			deepEqual(
 				constructNotionHeaders({
@@ -26,18 +18,35 @@ describe('constructNotionHeaders', () => {
 				}),
 				{
 					headers: {
-						cookie: 'token_v2=token;notion_user_id=;',
-						['x-notion-active-user-header']: ''
+						cookie: 'token_v2=token;'
 					}
 				}
 			)
 		).toBe(true);
+	});
 
+	it(`Should return user_id attached header`, () => {
 		expect(
 			deepEqual(
 				constructNotionHeaders({
-					token: 'token',
 					user_id: '123'
+				}),
+				{
+					headers: {
+						cookie: 'notion_user_id=123;',
+						['x-notion-active-user-header']: '123'
+					}
+				}
+			)
+		).toBe(true);
+	});
+
+	it(`Should return token+user_id attached header`, () => {
+		expect(
+			deepEqual(
+				constructNotionHeaders({
+					user_id: '123',
+					token: 'token'
 				}),
 				{
 					headers: {
@@ -46,6 +55,22 @@ describe('constructNotionHeaders', () => {
 					}
 				}
 			)
+		).toBe(true);
+	});
+
+	it(`Should return empty header`, () => {
+		expect(
+			deepEqual(constructNotionHeaders({}), {
+				headers: {}
+			})
+		).toBe(true);
+	});
+
+	it(`Should return empty header when nothing is passed`, () => {
+		expect(
+			deepEqual(constructNotionHeaders(), {
+				headers: {}
+			})
 		).toBe(true);
 	});
 });
@@ -71,6 +96,18 @@ describe('sendApiRequest', () => {
 });
 
 describe('sendRequest', () => {
+	it(`Should work without any config passed`, async () => {
+		const request_data = {
+				req: 'request_data'
+			},
+			response_data = {
+				res: 'response_data'
+			};
+		mock.onPost('/syncRecordValues').replyOnce(200, response_data);
+		const response = await sendRequest<SyncRecordValuesResult>('syncRecordValues', request_data);
+		expect(deepEqual(response, response_data)).toBe(true);
+	});
+
 	it(`Should contain correct request url,data and response data with default interval`, async () => {
 		const request_data = {
 				req: 'request_data'

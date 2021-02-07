@@ -19,6 +19,8 @@ describe('Cache class', () => {
 					}
 				} as any)
 		).toThrow();
+
+		expect(() => new Cache({} as any)).toThrow(`Token not provided`);
 	});
 
 	it(`getConfigs method`, () => {
@@ -29,7 +31,7 @@ describe('Cache class', () => {
 		expect(
 			deepEqual(cache.getConfigs(), {
 				token: 'token',
-				user_id: '',
+				user_id: undefined,
 				interval: 500
 			})
 		).toBe(true);

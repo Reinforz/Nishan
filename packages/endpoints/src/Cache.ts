@@ -8,7 +8,7 @@ export default class Cache {
 	token: string;
 	interval: number;
 	headers: NotionHeaders;
-	user_id: string;
+	user_id?: string;
 
 	constructor ({ cache, token, interval, user_id }: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
     // Validate the cache first if its passed, otherwise store a default one
@@ -22,10 +22,12 @@ export default class Cache {
 			user_root: new Map(),
 			user_settings: new Map()
 		};
+    if(!token)
+      throw new Error(`Token not provided`);
 		this.headers = constructNotionHeaders({token, user_id});
 		this.token = token;
 		this.interval = interval ?? 500;
-		this.user_id = this.headers.headers["x-notion-active-user-header"];
+		this.user_id = user_id;
 	}
 
   /**

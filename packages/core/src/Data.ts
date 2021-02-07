@@ -34,6 +34,7 @@ export default class Data<T extends TData> extends Operations {
   type: TDataType;
   init_cache = false;
   protected logger: Logger;
+  user_id: string
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -43,6 +44,8 @@ export default class Data<T extends TData> extends Operations {
     this.logger = arg.logger === false ? false : function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
     };
+    // Throw error here if user_id not provided
+    this.user_id = super.user_id ?? '';
   }
 
   protected getLastEditedProps() {
@@ -149,7 +152,7 @@ export default class Data<T extends TData> extends Operations {
     return {
       token: this.token,
       interval: this.interval,
-      user_id: this.user_id,
+      user_id: this.user_id ?? '',
       shard_id: this.shard_id,
       space_id: this.space_id,
       cache: this.cache,

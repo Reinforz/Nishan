@@ -1,12 +1,4 @@
-import {
-	CreatedBySchemaUnit,
-	CreatedTimeSchemaUnit,
-	IViewFilter,
-	TSchemaUnit,
-	ViewAggregations,
-	ViewFormatProperties,
-	ViewSorts
-} from '@nishans/types';
+import { IViewFilter, TSchemaUnit, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
 
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;

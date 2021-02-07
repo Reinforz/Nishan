@@ -2,10 +2,10 @@ import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '../../src';
 
 import {
 	generateFormulaASTFromArray,
-	NumberAddFunctionArrayCreateInput,
-	NumberIfFunctionArrayCreateInput,
-	TFormulaArrayCreateInput,
-	TNumberArrayResultType
+	NumberAddFunctionArray,
+	NumberIfFunctionArray,
+	TFormulaArray,
+	TNumberArrayArgument
 } from '@nishans/notion-formula';
 
 import { status, phase, priority, subject } from './data';
@@ -21,19 +21,19 @@ export const status_phase_combos = [
 	[ 'Completed', 'Practice', 'Practicing' ]
 ];
 
-export function counterFormula (property: string, levels: [string, string]): TFormulaArrayCreateInput {
+export function counterFormula (property: string, levels: [string, string]): TFormulaArray {
 	return [
 		'if',
 		[ [ 'equal', [ { property }, levels[0] ] ], 3, [ 'if', [ [ 'equal', [ { property }, levels[1] ] ], 2, 1 ] ] ]
 	];
 }
 
-export function adders (args: TNumberArrayResultType[]) {
-	const root_formula: NumberAddFunctionArrayCreateInput = [ 'add', [] as any ];
+export function adders (args: TNumberArrayArgument[]) {
+	const root_formula: NumberAddFunctionArray = [ 'add', [] as any ];
 
 	function inner (parent: any, arg_number: number) {
 		if (arg_number < args.length - 1) {
-			const root_formula: NumberAddFunctionArrayCreateInput = [ 'add', [] as any ];
+			const root_formula: NumberAddFunctionArray = [ 'add', [] as any ];
 			const last_argument = arg_number === args.length - 2;
 			parent.push(args[arg_number], last_argument ? args[arg_number + 1] : root_formula);
 			if (!last_argument) inner(last_argument ? parent : root_formula[1], arg_number + 1);
@@ -45,7 +45,7 @@ export function adders (args: TNumberArrayResultType[]) {
 	return root_formula;
 }
 
-export function propertyChecked (property: string): NumberIfFunctionArrayCreateInput {
+export function propertyChecked (property: string): NumberIfFunctionArray {
 	return [
 		'if',
 		[

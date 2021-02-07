@@ -1,20 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
-	DateViewFiltersValue,
-	FormulaSchemaUnit,
-	ISchemaUnit,
-	RelationSchemaUnit,
-	RollupSchemaUnit
-} from '@nishans/types';
+import { DateViewFiltersValue, FormulaSchemaUnit, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
 
-import { Page, SchemaUnit, TSchemaUnitInput, TViewCreateInput } from '../../../src';
+import { Page, TSchemaUnitInput, TViewCreateInput } from '../../../src';
 import { status, purpose, subject, source } from '../data';
 import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';
-import {
-	FormulaSchemaUnitInput,
-	generateFormulaASTFromArray,
-	generateFormulaASTFromObject
-} from '@nishans/notion-formula';
+import { generateFormulaASTFromArray, generateFormulaASTFromObject } from '@nishans/notion-formula';
 
 const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	{

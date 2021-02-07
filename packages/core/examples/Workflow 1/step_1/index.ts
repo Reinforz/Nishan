@@ -25,6 +25,7 @@ const daily_sites = [
 export default async function step1(user_family_name: string, space_name: string) {
 	const nishan = new Nishan({
 		token: process.env.NOTION_TOKEN as string,
+    logger: false
   });
 
   const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);

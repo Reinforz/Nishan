@@ -116,8 +116,8 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
       format,
       query2,
     } as any;
-    props.stack.push(Operation.collection_view.set(view_id, [], view_data))
-    props.cache.collection_view.set(view_id, view_data)
+    props.stack.push(Operation.collection_view.set(view_id, [], JSON.parse(JSON.stringify(view_data))))
+    props.cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)))
     props.logger && props.logger("CREATE", "collection_view", view_id) 
   }
 

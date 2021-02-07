@@ -105,8 +105,9 @@ class NotionUser extends Data<INotionUser> {
         shard_id: this.shard_id,
         version: 0,
         icon,
-      } as any, space_data: ISpace = {...space_op_data, ...space_extra_data}
-      this.cache.space.set(space_id, space_data);
+      } as any;
+
+      this.cache.space.set(space_id, JSON.parse(JSON.stringify({...space_op_data, ...space_extra_data})));
       const space_view_data: ISpaceView = {
         created_getting_started: false,
         created_onboarding_templates: false,
@@ -132,7 +133,7 @@ class NotionUser extends Data<INotionUser> {
         Operation.user_settings.update(this.user_id, ['settings'], {
           persona: 'personal', type: 'personal'
         }),
-        Operation.space_view.set($space_view_id, [],space_view_data),
+        Operation.space_view.set($space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
         Operation.block.update(page_id, [], {
           type: 'page',
           id: page_id,

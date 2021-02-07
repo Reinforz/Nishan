@@ -78,8 +78,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
 
         if (content.type === "collection_view_page") (args as ICollectionViewPage).permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }];
 
-        props.stack.push(Operation.block.update(block_id, [], args))
-        props.cache.block.set(block_id, args as any)
+        props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(args))))
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(args)))
 
         const collectionblock = type === "collection_view" ? new CollectionView({
           ...props,
@@ -103,8 +103,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           const content_data: any = {
             ...content, parent_id: block_id, parent_table: "block", ...metadata
           };
-          props.cache.block.set(content.block_id, content_data)
-          return Operation.block.update(content.block_id, [], content_data)
+          props.cache.block.set(content.block_id, JSON.parse(JSON.stringify(content_data)))
+          return Operation.block.update(content.block_id, [], JSON.parse(JSON.stringify(content_data)))
         });
         const factory_data: IFactory = {
           id: block_id,
@@ -118,10 +118,10 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           ...metadata
         }
         props.stack.push(
-          Operation.block.update(block_id, [], factory_data),
+          Operation.block.update(block_id, [], JSON.parse(JSON.stringify(factory_data))),
           ...content_blocks_ops
         );
-        props.cache.block.set(block_id, factory_data)
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(factory_data)))
         block_map.factory.set(block_id, new Block({
           id: block_id,
           ...props
@@ -142,8 +142,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
             ...metadata
           }
 
-        props.stack.push(Operation.block.set(block_id, [], collection_view_data));
-        props.cache.block.set(block_id, collection_view_data);
+        props.stack.push(Operation.block.set(block_id, [], JSON.parse(JSON.stringify(collection_view_data))));
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(collection_view_data)));
         block_map[content.type].set(block_id, new CollectionView({
           ...props,
           id: block_id
@@ -163,8 +163,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
           ...metadata
         }
-        props.stack.push(Operation.block.update(block_id, [], page_data));
-        props.cache.block.set(block_id, page_data);
+        props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(page_data))));
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(page_data)));
         const block_obj = createBlockClass(content.type, block_id, props)
         block_map[type].set(block_id, block_obj);
         block_map[type].set(content.properties.title[0][0], block_obj);
@@ -182,8 +182,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           content: [],
           ...metadata
         };
-        props.stack.push(Operation.block.set(block_id, [], column_list_data));
-        props.cache.block.set(block_id, column_list_data)
+        props.stack.push(Operation.block.set(block_id, [], JSON.parse(JSON.stringify(column_list_data))));
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(column_list_data)))
 
         for (let index = 0; index < contents.length; index++) {
           const column_id = uuidv4(), column_data: IColumn = {
@@ -198,8 +198,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
             ...metadata,
             content: []
           };
-          props.stack.push(Operation.block.set(column_id, [], column_data), Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
-          props.cache.block.set(column_id, column_data);
+          props.stack.push(Operation.block.set(column_id, [], JSON.parse(JSON.stringify(column_data))), Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
+          props.cache.block.set(column_id, JSON.parse(JSON.stringify(column_data)));
           column_list_data.content.push(column_id);
           await traverse([contents[index]], this_id, "block", column_id)
         }
@@ -215,8 +215,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           alive: true,
           ...metadata
         };
-        props.stack.push(Operation.block.update(block_id, [], block_data));
-        props.cache.block.set(block_id, block_data);
+        props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(block_data))));
+        props.cache.block.set(block_id, JSON.parse(JSON.stringify(block_data)));
         const block_obj = createBlockClass(content.type, block_id, props)
         block_map[type].set(block_id,block_obj);
       }
@@ -252,5 +252,5 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
   }
 
   await traverse(contents, parent_id, parent_table);
-  return block_map
+  return block_map;
 }

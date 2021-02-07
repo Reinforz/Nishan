@@ -26,7 +26,10 @@ export default class Operations extends Cache {
 	async executeOperation () {
 		if (this.stack.length === 0) warn(`The operation stack is empty`);
 		else {
-			await saveTransactions(createTransaction(this.shard_id, this.space_id, this.stack), { token: this.token });
+			await saveTransactions(createTransaction(this.shard_id, this.space_id, this.stack), {
+				token: this.token,
+				interval: 0
+			});
 			this.emptyStack();
 		}
 	}

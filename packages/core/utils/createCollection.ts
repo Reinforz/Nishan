@@ -43,8 +43,8 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     name: param.properties.title,
     migrated: false, version: 0
   } as const;
-  props.stack.push(Operation.collection.update(collection_id, [], collection_data))
-  props.cache.collection.set(collection_id, collection_data);
+  props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))))
+  props.cache.collection.set(collection_id, JSON.parse(JSON.stringify(collection_data)));
   props.logger && props.logger("CREATE", "collection", collection_id);
 
   return [collection_id, view_ids, view_map] as [string, string[], ITView]

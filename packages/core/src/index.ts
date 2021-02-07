@@ -30,7 +30,7 @@ class Nishan extends Cache {
     this.token = arg.token;
     this.interval = arg.interval || 500;
     this.init_cache = false;
-    this.logger = arg.logger || function (method, subject, id) {
+    this.logger = arg.logger === false ? false : function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)}:${colors.blue(id)}`);
     };
   }

@@ -38,7 +38,6 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
    * @returns The corresponding collection object
    */
 	async getCollection () {
-		await this.initializeCache();
 		return new Collection({
 			...this.getProps(),
 			id: this.getCachedData().collection_id

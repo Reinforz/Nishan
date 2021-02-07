@@ -12,13 +12,6 @@ import {
 	ViewFormatProperties,
 	ViewSorts
 } from '@nishans/types';
-import { TFormulaCreateInput } from './formula';
-
-export type FormulaSchemaUnitInput = {
-	type: 'formula';
-	name: string;
-	formula: TFormulaCreateInput;
-};
 
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
@@ -44,5 +37,4 @@ export type TSchemaUnitInput =
 	| CreatedTimeSchemaUnit
 	| CreatedBySchemaUnit
 	| LastEditedTimeSchemaUnit
-	| LastEditedBySchemaUnit
-	| FormulaSchemaUnitInput;
+	| LastEditedBySchemaUnit;

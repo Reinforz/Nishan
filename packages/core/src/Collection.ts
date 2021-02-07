@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, parseFormula, slugify, warn } from '../utils';
+import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, slugify, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -162,9 +162,7 @@ class Collection extends Data<ICollection> {
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
-        if (arg.type === "formula")
-          data.schema[schema_id] = { ...arg, formula: parseFormula(arg.formula, getSchemaMap(data)) }
-        else data.schema[schema_id] = arg;
+        data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         results[arg.type].set(schema_id, schema_obj);
         results[arg.type].set(arg.name, schema_obj);

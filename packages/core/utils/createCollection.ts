@@ -1,6 +1,6 @@
 import { Schema, TSchemaUnit } from "@nishans/types";
 import { ICollectionBlockInput, ITView, NishanArg } from "../types";
-import { parseFormula, createViews, Operation, generateId } from "../utils";
+import { createViews, Operation, generateId } from "../utils";
 import { slugify } from "./slugify";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
@@ -13,8 +13,7 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
   });
 
   Object.entries(schema).forEach(([schema_id, schema_unit])=>{
-    if(schema_unit.type === "formula") schema_unit.formula = parseFormula(schema_unit.formula as any, schema_map);
-    else if(schema_unit.type === "relation"){
+    if(schema_unit.type === "relation"){
       const collection = props.cache.collection.get(schema_unit.collection_id);
       if(collection)
         collection.schema[schema_unit.property] = {

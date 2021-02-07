@@ -21,8 +21,7 @@
   },
   "include": [
     "./src/index.ts",
-    "./experiment",
-    "./examples"
+    "./experiment"
   ],
   "exclude": [
     "./node_modules",

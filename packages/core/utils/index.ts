@@ -3,7 +3,6 @@ import Operation from './chunk';
 export * from './ids';
 export * from './logs';
 export * from './uuid';
-export * from './parseFormula';
 export * from './populateFilters';
 export * from './createViews';
 export * from './createCollection';

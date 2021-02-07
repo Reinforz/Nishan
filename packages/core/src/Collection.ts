@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, slugify, warn } from '../utils';
+import { createSchemaUnitMap, generateSchemaMapFromCollectionSchema, getSchemaMap, nestedContentPopulate, Operation, slugify, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -6,6 +6,7 @@ import SchemaUnit from "./SchemaUnit";
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
 import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMapValue, ITSchemaUnit } from '../types';
+import { generateFormulaAST } from '@nishans/notion-formula';
 
 /**
  * A class to represent collection of Notion
@@ -158,14 +159,15 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   createSchemaUnits(args: TSchemaUnitInput[]) {
-    const results = createSchemaUnitMap(), data = this.getCachedData();
+    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData(), schema_map = generateSchemaMapFromCollectionSchema(data.schema);
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = slugify(arg.name);
       if (!data.schema[schema_id]) {
-        data.schema[schema_id] = arg;
+        if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: generateFormulaAST(arg.formula[0] as any, arg.formula[1] as any, schema_map)}
+        else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
-        results[arg.type].set(schema_id, schema_obj);
-        results[arg.type].set(arg.name, schema_obj);
+        schema_unit_map[arg.type].set(schema_id, schema_obj);
+        schema_unit_map[arg.type].set(arg.name, schema_obj);
         this.logger && this.logger("CREATE", "collection", schema_id);
       } else
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
@@ -173,7 +175,7 @@ class Collection extends Data<ICollection> {
 
     this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
     this.updateLastEditedProps();
-    return results;
+    return schema_unit_map;
   }
 
   async getSchemaUnit(arg?: FilterType<ISchemaMapValue>) {

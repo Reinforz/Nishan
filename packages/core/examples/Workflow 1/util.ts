@@ -21,14 +21,20 @@ export const status_phase_combos = [
 	[ 'Completed', 'Practice', 'Practicing' ]
 ];
 
-export function counterFormula (property: string, levels: [string, string]): TFormulaArray {
+export function counterFormula (
+	property: string,
+	levels: [string, string]
+): [TFormulaArray, 'array' | 'object' | 'string'] {
 	return [
-		'if',
-		[ [ 'equal', [ { property }, levels[0] ] ], 3, [ 'if', [ [ 'equal', [ { property }, levels[1] ] ], 2, 1 ] ] ]
+		[
+			'if',
+			[ [ 'equal', [ { property }, levels[0] ] ], 3, [ 'if', [ [ 'equal', [ { property }, levels[1] ] ], 2, 1 ] ] ]
+		],
+		'array'
 	];
 }
 
-export function adders (args: TNumberArrayArgument[]) {
+export function adders (args: TNumberArrayArgument[]): [NumberAddFunctionArray, 'array' | 'object' | 'string'] {
 	const root_formula: NumberAddFunctionArray = [ 'add', [] as any ];
 
 	function inner (parent: any, arg_number: number) {
@@ -42,7 +48,7 @@ export function adders (args: TNumberArrayArgument[]) {
 
 	inner(root_formula[1], 0);
 
-	return root_formula;
+	return [ root_formula, 'array' ];
 }
 
 export function propertyChecked (property: string): NumberIfFunctionArray {
@@ -68,17 +74,15 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'formula',
 		name: 'Urgency',
-		formula: generateFormulaASTFromArray(
-			adders([ { property: 'Phase Counter' }, { property: 'Status Counter' }, { property: 'Priority Counter' } ])
-		)
+		formula: adders([ { property: 'Phase Counter' }, { property: 'Status Counter' }, { property: 'Priority Counter' } ])
 	},
 	{
 		type: 'formula',
 		name: 'Completed',
-		formula: generateFormulaASTFromArray([
-			'and',
-			[ [ 'and', [ { property: 'Practiced' }, { property: 'Learned' } ] ], { property: 'Revised' } ]
-		])
+		formula: [
+			[ 'and', [ [ 'and', [ { property: 'Practiced' }, { property: 'Learned' } ] ], { property: 'Revised' } ] ],
+			'array'
+		]
 	},
 	{
 		type: 'select',
@@ -88,7 +92,7 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'formula',
 		name: 'Priority Counter',
-		formula: generateFormulaASTFromArray(counterFormula('Priority', [ 'High', 'Medium' ]))
+		formula: counterFormula('Priority', [ 'High', 'Medium' ])
 	},
 	{
 		type: 'select',
@@ -98,7 +102,7 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'formula',
 		name: 'Status Counter',
-		formula: generateFormulaASTFromArray(counterFormula('Status', [ 'Completing', 'To Complete' ]))
+		formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
 	},
 	{
 		type: 'select',
@@ -108,7 +112,7 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	{
 		type: 'formula',
 		name: 'Phase Counter',
-		formula: generateFormulaASTFromArray(counterFormula('Phase', [ 'Practice', 'Revise' ]))
+		formula: counterFormula('Phase', [ 'Practice', 'Revise' ])
 	},
 	{
 		type: 'date',

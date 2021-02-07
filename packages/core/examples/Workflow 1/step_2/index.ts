@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DateViewFiltersValue, FormulaSchemaUnit, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
 
-import { Page, TSchemaUnitInput, TViewCreateInput } from '../../../src';
+import { Page, TFormulaSchemaUnitInput, TSchemaUnitInput, TViewCreateInput } from '../../../src';
 import { status, purpose, subject, source } from '../data';
 import { CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem, adders } from '../util';
 import { generateFormulaASTFromArray, generateFormulaASTFromObject } from '@nishans/notion-formula';
@@ -24,37 +24,40 @@ const CommonMultiSelectSchemaInput: TSchemaUnitInput[] = [
 	}
 ];
 
-function goalProgress (goal_number: number): FormulaSchemaUnit {
+function goalProgress (goal_number: number): TFormulaSchemaUnitInput {
 	return {
 		type: 'formula',
 		name: `Goal ${goal_number} Progress`,
-		formula: generateFormulaASTFromObject({
-			function: 'round',
-			args: [
-				{
-					function: 'multiply',
-					args: [
-						{
-							function: 'divide',
-							args: [
-								{
-									property: `Goal ${goal_number} Step`
-								},
-								{
-									function: 'toNumber',
-									args: [
-										{
-											property: `Goal ${goal_number} Total Steps`
-										}
-									]
-								}
-							]
-						},
-						100
-					]
-				}
-			]
-		})
+		formula: [
+			{
+				function: 'round',
+				args: [
+					{
+						function: 'multiply',
+						args: [
+							{
+								function: 'divide',
+								args: [
+									{
+										property: `Goal ${goal_number} Step`
+									},
+									{
+										function: 'toNumber',
+										args: [
+											{
+												property: `Goal ${goal_number} Total Steps`
+											}
+										]
+									}
+								]
+							},
+							100
+						]
+					}
+				]
+			},
+			'object'
+		]
 	};
 }
 
@@ -439,38 +442,41 @@ export default async function step2 (target_page: Page) {
 					{
 						type: 'formula',
 						name: 'Progress',
-						formula: generateFormulaASTFromObject({
-							function: 'if',
-							args: [
-								{
-									function: 'equal',
-									args: [ { property: 'Total Steps' }, 0 ]
-								},
-								0,
-								{
-									function: 'round',
-									args: [
-										{
-											function: 'multiply',
-											args: [
-												{
-													function: 'divide',
-													args: [
-														{
-															property: 'Completed Steps'
-														},
-														{
-															property: 'Total Steps'
-														}
-													]
-												},
-												100
-											]
-										}
-									]
-								}
-							]
-						})
+						formula: [
+							{
+								function: 'if',
+								args: [
+									{
+										function: 'equal',
+										args: [ { property: 'Total Steps' }, 0 ]
+									},
+									0,
+									{
+										function: 'round',
+										args: [
+											{
+												function: 'multiply',
+												args: [
+													{
+														function: 'divide',
+														args: [
+															{
+																property: 'Completed Steps'
+															},
+															{
+																property: 'Total Steps'
+															}
+														]
+													},
+													100
+												]
+											}
+										]
+									}
+								]
+							},
+							'object'
+						]
 					},
 					...CommonMultiSelectSchemaInput,
 					{
@@ -493,7 +499,7 @@ export default async function step2 (target_page: Page) {
 					{
 						type: 'formula',
 						name: 'Status Counter',
-						formula: generateFormulaASTFromArray(counterFormula('Status', [ 'Completing', 'To Complete' ]))
+						formula: counterFormula('Status', [ 'Completing', 'To Complete' ])
 					}
 				]
 			},
@@ -571,17 +577,20 @@ export default async function step2 (target_page: Page) {
 					{
 						type: 'formula',
 						name: 'On',
-						formula: generateFormulaASTFromObject({
-							function: 'if',
-							args: [
-								{
-									function: 'empty',
-									args: [ { property: 'Custom Date' } ]
-								},
-								{ property: 'Created' },
-								{ property: 'Custom Date' }
-							]
-						})
+						formula: [
+							{
+								function: 'if',
+								args: [
+									{
+										function: 'empty',
+										args: [ { property: 'Custom Date' } ]
+									},
+									{ property: 'Created' },
+									{ property: 'Custom Date' }
+								]
+							},
+							'object'
+						]
 					}
 				]
 			}
@@ -615,20 +624,20 @@ export default async function step2 (target_page: Page) {
 					{
 						type: 'formula',
 						name: 'Completed Steps',
-						formula: generateFormulaASTFromArray(
-							adders([
-								{ property: 'Completed Steps 1' },
-								{ property: 'Completed Steps 2' },
-								{ property: 'Completed Steps 3' }
-							])
-						)
+						formula: adders([
+							{ property: 'Completed Steps 1' },
+							{ property: 'Completed Steps 2' },
+							{ property: 'Completed Steps 3' }
+						])
 					},
 					{
 						type: 'formula',
 						name: 'Total Tasks',
-						formula: generateFormulaASTFromArray(
-							adders([ { property: 'Total Tasks 1' }, { property: 'Total Tasks 2' }, { property: 'Total Tasks 3' } ])
-						)
+						formula: adders([
+							{ property: 'Total Tasks 1' },
+							{ property: 'Total Tasks 2' },
+							{ property: 'Total Tasks 3' }
+						])
 					}
 				]);
 				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');

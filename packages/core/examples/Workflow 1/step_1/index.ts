@@ -157,14 +157,14 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: 'formula',
           name: 'Urgency',
-          formula: generateFormulaASTFromArray(adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}]))
+          formula: adders([{property: 'Difficulty Counter'}, {property: 'Priority Counter'}])
         },
         {
           type: 'formula',
           name: 'Done',
-          formula: generateFormulaASTFromArray(
+          formula: [
             [ 'not', [['empty', [{ property: 'Completed At' }]]]]
-          )
+          , 'array']
         },
         {
           type: 'select',
@@ -179,12 +179,12 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: 'formula',
           name: 'Priority Counter',
-          formula: generateFormulaASTFromArray(counterFormula('Priority', [ 'High', 'Medium' ]))
+          formula: counterFormula('Priority', [ 'High', 'Medium' ])
         },
         {
           type: 'formula',
           name: 'Difficulty Counter',
-          formula: generateFormulaASTFromArray(counterFormula('Difficulty', [ 'Easy', 'Medium' ]))
+          formula: counterFormula('Difficulty', [ 'Easy', 'Medium' ])
         },
         {
           type: 'date',
@@ -297,12 +297,12 @@ export default async function step1(user_family_name: string, space_name: string
         {
           type: "formula",
           name: "Total Checked",
-          formula: generateFormulaASTFromArray(adders(daily_sites.map(site => propertyChecked(site))))
+          formula: adders(daily_sites.map(site => propertyChecked(site)))
         },
         {
           type: "formula",
           name: "Percentage Checked",
-          formula: generateFormulaASTFromArray([
+          formula: [[
             'round', [
               ['multiply', [
                 ['divide', [
@@ -314,7 +314,7 @@ export default async function step1(user_family_name: string, space_name: string
                 100
               ]
             ]]
-          ])
+          ],'array']
         }
       ],
       views: [

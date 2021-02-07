@@ -16,5 +16,6 @@ export * from './positionChildren';
 export * from './iterateChildren';
 export * from './detectChildData';
 export * from './createViewMaps';
+export * from './generateSchemaMapFromCollectionSchema';
 
 export { Operation };

@@ -1,4 +1,18 @@
-import { IViewFilter, TSchemaUnit, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
+import { FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput } from '@nishans/notion-formula';
+import {
+	CreatedBySchemaUnit,
+	CreatedTimeSchemaUnit,
+	IViewFilter,
+	LastEditedBySchemaUnit,
+	LastEditedTimeSchemaUnit,
+	RelationSchemaUnit,
+	RollupSchemaUnit,
+	TBasicSchemaUnit,
+	TSchemaUnit,
+	ViewAggregations,
+	ViewFormatProperties,
+	ViewSorts
+} from '@nishans/types';
 
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
@@ -17,4 +31,29 @@ export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 
 export type SchemaFormalPropertiesUpdateInput = Partial<{ position: number; visible: boolean; width: number }>;
 
-export type TSchemaUnitInput = TSchemaUnit;
+export type TFormulaSchemaUnitInput = {
+	type: 'formula';
+	name: string;
+	formula: [
+
+			| FormulaArraySchemaUnitInput['formula']
+			| FormulaObjectSchemaUnitInput['formula']
+			| boolean
+			| 'e'
+			| 'pi'
+			| string
+			| number
+			| { property: string },
+		'object' | 'array' | 'string'
+	];
+};
+
+export type TSchemaUnitInput =
+	| TBasicSchemaUnit
+	| TFormulaSchemaUnitInput
+	| RelationSchemaUnit
+	| RollupSchemaUnit
+	| CreatedTimeSchemaUnit
+	| CreatedBySchemaUnit
+	| LastEditedTimeSchemaUnit
+	| LastEditedBySchemaUnit;

@@ -2,11 +2,6 @@ import { TBlockType } from '@nishans/types';
 import { NishanArg } from '../types';
 
 export function createBlockClass (type: TBlockType, id: string, props: Omit<NishanArg, 'id'>) {
-	const Page = require('../src/Page').default;
-	const Block = require('../src/Block').default;
-	const CollectionView = require('../src/CollectionView').default;
-	const CollectionViewPage = require('../src/CollectionViewPage').default;
-
 	const obj = {
 		id,
 		...props
@@ -40,12 +35,16 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'quote':
 		case 'divider':
 		case 'callout':
+			const Block = require('../src/Block').default;
 			return new Block(obj);
 		case 'page':
+			const Page = require('../src/Page').default;
 			return new Page(obj);
 		case 'collection_view':
+			const CollectionView = require('../src/CollectionView').default;
 			return new CollectionView(obj);
 		case 'collection_view_page':
+			const CollectionViewPage = require('../src/CollectionViewPage').default;
 			return new CollectionViewPage(obj);
 		default:
 			throw new Error(`Unsupported block type ${type} passed`);

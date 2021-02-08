@@ -2574,10 +2574,20 @@
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.12.tgz#a5f3e4dd99c7d3f2c8cc048439eef24d1a9448b4"
   integrity sha512-sVde7qazhe6bx87Hv3quvj8jH/WXGk3+deMdHIvkx8WscFgItRZayFkG9BIixO+p6Fh2w0jGBMa4F0eNSRNPQw==
 
+"@nishans/types@0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.14.tgz#ee807241544cdaf6a4ed38ad5f4625a21a52cdc0"
+  integrity sha512-y+7iBZlVWKrqJDj9GJgcshpvPIUmunGYdfLOP6YCxxfRXIZJwe6JfquUWAaXSN3EgxGMlfkL14N3WIVq1acaDQ==
+
 "@nishans/types@^0.0.10":
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.10.tgz#4e052e2159a8ad577b78d6ef6a2a43f739413f83"
   integrity sha512-E+BO1gvB70mGhkjotauz6TEkgFBXW1+f1VZk5hKz1KjdFf+y58SlPW8tYkClRzl5hX7sHFE2MoGuhLoW6QJtog==
+
+"@nishans/utils@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.5.tgz#2062447e49518033be2e4c3294d41f1963cdd40d"
+  integrity sha512-MveIGhNjDjQgoizM0XweaO1SSVCX1jqnCUOlo8GIadm+nNZ6+dMUFrFvNFOGHavYRnnVT0C8WrUqq6FNaqHF5Q==
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -3704,9 +3714,9 @@
   integrity sha512-fZQQafSREFyuZcdWFAExYjBiCL7AUCdgsk80iO0q4yihYYdcIiH28CcuPTGFgLOCC8RlW49GSQxdHwZP+I7CNg==
 
 "@types/mongodb@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.6.3.tgz#5655af409d9e32d5d5ae9a653abf3e5f9c83eb7a"
-  integrity sha512-6YNqGP1hk5bjUFaim+QoFFuI61WjHiHE1BNeB41TA00Xd2K7zG4lcWyLLq/XtIp36uMavvS5hoAUJ+1u/GcX2Q==
+  version "3.6.6"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.6.6.tgz#d62300927564e03daa08794eb207ff4f760f9014"
+  integrity sha512-ghYevKiSh/TGk2MAwSRZP7T1ilR9Pw8Fa7pT9GGVGZPUsWKdZjZ4G6LG3MqK2iXKdNba994F8W9ikA+qx2Eo3A==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
@@ -4784,7 +4794,7 @@ axe-core@^4.0.2:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.1.1.tgz#70a7855888e287f7add66002211a423937063eaf"
   integrity sha512-5Kgy8Cz6LPC9DJcNb3yjAXTu3XihQgEdnIg50c//zOC/MyLP0Clg+Y8Sh9ZjjnvBrDZU4DgXS9C3T9r4/scGZQ==
 
-axios-mock-adapter@^1.19.0:
+axios-mock-adapter@1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/axios-mock-adapter/-/axios-mock-adapter-1.19.0.tgz#9d72e321a6c5418e1eff067aa99761a86c5188a4"
   integrity sha512-D+0U4LNPr7WroiBDvWilzTMYPYTuZlbo6BI8YHZtj7wYQS8NkARlP9KBt8IWWHTQJ0q/8oZ0ClPBtKCCkx8cQg==
@@ -10702,13 +10712,6 @@ jest-message-util@^26.6.0, jest-message-util@^26.6.2:
     pretty-format "^26.6.2"
     slash "^3.0.0"
     stack-utils "^2.0.2"
-
-jest-mock-axios@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/jest-mock-axios/-/jest-mock-axios-4.2.1.tgz#cf01d186c12bace381bded70d0443626c8be9114"
-  integrity sha512-YUoV+A/Z6HWJePwXVc/4/Gtu1AgKqYNZ6ngjV+1kGepREni5aOPlmHyiwiH+lNuyoLOhtgBVROZf8ij1Va8oAw==
-  dependencies:
-    synchronous-promise "^2.0.13"
 
 jest-mock@^26.6.2:
   version "26.6.2"
@@ -16637,11 +16640,6 @@ symbol.prototype.description@^1.0.0:
     has-symbols "^1.0.1"
     object.getownpropertydescriptors "^2.1.0"
 
-synchronous-promise@^2.0.13:
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.15.tgz#07ca1822b9de0001f5ff73595f3d08c4f720eb8e"
-  integrity sha512-k8uzYIkIVwmT+TcglpdN50pS2y1BDcUnBPK9iJeGu0Pl1lOI8pD6wtzgw91Pjpe+RxtTncw32tLxs/R0yNL2Mg==
-
 table@^6.0.4:
   version "6.0.7"
   resolved "https://registry.yarnpkg.com/table/-/table-6.0.7.tgz#e45897ffbcc1bcf9e8a87bf420f2c9e5a7a52a34"
@@ -17224,7 +17222,7 @@ typedoc-plugin-no-inherit@^1.2.0:
   resolved "https://registry.yarnpkg.com/typedoc-plugin-no-inherit/-/typedoc-plugin-no-inherit-1.2.0.tgz#7f73809c04cb29c03afe5eea356534968cb717a9"
   integrity sha512-jAAslwDbm5sVpA6EQIg5twYctRi/bnT9TgZ5SwbrNpCD5xCIIylPRX9KxIoi1RJliVgCIAxWbSUzzLKGwJCkeA==
 
-typedoc@^0.20.16, typedoc@^0.20.20:
+typedoc@^0.20.16:
   version "0.20.20"
   resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.20.tgz#0f0915fb73e7371fc2cf8c74b6a3207dcf5c3dda"
   integrity sha512-qXB40ttDGaqv6q6UIiAVqOpX/GlXoBur0lB4g9fePoYjfwa6OsPkoYufLtsjEaBB0EokShR2aIoI5GX4RB83cw==

@@ -48,6 +48,6 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'collection_view_page':
 			return new CollectionViewPage(obj);
 		default:
-			return new Page(obj);
+			throw new Error(`Unsupported block type ${type} passed`);
 	}
 }

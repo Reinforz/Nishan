@@ -7,7 +7,7 @@ interface PositionChildrenParam { logger: Logger, parent: any, child_id: string,
 
 export function positionChildren(arg: PositionChildrenParam) {
   const { child_id, position, parent, parent_type, parent_id, logger } = arg;
-  const [child_path] = detectChildData(parent_type,parent);
+  const [child_path] = detectChildData(parent_type as any, parent);
   if (!parent[child_path]) parent[child_path] = [];
   const container: string[] = parent[child_path];
   logger && logger("UPDATE", parent_type, parent_id);

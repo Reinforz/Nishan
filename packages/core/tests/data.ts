@@ -98,6 +98,49 @@ export default {
 			}
 		},
 		block: {
+			'6eae77bf-64cd-4ed0-adfb-e97d928a6401': {
+				role: 'editor',
+				value: {
+					id: '6eae77bf-64cd-4ed0-adfb-e97d928a6401',
+					version: 16,
+					type: 'header',
+					properties: {
+						title: [ [ 'Header' ] ]
+					},
+					created_time: 1609505700000,
+					last_edited_time: 1609505700000,
+					parent_id: '6eae77bf-64cd-4ed0-adfb-e97d928a6402',
+					parent_table: 'block',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
+			'4b4bb21d-f68b-4113-b342-830687a5337b': {
+				role: 'editor',
+				value: {
+					id: '4b4bb21d-f68b-4113-b342-830687a5337b',
+					version: 23,
+					type: 'collection_view',
+					view_ids: [],
+					collection_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c',
+					created_time: 1602390407523,
+					last_edited_time: 1609505580000,
+					parent_id: '4b4bb21d-f68b-4113-b342-830687a5337a',
+					parent_table: 'block',
+					alive: true,
+					created_by_table: 'notion_user',
+					created_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b',
+					shard_id: 227383,
+					space_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4'
+				}
+			},
 			'4b4bb21d-f68b-4113-b342-830687a5337a': {
 				role: 'editor',
 				value: {
@@ -113,6 +156,7 @@ export default {
 							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
 						}
 					],
+					contents: [ '4b4bb21d-f68b-4113-b342-830687a5337b' ],
 					created_time: 1602390407523,
 					last_edited_time: 1609505580000,
 					parent_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4',
@@ -135,7 +179,7 @@ export default {
 					properties: {
 						title: [ [ 'Page' ] ]
 					},
-					content: [ '041173d7-8168-42b9-9440-c0b287573da9' ],
+					content: [ '6eae77bf-64cd-4ed0-adfb-e97d928a6401', '041173d7-8168-42b9-9440-c0b287573da9' ],
 					permissions: [
 						{
 							role: 'editor',

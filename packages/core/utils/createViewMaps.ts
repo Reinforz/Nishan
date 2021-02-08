@@ -1,10 +1,10 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, TView, TViewFilters, ViewFormatProperties } from '@nishans/types';
+import { IBoardView, ICollection, ITableView, ITimelineView, Schema, TView, TViewFilters, ViewFormatProperties } from '@nishans/types';
 import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
 
-export function getSchemaMap (collection: ICollection) {
+export function getSchemaMap (schema: Schema) {
 	const schema_map: ISchemaMap = new Map();
-	Object.entries(collection.schema).forEach(([ schema_id, value ]) => {
+	Object.entries(schema).forEach(([ schema_id, value ]) => {
 		schema_map.set(value.name, {
 			schema_id,
 			...value

@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, generateSchemaMapFromCollectionSchema, getSchemaMap, nestedContentPopulate, Operation, createShortId, warn } from '../utils';
+import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, createShortId, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -163,7 +163,7 @@ class Collection extends Data<ICollection> {
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = arg.type === "title" ? "title" : createShortId();
       if (!data.schema[schema_id]) {
-        const schema_map = generateSchemaMapFromCollectionSchema(data.schema);
+        const schema_map = getSchemaMap(data.schema);
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: generateFormulaAST(arg.formula[0] as any, arg.formula[1] as any, schema_map)}
         else data.schema[schema_id] = arg;
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
@@ -189,7 +189,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async getSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(data);
+    const data = this.getCachedData(), schema_map = getSchemaMap(data.schema);
     return await this.getIterate<ISchemaMapValue, ITSchemaUnit>(args, { container: createSchemaUnitMap(), child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) =>
       schema_map.get(name) as ISchemaMapValue, (_, { schema_id, name, type }, schema_unit_map) => {
         const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
@@ -213,7 +213,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async updateSchemaUnits(args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(data);
+    const data = this.getCachedData(), schema_map = getSchemaMap(data.schema);
     const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ITSchemaUnit>(args, {
       child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
@@ -248,7 +248,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async deleteSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(data);
+    const data = this.getCachedData(), schema_map = getSchemaMap(data.schema);
     await this.deleteIterate<ISchemaMapValue>(args, {
       child_ids: Array.from(schema_map.keys()),
       child_type: "collection",

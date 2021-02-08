@@ -83,7 +83,7 @@ class View<T extends TView> extends Data<T> {
 
 	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
-			schema_map = getSchemaMap(this.getCollection()),
+			schema_map = getSchemaMap(this.getCollection().schema),
 			[ , sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
@@ -169,7 +169,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	createFilters (args: TViewFilterCreateInput[]) {
-		const schema_map = getSchemaMap(this.getCollection()),
+		const schema_map = getSchemaMap(this.getCollection().schema),
 			data = this.getCachedData(),
 			filters = initializeViewFilters(this.getCachedData()).filters;
 		populateFilters(args, filters, schema_map);

@@ -17,7 +17,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async createAggregations(args: TAggregationsCreateInput[]) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection()), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
+    const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection().schema), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
       // ? FIX:1:E Warning if schema_map.get(name) returns undefined

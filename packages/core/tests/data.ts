@@ -2,6 +2,40 @@ import { LoadUserContentResult } from '@nishans/types';
 
 export default {
 	recordMap: {
+		collection_view: {
+			'dd721d8b-bf35-4036-bdcd-e9378e8b7e83': {
+				role: 'editor',
+				value: {
+					id: 'dd721d8b-bf35-4036-bdcd-e9378e8b7e83',
+					version: 7,
+					type: 'table',
+					name: 'All',
+					format: {
+						table_wrap: true,
+						table_properties: [
+							{
+								width: 250,
+								visible: true,
+								property: 'title'
+							}
+						]
+					},
+					parent_id: 'cd4eb74d-6fd5-435e-8e7e-a60471ea5901',
+					parent_table: 'block',
+					alive: true,
+					query2: {
+						aggregations: [
+							{
+								property: 'title',
+								aggregator: 'count'
+							}
+						]
+					},
+					shard_id: 731776,
+					space_id: '322c0b0c-5fb4-4fdc-97eb-84e7142b2a80'
+				}
+			}
+		},
 		notion_user: {
 			'd94caf87-a207-45c3-b3d5-03d157b5b39b': {
 				role: 'editor',
@@ -147,7 +181,7 @@ export default {
 					id: '4b4bb21d-f68b-4113-b342-830687a5337a',
 					version: 23,
 					type: 'collection_view_page',
-					view_ids: [ '451a024a-f6f8-476d-9a5a-1c98ffdf5a38' ],
+					view_ids: [ 'dd721d8b-bf35-4036-bdcd-e9378e8b7e83' ],
 					collection_id: 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b',
 					permissions: [
 						{

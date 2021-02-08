@@ -17,7 +17,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async createAggregations(args: TAggregationsCreateInput[]) {
-    const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection().schema), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
+    const data = this.getCachedData(), schema_map = getSchemaMap(this.getCollection().schema), [, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection().schema);
     for (let index = 0; index < args.length; index++) {
       const { aggregator, name } = args[index];
       // ? FIX:1:E Warning if schema_map.get(name) returns undefined
@@ -37,7 +37,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async updateAggregations(args: UpdateTypes<ISchemaAggregationMapValue, TAggregationsUpdateInput>, multiple?: boolean) {
-    const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection());
+    const data = this.getCachedData(), [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection().schema);
     await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(args, {
       child_ids: Array.from(aggregations_map.keys()),
       child_type: "collection_view",
@@ -58,7 +58,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async deleteAggregations(args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-    const [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection()), data = this.getCachedData();
+    const [aggregations_map, aggregations] = getAggregationsMap(this.getCachedData(), this.getCollection().schema), data = this.getCachedData();
     await this.deleteIterate<ISchemaAggregationMapValue>(args, {
       child_type: "collection_view",
       multiple,

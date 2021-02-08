@@ -84,7 +84,7 @@ class View<T extends TView> extends Data<T> {
 	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(this.getCollection().schema),
-			[ , sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
+			[ , sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
 				target_sort = schema_map.get(arg[0]);
@@ -115,7 +115,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
+			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
@@ -151,7 +151,7 @@ class View<T extends TView> extends Data<T> {
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection());
+			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -186,7 +186,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
-		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection()),
+		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection().schema),
 			data = this.getCachedData();
 
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
@@ -222,7 +222,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
-		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection()),
+		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection().schema),
 			data = this.getCachedData();
 		await this.deleteIterate<ISchemaFiltersMapValue>(
 			args,
@@ -250,7 +250,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateFormatVisibilityProperties (args: UpdateTypes<ISchemaFormatMapValue, boolean>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection());
+			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, boolean>(
 			args,
 			{
@@ -280,7 +280,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateFormatWidthProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection());
+			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, number>(
 			args,
 			{
@@ -310,7 +310,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateFormatPositionProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection());
+			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, number>(
 			args,
 			{
@@ -347,7 +347,7 @@ class View<T extends TView> extends Data<T> {
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection());
+			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>(
 			args,
 			{

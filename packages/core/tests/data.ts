@@ -156,7 +156,6 @@ export default {
 							user_id: 'd94caf87-a207-45c3-b3d5-03d157b5b39b'
 						}
 					],
-					contents: [ '4b4bb21d-f68b-4113-b342-830687a5337b' ],
 					created_time: 1602390407523,
 					last_edited_time: 1609505580000,
 					parent_id: 'd2498a62-99ed-4ffd-b56d-e986001729f4',

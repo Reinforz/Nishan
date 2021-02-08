@@ -268,7 +268,7 @@ export type TBlockInput = TMediaBlockInput | TBasicBlockInput | TAdvancedBlockIn
 
 export type RepositionParams = {
   id: string,
-  position: "before" | "after"
+  position: "Before" | "After"
 } | number | undefined;
 
 export const TSpaceUpdateKeys = ["name", "icon", "disable_public_access", "disable_guests", "disable_move_to_space", "disable_export", "domain", "invite_link_enabled", "beta_enabled"] as const;

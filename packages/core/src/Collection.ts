@@ -1,4 +1,4 @@
-import { createSchemaUnitMap, generateSchemaMapFromCollectionSchema, getSchemaMap, nestedContentPopulate, Operation, slugify, warn } from '../utils';
+import { createSchemaUnitMap, generateSchemaMapFromCollectionSchema, getSchemaMap, nestedContentPopulate, Operation, createShortId, warn } from '../utils';
 
 import Data from "./Data";
 import SchemaUnit from "./SchemaUnit";
@@ -161,7 +161,7 @@ class Collection extends Data<ICollection> {
   createSchemaUnits(args: TSchemaUnitInput[]) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index], schema_id = slugify(arg.name);
+      const arg = args[index], schema_id = arg.type === "title" ? "title" : createShortId();
       if (!data.schema[schema_id]) {
         const schema_map = generateSchemaMapFromCollectionSchema(data.schema);
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: generateFormulaAST(arg.formula[0] as any, arg.formula[1] as any, schema_map)}

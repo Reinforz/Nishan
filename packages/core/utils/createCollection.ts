@@ -1,15 +1,14 @@
 import { generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
 import { ICollectionBlockInput, ITView, NishanArg } from "../types";
-import { createViews, Operation, generateId } from "../utils";
-import { slugify } from "./slugify";
+import { createShortId, createViews, Operation, generateId } from "../utils";
 
 export function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
   const schema: Schema = {}, collection_id = generateId(param.collection_id), schema_map: ISchemaMap = new Map();
 
   // Generate the schema first since formula will need the whole schema_map
   param.schema.forEach(opt => {
-    const schema_id = slugify(opt.type === "title" ? "Title" : opt.name);
+    const schema_id = opt.type === "title" ? "title" : createShortId();
     if(opt.type === "formula"){
       const parsed_formula = generateFormulaAST(opt.formula[0] as any, opt.formula[1] as any, schema_map)
       schema[schema_id] = {...opt, formula: parsed_formula};

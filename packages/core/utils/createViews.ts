@@ -97,7 +97,9 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
     })
 
     const non_included_units = Object.keys(schema).filter(key => !included_units.includes(key));
-    populateFilters(views[index].filters, filters, name_map)
+    const input_filters = views[index].filters;
+    if(input_filters)
+      populateFilters(input_filters, filters, name_map)
     non_included_units.forEach(property => {
       properties.push({
         property,

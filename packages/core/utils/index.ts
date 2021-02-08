@@ -1,4 +1,4 @@
-import Operation from './chunk';
+import Operation from './operation';
 
 export * from './logs';
 export * from './populateFilters';

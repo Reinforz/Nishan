@@ -1,5 +1,5 @@
 import { Schema } from '@nishans/types';
-import { createViews, getSchemaMap, populateViewFormat } from '../../src';
+import { createViews, getSchemaMap, populateViewFormat, populateViewQuery2 } from '../../src';
 
 const schema: Schema = {
 	title: {
@@ -20,6 +20,9 @@ const schema_map = getSchemaMap(schema);
 
 describe('populateViewQuery2', () => {
 	it(`Should work for table view`, () => {
-		const { properties, format } = populateViewQuery2('table');
+		const query2 = populateViewQuery2({
+			type: 'timeline',
+			name: 'Table'
+		});
 	});
 });

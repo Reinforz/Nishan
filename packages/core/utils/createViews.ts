@@ -1,13 +1,14 @@
 import { ISchemaMap } from "@nishans/notion-formula";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2 } from "@nishans/types";
 import { getSchemaMap } from "src";
-import { TViewCreateInput, ITView, NishanArg } from "../types";
+import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
 
-export function populateViewQuery2(view: TViewCreateInput): TViewQuery2 {
+
+export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
   const query2: TViewQuery2 = {} as any;
   switch (view.type) {
     case "table":
@@ -116,8 +117,8 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
 
   for (let index = 0; index < views.length; index++) {
     const view = views[index];
-    const { id, name, type, schema_units, filter_operator = "and" } = view,
-      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view), {sort: sorts, filter} = query2 ,{properties, format} = populateViewFormat(view, schema_map, query2);
+    const { id, name, type, schema_units} = view,
+      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view), {sort: sorts, filter} = query2, {properties, format} = populateViewFormat(view, schema_map, query2);
 
     view_ids.push(view_id);
     view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))

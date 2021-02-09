@@ -1,11 +1,11 @@
 import { ISchemaMap } from "@nishans/notion-formula";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2 } from "@nishans/types";
 import { getSchemaMap } from "../src";
-import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput } from "../types";
+import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
-type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
+export type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
 
 export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
 export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
@@ -79,8 +79,10 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
   }
 }
 
-export function populateViewFormat(view: TViewCreateInput, schema_map: ISchemaMap, query2: ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2){
-  const properties: ViewFormatProperties[] = [], format: ITableViewFormat | ITimelineViewFormat | IListViewFormat | IBoardViewFormat | IGalleryViewFormat | ICalendarViewFormat = {
+export type TViewFormat = ITableViewFormat | ICalendarViewFormat | ITimelineViewFormat | IListViewFormat | IGalleryViewFormat | IBoardViewFormat;
+
+export function populateViewFormat(view: TViewFormatCreateInput, schema_map: ISchemaMap){
+  const properties: ViewFormatProperties[] = [], format: TViewFormat = {
     [`${view.type}_properties`]: properties
   } as any;
 
@@ -90,12 +92,11 @@ export function populateViewFormat(view: TViewCreateInput, schema_map: ISchemaMa
       table_format.table_wrap = table_view.table_wrap ?? true;
       break;
     case "board":
-      const board_view = view, board_format = format as IBoardViewFormat, board_query2 = query2 as IBoardViewQuery2;
+      const board_view = view, board_format = format as IBoardViewFormat;
       board_format.board_cover = board_view.board_cover ?? { type: "page_cover" };
       board_format.board_cover_aspect = board_view.board_cover_aspect;
       board_format.board_cover_size = board_view.board_cover_size;
       board_format.board_groups2 = board_view.board_groups2 as any;
-      board_query2.group_by = schema_map.get(board_view.group_by)?.schema_id ?? board_view.group_by;
       break;
     case "gallery":
       const gallery_view = view, gallery_format = format as IGalleryViewFormat;
@@ -103,10 +104,6 @@ export function populateViewFormat(view: TViewCreateInput, schema_map: ISchemaMa
       else gallery_format.gallery_cover = gallery_view.gallery_cover
       gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
       gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
-      break;
-    case "calendar":
-      const calender_view = view, calendar_query2 = query2 as ICalendarViewQuery2;
-      calendar_query2.calendar_by = schema_map.get(calender_view.calendar_by)?.schema_id ?? calender_view.calendar_by;
       break;
     case "timeline":
       const timeline_view = view, timeline_format = format as ITimelineViewFormat;
@@ -129,7 +126,7 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
   for (let index = 0; index < views.length; index++) {
     const view = views[index];
     const { id, name, type, schema_units} = view,
-      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, {properties, format} = populateViewFormat(view, schema_map, query2);
+      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, {properties, format} = populateViewFormat(view, schema_map);
 
     view_ids.push(view_id);
     view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))

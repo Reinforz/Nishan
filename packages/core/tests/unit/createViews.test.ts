@@ -3,6 +3,7 @@ import {
 	ICalendarViewQuery2,
 	IGalleryViewQuery2,
 	IListViewQuery2,
+	ITableViewFormat,
 	ITableViewQuery2,
 	ITimelineViewQuery2,
 	Schema
@@ -143,5 +144,13 @@ describe('populateViewQuery2', () => {
 		).toBe(true);
 		expect(query2.timeline_by).toBe('hours');
 		expect(deepEqual(query2.sort, [])).toBe(true);
+	});
+});
+
+describe('populateViewFormat', () => {
+	it(`Should work for table view`, () => {
+		const format = populateViewFormat({
+			type: 'table'
+		}) as ITableViewFormat;
 	});
 });

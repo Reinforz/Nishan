@@ -8,7 +8,9 @@ import {
 	TSchemaUnitType,
 	TSortValue,
 	TViewGroupFilterOperator,
-	IViewAggregationsAggregators
+	IViewAggregationsAggregators,
+	IListViewFormat,
+	ICalendarViewFormat
 } from '@nishans/types';
 import { RepositionParams } from './block';
 import { TViewFilterCreateInput } from './filter';
@@ -53,6 +55,57 @@ export type TViewQuery2CreateInput =
 	| CalendarViewQuery2CreateInput
 	| TimelineViewQuery2CreateInput;
 
+export interface IViewFormatCreateInput {
+	type: TViewType;
+}
+
+export interface TableViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<ITableViewFormat, 'table_properties'>> {
+	type: 'table';
+}
+
+export interface ListViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<IListViewFormat, 'list_properties'>> {
+	type: 'list';
+}
+
+export interface BoardViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<IBoardViewFormat, 'board_properties'>> {
+	type: 'board';
+	group_by: string;
+}
+
+export interface GalleryViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<IGalleryViewFormat, 'gallery_properties'>> {
+	type: 'gallery';
+}
+
+export interface CalendarViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<ICalendarViewFormat, 'calendar_properties'>> {
+	type: 'calendar';
+	calendar_by: string;
+}
+
+export interface TimelineViewFormatCreateInput
+	extends IViewFormatCreateInput,
+		Partial<Omit<ITimelineViewFormat, 'timeline_properties' | 'timeline_table_properties'>> {
+	type: 'timeline';
+	timeline_by: TTimelineViewTimelineby;
+}
+
+export type TViewFormatCreateInput =
+	| TableViewFormatCreateInput
+	| ListViewFormatCreateInput
+	| BoardViewFormatCreateInput
+	| GalleryViewFormatCreateInput
+	| CalendarViewFormatCreateInput
+	| TimelineViewFormatCreateInput;
+
 export interface IViewCreateInput extends IViewQuery2CreateInput {
 	id?: string;
 	schema_units: TViewSchemaUnitsCreateInput[];
@@ -61,33 +114,38 @@ export interface IViewCreateInput extends IViewQuery2CreateInput {
 	name: string;
 }
 
-export interface TableViewCreateInput extends IViewCreateInput, Partial<Omit<ITableViewFormat, 'table_properties'>> {
+export interface TableViewCreateInput extends IViewCreateInput, TableViewQuery2CreateInput, TableViewFormatCreateInput {
 	type: 'table';
 }
 
-export interface ListViewCreateInput extends IViewCreateInput {
+export interface ListViewCreateInput extends IViewCreateInput, ListViewQuery2CreateInput, ListViewFormatCreateInput {
 	type: 'list';
 }
 
-export interface BoardViewCreateInput extends IViewCreateInput, Partial<Omit<IBoardViewFormat, 'board_properties'>> {
+export interface BoardViewCreateInput extends IViewCreateInput, BoardViewQuery2CreateInput, BoardViewFormatCreateInput {
 	type: 'board';
 	group_by: string;
 }
 
 export interface GalleryViewCreateInput
 	extends IViewCreateInput,
-		Partial<Omit<IGalleryViewFormat, 'gallery_properties'>> {
+		GalleryViewQuery2CreateInput,
+		GalleryViewFormatCreateInput {
 	type: 'gallery';
 }
 
-export interface CalendarViewCreateInput extends IViewCreateInput {
+export interface CalendarViewCreateInput
+	extends IViewCreateInput,
+		CalendarViewQuery2CreateInput,
+		CalendarViewFormatCreateInput {
 	type: 'calendar';
 	calendar_by: string;
 }
 
 export interface TimelineViewCreateInput
 	extends IViewCreateInput,
-		Partial<Omit<ITimelineViewFormat, 'timeline_properties' | 'timeline_table_properties'>> {
+		TimelineViewQuery2CreateInput,
+		TimelineViewFormatCreateInput {
 	type: 'timeline';
 	timeline_by: TTimelineViewTimelineby;
 }

@@ -1,22 +1,21 @@
 import { ISchemaMap } from "@nishans/notion-formula";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2 } from "@nishans/types";
-import { getSchemaMap } from "src";
+import { getSchemaMap } from "../src";
 import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
 
-
 export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
-  const query2: TViewQuery2 = {} as any;
+  const query2: TViewQuery2 = {} as any, operator = view.filter_operator ?? "and";
   switch (view.type) {
     case "table":
       const table_query2: ITableViewQuery2 = query2;
       table_query2.aggregations = [];
       table_query2.sort = [];
       table_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return table_query2;
@@ -26,7 +25,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       board_query2.sort = [];
       board_query2.group_by = view.group_by;
       board_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return board_query2;
@@ -34,7 +33,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       const gallery_query2: IGalleryViewQuery2 = query2;
       gallery_query2.sort = [];
       gallery_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return gallery_query2;
@@ -43,7 +42,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       calendar_query2.sort = [];
       calendar_query2.calendar_by = view.calendar_by;
       calendar_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return calendar_query2;
@@ -53,7 +52,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       timeline_query2.sort = [];
       timeline_query2.timeline_by = view.timeline_by;
       timeline_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return timeline_query2;
@@ -61,7 +60,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       const list_query2: IListViewQuery2 = query2;
       list_query2.sort = [];
       list_query2.filter = {
-        operator: view.filter_operator ?? "and",
+        operator,
         filters: []
       };
       return list_query2;

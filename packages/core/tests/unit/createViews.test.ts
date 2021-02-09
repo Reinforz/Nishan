@@ -1,4 +1,13 @@
-import { Schema } from '@nishans/types';
+import {
+	IBoardViewQuery2,
+	ICalendarViewQuery2,
+	IGalleryViewQuery2,
+	IListViewQuery2,
+	ITableViewQuery2,
+	ITimelineViewQuery2,
+	Schema
+} from '@nishans/types';
+import deepEqual from 'deep-equal';
 import { createViews, getSchemaMap, populateViewFormat, populateViewQuery2 } from '../../src';
 
 const schema: Schema = {
@@ -21,8 +30,88 @@ const schema_map = getSchemaMap(schema);
 describe('populateViewQuery2', () => {
 	it(`Should work for table view`, () => {
 		const query2 = populateViewQuery2({
+			type: 'table'
+		}) as ITableViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'and',
+				filters: []
+			})
+		).toBe(true);
+		expect(deepEqual(query2.sort, [])).toBe(true);
+		expect(deepEqual(query2.aggregations, [])).toBe(true);
+	});
+
+	it(`Should work for list view`, () => {
+		const query2 = populateViewQuery2({
+			type: 'list',
+			filter_operator: 'or'
+		}) as IListViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'or',
+				filters: []
+			})
+		).toBe(true);
+		expect(deepEqual(query2.sort, [])).toBe(true);
+	});
+
+	it(`Should work for board view`, () => {
+		const query2 = populateViewQuery2({
+			type: 'board',
+			group_by: 'text'
+		}) as IBoardViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'and',
+				filters: []
+			})
+		).toBe(true);
+		expect(deepEqual(query2.aggregations, [])).toBe(true);
+		expect(deepEqual(query2.sort, [])).toBe(true);
+		expect(query2.group_by).toBe('text');
+	});
+
+	it(`Should work for calendar view`, () => {
+		const query2 = populateViewQuery2({
+			type: 'calendar',
+			calendar_by: 'text'
+		}) as ICalendarViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'and',
+				filters: []
+			})
+		).toBe(true);
+		expect(deepEqual(query2.sort, [])).toBe(true);
+		expect(query2.calendar_by).toBe('text');
+	});
+
+	it(`Should work for gallery view`, () => {
+		const query2 = populateViewQuery2({
+			type: 'gallery'
+		}) as IGalleryViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'and',
+				filters: []
+			})
+		).toBe(true);
+		expect(deepEqual(query2.sort, [])).toBe(true);
+	});
+
+	it(`Should work for timeline view`, () => {
+		const query2 = populateViewQuery2({
 			type: 'timeline',
-			name: 'Table'
-		});
+			timeline_by: 'hours'
+		}) as ITimelineViewQuery2;
+		expect(
+			deepEqual(query2.filter, {
+				operator: 'and',
+				filters: []
+			})
+		).toBe(true);
+		expect(query2.timeline_by).toBe('hours');
+		expect(deepEqual(query2.sort, [])).toBe(true);
 	});
 });

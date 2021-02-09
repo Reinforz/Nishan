@@ -15,41 +15,32 @@ import { TViewFilterCreateInput } from './filter';
 
 export interface IViewQuery2CreateInput {
 	type: TViewType;
-	name: string;
 	filter_operator?: TViewGroupFilterOperator;
 }
 
-export interface TableViewQuery2CreateInput
-	extends IViewQuery2CreateInput,
-		Partial<Omit<ITableViewFormat, 'table_properties'>> {
+export interface TableViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'table';
 }
 
-export interface ListViewQuery2CreateInput extends IViewCreateInput {
+export interface ListViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'list';
 }
 
-export interface BoardViewQuery2CreateInput
-	extends IViewCreateInput,
-		Partial<Omit<IBoardViewFormat, 'board_properties'>> {
+export interface BoardViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'board';
 	group_by: string;
 }
 
-export interface GalleryViewQuery2CreateInput
-	extends IViewCreateInput,
-		Partial<Omit<IGalleryViewFormat, 'gallery_properties'>> {
+export interface GalleryViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'gallery';
 }
 
-export interface CalendarViewQuery2CreateInput extends IViewCreateInput {
+export interface CalendarViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'calendar';
 	calendar_by: string;
 }
 
-export interface TimelineViewQuery2CreateInput
-	extends IViewCreateInput,
-		Partial<Omit<ITimelineViewFormat, 'timeline_properties' | 'timeline_table_properties'>> {
+export interface TimelineViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'timeline';
 	timeline_by: TTimelineViewTimelineby;
 }
@@ -67,6 +58,7 @@ export interface IViewCreateInput extends IViewQuery2CreateInput {
 	schema_units: TViewSchemaUnitsCreateInput[];
 	position?: RepositionParams;
 	filters?: TViewFilterCreateInput[];
+	name: string;
 }
 
 export interface TableViewCreateInput extends IViewCreateInput, Partial<Omit<ITableViewFormat, 'table_properties'>> {

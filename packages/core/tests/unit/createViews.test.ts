@@ -9,6 +9,7 @@ import {
 	IListViewFormat,
 	IListViewQuery2,
 	IOperation,
+	ITableView,
 	ITableViewFormat,
 	ITableViewQuery2,
 	ITimelineViewFormat,
@@ -28,6 +29,17 @@ import {
 	populateViewProperties,
 	populateViewQuery2
 } from '../../src';
+
+const default_cache: ICache = {
+	block: new Map(),
+	collection: new Map(),
+	space: new Map(),
+	collection_view: new Map(),
+	notion_user: new Map(),
+	space_view: new Map(),
+	user_root: new Map(),
+	user_settings: new Map()
+};
 
 const schema: Schema = {
 	title: {
@@ -1029,6 +1041,7 @@ describe('generateViewData', () => {
 				type: 'table'
 			},
 			{
+        user_id: 'user_id',
 				stack,
 				cache,
 				space_id: 'space_id',
@@ -1069,4 +1082,203 @@ describe('generateViewData', () => {
 
 		expect(deepEqual(Array.from(cache.collection_view.entries()), [ [ id, expected_view_data ] ]));
 	});
+});
+
+describe('createViews', () => {
+	describe('Output correctly', () => {
+    it(`Should work correctly`, () => {
+      const id = v4(),
+      stack: IOperation[] = [],
+      cache: ICache = default_cache;
+      
+      createViews(
+        {
+          id: 'collection_id',
+          schema: {
+            title: {
+              type: "title",
+              name: "Title"
+            }
+          },
+          parent_id: 'collection_parent_id'
+        },
+        [
+          {
+            id,
+            type: 'table',
+            name: 'Table',
+            schema_units: [
+              {
+                name: "Title",
+                type: "title",
+              }
+            ]
+          }
+        ],
+        {
+          token: 'token',
+          user_id: 'user_id',
+          stack,
+          cache,
+          space_id: 'space_id',
+          shard_id: 123,
+          logger: ()=>{
+            return
+          }
+        },
+        'parent_id'
+      );
+
+      
+      const expected_view_data = {
+        id,
+        "version": 0,
+        "type": "table",
+        "name": "Table",
+        "page_sort": [],
+        "parent_id": "parent_id",       
+        "parent_table": "block",        
+        "alive": true,
+        "format": {
+          "table_properties": [
+            {
+              "property": "title",      
+              "visible": true,
+              "width": 250
+            }
+          ],
+          "table_wrap": false
+        },
+        "query2": {
+          "aggregations": [],
+          "sort": [],
+          "filter": {
+            "operator": "and",
+            "filters": [{
+              property: "title",
+              filter: {
+                operator: "string_is",
+                value: {
+                  type: "exact",
+                  value: "123"
+                }
+              }
+            }]
+          }
+        },
+        "shard_id": 123,
+        "space_id": "space_id"
+      };
+  
+      const [ view_ids, view_map ] = createViews(
+        {
+          id: 'collection_id',
+          schema: {
+            title: {
+              type: "title",
+              name: "Title"
+            }
+          },
+          parent_id: 'parent_id'
+        },
+        [
+          {
+            id,
+            type: 'table',
+            name: 'Table',
+            schema_units: [
+              {
+                name: "Title",
+                type: "title",
+              }
+            ],
+            filters: [
+              {
+                name: "Title",
+                type: "title",
+                filter: {
+                  operator: "string_is",
+                  value: {
+                    type: "exact",
+                    value: "123"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        {
+          token: 'token',
+          user_id: 'user_id',
+          stack,
+          cache,
+          space_id: 'space_id',
+          shard_id: 123,
+          logger: ()=>{
+            return
+          }
+        }
+      );
+      
+      expect(deepEqual(view_ids, [ id ])).toBe(true);
+      expect(deepEqual(view_map.table.get(id)?.getCachedData() as ITableView, expected_view_data)).toBe(true);
+      expect(deepEqual(cache.collection_view.get(id), expected_view_data)).toBe(true);
+      expect(
+        deepEqual(stack, [
+          {
+            path: [],
+            table: 'collection_view',
+            command: 'set',
+            args: expected_view_data,
+            id
+          }
+        ])
+      );
+    });
+  });
+
+  describe('Throw error', () => {
+    it(`Should work correctly`, () => {
+      const id = v4(),
+        stack: IOperation[] = [],
+        cache: ICache = default_cache;
+      expect(()=>createViews(
+        {
+          id: 'collection_id',
+          schema: {
+            title: {
+              type: "title",
+              name: "Title"
+            }
+          },
+          parent_id: 'parent_id'
+        },
+        [
+          {
+            id,
+            type: 'table',
+            name: 'Table',
+            schema_units: [
+              {
+                name: "URL",
+                type: "url",
+              }
+            ]
+          }
+        ],
+        {
+          token: 'token',
+          user_id: 'user_id',
+          stack,
+          cache,
+          space_id: 'space_id',
+          shard_id: 123,
+          logger: ()=>{
+            return
+          }
+        }
+      )).toThrow(`Collection:collection_id does not contain SchemeUnit.name:URL`)
+    });
+  })
+  
 });

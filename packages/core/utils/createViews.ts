@@ -263,7 +263,7 @@ export function populateNonIncludedProperties(schema: Schema, included_units: st
   return properties;
 }
 
-export function generateViewData({id, name, type}: Pick<TViewCreateInput, "id" | "name" | "type">, {stack, cache, space_id, shard_id}: Pick<NishanArg, "stack" | "cache" | "space_id" | "shard_id">, format: TViewFormat, query2: TViewQuery2, parent_id?: string){
+export function generateViewData({id, name, type}: Pick<TViewCreateInput, "id" | "name" | "type">, {stack, cache, space_id, shard_id, user_id}: Pick<NishanArg, "stack" | "cache" | "space_id" | "shard_id" | "user_id">, format: TViewFormat, query2: TViewQuery2, parent_id?: string){
   const view_id = generateId(id);
   const view_data = {
     id: view_id,
@@ -277,21 +277,21 @@ export function generateViewData({id, name, type}: Pick<TViewCreateInput, "id" |
     format,
     query2,
     shard_id,
-    space_id
+    space_id,
   } as TView;
   stack.push(Operation.collection_view.set(view_id, [], JSON.parse(JSON.stringify(view_data))));
   cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)));
   return view_data;
 }
 
-export function createViews(collection: ICollection, views: TViewCreateInput[],props: Omit<NishanArg, "id">, parent_id?:string) {
+export function createViews(collection: Pick<ICollection, "id" | "schema" | "parent_id">, views: TViewCreateInput[], props: Omit<NishanArg, "id" | "interval">, parent_id?:string) {
   const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
   for (let index = 0; index < views.length; index++) {
-    const view = views[index];
-    const { name, type, schema_units} = view, included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
+    const view = views[index], 
+      { name, type, schema_units} = view, included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
 
     schema_units.forEach(schema_unit => {
       const { format, name } = schema_unit, schema_map_unit = schema_map.get(name);

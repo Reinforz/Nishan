@@ -14,7 +14,7 @@ import {
 	Schema
 } from '@nishans/types';
 import deepEqual from 'deep-equal';
-import { createViews, getSchemaMap, populateViewFormat, populateViewQuery2 } from '../../src';
+import { createViews, getSchemaMap, populateViewFormat, populateViewProperties, populateViewQuery2 } from '../../src';
 
 const schema: Schema = {
 	title: {
@@ -804,5 +804,67 @@ describe('populateViewFormat', () => {
 				).toThrow(`Property Select doesnot have any options`);
 			});
 		});
+	});
+});
+
+describe('populateViewProperties', () => {
+	it(`Should work with number input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }, 150), {
+				property: 'text',
+				visible: true,
+				width: 150
+			})
+		).toBe(true);
+	});
+
+	it(`Should work with boolean input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }, false), {
+				property: 'text',
+				visible: false,
+				width: 250
+			})
+		).toBe(true);
+	});
+
+	it(`Should work with [boolean] input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }, [ false ] as any), {
+				property: 'text',
+				visible: false,
+				width: 250
+			})
+		).toBe(true);
+	});
+
+	it(`Should work with [boolean, number] input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }, [ false, 120 ]), {
+				property: 'text',
+				visible: false,
+				width: 120
+			})
+		).toBe(true);
+	});
+
+	it(`Should work with [] input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }, [] as any), {
+				property: 'text',
+				visible: true,
+				width: 250
+			})
+		).toBe(true);
+	});
+
+	it(`Should work with no input`, () => {
+		expect(
+			deepEqual(populateViewProperties({ schema_id: 'text' }), {
+				property: 'text',
+				visible: true,
+				width: 250
+			})
+		).toBe(true);
 	});
 });

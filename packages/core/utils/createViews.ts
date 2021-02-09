@@ -1,7 +1,7 @@
-import { ISchemaMap } from "@nishans/notion-formula";
+import { ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit } from "@nishans/types";
 import { getSchemaMap } from "../src";
-import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput } from "../types";
+import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewSchemaUnitsCreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
@@ -209,6 +209,22 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
   return format;
 }
 
+export function populateViewProperties(schema_map_unit: Pick<ISchemaMapValue, "schema_id">, format?: TViewSchemaUnitsCreateInput["format"]){
+  const property: ViewFormatProperties = {
+    property: schema_map_unit.schema_id,
+    visible: true,
+    width: 250
+  };
+  if (typeof format === "boolean") property.visible = format;
+  else if (typeof format === "number") property.width = format;
+  else if (Array.isArray(format)) {
+    property.width = format[1] ?? 250
+    property.visible = format[0] ?? true;
+  }
+
+  return property;
+}
+
 export function createViews(collection: ICollection, views: TViewCreateInput[],props: Omit<NishanArg, "id">, parent_id?:string) {
   const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
@@ -220,41 +236,31 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
       view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
 
     view_ids.push(view_id);
-    view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))
+    const view_object = new view_classes[type]({ ...props, id: view_id })
+    view_map[type].set(view_id, view_object);
+    view_map[type].set(name, view_object);
 
     schema_units.forEach(schema_unit => {
-      const { format, sort, aggregation, name } = schema_unit, property_info = schema_map.get(name);
-      if (property_info) {
-        const property: ViewFormatProperties = {
-            property: property_info.schema_id,
-            visible: true,
-            width: 250
-          };
-        included_units.push(property_info.schema_id);
-        if (typeof format === "boolean") property.visible = format;
-        else if (typeof format === "number") property.width = format;
-        else if (Array.isArray(format)) {
-          property.width = format[1] ?? 250
-          property.visible = format[0] ?? true;
-        }
+      const { format, sort, aggregation, name } = schema_unit, schema_map_unit = schema_map.get(name);
+      if (schema_map_unit) {
+        included_units.push(schema_map_unit.schema_id);
         if (sort && sorts) {
           if (Array.isArray(sort))
             sorts.splice(sort[1], 0, {
-              property: property_info.schema_id,
+              property: schema_map_unit.schema_id,
               direction: sort[0]
             })
           else sorts.push({
-            property: property_info.schema_id,
+            property: schema_map_unit.schema_id,
             direction: sort
           })
         }
-
         if (aggregation && (query2 as any).aggregations) (query2 as any).aggregations.push({
-          property: property_info.schema_id,
+          property: schema_map_unit.schema_id,
           aggregator: aggregation as any
         })
 
-        properties.push(property)
+        properties.push(populateViewProperties(schema_map_unit, format))
       } else
         throw new Error(error(`Collection:${collection.id} does not contain SchemeUnit.name:${name}`))
     })

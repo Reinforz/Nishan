@@ -1,13 +1,19 @@
 import { ISchemaMap } from "@nishans/notion-formula";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2 } from "@nishans/types";
 import { getSchemaMap } from "../src";
-import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput } from "../types";
+import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
 
-export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
+export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
+export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
+export function populateViewQuery2(view: GalleryViewQuery2CreateInput): IGalleryViewQuery2;
+export function populateViewQuery2(view: TimelineViewQuery2CreateInput): ITimelineViewQuery2;
+export function populateViewQuery2(view: CalendarViewQuery2CreateInput, schema_map: ISchemaMap): ICalendarViewQuery2;
+export function populateViewQuery2(view: BoardViewQuery2CreateInput, schema_map: ISchemaMap): IBoardViewQuery2;
+export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: ISchemaMap): TViewQuery2 {
   const query2: TViewQuery2 = {} as any, operator = view.filter_operator ?? "and";
   switch (view.type) {
     case "table":
@@ -20,10 +26,13 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       };
       return table_query2;
     case "board":
+      const group_by = schema_map && schema_map.get(view.group_by);
+      if(!group_by)
+        throw new Error(`Unknown property ${view.group_by} referenced`);
       const board_query2: IBoardViewQuery2 = query2 as any;
       board_query2.aggregations = [];
       board_query2.sort = [];
-      board_query2.group_by = view.group_by;
+      board_query2.group_by = group_by.schema_id;
       board_query2.filter = {
         operator,
         filters: []
@@ -38,9 +47,12 @@ export function populateViewQuery2(view: TViewQuery2CreateInput): TViewQuery2 {
       };
       return gallery_query2;
     case "calendar":
+      const calendar_by = schema_map && schema_map.get(view.calendar_by);
+      if(!calendar_by)
+        throw new Error(`Unknown property ${view.calendar_by} referenced`);
       const calendar_query2: ICalendarViewQuery2 = query2 as any;
       calendar_query2.sort = [];
-      calendar_query2.calendar_by = view.calendar_by;
+      calendar_query2.calendar_by = calendar_by.schema_id;
       calendar_query2.filter = {
         operator,
         filters: []
@@ -117,7 +129,7 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
   for (let index = 0; index < views.length; index++) {
     const view = views[index];
     const { id, name, type, schema_units} = view,
-      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view), {sort: sorts, filter} = query2, {properties, format} = populateViewFormat(view, schema_map, query2);
+      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, {properties, format} = populateViewFormat(view, schema_map, query2);
 
     view_ids.push(view_id);
     view_map[type].set(view_id, new view_classes[type]({ ...props, id: view_id }))

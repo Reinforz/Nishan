@@ -57,10 +57,13 @@ describe('populateViewQuery2', () => {
 	});
 
 	it(`Should work for board view`, () => {
-		const query2 = populateViewQuery2({
-			type: 'board',
-			group_by: 'text'
-		}) as IBoardViewQuery2;
+		const query2 = populateViewQuery2(
+			{
+				type: 'board',
+				group_by: 'Text'
+			},
+			schema_map
+		) as IBoardViewQuery2;
 		expect(
 			deepEqual(query2.filter, {
 				operator: 'and',
@@ -72,11 +75,26 @@ describe('populateViewQuery2', () => {
 		expect(query2.group_by).toBe('text');
 	});
 
+	it(`Should throw error for unknown property referenced in board view`, () => {
+		expect(() =>
+			populateViewQuery2(
+				{
+					type: 'board',
+					group_by: 'text'
+				},
+				schema_map
+			)
+		).toThrow(`Unknown property text referenced`);
+	});
+
 	it(`Should work for calendar view`, () => {
-		const query2 = populateViewQuery2({
-			type: 'calendar',
-			calendar_by: 'text'
-		}) as ICalendarViewQuery2;
+		const query2 = populateViewQuery2(
+			{
+				type: 'calendar',
+				calendar_by: 'Text'
+			},
+			schema_map
+		) as ICalendarViewQuery2;
 		expect(
 			deepEqual(query2.filter, {
 				operator: 'and',
@@ -85,6 +103,18 @@ describe('populateViewQuery2', () => {
 		).toBe(true);
 		expect(deepEqual(query2.sort, [])).toBe(true);
 		expect(query2.calendar_by).toBe('text');
+	});
+
+	it(`Should throw error for unknown property referenced in calendar view`, () => {
+		expect(() =>
+			populateViewQuery2(
+				{
+					type: 'calendar',
+					calendar_by: 'text'
+				},
+				schema_map
+			)
+		).toThrow(`Unknown property text referenced`);
 	});
 
 	it(`Should work for gallery view`, () => {

@@ -1,5 +1,5 @@
 import { ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
-import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit } from "@nishans/types";
+import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit, ViewAggregations } from "@nishans/types";
 import { getSchemaMap } from "../src";
 import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewSchemaUnitsCreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
@@ -225,6 +225,29 @@ export function populateViewProperties(schema_map_unit: Pick<ISchemaMapValue, "s
   return property;
 }
 
+export function populateQuery2SortAndAggregations(input_schema_unit: Pick<TViewSchemaUnitsCreateInput, "sort" | "aggregation">, schema_map_unit: Pick<ISchemaMapValue, "schema_id">, query2: TViewQuery2){
+  const {sort, aggregation} = input_schema_unit;
+  const sorts = query2.sort, aggregations = (query2 as any).aggregations as ViewAggregations[];
+  if (sort && sorts) {
+    if (Array.isArray(sort))
+      sorts.splice(sort[1], 0, {
+        property: schema_map_unit.schema_id,
+        direction: sort[0]
+      })
+    else sorts.push({
+      property: schema_map_unit.schema_id,
+      direction: sort
+    })
+  };
+
+  if (aggregation && (query2 as any).aggregations) (query2 as any).aggregations.push({
+    property: schema_map_unit.schema_id,
+    aggregator: aggregation
+  });
+
+  return [sorts, aggregations]
+}
+
 export function createViews(collection: ICollection, views: TViewCreateInput[],props: Omit<NishanArg, "id">, parent_id?:string) {
   const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
@@ -241,25 +264,10 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
     view_map[type].set(name, view_object);
 
     schema_units.forEach(schema_unit => {
-      const { format, sort, aggregation, name } = schema_unit, schema_map_unit = schema_map.get(name);
+      const { format, name } = schema_unit, schema_map_unit = schema_map.get(name);
       if (schema_map_unit) {
         included_units.push(schema_map_unit.schema_id);
-        if (sort && sorts) {
-          if (Array.isArray(sort))
-            sorts.splice(sort[1], 0, {
-              property: schema_map_unit.schema_id,
-              direction: sort[0]
-            })
-          else sorts.push({
-            property: schema_map_unit.schema_id,
-            direction: sort
-          })
-        }
-        if (aggregation && (query2 as any).aggregations) (query2 as any).aggregations.push({
-          property: schema_map_unit.schema_id,
-          aggregator: aggregation as any
-        })
-
+        populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2)
         properties.push(populateViewProperties(schema_map_unit, format))
       } else
         throw new Error(error(`Collection:${collection.id} does not contain SchemeUnit.name:${name}`))

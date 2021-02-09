@@ -11,10 +11,18 @@ import {
 	ITableViewQuery2,
 	ITimelineViewFormat,
 	ITimelineViewQuery2,
-	Schema
+	Schema,
+	ViewSorts
 } from '@nishans/types';
 import deepEqual from 'deep-equal';
-import { createViews, getSchemaMap, populateViewFormat, populateViewProperties, populateViewQuery2 } from '../../src';
+import {
+	createViews,
+	getSchemaMap,
+	populateQuery2SortAndAggregations,
+	populateViewFormat,
+	populateViewProperties,
+	populateViewQuery2
+} from '../../src';
 
 const schema: Schema = {
 	title: {
@@ -864,6 +872,110 @@ describe('populateViewProperties', () => {
 				property: 'text',
 				visible: true,
 				width: 250
+			})
+		).toBe(true);
+	});
+});
+
+describe('populateQuery2SortAndAggregations', () => {
+	it(`Sort undefined, aggregation text`, () => {
+		const query2 = {
+			aggregations: [],
+			sort: []
+		};
+
+		populateQuery2SortAndAggregations(
+			{
+				aggregation: 'count'
+			},
+			{
+				schema_id: 'text'
+			},
+			query2
+		);
+
+		expect(
+			deepEqual(query2, {
+				sort: [],
+				aggregations: [
+					{
+						property: 'text',
+						aggregator: 'count'
+					}
+				]
+			})
+		).toBe(true);
+	});
+
+	it(`Sort text, aggregation text`, () => {
+		const query2 = {
+			aggregations: [],
+			sort: []
+		};
+
+		populateQuery2SortAndAggregations(
+			{
+				sort: 'ascending',
+				aggregation: 'count'
+			},
+			{
+				schema_id: 'text'
+			},
+			query2
+		);
+
+		expect(
+			deepEqual(query2, {
+				sort: [
+					{
+						property: 'text',
+						direction: 'ascending'
+					}
+				],
+				aggregations: [
+					{
+						property: 'text',
+						aggregator: 'count'
+					}
+				]
+			})
+		).toBe(true);
+	});
+
+	it(`Sort [TSort, number], Aggregation: undefined`, () => {
+		const query2 = {
+			aggregations: [],
+			sort: [
+				{
+					property: 'number',
+					direction: 'descending'
+				}
+			] as ViewSorts[]
+		};
+
+		populateQuery2SortAndAggregations(
+			{
+				sort: [ 'ascending', 0 ]
+			},
+			{
+				schema_id: 'text'
+			},
+			query2
+		);
+
+		expect(
+			deepEqual(query2, {
+				sort: [
+					{
+						property: 'text',
+						direction: 'ascending'
+					},
+					{
+						property: 'number',
+						direction: 'descending'
+					}
+				],
+				aggregations: []
 			})
 		).toBe(true);
 	});

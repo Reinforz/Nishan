@@ -1,3 +1,4 @@
+import { ICache } from '@nishans/endpoints';
 import {
 	IBoardViewFormat,
 	IBoardViewQuery2,
@@ -7,6 +8,7 @@ import {
 	IGalleryViewQuery2,
 	IListViewFormat,
 	IListViewQuery2,
+	IOperation,
 	ITableViewFormat,
 	ITableViewQuery2,
 	ITimelineViewFormat,
@@ -15,9 +17,12 @@ import {
 	ViewSorts
 } from '@nishans/types';
 import deepEqual from 'deep-equal';
+import { v4 } from 'uuid';
 import {
 	createViews,
+	generateViewData,
 	getSchemaMap,
+	populateNonIncludedProperties,
 	populateQuery2SortAndAggregations,
 	populateViewFormat,
 	populateViewProperties,
@@ -978,5 +983,90 @@ describe('populateQuery2SortAndAggregations', () => {
 				aggregations: []
 			})
 		).toBe(true);
+	});
+});
+
+describe('populateNonIncludedProperties', () => {
+	it(`Should work correctly`, () => {
+		expect(
+			deepEqual(
+				populateNonIncludedProperties(
+					{
+						title: {
+							type: 'title',
+							name: 'Title'
+						},
+						number: {
+							type: 'number',
+							name: 'Number'
+						}
+					},
+					[ 'number' ]
+				),
+				[
+					{
+						property: 'title',
+						visible: false,
+						width: 250
+					}
+				]
+			)
+		).toBe(true);
+	});
+});
+
+describe('generateViewData', () => {
+	const id = v4(),
+		stack: IOperation[] = [],
+		cache: ICache = {
+			collection_view: new Map()
+		} as any;
+	it(`Should work correctly`, () => {
+		const view_data = generateViewData(
+			{
+				id,
+				name: 'Table',
+				type: 'table'
+			},
+			{
+				stack,
+				cache,
+				space_id: 'space_id',
+				shard_id: 123
+			},
+			{} as any,
+			{} as any,
+			'parent_id'
+		);
+		const expected_view_data = {
+			id,
+			version: 0,
+			type: 'table',
+			name: 'Table',
+			page_sort: [],
+			parent_id: 'parent_id',
+			parent_table: 'block',
+			alive: true,
+			format: {},
+			query2: {},
+			shard_id: 123,
+			space_id: 'space_id'
+		};
+
+		expect(deepEqual(view_data, expected_view_data)).toBe(true);
+
+		expect(
+			deepEqual(stack, [
+				{
+					path: [],
+					table: 'collection_view',
+					command: 'set',
+					args: expected_view_data,
+					id
+				}
+			])
+		);
+
+		expect(deepEqual(Array.from(cache.collection_view.entries()), [ [ id, expected_view_data ] ]));
 	});
 });

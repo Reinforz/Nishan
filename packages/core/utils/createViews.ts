@@ -1,5 +1,6 @@
+import { ICache } from "@nishans/endpoints";
 import { ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
-import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit, ViewAggregations } from "@nishans/types";
+import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit, ViewAggregations, Schema, TView, IOperation } from "@nishans/types";
 import { getSchemaMap } from "../src";
 import { TViewCreateInput, ITView, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewSchemaUnitsCreateInput } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
@@ -248,6 +249,41 @@ export function populateQuery2SortAndAggregations(input_schema_unit: Pick<TViewS
   return [sorts, aggregations]
 }
 
+export function populateNonIncludedProperties(schema: Schema, included_units: string[]){
+  const properties: ViewFormatProperties[] = [];
+  const non_included_unit_entries = Object.keys(schema).filter((schema_id) => !included_units.includes(schema_id));
+  non_included_unit_entries.forEach((property) => {
+    properties.push({
+      property,
+      visible: false,
+      width: 250
+    })
+  });
+
+  return properties;
+}
+
+export function generateViewData({id, name, type}: Pick<TViewCreateInput, "id" | "name" | "type">, {stack, cache, space_id, shard_id}: Pick<NishanArg, "stack" | "cache" | "space_id" | "shard_id">, format: TViewFormat, query2: TViewQuery2, parent_id?: string){
+  const view_id = generateId(id);
+  const view_data = {
+    id: view_id,
+    version: 0,
+    type,
+    name,
+    page_sort: [],
+    parent_id,
+    parent_table: 'block',
+    alive: true,
+    format,
+    query2,
+    shard_id,
+    space_id
+  } as TView;
+  stack.push(Operation.collection_view.set(view_id, [], JSON.parse(JSON.stringify(view_data))));
+  cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)));
+  return view_data;
+}
+
 export function createViews(collection: ICollection, views: TViewCreateInput[],props: Omit<NishanArg, "id">, parent_id?:string) {
   const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
@@ -255,13 +291,7 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
 
   for (let index = 0; index < views.length; index++) {
     const view = views[index];
-    const { id, name, type, schema_units} = view,
-      view_id = generateId(id), included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
-
-    view_ids.push(view_id);
-    const view_object = new view_classes[type]({ ...props, id: view_id })
-    view_map[type].set(view_id, view_object);
-    view_map[type].set(name, view_object);
+    const { name, type, schema_units} = view, included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {sort: sorts, filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
 
     schema_units.forEach(schema_unit => {
       const { format, name } = schema_unit, schema_map_unit = schema_map.get(name);
@@ -273,34 +303,19 @@ export function createViews(collection: ICollection, views: TViewCreateInput[],p
         throw new Error(error(`Collection:${collection.id} does not contain SchemeUnit.name:${name}`))
     })
 
-    const non_included_units = Object.keys(collection.schema).filter(key => !included_units.includes(key));
+    properties.push(...populateNonIncludedProperties(collection.schema, included_units));
+
     const input_filters = views[index].filters;
     if(input_filters && filter)
       populateFilters(input_filters, filter.filters, schema_map);
 
-    non_included_units.forEach(property => {
-      properties.push({
-        property,
-        visible: false,
-        width: 250
-      })
-    });
-    
-    const view_data = {
-      id: view_id,
-      version: 0,
-      type,
-      name,
-      page_sort: [],
-      parent_id: parent_id ?? collection.parent_id,
-      parent_table: 'block',
-      alive: true,
-      format,
-      query2,
-    } as any;
-    props.stack.push(Operation.collection_view.set(view_id, [], JSON.parse(JSON.stringify(view_data))))
-    props.cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)))
-    props.logger && props.logger("CREATE", "collection_view", view_id) 
+    const view_data = generateViewData(view, props, format, query2, parent_id ?? collection.parent_id);
+    view_ids.push(view_data.id);
+    const view_object = new view_classes[type]({ ...props, id: view_data.id })
+    view_map[type].set(view_data.id, view_object);
+    view_map[type].set(name, view_object);
+
+    props.logger && props.logger("CREATE", "collection_view", view_data.id);
   }
 
   return [view_ids, view_map] as [string[], ITView];

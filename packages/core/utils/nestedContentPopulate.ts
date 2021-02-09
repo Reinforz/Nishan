@@ -130,7 +130,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
           collection = props.cache.collection.get(collection_id) as ICollection,
-          [view_ids] = createViews(collection.schema, views, collection.id, block_id, props),
+          [view_ids] = createViews(collection, views, props, block_id),
           collection_view_data: ICollectionView = {
             id: block_id,
             type: 'collection_view',

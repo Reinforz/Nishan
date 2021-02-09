@@ -47,7 +47,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 	createViews (params: TViewCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
-			[ view_ids, view_map ] = createViews(collection.schema, params, collection.id, this.id, this.getProps());
+			[ view_ids, view_map ] = createViews(collection, params, this.getProps());
 		this.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();

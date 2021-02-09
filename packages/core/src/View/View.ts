@@ -69,14 +69,7 @@ class View<T extends TView> extends Data<T> {
 			collection = this.cache.collection.get(
 				(this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id
 			) as ICollection,
-			[ , view_map ] = createViews(
-				collection.schema,
-				[ param ],
-				collection.id,
-				data.parent_id,
-				this.getProps(),
-				this.id
-			);
+			[ , view_map ] = createViews(collection, [ param ], this.getProps());
 		this.updateLastEditedProps();
 		return view_map;
 	}

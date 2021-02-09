@@ -1,5 +1,5 @@
 import { generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
-import { Schema } from "@nishans/types";
+import { ICollection, Schema } from "@nishans/types";
 import { ICollectionBlockInput, ITView, NishanArg } from "../types";
 import { createShortId, createViews, Operation, generateId } from "../utils";
 
@@ -27,13 +27,9 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     schema_map.set(opt.name,  {...schema[schema_id], schema_id})
   });
 
-  const [view_ids, view_map] = createViews(schema, param.views, collection_id, parent_id, props);
-  const collection_data = {
+  const collection_data: ICollection = {
     id: collection_id,
     schema,
-    format: {
-      collection_page_properties: []
-    },
     cover: param?.cover ?? "",
     icon: param?.icon ?? "",
     parent_id,
@@ -41,7 +37,10 @@ export function createCollection(param: ICollectionBlockInput, parent_id: string
     alive: true,
     name: param.properties.title,
     migrated: false, version: 0
-  } as const;
+  };
+
+  const [view_ids, view_map] = createViews(collection_data, param.views, props);
+  
   props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))))
   props.cache.collection.set(collection_id, JSON.parse(JSON.stringify(collection_data)));
   props.logger && props.logger("CREATE", "collection", collection_id);

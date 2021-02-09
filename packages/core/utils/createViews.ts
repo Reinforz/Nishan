@@ -1,20 +1,19 @@
-import { Schema, TSchemaUnit,  ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat } from "@nishans/types";
+import { Schema, ViewSorts, TViewFilters, ViewAggregations, ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection } from "@nishans/types";
+import { getSchemaMap } from "src";
 import { TViewCreateInput, ITView, NishanArg } from "../types";
 import { generateId, error, Operation, createViewMap } from "../utils";
 import { populateFilters } from "./populateFilters";
 
-export function createViews(schema: Schema, views: TViewCreateInput[], collection_id: string, parent_id: string, props: Omit<NishanArg, "id">, current_id?: string) {
-  const name_map: Map<string, { schema_id: string } & TSchemaUnit> = new Map(), view_ids: string[] = [], view_map = createViewMap();
+export function createViews(collection: ICollection, views: TViewCreateInput[],props: Omit<NishanArg, "id">, parent_id?:string) {
+  const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
-
-  Object.entries(schema).forEach(([schema_id, schema]) => name_map.set(schema.name, { schema_id, ...schema }));
 
   for (let index = 0; index < views.length; index++) {
     const view = views[index];
     const { id, name, type, schema_units, filter_operator = "and" } = view,
       sorts = [] as ViewSorts[], filters = [] as TViewFilters[], aggregations = [] as ViewAggregations[], properties = [] as ViewFormatProperties[],
-      view_id = current_id || generateId(id), included_units: string[] = [], query2 = {
+      view_id = generateId(id), included_units: string[] = [], query2 = {
         sort: sorts,
         filter: {
           operator: filter_operator,
@@ -39,18 +38,18 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
         board_format.board_cover_aspect = board_view.board_cover_aspect;
         board_format.board_cover_size = board_view.board_cover_size;
         board_format.board_groups2 = board_view.board_groups2 as any;
-        query2.group_by = name_map.get(board_view.group_by)?.schema_id ?? board_view.group_by;
+        query2.group_by = schema_map.get(board_view.group_by)?.schema_id ?? board_view.group_by;
         break;
       case "gallery":
         const gallery_view = view, gallery_format = format as IGalleryViewFormat;
-        if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: name_map.get(gallery_view.gallery_cover.property)?.schema_id as string }
+        if (gallery_view.gallery_cover?.type === "property") gallery_format.gallery_cover = { ...gallery_view.gallery_cover, property: schema_map.get(gallery_view.gallery_cover.property)?.schema_id as string }
         else gallery_format.gallery_cover = gallery_view.gallery_cover
         gallery_format.gallery_cover_aspect = gallery_view.gallery_cover_aspect
         gallery_format.gallery_cover_size = gallery_view.gallery_cover_size
         break;
       case "calendar":
         const calender_view = view, calendar_query2 = query2 as ICalendarViewQuery2;
-        calendar_query2.calendar_by = name_map.get(calender_view.calendar_by)?.schema_id ?? calender_view.calendar_by;
+        calendar_query2.calendar_by = schema_map.get(calender_view.calendar_by)?.schema_id ?? calender_view.calendar_by;
         break;
       case "timeline":
         const timeline_view = view, timeline_format = format as ITimelineViewFormat;
@@ -60,7 +59,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
     }
 
     schema_units.forEach(schema_unit => {
-      const { format, sort, aggregation, name } = schema_unit, property_info = name_map.get(name);
+      const { format, sort, aggregation, name } = schema_unit, property_info = schema_map.get(name);
       if (property_info) {
         const property: ViewFormatProperties = {
             property: property_info.schema_id,
@@ -93,13 +92,13 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
 
         properties.push(property)
       } else
-        throw new Error(error(`Collection:${collection_id} does not contain SchemeUnit.name:${name}`))
+        throw new Error(error(`Collection:${collection.id} does not contain SchemeUnit.name:${name}`))
     })
 
-    const non_included_units = Object.keys(schema).filter(key => !included_units.includes(key));
+    const non_included_units = Object.keys(collection.schema).filter(key => !included_units.includes(key));
     const input_filters = views[index].filters;
     if(input_filters)
-      populateFilters(input_filters, filters, name_map)
+      populateFilters(input_filters, filters, schema_map)
     non_included_units.forEach(property => {
       properties.push({
         property,
@@ -112,7 +111,7 @@ export function createViews(schema: Schema, views: TViewCreateInput[], collectio
       type,
       name,
       page_sort: [],
-      parent_id,
+      parent_id: parent_id ?? collection.parent_id,
       parent_table: 'block',
       alive: true,
       format,

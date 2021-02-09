@@ -49,7 +49,7 @@ export interface IBoardViewFormat {
 	board_cover: TViewFormatCover;
 	board_cover_aspect?: 'contain' | 'cover';
 	board_cover_size?: 'small' | 'medium' | 'large';
-	board_groups2: { hidden: boolean; property: string; value: { type: 'select' | 'multi_select'; value: string } }[];
+	board_groups2: { hidden: boolean; property: string; value: { type: 'select' | 'multi_select'; value?: string } }[];
 	board_properties: ViewFormatProperties[];
 }
 
@@ -97,7 +97,7 @@ export interface ICalendarView extends Node, ParentProps, SpaceShardProps {
 
 export interface ITimelineViewFormatPreference {
 	centerTimestamp: number;
-	zoomLevel: 'month';
+	zoomLevel: TTimelineViewZoomLevel;
 }
 
 export interface ITimelineViewFormat {
@@ -108,7 +108,7 @@ export interface ITimelineViewFormat {
 }
 
 export type ITimelineViewQuery2 = Partial<IViewQuery2> & {
-	timeline_by: TTimelineViewTimelineby;
+	timeline_by: string;
 };
 export interface ITimelineView extends Node, ParentProps, SpaceShardProps {
 	type: 'timeline';
@@ -117,7 +117,7 @@ export interface ITimelineView extends Node, ParentProps, SpaceShardProps {
 	query2: ITimelineViewQuery2;
 }
 
-export type TTimelineViewTimelineby = 'hours' | 'day' | 'week' | 'bi_week' | 'month' | 'quarter' | 'year';
+export type TTimelineViewZoomLevel = 'hours' | 'day' | 'week' | 'bi_week' | 'month' | 'quarter' | 'year';
 
 export interface ViewFormatProperties {
 	width?: number;

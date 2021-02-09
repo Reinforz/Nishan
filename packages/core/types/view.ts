@@ -4,7 +4,6 @@ import {
 	IBoardViewFormat,
 	IGalleryViewFormat,
 	ITimelineViewFormat,
-	TTimelineViewTimelineby,
 	TSchemaUnitType,
 	TSortValue,
 	TViewGroupFilterOperator,
@@ -44,7 +43,7 @@ export interface CalendarViewQuery2CreateInput extends IViewQuery2CreateInput {
 
 export interface TimelineViewQuery2CreateInput extends IViewQuery2CreateInput {
 	type: 'timeline';
-	timeline_by: TTimelineViewTimelineby;
+	timeline_by: string;
 }
 
 export type TViewQuery2CreateInput =
@@ -75,7 +74,6 @@ export interface BoardViewFormatCreateInput
 	extends IViewFormatCreateInput,
 		Partial<Omit<IBoardViewFormat, 'board_properties'>> {
 	type: 'board';
-	group_by: string;
 }
 
 export interface GalleryViewFormatCreateInput
@@ -88,14 +86,12 @@ export interface CalendarViewFormatCreateInput
 	extends IViewFormatCreateInput,
 		Partial<Omit<ICalendarViewFormat, 'calendar_properties'>> {
 	type: 'calendar';
-	calendar_by: string;
 }
 
 export interface TimelineViewFormatCreateInput
 	extends IViewFormatCreateInput,
 		Partial<Omit<ITimelineViewFormat, 'timeline_properties' | 'timeline_table_properties'>> {
 	type: 'timeline';
-	timeline_by: TTimelineViewTimelineby;
 }
 
 export type TViewFormatCreateInput =
@@ -124,7 +120,6 @@ export interface ListViewCreateInput extends IViewCreateInput, ListViewQuery2Cre
 
 export interface BoardViewCreateInput extends IViewCreateInput, BoardViewQuery2CreateInput, BoardViewFormatCreateInput {
 	type: 'board';
-	group_by: string;
 }
 
 export interface GalleryViewCreateInput
@@ -139,7 +134,6 @@ export interface CalendarViewCreateInput
 		CalendarViewQuery2CreateInput,
 		CalendarViewFormatCreateInput {
 	type: 'calendar';
-	calendar_by: string;
 }
 
 export interface TimelineViewCreateInput
@@ -147,7 +141,6 @@ export interface TimelineViewCreateInput
 		TimelineViewQuery2CreateInput,
 		TimelineViewFormatCreateInput {
 	type: 'timeline';
-	timeline_by: TTimelineViewTimelineby;
 }
 
 export type TViewCreateInput =

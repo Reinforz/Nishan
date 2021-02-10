@@ -8,7 +8,8 @@ interface IInput {
   type: TBlockType
 }
 
-export interface ICollectionBlockInput extends IInput {
+export interface ICollectionBlockInput {
+  id?: string,
   views: TViewCreateInput[],
   schema: TSchemaUnitInput[],
   name: TTextFormat,

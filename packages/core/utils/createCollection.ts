@@ -97,17 +97,18 @@ export async function generateSchema(input_schemas: ICollectionBlockInput["schem
 
 export async function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
   const collection_id = generateId(param.collection_id);
-  const [schema] = await generateSchema(param.schema, {id: collection_id, name: param.name, token: props.token, stack: props.stack, cache: props.cache})
+  const [schema] = await generateSchema(param.schema, {id: collection_id, name: param.name, token: props.token, stack: props.stack, cache: props.cache, logger: props.logger})
   const collection_data: ICollection = {
     id: collection_id,
     schema,
-    cover: param.cover ?? "",
-    icon: param.icon ?? "",
+    cover: param.cover,
+    icon: param.icon,
     parent_id,
     parent_table: 'block',
     alive: true,
     name: param.name,
-    migrated: false, version: 0
+    migrated: false, 
+    version: 0
   };
 
   const [view_ids, view_map] = createViews(collection_data, param.views, props);

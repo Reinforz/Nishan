@@ -1,86 +1,497 @@
-import { ISpace, ISpaceView, IUserRoot, TPage } from '@nishans/types';
+import { ICache } from '@nishans/endpoints';
+import { IPage, ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
+import deepEqual from 'deep-equal';
 import { createPageMap, iterateAndGetChildren, ITPage } from '../../src';
 import { nishan, TEST_DATA } from '../constants';
 import data from '../data';
+import colors from 'colors';
 
 const { cache } = nishan;
 
-describe('iterateAndGetChildren function works property', () => {
-	describe('Callback returns all children', () => {
-		describe('Returns correct child from cache', () => {
-			it('Check within the callback', async () => {
-				const child_ids = data.recordMap.space[TEST_DATA.space[0].data.id].value.pages;
-				iterateAndGetChildren<ISpace, TPage, ITPage>(
-					(page) => {
-						expect(child_ids.includes(page.id)).toBeTruthy();
-						return true;
-					},
+describe('iterateAndGetChildren', () => {
+	describe('Works correctly', () => {
+		describe('Array of ids', () => {
+			it('Multiple false', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					child_ids,
 					(id) => cache.block.get(id) as TPage,
 					{
-						parent_id: TEST_DATA.space[0].data.id,
-						parent_type: 'space',
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
 						child_type: 'block',
 						child_ids,
-						container: createPageMap(),
-						cache
-					}
+						container: [],
+						cache,
+						multiple: false,
+						logger (method, child_type, id) {
+							expect(method).toBe('READ');
+							expect(child_type).toBe('block');
+							expect(id).toBe('child_one_id');
+						}
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						}
+					])
 				);
 			});
 
-			it('Check the returned array', async () => {
-				const child_ids = data.recordMap.space[TEST_DATA.space[0].data.id].value.pages;
-				const children = await iterateAndGetChildren<ISpace, TPage, TPage[]>(
-					() => true,
+			it('Return container item', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					child_ids,
 					(id) => cache.block.get(id) as TPage,
 					{
-						parent_id: TEST_DATA.space[0].data.id,
-						parent_type: 'space',
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
 						child_type: 'block',
 						child_ids,
 						container: [],
 						cache
 					},
-					(id, data, pages) => pages.push(data)
+					(_, data, container) => container.push(data)
 				);
-				expect(children.length).toBe(2);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						},
+						{
+							id: 'child_two_id'
+						}
+					])
+				);
+			});
+
+			it('Works for string child_id path', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<IPage, TBlock, TBlock[]>(
+					child_ids,
+					(id) => cache.block.get(id) as TBlock,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids: 'content',
+						container: [],
+						cache
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						},
+						{
+							id: 'child_two_id'
+						}
+					])
+				);
+			});
+
+			it('Shows warning if child doesnt exist in the cache', async () => {
+				const child_ids = [ 'child_one_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						]
+					])
+				} as any;
+
+				const console_log_spy = jest.spyOn(console, 'log');
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					child_ids,
+					(id) => cache.block.get(id) as TPage,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids,
+						container: [],
+						cache
+					}
+				);
+
+				expect(console_log_spy).toHaveBeenCalledTimes(1);
+				expect(console_log_spy).toHaveBeenCalledWith(
+					colors.yellow.bold('block:child_one_id does not exist in the cache')
+				);
+				expect(deepEqual(container, [])).toBe(true);
+				console_log_spy.mockClear();
+			});
+
+			it('Shows warning if child_id is not present in child_ids', async () => {
+				const child_ids = [ 'child_one_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						]
+					])
+				} as any;
+
+				const console_log_spy = jest.spyOn(console, 'log');
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					child_ids,
+					(id) => cache.block.get(id) as TPage,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids: [],
+						container: [],
+						cache
+					}
+				);
+
+				expect(console_log_spy).toHaveBeenCalledTimes(1);
+				expect(console_log_spy).toHaveBeenCalledWith(
+					colors.yellow.bold('block:child_one_id is not a child of block:parent_one_id')
+				);
+				expect(deepEqual(container, [])).toBe(true);
+				console_log_spy.mockClear();
 			});
 		});
 
-		describe('Returns incorrect child from cache', () => {
-			it('Check within the callback', async () => {
-				const child_ids = data.recordMap.user_root[TEST_DATA.notion_user[0].data.id].value.space_views;
-				iterateAndGetChildren<IUserRoot, ISpaceView, ITPage>(
-					(child) => {
-						expect(child).toBeFalsy();
-						return true;
-					},
-					(id) => cache.block.get(id) as any,
+		describe('Callbacks', () => {
+			it('Multiple false', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					() => true,
+					(id) => cache.block.get(id) as TPage,
 					{
-						parent_id: TEST_DATA.notion_user[0].data.id,
-						parent_type: 'user_root',
-						container: createPageMap(),
-						child_type: 'space_view',
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
 						child_ids,
-						cache
-					}
+						container: [],
+						cache,
+						multiple: false
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						}
+					])
 				);
 			});
 
-			it('Check the returned array', async () => {
-				const child_ids = data.recordMap.user_root[TEST_DATA.notion_user[0].data.id].value.space_views;
-				const children = await iterateAndGetChildren<IUserRoot, ISpaceView, TPage[]>(
+			it('Return container item', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
 					() => true,
-					(id) => cache.block.get(id) as any,
+					(id) => cache.block.get(id) as TPage,
 					{
-						parent_id: TEST_DATA.notion_user[0].data.id,
-						container: [],
-						parent_type: 'user_root',
-						child_type: 'space_view',
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
 						child_ids,
+						container: [],
+						cache
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						},
+						{
+							id: 'child_two_id'
+						}
+					])
+				);
+			});
+
+			it('Shows warning if child doesnt exist in the cache', async () => {
+				const child_ids = [ 'child_one_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						]
+					])
+				} as any;
+
+				const console_log_spy = jest.spyOn(console, 'log');
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					() => true,
+					(id) => cache.block.get(id) as TPage,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids,
+						container: [],
 						cache
 					}
 				);
-				expect(children.length).toBe(0);
+
+				expect(console_log_spy).toHaveBeenCalledTimes(1);
+				expect(console_log_spy).toHaveBeenCalledWith(
+					colors.yellow.bold('block:child_one_id does not exist in the cache')
+				);
+				expect(deepEqual(container, [])).toBe(true);
+				console_log_spy.mockClear();
+			});
+
+			it('undefined args', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					undefined,
+					(id) => cache.block.get(id) as TPage,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids,
+						container: [],
+						cache,
+						multiple: false
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(
+					deepEqual(container, [
+						{
+							id: 'child_one_id'
+						}
+					])
+				);
+			});
+
+			it('false args', async () => {
+				const child_ids = [ 'child_one_id', 'child_two_id' ];
+
+				const cache: ICache = {
+					block: new Map([
+						[
+							'parent_one_id',
+							{
+								id: 'parent_one_id',
+								contents: child_ids
+							}
+						],
+						[
+							'child_one_id',
+							{
+								id: 'child_one_id'
+							}
+						],
+						[
+							'child_two_id',
+							{
+								id: 'child_two_id'
+							}
+						]
+					])
+				} as any;
+
+				const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+					() => false,
+					(id) => cache.block.get(id) as TPage,
+					{
+						parent_id: 'parent_one_id',
+						parent_type: 'block',
+						child_type: 'block',
+						child_ids,
+						container: [],
+						cache,
+						multiple: false
+					},
+					(_, data, container) => container.push(data)
+				);
+
+				expect(deepEqual(container, []));
 			});
 		});
 	});

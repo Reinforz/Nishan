@@ -37,7 +37,7 @@ function updateLastEditedProps(block: any, user_id: string){
 
 export const iterateAndGetChildren = async<T extends TData, TD, C>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndGetOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
   const { container, parent_id, multiple = true, child_type, logger, cache, parent_type} = options,
-    data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[];
+    parent = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : parent[options.child_ids]) ?? []) as string[];
   let total_matched = 0;
   const iterateUtil = async (child_id: string, current_data: TD) => {
     cb && await cb(child_id, current_data, container);
@@ -47,8 +47,8 @@ export const iterateAndGetChildren = async<T extends TData, TD, C>(args: FilterT
 
   if (Array.isArray(args)) {
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index];
-      const child_id = arg, current_data = transform(child_id), matches = child_ids.includes(child_id);
+      const child_id = args[index];
+      const current_data = transform(child_id), matches = child_ids.includes(child_id);
       if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
@@ -61,7 +61,7 @@ export const iterateAndGetChildren = async<T extends TData, TD, C>(args: FilterT
       if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else {
         const matches = args ? await args(current_data, index) : true;
-        if (current_data && matches)
+        if (matches)
           await iterateUtil(child_id, current_data)
       }
       if (!multiple && total_matched === 1) break;

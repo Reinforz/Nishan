@@ -60,11 +60,13 @@ export type TRelationSchemaUnitInput = {
 	relation_schema_unit_name?: string;
 };
 
+export type TRollupSchemaUnitInput = Omit<RollupSchemaUnit, 'target_property_type'>;
+
 export type TSchemaUnitInput =
 	| TRelationSchemaUnitInput
 	| TBasicSchemaUnit
+	| TRollupSchemaUnitInput
 	| TFormulaSchemaUnitInput
-	| RollupSchemaUnit
 	| CreatedTimeSchemaUnit
 	| CreatedBySchemaUnit
 	| LastEditedTimeSchemaUnit

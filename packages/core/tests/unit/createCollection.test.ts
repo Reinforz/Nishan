@@ -1,10 +1,10 @@
 import { ICache } from '@nishans/endpoints';
-import { ICollection, IOperation, RecordMap, TSchemaUnit } from '@nishans/types';
+import { ICollection, IOperation, RecordMap, Schema, TSchemaUnit } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
-import { createCollection, generateRelationSchema, generateSchema, getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../src';
+import { createCollection, generateRelationSchema, generateRollupSchema, generateSchema, getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
@@ -87,7 +87,7 @@ describe('generateRelationSchema', () => {
       expect(deepEqual(stack, [])).toBe(true)
 		});
 
-    it(`Should work correctly (child_collection does not exist in cache)`, async () => {
+    it(`Should work correctly (child_collection exists in db)`, async () => {
 			const stack: IOperation[] = [], child_collection: ICollection = {
 				schema: {
 					title: {
@@ -267,7 +267,6 @@ describe('generateRelationSchema', () => {
       )).rejects.toThrow(`Collection:child_collection_id doesnot exist`)
     })
   })
-  
 });
 
 describe('generateSchema', () => {
@@ -290,6 +289,13 @@ describe('generateSchema', () => {
         type: 'relation',
         collection_id: 'child_collection_id',
         name: 'Parent Relation Column'
+      },
+      {
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup",
+        relation_property: "Parent Relation Column",
+        target_property: "Title",
       }
     ];
 
@@ -303,9 +309,18 @@ describe('generateSchema', () => {
 					},
 					name: 'Child',
           id: 'child_collection_id'
+				} as any,target_collection: ICollection = {
+					schema: {
+						title: {
+							type: 'title',
+							name: 'Title'
+						}
+					},
+					name: 'Target Collection',
+          id: 'target_collection_id'
 				} as any,
 				cache: Pick<ICache, 'collection'> = {
-					collection: new Map([ [ 'child_collection_id', child_collection ] ])
+					collection: new Map([ [ 'child_collection_id', child_collection ], [ 'target_collection_id', target_collection ] ])
 				};
       
 			const [ schema ] = await generateSchema(
@@ -320,6 +335,7 @@ describe('generateSchema', () => {
 			);
 
       const child_relation_schema_unit_id = (getSchemaMap(child_collection.schema).get("Related to Parent (Parent Relation Column)") as ISchemaMapValue).schema_id;
+      const parent_relation_schema_unit_id = (getSchemaMap(schema).get("Parent Relation Column") as ISchemaMapValue).schema_id;
 
       const output_schema_units = [
         {
@@ -344,6 +360,15 @@ describe('generateSchema', () => {
           collection_id: 'child_collection_id',
           name: 'Parent Relation Column',
           property: child_relation_schema_unit_id
+        },
+        {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup",
+          relation_property: parent_relation_schema_unit_id,
+          target_property: "title",
+          target_property_type: "title",
+          aggregation: undefined
         }
       ] as TSchemaUnit[];
 
@@ -467,6 +492,338 @@ describe('createCollection', () => {
         path: []
       })).toBe(true);
       expect(deepEqual(cache.collection.get(collection_id), output_collection)).toBe(true);
+    })
+  })
+})
+
+describe('generateRollupSchema', () => {
+  const schema: Schema = {
+    title: {
+      type: "title",
+      name: "Title"
+    },
+    relation: {
+      type: "relation",
+      collection_id: "target_collection_id",
+      name: "Relation",
+      property: "child_relation_property"
+    }
+  };
+
+  describe('Work correctly', () => {
+    describe('Collection exists in cache', () => {
+      it(`Should work correctly for target_property=title`, async () =>{
+        const generated_rollup_schema2 = await generateRollupSchema({
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "Relation",
+          target_property: "Title",
+          aggregation: "average"
+        },getSchemaMap(schema), {
+          cache: {
+            collection: new Map([["target_collection_id", {
+              schema: {
+                title: {
+                  type: "title",
+                  name: "Title"
+                }
+              }
+            } as any]])
+          },
+          token: 'token',
+          logger: ()=>{
+            return
+          }
+        });
+  
+        expect(deepEqual(generated_rollup_schema2, {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "relation",
+          target_property: "title",
+          target_property_type: "title",
+          aggregation: "average"
+        })).toBe(true);
+      });
+
+      it(`Should work correctly for target_property=text`, async () =>{
+        const generated_rollup_schema2 = await generateRollupSchema({
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "Relation",
+          target_property: "Text",
+          aggregation: "average"
+        },getSchemaMap(schema), {
+          cache: {
+            collection: new Map([["target_collection_id", {
+              schema: {
+                text: {
+                  type: "text",
+                  name: "Text"
+                }
+              }
+            } as any]])
+          },
+          token: 'token',
+          logger: ()=>{
+            return
+          }
+        });
+  
+        expect(deepEqual(generated_rollup_schema2, {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "relation",
+          target_property: "text",
+          target_property_type: "text",
+          aggregation: "average"
+        })).toBe(true);
+      });
+
+      it(`Should work correctly for target_property=rollup.title`, async ()=>{
+        const generated_rollup_schema = await generateRollupSchema({
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "Relation",
+          target_property: "Rollup",
+          aggregation: "average"
+        },getSchemaMap(schema), {
+          cache: {
+            collection: new Map([["target_collection_id", {
+              schema: {
+                rollup: {
+                  name: "Rollup",
+                  type: "rollup",
+                  target_property_type: "title",
+                }
+              }
+            } as any]])
+          },
+          token: 'token',
+          logger: ()=>{
+            return
+          }
+        });
+  
+        expect(deepEqual(generated_rollup_schema, {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "relation",
+          target_property: "rollup",
+          target_property_type: "title",
+          aggregation: "average"
+        })).toBe(true);
+      })
+
+      it(`Should work correctly for target_property=rollup.text`, async ()=>{
+        const generated_rollup_schema = await generateRollupSchema({
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "Relation",
+          target_property: "Rollup",
+          aggregation: "average"
+        },getSchemaMap(schema), {
+          cache: {
+            collection: new Map([["target_collection_id", {
+              schema: {
+                rollup: {
+                  name: "Rollup",
+                  type: "rollup",
+                  target_property_type: "text",
+                }
+              }
+            } as any]])
+          },
+          token: 'token',
+          logger: ()=>{
+            return
+          }
+        });
+
+        expect(deepEqual(generated_rollup_schema, {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "relation",
+          target_property: "rollup",
+          target_property_type: "text",
+          aggregation: "average"
+        })).toBe(true);
+      })
+  
+      it(`Should work correctly for target_property=formula.date`, async ()=>{
+        const generated_rollup_schema = await generateRollupSchema({
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "Relation",
+          target_property: "Formula",
+          aggregation: "average"
+        },getSchemaMap(schema), {
+          cache: {
+            collection: new Map([["target_collection_id", {
+              schema: {
+                formula: {
+                  type: "formula",
+                  name: "Formula",
+                  formula: {
+                    result_type: "date"
+                  }
+                }
+              }
+            } as any]])
+          },
+          token: 'token',
+          logger: ()=>{
+            return
+          }
+        });
+  
+        expect(deepEqual(generated_rollup_schema, {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup Column",
+          relation_property: "relation",
+          target_property: "formula",
+          target_property_type: "date",
+          aggregation: "average"
+        })).toBe(true);
+      })
+    })
+    it(`Should work correctly (collection exists in db)`, async ()=>{
+      const cache = {
+        collection: new Map()
+      }
+  
+      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
+        target_collection_id: {
+          role: "editor",
+          value: {
+            schema: {
+              title: {
+                type: "title",
+                name: "Title"
+              }
+            }
+          }
+        }
+      }}});
+  
+      const generated_rollup_schema = await generateRollupSchema({
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "Relation",
+        target_property: "Title",
+        aggregation: "average"
+      },getSchemaMap(schema), {
+        cache,
+        token: 'token'
+      });
+  
+      expect(deepEqual(generated_rollup_schema, {
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "relation",
+        target_property: "title",
+        target_property_type: "title",
+        aggregation: "average"
+      })).toBe(true);
+  
+      expect(deepEqual(cache.collection.get("target_collection_id"), {
+        schema: {
+          title: {
+            type: "title",
+            name: "Title"
+          }
+        }
+      })).toBe(true)
+    })
+  })
+
+  
+  describe('Throw errors', () => {
+    it(`Should throw for using unknown relation_property`, async ()=>{
+      await expect(generateRollupSchema({
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "unknown",
+        target_property: "unknown"
+      },getSchemaMap(schema), {
+        cache: {
+          collection: new Map()
+        },
+        token: 'token'
+      })).rejects.toThrow(`Unknown property unknown referenced in relation_property`)
+    });
+
+    it(`Should throw for using unknown target_property`, async ()=>{
+      await expect(generateRollupSchema({
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "Relation",
+        target_property: "unknown"
+      },getSchemaMap(schema), {
+        cache: {
+          collection: new Map([["target_collection_id", {
+            schema: {
+              title: {
+                type: "title",
+                name: "Title"
+              }
+            }
+          } as any]])
+        },
+        token: 'token'
+      })).rejects.toThrow(`Unknown property unknown referenced in target_property`)
+    });
+
+    it(`Should throw error if relation property is not relation type`, async()=>{
+      await expect(generateRollupSchema({
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "Title",
+        target_property: "unknown"
+      },getSchemaMap(schema), {
+        cache: {
+          collection: new Map()
+        },
+        token: 'token'
+      })).rejects.toThrow(
+        `Property Title referenced in relation_property is not of the supported types\nGiven type: title\nSupported types: relation`
+      )
+    })
+
+    it(`Should throw error if collection doesnt exist in cache and db`, async()=>{
+      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
+        target_collection_id: {
+          role: "editor",
+        }
+      }}});
+
+      await expect(generateRollupSchema({
+        type: "rollup",
+        collection_id: "target_collection_id",
+        name: "Rollup Column",
+        relation_property: "Relation",
+        target_property: "unknown"
+      },getSchemaMap(schema), {
+        cache: {
+          collection: new Map()
+        },
+        token: 'token'
+      })).rejects.toThrow(`Collection:target_collection_id doesnot exist`)
     })
   })
 })

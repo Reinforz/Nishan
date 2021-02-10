@@ -32,6 +32,9 @@ export async function generateRelationSchema(input_schema: TRelationSchemaUnitIn
       token,
       interval: 0
     });
+
+    if(!recordMap.collection[child_collection_id].value)
+      throw new Error(`Collection:${child_collection_id} doesnot exist`);
     
     child_collection = {
       ...recordMap.collection[child_collection_id].value
@@ -48,22 +51,22 @@ export async function generateRelationSchema(input_schema: TRelationSchemaUnitIn
     collection_id: child_collection.id
   };
 
-  if(child_collection){
-    const child_collection_relation_schema_unit_name = relation_schema_unit_name ?? `Related to ${parent_collection_name[0][0]} (${input_schema.name})`;
-    const child_collection_relation_schema_unit: RelationSchemaUnit = {
-      type: "relation",
-      collection_id: parent_collection_id,
-      name: child_collection_relation_schema_unit_name,
-      property: parent_relation_schema_unit_id
-    };
-    child_collection.schema[child_relation_schema_unit_id] = child_collection_relation_schema_unit;
-    if(relation_schema_unit_name){
-      stack.push(Operation.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
-        ...child_collection_relation_schema_unit,
-        name: [[child_collection_relation_schema_unit_name]],
-      }))
-    }
+  const child_collection_relation_schema_unit_name = relation_schema_unit_name ?? `Related to ${parent_collection_name[0][0]} (${input_schema.name})`;
+  const child_collection_relation_schema_unit: RelationSchemaUnit = {
+    type: "relation",
+    collection_id: parent_collection_id,
+    name: child_collection_relation_schema_unit_name,
+    property: parent_relation_schema_unit_id
   };
+
+  child_collection.schema[child_relation_schema_unit_id] = child_collection_relation_schema_unit;
+  if(relation_schema_unit_name){
+    stack.push(Operation.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
+      ...child_collection_relation_schema_unit,
+      name: [[child_collection_relation_schema_unit_name]],
+    }));
+    logger && logger("UPDATE", "collection", child_collection_id)
+  }
   
   return relation_schema_unit;
 }

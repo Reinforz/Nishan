@@ -110,8 +110,10 @@ describe('generateRelationSchema', () => {
 					name: [ [ 'Parent Collection' ] ],
 					stack,
 					token: 'token',
-          logger: () => {
-            return
+          logger: (method, datatype, id) => {
+            expect(method).toBe("READ");
+            expect(datatype).toBe("collection");
+            expect(id).toBe("child_collection_id");
           }
 				}
 			);
@@ -166,7 +168,6 @@ describe('generateRelationSchema', () => {
         }
       }}});
 
-      
 			const relation_schema_unit = await generateRelationSchema(
 				{
 					type: 'relation',
@@ -227,9 +228,38 @@ describe('generateRelationSchema', () => {
       }])).toBe(true);
 		});
 	});
+
+  describe('Throw errors', () => {
+    it(`Should throw error if non existent collection id is referenced`, async ()=>{
+      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
+        child_collection_id: {
+          role: "editor",
+        }
+      }}});
+  
+      await expect(generateRelationSchema(
+        {
+          type: 'relation',
+          collection_id: 'child_collection_id',
+          name: 'Parent Relation Column',
+        },
+        {
+          cache: {
+            collection: new Map()
+          },
+          id: 'parent_collection_id',
+          parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
+          name: [ [ 'Parent Collection' ] ],
+          stack: [],
+          token: 'token',
+        }
+      )).rejects.toThrow(`Collection:child_collection_id doesnot exist`)
+    })
+  })
+  
 });
 
-/* describe('generateSchema', () => {
+describe('generateSchema', () => {
 	describe('Work correctly', () => {
     const input_schema_units: TSchemaUnitInput[] = [
       {
@@ -250,118 +280,64 @@ describe('generateRelationSchema', () => {
         collection_id: 'child_collection_id',
         name: 'Parent Relation Column'
       }
-    ], output_schema_units = [
-      {
-        type: 'title',
-        name: 'Title'
-      },
-      {
-        type: 'number',
-        name: 'Number'
-      },
-      {
-        type: 'formula',
-        name: 'Formula',
-        formula: {
-          result_type: 'date',
-          name: 'now',
-          type: 'function'
-        }
-      },
-      {
-        type: 'relation',
-        collection_id: 'child_collection_id',
-        name: 'Parent Relation Column',
-        property: 'child_column'
-      }
-    ] as TSchemaUnit[];
+    ];
 
 		it(`generateSchema should work correctly (collection exists in cache)`, async () => {
-			const collection: ICollection = {
+			const child_collection: ICollection = {
 					schema: {
 						title: {
 							type: 'title',
 							name: 'Title'
-						},
-            child_column: {
-              type: "text",
-              name: "Child Column"
-            }
+						}
 					},
 					name: 'Child',
           id: 'child_collection_id'
 				} as any,
 				cache: Pick<ICache, 'collection'> = {
-					collection: new Map([ [ 'child_collection_id', collection ] ])
+					collection: new Map([ [ 'child_collection_id', child_collection ] ])
 				};
-
-			const [ schema, schema_map ] = await generateSchema(
-				input_schema_units,
-				cache,
-				{
-					id: 'parent_collection_id',
-					name: [ [ 'Parent Relation Column' ] ],
-          token: 'token'
-				}
-			);
-
-			expect(
-				deepEqual(collection.schema.child, {
-					type: 'relation',
-					collection_id: 'parent_collection_id',
-					name: `Related to Parent (Child Column)`,
-					property: schema_map.get('Parent Relation Column')?.schema_id
-				})
-			).toBe(true);
-
-			expect(
-				deepEqual(Object.values(schema), output_schema_units)
-			).toBe(true);
-		});
-
-    it(`generateSchema should work correctly (collection doesnt exist in cache, fetch successful)`, async () => {
-			const cache: Pick<ICache, 'collection'> = {
-					collection: new Map()
-				}, recordMap: Pick<RecordMap, "collection"> = {
-          collection: {
-            child_collection_id: {
-              role: "editor",
-              value: {
-                schema: {
-                  title: {
-                    type: 'title',
-                    name: 'Title'
-                  }
-                },
-                name: 'Child'
-              }  as any
-            }
-          }
-        };
       
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap});
-
-			const [ schema, schema_map ] = await generateSchema(
+			const [ schema ] = await generateSchema(
 				input_schema_units,
-				cache,
 				{
 					id: 'parent_collection_id',
 					name: [ [ 'Parent' ] ],
-          token: 'token'
+          token: 'token',
+          cache,
+          stack: [],
 				}
 			);
 
-			expect(
-				deepEqual(recordMap.collection.child_collection_id.value.schema.child, {
-					type: 'relation',
-					collection_id: 'parent_collection_id',
-					name: `Related to Parent (Child)`,
-					property: schema_map.get('Parent')?.schema_id
-				})
-			).toBe(true);
+      const child_relation_schema_unit_id = (getSchemaMap(child_collection.schema).get("Related to Parent (Parent Relation Column)") as ISchemaMapValue).schema_id;
+
+      const output_schema_units = [
+        {
+          type: 'title',
+          name: 'Title'
+        },
+        {
+          type: 'number',
+          name: 'Number'
+        },
+        {
+          type: 'formula',
+          name: 'Formula',
+          formula: {
+            result_type: 'date',
+            name: 'now',
+            type: 'function'
+          }
+        },
+        {
+          type: 'relation',
+          collection_id: 'child_collection_id',
+          name: 'Parent Relation Column',
+          property: child_relation_schema_unit_id
+        }
+      ] as TSchemaUnit[];
 
 			expect(
-				deepEqual(Object.values(schema), output_schema_units)
+				deepEqual(output_schema_units, Object.values(schema))
 			).toBe(true);
 		});
 	});
@@ -381,12 +357,13 @@ describe('generateRelationSchema', () => {
 						}
 					],
 					{
-						collection: new Map()
-					},
-					{
 						id: 'parent_collection_id',
 						name: [ [ 'Parent' ] ],
-            token: 'token'
+            token: 'token',
+            stack: [],
+            cache: {
+              collection: new Map()
+            },
 					}
 				)
 			).rejects.toThrow(`Duplicate property Title`);
@@ -402,15 +379,16 @@ describe('generateRelationSchema', () => {
 						}
 					],
 					{
-						collection: new Map()
-					},
-					{
 						id: 'parent_collection_id',
 						name: [ [ 'Parent' ] ],
-            token: 'token'
+            token: 'token',
+            stack: [],
+            cache: {
+              collection: new Map()
+            },
 					}
 				)
 			).rejects.toThrow(`Schema must contain title type property`);
 		});
 	});
-}); */
+});

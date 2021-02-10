@@ -11,9 +11,7 @@ interface IInput {
 export interface ICollectionBlockInput extends IInput {
   views: TViewCreateInput[],
   schema: TSchemaUnitInput[],
-  properties: {
-    title: TTextFormat
-  },
+  name: TTextFormat,
   icon?: string;
   cover?: string;
   rows?: Omit<IPageCreateInput, "type">[],

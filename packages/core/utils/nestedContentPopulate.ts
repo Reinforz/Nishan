@@ -37,7 +37,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       }; */
 
       const {
-        properties,
         type,
       } = content;
 
@@ -64,7 +63,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       } */
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
-        const [collection_id, view_ids] = createCollection(content, block_id, props);
+        const [collection_id, view_ids] = await createCollection(content, block_id, props);
         const args: ICollectionBlock = {
           id: block_id,
           type: content.type,
@@ -90,7 +89,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         });
 
         block_map[type].set(block_id, collectionblock);
-        block_map[type].set(content.properties.title[0][0], collectionblock);
+        block_map[type].set(content.name[0][0], collectionblock);
         if (content.rows)
           await traverse(content.rows as any, collection_id, "collection")
       } else if (content.type === "factory") {
@@ -207,7 +206,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       else if (content.type !== "link_to_page") {
         const block_data: any = {
           id: block_id,
-          properties,
+          properties: content.properties,
           format: content.format,
           type,
           parent_id,

@@ -158,14 +158,15 @@ class Collection extends Data<ICollection> {
    * @param args array of Schema creation properties
    * @returns An array of SchemaUnit objects representing the columns
    */
-  createSchemaUnits(args: TSchemaUnitInput[]) {
+  async createSchemaUnits(args: TSchemaUnitInput[]) {
     const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
       const arg = args[index], schema_id = arg.type === "title" ? "title" : createShortId();
       if (!data.schema[schema_id]) {
         const schema_map = getSchemaMap(data.schema);
         if(arg.type === "formula") data.schema[schema_id] = {...arg, formula: generateFormulaAST(arg.formula[0] as any, arg.formula[1] as any, schema_map)}
-        else data.schema[schema_id] = arg;
+        // ! Fix this
+        // else if(arg.type === "relation") data.schema[schema_id] = generateRelationSchema(arg);
         const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id })
         schema_unit_map[arg.type].set(schema_id, schema_obj);
         schema_unit_map[arg.type].set(arg.name, schema_obj);

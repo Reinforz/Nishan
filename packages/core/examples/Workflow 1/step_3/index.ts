@@ -400,9 +400,7 @@ export default async function step3 (target_page: Page) {
   const { collection_view_page: created_collection_view_page } = await target_page.createBlocks([
     {
       type: 'collection_view_page',
-      properties: {
-        title: [['Web 3.0']]
-      },
+      name: [['Web 3.0']],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg',
       schema: [
         { name: 'Title', type: 'title' },

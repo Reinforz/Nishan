@@ -47,9 +47,7 @@ export default async function step1(user_family_name: string, space_name: string
 	await target_page?.createBlocks([
     {
       type: 'collection_view_page',
-      properties: {
-        title: [ [ 'Articles' ] ]
-      },
+      name: [ [ 'Articles' ] ],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg',
       schema: [
         {
@@ -147,9 +145,7 @@ export default async function step1(user_family_name: string, space_name: string
     },
     {
       type: 'collection_view_page',
-      properties: {
-        title: [ [ 'Todo' ] ]
-      },
+      name: [ [ 'Todo' ] ],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg',
       schema: [
         {
@@ -283,9 +279,7 @@ export default async function step1(user_family_name: string, space_name: string
     },
     {
       type: 'collection_view_page',
-      properties: {
-        title: [ [ 'Daily' ] ]
-      },
+      name: [ [ 'Daily' ] ],
       icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/270a-1f3fc.svg",
       schema: [
         {

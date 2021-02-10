@@ -53,10 +53,17 @@ export type TFormulaSchemaUnitInput = {
 	];
 };
 
+export type TRelationSchemaUnitInput = {
+	type: 'relation';
+	collection_id: string;
+	name: string;
+	relation_schema_unit_name?: string;
+};
+
 export type TSchemaUnitInput =
+	| TRelationSchemaUnitInput
 	| TBasicSchemaUnit
 	| TFormulaSchemaUnitInput
-	| RelationSchemaUnit
 	| RollupSchemaUnit
 	| CreatedTimeSchemaUnit
 	| CreatedBySchemaUnit

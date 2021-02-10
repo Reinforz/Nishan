@@ -176,9 +176,7 @@ export default async function step2 (target_page: Page) {
 		const { collection_view_page } = await target_page.createBlocks([
 			{
 				type: 'collection_view_page',
-				properties: {
-					title: [ [ 'Reading List' ] ]
-				},
+				name: [ [ 'Reading List' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4da.svg',
 				views: [
 					{
@@ -261,9 +259,7 @@ export default async function step2 (target_page: Page) {
 			},
 			{
 				type: 'collection_view_page',
-				properties: {
-					title: [ [ 'Course List' ] ]
-				},
+				name: [ [ 'Course List' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4dd.svg',
 				views: [
 					{
@@ -351,9 +347,7 @@ export default async function step2 (target_page: Page) {
 			{
 				id: goals_cvp_id,
 				type: 'collection_view_page',
-				properties: {
-					title: [ [ 'Goals' ] ]
-				},
+				name: [ [ 'Goals' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f44a-1f3fc.svg',
 				collection_id: goals_collection_id,
 				views: [
@@ -468,9 +462,7 @@ export default async function step2 (target_page: Page) {
 			{
 				id: tasks_cvp_id,
 				type: 'collection_view_page',
-				properties: {
-					title: [ [ 'Tasks' ] ]
-				},
+				name: [ [ 'Tasks' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg',
 				collection_id: tasks_collection_id,
 				schema: [

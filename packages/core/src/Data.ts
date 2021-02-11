@@ -27,19 +27,25 @@ export interface IterateAndGetOptions<T, C> extends IterateOptions<T, C>{
 }
 
 
-export type IterateAndMutateOptions<T, C> = IterateOptions<T, C> & {
+export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> & ( {
+  /**
+   * Whether or not the user will manually handle all the mutations
+   */
+  manual: true
+  /**
+   * The key of the parent which contains the child ids
+   */
+  child_path?: keyof T,
+} | {
+  manual?: false
+  child_path: keyof T,
+})
+
+export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
   /**
    * Whether or not the user will manually handle all the mutations
    */
   manual?: boolean
-  /**
-   * Whether or not the parent child path will be update in the cache, and related operations be pushed to stack
-   */
-  update_child_path?: boolean | keyof T,
-  /**
-   * Whether or not the child items will be update in the cache, and related operations be pushed to stack
-   */
-  update_child?: boolean
 }
 
 /**
@@ -130,7 +136,7 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndMutateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCacheForThisData()
     return  await iterateAndDeleteChildren<T, TD, C>(args, transform, {
       parent_id: this.id,
@@ -140,7 +146,7 @@ export default class Data<T extends TData> extends Operations {
     }, cb);
   }
 
-  protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndMutateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
+  protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
     await this.initializeCacheForThisData()
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,

@@ -9,6 +9,7 @@ Object {
   "last_edited_by_id": "user_id",
   "last_edited_by_table": "notion_user",
   "last_edited_time": Any<Number>,
+  "type": "page",
 }
 `;
 
@@ -103,6 +104,7 @@ Object {
   "last_edited_by_id": "user_id",
   "last_edited_by_table": "notion_user",
   "last_edited_time": Any<Number>,
+  "type": "page",
 }
 `;
 
@@ -160,12 +162,13 @@ Array [
 exports[`iterateAndDeleteChildren Array of ids String child_ids 1`] = `
 Object {
   "content": Array [
-    "child_three_id",
+    "child_two_id",
   ],
   "id": "parent_one_id",
   "last_edited_by_id": "user_id",
   "last_edited_by_table": "notion_user",
   "last_edited_time": Any<Number>,
+  "type": "page",
 }
 `;
 
@@ -174,13 +177,6 @@ Array [
   Object {
     "alive": false,
     "id": "child_one_id",
-    "last_edited_by_id": "user_id",
-    "last_edited_by_table": "notion_user",
-    "last_edited_time": Any<Number>,
-  },
-  Object {
-    "alive": false,
-    "id": "child_two_id",
     "last_edited_by_id": "user_id",
     "last_edited_by_table": "notion_user",
     "last_edited_time": Any<Number>,
@@ -215,25 +211,56 @@ Array [
   },
   Object {
     "args": Object {
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "parent_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids manual false, child_path undefined 1`] = `
+Object {
+  "content": Array [
+    "child_one_id",
+    "child_two_id",
+  ],
+  "id": "parent_one_id",
+  "last_edited_by_id": "user_id",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+  "type": "page",
+}
+`;
+
+exports[`iterateAndDeleteChildren Array of ids manual false, child_path undefined 2`] = `
+Array [
+  Object {
+    "alive": false,
+    "id": "child_one_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids manual false, child_path undefined 3`] = `
+Array [
+  Object {
+    "args": Object {
       "alive": false,
       "last_edited_by_id": "user_id",
       "last_edited_by_table": "notion_user",
       "last_edited_time": Any<Number>,
     },
     "command": "update",
-    "id": "child_two_id",
+    "id": "child_one_id",
     "path": Array [],
-    "table": "block",
-  },
-  Object {
-    "args": Object {
-      "id": "child_two_id",
-    },
-    "command": "listRemove",
-    "id": "parent_one_id",
-    "path": Array [
-      "content",
-    ],
     "table": "block",
   },
   Object {
@@ -250,8 +277,30 @@ Array [
 ]
 `;
 
-exports[`iterateAndDeleteChildren Array of ids empty child 1`] = `
+exports[`iterateAndDeleteChildren Array of ids manual true 1`] = `
 Object {
+  "content": Array [
+    "child_one_id",
+  ],
   "id": "parent_one_id",
+  "last_edited_by_id": "user_id",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
 }
+`;
+
+exports[`iterateAndDeleteChildren Array of ids manual true 2`] = `
+Array [
+  Object {
+    "args": Object {
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "parent_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+]
 `;

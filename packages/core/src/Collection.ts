@@ -97,7 +97,7 @@ class Collection extends Data<ICollection> {
       multiple,
       child_ids: "template_pages",
       child_type: "block",
-      update_child_path: "template_pages",
+      child_path: "template_pages",
       container: []
     }, (child_id) => this.cache.block.get(child_id) as IPage)
   }
@@ -133,7 +133,7 @@ class Collection extends Data<ICollection> {
       child_ids: await this.#getRowPages(),
       multiple,
       child_type: "block",
-      container: []
+      container: [],
     }, (child_id) => this.cache.block.get(child_id) as IPage, (id,_,__,pages) => pages.push(new Page({ ...this.getProps(), id })));
   }
 
@@ -147,12 +147,20 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    */
   async deletePages(args?: FilterTypes<IPage>, multiple?: boolean) {
+    // ! Push to operation stack and update pages
     await this.deleteIterate<IPage>(args, {
       child_ids: await this.#getRowPages(),
       child_type: "block",
       multiple,
-      container: []
-    }, (child_id) => this.cache.block.get(child_id) as IPage);
+      container: [],
+      manual: true
+    }, (child_id) => this.cache.block.get(child_id) as IPage, (child_id, child_data)=>{
+      child_data.alive = false;
+      child_data.last_edited_by_id = this.user_id;
+      child_data.last_edited_by_table = "notion_user";
+      child_data.last_edited_time = Date.now();
+      this.stack.push(Operation.block.update(child_id, [], { alive: false , last_edited_time: Date.now(), last_edited_by: this.user_id}));
+    });
   }
 
   /**

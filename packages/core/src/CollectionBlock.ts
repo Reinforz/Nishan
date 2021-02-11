@@ -114,7 +114,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 			args,
 			{
 				child_ids: 'view_ids',
-				update_child_path: 'view_ids',
+				child_path: 'view_ids',
 				child_type: 'collection_view',
 				multiple,
 				container: []

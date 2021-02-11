@@ -73,17 +73,17 @@ export const iterateAndGetChildren = async<T extends TData, TD, C>(args: FilterT
 
 export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndDeleteOptions<T>, cb?: ((id: string, data: TD) => any)) => {
   const matched_data: TD[] = [], { child_path, user_id, manual = false, parent_id, multiple = true, child_type, logger, stack, cache, parent_type} = options,
-    data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[], ops: IOperation[] = [],
+    data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[],
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };
   
   const iterateUtil = async (child_id: string, current_data: TD) => {
     if (child_type && !manual) {
       (current_data as any).alive = false;
       updateLastEditedProps(current_data, user_id);
-      ops.push(Operation[child_type].update(child_id, [], { alive: false, ...last_updated_props }));
+      stack.push(Operation[child_type].update(child_id, [], { alive: false, ...last_updated_props }));
       if (typeof child_path === "string") {
         data[child_path] = (data[child_path] as any).filter((id: string)=>id !== child_id) as any
-        ops.push(Operation[parent_type].listRemove(parent_id, [child_path], { id: child_id }));
+        stack.push(Operation[parent_type].listRemove(parent_id, [child_path], { id: child_id }));
       }
     }
 
@@ -94,8 +94,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
 
   if (Array.isArray(args)) {
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index];
-      const child_id = arg, current_data = transform(child_id), matches = child_ids.includes(child_id);
+      const child_id = args[index], current_data = transform(child_id), matches = child_ids.includes(child_id);
       if (!current_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
       if (current_data && matches)
@@ -117,8 +116,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD>(args: FilterT
 
   updateLastEditedProps(data, user_id);
 
-  ops.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
-  stack.push(...ops);
+  stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
 
   return matched_data;
 }

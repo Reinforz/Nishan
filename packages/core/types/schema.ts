@@ -54,9 +54,13 @@ export type TFormulaSchemaUnitInput = {
 };
 
 export type TRelationSchemaUnitInput = {
+	// Type of the schema unit
 	type: 'relation';
+	// The collection id of the child collection
 	collection_id: string;
+	// The name of the parent collection column
 	name: string;
+	// The new name that will be set for the created column in the child
 	relation_schema_unit_name?: string;
 };
 

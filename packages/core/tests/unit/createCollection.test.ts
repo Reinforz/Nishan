@@ -323,7 +323,7 @@ describe('generateSchema', () => {
 					collection: new Map([ [ 'child_collection_id', child_collection ], [ 'target_collection_id', target_collection ] ])
 				};
       
-			const [ schema ] = await generateSchema(
+			const [schema] = await generateSchema(
 				input_schema_units,
 				{
 					id: 'parent_collection_id',

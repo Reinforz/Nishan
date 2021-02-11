@@ -115,7 +115,8 @@ class View<T extends TView> extends Data<T> {
 				child_ids: Array.from(sorts_map.keys()),
 				child_type: 'collection_view',
 				multiple,
-				manual: true
+				manual: true,
+				container: []
 			},
 			(schema_id) => sorts_map.get(schema_id),
 			(_, sort, data) => {
@@ -151,7 +152,8 @@ class View<T extends TView> extends Data<T> {
 				child_ids: Array.from(sorts_map.keys()),
 				child_type: 'collection_view',
 				multiple,
-				manual: true
+				manual: true,
+				container: []
 			},
 			(schema_id) => sorts_map.get(schema_id),
 			(_, sort) => {
@@ -188,7 +190,8 @@ class View<T extends TView> extends Data<T> {
 				child_ids: Array.from(filters_map.keys()),
 				child_type: 'collection_view',
 				multiple,
-				manual: true
+				manual: true,
+				container: []
 			},
 			(schema_id) => filters_map.get(schema_id),
 			(_, original_filter, updated_data) => {
@@ -223,6 +226,7 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				manual: true,
+				container: [],
 				child_ids: Array.from(filters_map.keys())
 			},
 			(schema_id) => filters_map.get(schema_id),
@@ -250,7 +254,8 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				child_ids: Array.from(format_properties_map.keys()),
-				manual: true
+				manual: true,
+				container: []
 			},
 			(name) => format_properties_map.get(name),
 			(name, current_data, updated_data) => {
@@ -280,7 +285,8 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				child_ids: Array.from(format_properties_map.keys()),
-				manual: true
+				manual: true,
+				container: []
 			},
 			(name) => format_properties_map.get(name),
 			(name, current_data, updated_data) => {
@@ -310,7 +316,8 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				child_ids: Array.from(format_properties_map.keys()),
-				manual: true
+				manual: true,
+				container: []
 			},
 			(name) => format_properties_map.get(name),
 			(name, current_data, new_position) => {
@@ -347,7 +354,8 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				child_ids: Array.from(format_properties_map.keys()),
-				manual: true
+				manual: true,
+				container: []
 			},
 			(name) => format_properties_map.get(name),
 			(name, current_data, updated_data, container) => {

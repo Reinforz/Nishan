@@ -1,0 +1,257 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`iterateAndDeleteChildren Array of ids Array child_ids 1`] = `
+Object {
+  "content": Array [
+    "child_three_id",
+  ],
+  "id": "parent_one_id",
+  "last_edited_by_id": "user_id",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+}
+`;
+
+exports[`iterateAndDeleteChildren Array of ids Array child_ids 2`] = `
+Array [
+  Object {
+    "alive": false,
+    "id": "child_one_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+  Object {
+    "alive": false,
+    "id": "child_two_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids Array child_ids 3`] = `
+Array [
+  Object {
+    "args": Object {
+      "alive": false,
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "child_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "id": "child_one_id",
+    },
+    "command": "listRemove",
+    "id": "parent_one_id",
+    "path": Array [
+      "content",
+    ],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "alive": false,
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "child_two_id",
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "id": "child_two_id",
+    },
+    "command": "listRemove",
+    "id": "parent_one_id",
+    "path": Array [
+      "content",
+    ],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "parent_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids Multiple false 1`] = `
+Object {
+  "content": Array [
+    "child_two_id",
+    "child_three_id",
+  ],
+  "id": "parent_one_id",
+  "last_edited_by_id": "user_id",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+}
+`;
+
+exports[`iterateAndDeleteChildren Array of ids Multiple false 2`] = `
+Array [
+  Object {
+    "alive": false,
+    "id": "child_one_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids Multiple false 3`] = `
+Array [
+  Object {
+    "args": Object {
+      "alive": false,
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "child_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "id": "child_one_id",
+    },
+    "command": "listRemove",
+    "id": "parent_one_id",
+    "path": Array [
+      "content",
+    ],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "parent_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids String child_ids 1`] = `
+Object {
+  "content": Array [
+    "child_three_id",
+  ],
+  "id": "parent_one_id",
+  "last_edited_by_id": "user_id",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+}
+`;
+
+exports[`iterateAndDeleteChildren Array of ids String child_ids 2`] = `
+Array [
+  Object {
+    "alive": false,
+    "id": "child_one_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+  Object {
+    "alive": false,
+    "id": "child_two_id",
+    "last_edited_by_id": "user_id",
+    "last_edited_by_table": "notion_user",
+    "last_edited_time": Any<Number>,
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids String child_ids 3`] = `
+Array [
+  Object {
+    "args": Object {
+      "alive": false,
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "child_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "id": "child_one_id",
+    },
+    "command": "listRemove",
+    "id": "parent_one_id",
+    "path": Array [
+      "content",
+    ],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "alive": false,
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "child_two_id",
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "id": "child_two_id",
+    },
+    "command": "listRemove",
+    "id": "parent_one_id",
+    "path": Array [
+      "content",
+    ],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "last_edited_by_id": "user_id",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+    },
+    "command": "update",
+    "id": "parent_one_id",
+    "path": Array [],
+    "table": "block",
+  },
+]
+`;
+
+exports[`iterateAndDeleteChildren Array of ids empty child 1`] = `
+Object {
+  "id": "parent_one_id",
+}
+`;

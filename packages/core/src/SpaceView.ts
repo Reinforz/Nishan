@@ -97,7 +97,8 @@ class SpaceView extends Data<ISpaceView> {
       child_ids: this.cache.space.get(data.space_id)?.pages ?? [],
       child_type: "block",
       multiple,
-      manual: true
+      manual: true,
+      container: []
     }, (id) => this.cache.block.get(id) as TPage, (id, tpage, updated_favourite_status) => {
       if(!updated_favourite_status) data.bookmarked_pages = data?.bookmarked_pages?.filter(page_id=>page_id !== id);
       else data?.bookmarked_pages?.push(id)

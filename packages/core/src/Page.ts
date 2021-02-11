@@ -186,8 +186,9 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     await this.deleteIterate<TBlock>(args, {
       multiple,
       child_ids: 'content',
-      child_path: "content",
+      update_child_path: "content",
       child_type: "block",
+      container: []
     }, (block_id) => this.cache.block.get(block_id));
   }
 

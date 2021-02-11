@@ -4,24 +4,42 @@ import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAnd
 import Operations from "./Operations";
 import colors from "colors";
 
-interface IterateOptions<T>{
+export interface IterateOptions<T, C>{
+  /**
+   * The data type of the child
+   */
   child_type: TDataType,
+  /**
+   * A container of child ids or a key of the parent that stores the child ids
+   */
   child_ids: string[] | keyof T,
+  /**
+   * Matches multiple based on the value
+   */
   multiple?: boolean,
-}
-
-interface IterateAndGetOptions<T, C> extends IterateOptions<T>{
+  /**
+   * A container that stores the data
+   */
   container: C
 }
 
-interface IterateAndUpdateOptions<T, C> extends IterateOptions<T>{
-  manual?:boolean
-  container?: C
+export interface IterateAndGetOptions<T, C> extends IterateOptions<T, C>{
 }
 
-interface IterateAndDeleteOptions<T> extends IterateOptions<T>{
-  child_path?: keyof T,
-  manual?:boolean
+
+export type IterateAndMutateOptions<T, C> = IterateOptions<T, C> & {
+  /**
+   * Whether or not the user will manually handle all the mutations
+   */
+  manual?: boolean
+  /**
+   * Whether or not the parent child path will be update in the cache, and related operations be pushed to stack
+   */
+  update_child_path?: boolean | keyof T,
+  /**
+   * Whether or not the child items will be update in the cache, and related operations be pushed to stack
+   */
+  update_child?: boolean
 }
 
 /**
@@ -80,12 +98,6 @@ export default class Data<T extends TData> extends Operations {
     this.cache[this.type].delete(this.id);
   }
 
-  /**
-   * Adds the passed block id in the child container array of parent
-   * @param $block_id id of the block to add
-   * @param arg
-   * @returns created Operation and a function to update the cache and the class data
-   */
   protected addToChildArray(parent: TData, position: RepositionParams) {
     this.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type: this.type }))
   }
@@ -118,9 +130,9 @@ export default class Data<T extends TData> extends Operations {
     }
   }
 
-  protected async deleteIterate<TD>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndMutateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCacheForThisData()
-    return  await iterateAndDeleteChildren<T, TD>(args, transform, {
+    return  await iterateAndDeleteChildren<T, TD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),
@@ -128,7 +140,7 @@ export default class Data<T extends TData> extends Operations {
     }, cb);
   }
 
-  protected async updateIterate<TD, RD, C = any>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
+  protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndMutateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
     await this.initializeCacheForThisData()
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,

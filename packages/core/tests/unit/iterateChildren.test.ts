@@ -4,7 +4,7 @@ import deepEqual from 'deep-equal';
 import { iterateAndDeleteChildren, iterateAndGetChildren } from '../../src';
 import colors from 'colors';
 
-describe.skip('iterateAndGetChildren', () => {
+describe('iterateAndGetChildren', () => {
 	describe('Array of ids', () => {
 		it('Multiple false', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id' ];
@@ -526,63 +526,83 @@ describe('iterateAndDeleteChildren', () => {
 		}
 
 		function checker (parent_data: IPage, deleted_data: TBlock[], stack: IOperation[]) {
-			expect(deepEqual(parent_data.content, [ 'child_three_id' ])).toBe(true);
-			expect(parent_data.last_edited_time).toBeLessThanOrEqual(Date.now());
-			expect(parent_data.last_edited_by_table).toBe('notion_user');
-			expect(parent_data.last_edited_by_id).toBe('user_id');
+			expect(parent_data).toMatchSnapshot({
+				content: [ 'child_three_id' ],
+				last_edited_by_id: 'user_id',
+				last_edited_by_table: 'notion_user',
+				last_edited_time: expect.any(Number)
+			});
 
-			expect(
-				deepEqual(deleted_data, [
-					{
-						id: 'child_one_id',
-						alive: false,
+			expect(deleted_data).toMatchSnapshot([
+				{
+					id: 'child_one_id',
+					alive: false,
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'user_id',
+					last_edited_time: expect.any(Number)
+				},
+				{
+					id: 'child_two_id',
+					alive: false,
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'user_id',
+					last_edited_time: expect.any(Number)
+				}
+			]);
+
+			expect(stack).toMatchSnapshot([
+				{
+					command: 'update',
+					table: 'block',
+					id: 'child_one_id',
+					path: [],
+					args: {
 						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id'
-					},
-					{
-						id: 'child_two_id',
-						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id'
+						last_edited_by_id: 'user_id',
+						last_edited_time: expect.any(Number)
 					}
-				])
-			).toBe(true);
-
-			expect(
-				deepEqual(
-					[
-						{
-							command: 'listRemove',
-							table: 'block',
-							id: 'parent_one_id',
-							path: [ 'contents' ],
-							args: {
-								id: 'child_one_id'
-							}
-						},
-						{
-							command: 'listRemove',
-							table: 'block',
-							id: 'parent_one_id',
-							path: [ 'contents' ],
-							args: {
-								id: 'child_two_id'
-							}
-						},
-						{
-							command: 'update',
-							table: 'block',
-							id: 'parent_one_id',
-							path: [],
-							args: {
-								last_edited_by_table: 'notion_user',
-								last_edited_by_id: 'user_id'
-							}
-						}
-					],
-					stack
-				)
-			).toBe(true);
+				},
+				{
+					command: 'listRemove',
+					table: 'block',
+					id: 'parent_one_id',
+					path: [ 'content' ],
+					args: {
+						id: 'child_one_id'
+					}
+				},
+				{
+					command: 'update',
+					table: 'block',
+					id: 'child_two_id',
+					path: [],
+					args: {
+						last_edited_by_table: 'notion_user',
+						last_edited_by_id: 'user_id',
+						last_edited_time: expect.any(Number)
+					}
+				},
+				{
+					command: 'listRemove',
+					table: 'block',
+					id: 'parent_one_id',
+					path: [ 'content' ],
+					args: {
+						id: 'child_two_id'
+					}
+				},
+				{
+					command: 'update',
+					table: 'block',
+					id: 'parent_one_id',
+					path: [],
+					args: {
+						last_edited_by_table: 'notion_user',
+						last_edited_by_id: 'user_id',
+						last_edited_time: expect.any(Number)
+					}
+				}
+			]);
 		}
 
 		it(`Array child_ids`, async () => {
@@ -601,7 +621,6 @@ describe('iterateAndDeleteChildren', () => {
 					parent_type: 'block',
 					stack,
 					user_id: 'user_id',
-					child_path: 'content',
 					logger: (method, child_type, child_id) => {
 						expect(method).toBe('DELETE');
 						expect(child_type).toBe('block');
@@ -614,7 +633,7 @@ describe('iterateAndDeleteChildren', () => {
 				}
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
-			// checker(parent_data, deleted_data, stack);
+			checker(parent_data, deleted_data, stack);
 		});
 
 		it(`String child_ids`, async () => {
@@ -631,8 +650,7 @@ describe('iterateAndDeleteChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id',
-					child_path: 'content'
+					user_id: 'user_id'
 				}
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
@@ -654,47 +672,158 @@ describe('iterateAndDeleteChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id',
-					child_path: 'content'
+					user_id: 'user_id'
 				}
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
-			expect(deepEqual(parent_data.content, [ 'child_two_id', 'child_three_id' ])).toBe(true);
 
-			expect(
-				deepEqual(deleted_data, [
-					{
-						id: 'child_one_id',
+			expect(parent_data as any).toMatchSnapshot({
+				id: 'parent_one_id',
+				content: [ 'child_two_id', 'child_three_id' ],
+				last_edited_by_table: 'notion_user',
+				last_edited_by_id: 'user_id',
+				last_edited_time: expect.any(Number)
+			});
+
+			expect(deleted_data as any).toMatchSnapshot([
+				{
+					id: 'child_one_id',
+					alive: false,
+					last_edited_by_table: 'notion_user',
+					last_edited_by_id: 'user_id',
+					last_edited_time: expect.any(Number)
+				}
+			]);
+
+			expect(stack).toMatchSnapshot([
+				{
+					args: {
 						alive: false,
 						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id'
+						last_edited_by_id: 'user_id',
+						last_edited_time: expect.any(Number)
+					},
+					command: 'update',
+					id: 'child_one_id',
+					path: [],
+					table: 'block'
+				},
+				{
+					command: 'listRemove',
+					table: 'block',
+					id: 'parent_one_id',
+					path: [ 'content' ],
+					args: {
+						id: 'child_one_id'
 					}
-				])
-			).toBe(true);
+				},
+				{
+					command: 'update',
+					table: 'block',
+					id: 'parent_one_id',
+					path: [],
+					args: {
+						last_edited_by_table: 'notion_user',
+						last_edited_by_id: 'user_id',
+						last_edited_time: expect.any(Number)
+					}
+				}
+			]);
+		});
 
-			expect(
-				deepEqual(stack, [
-					{
-						command: 'listRemove',
-						table: 'block',
-						id: 'parent_one_id',
-						path: [ 'contents' ],
-						args: {
+		it(`parent doesnt contain child`, async () => {
+			const stack: IOperation[] = [];
+			const cache: ICache = {
+				block: new Map([
+					[
+						'parent_one_id',
+						{
+							id: 'parent_one_id'
+						}
+					],
+					[
+						'child_one_id',
+						{
 							id: 'child_one_id'
 						}
-					},
-					{
-						command: 'update',
-						table: 'block',
-						id: 'parent_one_id',
-						path: [],
-						args: {
-							last_edited_by_table: 'notion_user',
-							last_edited_by_id: 'user_id'
-						}
-					}
+					]
 				])
-			).toBe(true);
+			} as any;
+
+			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>([], (id) => cache.block.get(id), {
+				cache,
+				child_ids: 'content',
+				multiple: false,
+				child_type: 'block',
+				parent_id: 'parent_one_id',
+				parent_type: 'block',
+				stack,
+				user_id: 'user_id'
+			});
+
+			const parent_data = cache.block.get('parent_one_id') as IPage;
+
+			expect(
+				deepEqual(parent_data, {
+					id: 'parent_one_id'
+				})
+			);
+
+			expect(deepEqual(deleted_data, [])).toBe(true);
+			expect(deepEqual(stack, [])).toBe(true);
+		});
+
+		it.only(`manual true`, async () => {
+			const stack: IOperation[] = [];
+			const cache: ICache = {
+				block: new Map([
+					[
+						'parent_one_id',
+						{
+							id: 'parent_one_id',
+							child: [ 'child_one_id' ]
+						}
+					],
+					[
+						'child_one_id',
+						{
+							id: 'child_one_id'
+						}
+					],
+					[
+						'child_two_id',
+						{
+							id: 'child_two_id'
+						}
+					]
+				])
+			} as any;
+
+			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>([], (id) => cache.block.get(id), {
+				cache,
+				child_ids: 'content',
+				child_type: 'block',
+				parent_id: 'parent_one_id',
+				parent_type: 'block',
+				stack,
+				manual: true,
+				user_id: 'user_id'
+			});
+
+			const parent_data = cache.block.get('parent_one_id') as IPage;
+
+			/* expect(
+				deepEqual(parent_data, {
+					id: 'parent_one_id'
+				})
+			); */
+
+			expect(deleted_data).toMatchSnapshot([
+				{
+					id: 'child_one_id'
+				}
+			]);
+			// expect(deepEqual(stack, [])).toBe(true);
 		});
 	});
 });

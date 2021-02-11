@@ -97,7 +97,8 @@ class Collection extends Data<ICollection> {
       multiple,
       child_ids: "template_pages",
       child_type: "block",
-      child_path: "template_pages",
+      update_child_path: "template_pages",
+      container: []
     }, (child_id) => this.cache.block.get(child_id) as IPage)
   }
 
@@ -149,7 +150,8 @@ class Collection extends Data<ICollection> {
     await this.deleteIterate<IPage>(args, {
       child_ids: await this.#getRowPages(),
       child_type: "block",
-      multiple
+      multiple,
+      container: []
     }, (child_id) => this.cache.block.get(child_id) as IPage);
   }
 
@@ -254,7 +256,8 @@ class Collection extends Data<ICollection> {
       child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
       multiple,
-      manual: true
+      manual: true,
+      container: []
     }, (name) => {
       const schema_unit_data = schema_map.get(name) as ISchemaMapValue;
       return { ...schema_unit_data, schema_id: schema_unit_data.schema_id };

@@ -42,6 +42,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       child_ids: Array.from(aggregations_map.keys()),
       child_type: "collection_view",
       manual: true,
+      container: [],
       multiple
     }, (name) => aggregations_map.get(name), (_, original_data, updated_data) => {
       const aggregation = aggregations[aggregations.findIndex(data => data.property === original_data.schema_id)], { aggregator } = updated_data;
@@ -63,7 +64,8 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       child_type: "collection_view",
       multiple,
       child_ids: Array.from(aggregations_map.keys()),
-      manual: true
+      manual: true,
+      container: []
     }, (name) => aggregations_map.get(name), (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.schema_id), 1)
     })

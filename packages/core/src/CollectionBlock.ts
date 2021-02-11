@@ -114,9 +114,10 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 			args,
 			{
 				child_ids: 'view_ids',
-				child_path: 'view_ids',
+				update_child_path: 'view_ids',
 				child_type: 'collection_view',
-				multiple
+				multiple,
+				container: []
 			},
 			(view_id) => this.cache.collection_view.get(view_id)
 		);

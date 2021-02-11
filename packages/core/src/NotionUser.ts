@@ -195,6 +195,7 @@ class NotionUser extends Data<INotionUser> {
       child_ids: this.#getSpaceIds(),
       child_type: "space",
       multiple,
+      container: []
     }, (child_id) => this.cache.space.get(child_id), (id, _,__,spaces)=>spaces.push(new Space({ ...this.getProps(), id })))
   }
 
@@ -207,7 +208,8 @@ class NotionUser extends Data<INotionUser> {
       child_ids: this.#getSpaceIds(),
       multiple,
       child_type: "space",
-      manual: true
+      manual: true,
+      container: []
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
       await enqueueTask({
         task: {

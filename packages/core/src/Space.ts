@@ -153,8 +153,9 @@ export default class Space extends Data<ISpace> {
     await this.deleteIterate<TPage>(args, {
       multiple,
       child_ids: 'pages',
-      child_path: "pages",
+      update_child_path: "pages",
       child_type: "block",
+      container: []
     }, (block_id) => this.cache.block.get(block_id) as TPage)
   }
 

@@ -163,10 +163,6 @@ describe("Getter methods for space", ()=>{
     checkRootCollection((await space.getRootCollections(collection=>collection.parent_id === TEST_DATA.block.collection_view_page[0].data.id))[0]);
   })
   
-  it("Get [collection] undefined", async ()=>{
-    checkRootCollection((await space.getRootCollections())[0]);
-  })
-  
   it("!Get [collection] !cb", async ()=>{
     checkRootCollection((await space.getRootCollections(collection=>collection.id === TEST_DATA.collection[0].data.id.slice(1)))[0], false);
   })
@@ -201,10 +197,6 @@ describe("Getter methods for space", ()=>{
   
   it("Get [root_page] cb.type", async ()=>{
     checkRootPages(await space.getTRootPages(root_page=>root_page.type === "page"));
-  })
-  
-  it("Get [root_page] undefined", async ()=>{
-    checkRootPages(await space.getTRootPages());
   })
   
   it("!Get [root_page] !cb", async ()=>{
@@ -242,10 +234,6 @@ describe("Getter methods for space", ()=>{
   
   it("Get [root_cvp] cb.type", async ()=>{
     checkRootCollectionViewPages(await space.getTRootPages(root_cvp=>root_cvp.type === "collection_view_page"));
-  })
-  
-  it("Get [root_cvp] undefined", async ()=>{
-    checkRootCollectionViewPages(await space.getTRootPages());
   })
   
   it("!Get [root_cvp] !cb", async ()=>{

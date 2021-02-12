@@ -1,4 +1,4 @@
-import { ITPage, Collection, Space } from "../src";
+import { IPageMap, Collection, Space } from "../src";
 import {nishan, TEST_DATA} from "./constants"
 
 let space: Space = null as any;
@@ -9,7 +9,7 @@ beforeAll(async ()=>{
   space.init_cache = true;
 })
 
-function checkRootPages(pages: ITPage, status?:boolean){
+function checkRootPages(pages: IPageMap, status?:boolean){
   status = status ?? true;
   if(status){
     expect(pages.page.size).toBe(2);
@@ -22,7 +22,7 @@ function checkRootPages(pages: ITPage, status?:boolean){
   }
 }
 
-function checkRootCollectionViewPages(pages: ITPage, status?:boolean){
+function checkRootCollectionViewPages(pages: IPageMap, status?:boolean){
   status = status ?? true;
   if(status){
     expect(pages.collection_view_page.size).toBe(2);

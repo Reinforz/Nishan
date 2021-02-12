@@ -50,6 +50,7 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 			const Page = require('../src/Page').default;
 			return new Page(obj);
 		case 'collection_view':
+		case 'linked_db':
 			const CollectionView = require('../src/CollectionView').default;
 			return new CollectionView(obj);
 		case 'collection_view_page':

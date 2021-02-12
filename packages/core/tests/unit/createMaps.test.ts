@@ -3,13 +3,13 @@ import {
 	createPageMap,
 	createSchemaUnitMap,
 	createViewMap,
-	ITBlock,
-	ITPage,
-	ITSchemaUnit,
-	ITView
+	IBlockMap,
+	IPageMap,
+	ISchemaUnitMap,
+	IViewMap
 } from '../../src';
 
-const block_map_keys: (keyof ITBlock)[] = [
+const block_map_keys: (keyof IBlockMap)[] = [
 	'linked_db',
 	'collection_view_page',
 	'embed',
@@ -59,7 +59,7 @@ describe('createBlockMap', () => {
 	});
 });
 
-const view_map_keys: (keyof ITView)[] = [ 'board', 'gallery', 'list', 'timeline', 'table', 'calendar' ];
+const view_map_keys: (keyof IViewMap)[] = [ 'board', 'gallery', 'list', 'timeline', 'table', 'calendar' ];
 
 describe('createViewMap', () => {
 	const view_map = createViewMap();
@@ -73,7 +73,7 @@ describe('createViewMap', () => {
 	});
 });
 
-const schema_unit_map_keys: (keyof ITSchemaUnit)[] = [
+const schema_unit_map_keys: (keyof ISchemaUnitMap)[] = [
 	'text',
 	'number',
 	'select',
@@ -109,7 +109,7 @@ describe('createSchemaUnitMap', () => {
 	});
 });
 
-const page_map_keys: (keyof ITPage)[] = [ 'page', 'collection_view_page' ];
+const page_map_keys: (keyof IPageMap)[] = [ 'page', 'collection_view_page' ];
 
 describe('createPageMap', () => {
 	const page_map = createPageMap();

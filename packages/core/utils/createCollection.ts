@@ -234,32 +234,32 @@ export async function generateSchema(input_schema_units: ICollectionBlockInput["
 
 /**
  * Creates a collection from the input
- * @param param collection input
+ * @param input collection input
  * @param parent_id parent id of the collection 
  * @param props Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function createCollection(param: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id">) {
+export async function createCollection(input: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, "id" | "interval">) {
   // Generate the collection id
-  const collection_id = generateId(param.collection_id);
+  const collection_id = generateId(input.collection_id);
   // Generate the schema to store in the collection
-  const [schema] = await generateSchema(param.schema, {id: collection_id, name: param.name, token: props.token, stack: props.stack, cache: props.cache, logger: props.logger})
+  const [schema] = await generateSchema(input.schema, {id: collection_id, name: input.name, token: props.token, stack: props.stack, cache: props.cache, logger: props.logger})
   // construct the collection to store it in cache and in op stack
   const collection_data: ICollection = {
     id: collection_id,
     schema,
-    cover: param.cover,
-    icon: param.icon,
+    cover: input.cover,
+    icon: input.icon,
     parent_id,
     parent_table: 'block',
     alive: true,
-    name: param.name,
+    name: input.name,
     migrated: false, 
     version: 0
   };
 
   // Create the views of the collection
-  const [view_ids, view_map] = createViews(collection_data, param.views, props);
+  const [view_ids, view_map] = createViews(collection_data, input.views, props);
   // Push the collection create operation to stack
   props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))))
   // Store the collection in cache

@@ -1,9 +1,46 @@
-import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView } from "@nishans/types";
-import { TBlockCreateInput, NishanArg } from "../types";
+import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, TPermissionRole, IPermission, IOperation } from "@nishans/types";
+import { TBlockCreateInput, NishanArg, IPageCreateInput } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
+import { ICache } from "@nishans/endpoints";
 
-export async function nestedContentPopulate(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">,) {
+function populatePermissions(user_id: string, is_private?: boolean): IPermission{
+  return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }
+}
+
+export function appendChildToParent(parent_table: "collection", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[], is_template?: boolean):void
+export function appendChildToParent(parent_table: "space" , parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[]):void
+export function appendChildToParent(parent_table: "block", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[]):void
+export function appendChildToParent(parent_table: "space" | "block" | "collection", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[], is_template?: boolean):void{
+  
+  switch(parent_table){
+    case "block": {
+      stack.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
+      const parent = cache.block.get(parent_content_id) as IPage;
+      if(!parent['content']) parent['content'] = [];
+      parent['content'].push(content_id);
+      break;
+    }
+    case "space": {
+      stack.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
+      const parent = cache.space.get(parent_content_id) as ISpace;
+      if(!parent['pages']) parent['pages'] = []
+      parent['pages'].push(content_id);
+      break;
+    }
+    case "collection": {
+      if(is_template){
+        stack.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
+        const parent = cache.collection.get(parent_content_id) as ICollection;
+        if(!parent['template_pages']) parent['template_pages'] = []
+        parent['template_pages'].push(content_id)
+      }
+      break;
+    }
+  }
+}
+
+export async function nestedContentPopulate(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
   const block_map = createBlockMap();
 
   const metadata = {
@@ -69,7 +106,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
           ...metadata
         };
 
-        if (content.type === "collection_view_page") (args as ICollectionViewPage).permissions = [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }];
+        if (content.type === "collection_view_page") (args as ICollectionViewPage).permissions = [populatePermissions(props.user_id, content.isPrivate)];
 
         props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(args))))
         props.cache.block.set(block_id, JSON.parse(JSON.stringify(args)))
@@ -85,7 +122,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
         block_map[type].set(block_id, collectionblock);
         block_map[type].set(content.name[0][0], collectionblock);
         if (content.rows)
-          await traverse(content.rows as any, collection_id, "collection")
+          await traverse(content.rows, collection_id, "collection")
       } else if (content.type === "factory") {
         const Block = require('../src/Block').default;
         // ! FIX:1:H Nested content for factory children is not populated, ie if a page is passed as a children, its nested content will not be populated 
@@ -152,13 +189,14 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
           id: block_id,
           properties: content.properties,
           format: content.format,
-          type: content.type,
+          type: "page",
           parent_id,
           parent_table,
           alive: true,
-          permissions: [{ type: content.isPrivate ? 'user_permission' : 'space_permission', role: 'editor', user_id: props.user_id }],
+          permissions: [populatePermissions(props.user_id, content.isPrivate)],
           ...metadata
         }
+
         props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(page_data))));
         props.cache.block.set(block_id, JSON.parse(JSON.stringify(page_data)));
         const block_obj = createBlockClass(content.type, block_id, props)
@@ -218,31 +256,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
       }
 
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;
-
-      if (parent_table === "block"){
-        props.stack.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
-        const parent = props.cache.block.get(parent_content_id);
-        if(parent){
-          if(!(parent as IPage)['content']) (parent as IPage)['content'] = [];
-          (parent as IPage)['content'].push(content_id)
-        }
-      }
-      else if (parent_table === "space"){
-        props.stack.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
-        const parent = props.cache.space.get(parent_content_id);
-        if(parent){
-          if(!parent['pages']) parent['pages'] = []
-          parent['pages'].push(content_id)
-        }
-      }
-      else if (parent_table === "collection" && (content as any).is_template){
-        props.stack.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
-        const parent = props.cache.collection.get(parent_content_id);
-        if(parent){
-          if(!parent['template_pages']) parent['template_pages'] = []
-          parent['template_pages'].push(content_id)
-        }
-      }
+      appendChildToParent(parent_table as any, parent_content_id, content_id, props.cache, props.stack, (content as any).is_template);
+      
       props.logger && props.logger("CREATE","block", content_id)
     }
   }

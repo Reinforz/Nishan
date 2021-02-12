@@ -15,7 +15,7 @@ export interface ICollectionBlockInput {
   name: TTextFormat,
   icon?: string;
   cover?: string;
-  rows?: Omit<IPageCreateInput, "type">[],
+  rows?: IPageCreateInput[],
   collection_id?:string
 }
 
@@ -95,7 +95,8 @@ export interface IPageCreateInput extends IInput {
   properties: IPage["properties"],
   format?: Partial<IPage["format"]>,
   isPrivate?: boolean,
-  contents?: TBlockInput[]
+  contents?: TBlockInput[],
+  is_template?: boolean
 }
 
 export interface IPageUpdateInput {

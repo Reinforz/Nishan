@@ -457,7 +457,6 @@ describe('createCollection', () => {
       },'parent_id', {
         cache,
         stack,
-        interval: 0,
         logger(){
           return
         },

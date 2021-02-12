@@ -2,15 +2,23 @@ import { ICache } from '@nishans/endpoints';
 import { IHeader, IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import colors from 'colors';
+
 import {
 	appendChildToParent,
 	Block,
 	CollectionView,
 	CollectionViewPage,
+	fetchAndCacheData,
 	IHeaderInput,
 	nestedContentPopulate,
 	Page
 } from '../../src';
+
+axios.defaults.baseURL = 'https://www.notion.so/api/v3';
+const mock = new MockAdapter(axios);
 
 const space_id = '322c0b0c-5fb4-4fdc-97eb-84e7142b2a80',
 	user_id = '72e85506-b758-481a-92b1-73984a903002',
@@ -41,14 +49,54 @@ const metadata = {
 	version: 0
 };
 
+describe('fetchAndCacheData', () => {
+	it('exist in cache', async () => {
+		const data = await fetchAndCacheData(
+			'block',
+			'id',
+			{
+				block: new Map([ [ 'id', { data: 'data' } ] ])
+			} as any,
+			'token'
+		);
+		expect(deepEqual(data, { data: 'data' })).toBe(true);
+	});
+
+	it.only('doesnt exist in cache', async () => {
+		const console_log_spy = jest.spyOn(console, 'log');
+		mock.onPost(`/syncRecordValues`).replyOnce(200, {
+			recordMap: {
+				block: {
+					id: {
+						role: 'editor',
+						value: { data: 'data' }
+					}
+				}
+			}
+		});
+		const data = await fetchAndCacheData(
+			'block',
+			'id',
+			{
+				block: new Map()
+			} as any,
+			'token'
+		);
+		expect(console_log_spy).toHaveBeenCalledTimes(1);
+		expect(console_log_spy).toHaveBeenCalledWith(colors.yellow.bold(`block:id doesnot exist in the cache`));
+
+		expect(deepEqual(data, { data: 'data' })).toBe(true);
+	});
+});
+
 describe('appendChildToParent', () => {
-	describe.only(`type=block`, () => {
-		it(`path exists`, () => {
+	describe(`type=block`, () => {
+		it(`path exists`, async () => {
 			const stack: IOperation[] = [],
 				cache: ICache = {
 					block: new Map([ [ 'parent_id', { content: [] } ] ])
 				} as any;
-			appendChildToParent('block', 'parent_id', 'child_id', cache, stack);
+			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
 			expect(
 				deepEqual(stack, [
@@ -68,12 +116,12 @@ describe('appendChildToParent', () => {
 			expect(deepEqual(cache.block.get('parent_id'), { content: [ 'child_id' ] })).toBe(true);
 		});
 
-		it(`path doesnt exists`, () => {
+		it(`path doesnt exists`, async () => {
 			const stack: IOperation[] = [],
 				cache: ICache = {
 					block: new Map([ [ 'parent_id', {} ] ])
 				} as any;
-			appendChildToParent('block', 'parent_id', 'child_id', cache, stack);
+			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
 			expect(
 				deepEqual(stack, [

@@ -1,40 +1,56 @@
-import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, TPermissionRole, IPermission, IOperation } from "@nishans/types";
+import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, TPermissionRole, IPermission, IOperation, TDataType, TData } from "@nishans/types";
 import { TBlockCreateInput, NishanArg, IPageCreateInput } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
-import { ICache } from "@nishans/endpoints";
+import { ICache, syncRecordValues } from "@nishans/endpoints";
+import { warn } from "../src";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
   return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }
 }
 
-export function appendChildToParent(parent_table: "collection", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[], is_template?: boolean):void
-export function appendChildToParent(parent_table: "space" , parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[]):void
-export function appendChildToParent(parent_table: "block", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[]):void
-export function appendChildToParent(parent_table: "space" | "block" | "collection", parent_content_id: string, content_id: string, cache: Pick<ICache, "block" | "space" | "collection">, stack: IOperation[], is_template?: boolean):void{
-  
+export async function fetchAndCacheData<D extends TData>(table: TDataType, id: string, cache: ICache, token: string){
+  let data = cache[table].get(id);
+  if(!data){
+    warn(`${table}:${id} doesnot exist in the cache`);
+    const {recordMap} = await syncRecordValues({
+      requests: [
+        {
+          id,
+          table,
+          version: 0
+        }
+      ]
+    }, {
+      token,
+      interval: 0
+    });
+    data = recordMap[table][id].value;
+  }
+  return data as D;
+}
+
+export async function appendChildToParent(parent_table: "space" | "block" | "collection", parent_id: string, content_id: string, cache: ICache, stack: IOperation[], token: string):Promise<void>{
   switch(parent_table){
     case "block": {
-      stack.push(Operation.block.listAfter(parent_content_id, ['content'], { after: '', id: content_id }))
-      const parent = cache.block.get(parent_content_id) as IPage;
+      stack.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: content_id }))
+      const parent = await fetchAndCacheData<IPage>(parent_table, parent_id, cache, token);
       if(!parent['content']) parent['content'] = [];
       parent['content'].push(content_id);
       break;
     }
     case "space": {
-      stack.push(Operation.space.listAfter(parent_content_id, ['pages'], { after: '', id: content_id }))
-      const parent = cache.space.get(parent_content_id) as ISpace;
+      stack.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: content_id }))
+      const parent = await fetchAndCacheData<ISpace>(parent_table, parent_id, cache, token);
       if(!parent['pages']) parent['pages'] = []
       parent['pages'].push(content_id);
       break;
     }
     case "collection": {
-      if(is_template){
-        stack.push(Operation.collection.listAfter(parent_content_id, ['template_pages'], { after: '', id: content_id }))
-        const parent = cache.collection.get(parent_content_id) as ICollection;
-        if(!parent['template_pages']) parent['template_pages'] = []
-        parent['template_pages'].push(content_id)
-      }
+      stack.push(Operation.collection.listAfter(parent_id, ['template_pages'], { after: '', id: content_id }))
+      const parent = await fetchAndCacheData<ICollection>(parent_table, parent_id, cache, token);;
+      if(!parent['template_pages']) parent['template_pages'] = []
+      parent['template_pages'].push(content_id)
       break;
     }
   }
@@ -256,8 +272,11 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
       }
 
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;
-      appendChildToParent(parent_table as any, parent_content_id, content_id, props.cache, props.stack, (content as any).is_template);
-      
+      if(parent_table === "collection" && (content as any).is_template)
+        await appendChildToParent(parent_table, parent_content_id, content_id, props.cache, props.stack, props.token, );
+      else if(parent_table === "block" || parent_table==="space")
+        await appendChildToParent(parent_table, parent_content_id, content_id, props.cache, props.stack, props.token, );
+
       props.logger && props.logger("CREATE","block", content_id)
     }
   }

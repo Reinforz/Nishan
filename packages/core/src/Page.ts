@@ -1,7 +1,7 @@
 import { enqueueTask, findUser, inviteGuestsToSpace } from "@nishans/endpoints";
 import { IPage, ISpace, ISpaceView, TExportType, TBlock, INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 
-import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, ITBlock, IPageCreateInput } from "../types";
+import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, IBlockMap, IPageCreateInput } from "../types";
 import { createBlockClass, createBlockMap, error, nestedContentPopulate, Operation } from "../utils";
 import Block from "./Block";
 
@@ -134,7 +134,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @returns An array of block object
    */
   async getBlocks(args?: FilterTypes<TBlock>, multiple?: boolean) {
-    return await this.getIterate<TBlock, ITBlock>(args, { container: createBlockMap(), multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, (_, block, block_map) => {
+    return await this.getIterate<TBlock, IBlockMap>(args, { container: createBlockMap(), multiple, child_ids: "content", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TBlock, (_, block, block_map) => {
       const block_obj = createBlockClass(block.type, block.id, this.getProps());
       if(block.type === "page")
         block_map[block.type].set(block.properties.title[0][0], block_obj)
@@ -152,7 +152,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
   }
 
   async updateBlocks(args: UpdateTypes<TBlock, TBlockInput>, multiple?: boolean) {
-    return await this.updateIterate<TBlock, TBlockInput, ITBlock>(args, {
+    return await this.updateIterate<TBlock, TBlockInput, IBlockMap>(args, {
       multiple,
       child_ids: "content",
       child_type: "block",

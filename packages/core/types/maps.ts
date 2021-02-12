@@ -94,12 +94,12 @@ import {
 	ILinkToPageInput
 } from './block';
 
-export interface ITPage {
+export interface IPageMap {
 	collection_view_page: Map<string, CollectionViewPage>;
 	page: Map<string, Page>;
 }
 
-export interface ITSchemaUnit {
+export interface ISchemaUnitMap {
 	text: Map<string, SchemaUnit<TextSchemaUnit>>;
 	number: Map<string, SchemaUnit<NumberSchemaUnit>>;
 	select: Map<string, SchemaUnit<SelectSchemaUnit>>;
@@ -121,7 +121,7 @@ export interface ITSchemaUnit {
 	last_edited_by: Map<string, SchemaUnit<LastEditedBySchemaUnit>>;
 }
 
-export interface ITView {
+export interface IViewMap {
 	table: Map<string, TableView>;
 	gallery: Map<string, GalleryView>;
 	list: Map<string, ListView>;
@@ -130,7 +130,7 @@ export interface ITView {
 	calendar: Map<string, CalendarView>;
 }
 
-export interface ITBlock {
+export interface IBlockMap {
 	link_to_page: Map<string, Block<ILinkToPage, ILinkToPageInput>>;
 	embed: Map<string, Block<IEmbed, IEmbedInput>>;
 	video: Map<string, Block<IVideo, IVideoInput>>;

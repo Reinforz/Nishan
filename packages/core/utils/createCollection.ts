@@ -2,7 +2,7 @@ import { ICache, syncRecordValues } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { ICollection, IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValues, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
 import { getSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../src";
-import { ICollectionBlockInput, ITView, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput } from "../types";
+import { ICollectionBlockInput, IViewMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput } from "../types";
 import { createShortId, createViews, Operation, generateId } from "../utils";
 
 interface ParentCollectionData {
@@ -267,5 +267,5 @@ export async function createCollection(param: ICollectionBlockInput, parent_id: 
   // Log the collection creation
   props.logger && props.logger("CREATE", "collection", collection_id);
 
-  return [collection_id, view_ids, view_map] as [string, string[], ITView]
+  return [collection_id, view_ids, view_map] as [string, string[], IViewMap]
 }

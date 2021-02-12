@@ -1,4 +1,4 @@
-import { ITBlock, ITView, ITSchemaUnit, ITPage } from '../types';
+import { IBlockMap, IViewMap, ISchemaUnitMap, IPageMap } from '../types';
 
 export function createBlockMap () {
 	return {
@@ -37,7 +37,7 @@ export function createBlockMap () {
 		link_to_page: new Map(),
 		column_list: new Map(),
 		column: new Map()
-	} as ITBlock;
+	} as IBlockMap;
 }
 
 export function createViewMap () {
@@ -48,7 +48,7 @@ export function createViewMap () {
 		timeline: new Map(),
 		table: new Map(),
 		calendar: new Map()
-	} as ITView;
+	} as IViewMap;
 }
 
 export function createSchemaUnitMap () {
@@ -72,12 +72,12 @@ export function createSchemaUnitMap () {
 		created_by: new Map(),
 		last_edited_time: new Map(),
 		last_edited_by: new Map()
-	} as ITSchemaUnit;
+	} as ISchemaUnitMap;
 }
 
 export function createPageMap () {
 	return {
 		page: new Map(),
 		collection_view_page: new Map()
-	} as ITPage;
+	} as IPageMap;
 }

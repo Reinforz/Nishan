@@ -5,7 +5,7 @@ import SchemaUnit from "./SchemaUnit";
 
 import Page from './Page';
 import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMapValue, ITSchemaUnit } from '../types';
+import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMapValue, ISchemaUnitMap } from '../types';
 import { generateFormulaAST } from '@nishans/notion-formula';
 
 /**
@@ -201,7 +201,7 @@ class Collection extends Data<ICollection> {
    */
   async getSchemaUnits(args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
     const data = this.getCachedData(), schema_map = getSchemaMap(data.schema);
-    return await this.getIterate<ISchemaMapValue, ITSchemaUnit>(args, { container: createSchemaUnitMap(), child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) =>
+    return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(args, { container: createSchemaUnitMap(), child_ids: Array.from(schema_map.keys()), child_type: "collection", multiple }, (name) =>
       schema_map.get(name) as ISchemaMapValue, (_, { schema_id, name, type }, schema_unit_map) => {
         const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
         schema_unit_map[type].set(schema_id, schema_obj)
@@ -225,7 +225,7 @@ class Collection extends Data<ICollection> {
    */
   async updateSchemaUnits(args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
     const data = this.getCachedData(), schema_map = getSchemaMap(data.schema);
-    const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ITSchemaUnit>(args, {
+    const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ISchemaUnitMap>(args, {
       child_ids: Array.from(schema_map.keys()),
       child_type: "collection",
       multiple,

@@ -10,7 +10,7 @@ import {
 	UpdateTypes,
 	FilterType,
 	TViewCreateInput,
-	ITView,
+	IViewMap,
 	TCollectionBlockInput
 } from '../types';
 import Block from './Block';
@@ -59,7 +59,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
    * @returns An array of view objects of the collectionblock
    */
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
-		return await this.getIterate<TView, ITView>(
+		return await this.getIterate<TView, IViewMap>(
 			args,
 			{ multiple, container: createViewMap(), child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
@@ -79,7 +79,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 	}
 
 	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, multiple?: boolean) {
-		return await this.updateIterate<TView, TViewUpdateInput, ITView>(
+		return await this.updateIterate<TView, TViewUpdateInput, IViewMap>(
 			args,
 			{
 				container: createViewMap(),

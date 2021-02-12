@@ -7,7 +7,7 @@ import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
-import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, ITPage } from '../types';
+import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
 import { enqueueTask, findUser, removeUsersFromSpace } from '@nishans/endpoints';
 
 const trootpage_class = {
@@ -88,7 +88,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    return await this.getIterate<TPage, ITPage>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page, trootpage_map) => {
+    return await this.getIterate<TPage, IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page, trootpage_map) => {
       const page_obj: any = new trootpage_class[page.type]({
         id: page.id,
         ...this.getProps()
@@ -117,7 +117,7 @@ export default class Space extends Data<ISpace> {
    * @param multiple whether multiple rootpages should be deleted
    */
   async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, multiple?: boolean) {
-    return await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput, ITPage>(args, {
+    return await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput, IPageMap>(args, {
       child_ids: "pages",
       child_type: "block",
       multiple,

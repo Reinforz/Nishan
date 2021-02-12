@@ -424,6 +424,102 @@ describe('nestedContentPopulate', () => {
 				})
 			).toBe(true);
 		});
+
+		it(`is_template=true,contents=[],parent=collection`, async () => {
+			const page_id = '48a3d30c-c259-4047-986f-74d9a6cb1305';
+
+			const cache = constructDefaultCache(),
+				stack: IOperation[] = [];
+
+			const logger_spy = jest.fn();
+
+			const block_map = await nestedContentPopulate(
+				[
+					{
+						type: 'page',
+						properties: { title: [ [ 'Page' ] ] },
+						format: {
+							page_font: 'Monaco'
+						},
+						is_template: true,
+						id: page_id
+					}
+				],
+				'collection1_id',
+				'collection',
+				{
+					cache,
+					interval: 0,
+					logger: logger_spy,
+					shard_id,
+					space_id,
+					stack,
+					token: 'token',
+					user_id
+				}
+			);
+
+			const page_snapshot = {
+				id: expect.any(String),
+				type: 'page',
+				properties: {
+					title: [ [ 'Page' ] ]
+				},
+				format: {
+					page_font: 'Monaco'
+				},
+				parent_id: 'collection1_id',
+				parent_table: 'collection',
+				alive: true,
+				permissions: [
+					{
+						type: 'space_permission',
+						role: 'editor',
+						user_id
+					}
+				],
+				created_time: expect.any(Number),
+				created_by_id: user_id,
+				created_by_table: 'notion_user',
+				last_edited_time: expect.any(Number),
+				last_edited_by_table: 'notion_user',
+				last_edited_by_id: user_id,
+				space_id,
+				shard_id,
+				version: 0
+			};
+
+			expect(logger_spy).toHaveBeenCalledTimes(1);
+			expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', page_id);
+
+			expect((block_map.page.get('Page') as Page).getCachedData()).toMatchSnapshot({
+				...page_snapshot,
+				content: []
+			});
+
+			expect(stack).toMatchSnapshot([
+				{
+					table: 'block',
+					command: 'update',
+					path: [],
+					id: page_id,
+					args: page_snapshot
+				},
+				{
+					path: [ 'template_pages' ],
+					table: 'collection',
+					command: 'listAfter',
+					args: { after: '', id: page_id },
+					id: 'collection1_id'
+				}
+			]);
+
+			expect(
+				deepEqual(cache.collection.get('collection1_id'), {
+					template_pages: [ page_id ]
+				})
+			).toBe(true);
+		});
 	});
 
 	describe('type=collection_block', () => {
@@ -602,5 +698,251 @@ describe('nestedContentPopulate', () => {
 				id: expect.any(String)
 			});
 		});
+	});
+
+	it(`type=link_to_page`, async () => {
+		const cache: any = {
+				block: new Map([ [ 'page1_id', { id: 'page1_id' } ] ]),
+				collection: new Map(),
+				space: new Map(),
+				collection_view: new Map(),
+				notion_user: new Map(),
+				space_view: new Map(),
+				user_root: new Map(),
+				user_settings: new Map()
+			},
+			stack: IOperation[] = [];
+
+		await nestedContentPopulate(
+			[
+				{
+					type: 'link_to_page',
+					page_id: 'page_to_link'
+				}
+			],
+			'page1_id',
+			'block',
+			{
+				cache,
+				shard_id,
+				space_id,
+				interval: 0,
+				logger: false,
+				stack,
+				token: 'token',
+				user_id
+			}
+		);
+
+		expect(stack).toMatchSnapshot([
+			{
+				path: [ 'content' ],
+				table: 'block',
+				command: 'listAfter',
+				args: {
+					after: '',
+					id: 'page_to_link'
+				},
+				id: 'page1_id'
+			}
+		]);
+	});
+
+	it(`type=column_list`, async () => {
+		const cache: any = {
+				block: new Map([ [ 'page_id', { id: 'page_id' } ] ]),
+				collection: new Map(),
+				space: new Map(),
+				collection_view: new Map(),
+				notion_user: new Map(),
+				space_view: new Map(),
+				user_root: new Map(),
+				user_settings: new Map()
+			},
+			stack: IOperation[] = [];
+		await nestedContentPopulate(
+			[
+				{
+					type: 'column_list',
+					contents: [
+						{
+							type: 'to_do',
+							properties: {
+								title: [ [ 'Todo' ] ],
+								checked: [ [ 'Yes' ] ]
+							}
+						},
+						{
+							type: 'to_do',
+							properties: {
+								title: [ [ 'Todo' ] ],
+								checked: [ [ 'No' ] ]
+							}
+						}
+					]
+				}
+			],
+			'page_id',
+			'block',
+			{
+				cache,
+				shard_id,
+				space_id,
+				interval: 0,
+				logger: false,
+				stack,
+				token: 'token',
+				user_id
+			}
+		);
+	});
+
+	it(`type=factory`, async () => {
+		const cache: any = {
+				block: new Map([ [ 'page_id', { id: 'page_id' } ] ]),
+				collection: new Map(),
+				space: new Map(),
+				collection_view: new Map(),
+				notion_user: new Map(),
+				space_view: new Map(),
+				user_root: new Map(),
+				user_settings: new Map()
+			},
+			stack: IOperation[] = [];
+		const block_map = await nestedContentPopulate(
+			[
+				{
+					type: 'factory',
+					properties: {
+						title: [ [ 'Template' ] ]
+					},
+					contents: [
+						{
+							type: 'to_do',
+							properties: {
+								title: [ [ 'Todo' ] ],
+								checked: [ [ 'Yes' ] ]
+							}
+						}
+					]
+				}
+			],
+			'page_id',
+			'block',
+			{
+				cache,
+				shard_id,
+				space_id,
+				interval: 0,
+				logger: false,
+				stack,
+				token: 'token',
+				user_id
+			}
+		);
+
+		await nestedContentPopulate(
+			[
+				{
+					type: 'factory',
+					properties: {
+						title: [ [ 'Template' ] ]
+					}
+				}
+			],
+			'page_id',
+			'block',
+			{
+				cache,
+				shard_id,
+				space_id,
+				interval: 0,
+				logger: false,
+				stack: [],
+				token: 'token',
+				user_id
+			}
+		);
+
+		expect(block_map.to_do.size).toBe(1);
+		expect(block_map.factory.get('Template')).toBeTruthy();
+		expect(block_map.factory.size).toBe(2);
+		expect(stack.length).toBe(4);
+	});
+
+	it(`type=linked_db`, async () => {
+		const cache: any = {
+				block: new Map([ [ 'page1_id', { id: 'page1_id' } ] ]),
+				collection: new Map([
+					[
+						'collection_id',
+						{
+							name: [ [ 'collection' ] ],
+							schema: {
+								title: {
+									type: 'title',
+									name: 'Title'
+								}
+							},
+							id: 'collection_id'
+						}
+					]
+				]),
+				space: new Map([ [ space_id, {} ] ]),
+				collection_view: new Map(),
+				notion_user: new Map(),
+				space_view: new Map(),
+				user_root: new Map(),
+				user_settings: new Map()
+			},
+			stack: IOperation[] = [];
+
+		const block_map = await nestedContentPopulate(
+			[
+				{
+					type: 'linked_db',
+					collection_id: 'collection_id',
+					views: [
+						{
+							type: 'table',
+							name: 'Table',
+							schema_units: [
+								{
+									type: 'title',
+									name: 'Title'
+								}
+							]
+						}
+					]
+				}
+			],
+			'page1_id',
+			'block',
+			{
+				cache,
+				shard_id,
+				space_id,
+				interval: 0,
+				logger: false,
+				stack,
+				token: 'token',
+				user_id
+			}
+		);
+
+		const collection_view = (block_map.collection_view.get('collection') as CollectionView).getCachedData();
+
+		const collection_view_snapshot = {
+			id: expect.any(String),
+			type: 'collection_view',
+			collection_id: expect.any(String),
+			view_ids: [ expect.any(String) ],
+			parent_id: 'page1_id',
+			parent_table: 'block',
+			...metadata
+		};
+		expect(collection_view).toMatchSnapshot(collection_view_snapshot);
+
+		expect(stack.length).toBe(3);
 	});
 });

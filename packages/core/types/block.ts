@@ -1,4 +1,4 @@
-import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, ILinkToPage, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings, TTextFormat } from "@nishans/types";
+import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings, TTextFormat } from "@nishans/types";
 import { ElementType } from "./utils";
 import { TViewCreateInput } from "./view";
 import {TSchemaUnitInput} from "./schema"
@@ -85,8 +85,6 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IColumnListInput extends IInput {
   type: "column_list",
-  properties?: IColumnList["properties"],
-  format?: IColumnList["format"],
   contents: TBlockInput[]
 }
 
@@ -162,11 +160,9 @@ export interface IQuoteInput extends IInput {
   type: 'quote'
 }
 
-export interface ILinkToPageInput extends IInput {
+export interface ILinkToPageInput {
   type: "link_to_page",
   page_id: string,
-  format?: ILinkToPage["format"],
-  properties?: ILinkToPage["properties"]
 }
 
 export interface IDividerInput extends IInput {
@@ -207,7 +203,7 @@ export interface IFactoryInput extends IInput {
   type: 'factory',
   properties: IFactory["properties"],
   format?: IFactory["format"],
-  contents: TBlockInput[]
+  contents?: TBlockInput[]
 }
 
 export interface IBreadcrumbInput extends IInput {

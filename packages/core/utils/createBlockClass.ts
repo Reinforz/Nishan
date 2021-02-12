@@ -29,6 +29,8 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'drive':
 		case 'text':
 		case 'table_of_contents':
+		case 'column_list':
+		case 'column':
 		case 'equation':
 		case 'breadcrumb':
 		case 'factory':

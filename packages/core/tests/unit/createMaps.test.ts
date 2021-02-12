@@ -42,7 +42,6 @@ const block_map_keys: (keyof IBlockMap)[] = [
 	'divider',
 	'callout',
 	'collection_view',
-	'link_to_page',
 	'column_list',
 	'column'
 ];

@@ -1,12 +1,10 @@
-import { createSchemaUnitMap, getSchemaMap, nestedContentPopulate, Operation, createShortId, warn } from '../utils';
-
-import Data from "./Data";
-import SchemaUnit from "./SchemaUnit";
-
-import Page from './Page';
-import { ICollection, TCollectionBlock, IPage, TSchemaUnit } from '@nishans/types';
-import { NishanArg, ICollectionUpdateInput, TCollectionUpdateKeys, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, TSchemaUnitInput, ISchemaMapValue, ISchemaUnitMap } from '../types';
 import { generateFormulaAST } from '@nishans/notion-formula';
+import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
+import { FilterType, FilterTypes, ICollectionUpdateInput, IPageCreateInput, IPageUpdateInput, ISchemaMapValue, ISchemaUnitMap, NishanArg, TCollectionUpdateKeys, TSchemaUnitInput, UpdateType, UpdateTypes } from '../types';
+import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, Operation, warn } from '../utils';
+import Data from "./Data";
+import Page from './Page';
+import SchemaUnit from "./SchemaUnit";
 
 /**
  * A class to represent collection of Notion
@@ -42,8 +40,8 @@ class Collection extends Data<ICollection> {
    * Create multiple templates for the collection
    * @param opts Array of Objects for configuring template options
    */
-  async createTemplates(rows: (Omit<IPageCreateInput, "type">)[]) {
-    return await nestedContentPopulate(rows.map((row) => ({ ...row, is_template: true })) as any, this.id, this.type as "collection", this.getProps())
+  async createTemplates(rows: IPageCreateInput[]) {
+    return await nestedContentPopulate(rows, this.id, this.type as "collection", this.getProps())
   }
 
   /**
@@ -107,8 +105,8 @@ class Collection extends Data<ICollection> {
    * @param rows
    * @returns An array of newly created page objects
    */
-  async createPages(rows: Omit<IPageCreateInput, "type">[]) {
-    return await nestedContentPopulate(rows.map((row) => ({ ...row, is_template: false })) as any, this.id, this.type as "collection", this.getProps())
+  async createPages(rows: IPageCreateInput[]) {
+    return await nestedContentPopulate(rows, this.id, this.type as "collection", this.getProps())
   }
 
   async getPage(arg?: FilterType<IPage>) {

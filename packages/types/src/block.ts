@@ -44,8 +44,7 @@ export type TBasicBlockType =
 	| 'toggle'
 	| 'quote'
 	| 'divider'
-	| 'callout'
-	| 'link_to_page';
+	| 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
 export type TEmbedsBlockType = 'embed' | 'drive' | TGenericEmbedBlockType;
 export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
@@ -262,13 +261,6 @@ export interface ICallout extends IBlock, ICommonText {
 	type: 'callout';
 }
 
-export interface ILinkToPage extends IBlock {
-	type: 'link_to_page';
-	page_id: string;
-	format?: Record<string, unknown>;
-	properties?: Record<string, unknown>;
-}
-
 export type TBasicBlock =
 	| IText
 	| ITodo
@@ -282,8 +274,7 @@ export type TBasicBlock =
 	| IDivider
 	| ICallout
 	| IPage
-	| TCollectionBlock
-	| ILinkToPage;
+	| TCollectionBlock;
 
 // Advanced block types
 export interface ITOC extends IBlock {
@@ -317,7 +308,7 @@ export interface IFactory extends IBlock {
 	format?: {
 		block_color?: TFormatBlockColor;
 	};
-	contents: string[];
+	content: string[];
 }
 
 export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;

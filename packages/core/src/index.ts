@@ -16,7 +16,7 @@ import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
 export * from "./View";
-import { error } from "../utils";
+import { error, iterateAndGetChildren } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends Cache {
@@ -28,7 +28,7 @@ class Nishan extends Cache {
   constructor(arg: Pick<NishanArg, "token"> & { interval?: number, logger?: Logger }) {
     super(arg);
     this.token = arg.token;
-    this.interval = arg.interval || 500;
+    this.interval = arg.interval ?? 500;
     this.init_cache = false;
     this.logger = arg.logger === false ? false : function (method, subject, id) {
       console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
@@ -41,7 +41,6 @@ class Nishan extends Cache {
         await this.initializeCache();
         this.init_cache = true;
       } catch (err) {
-        console.log(err)
         throw new Error(error(err.response.data))
       }
     }
@@ -76,25 +75,15 @@ class Nishan extends Cache {
     for (const [notion_user_id] of this.cache.notion_user) {
       notion_user_ids.push(notion_user_id)
     }
-
-    if (Array.isArray(args)) {
-      for (let index = 0; index < args.length; index++) {
-        const id = args[index], block = this.cache.notion_user.get(id), should_add = notion_user_ids.includes(id);
-        if (should_add && block) user_ids.push(block.id);
-        if (!multiple && user_ids.length === 1) break;
-      }
-    } else if (typeof args === "function" || args === undefined) {
-      for (let index = 0; index < notion_user_ids.length; index++) {
-        const notion_user_id = notion_user_ids[index], notion_user = this.cache.notion_user.get(notion_user_id) as INotionUser, should_add = typeof args === "function" ? await args(notion_user, index) : true;
-        if (should_add && notion_user) user_ids.push(notion_user.id);
-        if (!multiple && user_ids.length === 1) break;
-      }
-    }
-
-    return user_ids.map(user_id => {
-      this.logger && this.logger(`READ`, 'notion_user', user_id);
-      return new NotionUser({ ...common_props, user_id, id: user_id, space_id: "0", shard_id: 0 })
-    });
+    
+    return await iterateAndGetChildren<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
+      ...common_props,
+      child_ids: user_ids,
+      child_type: 'notion_user',
+      container: [],
+      parent_id: this.user_id ?? '',
+      parent_type: 'notion_user'
+    }, (id, _, container)=>container.push(new NotionUser({ ...common_props, user_id: id, id, space_id: "0", shard_id: 0 })));
   }
 }
 

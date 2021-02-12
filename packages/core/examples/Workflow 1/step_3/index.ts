@@ -91,6 +91,7 @@ export default async function step3 (target_page: Page) {
 	function returnSubjectSlice(start: number, end: number) {
     return subject.slice(start, end).map(({ ecosystem, image, title, category }) => (
       {
+        type: "page",
         format: {
           page_icon: image,
           page_full_width: true,
@@ -394,7 +395,7 @@ export default async function step3 (target_page: Page) {
             ]
           },
         ]
-      } as Omit<IPageCreateInput, "type">))
+      } as IPageCreateInput))
   }
 
   const { collection_view_page: created_collection_view_page } = await target_page.createBlocks([

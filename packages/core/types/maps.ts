@@ -46,8 +46,7 @@ import {
 	IDivider,
 	ICallout,
 	IColumnList,
-	IColumn,
-	ILinkToPage
+	IColumn
 } from '@nishans/types';
 import {
 	CollectionViewPage,
@@ -90,8 +89,7 @@ import {
 	IQuoteInput,
 	IDividerInput,
 	ICalloutInput,
-	IColumnListInput,
-	ILinkToPageInput
+	IColumnListInput
 } from './block';
 
 export interface IPageMap {
@@ -131,7 +129,6 @@ export interface IViewMap {
 }
 
 export interface IBlockMap {
-	link_to_page: Map<string, Block<ILinkToPage, ILinkToPageInput>>;
 	embed: Map<string, Block<IEmbed, IEmbedInput>>;
 	video: Map<string, Block<IVideo, IVideoInput>>;
 	audio: Map<string, Block<IAudio, IAudioInput>>;

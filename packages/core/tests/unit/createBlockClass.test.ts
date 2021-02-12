@@ -51,26 +51,28 @@ describe('createBlockClass', () => {
 		'toggle',
 		'quote',
 		'divider',
-		'callout'
+		'callout',
+		'column',
+		'column_list'
 	] as TBlockType[]).forEach((block_type) => {
 		it(`Should create Block Class`, () => {
-			expect(createBlockClass(block_type, v4(), arg)).toBeTruthy();
 			expect(createBlockClass(block_type, v4(), arg).id).toBe('123');
 		});
 	});
 
 	it(`Should create Page class`, () => {
-		expect(createBlockClass('page', v4(), arg)).toBeTruthy();
 		expect(createBlockClass('page', v4(), arg).id).toBe('123');
 	});
 
 	it(`Should create CollectionView class`, () => {
-		expect(createBlockClass('collection_view', v4(), arg)).toBeTruthy();
 		expect(createBlockClass('collection_view', v4(), arg).id).toBe('123');
 	});
 
+	it(`Should create CollectionView class`, () => {
+		expect(createBlockClass('linked_db', v4(), arg).id).toBe('123');
+	});
+
 	it(`Should create CollectionViewPage class`, () => {
-		expect(createBlockClass('collection_view_page', v4(), arg)).toBeTruthy();
 		expect(createBlockClass('collection_view_page', v4(), arg).id).toBe('123');
 	});
 

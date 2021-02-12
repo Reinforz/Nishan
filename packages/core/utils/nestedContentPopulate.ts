@@ -3,12 +3,8 @@ import { TBlockCreateInput, NishanArg } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function nestedContentPopulate(contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg,"id">, this_id: string) {
+export async function nestedContentPopulate(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">,) {
   const block_map = createBlockMap();
-
-  const CollectionView = require("../src/CollectionView").default;
-  const CollectionViewPage = require('../src/CollectionViewPage').default;
-  const Block = require('../src/Block').default;
 
   const metadata = {
     created_time: Date.now(),
@@ -26,7 +22,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
     parent_content_id = parent_content_id ?? parent_id;
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index], block_id = generateId(content.id);
-      content.type = content.type ?? 'page';
 
       /* if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
         content.format = (await this.getGenericEmbedBlockData({
@@ -35,10 +30,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           type: content.type as TGenericEmbedBlockType
         })).format;
       }; */
-
-      const {
-        type,
-      } = content;
 
       /* if (type === "bookmark") {
         bookmarks.push({
@@ -63,6 +54,9 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
       } */
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
+        const {type} = content;
+        const CollectionView = require("../src/CollectionView").default;
+        const CollectionViewPage = require('../src/CollectionViewPage').default;
         const [collection_id, view_ids] = await createCollection(content, block_id, props);
         const args: ICollectionBlock = {
           id: block_id,
@@ -93,6 +87,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         if (content.rows)
           await traverse(content.rows as any, collection_id, "collection")
       } else if (content.type === "factory") {
+        const Block = require('../src/Block').default;
         // ! FIX:1:H Nested content for factory children is not populated, ie if a page is passed as a children, its nested content will not be populated 
         const content_ids: string[] = [], content_blocks_ops = (content.contents.map(content => ({
           ...content,
@@ -127,6 +122,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }))
       }
       else if (content.type === "linked_db") {
+        const CollectionView = require("../src/CollectionView").default;
         const { collection_id, views } = content,
           collection = props.cache.collection.get(collection_id) as ICollection,
           [view_ids] = createViews(collection, views, props, block_id),
@@ -149,6 +145,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         }))
       }
       else if (content.type === "page") {
+        const {type} = content;
         const page_data: IPage = {
           content: [],
           is_template: (content as any).is_template && parent_table === "collection",
@@ -200,7 +197,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           props.stack.push(Operation.block.set(column_id, [], JSON.parse(JSON.stringify(column_data))), Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
           props.cache.block.set(column_id, JSON.parse(JSON.stringify(column_data)));
           column_list_data.content.push(column_id);
-          await traverse([contents[index]], this_id, "block", column_id)
+          await traverse([contents[index]], original_parent_id, "block", column_id)
         }
       }
       else if (content.type !== "link_to_page") {
@@ -208,7 +205,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
           id: block_id,
           properties: content.properties,
           format: content.format,
-          type,
+          type: content.type,
           parent_id,
           parent_table,
           alive: true,
@@ -217,7 +214,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
         props.stack.push(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(block_data))));
         props.cache.block.set(block_id, JSON.parse(JSON.stringify(block_data)));
         const block_obj = createBlockClass(content.type, block_id, props)
-        block_map[type].set(block_id,block_obj);
+        block_map[content.type].set(block_id,block_obj);
       }
 
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;
@@ -250,6 +247,6 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], paren
     }
   }
 
-  await traverse(contents, parent_id, parent_table);
+  await traverse(contents, original_parent_id, parent_table);
   return block_map;
 }

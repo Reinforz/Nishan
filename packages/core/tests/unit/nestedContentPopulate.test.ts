@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/endpoints';
-import { IHeader, IOperation } from '@nishans/types';
+import { IHeader, IOperation, IPage } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
 import MockAdapter from 'axios-mock-adapter';
@@ -12,9 +12,11 @@ import {
 	CollectionView,
 	CollectionViewPage,
 	fetchAndCacheData,
+	IBlockMap,
 	IHeaderInput,
 	nestedContentPopulate,
-	Page
+	Page,
+	stackCacheMap
 } from '../../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
@@ -244,6 +246,35 @@ describe('appendChildToParent', () => {
 
 			expect(deepEqual(cache.collection.get('parent_id'), { template_pages: [ 'child_id' ] })).toBe(true);
 		});
+	});
+});
+
+describe('stackCacheMap', () => {
+	it(`name=string`, () => {
+		const cache = constructDefaultCache(),
+			stack: IOperation[] = [],
+			block_map: IBlockMap = { page: new Map() } as any,
+			data = { id: 'data_id', type: 'page', data: 'data' } as any;
+		stackCacheMap<IPage>(
+			block_map,
+			data,
+			{
+				cache,
+				interval: 0,
+				logger: false,
+				shard_id,
+				space_id,
+				stack,
+				token: 'token',
+				user_id
+			},
+			'name'
+		);
+
+		expect(deepEqual(stack, [ data ]));
+		expect(deepEqual(cache.block.get('data_id'), data)).toBe(true);
+		expect(deepEqual((block_map.page.get('data_id') as Page).getCachedData(), data)).toBe(true);
+		expect(deepEqual((block_map.page.get('name') as Page).getCachedData(), data)).toBe(true);
 	});
 });
 

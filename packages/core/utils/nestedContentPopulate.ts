@@ -56,7 +56,7 @@ export async function appendChildToParent(parent_table: "space" | "block" | "col
   }
 }
 
-export async function stackCacheMap<T extends TBlock>(block_map: IBlockMap, data: T, props: Omit<NishanArg, "id">, name?: string){
+export function stackCacheMap<T extends TBlock>(block_map: IBlockMap, data: T, props: Omit<NishanArg, "id">, name?: string){
   const {id, type} = data;
   props.stack.push(Operation.block.update(id, [], JSON.parse(JSON.stringify(data))))
   props.cache.block.set(id, JSON.parse(JSON.stringify(data)))

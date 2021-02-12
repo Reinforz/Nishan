@@ -62,7 +62,7 @@ describe('fetchAndCacheData', () => {
 		expect(deepEqual(data, { data: 'data' })).toBe(true);
 	});
 
-	it.only('doesnt exist in cache', async () => {
+	it('doesnt exist in cache', async () => {
 		const console_log_spy = jest.spyOn(console, 'log');
 		mock.onPost(`/syncRecordValues`).replyOnce(200, {
 			recordMap: {
@@ -139,6 +139,110 @@ describe('appendChildToParent', () => {
 			).toBe(true);
 
 			expect(deepEqual(cache.block.get('parent_id'), { content: [ 'child_id' ] })).toBe(true);
+		});
+	});
+
+	describe(`type=space`, () => {
+		it(`path exists`, async () => {
+			const stack: IOperation[] = [],
+				cache: ICache = {
+					space: new Map([ [ 'parent_id', { pages: [] } ] ])
+				} as any;
+			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
+
+			expect(
+				deepEqual(stack, [
+					{
+						table: 'space',
+						command: 'listAfter',
+						id: 'parent_id',
+						args: {
+							after: '',
+							id: 'child_id'
+						},
+						path: [ 'pages' ]
+					}
+				])
+			).toBe(true);
+
+			expect(deepEqual(cache.space.get('parent_id'), { pages: [ 'child_id' ] })).toBe(true);
+		});
+
+		it(`path doesnt exists`, async () => {
+			const stack: IOperation[] = [],
+				cache: ICache = {
+					space: new Map([ [ 'parent_id', {} ] ])
+				} as any;
+			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
+
+			expect(
+				deepEqual(stack, [
+					{
+						table: 'space',
+						command: 'listAfter',
+						id: 'parent_id',
+						args: {
+							after: '',
+							id: 'child_id'
+						},
+						path: [ 'pages' ]
+					}
+				])
+			).toBe(true);
+
+			expect(deepEqual(cache.space.get('parent_id'), { pages: [ 'child_id' ] })).toBe(true);
+		});
+	});
+
+	describe(`type=collection`, () => {
+		it(`path exists`, async () => {
+			const stack: IOperation[] = [],
+				cache: ICache = {
+					collection: new Map([ [ 'parent_id', { template_pages: [] } ] ])
+				} as any;
+			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
+
+			expect(
+				deepEqual(stack, [
+					{
+						table: 'collection',
+						command: 'listAfter',
+						id: 'parent_id',
+						args: {
+							after: '',
+							id: 'child_id'
+						},
+						path: [ 'template_pages' ]
+					}
+				])
+			).toBe(true);
+
+			expect(deepEqual(cache.collection.get('parent_id'), { template_pages: [ 'child_id' ] })).toBe(true);
+		});
+
+		it(`path doesnt exists`, async () => {
+			const stack: IOperation[] = [],
+				cache: ICache = {
+					collection: new Map([ [ 'parent_id', {} ] ])
+				} as any;
+			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
+
+			expect(
+				deepEqual(stack, [
+					{
+						table: 'collection',
+						command: 'listAfter',
+						id: 'parent_id',
+						args: {
+							after: '',
+							id: 'child_id'
+						},
+						path: [ 'template_pages' ]
+					}
+				])
+			).toBe(true);
+
+			expect(deepEqual(cache.collection.get('parent_id'), { template_pages: [ 'child_id' ] })).toBe(true);
 		});
 	});
 });

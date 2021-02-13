@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/endpoints';
+import { ICache } from '@nishans/cache';
 import { IOperation, IPage, ISpace, TBlock, TPage } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';

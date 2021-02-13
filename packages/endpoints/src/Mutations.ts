@@ -1,87 +1,55 @@
 import {
-	IOperation,
 	SetPageNotificationsAsReadParams,
 	SetSpaceNotificationsAsReadParams,
 	RemoveUsersFromSpaceParams,
+	RemoveUsersFromSpaceResult,
 	InviteGuestsToSpaceParams,
 	CreateSpaceParams,
-	EnqueueTaskParams,
-	SetBookmarkMetadataParams,
+	CreateSpaceResult,
 	SaveTransactionParams,
+	EnqueueTaskParams,
+	EnqueueTaskResult,
+	SetBookmarkMetadataParams,
+	InitializePageTemplateResult,
+	InitializePageTemplateParams,
 	InitializeGoogleDriveBlockParams,
-	InitializePageTemplateParams
+	InitializeGoogleDriveBlockResult
 } from '@nishans/types';
-import { CtorArgs } from './types';
-import {
-	createSpace,
-	createTransaction,
-	enqueueTask,
-	initializeGoogleDriveBlock,
-	initializePageTemplate,
-	inviteGuestsToSpace,
-	removeUsersFromSpace,
-	saveTransactions,
-	setBookmarkMetadata,
-	setPageNotificationsAsRead,
-	setSpaceNotificationsAsRead
-} from '../utils';
-import Queries from './Queries';
 
-export default class Mutations extends Queries {
-	space_id: string;
-	shard_id: number;
-	createTransaction: (operations: IOperation[]) => SaveTransactionParams;
+import { Configs } from '.';
+import { sendRequest } from '../utils';
 
-	constructor ({ cache, token, interval, user_id, shard_id, space_id }: CtorArgs) {
-		super({ token, interval, user_id, cache });
-		this.shard_id = shard_id;
-		this.space_id = space_id;
-		this.createTransaction = createTransaction.bind(this, shard_id, space_id);
+const Mutations = {
+	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs?: Partial<Configs>) {
+		return await sendRequest('setPageNotificationsAsRead', params, configs);
+	},
+	async setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs?: Partial<Configs>) {
+		return await sendRequest('setSpaceNotificationsAsRead', params, configs);
+	},
+	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs?: Partial<Configs>) {
+		return await sendRequest<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
+	},
+	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs?: Partial<Configs>) {
+		return await sendRequest('inviteGuestsToSpace', params, configs);
+	},
+	async createSpace (params: CreateSpaceParams, configs?: Partial<Configs>) {
+		return await sendRequest<CreateSpaceResult>('createSpace', params, configs);
+	},
+	async saveTransactions (params: SaveTransactionParams, configs?: Partial<Configs>) {
+		return await sendRequest('saveTransactions', params, configs);
+	},
+	async enqueueTask (params: EnqueueTaskParams, configs?: Partial<Configs>) {
+		return await sendRequest<EnqueueTaskResult>('enqueueTask', params, configs);
+	},
+	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs?: Partial<Configs>) {
+		return await sendRequest('setBookmarkMetadata', params, configs);
+	},
+	async initializePageTemplate (params: InitializePageTemplateParams, configs?: Partial<Configs>) {
+		return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
+	},
+	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs?: Partial<Configs>) {
+		return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 	}
+};
 
-	async setPageNotificationsAsRead (arg: SetPageNotificationsAsReadParams) {
-		return await setPageNotificationsAsRead(arg, this.getConfigs());
-	}
-
-	async setSpaceNotificationsAsRead (arg: SetSpaceNotificationsAsReadParams) {
-		return await setSpaceNotificationsAsRead(arg, this.getConfigs());
-	}
-
-	async removeUsersFromSpace (arg: RemoveUsersFromSpaceParams) {
-		const data = await removeUsersFromSpace(arg, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
-
-	async inviteGuestsToSpace (arg: InviteGuestsToSpaceParams) {
-		return await inviteGuestsToSpace(arg, this.getConfigs());
-	}
-
-	async createSpace (arg: CreateSpaceParams) {
-		return await createSpace(arg, this.getConfigs());
-	}
-
-	async saveTransactions (Operations: IOperation[]) {
-		return await saveTransactions(this.createTransaction(Operations), this.getConfigs());
-	}
-
-	async enqueueTask (params: EnqueueTaskParams) {
-		return await enqueueTask(params, this.getConfigs());
-	}
-
-	async setBookmarkMetadata (arg: SetBookmarkMetadataParams) {
-		return await setBookmarkMetadata(arg, this.getConfigs());
-	}
-
-	async initializeGoogleDriveBlock (arg: InitializeGoogleDriveBlockParams) {
-		const data = await initializeGoogleDriveBlock(arg, this.getConfigs());
-		this.saveToCache(data.recordMap.block);
-		return data;
-	}
-
-	async initializePageTemplate (arg: InitializePageTemplateParams) {
-		const data = await initializePageTemplate(arg, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
-}
+export default Mutations;

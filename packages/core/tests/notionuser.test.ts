@@ -1,7 +1,13 @@
 import { ICache } from '@nishans/endpoints';
+import * as Endpoints from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import deepEqual from 'deep-equal';
 import { NotionUser } from '../src';
+
+axios.defaults.baseURL = 'https://www.notion.so/api/v3';
+const mock = new MockAdapter(axios);
 
 describe('NotionUser', () => {
 	describe('get space', () => {
@@ -205,5 +211,53 @@ describe('NotionUser', () => {
 		const user_root = notion_user.getUserRoot();
 		expect(deepEqual(user_root.getCachedData(), { id: 'user_1', name: 'User Root 1' })).toBe(true);
 		expect(user_root.id).toBe('user_1');
+	});
+
+	describe('delete space', () => {
+		it.only(`multiple=false,arg=string`, async () => {
+			const cache: ICache = {
+					block: new Map(),
+					collection: new Map(),
+					collection_view: new Map(),
+					notion_user: new Map(),
+					space: new Map([ [ 'space_1', { id: 'space_1', name: 'Space One' } ] ] as any),
+					space_view: new Map(),
+					user_root: new Map(),
+					user_settings: new Map()
+				},
+				stack: IOperation[] = [];
+
+			const notion_user = new NotionUser({
+				cache,
+				id: 'user_1',
+				stack,
+				interval: 0,
+				shard_id: 123,
+				space_id: 'space_1',
+				token: 'token',
+				user_id: 'user_1'
+			});
+
+			/* const enqueuetask_spy = jest.spyOn(endpoints, 'enqueueTask').mockImplementation(async () => {
+				return {} as any;
+			});
+
+			await notion_user.deleteSpace('space_1');
+			expect(enqueuetask_spy).toHaveBeenCalledTimes(1);
+			expect(enqueuetask_spy).toHaveBeenCalledWith(
+				{
+					task: {
+						eventName: 'deleteSpace',
+						request: {
+							spaceId: 'space_1'
+						}
+					}
+				},
+				{
+					interval: 0,
+					token: 'token'
+				}
+			); */
+		});
 	});
 });

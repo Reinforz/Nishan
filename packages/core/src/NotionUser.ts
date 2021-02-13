@@ -199,8 +199,9 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id), (id, _,__,spaces)=>spaces.push(new Space({ ...this.getProps(), id })))
   }
 
+  // FIX:1:H How will deleting a space manipulate the internal cache 
   async deleteSpace(arg: FilterType<ISpace>) {
-    return (await this.deleteSpaces(typeof arg === "string" ? [arg] : arg, false));
+    (await this.deleteSpaces(typeof arg === "string" ? [arg] : arg, false));
   }
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {

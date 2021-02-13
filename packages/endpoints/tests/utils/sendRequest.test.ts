@@ -1,6 +1,6 @@
 import deepEqual from 'deep-equal';
-import { sendRequest } from '../src';
-import { sendApiRequest, constructNotionHeaders } from '../utils/sendRequest';
+import { sendRequest } from '../../src';
+import { sendApiRequest, constructNotionHeaders } from '../../utils/sendRequest';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { SyncRecordValuesResult } from '@nishans/types';

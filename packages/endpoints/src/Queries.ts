@@ -1,162 +1,140 @@
-import Cache from './Cache';
-
 import {
-	RecordPageVisitParams,
-	GetTasksParams,
-	GetUserNotificationsParams,
 	GetPageVisitsParams,
-	GetBackLinksForBlockParams,
+	GetPageVisitsResult,
 	GetUserSharedPagesParams,
+	GetUserSharedPagesResult,
+	GetUserTasksResult,
 	GetPublicPageDataParams,
+	GetPublicPageDataResult,
 	GetPublicSpaceDataParams,
+	GetPublicSpaceDataResult,
 	GetSubscriptionDataParams,
+	GetSubscriptionDataResult,
 	LoadBlockSubtreeParams,
+	LoadBlockSubtreeResult,
 	GetGenericEmbedBlockDataParams,
+	GetGenericEmbedBlockDataResult,
 	GetUploadFileUrlParams,
+	GetUploadFileUrlResult,
+	GetGoogleDriveAccountsResult,
+	GetBackLinksForBlockResult,
+	FindUserResult,
 	SyncRecordValuesParams,
+	SyncRecordValuesResult,
 	QueryCollectionParams,
+	QueryCollectionResult,
+	LoadUserContentResult,
 	LoadPageChunkParams,
-	FindUserParams
+	LoadPageChunkResult,
+	GetSpacesResult,
+	GetBackLinksForBlockParams,
+	FindUserParams,
+	GetJoinableSpacesResult,
+	IsUserDomainJoinableResult,
+	IsEmailEducationResult,
+	GetUserNotificationsResult,
+	GetUserNotificationsParams,
+	GetTasksParams,
+	GetTasksResult,
+	RecordPageVisitResult,
+	RecordPageVisitParams
 } from '@nishans/types';
-import { CtorArgs } from './types';
-import {
-	findUser,
-	getBacklinksForBlock,
-	getGenericEmbedBlockData,
-	getGoogleDriveAccounts,
-	getJoinableSpaces,
-	getPageVisits,
-	getPublicPageData,
-	getPublicSpaceData,
-	getSpaces,
-	getSubscriptionData,
-	getTasks,
-	getUploadFileUrl,
-	getUserNotifications,
-	getUserSharedPages,
-	getUserTasks,
-	isEmailEducation,
-	isUserDomainJoinable,
-	loadBlockSubtree,
-	loadPageChunk,
-	loadUserContent,
-	queryCollection,
-	recordPageVisit,
-	syncRecordValues
-} from '../utils';
 
-/**
- * A class containing all the api endpoints of Notion
- * @noInheritDoc
- */
-export default class Queries extends Cache {
-	constructor (params: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
-		super(params);
-	}
+import { Configs } from '.';
+import { sendRequest } from '../utils';
 
-	async getPageVisits (arg: GetPageVisitsParams) {
-		return await getPageVisits(arg, this.getConfigs());
-	}
+const Queries = {
+	async getPageVisits (params: GetPageVisitsParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetPageVisitsResult>('getPageVisits', params, configs);
+	},
 
-	async getUserSharedPages (arg: GetUserSharedPagesParams) {
-		return await getUserSharedPages(arg, this.getConfigs());
-	}
+	async getUserSharedPages (params: GetUserSharedPagesParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetUserSharedPagesResult>('getUserSharedPages', params, configs);
+	},
 
-	async getUserTasks () {
-		return await getUserTasks(this.getConfigs());
-	}
+	async getUserTasks (configs?: Partial<Configs>) {
+		return await sendRequest<GetUserTasksResult>('getUserTasks', {}, configs);
+	},
 
-	async getPublicPageData (arg: GetPublicPageDataParams) {
-		return await getPublicPageData(arg, this.getConfigs());
-	}
+	async getPublicPageData (params: GetPublicPageDataParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetPublicPageDataResult>('getPublicPageData', params, configs);
+	},
 
-	async getPublicSpaceData (arg: GetPublicSpaceDataParams) {
-		return await getPublicSpaceData(arg, this.getConfigs());
-	}
+	async getPublicSpaceData (params: GetPublicSpaceDataParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetPublicSpaceDataResult>('getPublicSpaceData', params, configs);
+	},
 
-	async getSubscriptionData (arg: GetSubscriptionDataParams) {
-		return await getSubscriptionData(arg, this.getConfigs());
-	}
+	async getSubscriptionData (params: GetSubscriptionDataParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetSubscriptionDataResult>('getSubscriptionData', params, configs);
+	},
 
-	async loadBlockSubtree (arg: LoadBlockSubtreeParams) {
-		const data = await loadBlockSubtree(arg, this.getConfigs());
-		this.saveToCache(data.subtreeRecordMap);
-		return data;
-	}
+	async loadBlockSubtree (params: LoadBlockSubtreeParams, configs?: Partial<Configs>) {
+		return await sendRequest<LoadBlockSubtreeResult>('loadBlockSubtree', params, configs);
+	},
 
-	async getSpaces () {
-		const data = await getSpaces(this.getConfigs());
-		Object.values(data).forEach((data) => this.saveToCache(data));
-		return data;
-	}
+	async getSpaces (configs?: Partial<Configs>) {
+		return await sendRequest<GetSpacesResult>('getSpaces', {}, configs);
+	},
 
-	async getGenericEmbedBlockData (arg: GetGenericEmbedBlockDataParams) {
-		return await getGenericEmbedBlockData(arg, this.getConfigs());
-	}
+	async getGenericEmbedBlockData (params: GetGenericEmbedBlockDataParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetGenericEmbedBlockDataResult>('getGenericEmbedBlockData', params, configs);
+	},
 
-	async getUploadFileUrl (arg: GetUploadFileUrlParams) {
-		return await getUploadFileUrl(arg, this.getConfigs());
-	}
+	async getUploadFileUrl (params: GetUploadFileUrlParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetUploadFileUrlResult>('getUploadFileUrl', params, configs);
+	},
 
-	async getGoogleDriveAccounts () {
-		return await getGoogleDriveAccounts(this.getConfigs());
-	}
+	async getGoogleDriveAccounts (configs?: Partial<Configs>) {
+		return await sendRequest<GetGoogleDriveAccountsResult>('getGoogleDriveAccounts', {}, configs);
+	},
 
-	async getBacklinksForBlock (params: GetBackLinksForBlockParams) {
-		const data = await getBacklinksForBlock(params, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
+	async getBacklinksForBlock (params: GetBackLinksForBlockParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetBackLinksForBlockResult>('getBacklinksForBlock', params, configs);
+	},
 
-	async findUser (params: FindUserParams) {
-		return await findUser(params, this.getConfigs());
-	}
+	async findUser (params: FindUserParams, configs?: Partial<Configs>) {
+		return await sendRequest<FindUserResult>('findUser', params, configs);
+	},
 
-	async syncRecordValues (params: SyncRecordValuesParams) {
-		const data = await syncRecordValues(params, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
+	async syncRecordValues (params: SyncRecordValuesParams, configs?: Partial<Configs>) {
+		return await sendRequest<SyncRecordValuesResult>('syncRecordValues', params, configs);
+	},
 
-	async queryCollection (params: QueryCollectionParams) {
-		const data = await queryCollection(params, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
+	async queryCollection (params: QueryCollectionParams, configs?: Partial<Configs>) {
+		return await sendRequest<QueryCollectionResult>('queryCollection', params, configs);
+	},
 
-	async loadUserContent () {
-		const data = await loadUserContent(this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
+	async loadUserContent (configs?: Partial<Configs>) {
+		return await sendRequest<LoadUserContentResult>('loadUserContent', {}, configs);
+	},
 
-	async loadPageChunk (params: LoadPageChunkParams) {
-		const data = await loadPageChunk(params, this.getConfigs());
-		this.saveToCache(data.recordMap);
-		return data;
-	}
+	async loadPageChunk (params: LoadPageChunkParams, configs?: Partial<Configs>) {
+		return await sendRequest<LoadPageChunkResult>('loadPageChunk', params, configs);
+	},
 
-	async getJoinableSpaces () {
-		return await getJoinableSpaces(this.getConfigs());
-	}
+	async recordPageVisit (params: RecordPageVisitParams, configs?: Partial<Configs>) {
+		return await sendRequest<RecordPageVisitResult>('recordPageVisit', params, configs);
+	},
 
-	async isUserDomainJoinable () {
-		return await isUserDomainJoinable(this.getConfigs());
-	}
+	async getJoinableSpaces (configs?: Partial<Configs>) {
+		return await sendRequest<GetJoinableSpacesResult>('getJoinableSpaces', {}, configs);
+	},
 
-	async isEmailEducation () {
-		return await isEmailEducation(this.getConfigs());
-	}
+	async isUserDomainJoinable (configs?: Partial<Configs>) {
+		return await sendRequest<IsUserDomainJoinableResult>('isUserDomainJoinable', {}, configs);
+	},
 
-	async getUserNotifications (params: GetUserNotificationsParams) {
-		return await getUserNotifications(params, this.getConfigs());
-	}
+	async isEmailEducation (configs?: Partial<Configs>) {
+		return await sendRequest<IsEmailEducationResult>('isEmailEducation', {}, configs);
+	},
 
-	async getTasks (params: GetTasksParams) {
-		return await getTasks(params, this.getConfigs());
-	}
+	async getUserNotifications (params: GetUserNotificationsParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetUserNotificationsResult>('getUserNotifications', params, configs);
+	},
 
-	async recordPageVisit (params: RecordPageVisitParams) {
-		return await recordPageVisit(params, this.getConfigs());
+	async getTasks (params: GetTasksParams, configs?: Partial<Configs>) {
+		return await sendRequest<GetTasksResult>('getTasks', params, configs);
 	}
-}
+};
+
+export default Queries;

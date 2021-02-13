@@ -1,4 +1,4 @@
-import { createTransaction } from '../src';
+import { createTransaction } from '../../src';
 
 describe.only('createTransaction', () => {
 	it(`Should create correct request`, () => {

@@ -3,9 +3,6 @@ import {
 	INotionUser,
 	LoadUserContentResult,
 	NotionUserData,
-	SpaceData,
-	TView,
-	ViewData
 } from '@nishans/types';
 
 export const ExternalNotionUser: INotionUser = {

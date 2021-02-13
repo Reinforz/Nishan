@@ -1,9 +1,9 @@
+import { NotionRequestConfigs, NotionHeaders, UpdateCacheManuallyParam, Queries, constructNotionHeaders } from '@nishans/endpoints';
 import { ICollection, ISpace, ISpaceView, IUserRoot, RecordMap, SyncRecordValues, TBlock, TDataType } from '@nishans/types';
-import { validateCache, constructNotionHeaders } from '../utils';
-import { Queries } from '../src';
-import { Configs, CtorArgs, ICache, NotionHeaders, UpdateCacheManuallyParam } from './types';
+import { validateCache } from '../utils';
+import { CtorArgs, ICache } from './types';
 
-export default class Cache {
+export class NotionCache {
 	cache: ICache;
 	token: string;
 	interval: number;
@@ -33,7 +33,7 @@ export default class Cache {
   /**
    * Get the internal configs passed to the constructor
    */
-	getConfigs = (): Configs => {
+	getConfigs = (): NotionRequestConfigs => {
 		return {
 			token: this.token,
 			user_id: this.user_id,

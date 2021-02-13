@@ -16,38 +16,41 @@ import {
 	InitializeGoogleDriveBlockResult
 } from '@nishans/types';
 
-import { Configs } from '.';
+import { NotionRequestConfigs } from '.';
 import { sendRequest } from '../utils';
 
 const Mutations = {
-	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs?: Partial<Configs>) {
+	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest('setPageNotificationsAsRead', params, configs);
 	},
-	async setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs?: Partial<Configs>) {
+	async setSpaceNotificationsAsRead (
+		params: SetSpaceNotificationsAsReadParams,
+		configs?: Partial<NotionRequestConfigs>
+	) {
 		return await sendRequest('setSpaceNotificationsAsRead', params, configs);
 	},
-	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs?: Partial<Configs>) {
+	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
 	},
-	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs?: Partial<Configs>) {
+	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest('inviteGuestsToSpace', params, configs);
 	},
-	async createSpace (params: CreateSpaceParams, configs?: Partial<Configs>) {
+	async createSpace (params: CreateSpaceParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<CreateSpaceResult>('createSpace', params, configs);
 	},
-	async saveTransactions (params: SaveTransactionParams, configs?: Partial<Configs>) {
+	async saveTransactions (params: SaveTransactionParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest('saveTransactions', params, configs);
 	},
-	async enqueueTask (params: EnqueueTaskParams, configs?: Partial<Configs>) {
+	async enqueueTask (params: EnqueueTaskParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<EnqueueTaskResult>('enqueueTask', params, configs);
 	},
-	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs?: Partial<Configs>) {
+	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest('setBookmarkMetadata', params, configs);
 	},
-	async initializePageTemplate (params: InitializePageTemplateParams, configs?: Partial<Configs>) {
+	async initializePageTemplate (params: InitializePageTemplateParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
 	},
-	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs?: Partial<Configs>) {
+	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 	}
 };

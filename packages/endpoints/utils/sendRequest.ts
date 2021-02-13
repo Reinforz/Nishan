@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Configs, NotionHeaders } from '../src';
+import { NotionRequestConfigs, NotionHeaders } from '../src';
 
 const BASE_NOTION_URL = 'https://www.notion.so/api/v3';
 
@@ -9,7 +9,7 @@ const BASE_NOTION_URL = 'https://www.notion.so/api/v3';
  * @param configs Notion specific data required to construct the header
  * @returns Notion specific header
  */
-export function constructNotionHeaders (configs?: Partial<Configs>): NotionHeaders {
+export function constructNotionHeaders (configs?: Partial<NotionRequestConfigs>): NotionHeaders {
 	const headers: NotionHeaders = {
 		headers: {}
 	} as any;
@@ -31,7 +31,7 @@ export function constructNotionHeaders (configs?: Partial<Configs>): NotionHeade
  * @param configs The config required to construct notion header
  * @returns
  */
-export function sendApiRequest<T> (endpoint: string, arg: any, configs?: Partial<Configs>) {
+export function sendApiRequest<T> (endpoint: string, arg: any, configs?: Partial<NotionRequestConfigs>) {
 	const headers = constructNotionHeaders(configs);
 	return axios.post<T>(`${BASE_NOTION_URL}/${endpoint}`, arg, headers);
 }
@@ -39,7 +39,7 @@ export function sendApiRequest<T> (endpoint: string, arg: any, configs?: Partial
 export const sendRequest = <T>(
 	endpoint: string,
 	arg: any,
-	configs?: Partial<Configs>
+	configs?: Partial<NotionRequestConfigs>
 ): Promise<T> => {
   configs = configs ?? { interval: 500 };
 

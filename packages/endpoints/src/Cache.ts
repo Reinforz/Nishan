@@ -1,6 +1,6 @@
 import { ICollection, ISpace, ISpaceView, IUserRoot, RecordMap, SyncRecordValues, TBlock, TDataType } from '@nishans/types';
 import { validateCache, constructNotionHeaders } from '../utils';
-import { getSpaces, queryCollection, syncRecordValues } from '../src';
+import { Queries } from '../src';
 import { Configs, CtorArgs, ICache, NotionHeaders, UpdateCacheManuallyParam } from './types';
 
 export default class Cache {
@@ -80,7 +80,7 @@ export default class Cache {
    * Initialize the cache by sending a post request to the `getSpaces` endpoint 
    */
   async initializeCache(){
-    const data = await getSpaces({token: this.token, interval: 0});
+    const data = await Queries.getSpaces({token: this.token, interval: 0});
     // Contains a set of external notion user that has access to the space 
     const external_notion_users: Set<string> = new Set();
 
@@ -99,7 +99,7 @@ export default class Cache {
     // If the number of external_notion_users in not zero continue
     if(external_notion_users.size !== 0){
       // Send a api request to syncRecordValues endpoint to fetch the external notion users
-      const { recordMap } = await syncRecordValues({
+      const { recordMap } = await Queries.syncRecordValues({
         requests: Array.from(external_notion_users.values()).map(external_notion_user => ({ table: "notion_user", id: external_notion_user, version: -1 }))
       }, {token: this.token, interval: 0});
       // Save the fetched external notion user to cache
@@ -129,7 +129,7 @@ export default class Cache {
 
     // fetch and save notion data to cache
     if (sync_record_values.length){
-      const {recordMap} = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
+      const {recordMap} = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(recordMap);
     }
 	}
@@ -148,7 +148,7 @@ export default class Cache {
 				sync_record_values.push({ id: arg, table: 'block', version: 0 });
 		});
 		if (sync_record_values.length) {
-      const data = await syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
+      const data = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(data.recordMap);
     }
   }
@@ -186,7 +186,7 @@ export default class Cache {
       if((data as ICollection).template_pages)
         container.push(...data.template_pages as string[])
       // Fetching the row_pages of collection
-      const {recordMap} = await queryCollection({
+      const {recordMap} = await Queries.queryCollection({
         collectionId: id,
         collectionViewId: "",
         query: {},

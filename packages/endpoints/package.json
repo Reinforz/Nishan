@@ -1,6 +1,6 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "A package to expose all notion endpoints for queries and mutations and for caching response",
   "keywords": [
     "notion",
@@ -32,7 +32,7 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.15"
+    "@nishans/types": "0.0.16"
   },
   "scripts": {
     "prebuild": "npm run test",

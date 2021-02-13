@@ -72,7 +72,7 @@ export class NotionCache {
    */
 	returnNonCachedData (update_cache_param: UpdateCacheManuallyParam): UpdateCacheManuallyParam {
 		return update_cache_param.filter(
-			(info) => !Boolean(Array.isArray(info) ? this.cache[info[1]].get(info[0]) : this.cache.block.get(info))
+			(info) => !Boolean(this.cache[info[1]].get(info[0]))
 		);
   }
   
@@ -107,50 +107,34 @@ export class NotionCache {
     }
   }
 
-  /**
-   * Fetches data from notions server and store within the cache
-   * @param args The array of id and data_type tuple to fetch and store
-   */
-	async updateCacheManually (args: UpdateCacheManuallyParam | string) {
-		const sync_record_values: SyncRecordValues[] = [];
-		if (Array.isArray(args)){
-      // Iterate through the passed array argument and construct sync_record argument
-      args.forEach((arg: string | [string, TDataType]) => {
-				if (Array.isArray(arg)) sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
-				else if (typeof arg === 'string')
-          sync_record_values.push({ id: arg, table: 'block', version: 0 })
-        else
-          throw new Error(`Unsupported argument passed`)
-			});
-    }
-    else if (typeof args === 'string') sync_record_values.push({ id: args, table: 'block', version: 0 });
-    else
-      throw new Error(`Unsupported argument passed`);
+  #syncRecordValues = async (args: UpdateCacheManuallyParam) => {
+    const sync_record_values: SyncRecordValues[] = [];
+    // Iterate through the passed array argument and construct sync_record argument
+    args.forEach((arg) => {
+      sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
+    });
 
     // fetch and save notion data to cache
     if (sync_record_values.length){
       const {recordMap} = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
       this.saveToCache(recordMap);
     }
+  }
+
+  /**
+   * Fetches data from notions server and store within the cache
+   * @param args The array of id and data_type tuple to fetch and store
+   */
+	async updateCacheManually (args: UpdateCacheManuallyParam) {
+		await this.#syncRecordValues(args);
 	}
 
   /**
    * Fetches notion data only if it doesnt exist in the cache
    * @param arg Array of id and data_type tuple to fetch from notion and store
    */
-	async updateCacheIfNotPresent (arg: UpdateCacheManuallyParam) {
-		const sync_record_values: SyncRecordValues[] = [];
-		arg.forEach((arg: string | [string, TDataType]) => {
-      // Checks to see if the data requests exists in the internal cache or not
-			if (Array.isArray(arg) && !this.cache[arg[1]].get(arg[0]))
-				sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
-			else if (typeof arg === 'string' && !this.cache.block.get(arg))
-				sync_record_values.push({ id: arg, table: 'block', version: 0 });
-		});
-		if (sync_record_values.length) {
-      const {recordMap} = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
-      this.saveToCache(recordMap);
-    }
+	async updateCacheIfNotPresent (args: UpdateCacheManuallyParam) {
+		await this.#syncRecordValues(args.filter(arg=>!this.cache[arg[1]].get(arg[0])));
   }
   
   /**
@@ -164,7 +148,7 @@ export class NotionCache {
       const data = this.cache[type].get(id) as TBlock;
       // If the type is block and page, fetch its content
       if (data.type === "page")
-        container.push(...data.content);
+        data.content.forEach(id=>container.push([id, "block"]));
       // If the type is block and cvp or cv, fetch its views and collection
       if (data.type === "collection_view" || data.type === "collection_view_page") {
         data.view_ids.map((view_id) => container.push([view_id, "collection_view"]))
@@ -173,7 +157,7 @@ export class NotionCache {
     } else if (type === "space") {
       // If the type is space, fetch its pages and notion_user
       const data = this.cache[type].get(id) as ISpace;
-      container.push(...data.pages);
+      data.pages.forEach(id=>container.push([id, "block"]));
       data.permissions.forEach((permission) => container.push([permission.user_id, "notion_user"]))
     } else if (type === "user_root"){
       // If the type is user_root, fetch its space_view
@@ -183,8 +167,8 @@ export class NotionCache {
     else if (type === "collection") {
       // If the type is collection, fetch its template_pages and all of its row_pages
       const data = this.cache[type].get(id) as ICollection;
-      if((data as ICollection).template_pages)
-        container.push(...data.template_pages as string[])
+      if(data.template_pages)
+        data.template_pages.forEach(id=>container.push([id, "block"]));
       // Fetching the row_pages of collection
       const {recordMap} = await Queries.queryCollection({
         collectionId: id,
@@ -204,7 +188,7 @@ export class NotionCache {
       // If the type is space_view, fetch its bookmarked_pages
       const data = this.cache[type].get(id) as ISpaceView;
       if(data.bookmarked_pages)
-        container.push(...data.bookmarked_pages)
+        data.bookmarked_pages.forEach(id=>container.push([id, "block"]));
     }
     else
       throw new Error(`${type} data is not supported`);

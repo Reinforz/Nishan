@@ -79,12 +79,11 @@ describe('NotionCache class', () => {
 		// Check to see if the data that doesnot exist in the cache returns or not
 		const non_cached_data = notion_cache.returnNonCachedData([
 			[ 'block_1', 'block' ],
-			[ 'notion_user_1', 'notion_user' ],
-			'block_2'
+			[ 'notion_user_1', 'notion_user' ]
 		]);
 
 		// the 2nd argument to deepEqual represents the data that doesnot exist in the internal cache
-		expect(deepEqual(non_cached_data, [ [ 'notion_user_1', 'notion_user' ], 'block_2' ])).toBe(true);
+		expect(deepEqual(non_cached_data, [ [ 'notion_user_1', 'notion_user' ] ])).toBe(true);
 	});
 
 	describe(`initializeCache method`, () => {
@@ -204,33 +203,9 @@ describe('NotionCache class', () => {
 				}
 			});
 
-			// Array of string, or [id, data_type] tuple should work
-			await notion_cache.updateCacheManually([ 'block_1', [ 'collection_1', 'collection' ] ]);
+			await notion_cache.updateCacheManually([ [ 'collection_1', 'collection' ] ]);
 			expect(deepEqual(notion_cache.cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
 			expect(deepEqual(notion_cache.cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
-
-			mock.onPost(`/syncRecordValues`).replyOnce(200, {
-				recordMap: {
-					block: {
-						block_2: {
-							value: { id: 'block_2' }
-						}
-					}
-				}
-			});
-
-			// Single string argument should work as well
-			await notion_cache.updateCacheManually('block_2');
-			expect(deepEqual(notion_cache.cache.block.get('block_2'), { id: 'block_2' })).toBe(true);
-		});
-
-		it(`Should throw an error if passed wrong arguments`, async () => {
-			const notion_cache = new NotionCache({
-				token: 'token'
-			});
-			expect(() => notion_cache.updateCacheManually([ true ] as any)).rejects.toThrow(`Unsupported argument passed`);
-			expect(() => notion_cache.updateCacheManually(true as any)).rejects.toThrow(`Unsupported argument passed`);
-			expect(await notion_cache.updateCacheManually([])).toBeFalsy();
 		});
 	});
 
@@ -263,7 +238,7 @@ describe('NotionCache class', () => {
 			}
 		});
 
-		await notion_cache.updateCacheIfNotPresent([ 'block_1', [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ]);
+		await notion_cache.updateCacheIfNotPresent([ [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ]);
 
 		expect(deepEqual(notion_cache.cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
 		expect(deepEqual(notion_cache.cache.block.get('block_2'), { id: 'block_2' })).toBe(true);
@@ -273,7 +248,7 @@ describe('NotionCache class', () => {
 	});
 
 	describe('initializeCacheForSpecificData', () => {
-		it(`Should work for block & page type`, async () => {
+		it(`type=block.page`, async () => {
 			const notion_cache = new NotionCache({
 				token: 'token'
 			});

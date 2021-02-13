@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { createPageMap, error, Operation, transformToMultiple } from '../utils';
+import { createPageMap, error, idToUuid, Operation, transformToMultiple, uuidToId, warn } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
 import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView, ICollection } from '@nishans/types';
 import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
-import { Mutations, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { Mutations} from '@nishans/endpoints';
 
 /**
  * A class to represent NotionUser of Notion
@@ -223,30 +223,26 @@ class NotionUser extends Data<INotionUser> {
     });
   }
 
-  async getTPagesById(ids: string[]) {
-    const tpage_map = createPageMap(), sync_records: UpdateCacheManuallyParam = [];
-    await this.updateCacheManually(ids);
+  async getPagesById(ids: string[]) {
+    const tpage_map = createPageMap();
+    await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
     for (let index = 0; index < ids.length; index++) {
-      const id = ids[index];
-      const page = this.cache.block.get(id) as TPage;
-      if (page?.type === "page") {
+      const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;
+      if(!page)
+        warn(`The data is neither a page nor a cvp`)
+      else if (page.type === "page") {
         const page_obj = new Page({ ...this.getProps(), id: page.id })
         tpage_map.page.set(page.id, page_obj)
-        tpage_map.page.set(page.properties.title[0][0], page_obj)
-        if (page.content)
-          page.content.forEach(content_id=>sync_records.push(content_id));
-      } else if (page?.type === "collection_view_page"){
-        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
+        tpage_map.page.set(page.properties.title[0][0], page_obj);
         await this.initializeCacheForSpecificData(page.id, "block");
+      } else if (page.type === "collection_view_page"){
+        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj);
         tpage_map.collection_view_page.set(page.id, cvp_obj);
-      }else
-        error(`The data is neither a page nor a cvp`)
+        await this.initializeCacheForSpecificData(page.id, "block");
+      }
     }
-
-    if (sync_records.length)
-      await this.updateCacheManually(sync_records);
     return tpage_map;
   }
 }

@@ -17,5 +17,6 @@ export * from './errors';
 export * from './deepMerge';
 export * from './constructLogger';
 export * from './transformToMultiple';
+export * from './uuidConversion';
 
 export { Operation };

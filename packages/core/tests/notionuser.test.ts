@@ -1,9 +1,10 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import deepEqual from 'deep-equal';
+import { v4 } from 'uuid';
 import { NotionUser } from '../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
@@ -203,5 +204,48 @@ describe('NotionUser', () => {
 				}
 			);
 		});
+	});
+
+	it.skip('getPagesById', async () => {
+		const block_1_id = v4(),
+			block_2_id = v4(),
+			block_3_id = v4();
+		const cache: ICache = {
+				block: new Map([
+					[ block_1_id, { id: block_1_id, type: 'page', properties: { title: [ [ 'Block One' ] ] } } as any ],
+					[ block_2_id, { id: block_2_id, type: 'collection_view_page', collection_id: 'collection_1' } as any ],
+					[ block_3_id, { id: block_3_id, type: 'collection_view' } as any ]
+				]),
+				collection: new Map([
+					[ 'collection_1', { id: 'collection_1', type: 'collection', name: [ [ 'Collection One' ] ] } as any ]
+				]),
+				collection_view: new Map(),
+				notion_user: new Map(),
+				space: new Map(),
+				space_view: new Map(),
+				user_root: new Map(),
+				user_settings: new Map()
+			},
+			stack: IOperation[] = [];
+
+		const notion_user = new NotionUser({
+			cache,
+			id: 'user_1',
+			stack,
+			interval: 0,
+			shard_id: 123,
+			space_id: 'space_1',
+			token: 'token',
+			user_id: 'user_1'
+		});
+
+		const initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionCache.prototype, 'initializeCacheForSpecificData')
+			.mockImplementationOnce(() => {
+				return {} as any;
+			});
+
+		const page_map = await notion_user.getPagesById([ block_1_id, block_2_id ]);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 	});
 });

@@ -49,7 +49,7 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
       permissionItems,
       spaceId: data.space_id
     }, this.getConfigs());
-    await this.updateCacheManually([this.id, [data.space_id, "space"]]);
+    await this.updateCacheManually([[this.id, 'block'], [data.space_id, "space"]]);
     return notion_users;
   }
 

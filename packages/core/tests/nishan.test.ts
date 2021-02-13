@@ -9,10 +9,16 @@ const mock = new MockAdapter(axios);
 describe('Nishan', () => {
 	describe('get', () => {
 		it('arg=cb', async () => {
+			const logger_spy = jest.fn();
+
 			const nishan = new Nishan({
 				token: 'token',
-				interval: 0
+				interval: 0,
+				logger: (method, data_type, id) => {
+					logger_spy(method, data_type, id);
+				}
 			});
+
 			mock.onPost(`/getSpaces`).replyOnce(200, {
 				'1': {
 					space: {
@@ -36,12 +42,14 @@ describe('Nishan', () => {
 				}
 			});
 
-			/* const users = await nishan.getNotionUsers((user) => {
-				console.log(user);
+			const users = await nishan.getNotionUsers((user) => {
+				return user.id === 'a';
 			});
 
-			expect(deepEqual(users[0].getCachedData(), { id: 'a', data: 'data' })); */
-			expect(true).toBe(true);
+			expect(logger_spy).toHaveBeenCalledTimes(1);
+			expect(logger_spy).toHaveBeenCalledWith('READ', 'notion_user', 'a');
+
+			expect(deepEqual(users[0].getCachedData(), { id: 'a', data: 'data' }));
 		});
 	});
 });

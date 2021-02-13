@@ -16,7 +16,7 @@ import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
 export * from "./View";
-import { error, iterateAndGetChildren } from "../utils";
+import { constructLogger, error, iterateAndGetChildren } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends Cache {
@@ -30,9 +30,7 @@ class Nishan extends Cache {
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.init_cache = false;
-    this.logger = arg.logger === false ? false : function (method, subject, id) {
-      console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
-    };
+    this.logger = constructLogger(arg.logger)
   }
 
   #initializeCache = async () => {
@@ -62,7 +60,6 @@ class Nishan extends Cache {
     multiple = multiple ?? true;
     await this.#initializeCache();
 
-    const user_ids: string[] = [];
     const common_props = {
       token: this.token,
       cache: this.cache,
@@ -75,10 +72,10 @@ class Nishan extends Cache {
     for (const [notion_user_id] of this.cache.notion_user) {
       notion_user_ids.push(notion_user_id)
     }
-    
+
     return await iterateAndGetChildren<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
       ...common_props,
-      child_ids: user_ids,
+      child_ids: notion_user_ids,
       child_type: 'notion_user',
       container: [],
       parent_id: this.user_id ?? '',

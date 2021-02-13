@@ -13,7 +13,7 @@ export interface NishanArg {
 	space_id: string;
 	cache: ICache;
 	id: string;
-	logger: Logger;
+	logger?: Logger;
 	stack: IOperation[];
 }
 

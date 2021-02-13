@@ -15,5 +15,6 @@ export * from './detectChildData';
 export * from './createViewMaps';
 export * from './errors';
 export * from './deepMerge';
+export * from './constructLogger';
 
 export { Operation };

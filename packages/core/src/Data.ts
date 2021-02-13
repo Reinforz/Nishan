@@ -1,8 +1,7 @@
 import { TDataType, TData } from '@nishans/types';
 import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '../types';
-import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren } from "../utils";
+import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren, constructLogger } from "../utils";
 import Operations from "./Operations";
-import colors from "colors";
 
 export interface IterateOptions<T, C>{
   /**
@@ -65,10 +64,7 @@ export default class Data<T extends TData> extends Operations {
     this.type = arg.type;
     this.id = arg.id;
     this.init_cache = false;
-    this.logger = arg.logger === false ? false : function (method, subject, id) {
-      console.log(`${colors.red(method)} ${colors.green(subject)} ${colors.blue(id)}`);
-    };
-    // Throw error here if user_id not provided
+    this.logger = constructLogger(arg.logger);
     this.user_id = arg.user_id ?? '';
   }
 

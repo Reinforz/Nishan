@@ -125,14 +125,14 @@ export const iterateAndDeleteChildren = async<T extends TData, TD, C = any[]>(ar
     parent_type
   });
 
-  updateLastEditedProps(data, user_id);
-  stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
+  if(data){
+    updateLastEditedProps(data, user_id);
+    stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
+  }
 
   return container;
 }
 
-// ! FIX:1:H Update deeply for example now it only replaces the top most properties
-// if page.properties = {key1: value1, key2: value2} and updated properties = {key1: value1} it'll lose {key2:value2}  
 export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateAndUpdateChildrenOptions<T, C>, cb?: ((id: string, child_data: CD, updated_data: RD, container: C) => any)) => {
   const { container, manual = false, user_id, parent_id, multiple = true, child_type, logger, cache, stack, parent_type } = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids])) as string[],
@@ -142,9 +142,6 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]
     if (!manual) {
       updateLastEditedProps(child_data, user_id);
       deepMerge(child_data ,updated_data);
-      (child_data as any).last_edited_time = Date.now();
-      (child_data as any).last_edited_by_table = "notion_user";
-      (child_data as any).last_edited_by_id = user_id;
       stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
     }
     
@@ -160,8 +157,10 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]
     parent_type
   });
 
-  updateLastEditedProps(data, user_id);
-  stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
+  if(data){
+    updateLastEditedProps(data, user_id);
+    stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
+  }
 
   return container as C;
 }

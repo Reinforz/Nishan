@@ -1,7 +1,7 @@
 import Collection from './Collection';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { createViewMap, createViews, Operation } from '../utils';
+import { createViewMap, createViews, Operation, transformToMultiple } from '../utils';
 import { ICollection, TView, TViewUpdateInput, ICollectionViewPage, ICollectionView } from '@nishans/types';
 import {
 	NishanArg,
@@ -75,7 +75,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 	}
 
 	async updateView (arg: UpdateType<TView, TViewUpdateInput>) {
-		return await this.updateViews(typeof arg === 'function' ? arg : [ arg ], false);
+		return await this.updateViews(transformToMultiple(arg), false);
 	}
 
 	async updateViews (args: UpdateTypes<TView, TViewUpdateInput>, multiple?: boolean) {
@@ -101,7 +101,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
    * @param arg Criteria to filter the page to be deleted
    */
 	async deleteView (arg?: FilterType<TView>) {
-		return await this.deleteViews(typeof arg === 'string' ? [ arg ] : arg, false);
+		return await this.deleteViews(transformToMultiple(arg), false);
 	}
 
 	/**

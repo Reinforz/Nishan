@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { createPageMap, error, Operation } from '../utils';
+import { createPageMap, error, Operation, transformToMultiple } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
@@ -161,7 +161,7 @@ class NotionUser extends Data<INotionUser> {
    * @returns The obtained Space object
    */
   async getSpace(arg?: FilterType<ISpace>) {
-    return (await this.getSpaces(typeof arg === "string" ? [arg] : arg, false))[0]
+    return (await this.getSpaces(transformToMultiple(arg), false))[0]
   }
 
   /**
@@ -175,7 +175,7 @@ class NotionUser extends Data<INotionUser> {
       container: [],
       child_type: "space",
       child_ids: this.#getSpaceIds(),
-    }, (space_id,) => this.cache.space.get(space_id), (id, {shard_id}, spaces)=>{
+    }, (space_id) => this.cache.space.get(space_id), (id, {shard_id}, spaces)=>{
       spaces.push(new Space({
         ...this.getProps(),
         space_id: id,
@@ -187,7 +187,7 @@ class NotionUser extends Data<INotionUser> {
 
   // FIX:1:H Fix the updateSpace method
   async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>) {
-    return (await this.updateSpaces(typeof arg === "function" ? arg : [arg],  false))[0]
+    return (await this.updateSpaces(transformToMultiple(arg), false))[0]
   }
 
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {

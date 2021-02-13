@@ -32,7 +32,8 @@ import {
 	getSortsMap,
 	initializeViewFilters,
 	Operation,
-	populateFilters
+	populateFilters,
+	transformToMultiple
 } from '../../utils';
 import Data from '../Data';
 
@@ -103,7 +104,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateSort (arg: UpdateType<ISchemaSortsMapValue, TSortUpdateInput>) {
-		await this.updateSorts(typeof arg === 'function' ? arg : [ arg ], false);
+		await this.updateSorts(transformToMultiple(arg), false);
 	}
 
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
@@ -139,8 +140,8 @@ class View<T extends TView> extends Data<T> {
 		this.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
 	}
 
-	async deleteSort (arg: FilterTypes<ISchemaSortsMapValue>) {
-		await this.deleteSorts(typeof arg === 'string' ? [ arg ] : arg, false);
+	async deleteSort (arg: FilterType<ISchemaSortsMapValue>) {
+		await this.deleteSorts(transformToMultiple(arg), false);
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
@@ -177,7 +178,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFilter (arg: UpdateType<ISchemaFiltersMapValue, TViewFilterUpdateInput>) {
-		await this.updateFilters(typeof arg === 'function' ? arg : [ arg ], false);
+		await this.updateFilters(transformToMultiple(arg), false);
 	}
 
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
@@ -214,7 +215,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteFilter (arg: FilterType<ISchemaFiltersMapValue>) {
-		await this.deleteFilters(typeof arg === 'string' ? [ arg ] : arg);
+		await this.deleteFilters(transformToMultiple(arg));
 	}
 
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
@@ -242,7 +243,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFormatVisibilityProperty (arg: UpdateType<ISchemaFormatMapValue, boolean>) {
-		return await this.updateFormatVisibilityProperties(typeof arg === 'function' ? arg : [ arg ], false);
+		return await this.updateFormatVisibilityProperties(transformToMultiple(arg), false);
 	}
 
 	async updateFormatVisibilityProperties (args: UpdateTypes<ISchemaFormatMapValue, boolean>, multiple?: boolean) {
@@ -273,7 +274,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFormatWidthProperty (arg: UpdateType<ISchemaFormatMapValue, number>) {
-		return await this.updateFormatWidthProperties(typeof arg === 'function' ? arg : [ arg ], false);
+		return await this.updateFormatWidthProperties(transformToMultiple(arg), false);
 	}
 
 	async updateFormatWidthProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
@@ -304,7 +305,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFormatPositionProperty (arg: UpdateType<ISchemaFormatMapValue, number>) {
-		return await this.updateFormatPositionProperties(typeof arg === 'function' ? arg : [ arg ], false);
+		return await this.updateFormatPositionProperties(transformToMultiple(arg), false);
 	}
 
 	async updateFormatPositionProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
@@ -339,7 +340,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>) {
-		await this.updateFormatProperties(typeof arg === 'function' ? arg : [ arg ], false);
+		await this.updateFormatProperties(transformToMultiple(arg), false);
 	}
 
 	async updateFormatProperties (

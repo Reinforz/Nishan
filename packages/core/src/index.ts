@@ -1,4 +1,4 @@
-import {Cache} from "@nishans/endpoints"
+import {NotionCache} from "@nishans/cache";
 import { INotionUser } from "@nishans/types";
 
 import Block from "./Block";
@@ -18,7 +18,7 @@ export * from "./View";
 import { constructLogger, error, iterateAndGetChildren } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
-class Nishan extends Cache {
+class Nishan extends NotionCache {
   token: string;
   interval: number;
   init_cache: boolean;

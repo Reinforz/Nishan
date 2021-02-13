@@ -2,7 +2,8 @@ import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollection
 import { TBlockCreateInput, NishanArg, IPageCreateInput, IBlockMap, IFactoryInput } from "../types";
 import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
 import { v4 as uuidv4 } from 'uuid';
-import { ICache, syncRecordValues } from "@nishans/endpoints";
+import { Queries } from "@nishans/endpoints";
+import { ICache } from "@nishans/cache";
 import { warn } from "../src";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
@@ -13,7 +14,7 @@ export async function fetchAndCacheData<D extends TData>(table: TDataType, id: s
   let data = cache[table].get(id);
   if(!data){
     warn(`${table}:${id} doesnot exist in the cache`);
-    const {recordMap} = await syncRecordValues({
+    const {recordMap} = await Queries.syncRecordValues({
       requests: [
         {
           id,

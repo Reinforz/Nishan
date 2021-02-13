@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/endpoints';
+import { ICache } from '@nishans/cache';
 import { IOperation, TDataType } from '@nishans/types';
 import { Predicate } from './utils';
 

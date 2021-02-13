@@ -1,4 +1,4 @@
-import { enqueueTask, findUser, inviteGuestsToSpace } from "@nishans/endpoints";
+import { Queries, Mutations } from "@nishans/endpoints";
 import { IPage, ISpace, ISpaceView, TExportType, TBlock, INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, IBlockMap, IPageCreateInput } from "../types";
@@ -89,7 +89,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     } = arg;
     const {
       taskId
-    } = await enqueueTask({
+    } = await Mutations.enqueueTask({
       task: {
         eventName: 'exportBlock',
         request: {
@@ -205,7 +205,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
     const permissionItems: IPermission[] = [];
     for (let i = 0; i < args.length; i++) {
       const [email, permission] = args[i];
-      const { value } = await findUser({email}, this.getConfigs());
+      const { value } = await Queries.findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const { value: notion_user } = value;
@@ -217,7 +217,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
         notion_users.push(notion_user)
       }
     }
-    await inviteGuestsToSpace({
+    await Mutations.inviteGuestsToSpace({
       blockId: data.id,
       permissionItems,
       spaceId: data.space_id

@@ -1,9 +1,10 @@
-import { saveTransactions, Cache, createTransaction } from '@nishans/endpoints';
+import { Mutations, createTransaction } from '@nishans/endpoints';
+import { NotionCache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NishanArg } from '../types';
 import { warn } from '../utils';
 
-export default class Operations extends Cache {
+export default class Operations extends NotionCache {
 	stack: IOperation[] = [];
 	space_id: string;
 	shard_id: number;
@@ -26,7 +27,7 @@ export default class Operations extends Cache {
 	async executeOperation () {
 		if (this.stack.length === 0) warn(`The operation stack is empty`);
 		else {
-			await saveTransactions(createTransaction(this.shard_id, this.space_id, this.stack), {
+			await Mutations.saveTransactions(createTransaction(this.shard_id, this.space_id, this.stack), {
 				token: this.token,
 				interval: 0
 			});

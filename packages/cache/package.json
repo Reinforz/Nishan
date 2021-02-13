@@ -1,13 +1,13 @@
 {
   "name": "@nishans/cache",
-  "version": "0.0.17",
+  "version": "0.0.16",
   "description": "A cache specially designed to store notion data in memory",
   "keywords": [
     "notion",
     "notion-cache",
     "notion-data-store"
   ],
-  "author": "Devon Reid <devorein00@gmail.com>",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/cache/README.md",
   "license": "MIT",
   "main": "dist/src/index.js",

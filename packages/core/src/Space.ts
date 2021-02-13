@@ -8,7 +8,7 @@ import CollectionViewPage from './CollectionViewPage';
 import Page from './Page';
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
-import { enqueueTask, findUser, removeUsersFromSpace } from '@nishans/endpoints';
+import { Mutations, Queries } from '@nishans/endpoints';
 
 const trootpage_class = {
   page: Page,
@@ -64,7 +64,7 @@ export default class Space extends Data<ISpace> {
    * Delete the current workspace
    */
   async delete() {
-    await enqueueTask({
+    await Mutations.enqueueTask({
       task: {
         eventName: 'deleteSpace',
         request:
@@ -175,7 +175,7 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [],data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value } = await findUser({email}, this.getConfigs());
+      const [email, role] = infos[i], { value } = await Queries.findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
@@ -203,7 +203,7 @@ export default class Space extends Data<ISpace> {
    */
   async removeUsers(userIds: string[]) {
     const data = this.getCachedData();
-    await removeUsersFromSpace({
+    await Mutations.removeUsersFromSpace({
       removePagePermissions: true,
       revokeUserTokens: false,
       spaceId: data.id,

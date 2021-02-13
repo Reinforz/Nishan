@@ -1,4 +1,4 @@
-import { enqueueTask } from '@nishans/endpoints';
+import { Mutations } from '@nishans/endpoints';
 import { TBlock, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
 import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
@@ -45,7 +45,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 						alive: true
 					})
 				);
-				await enqueueTask(
+				await Mutations.enqueueTask(
 					{
 						task: {
 							eventName: 'duplicateBlock',

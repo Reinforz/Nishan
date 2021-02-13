@@ -1,4 +1,5 @@
-import { ICache, syncRecordValues } from "@nishans/endpoints";
+import { ICache } from "@nishans/cache";
+import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { ICollection, IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValues, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
 import { getSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../src";
@@ -29,7 +30,7 @@ export async function generateRelationSchema(input_schema_unit: TRelationSchemaU
   // If child collection doesnt exist in the cache passed, sent a api request to notion's db to get the data
   if(!child_collection){
     // Fetching only the collection data from notion's db, using the token provided
-    const {recordMap} = await syncRecordValues({
+    const {recordMap} = await Queries.syncRecordValues({
       requests: [{
         table: "collection",
         id: child_collection_id,
@@ -142,7 +143,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
     };
 
     // Get the record map from the response
-    const {recordMap} = await syncRecordValues(sync_record_values_param, {
+    const {recordMap} = await Queries.syncRecordValues(sync_record_values_param, {
       token,
       interval: 0
     });

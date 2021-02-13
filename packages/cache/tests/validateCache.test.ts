@@ -1,5 +1,4 @@
 import { ICache, validateCache } from '../src';
-import { LoadUserContentData } from '../utils/data';
 
 const correct_cache: ICache = {
 	block: new Map(),
@@ -49,12 +48,7 @@ describe('validateCache', () => {
 		expect(
 			validateCache({
 				...correct_cache,
-				block: new Map([
-					[
-						'4b4bb21d-f68b-4113-b342-830687a5337b',
-						{ ...LoadUserContentData.recordMap.block['4b4bb21d-f68b-4113-b342-830687a5337b'].value }
-					]
-				])
+				block: new Map([ [ '4b4bb21d-f68b-4113-b342-830687a5337b', { value: {} } ] as any ])
 			})
 		).toBeTruthy();
 	});

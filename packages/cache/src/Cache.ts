@@ -148,8 +148,8 @@ export class NotionCache {
 				sync_record_values.push({ id: arg, table: 'block', version: 0 });
 		});
 		if (sync_record_values.length) {
-      const data = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
-      this.saveToCache(data.recordMap);
+      const {recordMap} = await Queries.syncRecordValues({ requests: sync_record_values }, {token: this.token, interval: 0});
+      this.saveToCache(recordMap);
     }
   }
   

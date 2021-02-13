@@ -1,35 +1,35 @@
-import { Cache } from '../src';
+import { ICache, NotionCache } from '../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import deepEqual from 'deep-equal';
-import { ExternalNotionUser, ExternalNotionUserData, GetSpacesData, LoadUserContentData } from '../utils/data';
+import { RecordMap } from '@nishans/types';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
 const mock = new MockAdapter(axios);
 
-describe('Cache class', () => {
+describe('NotionCache class', () => {
 	it(`constructor`, () => {
 		// It should throw if cache passed is not correct
 		expect(
 			() =>
-				new Cache({
+				new NotionCache({
 					cache: {
 						block: new Map()
 					}
 				} as any)
 		).toThrow();
 
-		expect(() => new Cache({} as any)).toThrow(`Token not provided`);
+		expect(() => new NotionCache({} as any)).toThrow(`Token not provided`);
 	});
 
 	it(`getConfigs method`, () => {
-		const cache = new Cache({
+		const notion_cache = new NotionCache({
 			token: 'token'
 		});
 
 		expect(
-			deepEqual(cache.getConfigs(), {
+			deepEqual(notion_cache.getConfigs(), {
 				token: 'token',
 				user_id: undefined,
 				interval: 500
@@ -38,288 +38,566 @@ describe('Cache class', () => {
 	});
 
 	it('saveToCache method', () => {
-		const cache = new Cache({
+		const recordMap: RecordMap = {
+			block: {
+				block_1: {
+					role: 'editor',
+					value: { id: 'block_1' } as any
+				}
+			}
+		} as any;
+
+		const notion_cache = new NotionCache({
 			token: 'token'
 		});
 
 		// Save data to internal cache
-		cache.saveToCache(LoadUserContentData.recordMap);
+		notion_cache.saveToCache(recordMap);
 
 		// After saving data to cache it should exist in the internal cache
-		expect(
-			deepEqual(
-				cache.cache.notion_user.get('d94caf87-a207-45c3-b3d5-03d157b5b39b'),
-				LoadUserContentData.recordMap.notion_user['d94caf87-a207-45c3-b3d5-03d157b5b39b'].value
-			)
-		).toBe(true);
+		expect(deepEqual(notion_cache.cache.block.get('block_1'), recordMap.block['block_1'].value)).toBe(true);
 		// Unknown data should not exist in the internal cache
-		expect(cache.cache.notion_user.get('d94caf87-a207-45c3-b3d5-03d157b5b39c')).toBeUndefined();
+		expect(notion_cache.cache.block.get('block_2')).toBeUndefined();
 	});
 
 	it(`returnNonCachedData method`, () => {
-		const cache = new Cache({
+		const recordMap: RecordMap = {
+			block: {
+				block_1: {
+					role: 'editor',
+					value: { id: 'block_1' } as any
+				}
+			}
+		} as any;
+
+		const notion_cache = new NotionCache({
 			token: 'token',
 			interval: 0
 		});
 
-		cache.saveToCache(LoadUserContentData.recordMap);
+		notion_cache.saveToCache(recordMap);
 		// Check to see if the data that doesnot exist in the cache returns or not
-		const non_cached_data = cache.returnNonCachedData([
-			[ 'd94caf87-a207-45c3-b3d5-03d157b5b39b', 'notion_user' ],
-			[ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ],
-			'd94caf87-a207-45c3-b3d5-03d157b5b39d'
+		const non_cached_data = notion_cache.returnNonCachedData([
+			[ 'block_1', 'block' ],
+			[ 'notion_user_1', 'notion_user' ],
+			'block_2'
 		]);
 
 		// the 2nd argument to deepEqual represents the data that doesnot exist in the internal cache
-		expect(
-			deepEqual(non_cached_data, [
-				[ 'd94caf87-a207-45c3-b3d5-03d157b5b39c', 'notion_user' ],
-				'd94caf87-a207-45c3-b3d5-03d157b5b39d'
-			])
-		).toBe(true);
+		expect(deepEqual(non_cached_data, [ [ 'notion_user_1', 'notion_user' ], 'block_2' ])).toBe(true);
 	});
 
 	describe(`initializeCache method`, () => {
-		it(`Fetches external notion_user data`, async () => {
-			mock.onPost(`/getSpaces`).replyOnce(200, GetSpacesData);
-			mock.onPost(`/syncRecordValues`).replyOnce(200, { recordMap: { notion_user: ExternalNotionUserData } });
+		it(`Fetches external notion_user data,external user = 1`, async () => {
+			mock.onPost(`/getSpaces`).replyOnce(200, {
+				space_1: {
+					user_root: {
+						user_root_1: {
+							value: { id: 'user_root_1' }
+						}
+					},
+					space: {
+						space_1: {
+							value: {
+								permissions: [
+									{
+										user_id: 'user_root_1'
+									},
+									{
+										user_id: 'user_root_2'
+									}
+								]
+							}
+						}
+					},
+					block: {
+						block_1: {
+							value: { id: 'block_1' }
+						}
+					},
+					collection: {
+						collection_1: {
+							value: { id: 'collection_1' }
+						}
+					}
+				}
+			});
 
-			const cache = new Cache({
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					notion_user: {
+						user_root_2: {
+							value: { id: 'user_root_2' }
+						}
+					}
+				}
+			});
+
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
 
-			await cache.initializeCache();
-			// Expect certain cache data to exist after cache initialization.
-			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
-			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
-			// External notion user is checked in the cache
-			expect(cache.cache.notion_user.get(ExternalNotionUser.id)).not.toBeUndefined();
+			await notion_cache.initializeCache();
+			expect(deepEqual(notion_cache.cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
+			expect(deepEqual(notion_cache.cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
+			expect(deepEqual(notion_cache.cache.notion_user.get('user_root_2'), { id: 'user_root_2' })).toBe(true);
+			expect(notion_cache.cache.notion_user.get('user_root_3')).toBeUndefined();
 		});
 
-		it(`Doesnt fetch external notion_user data`, async () => {
-			// Getting a space that doesnot give access to external users
+		it(`Fetches external notion_user data,external user = 0`, async () => {
 			mock.onPost(`/getSpaces`).replyOnce(200, {
-				'd2498a62-99ed-4ffd-b56d-e986001729f3': GetSpacesData['d2498a62-99ed-4ffd-b56d-e986001729f3']
+				space_1: {
+					user_root: {
+						user_root_1: {
+							value: { id: 'user_root_1' }
+						}
+					},
+					space: {
+						space_1: {
+							value: {
+								permissions: [
+									{
+										user_id: 'user_root_1'
+									}
+								]
+							}
+						}
+					},
+					block: {
+						block_1: {
+							value: { id: 'block_1' }
+						}
+					},
+					collection: {
+						collection_1: {
+							value: { id: 'collection_1' }
+						}
+					}
+				}
 			});
 
-			const cache = new Cache({
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
 
-			await cache.initializeCache();
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
-			// This internal notion user is checked in the cache
-			expect(cache.cache.notion_user.get('d94caf87-a207-45c3-b3d5-03d157b5b39b')).not.toBeUndefined();
-			// expect external notion user to be undefined in the cache since it was not fetched
-			expect(cache.cache.notion_user.get(ExternalNotionUser.id)).toBeUndefined();
+			await notion_cache.initializeCache();
 		});
 	});
 
 	describe(`updateCacheManually method`, () => {
 		it(`Should work correctly when passed array of string arguments`, async () => {
-			const cache = new Cache({
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
-			mock.onPost(`/syncRecordValues`).replyOnce(200, LoadUserContentData);
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					block: {
+						block_1: {
+							value: { id: 'block_1' }
+						}
+					},
+					collection: {
+						collection_1: {
+							value: { id: 'collection_1' }
+						}
+					}
+				}
+			});
 
 			// Array of string, or [id, data_type] tuple should work
-			await cache.updateCacheManually([
-				'4b4bb21d-f68b-4113-b342-830687a5337a',
-				[ 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b', 'collection' ]
-			]);
-			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
-			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+			await notion_cache.updateCacheManually([ 'block_1', [ 'collection_1', 'collection' ] ]);
+			expect(deepEqual(notion_cache.cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
+			expect(deepEqual(notion_cache.cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
 
-			mock.onPost(`/syncRecordValues`).replyOnce(200, LoadUserContentData);
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					block: {
+						block_2: {
+							value: { id: 'block_2' }
+						}
+					}
+				}
+			});
 
 			// Single string argument should work as well
-			await cache.updateCacheManually('6eae77bf-64cd-4ed0-adfb-e97d928a6402');
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
+			await notion_cache.updateCacheManually('block_2');
+			expect(deepEqual(notion_cache.cache.block.get('block_2'), { id: 'block_2' })).toBe(true);
 		});
 
 		it(`Should throw an error if passed wrong arguments`, async () => {
-			const cache = new Cache({
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
-			expect(() => cache.updateCacheManually([ true ] as any)).rejects.toThrow(`Unsupported argument passed`);
-			expect(() => cache.updateCacheManually(true as any)).rejects.toThrow(`Unsupported argument passed`);
-			expect(await cache.updateCacheManually([])).toBeFalsy();
+			expect(() => notion_cache.updateCacheManually([ true ] as any)).rejects.toThrow(`Unsupported argument passed`);
+			expect(() => notion_cache.updateCacheManually(true as any)).rejects.toThrow(`Unsupported argument passed`);
+			expect(await notion_cache.updateCacheManually([])).toBeFalsy();
 		});
 	});
 
 	it(`updateCacheIfNotPresent method`, async () => {
-		const cache = new Cache({
+		const notion_cache = new NotionCache({
 			token: 'token'
 		});
 
-		cache.saveToCache({
-			collection: LoadUserContentData.recordMap.collection
+		notion_cache.saveToCache({
+			collection: {
+				collection_1: {
+					role: 'editor',
+					value: { id: 'collection_1' } as any
+				}
+			}
 		});
 
 		mock.onPost(`/syncRecordValues`).replyOnce(200, {
-			recordMap: { block: LoadUserContentData.recordMap.block, space: LoadUserContentData.recordMap.space }
+			recordMap: {
+				block: {
+					block_2: {
+						role: 'editor',
+						value: { id: 'block_2' } as any
+					},
+					block_1: {
+						role: 'editor',
+						value: { id: 'block_1' } as any
+					}
+				}
+			}
 		});
 
-		await cache.updateCacheIfNotPresent([
-			'4b4bb21d-f68b-4113-b342-830687a5337a',
-			[ 'd2498a62-99ed-4ffd-b56d-e986001729f4', 'space' ],
-			[ 'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b', 'collection' ]
-		]);
+		await notion_cache.updateCacheIfNotPresent([ 'block_1', [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ]);
 
-		expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
-		expect(cache.cache.space.get('d2498a62-99ed-4ffd-b56d-e986001729f4')).not.toBeUndefined();
-		expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
+		expect(deepEqual(notion_cache.cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
+		expect(deepEqual(notion_cache.cache.block.get('block_2'), { id: 'block_2' })).toBe(true);
+		expect(deepEqual(notion_cache.cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
 		// Using empty arguments to check for else coverage
-		await cache.updateCacheIfNotPresent([]);
+		await notion_cache.updateCacheIfNotPresent([]);
 	});
 
 	describe('initializeCacheForSpecificData', () => {
 		it(`Should work for block & page type`, async () => {
-			const cache = new Cache({
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
+
+			const block_1: any = {
+					content: [ 'block_2', 'block_3', 'block_4' ],
+					id: 'block_1',
+					type: 'page'
+				},
+				block_2: any = {
+					id: 'block_2',
+					type: 'collection_view_page',
+					collection_id: 'collection_1'
+				},
+				block_3: any = {
+					id: 'block_3',
+					type: 'collection_view',
+					collection_id: 'collection_1'
+				},
+				block_4: any = {
+					id: 'block_4',
+					type: 'header'
+				},
+				collection_1: any = { id: 'collection_1' };
+
 			// Removing certain data so that they are not loaded in the cache initially
-			const copied_block_data = JSON.parse(JSON.stringify(LoadUserContentData.recordMap.block));
-			delete copied_block_data['6eae77bf-64cd-4ed0-adfb-e97d928a6401'];
-			delete copied_block_data['4b4bb21d-f68b-4113-b342-830687a5337b'];
-			cache.saveToCache({ block: copied_block_data });
+			notion_cache.saveToCache({
+				block: {
+					block_1: {
+						value: block_1
+					}
+				} as any
+			});
+
 			mock.onPost(`/syncRecordValues`).replyOnce(200, {
 				recordMap: {
-					block: LoadUserContentData.recordMap.block,
-					collection: LoadUserContentData.recordMap.collection
+					block: {
+						block_2: {
+							value: block_2
+						},
+						block_3: {
+							value: block_3
+						},
+						block_4: {
+							value: block_4
+						}
+					},
+					collection: {
+						collection_1: {
+							value: collection_1
+						}
+					}
 				}
 			});
-			await cache.initializeCacheForSpecificData('6eae77bf-64cd-4ed0-adfb-e97d928a6402', 'block');
-			// The contents of the page block should be present in the cache
-			// That means the cvp and its collection as well
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6401')).not.toBeUndefined();
-			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337b')).not.toBeUndefined();
-			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c')).not.toBeUndefined();
+			await notion_cache.initializeCacheForSpecificData('block_1', 'block');
+			expect(deepEqual(notion_cache.cache.block.get('block_1'), block_1)).toBe(true);
+			expect(deepEqual(notion_cache.cache.block.get('block_2'), block_2)).toBe(true);
+			expect(deepEqual(notion_cache.cache.block.get('block_3'), block_3)).toBe(true);
+			expect(deepEqual(notion_cache.cache.collection.get('collection_1'), collection_1)).toBe(true);
 		});
 
-		it(`Should work for block & collection_view_page type`, async () => {
-			const cache = new Cache({
+		it(`type=collection_view_page`, async () => {
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
-			cache.saveToCache({ block: LoadUserContentData.recordMap.block });
-			mock.onPost(`/syncRecordValues`).replyOnce(200, {
-				recordMap: {
-					collection_view: GetSpacesData['d2498a62-99ed-4ffd-b56d-e986001729f4'].collection_view,
-					collection: LoadUserContentData.recordMap.collection
+
+			const block_1: any = {
+					value: {
+						id: 'block_2',
+						type: 'collection_view_page',
+						collection_id: 'collection_1',
+						view_ids: [ 'collection_view_1' ]
+					}
+				},
+				collection_view_1 = {
+					value: {
+						id: 'collection_view_1'
+					}
+				},
+				collection_1: any = {
+					value: { id: 'collection_1' }
+				};
+
+			notion_cache.saveToCache({
+				block: {
+					block_1
 				}
 			});
-			await cache.initializeCacheForSpecificData('4b4bb21d-f68b-4113-b342-830687a5337a', 'block');
+
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					collection_view: {
+						collection_view_1
+					},
+					collection: {
+						collection_1
+					}
+				}
+			});
+			await notion_cache.initializeCacheForSpecificData('block_1', 'block');
 			// The collection and collection_view data should be present in the cache when cvp data is initialized
-			expect(cache.cache.collection.get('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b')).not.toBeUndefined();
-			expect(cache.cache.collection_view.get('451a024a-f6f8-476d-9a5a-1c98ffdf5a38')).not.toBeUndefined();
+			expect(deepEqual(notion_cache.cache.collection.get('collection_1'), collection_1.value)).toBe(true);
+			expect(deepEqual(notion_cache.cache.collection_view.get('collection_view_1'), collection_view_1.value)).toBe(
+				true
+			);
 		});
 
 		it(`Should work for type space`, async () => {
-			const cache = new Cache({
+			const notion_cache = new NotionCache({
 				token: 'token'
 			});
-			cache.saveToCache({ space: LoadUserContentData.recordMap.space });
-			mock.onPost(`/syncRecordValues`).replyOnce(200, {
-				recordMap: {
-					block: LoadUserContentData.recordMap.block
+
+			const space_1: any = {
+					value: {
+						permissions: [
+							{
+								user_id: 'user_root_1'
+							},
+							{
+								user_id: 'user_root_2'
+							}
+						],
+						id: 'space_1',
+						pages: [ 'block_1', 'block_2' ]
+					}
+				},
+				block_1 = {
+					value: {
+						id: 'block_1'
+					}
+				},
+				block_2: any = {
+					value: { id: 'block_2' }
+				};
+
+			notion_cache.saveToCache({
+				space: {
+					space_1
+				},
+				user_root: {
+					user_root_1: {
+						value: { id: 'user_root_1' }
+					} as any
 				}
 			});
-			await cache.initializeCacheForSpecificData('d2498a62-99ed-4ffd-b56d-e986001729f4', 'space');
+
+			mock.onPost(`/syncRecordValues`).replyOnce(200, {
+				recordMap: {
+					block: {
+						block_1,
+						block_2
+					}
+				}
+			});
+
+			await notion_cache.initializeCacheForSpecificData('space_1', 'space');
 			// All the pages of the space should be loaded in the cache
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
-			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
+			expect(deepEqual(notion_cache.cache.block.get('block_1'), block_1.value)).toBe(true);
+			expect(deepEqual(notion_cache.cache.block.get('block_2'), block_2.value)).toBe(true);
 		});
 
 		it(`Should work for type user_root`, async () => {
-			const cache = new Cache({
-				token: 'token'
-			});
-			cache.saveToCache({ user_root: LoadUserContentData.recordMap.user_root });
+			const notion_cache = new NotionCache({
+					token: 'token'
+				}),
+				user_root_1 = {
+					value: {
+						space_views: [ 'space_view_1' ],
+						id: 'user_root_1'
+					}
+				} as any,
+				space_view_1 = {
+					value: {
+						id: 'space_view_1'
+					}
+				} as any;
+			notion_cache.saveToCache({ user_root: { user_root_1 } });
 			mock.onPost(`/syncRecordValues`).replyOnce(200, {
 				recordMap: {
-					space_view: LoadUserContentData.recordMap.space_view
+					space_view: { space_view_1 }
 				}
 			});
-			await cache.initializeCacheForSpecificData('d94caf87-a207-45c3-b3d5-03d157b5b39b', 'user_root');
-			expect(cache.cache.space_view.get('ccfc7afe-c14f-4764-9a89-85659217eed7')).not.toBeUndefined();
+			await notion_cache.initializeCacheForSpecificData('user_root_1', 'user_root');
+			expect(deepEqual(notion_cache.cache.space_view.get('space_view_1'), space_view_1.value)).toBe(true);
 		});
 
-		it(`Should work for type space_view`, async () => {
-			const cache = new Cache({
-				token: 'token'
+		describe('space_view', () => {
+			it(`bookmarked_pages=[]`, async () => {
+				const notion_cache = new NotionCache({
+						token: 'token'
+					}),
+					block_1 = {
+						value: {
+							id: 'block_1'
+						}
+					} as any,
+					space_view_1 = {
+						value: {
+							id: 'space_view_1',
+							bookmarked_pages: [ 'block_1' ]
+						}
+					} as any;
+
+				notion_cache.saveToCache({
+					space_view: {
+						space_view_1
+					}
+				});
+
+				mock.onPost(`/syncRecordValues`).replyOnce(200, {
+					recordMap: {
+						block: { block_1 }
+					}
+				});
+				await notion_cache.initializeCacheForSpecificData('space_view_1', 'space_view');
+				expect(deepEqual(notion_cache.cache.block.get('block_1'), block_1.value)).toBe(true);
 			});
 
-			cache.saveToCache({
-				space_view: {
-					'ccfc7afe-c14f-4764-9a89-85659217eed7':
-						LoadUserContentData.recordMap.space_view['ccfc7afe-c14f-4764-9a89-85659217eed7'],
-					'd2498a62-99ed-4ffd-b56d-e986001729f1':
-						GetSpacesData['d2498a62-99ed-4ffd-b56d-e986001729f3'].space_view['d2498a62-99ed-4ffd-b56d-e986001729f1']
-				}
-			});
+			it(`bookmarked_pages=undefined`, async () => {
+				const notion_cache = new NotionCache({
+						token: 'token'
+					}),
+					space_view_1 = {
+						value: {
+							id: 'space_view_1'
+						}
+					} as any;
 
-			mock.onPost(`/syncRecordValues`).replyOnce(200, {
-				recordMap: {
-					block: LoadUserContentData.recordMap.block
-				}
+				notion_cache.saveToCache({
+					space_view: {
+						space_view_1
+					}
+				});
+
+				await notion_cache.initializeCacheForSpecificData('space_view_1', 'space_view');
 			});
-			await cache.initializeCacheForSpecificData('ccfc7afe-c14f-4764-9a89-85659217eed7', 'space_view');
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6402')).not.toBeUndefined();
-			expect(cache.cache.block.get('4b4bb21d-f68b-4113-b342-830687a5337a')).not.toBeUndefined();
-			// This space view doesnot contain any bookmarked_page
-			await cache.initializeCacheForSpecificData('d2498a62-99ed-4ffd-b56d-e986001729f1', 'space_view');
 		});
 
-		it(`Should work for type collection`, async () => {
-			const cache = new Cache({
-				token: 'token'
-			});
-			cache.saveToCache({ collection: LoadUserContentData.recordMap.collection });
-			mock.onPost(`/syncRecordValues`).replyOnce(200, {
-				recordMap: {
-					block: {
-						'6eae77bf-64cd-4ed0-adfb-e97d928a6404':
-							LoadUserContentData.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6404']
+		describe('collection', () => {
+			it(`template_pages=[]`, async () => {
+				const notion_cache = new NotionCache({
+						token: 'token'
+					}),
+					collection_1 = {
+						value: {
+							id: 'collection_1',
+							template_pages: [ 'block_1' ]
+						}
+					} as any,
+					block_1 = {
+						value: {
+							id: 'block_1'
+						}
+					} as any,
+					block_2 = {
+						value: {
+							id: 'block_2'
+						}
+					} as any;
+
+				notion_cache.saveToCache({ collection: { collection_1 } });
+				mock.onPost(`/syncRecordValues`).replyOnce(200, {
+					recordMap: {
+						block: {
+							block_1
+						}
 					}
-				}
-			});
+				});
 
-			mock.onPost(`/queryCollection`).replyOnce(200, {
-				recordMap: {
-					block: {
-						'6eae77bf-64cd-4ed0-adfb-e97d928a6403':
-							LoadUserContentData.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6403']
+				mock.onPost(`/queryCollection`).replyOnce(200, {
+					recordMap: {
+						block: {
+							block_2
+						}
 					}
-				}
+				});
+
+				// This collection contains template pages
+				await notion_cache.initializeCacheForSpecificData('collection_1', 'collection');
+
+				expect(deepEqual(notion_cache.cache.block.get('block_1'), block_1.value)).toBe(true);
+				expect(deepEqual(notion_cache.cache.block.get('block_2'), block_2.value)).toBe(true);
 			});
 
-			// This collection contains template pages
-			await cache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7b', 'collection');
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6404')).not.toBeUndefined();
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6403')).not.toBeUndefined();
+			it(`template_pages=undefined`, async () => {
+				const notion_cache = new NotionCache({
+						token: 'token'
+					}),
+					collection_1 = {
+						value: {
+							id: 'collection_1'
+						}
+					} as any,
+					block_1 = {
+						value: {
+							id: 'block_1'
+						}
+					} as any;
 
-			mock.onPost(`/queryCollection`).replyOnce(200, {
-				recordMap: {
-					block: {
-						'6eae77bf-64cd-4ed0-adfb-e97d928a6400':
-							LoadUserContentData.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6400']
+				notion_cache.saveToCache({ collection: { collection_1 } });
+
+				mock.onPost(`/queryCollection`).replyOnce(200, {
+					recordMap: {
+						block: {
+							block_1
+						}
 					}
-				}
-			});
+				});
 
-			// This collection doesnot contains template pages
-			await cache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'collection');
-			expect(cache.cache.block.get('6eae77bf-64cd-4ed0-adfb-e97d928a6400')).not.toBeUndefined();
+				// This collection contains template pages
+				await notion_cache.initializeCacheForSpecificData('collection_1', 'collection');
+
+				expect(deepEqual(notion_cache.cache.block.get('block_1'), block_1.value)).toBe(true);
+			});
 		});
 	});
 
 	it(`Should throw error for unsupported data`, async () => {
-		const cache = new Cache({
+		const notion_cache = new NotionCache({
 			token: 'token'
 		});
 
 		expect(() =>
-			cache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any)
+			notion_cache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any)
 		).rejects.toThrow(`unknown data is not supported`);
 	});
 });

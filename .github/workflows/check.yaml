@@ -41,3 +41,8 @@ jobs:
           files: ./packages/endpoints/coverage/lcov.info
           flags: endpoints
           name: "@nishans/endpoints"
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./packages/cache/coverage/lcov.info
+          flags: cache
+          name: "@nishans/cache"

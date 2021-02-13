@@ -1,4 +1,3 @@
-import colors from "colors";
 import {Cache} from "@nishans/endpoints"
 import { INotionUser } from "@nishans/types";
 
@@ -35,12 +34,8 @@ class Nishan extends Cache {
 
   #initializeCache = async () => {
     if (!this.init_cache) {
-      try {
-        await this.initializeCache();
-        this.init_cache = true;
-      } catch (err) {
-        throw new Error(error(err.response.data))
-      }
+      await this.initializeCache();
+      this.init_cache = true;
     }
   }
 
@@ -57,7 +52,6 @@ class Nishan extends Cache {
    * @param args An array of string ids, a predicate passed the INotionUser or undefined to indicate everything
    */
   async getNotionUsers(args?: FilterTypes<INotionUser>, multiple?: boolean) {
-    multiple = multiple ?? true;
     await this.#initializeCache();
 
     const common_props = {
@@ -75,10 +69,11 @@ class Nishan extends Cache {
 
     return await iterateAndGetChildren<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
       ...common_props,
+      multiple,
       child_ids: notion_user_ids,
       child_type: 'notion_user',
       container: [],
-      parent_id: this.user_id ?? '',
+      parent_id: '',
       parent_type: 'notion_user'
     }, (id, _, container)=>container.push(new NotionUser({ ...common_props, user_id: id, id, space_id: "0", shard_id: 0 })));
   }

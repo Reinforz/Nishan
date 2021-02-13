@@ -5,5 +5,5 @@ export function transformToMultiple (arg?: UpdateType<any, any>): UpdateTypes<an
 export function transformToMultiple (
 	arg?: UpdateType<any, any> | FilterType<any>
 ): FilterTypes<any> | UpdateTypes<any, any> {
-	return typeof arg === 'string' ? [ arg ] : (arg ?? (() => true));
+	return typeof arg === 'string' ? [ arg ] : (Array.isArray(arg) ? [arg] : arg ?? (() => true));
 }

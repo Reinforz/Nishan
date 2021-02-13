@@ -187,7 +187,7 @@ class NotionUser extends Data<INotionUser> {
 
   // FIX:1:H Fix the updateSpace method
   async updateSpace(arg: UpdateType<ISpace, ISpaceUpdateInput>) {
-    return (await this.updateSpaces(transformToMultiple(arg), false))[0]
+    return (await this.updateSpaces(transformToMultiple(arg), false))[0];
   }
 
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {

@@ -13,11 +13,16 @@ describe('transformToMultiple', () => {
 		expect(deepEqual(data, [ '123' ])).toBe(true);
 	});
 
-	it(`arg=string`, () => {
+	it(`arg=fn`, () => {
 		const fn = () => {
 			return;
 		};
 		const data = transformToMultiple(fn);
 		expect(data).toBe(fn);
+	});
+
+	it(`arg=[]`, () => {
+		const data = transformToMultiple([ 'id', '123' ]);
+		expect(deepEqual(data, [ [ 'id', '123' ] ])).toBe(true);
 	});
 });

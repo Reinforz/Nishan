@@ -7,8 +7,7 @@
     "notion-endpoints",
     "notion-queries",
     "notion-mutations",
-    "notion-cache",
-    "rest-api"
+    "notion-api"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/endpoints/README.md",
@@ -32,9 +31,10 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.18"
+    "@nishans/types": "0.0.17"
   },
   "scripts": {
+    "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
     "test": "npx jest --runInBand ./tests --collectCoverage"

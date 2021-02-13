@@ -23,7 +23,8 @@ const mock = new MockAdapter(axios);
 	'loadPageChunk',
 	'recordPageVisit',
 	'getUserNotifications',
-	'getTasks'
+	'getTasks',
+	'search'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const request_data = {

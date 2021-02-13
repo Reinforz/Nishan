@@ -37,7 +37,9 @@ import {
 	GetTasksParams,
 	GetTasksResult,
 	RecordPageVisitResult,
-	RecordPageVisitParams
+	RecordPageVisitParams,
+	SearchResult,
+	SearchParams
 } from '@nishans/types';
 
 import { NotionRequestConfigs } from '.';
@@ -53,6 +55,10 @@ const Queries = {
 
 	async getUserTasks (configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<GetUserTasksResult>('getUserTasks', {}, configs);
+	},
+
+	async search (params: SearchParams, configs?: Partial<NotionRequestConfigs>) {
+		return await sendRequest<SearchResult>('search', params, configs);
 	},
 
 	async getPublicPageData (params: GetPublicPageDataParams, configs?: Partial<NotionRequestConfigs>) {

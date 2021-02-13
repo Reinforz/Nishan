@@ -1,6 +1,6 @@
 import { TDataType } from '@nishans/types';
 
-export type UpdateCacheManuallyParam = (string | [string, TDataType])[];
+export type UpdateCacheManuallyParam = [string, TDataType][];
 
 export interface NotionHeaders {
 	headers: {

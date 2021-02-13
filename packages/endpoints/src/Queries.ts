@@ -47,7 +47,6 @@ const Queries = {
 	async getPageVisits (params: GetPageVisitsParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<GetPageVisitsResult>('getPageVisits', params, configs);
 	},
-
 	async getUserSharedPages (params: GetUserSharedPagesParams, configs?: Partial<NotionRequestConfigs>) {
 		return await sendRequest<GetUserSharedPagesResult>('getUserSharedPages', params, configs);
 	},

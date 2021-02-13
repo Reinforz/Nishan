@@ -464,3 +464,33 @@ export interface RecordPageVisitParams {
 }
 
 export type RecordPageVisitResult = GetPageVisitsResult;
+
+export type SearchParams = {
+	type: 'CollectionsInSpace';
+	query: string;
+	spaceId: string;
+	limit: number;
+	filters: {
+		isDeletedOnly: boolean;
+		excludeTemplates: boolean;
+		isNavigableOnly: boolean;
+		requireEditPermissions: boolean;
+		ancestors: string[];
+		createdBy: string[];
+		editedBy: string[];
+		lastEditedTime: Record<string, never>;
+		createdTime: Record<string, never>;
+	};
+	sort: 'Relevance';
+	source: 'relation_setup_menu';
+};
+
+export type SearchResult = {
+	recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
+	results: {
+		id: string;
+		isNavigable: boolean;
+		score: number;
+	}[];
+	total: number;
+};

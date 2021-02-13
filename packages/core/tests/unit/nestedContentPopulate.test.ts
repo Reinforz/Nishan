@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/endpoints';
+import { ICache } from '@nishans/cache';
 import { IHeader, IOperation, IPage } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';

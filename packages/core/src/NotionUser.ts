@@ -201,7 +201,7 @@ class NotionUser extends Data<INotionUser> {
 
   // FIX:1:H How will deleting a space manipulate the internal cache 
   async deleteSpace(arg: FilterType<ISpace>) {
-    (await this.deleteSpaces(typeof arg === "string" ? [arg] : arg, false));
+    (await this.deleteSpaces(transformToMultiple(arg), false));
   }
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
@@ -234,7 +234,7 @@ class NotionUser extends Data<INotionUser> {
         tpage_map.page.set(page.id, page_obj)
         tpage_map.page.set(page.properties.title[0][0], page_obj)
         if (page.content)
-          page.content.forEach(content_id=>sync_records.push(content_id))
+          page.content.forEach(content_id=>sync_records.push(content_id));
       } else if (page?.type === "collection_view_page"){
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
         await this.initializeCacheForSpecificData(page.id, "block");

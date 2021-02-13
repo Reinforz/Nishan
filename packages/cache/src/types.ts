@@ -1,5 +1,4 @@
 import { TBlock, ICollection, TView, ISpace, INotionUser, ISpaceView, IUserRoot, IUserSettings } from '@nishans/types';
-
 export interface ICache {
 	block: Map<string, TBlock>;
 	collection: Map<string, ICollection>;

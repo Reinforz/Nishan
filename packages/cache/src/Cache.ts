@@ -220,7 +220,6 @@ export class NotionCache {
       if(data.type === "page"){
         const collection_blocks_ids: UpdateCacheManuallyParam = [];
         for (let index = 0; index < data.content.length; index++) {
-          // since the contents of the page has been fetched and stored in the cached it exists in the cache
           const content_id = data.content[index],
             content = this.cache.block.get(content_id)
           if(content && (content.type === "collection_view_page" || content.type === "collection_view"))

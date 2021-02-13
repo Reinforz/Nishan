@@ -21,4 +21,4 @@
 </p>
 
 <p align="center"><b>
-A package to expose all notion query and mutation endpoints and for caching response</b></p>
+A package to expose all notion query and mutation endpoints</b></p>

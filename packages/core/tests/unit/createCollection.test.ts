@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/endpoints';
+import { ICache } from '@nishans/cache';
 import { ICollection, IOperation, RecordMap, Schema, TSchemaUnit } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import MockAdapter from 'axios-mock-adapter';

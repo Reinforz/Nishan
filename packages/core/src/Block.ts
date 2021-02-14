@@ -20,7 +20,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	}
 
 	reposition (arg: RepositionParams) {
-		this.addToChildArray(this.getCachedParentData(), arg);
+		this.addToChildArray('block', this.getCachedParentData(), arg);
 	}
 
 	/**

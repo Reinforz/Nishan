@@ -57,7 +57,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	reposition (arg: RepositionParams) {
-		this.addToChildArray(this.getCachedParentData(), arg);
+		this.addToChildArray('block', this.getCachedParentData(), arg);
 	}
 
 	/**

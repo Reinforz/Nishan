@@ -100,8 +100,8 @@ export default class Data<T extends TData> extends Operations {
     this.cache[this.type].delete(this.id);
   }
 
-  protected addToChildArray(parent: TData, position: RepositionParams) {
-    this.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type: this.type }))
+  protected addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
+    this.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
   }
 
   /**

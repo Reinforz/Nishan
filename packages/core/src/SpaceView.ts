@@ -1,10 +1,10 @@
 import Data from './Data';
 
 import Space from './Space';
-import { createPageMap, Operation } from '../utils';
+import { createPageMap, Operation, transformToMultiple } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { ISpaceView, ISpace, TPage, IUserRoot } from '@nishans/types';
+import { ISpaceView, ISpace, TPage, IUserRoot, ICollection } from '@nishans/types';
 import { NishanArg, RepositionParams, ISpaceViewUpdateInput, TSpaceViewUpdateKeys, FilterType, FilterTypes, UpdateTypes, IPageMap } from '../types';
 
 /**
@@ -21,7 +21,7 @@ class SpaceView extends Data<ISpaceView> {
   }
 
   reposition(arg: RepositionParams) {
-    this.addToChildArray(this.getCachedParentData(), arg)
+    this.addToChildArray('user_root', this.getCachedParentData(), arg)
   }
 
   /**
@@ -36,7 +36,7 @@ class SpaceView extends Data<ISpaceView> {
    * Get the corresponding space associated with this space view
    * @returns The corresponding space object
    */
-  async getSpace() {
+  getSpace() {
     const data = this.getCachedData();
     let target_space: ISpace = null as any;
     for (const [, space] of this.cache.space) {
@@ -45,7 +45,7 @@ class SpaceView extends Data<ISpaceView> {
         break;
       }
     }
-    this.logger && this.logger("READ", "block", target_space.id);
+    this.logger && this.logger("READ", "space", target_space.id);
     return new Space({
       id: target_space.id,
       ...this.getProps()
@@ -53,16 +53,16 @@ class SpaceView extends Data<ISpaceView> {
   }
 
   async getBookmarkedPage(arg: FilterType<TPage>) {
-    return await this.getBookmarkedPages(typeof arg === "string" ? [arg] : arg, false)
+    return await this.getBookmarkedPages(transformToMultiple(arg), false)
   }
 
   async getBookmarkedPages(args: FilterTypes<TPage>, multiple?: boolean) {
     return await this.getIterate<TPage, IPageMap>(args, {
-      child_ids: this.getCachedData().bookmarked_pages ?? [],
+      child_ids: 'bookmarked_pages',
       child_type: "block",
       multiple,
       container: createPageMap()
-    }, (id) => this.cache.block.get(id) as TPage, (id, page, tpage_map) => {
+    }, (id) => this.cache.block.get(id) as TPage, async (id, page, tpage_map) => {
       if (page.type === "page") {
         const page_obj = new Page({ ...this.getProps(), id })
         tpage_map.page.set(id, page_obj)
@@ -70,10 +70,10 @@ class SpaceView extends Data<ISpaceView> {
       }
       else {
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id });
-        tpage_map.collection_view_page.set(id, cvp_obj)
-        const collection = this.cache.collection.get(page.collection_id);
-        if(collection)
-          tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj)
+        tpage_map.collection_view_page.set(id, cvp_obj);
+        // await this.initializeCacheForSpecificData(id, 'block');
+        const collection = this.cache.collection.get(page.collection_id) as ICollection;
+        tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj)
       }
     })
   }

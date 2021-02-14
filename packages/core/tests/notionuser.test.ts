@@ -411,8 +411,6 @@ describe('NotionUser', () => {
 	});
 
 	it('update', async () => {
-		const notion_user_1_id = v4(),
-			notion_user_1 = { id: notion_user_1_id, type: 'notion_user' } as any;
 		const cache: ICache = {
 				block: new Map(),
 				collection: new Map(),

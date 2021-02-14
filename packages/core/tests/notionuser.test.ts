@@ -43,10 +43,18 @@ describe('NotionUser', () => {
 		});
 
 		const space = await notion_user.createSpace({
-			name: 'Space One'
+			name: 'Space One',
+      contents: [
+        {
+          type: "page",
+          properties: {
+            title: [["Hello World"]]
+          }
+        }
+      ]
 		});
 
-    const space_views = cache.user_root.get('user_1')?.space_views ?? []
+    const space_views = cache.user_root.get('user_1')?.space_views ?? [];
 
 		const space_cached_data = space.getCachedData(), space_snapshot_data = {
 			created_by_id: 'user_1',
@@ -70,8 +78,7 @@ describe('NotionUser', () => {
 			disable_move_to_space: false,
 			beta_enabled: true,
 			invite_link_enabled: true,
-			domain: ''
-		}, page_id = space_cached_data.pages[0], space_view_snapshot_data = {
+		}, space_view_snapshot_data = {
       created_getting_started: false,
       created_onboarding_templates: false,
       space_id: expect.any(String),
@@ -87,30 +94,12 @@ describe('NotionUser', () => {
       visited_templates: [],
       sidebar_hidden_templates: [],
       bookmarked_pages: []
-    }, page_snapshot_data = {
-      created_by_id: 'user_1',
-			created_by_table: 'notion_user',
-			created_time: expect.any(Number),
-			last_edited_by_id: 'user_1',
-			last_edited_by_table: 'notion_user',
-			last_edited_time: expect.any(Number),
-			version: 0,
-			id: expect.any(String),
-      type: 'page',
-      parent_id: expect.any(String),
-      parent_table: 'space',
-      alive: true,
-      permissions: [{ type: 'user_permission', role: 'editor', user_id: 'user_1' }],
-      properties: {
-        title: [['Default Page']]
-      },
-      content: [],
-      shard_id: 123,
-      space_id: expect.any(String),
     };
 
-    expect(logger_spy).toHaveBeenCalledTimes(1);
-    expect(logger_spy).toHaveBeenCalledWith("CREATE", "space", spaceId);
+    expect(logger_spy).toHaveBeenNthCalledWith(1, "CREATE", "space", spaceId);
+    expect(logger_spy).toHaveBeenNthCalledWith(2, "CREATE", "space_view", space_views[0]);
+    expect(logger_spy).toHaveBeenNthCalledWith(3, "UPDATE", "user_root", 'user_1');
+    expect(logger_spy).toHaveBeenNthCalledWith(4, "UPDATE", "space", spaceId);
 
 		expect(createSpace_spy).toHaveBeenCalledTimes(1);
 		expect(createSpace_spy).toHaveBeenCalledWith(
@@ -125,10 +114,9 @@ describe('NotionUser', () => {
     expect(space_views.length).toBe(1);
 
     expect(cache.space_view.get(space_views[0])).toMatchSnapshot(space_view_snapshot_data);
-    expect(cache.block.get(page_id)).toMatchSnapshot(page_snapshot_data);
 		expect(space_cached_data).toMatchSnapshot(space_snapshot_data);
 
-    expect(stack).toMatchSnapshot([
+    expect(stack.slice(0, 3)).toMatchSnapshot([
       {
         command: "update",
         table: "space",
@@ -141,18 +129,10 @@ describe('NotionUser', () => {
           disable_move_to_space: false,
           beta_enabled: true,
           invite_link_enabled: true,
-          domain: ''
         }
       },
       {
         command: "update",
-        table: "block",
-        path: [],
-        id: expect.any(String),
-        args: page_snapshot_data
-      },
-      {
-        command: "set",
         table: "space_view",
         path: [],
         id: expect.any(String),
@@ -162,16 +142,6 @@ describe('NotionUser', () => {
         command: "listAfter",
         table: "user_root",
         path: ['space_views'],
-        id: expect.any(String),
-        args: {
-          after: '',
-          id: expect.any(String)
-        }
-      },
-      {
-        command: "listAfter",
-        table: "space",
-        path: ['pages'],
         id: expect.any(String),
         args: {
           after: '',

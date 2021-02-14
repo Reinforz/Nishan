@@ -274,7 +274,7 @@ export const TSpaceViewUpdateKeys = ['notify_desktop', 'notify_email', 'notify_m
 export const TUserSettingsUpdateKeys = ['start_day_of_week', 'time_zone', 'locale', 'preferred_locale', 'preferred_locale_origin'] as const;
 
 export type ISpaceUpdateInput = Partial<Pick<ISpace, ElementType<typeof TSpaceUpdateKeys>>>;
-export type ISpaceCreateInput = Partial<Pick<ISpace, Exclude<ElementType<typeof TSpaceUpdateKeys>, "name">>> & {name: string};
+export type ISpaceCreateInput = Partial<Pick<ISpace, Exclude<ElementType<typeof TSpaceUpdateKeys>, "name" | "domain">>> & {name: string, contents: TBlockCreateInput[]};
 
 export type ICollectionUpdateInput = Partial<Pick<ICollection, ElementType<typeof TCollectionUpdateKeys>>>;
 

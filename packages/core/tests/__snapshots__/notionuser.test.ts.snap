@@ -22,40 +22,6 @@ Object {
 
 exports[`NotionUser create space 2`] = `
 Object {
-  "alive": true,
-  "content": Array [],
-  "created_by_id": "user_1",
-  "created_by_table": "notion_user",
-  "created_time": Any<Number>,
-  "id": Any<String>,
-  "last_edited_by_id": "user_1",
-  "last_edited_by_table": "notion_user",
-  "last_edited_time": Any<Number>,
-  "parent_id": Any<String>,
-  "parent_table": "space",
-  "permissions": Array [
-    Object {
-      "role": "editor",
-      "type": "user_permission",
-      "user_id": "user_1",
-    },
-  ],
-  "properties": Object {
-    "title": Array [
-      Array [
-        "Default Page",
-      ],
-    ],
-  },
-  "shard_id": 123,
-  "space_id": Any<String>,
-  "type": "page",
-  "version": 0,
-}
-`;
-
-exports[`NotionUser create space 3`] = `
-Object {
   "beta_enabled": true,
   "created_by_id": "user_1",
   "created_by_table": "notion_user",
@@ -64,7 +30,6 @@ Object {
   "disable_guests": false,
   "disable_move_to_space": false,
   "disable_public_access": false,
-  "domain": "",
   "icon": "",
   "id": Any<String>,
   "invite_link_code": "",
@@ -83,7 +48,7 @@ Object {
 }
 `;
 
-exports[`NotionUser create space 4`] = `
+exports[`NotionUser create space 3`] = `
 Array [
   Object {
     "args": Object {
@@ -92,50 +57,12 @@ Array [
       "disable_guests": false,
       "disable_move_to_space": false,
       "disable_public_access": false,
-      "domain": "",
       "invite_link_enabled": true,
     },
     "command": "update",
     "id": Any<String>,
     "path": Array [],
     "table": "space",
-  },
-  Object {
-    "args": Object {
-      "alive": true,
-      "content": Array [],
-      "created_by_id": "user_1",
-      "created_by_table": "notion_user",
-      "created_time": Any<Number>,
-      "id": Any<String>,
-      "last_edited_by_id": "user_1",
-      "last_edited_by_table": "notion_user",
-      "last_edited_time": Any<Number>,
-      "parent_id": Any<String>,
-      "parent_table": "space",
-      "permissions": Array [
-        Object {
-          "role": "editor",
-          "type": "user_permission",
-          "user_id": "user_1",
-        },
-      ],
-      "properties": Object {
-        "title": Array [
-          Array [
-            "Default Page",
-          ],
-        ],
-      },
-      "shard_id": 123,
-      "space_id": Any<String>,
-      "type": "page",
-      "version": 0,
-    },
-    "command": "update",
-    "id": Any<String>,
-    "path": Array [],
-    "table": "block",
   },
   Object {
     "args": Object {
@@ -155,7 +82,7 @@ Array [
       "version": 1,
       "visited_templates": Array [],
     },
-    "command": "set",
+    "command": "update",
     "id": Any<String>,
     "path": Array [],
     "table": "space_view",
@@ -171,46 +98,6 @@ Array [
       "space_views",
     ],
     "table": "user_root",
-  },
-  Object {
-    "args": Object {
-      "after": "",
-      "id": Any<String>,
-    },
-    "command": "listAfter",
-    "id": Any<String>,
-    "path": Array [
-      "pages",
-    ],
-    "table": "space",
-  },
-]
-`;
-
-exports[`NotionUser update space multiple=false,arg=string 1`] = `
-Object {
-  "id": "space_1",
-  "last_edited_by_id": "user_1",
-  "last_edited_by_table": "notion_user",
-  "last_edited_time": Any<Number>,
-  "name": "Space One",
-  "shard_id": 123,
-}
-`;
-
-exports[`NotionUser update space multiple=false,arg=string 2`] = `
-Array [
-  Object {
-    "args": Object {
-      "last_edited_by_id": "user_1",
-      "last_edited_by_table": "notion_user",
-      "last_edited_time": Any<Number>,
-      "name": "Space One",
-    },
-    "command": "update",
-    "id": "space_1",
-    "path": Array [],
-    "table": "space",
   },
 ]
 `;

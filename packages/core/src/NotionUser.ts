@@ -3,14 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { createPageMap, error, idToUuid, Operation, transformToMultiple, uuidToId, warn } from '../utils';
+import { createPageMap, idToUuid, nestedContentPopulate, Operation, transformToMultiple, uuidToId, warn } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
-import Page from './Page';
-import CollectionViewPage from './CollectionViewPage';
-import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView, ICollection, IPage } from '@nishans/types';
+import { INotionUser, IUserSettings, IUserRoot, ISpace, ISpaceView, IPage, ICollection, TPage } from '@nishans/types';
 import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes, ISpaceCreateInput } from '../types';
 import { Mutations} from '@nishans/endpoints';
+import { Page, CollectionViewPage } from '../src';
 
 /**
  * A class to represent NotionUser of Notion
@@ -82,7 +81,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), space_view_id = uuidv4(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = uuidv4(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
 
       spaces.push(new Space({
         id: space_id,
@@ -96,33 +95,18 @@ class NotionUser extends Data<INotionUser> {
         disable_move_to_space,
         beta_enabled,
         invite_link_enabled,
-        domain,
       }, space_extra_data = {
         ...metadata,
         id: space_id,
         invite_link_code: "",
         name,
-        pages: [page_id],
+        pages: [],
         permissions: [],
         plan_type: "personal",
         shard_id: this.shard_id,
         icon,
-      } as any, page_data: IPage = {
-        type: 'page',
-        id: page_id,
-        parent_id: space_id,
-        parent_table: 'space',
-        alive: true,
-        permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
-        properties: {
-          title: [['Default Page']]
-        },
-        content: [],
-        shard_id: this.shard_id,
-        space_id,
-        ...metadata
-      };
-
+      } as any;
+      
       const space_view_data: ISpaceView = {
         created_getting_started: false,
         created_onboarding_templates: false,
@@ -145,19 +129,22 @@ class NotionUser extends Data<INotionUser> {
 
       this.cache.space.set(space_id, cached_space_data);
       this.cache.space_view.set(space_view_id, space_view_data);
-      this.cache.block.set(page_id, page_data);
 
       const user_root = this.cache.user_root.get(this.user_id) as IUserRoot;
       user_root.space_views.push(space_view_id);
 
       this.stack.push(
         Operation.space.update(space_id, [], space_op_data),
-        Operation.block.update(page_id, [], page_data),
-        Operation.space_view.set(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
+        Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
         Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id }),
-        Operation.space.listAfter(space_id, ['pages'], { after: '', id: page_id })
       );
+
       this.logger && this.logger(`CREATE`, 'space', space_id);
+      this.logger && this.logger(`CREATE`, 'space_view', space_view_id);
+      this.logger && this.logger(`UPDATE`, 'user_root', this.user_id);
+      this.logger && this.logger(`UPDATE`, 'space', space_id);
+
+      await nestedContentPopulate(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };
 
     return spaces;

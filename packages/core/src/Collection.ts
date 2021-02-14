@@ -17,7 +17,7 @@ class Collection extends Data<ICollection> {
   }
 
   #getRowPages = async () => {
-    await this.initializeCache();
+    await this.initializeNotionCache();
     const page_ids: string[] = [];
     for (const [_, page] of this.cache.block)
       if (page?.type === "page" && page.parent_id === this.id && !page.is_template) page_ids.push(page.id);

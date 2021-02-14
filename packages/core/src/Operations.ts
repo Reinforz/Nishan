@@ -1,10 +1,10 @@
 import { Mutations, createTransaction } from '@nishans/endpoints';
-import { NotionCache } from '@nishans/cache';
+import { NotionCacheClass } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NishanArg } from '../types';
 import { warn } from '../utils';
 
-export default class Operations extends NotionCache {
+export default class Operations extends NotionCacheClass {
 	stack: IOperation[] = [];
 	space_id: string;
 	shard_id: number;

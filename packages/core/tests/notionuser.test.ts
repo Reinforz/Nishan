@@ -1,4 +1,4 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
@@ -387,7 +387,7 @@ describe('NotionUser', () => {
 		});
 
 		const initializeCacheForSpecificDataMock = jest
-			.spyOn(NotionCache.prototype, 'initializeCacheForSpecificData')
+			.spyOn(Data.prototype, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(() => {
 				return {} as any;
 			});

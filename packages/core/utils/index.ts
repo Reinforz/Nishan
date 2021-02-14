@@ -13,6 +13,7 @@ export * from './positionChildren';
 export * from './iterateChildren';
 export * from './detectChildData';
 export * from './createViewMaps';
+export * from './populatePageMap';
 export * from './errors';
 export * from './deepMerge';
 export * from './constructLogger';

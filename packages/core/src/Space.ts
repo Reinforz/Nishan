@@ -1,7 +1,7 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { createPageMap, error, nestedContentPopulate } from '../utils';
+import { createPageMap, error, nestedContentPopulate, transformToMultiple } from '../utils';
 
 import Collection from './Collection';
 import CollectionViewPage from './CollectionViewPage';
@@ -141,7 +141,7 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the page to be deleted
    */
   async deleteTRootPage(arg?: FilterType<TPage>) {
-    return await this.deleteTRootPages(typeof arg === "string" ? [arg] : arg,  false);
+    return await this.deleteTRootPages(transformToMultiple(arg),  false);
   }
 
   /**
@@ -160,7 +160,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootCollection(arg?: FilterType<ICollection>) {
-    return (await this.getRootCollections(typeof arg === "string" ? [arg] : arg, true))[0]
+    return (await this.getRootCollections(transformToMultiple(arg), true))[0]
   }
 
   async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {

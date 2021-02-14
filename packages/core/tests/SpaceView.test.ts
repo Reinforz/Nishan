@@ -154,17 +154,15 @@ it(`getSpace`, () => {
 	expect(deepEqual(space.getCachedData(), { id: 'space_1' })).toBe(true);
 });
 
-it.only(`getBookmarkedPage`, async () => {
+it(`getBookmarkedPage`, async () => {
 	const cache: ICache = {
 			block: new Map([
-				[ 'block_1', { type: 'collection_view_page', collection_id: 'collection_1' } as any ]
+				[ 'block_1', { type: 'collection_view_page', collection_id: 'collection_1', view_ids: [] } as any ]
 			]),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ] } as any ] ]),
 			collection_view: new Map(),
 			notion_user: new Map(),
-			space_view: new Map([
-				[ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] } as any ]
-			]),
+			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] } as any ] ]),
 			space: new Map(),
 			user_root: new Map(),
 			user_settings: new Map()
@@ -186,5 +184,80 @@ it.only(`getBookmarkedPage`, async () => {
 	});
 
 	const page_map = await space_view.getBookmarkedPage('block_1');
-  expect(page_map.collection_view_page.get("Collection One")?.id).toBe('block_1');
+	expect(page_map.collection_view_page.get('Collection One')).not.toBeUndefined();
+});
+
+it(`updateBookmarkedPages`, async () => {
+	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
+		cache: ICache = {
+			block: new Map([
+				[ 'block_1', { type: 'page', properties: { title: [ [ 'Block One' ] ] } } as any ],
+				[ 'block_2', { type: 'page', properties: { title: [ [ 'Block Two' ] ] } } as any ]
+			]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
+			space: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
+
+	const logger_spy = jest.fn();
+
+	const space_view = new SpaceView({
+		cache,
+		logger: logger_spy,
+		id: 'space_view_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const page_map = await space_view.updateBookmarkedPages([ [ 'block_1', false ], [ 'block_2', true ] ]);
+
+	expect(page_map.page.get('Block One')).not.toBeUndefined();
+	expect(page_map.page.get('block_2')).not.toBeUndefined();
+
+	expect(space_view_1).toMatchSnapshot({
+		bookmarked_pages: [ 'block_2' ],
+		id: 'space_view_1',
+		last_edited_time: expect.any(Number),
+		last_edited_by_table: 'notion_user',
+		last_edited_by_id: 'user_root_1'
+	});
+
+	expect(stack).toMatchSnapshot([
+		{
+			path: [ 'bookmarked_pages' ],
+			table: 'space_view',
+			command: 'listRemove',
+			args: { id: 'block_1' },
+			id: 'space_view_1'
+		},
+		{
+			path: [ 'bookmarked_pages' ],
+			table: 'space_view',
+			command: 'listAfter',
+			args: { id: 'block_2' },
+			id: 'space_view_1'
+		},
+		{
+			path: [],
+			table: 'space_view',
+			command: 'update',
+			args: {
+				last_edited_time: expect.any(Number),
+				last_edited_by_table: 'notion_user',
+				last_edited_by_id: 'user_root_1'
+			},
+			id: 'space_view_1'
+		}
+	]);
+
+	await space_view.updateBookmarkedPage([ 'block_2', true ]);
 });

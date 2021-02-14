@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
@@ -26,6 +26,7 @@
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
   "scripts": {
+    "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
     "test": "npx jest --runInBand ./tests --collectCoverage"
@@ -35,7 +36,7 @@
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.18",
-    "@nishans/cache": "^0.0.18",
+    "@nishans/cache": "^0.0.19",
     "@nishans/notion-formula": "^0.0.15",
     "colors": "^1.4.0",
     "uuid": "^8.3.2"

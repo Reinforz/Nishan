@@ -15,7 +15,7 @@ import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
 export * from "./View";
-import { constructLogger, error, iterateAndGetChildren } from "../utils";
+import { constructLogger, error, iterateAndGetChildren, transformToMultiple } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends NotionCacheClass {
@@ -44,7 +44,7 @@ class Nishan extends NotionCacheClass {
    * @param args An string id, a predicate passed the INotionUser or undefined to indicate everything
    */
   async getNotionUser(arg?: FilterType<INotionUser>) {
-    return (await this.getNotionUsers(typeof arg === "string" ? [arg] : arg, false))[0];
+    return (await this.getNotionUsers(transformToMultiple(arg), false))[0];
   }
 
   /**

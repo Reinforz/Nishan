@@ -1,6 +1,6 @@
 import { ITableView, IBoardView, ITimelineView } from "@nishans/types";
 import { NishanArg, TAggregationsCreateInput, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaAggregationMapValue, TAggregationsUpdateInput } from "../../types";
-import { getAggregationsMap, getSchemaMap, Operation } from "../../utils";
+import { getAggregationsMap, getSchemaMap, Operation, transformToMultiple } from "../../utils";
 import View from "./View";
 
 /**
@@ -55,7 +55,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
   }
 
   async deleteAggregation(arg: FilterType<ISchemaAggregationMapValue>) {
-    await this.deleteAggregations(typeof arg === "string" ? [arg] : arg,  false);
+    await this.deleteAggregations(transformToMultiple(arg),  false);
   }
 
   async deleteAggregations(args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {

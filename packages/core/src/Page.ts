@@ -2,7 +2,7 @@ import { Queries, Mutations } from "@nishans/endpoints";
 import { IPage, ISpace, ISpaceView, TExportType, TBlock, INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, IBlockMap, IPageCreateInput } from "../types";
-import { createBlockClass, createBlockMap, error, nestedContentPopulate, Operation } from "../utils";
+import { createBlockClass, createBlockMap, error, nestedContentPopulate, Operation, transformToMultiple } from "../utils";
 import Block from "./Block";
 
 
@@ -126,7 +126,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
   }
 
   async getBlock(arg?: FilterType<TBlock>) {
-    return await this.getBlocks(typeof arg === "string" ? [arg] : arg, false);
+    return await this.getBlocks(transformToMultiple(arg), false);
   }
 
   /**
@@ -175,7 +175,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @param arg id string or a predicate acting as a filter
    */
   async deleteBlock(arg?: FilterType<TBlock>) {
-    return await this.deleteBlocks(typeof arg === "string" ? [arg] : arg,  false);
+    return await this.deleteBlocks(transformToMultiple(arg),  false);
   }
 
   /**

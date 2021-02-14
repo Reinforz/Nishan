@@ -143,7 +143,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
-    await this.initializeCacheForThisData()
+    await this.initializeCacheForThisData();
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
       parent_id: this.id,
@@ -153,7 +153,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD, container: C) => any) {
-    await this.initializeCacheForThisData()
+    await this.initializeCacheForThisData();
     return await iterateAndGetChildren<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,

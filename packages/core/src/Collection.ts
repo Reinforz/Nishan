@@ -1,7 +1,7 @@
 import { generateFormulaAST } from '@nishans/notion-formula';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { FilterType, FilterTypes, ICollectionUpdateInput, IPageCreateInput, IPageUpdateInput, ISchemaMapValue, ISchemaUnitMap, NishanArg, TCollectionUpdateKeys, TSchemaUnitInput, UpdateType, UpdateTypes } from '../types';
-import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, Operation, warn } from '../utils';
+import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, Operation, transformToMultiple, warn } from '../utils';
 import Data from "./Data";
 import Page from './Page';
 import SchemaUnit from "./SchemaUnit";
@@ -110,7 +110,7 @@ class Collection extends Data<ICollection> {
   }
 
   async getPage(arg?: FilterType<IPage>) {
-    return (await this.getPages(typeof arg === "string" ? [arg] : arg, false))[0]
+    return (await this.getPages(transformToMultiple(arg), false))[0]
   }
 
   async getPages(args?: FilterTypes<IPage>, multiple?: boolean) {
@@ -189,7 +189,7 @@ class Collection extends Data<ICollection> {
   }
 
   async getSchemaUnit(arg?: FilterType<ISchemaMapValue>) {
-    return (await this.getSchemaUnits(typeof arg === "string" ? [arg] : arg, false))
+    return (await this.getSchemaUnits(transformToMultiple(arg), false))
   }
 
   /**

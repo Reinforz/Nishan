@@ -1,5 +1,192 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`NotionUser create space 1`] = `
+Object {
+  "alive": true,
+  "bookmarked_pages": Array [],
+  "created_getting_started": false,
+  "created_onboarding_templates": false,
+  "id": Any<String>,
+  "joined": true,
+  "notify_desktop": true,
+  "notify_email": true,
+  "notify_mobile": true,
+  "parent_id": "user_1",
+  "parent_table": "user_root",
+  "sidebar_hidden_templates": Array [],
+  "space_id": Any<String>,
+  "version": 1,
+  "visited_templates": Array [],
+}
+`;
+
+exports[`NotionUser create space 2`] = `
+Object {
+  "alive": true,
+  "content": Array [],
+  "created_by_id": "user_1",
+  "created_by_table": "notion_user",
+  "created_time": Any<Number>,
+  "id": Any<String>,
+  "last_edited_by_id": "user_1",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+  "parent_id": Any<String>,
+  "parent_table": "space",
+  "permissions": Array [
+    Object {
+      "role": "editor",
+      "type": "user_permission",
+      "user_id": "user_1",
+    },
+  ],
+  "properties": Object {
+    "title": Array [
+      Array [
+        "Default Page",
+      ],
+    ],
+  },
+  "shard_id": 123,
+  "space_id": Any<String>,
+  "type": "page",
+  "version": 0,
+}
+`;
+
+exports[`NotionUser create space 3`] = `
+Object {
+  "beta_enabled": true,
+  "created_by_id": "user_1",
+  "created_by_table": "notion_user",
+  "created_time": Any<Number>,
+  "disable_export": false,
+  "disable_guests": false,
+  "disable_move_to_space": false,
+  "disable_public_access": false,
+  "domain": "",
+  "icon": "",
+  "id": Any<String>,
+  "invite_link_code": "",
+  "invite_link_enabled": true,
+  "last_edited_by_id": "user_1",
+  "last_edited_by_table": "notion_user",
+  "last_edited_time": Any<Number>,
+  "name": "Space One",
+  "pages": Array [
+    Any<String>,
+  ],
+  "permissions": Array [],
+  "plan_type": "personal",
+  "shard_id": 123,
+  "version": 0,
+}
+`;
+
+exports[`NotionUser create space 4`] = `
+Array [
+  Object {
+    "args": Object {
+      "beta_enabled": true,
+      "disable_export": false,
+      "disable_guests": false,
+      "disable_move_to_space": false,
+      "disable_public_access": false,
+      "domain": "",
+      "invite_link_enabled": true,
+    },
+    "command": "update",
+    "id": Any<String>,
+    "path": Array [],
+    "table": "space",
+  },
+  Object {
+    "args": Object {
+      "alive": true,
+      "content": Array [],
+      "created_by_id": "user_1",
+      "created_by_table": "notion_user",
+      "created_time": Any<Number>,
+      "id": Any<String>,
+      "last_edited_by_id": "user_1",
+      "last_edited_by_table": "notion_user",
+      "last_edited_time": Any<Number>,
+      "parent_id": Any<String>,
+      "parent_table": "space",
+      "permissions": Array [
+        Object {
+          "role": "editor",
+          "type": "user_permission",
+          "user_id": "user_1",
+        },
+      ],
+      "properties": Object {
+        "title": Array [
+          Array [
+            "Default Page",
+          ],
+        ],
+      },
+      "shard_id": 123,
+      "space_id": Any<String>,
+      "type": "page",
+      "version": 0,
+    },
+    "command": "update",
+    "id": Any<String>,
+    "path": Array [],
+    "table": "block",
+  },
+  Object {
+    "args": Object {
+      "alive": true,
+      "bookmarked_pages": Array [],
+      "created_getting_started": false,
+      "created_onboarding_templates": false,
+      "id": Any<String>,
+      "joined": true,
+      "notify_desktop": true,
+      "notify_email": true,
+      "notify_mobile": true,
+      "parent_id": "user_1",
+      "parent_table": "user_root",
+      "sidebar_hidden_templates": Array [],
+      "space_id": Any<String>,
+      "version": 1,
+      "visited_templates": Array [],
+    },
+    "command": "set",
+    "id": Any<String>,
+    "path": Array [],
+    "table": "space_view",
+  },
+  Object {
+    "args": Object {
+      "after": "",
+      "id": Any<String>,
+    },
+    "command": "listAfter",
+    "id": Any<String>,
+    "path": Array [
+      "space_views",
+    ],
+    "table": "user_root",
+  },
+  Object {
+    "args": Object {
+      "after": "",
+      "id": Any<String>,
+    },
+    "command": "listAfter",
+    "id": Any<String>,
+    "path": Array [
+      "pages",
+    ],
+    "table": "space",
+  },
+]
+`;
+
 exports[`NotionUser update space multiple=false,arg=string 1`] = `
 Object {
   "id": "space_1",

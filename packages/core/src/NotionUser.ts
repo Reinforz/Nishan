@@ -8,8 +8,8 @@ import Space from './Space';
 import UserSettings from './UserSettings';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
-import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView, ICollection } from '@nishans/types';
-import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
+import { INotionUser, IUserSettings, IUserRoot, ISpace, TPage, ISpaceView, ICollection, IPage } from '@nishans/types';
+import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes, ISpaceCreateInput } from '../types';
 import { Mutations} from '@nishans/endpoints';
 
 /**
@@ -63,12 +63,12 @@ class NotionUser extends Data<INotionUser> {
   * @param opt Object for configuring the Space options
   * @returns Newly created Space object
   */
-  async createSpace(opt: ISpaceUpdateInput) {
+  async createSpace(opt: ISpaceCreateInput) {
     return (await this.createSpaces([opt]))[0];
   };
 
   // ? FEAT:1:H Take root pages to create as parameter 
-  async createSpaces(opts: ISpaceUpdateInput[]) {
+  async createSpaces(opts: ISpaceCreateInput[]) {
     const metadata = {
       created_by_id: this.user_id,
       created_by_table: "notion_user",
@@ -76,16 +76,19 @@ class NotionUser extends Data<INotionUser> {
       last_edited_by_id: this.user_id,
       last_edited_by_table: "notion_user",
       last_edited_time: Date.now(),
+      version: 0,
     } as const;
 
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name = "Workspace", icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), $space_view_id = uuidv4(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, domain = "", invite_link_enabled = true } = opt, page_id = uuidv4(), space_view_id = uuidv4(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+
       spaces.push(new Space({
         id: space_id,
         ...this.getProps()
-      }))
+      }));
+
       const space_op_data = {
         disable_public_access,
         disable_export,
@@ -99,15 +102,27 @@ class NotionUser extends Data<INotionUser> {
         id: space_id,
         invite_link_code: "",
         name,
-        pages: [],
+        pages: [page_id],
         permissions: [],
         plan_type: "personal",
         shard_id: this.shard_id,
-        version: 0,
         icon,
-      } as any;
+      } as any, page_data: IPage = {
+        type: 'page',
+        id: page_id,
+        parent_id: space_id,
+        parent_table: 'space',
+        alive: true,
+        permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
+        properties: {
+          title: [['Default Page']]
+        },
+        content: [],
+        shard_id: this.shard_id,
+        space_id,
+        ...metadata
+      };
 
-      this.cache.space.set(space_id, JSON.parse(JSON.stringify({...space_op_data, ...space_extra_data})));
       const space_view_data: ISpaceView = {
         created_getting_started: false,
         created_onboarding_templates: false,
@@ -119,35 +134,28 @@ class NotionUser extends Data<INotionUser> {
         parent_table: 'user_root',
         alive: true,
         joined: true,
-        id: $space_view_id,
+        id: space_view_id,
         version: 1,
         visited_templates: [],
         sidebar_hidden_templates: [],
         bookmarked_pages: []
-      }
-      this.cache.space_view.set($space_view_id, space_view_data);
-      const user_root = this.cache.user_root.get(this.user_id);
-      user_root?.space_views.push($space_view_id);
+      };
+
+      const cached_space_data = JSON.parse(JSON.stringify({...space_op_data, ...space_extra_data}))
+
+      this.cache.space.set(space_id, cached_space_data);
+      this.cache.space_view.set(space_view_id, space_view_data);
+      this.cache.block.set(page_id, page_data);
+
+      const user_root = this.cache.user_root.get(this.user_id) as IUserRoot;
+      user_root.space_views.push(space_view_id);
+
       this.stack.push(
         Operation.space.update(space_id, [], space_op_data),
-        Operation.user_settings.update(this.user_id, ['settings'], {
-          persona: 'personal', type: 'personal'
-        }),
-        Operation.space_view.set($space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
-        Operation.block.update(page_id, [], {
-          type: 'page',
-          id: page_id,
-          version: 1,
-          parent_id: space_id,
-          parent_table: 'space',
-          alive: true,
-          permissions: [{ type: 'user_permission', role: 'editor', user_id: this.user_id }],
-          properties: {
-            title: [[name]]
-          }
-        }),
-        Operation.user_root.listAfter(this.user_id, ['space_views'], { id: $space_view_id }),
-        Operation.space.listAfter(space_id, ['pages'], { id: page_id })
+        Operation.block.update(page_id, [], page_data),
+        Operation.space_view.set(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
+        Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id }),
+        Operation.space.listAfter(space_id, ['pages'], { after: '', id: page_id })
       );
       this.logger && this.logger(`CREATE`, 'space', space_id);
     };
@@ -228,9 +236,7 @@ class NotionUser extends Data<INotionUser> {
     await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
     for (let index = 0; index < ids.length; index++) {
       const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;
-      if(!page)
-        warn(`The data is neither a page nor a cvp`)
-      else if (page.type === "page") {
+      if (page.type === "page") {
         const page_obj = new Page({ ...this.getProps(), id: page.id })
         tpage_map.page.set(page.id, page_obj)
         tpage_map.page.set(page.properties.title[0][0], page_obj);
@@ -242,6 +248,8 @@ class NotionUser extends Data<INotionUser> {
         tpage_map.collection_view_page.set(page.id, cvp_obj);
         await this.initializeCacheForSpecificData(page.id, "block");
       }
+      else
+        warn(`The data is neither a page nor a cvp`)
     }
     return tpage_map;
   }

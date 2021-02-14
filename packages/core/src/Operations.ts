@@ -29,7 +29,8 @@ export default class Operations extends NotionCache {
 		else {
 			await Mutations.saveTransactions(createTransaction(this.shard_id, this.space_id, this.stack), {
 				token: this.token,
-				interval: 0
+				interval: 0,
+				user_id: this.user_id
 			});
 			this.emptyStack();
 		}

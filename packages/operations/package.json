@@ -1,0 +1,38 @@
+{
+  "name": "@nishans/operations",
+  "version": "0.0.0",
+  "description": "A package to inspect, modify and store notion operations",
+  "keywords": [
+    "notion",
+    "notion-api",
+    "notion-operations"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/operations/README.md",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "files": [
+    "dist/src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run test",
+    "build": "npx del-cli ./dist && tsc --sourceMap false",
+    "test": "npx jest --runInBand ./tests --collectCoverage"
+  },
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Foperations"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.17"
+  }
+}

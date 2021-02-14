@@ -45,6 +45,12 @@ export const NotionCacheObject = {
 		return update_cache_param.filter((info) => !Boolean(cache[info[1]].get(info[0])));
 	},
 
+	/**
+   * Constructs and executes syncRecordValue params
+   * @param args Array of [id, TDataType] tuples
+   * @param configs The notion request configs
+   * @param cache The cache to store result
+   */
 	constructSyncRecordsParams: async (args: UpdateCacheManuallyParam, configs: NotionRequestConfigs, cache: ICache) => {
 		const sync_record_values: SyncRecordValues[] = [];
 		// Iterate through the passed array argument and construct sync_record argument

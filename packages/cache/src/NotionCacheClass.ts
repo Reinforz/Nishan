@@ -25,7 +25,7 @@ export class NotionCacheClass {
       throw new Error(`Token not provided`);
 		this.token = token;
 		this.interval = interval ?? 500;
-		this.user_id = user_id;
+		this.user_id = user_id ?? '';
 	}
 
   /**

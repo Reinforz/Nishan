@@ -1,6 +1,5 @@
 import deepEqual from 'deep-equal';
 import { detectChildData } from '../../src';
-import data from '../data';
 
 describe('detectChildData', () => {
 	it(`Should return correct child data for space type`, () => {
@@ -20,31 +19,18 @@ describe('detectChildData', () => {
 	});
 
 	it(`Should return correct child data for block type`, () => {
+		expect(deepEqual(detectChildData('block', { type: 'page' } as any), [ 'content', 'block' ])).toBe(true);
+
 		expect(
-			deepEqual(detectChildData('block', data.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6402'].value), [
-				'content',
-				'block'
-			])
+			deepEqual(detectChildData('block', { type: 'collection_view_page' } as any), [ 'view_ids', 'collection_view' ])
 		).toBe(true);
 
 		expect(
-			deepEqual(detectChildData('block', data.recordMap.block['4b4bb21d-f68b-4113-b342-830687a5337a'].value), [
-				'view_ids',
-				'collection_view'
-			])
-		).toBe(true);
-
-		expect(
-			deepEqual(detectChildData('block', data.recordMap.block['4b4bb21d-f68b-4113-b342-830687a5337b'].value), [
-				'view_ids',
-				'collection_view'
-			])
+			deepEqual(detectChildData('block', { type: 'collection_view' } as any), [ 'view_ids', 'collection_view' ])
 		).toBe(true);
 
 		expect(() => detectChildData('block' as any)).toThrow(`type block requires second data argument`);
-		expect(() => detectChildData('block', data.recordMap.block['6eae77bf-64cd-4ed0-adfb-e97d928a6401'].value)).toThrow(
-			`Unsupported block type header`
-		);
+		expect(() => detectChildData('block', { type: 'header' } as any)).toThrow(`Unsupported block type header`);
 		expect(() => detectChildData('notion_user' as any)).toThrow(`Unsupported notion_user data provided`);
 	});
 });

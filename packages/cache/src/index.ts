@@ -1,3 +1,4 @@
 export * from './types';
-export * from './Cache';
+export * from './NotionCacheClass';
+export * from './NotionCacheObject';
 export * from '../utils';

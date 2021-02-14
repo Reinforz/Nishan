@@ -1,18 +1,17 @@
-import { NotionRequestConfigs, NotionHeaders, UpdateCacheManuallyParam, constructNotionHeaders } from '@nishans/endpoints';
+import { NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap, TDataType } from '@nishans/types';
-import { initializeNotionCache, initializeCacheForSpecificData, returnNonCachedData, saveToCache, updateCacheIfNotPresent, updateCacheManually, validateCache } from '../utils';
+import { NotionCacheObject } from '../src';
 import { CtorArgs, ICache } from './types';
 
-export class NotionCache {
+export class NotionCacheClass {
 	cache: ICache;
 	token: string;
 	interval: number;
-	headers: NotionHeaders;
 	user_id?: string;
 
 	constructor ({ cache, token, interval, user_id }: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
     // Validate the cache first if its passed, otherwise store a default one
-		this.cache = (cache && validateCache(cache)) || {
+		this.cache = (cache && NotionCacheObject.validateCache(cache)) || {
 			block: new Map(),
 			collection: new Map(),
 			space: new Map(),
@@ -24,7 +23,6 @@ export class NotionCache {
 		};
     if(!token)
       throw new Error(`Token not provided`);
-		this.headers = constructNotionHeaders({token, user_id});
 		this.token = token;
 		this.interval = interval ?? 500;
 		this.user_id = user_id;
@@ -46,7 +44,7 @@ export class NotionCache {
  * @param recordMap The recordMap to save to cache
  */
 	saveToCache (recordMap: Partial<RecordMap>) {
-    saveToCache(recordMap, this.cache);
+    NotionCacheObject.saveToCache(recordMap, this.cache);
 	}
 
   /**
@@ -55,14 +53,14 @@ export class NotionCache {
    * @returns
    */
 	returnNonCachedData (update_cache_param: UpdateCacheManuallyParam) {
-		return returnNonCachedData(update_cache_param, this.cache);
+    return NotionCacheObject.returnNonCachedData(update_cache_param, this.cache);
   }
   
   /**
    * Initialize the cache by sending a post request to the `getSpaces` endpoint 
    */
   async initializeNotionCache(){
-    await initializeNotionCache(this.getConfigs(), this.cache);
+    await NotionCacheObject.initializeNotionCache(this.getConfigs(), this.cache);
   }
 
   /**
@@ -70,7 +68,7 @@ export class NotionCache {
    * @param args The array of id and data_type tuple to fetch and store
    */
 	async updateCacheManually (args: UpdateCacheManuallyParam) {
-		await updateCacheManually(args, this.getConfigs(), this.cache);
+		await NotionCacheObject.updateCacheManually(args, this.getConfigs(), this.cache);
 	}
 
   /**
@@ -78,7 +76,7 @@ export class NotionCache {
    * @param arg Array of id and data_type tuple to fetch from notion and store
    */
 	async updateCacheIfNotPresent (args: UpdateCacheManuallyParam) {
-		await updateCacheIfNotPresent(args, this.getConfigs(), this.cache);
+		await NotionCacheObject.updateCacheIfNotPresent(args, this.getConfigs(), this.cache);
   }
   
   /**
@@ -87,6 +85,6 @@ export class NotionCache {
    * @param type The type of data
    */
   async initializeCacheForSpecificData(id: string, type: TDataType){
-		await initializeCacheForSpecificData(id, type, this.getConfigs(), this.cache);
+		await NotionCacheObject.initializeCacheForSpecificData(id, type, this.getConfigs(), this.cache);
   }
 }

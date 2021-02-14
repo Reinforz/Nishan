@@ -29,7 +29,7 @@ class UserRoot extends Data<IUserRoot> {
 			args,
 			{ multiple, child_type: 'space_view', child_ids: 'space_views', container: [] },
 			(space_id) => this.cache.space_view.get(space_id),
-			(id, data, container) =>
+			(id, _, container) =>
 				container.push(
 					new SpaceView({
 						...this.getProps(),
@@ -40,7 +40,7 @@ class UserRoot extends Data<IUserRoot> {
 	}
 
 	async updateSpaceView (arg: UpdateType<ISpaceView, ISpaceViewUpdateInput>) {
-		return await this.updateSpaceViews(transformToMultiple(arg), false);
+		return (await this.updateSpaceViews(transformToMultiple(arg), false))[0];
 	}
 
 	async updateSpaceViews (args: UpdateTypes<ISpaceView, ISpaceViewUpdateInput>, multiple?: boolean) {
@@ -53,7 +53,7 @@ class UserRoot extends Data<IUserRoot> {
 				container: []
 			},
 			(id) => this.cache.space_view.get(id),
-			(id, _, __, space_views) => space_views.push(new SpaceView({ ...this.getProps(), id }))
+			(id, _, __, container) => container.push(new SpaceView({ ...this.getProps(), id }))
 		);
 	}
 }

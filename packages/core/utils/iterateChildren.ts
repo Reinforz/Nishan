@@ -5,16 +5,16 @@ import { IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions,
 import { deepMerge } from "../src";
 import { Operation } from "@nishans/operations";
 
-interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<NishanArg, "cache">{
+export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<NishanArg, "cache">{
   parent_type: TDataType,
   parent_id: string,
   logger?: Logger
 }
-interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C>{
+export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C>{
 }
 
-type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, "stack" | "user_id"> & IterateAndUpdateOptions<T, C> & IterateChildrenOptions<T, C>;
-type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, "stack" | "user_id"> & IterateAndDeleteOptions<T, C> & IterateChildrenOptions<T, C>;
+export type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, "stack" | "user_id"> & IterateAndUpdateOptions<T, C> & IterateChildrenOptions<T, C>;
+export type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, "stack" | "user_id"> & IterateAndDeleteOptions<T, C> & IterateChildrenOptions<T, C>;
 
 function updateLastEditedProps(block: any, user_id: string){
   block.last_edited_time = Date.now();
@@ -22,7 +22,7 @@ function updateLastEditedProps(block: any, user_id: string){
   block.last_edited_by_id = user_id;
 }
 
-type IterateChildren<TD = any, RD = any> = {
+export type IterateChildren<TD = any, RD = any> = {
   args: FilterTypes<TD>,
   cb: (id: string, data: TD) => any,
   method: "READ" | "DELETE",

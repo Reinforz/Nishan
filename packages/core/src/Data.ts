@@ -2,7 +2,7 @@ import { NotionCacheClass } from '@nishans/cache';
 import { TDataType, TData } from '@nishans/types';
 import { NotionOperationsClass, Operation } from '@nishans/operations';
 import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '../types';
-import { warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren, constructLogger } from "../utils";
+import { warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren, constructLogger, ChildTraverser } from "../utils";
 
 export interface IterateOptions<T, C>{
   /**
@@ -67,7 +67,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     this.id = arg.id;
     this.init_cache = false;
     this.logger = constructLogger(arg.logger);
-    this.user_id = arg.user_id ?? '';
+    this.user_id = arg.user_id;
     this.Operations = new NotionOperationsClass(arg)
   }
 
@@ -87,8 +87,10 @@ export default class Data<T extends TData> extends NotionCacheClass {
    */
   getCachedData() {
     const data = this.cache[this.type].get(this.id);
-    if ((data as any).alive === false)
-      warn(`${this.type}:${this.id} has been deleted`);
+    if (!data)
+      warn(`${this.type}:${this.id} doesnot exist in the cache`);
+    else if((data as any).alive === false)
+      warn(`${this.type}:${this.id} is not alive`);
     return data as T;
   }
 
@@ -107,28 +109,23 @@ export default class Data<T extends TData> extends NotionCacheClass {
     this.Operations.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
   }
 
-  /**
-   * Update the cache of the data using only the passed keys
-   * @param arg
-   * @param keys
-   */
-  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>, appendToStack?: boolean) {
-    appendToStack = appendToStack ?? true
+  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
     const parent_data = this.getCachedData(), data = arg;
 
     Object.entries(arg).forEach(([key, value])=>{
       if(keys.includes(key as keyof T))
         parent_data[key as keyof T] = value;
+      else
+        delete (data as any)[key]
     })
 
     this.logger && this.logger("UPDATE", this.type as any, this.id)
-    if(appendToStack)
-      this.Operations.stack.push(
-        Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data)
-      );
+    this.Operations.stack.push(
+      Operation[this.type].update(this.id, [], data)
+    );
   }
 
-  protected async initializeCacheForThisData() {
+  async initializeCacheForThisData() {
     if (!this.init_cache && this.type !== "notion_user") {
       await this.initializeCacheForSpecificData(this.id, this.type)
       this.init_cache = true;
@@ -137,7 +134,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
 
   protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCacheForThisData()
-    return  await iterateAndDeleteChildren<T, TD, C>(args, transform, {
+    return await ChildTraverser.delete<T, TD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),
@@ -147,7 +144,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
 
   protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
     await this.initializeCacheForThisData();
-    return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
+    return await ChildTraverser.update<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
       parent_id: this.id,
       ...this.getProps(),
@@ -157,7 +154,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
 
   protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined | Promise<RD | undefined>), cb?: (id: string, data: RD, container: C) => any) {
     await this.initializeCacheForThisData();
-    return await iterateAndGetChildren<T, RD, C>(args, transform, {
+    return await ChildTraverser.get<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),
@@ -169,7 +166,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     return {
       token: this.token,
       interval: this.interval,
-      user_id: this.user_id ?? '',
+      user_id: this.user_id,
       shard_id: this.Operations.shard_id,
       space_id: this.Operations.space_id,
       cache: this.cache,

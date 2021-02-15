@@ -9,8 +9,6 @@
   <img src="https://img.shields.io/npm/dw/@nishans/types?style=flat&color=orange"/>
   <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/types?color=yellow"/>
   <img src="https://img.shields.io/npm/v/@nishans/types?color=%2303C04A"/>
-  <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=types&color=blue"/>
-  <img src="https://img.shields.io/librariesio/release/npm/@nishans/types?color=%234B0082">
 </p>
 
 <p align="center">
@@ -20,4 +18,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>Package containing typescript typings for Notion</b></p>
+<p align="center"><b>Package containing typescript type definitions for Notion</b></p>

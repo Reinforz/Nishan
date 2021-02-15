@@ -8,7 +8,7 @@ import colors from 'colors';
 import Data from '../src/Data';
 
 afterEach(() => {
-	jest.clearAllMocks();
+	jest.resetAllMocks();
 });
 
 describe('NotionUser', () => {

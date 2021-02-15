@@ -18,3 +18,4 @@ export * from './constructLogger';
 export * from './transformToMultiple';
 export * from './uuidConversion';
 export * from './createData';
+export * from './ChildTraverser';

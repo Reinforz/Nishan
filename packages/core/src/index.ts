@@ -14,8 +14,9 @@ import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
 import CollectionBlock from "./CollectionBlock";
 import NotionPermissions from "./Permissions";
+import NotionData from "./Data";
 export * from "./View";
-import { constructLogger, error, iterateAndGetChildren, transformToMultiple } from "../utils";
+import { constructLogger, iterateAndGetChildren, transformToMultiple } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
 class Nishan extends NotionCacheClass {
@@ -96,5 +97,6 @@ export {
   Space,
   SchemaUnit,
   CollectionBlock,
-  NotionPermissions
+  NotionPermissions,
+  NotionData
 }

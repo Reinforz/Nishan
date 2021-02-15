@@ -27,7 +27,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       })
     };
 
-    this.stack.push(Operation.collection_view.update(this.id, [], {
+    this.Operations.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2,
     }))
   }
@@ -49,7 +49,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
       aggregation.aggregator = aggregator as any;
     })
 
-    this.stack.push(Operation.collection_view.update(this.id, [], {
+    this.Operations.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2,
     }))
   }
@@ -69,7 +69,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
     }, (name) => aggregations_map.get(name), (_, aggregation) => {
       aggregations.splice(aggregations.findIndex(data => data.property === aggregation.schema_id), 1)
     })
-    this.stack.push(Operation.collection_view.update(this.id, [], {
+    this.Operations.stack.push(Operation.collection_view.update(this.id, [], {
       query2: data.query2
     }))
   }

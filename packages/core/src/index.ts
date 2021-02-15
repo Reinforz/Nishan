@@ -12,7 +12,6 @@ import UserRoot from "./UserRoot";
 import SpaceView from "./SpaceView";
 import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
-import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
 import NotionPermissions from "./Permissions";
 export * from "./View";
@@ -96,7 +95,6 @@ export {
   SpaceView,
   Space,
   SchemaUnit,
-  Operations,
   CollectionBlock,
   NotionPermissions
 }

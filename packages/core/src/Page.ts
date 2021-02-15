@@ -70,7 +70,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
       else target_space_view.bookmarked_pages.push(this.id);
     }
 
-    this.stack.push(
+    this.Operations.stack.push(
       (is_bookmarked ? Operation.space_view.listRemove : Operation.space_view.listBefore)(target_space_view.id, ["bookmarked_pages"], {
         id: data.id
       })

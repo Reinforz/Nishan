@@ -451,7 +451,7 @@ export default async function step3 (target_page: Page) {
       ]
     }
   ]);
-  await target_page.executeOperation();
+  await target_page.Operations.executeOperation();
 
   const Web3CVP = created_collection_view_page.get("Web 3.0");
   if (Web3CVP) {
@@ -461,7 +461,7 @@ export default async function step3 (target_page: Page) {
       const start = (10 * index) + 1, end = start + 9;
       await Web3CVP_collection.createPages(returnSubjectSlice(start, end));
       console.log(`Deployed batch ${index + 1}`);
-      await target_page.executeOperation();
+      await target_page.Operations.executeOperation();
     }
   }
 }

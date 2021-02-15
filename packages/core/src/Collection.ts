@@ -157,7 +157,7 @@ class Collection extends Data<ICollection> {
       child_data.last_edited_by_id = this.user_id;
       child_data.last_edited_by_table = "notion_user";
       child_data.last_edited_time = Date.now();
-      this.stack.push(Operation.block.update(child_id, [], { alive: false , last_edited_time: Date.now(), last_edited_by: this.user_id}));
+      this.Operations.stack.push(Operation.block.update(child_id, [], { alive: false , last_edited_time: Date.now(), last_edited_by: this.user_id}));
     });
   }
 
@@ -183,7 +183,7 @@ class Collection extends Data<ICollection> {
         warn(`Collection:${this.id} already contains SchemaUnit:${schema_id}`)
     };
 
-    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+    this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
     this.updateLastEditedProps();
     return schema_unit_map;
   }
@@ -238,7 +238,7 @@ class Collection extends Data<ICollection> {
       results[type].set(name, schema_obj)
     });
     this.updateLastEditedProps();
-    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
+    this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
     return results;
   }
 
@@ -271,7 +271,7 @@ class Collection extends Data<ICollection> {
       delete data.schema[schema_id]
     });
     this.updateLastEditedProps();
-    this.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
+    this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }))
   }
 }
 

@@ -1,7 +1,7 @@
 import { Mutations, createTransaction } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 
-export class OperationsClass {
+export class NotionOperationsClass {
 	stack: IOperation[] = [];
 	space_id: string;
 	shard_id: number;

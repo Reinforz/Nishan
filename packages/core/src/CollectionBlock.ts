@@ -48,7 +48,7 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
 		const data = this.getCachedData(),
 			collection = this.cache.collection.get(data.collection_id) as ICollection,
 			[ view_ids, view_map ] = createViews(collection, params, this.getProps());
-		this.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
+		this.Operations.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();
 		return view_map;

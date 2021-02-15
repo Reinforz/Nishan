@@ -114,14 +114,14 @@ class SpaceView extends Data<ISpaceView> {
 				const bookmarked_pages = data.bookmarked_pages as string[];
 				if (!updated_favourite_status && bookmarked_pages.includes(id)) {
 					data.bookmarked_pages = bookmarked_pages.filter((page_id) => page_id !== id);
-					this.stack.push(
+					this.Operations.stack.push(
 						Operation.space_view.listRemove(data.id, [ 'bookmarked_pages' ], {
 							id
 						})
 					);
 				} else if (updated_favourite_status && !bookmarked_pages.includes(id)) {
 					bookmarked_pages.push(id);
-					this.stack.push(
+					this.Operations.stack.push(
 						Operation.space_view.listAfter(data.id, [ 'bookmarked_pages' ], {
 							id
 						})

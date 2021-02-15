@@ -425,6 +425,6 @@ export default async function step1(user_family_name: string, space_name: string
     }
   ]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-  await target_page?.executeOperation();
+  await target_page?.Operations.executeOperation();
   return target_page as Page;
 };

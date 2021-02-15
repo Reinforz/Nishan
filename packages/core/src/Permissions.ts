@@ -1,6 +1,6 @@
 import { Queries, Mutations } from "@nishans/endpoints";
 import { TPermissionRole, INotionUser, IPermission, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole, ISpacePermission, TPage, TDataType } from "@nishans/types";
-import { NishanArg } from "types";
+import { NishanArg } from "../types";
 import { error, Operation } from "../utils";
 import Data from "./Data";
 
@@ -61,7 +61,7 @@ export default class NotionPermissions extends Data<TPage>{
     for (let index = 0; index < args.length; index++) {
       const arg = args[index];
       const permission_data: IPermission = { role: arg[1], type: "user_permission", user_id: arg[0] }
-      this.stack.push({
+      this.Operations.stack.push({
         args: permission_data,
         command: "setPermissionItem",
         id: this.id,
@@ -71,7 +71,7 @@ export default class NotionPermissions extends Data<TPage>{
       data.permissions.push(permission_data)
     }
     this.updateLastEditedProps();
-    this.stack.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+    this.Operations.stack.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
   }
 
   /**
@@ -106,7 +106,7 @@ export default class NotionPermissions extends Data<TPage>{
     permission.allow_duplicate = options?.allow_duplicate ?? permission.allow_duplicate;
     permission.allow_search_engine_indexing = options?.allow_search_engine_indexing ?? permission.allow_search_engine_indexing;
     
-    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], permission_data))
+    this.Operations.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], permission_data))
   }
 
   removePublicPermission() {
@@ -117,7 +117,7 @@ export default class NotionPermissions extends Data<TPage>{
     const data = this.getCachedData(), permission = data.permissions.find((permission) => permission.type === "public_permission") as ISpacePermission;
     permission.role = role;
     this.updateLastEditedProps();
-    this.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
+    this.Operations.stack.push(Operation.block.setPermissionItem(this.id, ["permissions"], {
       type: "space_permission",
       role,
     }))

@@ -180,7 +180,7 @@ export default class Space extends Data<ISpace> {
       else{
         const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
-        this.stack.push({
+        this.Operations.stack.push({
           args: permission_data,
           command: "setPermissionItem",
           id: this.id,

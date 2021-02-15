@@ -96,7 +96,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		}
 		this.updateLastEditedProps();
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				query2: data.query2
 			})
@@ -137,7 +137,7 @@ class View<T extends TView> extends Data<T> {
 				}
 			}
 		);
-		this.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
+		this.Operations.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
 	}
 
 	async deleteSort (arg: FilterType<ISchemaSortsMapValue>) {
@@ -161,7 +161,7 @@ class View<T extends TView> extends Data<T> {
 				sorts.splice(sorts.findIndex((data) => data.property === sort.schema_id), 1);
 			}
 		);
-		this.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
+		this.Operations.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
 	}
 
 	createFilters (args: TViewFilterCreateInput[]) {
@@ -170,7 +170,7 @@ class View<T extends TView> extends Data<T> {
 			filters = initializeViewFilters(this.getCachedData()).filters;
 		populateFilters(args, filters, schema_map);
 		this.updateLastEditedProps();
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				query2: data.query2
 			})
@@ -207,7 +207,7 @@ class View<T extends TView> extends Data<T> {
 				}
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				query2: data.query2
 			})
@@ -235,7 +235,7 @@ class View<T extends TView> extends Data<T> {
 				filters.splice(filters.findIndex((data) => (data as any).property === filter.schema_id), 1);
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				query2: data.query2
 			})
@@ -266,7 +266,7 @@ class View<T extends TView> extends Data<T> {
 				target_format_property.visible = updated_data;
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				format: data.format
 			})
@@ -297,7 +297,7 @@ class View<T extends TView> extends Data<T> {
 				target_format_property.width = updated_data;
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				format: data.format
 			})
@@ -332,7 +332,7 @@ class View<T extends TView> extends Data<T> {
 				}
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				format: data.format
 			})
@@ -373,7 +373,7 @@ class View<T extends TView> extends Data<T> {
 				if (width !== undefined && width !== null) target_format_property.width = width;
 			}
 		);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {
 				format: data.format
 			})

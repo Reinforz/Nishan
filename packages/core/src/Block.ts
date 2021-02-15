@@ -36,7 +36,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			const { id } = infos[index],
 				block_id = generateId(id);
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
-				this.stack.push(
+				this.Operations.stack.push(
 					Operation.block.update(block_id, [], {
 						id: block_id,
 						type: 'copy_indicator',
@@ -60,7 +60,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				);
 				this.logger && this.logger('CREATE', 'block', block_id);
 			} else {
-				this.stack.push(
+				this.Operations.stack.push(
 					Operation.block.update(block_id, [], {
 						...data,
 						id: block_id,
@@ -90,7 +90,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		const { format = data.format, properties = data.properties } = args as any;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.block.update(this.id, [], {
 				properties,
 				format,
@@ -108,7 +108,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		this.stack.push(Operation.block.update(this.id, [], { type }));
+		this.Operations.stack.push(Operation.block.update(this.id, [], { type }));
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		}
 		data.alive = false;
 		this.updateLastEditedProps();
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.block.update(this.id, [], {
 				alive: false,
 				...this.getLastEditedProps()
@@ -160,7 +160,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			this.updateLastEditedProps(new_parent_data);
 		}
 
-		this.stack.push(
+		this.Operations.stack.push(
 			Operation.block.update(this.id, [], {
 				...this.getLastEditedProps(),
 				parent_id: new_parent_id,

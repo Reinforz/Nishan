@@ -1,7 +1,8 @@
+import { NotionCacheClass } from '@nishans/cache';
 import { TDataType, TData } from '@nishans/types';
+import { NotionOperationsClass } from '@nishans/operations';
 import { NishanArg, RepositionParams, FilterTypes, UpdateTypes, Logger } from '../types';
 import { Operation, warn, positionChildren, iterateAndUpdateChildren, iterateAndGetChildren, iterateAndDeleteChildren, constructLogger } from "../utils";
-import Operations from "./Operations";
 
 export interface IterateOptions<T, C>{
   /**
@@ -52,12 +53,13 @@ export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
  * @noInheritDoc
  */
 
-export default class Data<T extends TData> extends Operations {
+export default class Data<T extends TData> extends NotionCacheClass {
   id: string;
   type: TDataType;
   init_cache = false;
   protected logger: Logger;
-  user_id: string
+  user_id: string;
+  Operations: NotionOperationsClass;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -66,6 +68,7 @@ export default class Data<T extends TData> extends Operations {
     this.init_cache = false;
     this.logger = constructLogger(arg.logger);
     this.user_id = arg.user_id ?? '';
+    this.Operations = new NotionOperationsClass(arg)
   }
 
   protected getLastEditedProps() {
@@ -101,7 +104,7 @@ export default class Data<T extends TData> extends Operations {
   }
 
   protected addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
-    this.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
+    this.Operations.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
   }
 
   /**
@@ -120,7 +123,7 @@ export default class Data<T extends TData> extends Operations {
 
     this.logger && this.logger("UPDATE", this.type as any, this.id)
     if(appendToStack)
-      this.stack.push(
+      this.Operations.stack.push(
         Operation[this.type].update(this.id,this.type === "user_settings" ? ["settings"] : [], data)
       );
   }
@@ -167,11 +170,11 @@ export default class Data<T extends TData> extends Operations {
       token: this.token,
       interval: this.interval,
       user_id: this.user_id ?? '',
-      shard_id: this.shard_id,
-      space_id: this.space_id,
+      shard_id: this.Operations.shard_id,
+      space_id: this.Operations.space_id,
       cache: this.cache,
       logger: this.logger,
-      stack: this.stack
+      stack: this.Operations.stack
     }
   }
 }

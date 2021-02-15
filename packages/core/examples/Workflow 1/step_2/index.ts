@@ -634,7 +634,7 @@ export default async function step2 (target_page: Page) {
 					}
 				]);
 				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-				await target_page.executeOperation();
+				await target_page.Operations.executeOperation();
 			}
 		}
 	}

@@ -31,7 +31,7 @@ export default async function step1(user_family_name: string, space_name: string
   const user = await nishan.getNotionUser((user) => user.family_name === user_family_name);
   
   const space = await user.getSpace((space) => space.name === space_name);
-	const { page } = await space.createTRootPages([
+	const { page } = await space.createRootPages([
     {
       type: "page",
       properties: {

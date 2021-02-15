@@ -1,19 +1,11 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { createPageMap, error, nestedContentPopulate, transformToMultiple } from '../utils';
+import { createPageMap, error, nestedContentPopulate, populatePageMap, transformToMultiple } from '../utils';
 
-import Collection from './Collection';
-import CollectionViewPage from './CollectionViewPage';
-import Page from './Page';
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
 import { Mutations, Queries } from '@nishans/endpoints';
-
-const trootpage_class = {
-  page: Page,
-  collection_view_page: CollectionViewPage
-}
 
 /**
  * A class to represent space of Notion
@@ -79,26 +71,26 @@ export default class Space extends Data<ISpace> {
     this.logger && this.logger("DELETE", "space", this.id);
   }
 
-  async createTRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
+  async createRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
     return await nestedContentPopulate(contents, this.id, this.type as "space", this.getProps())
   }
 
-  async getTRootPage(args?: FilterType<IPage | ICollectionViewPage>) {
-    return await this.getTRootPages(typeof args === "string" ? [args] : args, false);
+  async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & ICollection)>) {
+    return await this.getRootPages(transformToMultiple(arg), false);
   }
 
-  async getTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
-    return await this.getIterate<TPage, IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => this.cache.block.get(block_id) as TPage, (_, page, trootpage_map) => {
-      const page_obj: any = new trootpage_class[page.type]({
-        id: page.id,
-        ...this.getProps()
-      });
-      if(page.type === "page") trootpage_map[page.type].set(page.properties.title[0][0], page_obj);
-      else{
-        const collection = this.cache.collection.get(page.collection_id);
-        if(collection) trootpage_map[page.type].set(collection.name[0][0], page_obj);
-      }
-      trootpage_map[page.type].set(page.id, page_obj)
+  async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & ICollection)>, multiple?: boolean) {
+    return await this.getIterate<IPage | (ICollectionViewPage & ICollection), IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => {
+      const data = this.cache.block.get(block_id) as IPage | (ICollectionViewPage & ICollection);
+      if(data.type === "page")
+        return data;
+      else if(data.type === "collection_view_page")
+        return {
+          ...data,
+          ...this.cache.collection.get(data.collection_id)
+        }
+    }, async (id, page, page_map) => {
+      await populatePageMap(page, page_map, {...this.getProps(), id});
     });
   }
 
@@ -108,7 +100,7 @@ export default class Space extends Data<ISpace> {
    * @param opt object to configure root page
    */
   async updateRootPage(arg: UpdateType<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>,) {
-    return await this.updateRootPages(typeof arg === "function" ? arg : [arg],  false);
+    return await this.updateRootPages(transformToMultiple(arg),  false);
   }
 
   /**
@@ -122,17 +114,17 @@ export default class Space extends Data<ISpace> {
       child_type: "block",
       multiple,
       container: createPageMap()
-    }, (id) => this.cache.block.get(id) as TPage, (id, page,__,trootpage_map) => {
-      const page_obj: any = new trootpage_class[page.type]({
-        id: page.id,
-        ...this.getProps()
-      });
-      if(page.type === "page") trootpage_map[page.type].set(page.properties.title[0][0], page_obj);
-      else{
-        const collection = this.cache.collection.get(page.collection_id);
-        if(collection) trootpage_map[page.type].set(collection.name[0][0], page_obj);
-      }
-      trootpage_map[page.type].set(page.id, page_obj)
+    }, (id) => {
+      const data = this.cache.block.get(id) as IPage | (ICollectionViewPage & ICollection);
+      if(data.type === "page")
+        return data;
+      else if(data.type === "collection_view_page")
+        return {
+          ...data,
+          ...this.cache.collection.get(data.collection_id)
+        }
+    }, async (id, page, __, page_map) => {
+      await populatePageMap(page, page_map, {...this.getProps(), id});
     });
   }
 
@@ -140,8 +132,8 @@ export default class Space extends Data<ISpace> {
    * Delete a single root page from the space
    * @param arg Criteria to filter the page to be deleted
    */
-  async deleteTRootPage(arg?: FilterType<TPage>) {
-    return await this.deleteTRootPages(transformToMultiple(arg),  false);
+  async deleteRootPage(arg?: FilterType<TPage>) {
+    await this.deleteRootPages(transformToMultiple(arg),  false);
   }
 
   /**
@@ -149,27 +141,23 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the pages to be deleted
    * @param multiple whether or not multiple root pages should be deleted
    */
-  async deleteTRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
+  async deleteRootPages(args?: FilterTypes<TPage>, multiple?: boolean) {
     await this.deleteIterate<TPage>(args, {
       multiple,
       child_ids: 'pages',
       child_path: "pages",
       child_type: "block",
       container: []
-    }, (block_id) => this.cache.block.get(block_id) as TPage)
-  }
-
-  async getRootCollection(arg?: FilterType<ICollection>) {
-    return (await this.getRootCollections(transformToMultiple(arg), true))[0]
-  }
-
-  async getRootCollections(args?: FilterTypes<ICollection>, multiple?: boolean) {
-    return await this.getIterate<ICollection, Collection[]>(args, {
-      child_type: "collection",
-      multiple,
-      container: [],
-      child_ids: this.getRootCollectionIds(),
-    }, (collection_id) => this.cache.collection.get(collection_id), (id,_,collections)=>collections.push(new Collection({ ...this.getProps(), id })));
+    }, (block_id) => {
+      const data = this.cache.block.get(block_id) as IPage | (ICollectionViewPage & ICollection);
+      if(data.type === "page")
+        return data;
+      else if(data.type === "collection_view_page")
+        return {
+          ...data,
+          ...this.cache.collection.get(data.collection_id)
+        }
+    })
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {

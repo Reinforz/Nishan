@@ -26,7 +26,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
-    "build": "npx del-cli ./dist && tsc --sourceMap false",
+    "build": "npx del-cli ./dist && tsc --sourceMap false --rootDir ./",
     "test": "npx jest --runInBand ./tests --collectCoverage"
   },
   "bugs": {

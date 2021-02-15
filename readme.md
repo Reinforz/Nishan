@@ -43,6 +43,8 @@ This monorepo contains/will contain the following packages:-
 13. @nishans/discord-bot [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) (NSY): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 14. @nishans/notion-formula [Github](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) [NPM](https://www.npmjs.com/package/@nishans/notion-formula) [Docs](https://nishan-docs.netlify.app/docs/notion-formula/): A package to generate notion formula with ease
 15. @nishans/schema-builder [Github](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder) (NSY): A package to create notion collection schema painlessly
+16. @nishans/cache [Github](https://github.com/Devorein/Nishan/tree/master/packages/cache) [NPM](https://www.npmjs.com/package/@nishans/cache) [Docs](https://nishan-docs.netlify.app/docs/cache/): A cache specially designed to store notion data in memory
+17. @nishans/operations [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) (NSY): A package to inspect, modify and store notion operations.
 
 ### Apps
 

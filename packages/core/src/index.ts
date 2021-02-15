@@ -14,6 +14,7 @@ import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
 import Operations from "./Operations";
 import CollectionBlock from "./CollectionBlock";
+import NotionPermissions from "./Permissions";
 export * from "./View";
 import { constructLogger, error, iterateAndGetChildren, transformToMultiple } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
@@ -96,5 +97,6 @@ export {
   Space,
   SchemaUnit,
   Operations,
-  CollectionBlock
+  CollectionBlock,
+  NotionPermissions
 }

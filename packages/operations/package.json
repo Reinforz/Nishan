@@ -1,6 +1,6 @@
 {
   "name": "@nishans/operations",
-  "version": "0.0.0",
+  "version": "0.0.16",
   "description": "A package to inspect, modify and store notion operations",
   "keywords": [
     "notion",

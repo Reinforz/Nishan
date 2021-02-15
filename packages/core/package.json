@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.18",
+    "@nishans/operations": "^0.0.16",
     "@nishans/cache": "^0.0.19",
     "@nishans/notion-formula": "^0.0.15",
     "colors": "^1.4.0",

@@ -96,6 +96,7 @@ class View<T extends TView> extends Data<T> {
 					});
 			}
 		}
+
 		this.updateLastEditedProps();
 		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, [], {

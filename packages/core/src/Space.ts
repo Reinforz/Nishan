@@ -6,6 +6,20 @@ import { createPageMap, error, nestedContentPopulate, populatePageMap, transform
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
 import { Mutations, Queries } from '@nishans/endpoints';
+import { ICache } from '@nishans/cache';
+
+export async function createSpaceIterateArguments(block_id: string, cache: ICache): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
+  const data = cache.block.get(block_id) as IPage | (ICollectionViewPage & {collection: ICollection});
+  if(data.type === "page")
+    return data;
+  else if(data.type === "collection_view_page"){
+    
+    return {
+      ...data,
+      collection: cache.collection.get(data.collection_id) as ICollection
+    }
+  }
+}
 
 /**
  * A class to represent space of Notion
@@ -21,14 +35,12 @@ export default class Space extends Data<ISpace> {
   get spaceView() {
     let target_space_view: ISpaceView = null as any;
     for (const [, space_view] of this.cache.space_view) {
-      if (space_view.space_id === this.id)
+      if (space_view.space_id === this.id){
         target_space_view = space_view;
+        break;
+      }
     }
     return target_space_view;
-  }
-
-  getRootCollectionIds() {
-    return (this.getCachedData().pages.map((id) => this.cache.block.get(id) as TPage).filter((cvp) => cvp?.type === "collection_view_page") as ICollectionViewPage[]).map(cvp => cvp.collection_id) as string[]
   }
 
   /**
@@ -79,16 +91,9 @@ export default class Space extends Data<ISpace> {
     return await this.getRootPages(transformToMultiple(arg), false);
   }
 
-  async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & ICollection)>, multiple?: boolean) {
-    return await this.getIterate<IPage | (ICollectionViewPage & ICollection), IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, (block_id) => {
-      const data = this.cache.block.get(block_id) as IPage | (ICollectionViewPage & ICollection);
-      if(data.type === "page")
-        return data;
-      else if(data.type === "collection_view_page")
-        return {
-          ...data,
-          ...this.cache.collection.get(data.collection_id)
-        }
+  async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & {collection: ICollection})>, multiple?: boolean) {
+    return await this.getIterate<IPage | (ICollectionViewPage & {collection: ICollection}), IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, async (id) => {
+      return await createSpaceIterateArguments(id, this.cache);
     }, async (id, page, page_map) => {
       await populatePageMap(page, page_map, {...this.getProps(), id});
     });
@@ -115,14 +120,7 @@ export default class Space extends Data<ISpace> {
       multiple,
       container: createPageMap()
     }, (id) => {
-      const data = this.cache.block.get(id) as IPage | (ICollectionViewPage & ICollection);
-      if(data.type === "page")
-        return data;
-      else if(data.type === "collection_view_page")
-        return {
-          ...data,
-          ...this.cache.collection.get(data.collection_id)
-        }
+      return createSpaceIterateArguments(id, this.cache);
     }, async (id, page, __, page_map) => {
       await populatePageMap(page, page_map, {...this.getProps(), id});
     });
@@ -149,14 +147,7 @@ export default class Space extends Data<ISpace> {
       child_type: "block",
       container: []
     }, (block_id) => {
-      const data = this.cache.block.get(block_id) as IPage | (ICollectionViewPage & ICollection);
-      if(data.type === "page")
-        return data;
-      else if(data.type === "collection_view_page")
-        return {
-          ...data,
-          ...this.cache.collection.get(data.collection_id)
-        }
+      return createSpaceIterateArguments(block_id, this.cache);
     })
   }
 

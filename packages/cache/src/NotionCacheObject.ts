@@ -163,7 +163,7 @@ export const NotionCacheObject = {
 		// Filters data that doesnt exist in the cache
 		const non_cached = NotionCacheObject.returnNonCachedData(container, cache);
 
-		await NotionCacheObject.updateCacheManually(non_cached, configs, cache);
+		if (non_cached.length) await NotionCacheObject.updateCacheManually(non_cached, configs, cache);
 
 		// If the block is a page, for all the collection block contents, fetch the collection attached with it as well
 		if (type === 'block') {

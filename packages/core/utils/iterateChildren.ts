@@ -32,12 +32,12 @@ type IterateChildren<TD = any, RD = any> = {
   method: "UPDATE",
 }
 
-export async function iterateChildren<TD, RD = any>(args: IterateChildren<TD, RD>, transform: ((id: string) => TD | undefined), {multiple = true, child_type, parent_type, parent_id, child_ids}: {child_ids: string[], multiple?: boolean, child_type: TDataType, parent_type: TDataType, parent_id: string}){
+export async function iterateChildren<TD, RD = any>(args: IterateChildren<TD, RD>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), {multiple = true, child_type, parent_type, parent_id, child_ids}: {child_ids: string[], multiple?: boolean, child_type: TDataType, parent_type: TDataType, parent_id: string}){
   let total_matched = 0;
   if (Array.isArray(args.args)) {
     for (let index = 0; index < args.args.length; index++) {
       const child_id = args.method === "UPDATE" ? args.args[index][0] : args.args[index],
-        child_data = transform(child_id),
+        child_data = await transform(child_id),
         matches = child_ids.includes(child_id);
       
       if (!child_data) warn(`${child_type}:${child_id} does not exist in the cache`);
@@ -54,7 +54,7 @@ export async function iterateChildren<TD, RD = any>(args: IterateChildren<TD, RD
     }
   } else {
     for (let index = 0; index < child_ids.length; index++) {
-      const child_id = child_ids[index], child_data = transform(child_id);
+      const child_id = child_ids[index], child_data = await transform(child_id);
       if (!child_data) warn(`${child_type}:${child_id} does not exist in the cache`);
       else {
         if(args.method === "UPDATE"){
@@ -76,7 +76,7 @@ export async function iterateChildren<TD, RD = any>(args: IterateChildren<TD, RD
   }
 }
 
-export const iterateAndGetChildren = async<T extends TData, TD, C = any[]>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndGetChildrenOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
+export const iterateAndGetChildren = async<T extends TData, TD, C = any[]>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), options: IterateAndGetChildrenOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
   const { container, parent_id, multiple = true, child_type, logger, cache, parent_type} = options,
     parent = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : parent[options.child_ids])) as string[];
 
@@ -96,7 +96,7 @@ export const iterateAndGetChildren = async<T extends TData, TD, C = any[]>(args:
   return container;
 }
 
-export const iterateAndDeleteChildren = async<T extends TData, TD, C = any[]>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined), options: IterateAndDeleteChildrenOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
+export const iterateAndDeleteChildren = async<T extends TData, TD, C = any[]>(args: FilterTypes<TD>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), options: IterateAndDeleteChildrenOptions<T, C>, cb?: ((id: string, data: TD, container: C) => any)) => {
   const { container, child_path, user_id, multiple = true, manual = false, parent_id, child_type, logger, stack, cache, parent_type} = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) ?? []) as string[],
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };
@@ -133,7 +133,7 @@ export const iterateAndDeleteChildren = async<T extends TData, TD, C = any[]>(ar
   return container;
 }
 
-export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined), options: IterateAndUpdateChildrenOptions<T, C>, cb?: ((id: string, child_data: CD, updated_data: RD, container: C) => any)) => {
+export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]>(args: UpdateTypes<CD, RD>, transform: ((id: string) => CD | undefined | Promise<CD | undefined>), options: IterateAndUpdateChildrenOptions<T, C>, cb?: ((id: string, child_data: CD, updated_data: RD, container: C) => any)) => {
   const { container, manual = false, user_id, parent_id, multiple = true, child_type, logger, cache, stack, parent_type } = options,
     data = cache[parent_type].get(parent_id) as T, child_ids = ((Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids])) as string[],
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };

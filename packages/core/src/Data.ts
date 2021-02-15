@@ -135,7 +135,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     }
   }
 
-  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
     await this.initializeCacheForThisData()
     return  await iterateAndDeleteChildren<T, TD, C>(args, transform, {
       parent_id: this.id,
@@ -145,7 +145,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     }, cb);
   }
 
-  protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
+  protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
     await this.initializeCacheForThisData();
     return await iterateAndUpdateChildren<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
@@ -155,7 +155,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     }, cb);
   }
 
-  protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined), cb?: (id: string, data: RD, container: C) => any) {
+  protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined | Promise<RD | undefined>), cb?: (id: string, data: RD, container: C) => any) {
     await this.initializeCacheForThisData();
     return await iterateAndGetChildren<T, RD, C>(args, transform, {
       parent_id: this.id,

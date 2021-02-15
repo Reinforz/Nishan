@@ -84,6 +84,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
     alive: true
   } as const;
 
+  
   const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space') => {
     for (let index = 0; index < contents.length; index++) {
       const content = contents[index], block_id = generateId((content as any).id);
@@ -171,8 +172,8 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
         const page_data: IPage = {
           content: [],
           is_template: (content as any).is_template && parent_table === "collection",
-          ...common_data,
           permissions: [populatePermissions(props.user_id, content.isPrivate)],
+          ...common_data,
           ...metadata
         }
 

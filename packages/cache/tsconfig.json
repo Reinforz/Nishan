@@ -17,7 +17,8 @@
     "declaration": true,
     "sourceMap": false,
     "noUnusedLocals": false,
-    "incremental": false
+    "incremental": false,
+    "rootDir": "./"
   },
   "include": [
     "./src/index.ts",
@@ -26,5 +27,4 @@
   "exclude": [
     "./node_modules",
   ],
-  "rootDir": "./"
 }

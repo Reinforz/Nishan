@@ -1,9 +1,49 @@
 import { ICache } from '@nishans/cache';
-import { Mutations } from '@nishans/endpoints';
+import { Mutations, Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Space, TSpaceUpdateKeys } from '../src';
 import Data from '../src/Data';
+import { createSpaceIterateArguments } from '../src/Space';
+import colors from "colors";
+
+afterAll(()=>{
+  jest.clearAllMocks();
+})
+
+describe('createSpaceIterateArguments', () => {
+  it(`type=page`, async()=>{
+    const cache = {
+      block: new Map([
+        ['block_1', {type: "page", id: "block_1"}],
+        ['block_2', {type: "header", id: "block_1"}]
+      ])
+    } as any;
+    const data = await createSpaceIterateArguments('block_1', cache, 'token');
+    expect(data).toStrictEqual({id: "block_1", type: "page"});
+  })
+
+  it(`type=collection_view_page,collection in cache`, async()=>{
+    const cache = {
+      collection: new Map([['collection_1', {id: 'collection_1'}]]),
+      block: new Map([['block_1', {type: "collection_view_page", id: "block_1", collection_id: 'collection_1'}]])
+    } as any;
+    const data = await createSpaceIterateArguments('block_1', cache, 'token');
+    expect(data).toStrictEqual({collection: {id: 'collection_1'}, type: "collection_view_page", id: "block_1", collection_id: 'collection_1'})
+    await createSpaceIterateArguments('block_2', cache, 'token');
+  })
+
+  it(`data=undefined,type=header`, async ()=>{
+    const cache = {
+      block: new Map([
+        ['block_1', {type: "page", id: "block_1"}],
+        ['block_2', {type: "header", id: "block_1"}]
+      ])
+    } as any;
+    await createSpaceIterateArguments('block_3', cache, 'token');
+    await createSpaceIterateArguments('block_2', cache, 'token');
+  })
+})
 
 it(`getSpaceView`, async () => {
 	const cache: ICache = {
@@ -149,8 +189,6 @@ it(`createRootPages`, async () => {
 		},
 		stack: IOperation[] = [];
 
-	const logger_spy = jest.fn();
-
 	const space = new Space({
 		cache,
 		id: 'space_1',
@@ -160,7 +198,6 @@ it(`createRootPages`, async () => {
 		space_id: 'space_1',
 		token: 'token',
 		user_id: 'user_root_1',
-		logger: logger_spy
 	});
 
 	const block_map = await space.createRootPages([
@@ -182,12 +219,8 @@ it(`getRootPage`, async () => {
 	const cache: ICache = {
 			block: new Map([
 				[ 'block_1', { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } } as any ],
-				[
-					'block_2',
-					{ type: 'collection_view_page', id: 'block_2', collection_id: 'collection_1', view_ids: [] } as any
-				]
 			]),
-			collection: new Map([ [ 'collection_1', { id: 'collection_1', name: [ [ 'Block Two' ] ] } as any ] ]),
+			collection: new Map(),
 			collection_view: new Map(),
 			notion_user: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			space: new Map([
@@ -195,7 +228,7 @@ it(`getRootPage`, async () => {
 					'space_1',
 					{
 						id: 'space_1',
-						pages: [ 'block_1', 'block_2' ],
+						pages: [ 'block_1' ],
 						permissions: [
 							{
 								role: 'editor',
@@ -232,13 +265,193 @@ it(`getRootPage`, async () => {
 		id: 'block_1',
 		properties: { title: [ [ 'Block One' ] ] }
 	});
+});
 
-	const page_map_2 = await space.getRootPage('block_2');
+it(`updateRootPage`, async()=>{
+	const cache: ICache = {
+			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [] } as any ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
 
-	expect(page_map_2.collection_view_page.get('Block Two')?.getCachedData()).toStrictEqual({
-		type: 'collection_view_page',
-		id: 'block_2',
-		collection_id: 'collection_1',
-		view_ids: [],
+	const space = new Space({
+		cache,
+		id: 'space_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1',
 	});
+
+	const block_map = await space.updateRootPage(['block_1',
+		{
+			properties: {
+				title: [ [ 'Page Two' ] ]
+			},
+      type: "page"
+		}
+	]);
+
+	expect(block_map.page.get('Page One')).not.toBeUndefined();
+	expect(cache.block.get('block_1')).not.toBeUndefined();
+})
+
+it(`deleteRootPage`, async()=>{
+	const cache: ICache = {
+			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [] } as any ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
+
+	const space = new Space({
+		cache,
+		id: 'space_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1',
+	});
+
+	await space.deleteRootPage('block_1');
+
+	expect(cache.block.get('block_1')?.alive).toBe(false);
+});
+
+it(`addMembers`, async()=>{
+	const cache: ICache = {
+			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
+        user_id: 'user_root_1'
+      } ] } as any ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
+
+	const space = new Space({
+		cache,
+		id: 'space_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1',
+	});
+
+  const findUser = jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
+    return {
+      value: {
+        value: {
+          id: 'user_root_2' 
+        }
+      }
+    } as any;
+  })
+
+	const notion_users = await space.addMembers([['user_root_2@gmail.com', 'editor']]);
+
+  expect(findUser).toHaveBeenCalledTimes(1);
+  expect(findUser).toHaveBeenNthCalledWith(1, {email: 'user_root_2@gmail.com'}, {
+    interval: 0,
+    token: 'token',
+    user_id: 'user_root_1'
+  });
+  expect(cache.space.get('space_1')?.permissions).toStrictEqual([{
+    user_id: 'user_root_1'
+  }, { role: 'editor', type: "user_permission", user_id: 'user_root_2' }]);
+  expect(notion_users).toStrictEqual([
+    {
+      id: 'user_root_2'
+    }
+  ]);
+
+  jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
+    return {
+      value: {}
+    } as any;
+  });
+
+  const console_log_spy = jest.spyOn(console, 'log');
+
+	await space.addMembers([['user_root_2@gmail.com', 'editor']]);
+
+  expect(console_log_spy).toHaveBeenCalledTimes(1);
+  expect(console_log_spy).toHaveBeenCalledWith(colors.red.bold(`User does not have a notion account`));
+
+  jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
+    return {
+    } as any;
+  });
+
+	await space.addMembers([['user_root_2@gmail.com', 'editor']]);
+
+});
+
+it(`removeUsers`, async()=>{
+	const cache: ICache = {
+			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
+        user_id: 'user_root_1'
+      }, {
+        user_id: 'user_root_2'
+      } ] } as any ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
+
+	const space = new Space({
+		cache,
+		id: 'space_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1',
+	});
+
+  const removeUsersFromSpaceMock = jest.spyOn(Mutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
+    return {} as any;
+  })
+
+	await space.removeUsers(['user_root_2']);
+  expect(removeUsersFromSpaceMock).toHaveBeenCalledTimes(1);
+  expect(removeUsersFromSpaceMock).toHaveBeenCalledWith({
+    removePagePermissions: true,
+    revokeUserTokens: false,
+    spaceId: 'space_1',
+    userIds: ['user_root_2']
+  }, {
+    token: 'token',
+    interval: 0
+  });
+  expect(cache.space.get('space_1')?.permissions).toStrictEqual([{
+    user_id: 'user_root_1'
+  }])
 });

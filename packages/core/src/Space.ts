@@ -1,22 +1,24 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { createPageMap, error, nestedContentPopulate, populatePageMap, transformToMultiple } from '../utils';
+import { createPageMap, error, fetchAndCacheData, nestedContentPopulate, populatePageMap, transformToMultiple } from '../utils';
 
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { ICache } from '@nishans/cache';
 
-export async function createSpaceIterateArguments(block_id: string, cache: ICache): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
+export async function createSpaceIterateArguments(block_id: string, cache: ICache, token: string): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
   const data = cache.block.get(block_id) as IPage | (ICollectionViewPage & {collection: ICollection});
-  if(data.type === "page")
-    return data;
-  else if(data.type === "collection_view_page"){
-    
-    return {
-      ...data,
-      collection: cache.collection.get(data.collection_id) as ICollection
+  if(data){
+    if(data.type === "page")
+      return data;
+    else if(data.type === "collection_view_page"){
+      fetchAndCacheData('collection', data.collection_id, cache, token);
+      return {
+        ...data,
+        collection: cache.collection.get(data.collection_id) as ICollection
+      }
     }
   }
 }
@@ -93,7 +95,7 @@ export default class Space extends Data<ISpace> {
 
   async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & {collection: ICollection})>, multiple?: boolean) {
     return await this.getIterate<IPage | (ICollectionViewPage & {collection: ICollection}), IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, async (id) => {
-      return await createSpaceIterateArguments(id, this.cache);
+      return await createSpaceIterateArguments(id, this.cache, this.token);
     }, async (id, page, page_map) => {
       await populatePageMap(page, page_map, {...this.getProps(), id});
     });
@@ -119,8 +121,8 @@ export default class Space extends Data<ISpace> {
       child_type: "block",
       multiple,
       container: createPageMap()
-    }, (id) => {
-      return createSpaceIterateArguments(id, this.cache);
+    }, async (id) => {
+      return await createSpaceIterateArguments(id, this.cache, this.token);
     }, async (id, page, __, page_map) => {
       await populatePageMap(page, page_map, {...this.getProps(), id});
     });
@@ -146,13 +148,13 @@ export default class Space extends Data<ISpace> {
       child_path: "pages",
       child_type: "block",
       container: []
-    }, (block_id) => {
-      return createSpaceIterateArguments(block_id, this.cache);
+    }, async (block_id) => {
+      return await createSpaceIterateArguments(block_id, this.cache, this.token);
     })
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
-    const notion_users: INotionUser[] = [],data = this.getCachedData()
+    const notion_users: INotionUser[] = [], data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], { value } = await Queries.findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
@@ -168,8 +170,8 @@ export default class Space extends Data<ISpace> {
         });
         data.permissions.push(permission_data)
         notion_users.push(notion_user)
+        this.logger && this.logger("UPDATE", "space", this.id)
       }
-      this.logger && this.logger("UPDATE", "space", this.id)
     }
     this.updateLastEditedProps();
     return notion_users;

@@ -139,14 +139,14 @@ export const iterateAndUpdateChildren = async<T extends TData, CD, RD, C = any[]
     last_updated_props = { last_edited_time: Date.now(), last_edited_by_table: "notion_user", last_edited_by_id: user_id };
 
   const iterateUtil = async (child_id: string, child_data: CD, updated_data: RD) => {
+    cb && await cb(child_id, child_data, updated_data, container);
+    logger && logger("UPDATE", child_type, child_id);
+
     if (!manual) {
       updateLastEditedProps(child_data, user_id);
       deepMerge(child_data ,updated_data);
       stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
     }
-    
-    cb && await cb(child_id, child_data, updated_data, container);
-    logger && logger("UPDATE", child_type, child_id);
   }
 
   await iterateChildren<CD, RD>({args, cb: iterateUtil, method: "UPDATE"}, transform, {

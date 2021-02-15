@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Data from './Data';
 import UserRoot from "./UserRoot"
 
-import { createPageMap, idToUuid, nestedContentPopulate, transformToMultiple, uuidToId, warn } from '../utils';
+import { CreateData, createPageMap, idToUuid, transformToMultiple, uuidToId, warn } from '../utils';
 import Space from './Space';
 import UserSettings from './UserSettings';
 import { INotionUser, IUserSettings, IUserRoot, ISpace, ISpaceView, IPage, ICollection, TPage } from '@nishans/types';
@@ -145,7 +145,7 @@ class NotionUser extends Data<INotionUser> {
       this.logger && this.logger(`UPDATE`, 'user_root', this.user_id);
       this.logger && this.logger(`UPDATE`, 'space', space_id);
 
-      await nestedContentPopulate(opt.contents, space_id, "space", {...this.getProps(), space_id})
+      await CreateData.createContents(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };
 
     return spaces;

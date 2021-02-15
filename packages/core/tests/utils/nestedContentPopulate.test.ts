@@ -14,7 +14,7 @@ import {
 	fetchAndCacheData,
 	IBlockMap,
 	IHeaderInput,
-	nestedContentPopulate,
+	createContents,
 	Page,
 	stackCacheMap
 } from '../../src';
@@ -278,7 +278,7 @@ describe('stackCacheMap', () => {
 	});
 });
 
-describe('nestedContentPopulate', () => {
+describe('createContents', () => {
 	// * Assert the loggers
 	// * Assert the returned block map
 	// * Assert the cache
@@ -294,7 +294,7 @@ describe('nestedContentPopulate', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await nestedContentPopulate(
+			const block_map = await createContents(
 				[
 					{
 						type: 'page',
@@ -433,7 +433,7 @@ describe('nestedContentPopulate', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await nestedContentPopulate(
+			const block_map = await createContents(
 				[
 					{
 						type: 'page',
@@ -529,7 +529,7 @@ describe('nestedContentPopulate', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await nestedContentPopulate(
+			const block_map = await createContents(
 				[
 					{
 						type: 'collection_view_page',
@@ -616,7 +616,7 @@ describe('nestedContentPopulate', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await nestedContentPopulate(
+			const block_map = await createContents(
 				[
 					{
 						type: 'collection_view',
@@ -713,7 +713,7 @@ describe('nestedContentPopulate', () => {
 			},
 			stack: IOperation[] = [];
 
-		await nestedContentPopulate(
+		await createContents(
 			[
 				{
 					type: 'link_to_page',
@@ -760,7 +760,7 @@ describe('nestedContentPopulate', () => {
 				user_settings: new Map()
 			},
 			stack: IOperation[] = [];
-		await nestedContentPopulate(
+		await createContents(
 			[
 				{
 					type: 'column_list',
@@ -809,7 +809,7 @@ describe('nestedContentPopulate', () => {
 				user_settings: new Map()
 			},
 			stack: IOperation[] = [];
-		const block_map = await nestedContentPopulate(
+		const block_map = await createContents(
 			[
 				{
 					type: 'factory',
@@ -841,7 +841,7 @@ describe('nestedContentPopulate', () => {
 			}
 		);
 
-		await nestedContentPopulate(
+		await createContents(
 			[
 				{
 					type: 'factory',
@@ -897,7 +897,7 @@ describe('nestedContentPopulate', () => {
 			},
 			stack: IOperation[] = [];
 
-		const block_map = await nestedContentPopulate(
+		const block_map = await createContents(
 			[
 				{
 					type: 'linked_db',

@@ -2,7 +2,7 @@ import { generateFormulaAST } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { FilterType, FilterTypes, ICollectionUpdateInput, IPageCreateInput, IPageUpdateInput, ISchemaMapValue, ISchemaUnitMap, NishanArg, TCollectionUpdateKeys, TSchemaUnitInput, UpdateType, UpdateTypes } from '../types';
-import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, transformToMultiple, warn } from '../utils';
+import { createSchemaUnitMap, createShortId, getSchemaMap, CreateData, transformToMultiple, warn } from '../utils';
 import Data from "./Data";
 import Page from './Page';
 import SchemaUnit from "./SchemaUnit";
@@ -42,7 +42,7 @@ class Collection extends Data<ICollection> {
    * @param opts Array of Objects for configuring template options
    */
   async createTemplates(rows: IPageCreateInput[]) {
-    return await nestedContentPopulate(rows, this.id, this.type as "collection", this.getProps())
+    return await CreateData.createContents(rows, this.id, this.type as "collection", this.getProps())
   }
 
   /**
@@ -107,7 +107,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
   async createPages(rows: IPageCreateInput[]) {
-    return await nestedContentPopulate(rows, this.id, this.type as "collection", this.getProps())
+    return await CreateData.createContents(rows, this.id, this.type as "collection", this.getProps())
   }
 
   async getPage(arg?: FilterType<IPage>) {

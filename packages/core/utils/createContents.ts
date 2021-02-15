@@ -1,6 +1,6 @@
 import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, IPermission, IOperation, TDataType, TData, TBlock } from "@nishans/types";
 import { TBlockCreateInput, NishanArg, IBlockMap } from "../types";
-import { generateId, createViews, createBlockMap, createCollection, createBlockClass} from "../utils";
+import { generateId, createViews, createBlockMap, createBlockClass, CreateData} from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 import { Queries } from "@nishans/endpoints";
 import { ICache } from "@nishans/cache";
@@ -68,7 +68,7 @@ export function stackCacheMap<T extends TBlock>(block_map: IBlockMap, data: T, p
     block_map[type].set(name, block_obj);
 }
 
-export async function nestedContentPopulate(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
+export async function createContents(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
   const block_map = createBlockMap();
 
   const metadata = {
@@ -129,7 +129,7 @@ export async function nestedContentPopulate(contents: TBlockCreateInput[], origi
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         const {type} = content;
-        const [collection_id, view_ids] = await createCollection(content, block_id, props);
+        const [collection_id, view_ids] = await CreateData.createCollection(content, block_id, props);
         const data: ICollectionBlock = {
           ...common_data,
           collection_id,

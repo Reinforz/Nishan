@@ -10,7 +10,7 @@ import CollectionBlock from './CollectionBlock';
 class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
 	Permissions: NotionPermissions;
 	constructor (arg: NishanArg) {
-		super({ ...arg, type: 'block' });
+		super({ ...arg });
 		this.Permissions = new NotionPermissions(arg, arg.id, 'block');
 	}
 

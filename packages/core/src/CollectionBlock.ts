@@ -1,8 +1,7 @@
 import Collection from './Collection';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
-
-import { createViewMap, createViews, transformToMultiple } from '../utils';
-import { ICollection, TView, TViewUpdateInput, ICollectionViewPage, ICollectionView } from '@nishans/types';
+import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../utils';
+import { ICollection, TView, TViewUpdateInput, TCollectionBlock } from '@nishans/types';
 import {
 	NishanArg,
 	FilterTypes,
@@ -29,8 +28,8 @@ const view_class = {
  * A class to represent collectionblock type in Notion
  * @noInheritDoc
  */
-class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends Block<T, TCollectionBlockInput> {
-	constructor (arg: NishanArg & { type: 'block' }) {
+class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBlockInput> {
+	constructor (arg: NishanArg) {
 		super({ ...arg });
 	}
 
@@ -39,16 +38,21 @@ class CollectionBlock<T extends ICollectionViewPage | ICollectionView> extends B
    * @returns The corresponding collection object
    */
 	async getCollection () {
+		const data = this.getCachedData();
+		await fetchAndCacheData('collection', data.collection_id, this.cache, this.token);
 		return new Collection({
 			...this.getProps(),
-			id: this.getCachedData().collection_id
+			id: data.collection_id
 		});
 	}
 
 	createViews (params: TViewCreateInput[]) {
 		const data = this.getCachedData(),
-			collection = this.cache.collection.get(data.collection_id) as ICollection,
-			[ view_ids, view_map ] = createViews(collection, params, this.getProps());
+			[ view_ids, view_map ] = CreateData.createViews(
+				this.cache.collection.get(data.collection_id) as ICollection,
+				params,
+				this.getProps()
+			);
 		this.Operations.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();

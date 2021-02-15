@@ -4,7 +4,7 @@ import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import { NotionPermissions } from "../src";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, IBlockMap, IPageCreateInput } from "../types";
-import { createBlockClass, createBlockMap, nestedContentPopulate, transformToMultiple } from "../utils";
+import { createBlockClass, createBlockMap, createContents, CreateData, transformToMultiple } from "../utils";
 import Block from "./Block";
 
 
@@ -127,7 +127,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @returns Array of newly created block content objects
    */
   async createBlocks(contents: TBlockCreateInput[]) {
-    return await nestedContentPopulate(contents, this.id, this.type as "block", this.getProps())
+    return await CreateData.createContents(contents, this.id, this.type as "block", this.getProps())
   }
 
   async getBlock(arg?: FilterType<TBlock>) {

@@ -1,7 +1,7 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { createPageMap, error, fetchAndCacheData, nestedContentPopulate, populatePageMap, transformToMultiple } from '../utils';
+import { CreateData, createPageMap, error, fetchAndCacheData, populatePageMap, transformToMultiple } from '../utils';
 
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
@@ -86,7 +86,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async createRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
-    return await nestedContentPopulate(contents, this.id, this.type as "space", this.getProps())
+    return await CreateData.createContents(contents, this.id, this.type as "space", this.getProps())
   }
 
   async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & ICollection)>) {

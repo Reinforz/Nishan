@@ -8,7 +8,7 @@ import CollectionBlock from './CollectionBlock';
  */
 class CollectionView extends CollectionBlock<ICollectionView> {
 	constructor (arg: NishanArg) {
-		super({ ...arg, type: 'block' });
+		super({ ...arg });
 	}
 
 	getCachedParentData () {

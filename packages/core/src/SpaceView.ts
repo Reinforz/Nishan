@@ -1,10 +1,7 @@
 import Data from './Data';
-
 import Space from './Space';
-import { createPageMap, populatePageMap, transformToMultiple } from '../utils';
-import Page from './Page';
-import CollectionViewPage from './CollectionViewPage';
-import { ISpaceView, ISpace, TPage, IUserRoot, ICollection, TBlock } from '@nishans/types';
+import { createPageMap, populatePageMap, transformToMultiple, updateBookmarkedPages } from '../utils';
+import { ISpaceView, ISpace, TPage, IUserRoot, TBlock } from '@nishans/types';
 import {
 	NishanArg,
 	RepositionParams,
@@ -16,7 +13,6 @@ import {
 	IPageMap,
 	UpdateType
 } from '../types';
-import { Operation } from '@nishans/operations';
 
 /**
  * A class to represent spaceview of Notion
@@ -112,23 +108,7 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favourite_status, page_map) => {
-				const bookmarked_pages = data.bookmarked_pages as string[];
-				if (!updated_favourite_status && bookmarked_pages.includes(id)) {
-					data.bookmarked_pages = bookmarked_pages.filter((page_id) => page_id !== id);
-					this.Operations.stack.push(
-						Operation.space_view.listRemove(data.id, [ 'bookmarked_pages' ], {
-							id
-						})
-					);
-				} else if (updated_favourite_status && !bookmarked_pages.includes(id)) {
-					bookmarked_pages.push(id);
-					this.Operations.stack.push(
-						Operation.space_view.listAfter(data.id, [ 'bookmarked_pages' ], {
-							id
-						})
-					);
-				}
-
+				updateBookmarkedPages(data, updated_favourite_status, id, this.Operations.stack);
 				populatePageMap(page, page_map, { ...this.getProps(), id });
 			}
 		);

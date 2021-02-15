@@ -1,0 +1,177 @@
+import { CreateData, Page } from '../src';
+
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
+it(`getCachedParentData`, async () => {
+	const space_1 = {
+			id: 'space_1'
+		},
+		cache = {
+			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any;
+
+	const page = new Page({
+		cache,
+		id: 'block_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const space = page.getCachedParentData();
+	expect(space).toStrictEqual(space_1);
+});
+
+it(`createBlocks`, async () => {
+	const space_1 = {
+			id: 'space_1'
+		},
+		cache = {
+			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any;
+
+	const page = new Page({
+		cache,
+		id: 'block_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const createContentsMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(() => {
+		return {} as any;
+	});
+
+	await page.createBlocks([
+		{
+			type: 'header',
+			properties: {
+				title: [ [ 'Header' ] ]
+			},
+			format: {}
+		}
+	]);
+
+	expect(createContentsMock).toHaveBeenCalledTimes(1);
+});
+
+it(`getBlock`, async () => {
+	const space_1 = {
+			id: 'space_1'
+		},
+		cache = {
+			block: new Map([
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_2', { id: 'block_2', type: 'header' } ]
+			]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any;
+
+	const page = new Page({
+		cache,
+		id: 'block_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const block_map = await page.getBlock('block_2');
+	expect(block_map.header.get('block_2')).not.toBeUndefined();
+});
+
+it(`updateBlock`, async () => {
+	const space_1 = {
+			id: 'space_1'
+		},
+		cache = {
+			block: new Map([
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_2', { id: 'block_2', type: 'header' } ]
+			]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any;
+
+	const page = new Page({
+		cache,
+		id: 'block_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const block_map = await page.updateBlock([ 'block_2', { alive: false } as any ]);
+	expect(block_map.header.get('block_2')?.getCachedData().alive).toBe(false);
+});
+
+it(`updateBlock`, async () => {
+	const space_1 = {
+			id: 'space_1'
+		},
+		cache = {
+			block: new Map([
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_2', { id: 'block_2', type: 'header' } ]
+			]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any;
+
+	const page = new Page({
+		cache,
+		id: 'block_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	await page.deleteBlock('block_2');
+	expect(cache.block.get('block_2')?.alive).toBe(false);
+});

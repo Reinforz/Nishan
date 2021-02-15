@@ -14,14 +14,7 @@ import {
 	IBlockMap,
 	IPageCreateInput
 } from '../types';
-import {
-	createBlockClass,
-	createBlockMap,
-	CreateData,
-	populatePageMap,
-	transformToMultiple,
-	updateBookmarkedPages
-} from '../utils';
+import { createBlockClass, createBlockMap, CreateData, transformToMultiple, updateBookmarkedPages } from '../utils';
 import Block from './Block';
 
 /**
@@ -45,7 +38,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	/**
    * Add/remove this page from the favourite list
    */
-	async toggleFavourite (favourite_status: boolean) {
+	async updateBookmarkedStatus (favourite_status: boolean) {
 		const data = this.getCachedData();
 		let target_space_view: ISpaceView = null as any;
 		for (const [ , space_view ] of this.cache.space_view) {

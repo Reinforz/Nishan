@@ -1,3 +1,5 @@
+import { ICache } from '@nishans/cache';
+import { IOperation } from '@nishans/types';
 import { CreateData, Page } from '../src';
 
 afterEach(() => {
@@ -174,4 +176,39 @@ it(`updateBlock`, async () => {
 
 	await page.deleteBlock('block_2');
 	expect(cache.block.get('block_2')?.alive).toBe(false);
+});
+
+it(`updateBookmarkedStatus`, async () => {
+	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
+		cache: ICache = {
+			block: new Map([
+				[ 'block_1', { id: 'block_1', type: 'page', space_id: 'space_1' } as any ],
+			]),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
+			space: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		},
+		stack: IOperation[] = [];
+
+	const logger_spy = jest.fn();
+
+	const page = new Page({
+		cache,
+		logger: logger_spy,
+		id: 'block_1',
+		stack,
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	await page.updateBookmarkedStatus(false);
+
+	expect(stack.length).toBe(1);
 });

@@ -1,7 +1,8 @@
 import { Mutations } from '@nishans/endpoints';
+import { Operation } from '@nishans/operations';
 import { TBlock, TBasicBlockType, ISpace, IPage, ICollectionBlock, TData } from '@nishans/types';
 import { TBlockInput, NishanArg, RepositionParams } from '../types';
-import { createBlockClass, createBlockMap, generateId, Operation } from '../utils';
+import { createBlockClass, createBlockMap, generateId } from '../utils';
 
 import Data from './Data';
 

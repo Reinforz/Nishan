@@ -1,10 +1,11 @@
 import { ICache } from "@nishans/cache";
 import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
+import { Operation } from "@nishans/operations";
 import { ICollection, IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValues, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
 import { getSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../src";
 import { ICollectionBlockInput, IViewMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput } from "../types";
-import { createShortId, createViews, Operation, generateId } from "../utils";
+import { createShortId, createViews, generateId } from "../utils";
 
 interface ParentCollectionData {
   id: string

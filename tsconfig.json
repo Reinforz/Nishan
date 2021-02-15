@@ -15,6 +15,9 @@
       "path": "./packages/cache/tsconfig.json"
     },
     {
+      "path": "./packages/operations/tsconfig.json"
+    },
+    {
       "path": "./packages/notion-formula/tsconfig.json"
     },
     {

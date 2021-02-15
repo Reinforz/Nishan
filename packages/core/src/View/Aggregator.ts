@@ -1,6 +1,7 @@
+import { Operation } from "@nishans/operations";
 import { ITableView, IBoardView, ITimelineView } from "@nishans/types";
 import { NishanArg, TAggregationsCreateInput, UpdateType, UpdateTypes, FilterType, FilterTypes, ISchemaAggregationMapValue, TAggregationsUpdateInput } from "../../types";
-import { getAggregationsMap, getSchemaMap, Operation, transformToMultiple } from "../../utils";
+import { getAggregationsMap, getSchemaMap, transformToMultiple } from "../../utils";
 import View from "./View";
 
 /**

@@ -1,7 +1,8 @@
 import { Queries, Mutations } from "@nishans/endpoints";
+import { Operation } from "@nishans/operations";
 import { TPermissionRole, INotionUser, IPermission, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole, ISpacePermission, TPage, TDataType } from "@nishans/types";
 import { NishanArg } from "../types";
-import { error, Operation } from "../utils";
+import { error } from "../utils";
 import Data from "./Data";
 
 export default class NotionPermissions extends Data<TPage>{

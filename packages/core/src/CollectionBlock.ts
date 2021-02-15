@@ -1,7 +1,7 @@
 import Collection from './Collection';
 import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
 
-import { createViewMap, createViews, Operation, transformToMultiple } from '../utils';
+import { createViewMap, createViews, transformToMultiple } from '../utils';
 import { ICollection, TView, TViewUpdateInput, ICollectionViewPage, ICollectionView } from '@nishans/types';
 import {
 	NishanArg,
@@ -14,6 +14,7 @@ import {
 	TCollectionBlockInput
 } from '../types';
 import Block from './Block';
+import { Operation } from '@nishans/operations';
 
 const view_class = {
 	board: BoardView,

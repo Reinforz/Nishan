@@ -20,15 +20,10 @@ const commands = [
 	'set'
 ] as TOperationCommand[];
 
-const Operations: Record<
-	TDataType,
-	Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>
-> = {} as any;
-
 tables.forEach((table) => {
-	Operations[table] = {} as any;
+	Operation[table] = {} as any;
 	commands.forEach((command) => {
-		Operations[table][command] = (id: string, path: string[], args: Args): IOperation => {
+		Operation[table][command] = (id: string, path: string[], args: Args): IOperation => {
 			return {
 				path,
 				table,
@@ -40,4 +35,7 @@ tables.forEach((table) => {
 	});
 });
 
-export default Operations;
+export const Operation: Record<
+	TDataType,
+	Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>
+> = {} as any;

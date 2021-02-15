@@ -1,9 +1,10 @@
 import { Mutations } from "@nishans/endpoints";
+import { Operation } from "@nishans/operations";
 import { IPage, ISpace, ISpaceView, TExportType, TBlock } from "@nishans/types";
 import { NotionPermissions } from "../src";
 
 import { NishanArg, TBlockCreateInput, FilterType, FilterTypes, UpdateType, TBlockInput, UpdateTypes, IBlockMap, IPageCreateInput } from "../types";
-import { createBlockClass, createBlockMap, nestedContentPopulate, Operation, transformToMultiple } from "../utils";
+import { createBlockClass, createBlockMap, nestedContentPopulate, transformToMultiple } from "../utils";
 import Block from "./Block";
 
 

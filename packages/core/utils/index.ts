@@ -1,5 +1,3 @@
-import Operation from './operation';
-
 export * from './logs';
 export * from './populateFilters';
 export * from './createViews';
@@ -19,5 +17,3 @@ export * from './deepMerge';
 export * from './constructLogger';
 export * from './transformToMultiple';
 export * from './uuidConversion';
-
-export { Operation };

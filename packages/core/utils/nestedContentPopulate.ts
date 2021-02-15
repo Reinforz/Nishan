@@ -1,10 +1,11 @@
-import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, TPermissionRole, IPermission, IOperation, TDataType, TData, TBlockType, TBlock, TCollectionBlock } from "@nishans/types";
-import { TBlockCreateInput, NishanArg, IPageCreateInput, IBlockMap, IFactoryInput } from "../types";
-import { generateId, createViews, createBlockMap, createCollection, createBlockClass, Operation } from "../utils";
+import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, IPermission, IOperation, TDataType, TData, TBlock } from "@nishans/types";
+import { TBlockCreateInput, NishanArg, IBlockMap } from "../types";
+import { generateId, createViews, createBlockMap, createCollection, createBlockClass} from "../utils";
 import { v4 as uuidv4 } from 'uuid';
 import { Queries } from "@nishans/endpoints";
 import { ICache } from "@nishans/cache";
 import { warn } from "../src";
+import { Operation } from "@nishans/operations";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
   return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }

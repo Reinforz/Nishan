@@ -1,8 +1,9 @@
 import { ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
+import { Operation } from "@nishans/operations";
 import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit, ViewAggregations, Schema, TView, IOperation } from "@nishans/types";
 import { getSchemaMap } from "../src";
 import { TViewCreateInput, IViewMap, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewSchemaUnitsCreateInput } from "../types";
-import { generateId, error, Operation, createViewMap, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../utils";
+import { generateId, error, createViewMap, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../utils";
 import { populateFilters } from "./populateFilters";
 
 // * Separate start and end date for timeline view

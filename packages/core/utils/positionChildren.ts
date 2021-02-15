@@ -1,6 +1,6 @@
 import { IOperation, TData, TDataType } from '@nishans/types';
+import { Operation } from '@nishans/operations';
 import { Logger, RepositionParams } from '../types';
-import { Operation } from '../utils';
 import { detectChildData } from './detectChildData';
 
 interface PositionChildrenParam {

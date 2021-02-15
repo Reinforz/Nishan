@@ -1,3 +1,4 @@
+import { Operation } from '@nishans/operations';
 import {
 	TView,
 	TCollectionBlock,
@@ -31,7 +32,6 @@ import {
 	getSchemaMap,
 	getSortsMap,
 	initializeViewFilters,
-	Operation,
 	populateFilters,
 	transformToMultiple
 } from '../../utils';

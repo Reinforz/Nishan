@@ -1,7 +1,8 @@
 import { generateFormulaAST } from '@nishans/notion-formula';
+import { Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { FilterType, FilterTypes, ICollectionUpdateInput, IPageCreateInput, IPageUpdateInput, ISchemaMapValue, ISchemaUnitMap, NishanArg, TCollectionUpdateKeys, TSchemaUnitInput, UpdateType, UpdateTypes } from '../types';
-import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, Operation, transformToMultiple, warn } from '../utils';
+import { createSchemaUnitMap, createShortId, getSchemaMap, nestedContentPopulate, transformToMultiple, warn } from '../utils';
 import Data from "./Data";
 import Page from './Page';
 import SchemaUnit from "./SchemaUnit";

@@ -1,7 +1,7 @@
 import Data from './Data';
 
 import Space from './Space';
-import { createPageMap, Operation, populatePageMap, transformToMultiple } from '../utils';
+import { createPageMap, populatePageMap, transformToMultiple } from '../utils';
 import Page from './Page';
 import CollectionViewPage from './CollectionViewPage';
 import { ISpaceView, ISpace, TPage, IUserRoot, ICollection, TBlock } from '@nishans/types';
@@ -16,6 +16,7 @@ import {
 	IPageMap,
 	UpdateType
 } from '../types';
+import { Operation } from '@nishans/operations';
 
 /**
  * A class to represent spaceview of Notion

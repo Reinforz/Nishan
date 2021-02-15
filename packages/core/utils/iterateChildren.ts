@@ -1,9 +1,9 @@
 import { warn } from "./logs";
 import { FilterTypes, Logger, NishanArg, UpdateTypes } from "../types";
 import { TData, TDataType } from "@nishans/types";
-import { Operation } from "../utils";
 import { IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, IterateOptions } from "../src/Data";
 import { deepMerge } from "../src";
+import { Operation } from "@nishans/operations";
 
 interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<NishanArg, "cache">{
   parent_type: TDataType,

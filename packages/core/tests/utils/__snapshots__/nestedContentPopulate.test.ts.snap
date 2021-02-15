@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`nestedContentPopulate type=collection_block type=collection_view,rows=[{}] 1`] = `
+exports[`createContents type=collection_block type=collection_view,rows=[{}] 1`] = `
 Object {
   "alive": true,
   "collection_id": Any<String>,
@@ -23,7 +23,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=collection_block type=collection_view,rows=[{}] 2`] = `
+exports[`createContents type=collection_block type=collection_view,rows=[{}] 2`] = `
 Object {
   "args": Object {
     "alive": true,
@@ -52,7 +52,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=collection_block type=collection_view_page,rows=[] 1`] = `
+exports[`createContents type=collection_block type=collection_view_page,rows=[] 1`] = `
 Object {
   "alive": true,
   "collection_id": Any<String>,
@@ -82,7 +82,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=collection_block type=collection_view_page,rows=[] 2`] = `
+exports[`createContents type=collection_block type=collection_view_page,rows=[] 2`] = `
 Object {
   "args": Object {
     "alive": true,
@@ -118,7 +118,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=link_to_page 1`] = `
+exports[`createContents type=link_to_page 1`] = `
 Array [
   Object {
     "args": Object {
@@ -135,7 +135,7 @@ Array [
 ]
 `;
 
-exports[`nestedContentPopulate type=linked_db 1`] = `
+exports[`createContents type=linked_db 1`] = `
 Object {
   "alive": true,
   "collection_id": Any<String>,
@@ -158,7 +158,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=page is_template=false,is_private=true,contents=[{}],parent=space 1`] = `
+exports[`createContents type=page is_template=false,is_private=true,contents=[{}],parent=space 1`] = `
 Object {
   "alive": true,
   "content": Array [
@@ -197,7 +197,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=page is_template=false,is_private=true,contents=[{}],parent=space 2`] = `
+exports[`createContents type=page is_template=false,is_private=true,contents=[{}],parent=space 2`] = `
 Object {
   "alive": true,
   "created_by_id": "72e85506-b758-481a-92b1-73984a903002",
@@ -226,7 +226,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=page is_template=false,is_private=true,contents=[{}],parent=space 3`] = `
+exports[`createContents type=page is_template=false,is_private=true,contents=[{}],parent=space 3`] = `
 Array [
   Object {
     "args": Object {
@@ -327,7 +327,7 @@ Array [
 ]
 `;
 
-exports[`nestedContentPopulate type=page is_template=true,contents=[],parent=collection 1`] = `
+exports[`createContents type=page is_template=true,contents=[],parent=collection 1`] = `
 Object {
   "alive": true,
   "content": Array [],
@@ -365,7 +365,7 @@ Object {
 }
 `;
 
-exports[`nestedContentPopulate type=page is_template=true,contents=[],parent=collection 2`] = `
+exports[`createContents type=page is_template=true,contents=[],parent=collection 2`] = `
 Array [
   Object {
     "args": Object {

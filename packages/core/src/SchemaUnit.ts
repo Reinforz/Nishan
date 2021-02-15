@@ -18,29 +18,41 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 	}
 
 	update (arg: T) {
-		const data = super.getCachedData();
+		const data = this.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.stack.push(
+			Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+		);
 		this.logger && this.logger('UPDATE', 'collection', this.id);
 	}
 
 	delete () {
-		const data = super.getCachedData();
-		delete data.schema[this.schema_id];
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
-		this.logger && this.logger('DELETE', 'collection', this.id);
+		const data = this.getCachedData();
+		const schema_unit = data.schema[this.schema_id];
+		if (schema_unit.type !== 'title') {
+			delete data.schema[this.schema_id];
+			this.Operations.stack.push(
+				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+			);
+			this.logger && this.logger('DELETE', 'collection', this.id);
+		}
 	}
 
 	duplicate () {
-		const data = super.getCachedData(),
+		const data = this.getCachedData(),
 			id = createShortId();
-		data.schema[id] = data.schema[this.schema_id];
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
-		this.logger && this.logger('CREATE', 'collection', id);
+		const schema_unit = data.schema[this.schema_id];
+		if (schema_unit.type !== 'title') {
+			data.schema[id] = data.schema[this.schema_id];
+			this.Operations.stack.push(
+				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+			);
+			this.logger && this.logger('UPDATE', 'collection', id);
+		}
 	}
 
 	getCachedChildData () {
-		const data = super.getCachedData();
+		const data = this.getCachedData();
 		return data.schema[this.schema_id];
 	}
 }

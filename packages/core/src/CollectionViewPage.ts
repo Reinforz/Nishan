@@ -16,8 +16,7 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
 
 	getCachedParentData () {
 		const data = this.getCachedData();
-		if (data.parent_table === 'space') return this.cache.space.get(data.parent_id) as ISpace;
-		else return this.cache.block.get(data.parent_id) as IPage;
+		return this.cache[data.parent_table].get(data.parent_id) as IPage | ISpace;
 	}
 }
 

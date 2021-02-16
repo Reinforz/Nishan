@@ -20,37 +20,34 @@ import { NotionRequestConfigs } from '.';
 import { sendRequest } from '../utils';
 
 const Mutations = {
-	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs?: Partial<NotionRequestConfigs>) {
+	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs: NotionRequestConfigs) {
 		return await sendRequest('setPageNotificationsAsRead', params, configs);
 	},
-	async setSpaceNotificationsAsRead (
-		params: SetSpaceNotificationsAsReadParams,
-		configs?: Partial<NotionRequestConfigs>
-	) {
+	async setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs: NotionRequestConfigs) {
 		return await sendRequest('setSpaceNotificationsAsRead', params, configs);
 	},
-	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs?: Partial<NotionRequestConfigs>) {
+	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: NotionRequestConfigs) {
 		return await sendRequest<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
 	},
-	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs?: Partial<NotionRequestConfigs>) {
+	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: NotionRequestConfigs) {
 		return await sendRequest('inviteGuestsToSpace', params, configs);
 	},
-	async createSpace (params: CreateSpaceParams, configs?: Partial<NotionRequestConfigs>) {
+	async createSpace (params: CreateSpaceParams, configs: NotionRequestConfigs) {
 		return await sendRequest<CreateSpaceResult>('createSpace', params, configs);
 	},
-	async saveTransactions (params: SaveTransactionParams, configs?: Partial<NotionRequestConfigs>) {
+	async saveTransactions (params: SaveTransactionParams, configs: NotionRequestConfigs) {
 		return await sendRequest('saveTransactions', params, configs);
 	},
-	async enqueueTask (params: EnqueueTaskParams, configs?: Partial<NotionRequestConfigs>) {
+	async enqueueTask (params: EnqueueTaskParams, configs: NotionRequestConfigs) {
 		return await sendRequest<EnqueueTaskResult>('enqueueTask', params, configs);
 	},
-	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs?: Partial<NotionRequestConfigs>) {
+	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs: NotionRequestConfigs) {
 		return await sendRequest('setBookmarkMetadata', params, configs);
 	},
-	async initializePageTemplate (params: InitializePageTemplateParams, configs?: Partial<NotionRequestConfigs>) {
+	async initializePageTemplate (params: InitializePageTemplateParams, configs: NotionRequestConfigs) {
 		return await sendRequest<InitializePageTemplateResult>('initializePageTemplate', params, configs);
 	},
-	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs?: Partial<NotionRequestConfigs>) {
+	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs: NotionRequestConfigs) {
 		return await sendRequest<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
 	}
 };

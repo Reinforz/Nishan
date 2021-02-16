@@ -1,4 +1,4 @@
-import { Mutations } from '@nishans/endpoints';
+import { Mutations, Queries } from '@nishans/endpoints';
 import { Operation } from '@nishans/operations';
 import { IPage, ISpace, ISpaceView, TExportType, TBlock } from '@nishans/types';
 import { NotionPermissions } from '../src';
@@ -49,50 +49,6 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 		}
 
 		updateBookmarkedPages(target_space_view, favourite_status, data.id, this.Operations.stack);
-	}
-
-	/**
-   * Export the page and its content as a zip
-   * @param arg Options used for setting up export
-   */
-	// ? FEAT:2:M Add export block method (maybe create a separate class for it as CollectionBlock will also support it)
-	async export (
-		arg: Partial<{
-			timeZone: string;
-			recursive: boolean;
-			exportType: TExportType;
-		}>
-	) {
-		const data = this.getCachedData();
-		const { timeZone = '', recursive = true, exportType = 'markdown' } = arg;
-		const { taskId } = await Mutations.enqueueTask(
-			{
-				task: {
-					eventName: 'exportBlock',
-					request: {
-						blockId: data.id,
-						exportOptions: {
-							exportType,
-							locale: 'en',
-							timeZone
-						},
-						recursive
-					}
-				}
-			},
-			{
-				token: this.token,
-				interval: this.interval
-			}
-		);
-
-		/* await this.getTasks({taskIds: [taskId]});
-
-    const response = await axios.get(results[0].status.exportURL, {
-      responseType: 'arraybuffer'
-    });
-
-    return response.data; */
 	}
 
 	/**

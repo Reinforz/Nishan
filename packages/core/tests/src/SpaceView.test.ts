@@ -1,11 +1,10 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
-import { SpaceView } from '../src';
-import Data from '../src/Data';
+import { NotionData, SpaceView } from '../../src';
 
 afterEach(() => {
-	jest.clearAllMocks();
+	jest.restoreAllMocks();
 });
 
 it(`getCachedParentData`, () => {
@@ -66,7 +65,7 @@ it(`reposition`, () => {
 		token: 'token',
 		user_id: 'user_root_1'
 	});
-	const addToChildArrayMock = jest.spyOn(Data.prototype, 'addToChildArray' as any);
+	const addToChildArrayMock = jest.spyOn(NotionData.prototype, 'addToChildArray' as any);
 
 	space_view.reposition(0);
 	expect(addToChildArrayMock).toHaveBeenCalledTimes(1);
@@ -104,7 +103,7 @@ it(`update`, () => {
 		user_id: 'user_root_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(Data.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
+	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
 		return {} as any;
 	});
 

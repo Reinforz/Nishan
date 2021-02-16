@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import deepEqual from 'deep-equal';
-import Nishan from '../src';
+import Nishan from '../../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);

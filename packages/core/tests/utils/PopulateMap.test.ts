@@ -2,7 +2,7 @@ import { IBlockMap, IPageMap, PopulateMap } from '../../src';
 import { NotionCacheObject } from '@nishans/cache';
 
 afterEach(() => {
-	jest.clearAllMocks();
+	jest.restoreAllMocks();
 });
 
 it(`PopulateMap.collection_block`, async () => {

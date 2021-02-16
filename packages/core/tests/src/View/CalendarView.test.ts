@@ -1,4 +1,4 @@
-import { CalendarView } from '../../src';
+import { CalendarView } from '../../../src';
 
 it(`CalendarView`, () => {
 	new CalendarView({

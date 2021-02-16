@@ -1,4 +1,4 @@
-import { GalleryView } from '../../src';
+import { GalleryView } from '../../../src';
 
 it(`GalleryView`, () => {
 	new GalleryView({

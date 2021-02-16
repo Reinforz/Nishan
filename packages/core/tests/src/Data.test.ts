@@ -1,4 +1,4 @@
-import { ChildTraverser, NotionData } from '../src';
+import { ChildTraverser, NotionData } from '../../src';
 import colors from 'colors';
 import { IHeader, IOperation } from '@nishans/types';
 

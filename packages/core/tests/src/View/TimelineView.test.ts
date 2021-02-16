@@ -1,4 +1,4 @@
-import { TimelineView } from '../../src';
+import { TimelineView } from '../../../src';
 
 it(`TimelineView`, () => {
 	new TimelineView({

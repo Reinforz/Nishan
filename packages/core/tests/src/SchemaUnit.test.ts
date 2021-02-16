@@ -1,6 +1,6 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { SchemaUnit } from '../src';
+import { SchemaUnit } from '../../src';
 
 it(`update`, () => {
 	const cache: ICache = {

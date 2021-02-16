@@ -1,10 +1,10 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
-import { UserRoot } from '../src';
+import { UserRoot } from '../../src';
 
 afterEach(() => {
-	jest.clearAllMocks();
+	jest.restoreAllMocks();
 });
 
 it(`get space_views`, async () => {

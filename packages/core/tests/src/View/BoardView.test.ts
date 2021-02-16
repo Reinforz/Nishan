@@ -1,4 +1,4 @@
-import { BoardView } from '../../src';
+import { BoardView } from '../../../src';
 
 it(`BoardView`, () => {
 	new BoardView({

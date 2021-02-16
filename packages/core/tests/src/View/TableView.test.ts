@@ -1,4 +1,4 @@
-import { TableView } from '../../src';
+import { TableView } from '../../../src';
 
 it(`TableView`, () => {
 	new TableView({

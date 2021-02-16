@@ -1,18 +1,16 @@
-import {NotionCacheClass} from "@nishans/cache";
+import { NotionCacheClass } from "@nishans/cache";
 import { INotionUser } from "@nishans/types";
-
-import Collection from "./Collection";
-
-import NotionUser from "./NotionUser";
-import UserSettings from "./UserSettings";
-import UserRoot from "./UserRoot";
-import SpaceView from "./SpaceView";
-import Space from "./Space";
-import SchemaUnit from "./SchemaUnit";
-import NotionPermissions from "./Permissions";
-import NotionData from "./Data";
+import { FilterType, FilterTypes, Logger, NishanArg } from "../types";
 import { constructLogger, iterateAndGetChildren, transformToMultiple } from "../utils";
-import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
+import Collection from "./Collection";
+import NotionData from "./Data";
+import NotionUser from "./NotionUser";
+import NotionPermissions from "./Permissions";
+import SchemaUnit from "./SchemaUnit";
+import Space from "./Space";
+import SpaceView from "./SpaceView";
+import UserRoot from "./UserRoot";
+import UserSettings from "./UserSettings";
 
 class Nishan extends NotionCacheClass {
   token: string;
@@ -80,7 +78,6 @@ export * from "../types";
 export * from "../utils";
 export * from "./Block";
 export * from "./View";
-
 export {
   Collection,
   NotionUser,
@@ -91,4 +88,5 @@ export {
   SchemaUnit,
   NotionPermissions,
   NotionData
-}
+};
+

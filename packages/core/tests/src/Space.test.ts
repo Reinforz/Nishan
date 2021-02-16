@@ -2,13 +2,12 @@ import { ICache } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
-import { Space, TSpaceUpdateKeys } from '../src';
-import Data from '../src/Data';
-import { createSpaceIterateArguments } from '../src/Space';
+import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
+import { createSpaceIterateArguments } from '../../src/Space';
 import colors from "colors";
 
 afterAll(()=>{
-  jest.clearAllMocks();
+  jest.restoreAllMocks();
 })
 
 describe('createSpaceIterateArguments', () => {
@@ -106,7 +105,7 @@ it(`update`, () => {
 		user_id: 'user_root_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(Data.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
+	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
 		return {} as any;
 	});
 

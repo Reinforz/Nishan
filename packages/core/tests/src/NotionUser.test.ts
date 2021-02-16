@@ -3,9 +3,8 @@ import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
-import { CollectionViewPage, NotionUser, Page } from '../src';
+import { NotionData, CollectionViewPage, NotionUser, Page } from '../../src';
 import colors from 'colors';
-import Data from '../src/Data';
 
 afterEach(() => {
 	jest.resetAllMocks();
@@ -387,7 +386,7 @@ describe('NotionUser', () => {
 		});
 
 		const initializeCacheForSpecificDataMock = jest
-			.spyOn(Data.prototype, 'initializeCacheForSpecificData')
+			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(() => {
 				return {} as any;
 			});
@@ -434,7 +433,7 @@ describe('NotionUser', () => {
 			user_id: 'user_1'
 		});
 
-		const updateCacheLocallyMock = jest.spyOn(Data.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
+		const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
 			return {} as any;
 		});
 

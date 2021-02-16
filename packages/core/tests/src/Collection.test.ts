@@ -6,9 +6,9 @@ import {
 	IPageCreateInput,
 	ISchemaUnitMap,
 	TCollectionUpdateKeys,
-	TSchemaUnitInput
-} from '../src';
-import { NotionData } from '../src';
+	TSchemaUnitInput,
+	NotionData
+} from '../../src';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -1,4 +1,4 @@
-import { CollectionView } from '../src';
+import { CollectionView } from '../../src';
 
 it(`getCachedParentData`, () => {
 	const cache = {

@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { CollectionBlock, CreateData, TViewCreateInput } from '../src';
+import { CollectionBlock, CreateData, TViewCreateInput } from '../../src';
 
 it(`getCollection`, async () => {
 	const collection_1 = {

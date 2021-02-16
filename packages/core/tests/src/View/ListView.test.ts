@@ -1,4 +1,4 @@
-import { ListView } from '../../src';
+import { ListView } from '../../../src';
 
 it(`ListView`, () => {
 	new ListView({

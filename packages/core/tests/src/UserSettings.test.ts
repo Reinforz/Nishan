@@ -1,10 +1,9 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { UserSettings } from '../src';
-import Data from '../src/Data';
+import { NotionData, UserSettings } from '../../src';
 
 afterEach(() => {
-	jest.clearAllMocks();
+	jest.restoreAllMocks();
 });
 
 it(`update`, () => {
@@ -31,7 +30,7 @@ it(`update`, () => {
 		user_id: 'user_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(Data.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
+	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
 		return {} as any;
 	});
 

@@ -1,6 +1,7 @@
 import { TBlockType } from '@nishans/types';
 import { v4 } from 'uuid';
 import { createBlockClass, NishanArg } from '../../src';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 const arg: NishanArg = {
 	token: 'token',
@@ -8,16 +9,7 @@ const arg: NishanArg = {
 	user_id: '',
 	shard_id: 123,
 	space_id: '123',
-	cache: {
-		block: new Map(),
-		collection: new Map(),
-		space: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
-	},
+	cache: createDefaultCache(),
 	logger: false,
 	stack: [],
 	id: '123'

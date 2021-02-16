@@ -1,4 +1,3 @@
-import deepEqual from 'deep-equal';
 import { transformToMultiple } from '../../src';
 
 describe('transformToMultiple', () => {
@@ -10,7 +9,7 @@ describe('transformToMultiple', () => {
 
 	it(`arg=string`, () => {
 		const data = transformToMultiple('123');
-		expect(deepEqual(data, [ '123' ])).toBe(true);
+		expect(data).toStrictEqual([ '123' ]);
 	});
 
 	it(`arg=fn`, () => {
@@ -23,6 +22,6 @@ describe('transformToMultiple', () => {
 
 	it(`arg=[]`, () => {
 		const data = transformToMultiple([ 'id', '123' ]);
-		expect(deepEqual(data, [ [ 'id', '123' ] ])).toBe(true);
+		expect(data).toStrictEqual([ [ 'id', '123' ] ]);
 	});
 });

@@ -1,5 +1,4 @@
 import { Schema } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { getAggregationsMap, getFiltersMap, getFormatPropertiesMap, getSchemaMap, getSortsMap } from '../../src';
 
 const schema: Schema = {
@@ -21,34 +20,32 @@ describe('getSchemaMap', () => {
 	it(`Should create correct schema map`, () => {
 		const schema_map = getSchemaMap(schema);
 
-		expect(
-			deepEqual(Array.from(schema_map.entries()), [
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						name: 'Title',
-						type: 'title'
-					}
-				],
-				[
-					'Number',
-					{
-						schema_id: 'number',
-						name: 'Number',
-						type: 'number'
-					}
-				],
-				[
-					'Text',
-					{
-						schema_id: 'text',
-						name: 'Text',
-						type: 'text'
-					}
-				]
-			])
-		).toBe(true);
+		expect(Array.from(schema_map.entries())).toStrictEqual([
+			[
+				'Title',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title'
+				}
+			],
+			[
+				'Number',
+				{
+					schema_id: 'number',
+					name: 'Number',
+					type: 'number'
+				}
+			],
+			[
+				'Text',
+				{
+					schema_id: 'text',
+					name: 'Text',
+					type: 'text'
+				}
+			]
+		]);
 	});
 });
 
@@ -86,22 +83,20 @@ describe('getAggregationsMap', () => {
 			schema
 		);
 
-		expect(
-			deepEqual(Array.from(aggregations_map.entries()), [
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						name: 'Title',
-						type: 'title',
-						aggregation: {
-							aggregator: 'count',
-							property: 'title'
-						}
+		expect(Array.from(aggregations_map.entries())).toStrictEqual([
+			[
+				'Title',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title',
+					aggregation: {
+						aggregator: 'count',
+						property: 'title'
 					}
-				]
-			])
-		).toBe(true);
+				}
+			]
+		]);
 	});
 });
 
@@ -139,19 +134,17 @@ describe('getSortsMap', () => {
 			schema
 		);
 
-		expect(
-			deepEqual(Array.from(sorts_map.entries()), [
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						name: 'Title',
-						type: 'title',
-						sort: 'ascending'
-					}
-				]
-			])
-		).toBe(true);
+		expect(Array.from(sorts_map.entries())).toStrictEqual([
+			[
+				'Title',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title',
+					sort: 'ascending'
+				}
+			]
+		]);
 	});
 });
 
@@ -193,22 +186,20 @@ describe('getFormatPropertiesMap', () => {
 			schema
 		);
 
-		expect(
-			deepEqual(Array.from(format_map.entries()), [
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						name: 'Title',
-						type: 'title',
-						format: {
-							width: 150,
-							visible: false
-						}
+		expect(Array.from(format_map.entries())).toStrictEqual([
+			[
+				'Title',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title',
+					format: {
+						width: 150,
+						visible: false
 					}
-				]
-			])
-		).toBe(true);
+				}
+			]
+		]);
 	});
 });
 
@@ -289,50 +280,48 @@ describe('getFiltersMap', () => {
 			schema
 		);
 
-		expect(
-			deepEqual(Array.from(filters_map.entries()), [
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						name: 'Title',
-						type: 'title',
-						filters: [
-							{
-								operator: 'string_is',
-								value: {
-									type: 'exact',
-									value: '123'
-								}
-							},
-							{
-								operator: 'string_starts_with',
-								value: {
-									type: 'exact',
-									value: '123'
-								}
+		expect(Array.from(filters_map.entries())).toStrictEqual([
+			[
+				'Title',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title',
+					filters: [
+						{
+							operator: 'string_is',
+							value: {
+								type: 'exact',
+								value: '123'
 							}
-						]
-					}
-				],
-				[
-					'Text',
-					{
-						schema_id: 'text',
-						name: 'Text',
-						type: 'text',
-						filters: [
-							{
-								operator: 'string_contains',
-								value: {
-									type: 'exact',
-									value: '123'
-								}
+						},
+						{
+							operator: 'string_starts_with',
+							value: {
+								type: 'exact',
+								value: '123'
 							}
-						]
-					}
-				]
-			])
-		).toBe(true);
+						}
+					]
+				}
+			],
+			[
+				'Text',
+				{
+					schema_id: 'text',
+					name: 'Text',
+					type: 'text',
+					filters: [
+						{
+							operator: 'string_contains',
+							value: {
+								type: 'exact',
+								value: '123'
+							}
+						}
+					]
+				}
+			]
+		]);
 	});
 });

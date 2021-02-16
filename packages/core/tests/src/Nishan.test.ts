@@ -1,6 +1,5 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import deepEqual from 'deep-equal';
 import Nishan from '../../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
@@ -49,7 +48,7 @@ describe('Nishan', () => {
 			expect(logger_spy).toHaveBeenCalledTimes(1);
 			expect(logger_spy).toHaveBeenCalledWith('READ', 'notion_user', 'a');
 
-			expect(deepEqual(users[0].getCachedData(), { id: 'a', data: 'data' }));
+			expect(users[0].getCachedData()).toStrictEqual({ id: 'a', data: 'data' });
 		});
 
 		it('arg=cb,multiple=false', async () => {
@@ -92,7 +91,7 @@ describe('Nishan', () => {
 			expect(logger_spy).toHaveBeenCalledTimes(1);
 			expect(logger_spy).toHaveBeenCalledWith('READ', 'notion_user', 'b');
 
-			expect(deepEqual(user.getCachedData(), { id: 'b', data: 'data' }));
+			expect(user.getCachedData()).toStrictEqual({ id: 'b', data: 'data' });
 		});
 
 		it('arg=string,multiple=false', async () => {
@@ -135,8 +134,8 @@ describe('Nishan', () => {
 			expect(logger_spy).toHaveBeenNthCalledWith(1, 'READ', 'notion_user', 'a');
 			expect(logger_spy).toHaveBeenNthCalledWith(2, 'READ', 'notion_user', 'b');
 
-			expect(deepEqual(user_a.getCachedData(), { id: 'a', data: 'data' }));
-			expect(deepEqual(user_b.getCachedData(), { id: 'b', data: 'data' }));
+			expect(user_a.getCachedData()).toStrictEqual({ id: 'a', data: 'data' });
+			expect(user_b.getCachedData()).toStrictEqual({ id: 'b', data: 'data' });
 		});
 	});
 });

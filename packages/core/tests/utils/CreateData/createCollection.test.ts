@@ -1,26 +1,15 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import axios from 'axios';
 
 import { createCollection } from '../../../utils/CreateData/createCollection';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
-const default_cache: ICache = {
-	block: new Map(),
-	collection: new Map(),
-	space: new Map(),
-	collection_view: new Map(),
-	notion_user: new Map(),
-	space_view: new Map(),
-	user_root: new Map(),
-	user_settings: new Map()
-};
-
 describe('createCollection', () => {
 	it(`createCollection should work correctly`, async () => {
-		const cache: ICache = default_cache;
+		const cache: ICache = createDefaultCache();
 		const stack: IOperation[] = [];
 		const [ collection_id ] = await createCollection(
 			{
@@ -76,15 +65,13 @@ describe('createCollection', () => {
 
 		expect(typeof collection_id).toBe('string');
 		expect(stack.length).toBe(2);
-		expect(
-			deepEqual(stack[1], {
-				table: 'collection',
-				command: 'update',
-				id: collection_id,
-				args: output_collection,
-				path: []
-			})
-		).toBe(true);
-		expect(deepEqual(cache.collection.get(collection_id), output_collection)).toBe(true);
+		expect(stack[1]).toStrictEqual({
+			table: 'collection',
+			command: 'update',
+			id: collection_id,
+			args: output_collection,
+			path: []
+		});
+		expect(cache.collection.get(collection_id)).toStrictEqual(output_collection);
 	});
 });

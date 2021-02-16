@@ -1,6 +1,5 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { NotionData, SpaceView } from '../../src';
 import { createDefaultCache } from '../../utils/createDefaultCache';
 
@@ -28,7 +27,7 @@ it(`getCachedParentData`, () => {
 	});
 
 	const parent_data = space_view.getCachedParentData();
-	expect(deepEqual(parent_data, { space_views: [ 'space_view_1' ] })).toBe(true);
+	expect(parent_data).toStrictEqual({ space_views: [ 'space_view_1' ] });
 });
 
 it(`reposition`, () => {
@@ -127,7 +126,7 @@ it(`getSpace`, () => {
 	const space = space_view.getSpace();
 	expect(logger_spy).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenCalledWith('READ', 'space', 'space_1');
-	expect(deepEqual(space.getCachedData(), { id: 'space_1' })).toBe(true);
+	expect(space.getCachedData()).toStrictEqual({ id: 'space_1' });
 });
 
 it(`getBookmarkedPage`, async () => {

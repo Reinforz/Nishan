@@ -1,5 +1,4 @@
 import { IPage } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { positionChildren } from '../../src';
 
 describe('positionChildren', () => {
@@ -15,18 +14,16 @@ describe('positionChildren', () => {
 
 		expect(parent.content[0]).toBe('child_id');
 
-		expect(
-			deepEqual(operation, {
-				path: [ 'content' ],
-				table: 'block',
-				command: 'listAfter',
-				args: {
-					after: '',
-					id: 'child_id'
-				},
-				id: 'parent_id'
-			})
-		).toBe(true);
+		expect(operation).toStrictEqual({
+			path: [ 'content' ],
+			table: 'block',
+			command: 'listAfter',
+			args: {
+				after: '',
+				id: 'child_id'
+			},
+			id: 'parent_id'
+		});
 	});
 
 	it(`Should work when position is a number`, () => {
@@ -39,18 +36,16 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content[0]).toBe('child_id');
-		expect(
-			deepEqual(operation, {
-				path: [ 'content' ],
-				table: 'block',
-				command: 'listBefore',
-				args: {
-					before: 'child_1_id',
-					id: 'child_id'
-				},
-				id: 'parent_id'
-			})
-		).toBe(true);
+		expect(operation).toStrictEqual({
+			path: [ 'content' ],
+			table: 'block',
+			command: 'listBefore',
+			args: {
+				before: 'child_1_id',
+				id: 'child_id'
+			},
+			id: 'parent_id'
+		});
 	});
 
 	it(`Should push to last if position not provided`, () => {
@@ -62,18 +57,16 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content.pop()).toBe('child_id');
-		expect(
-			deepEqual(operation, {
-				path: [ 'content' ],
-				table: 'block',
-				command: 'listAfter',
-				args: {
-					after: '',
-					id: 'child_id'
-				},
-				id: 'parent_id'
-			})
-		).toBe(true);
+		expect(operation).toStrictEqual({
+			path: [ 'content' ],
+			table: 'block',
+			command: 'listAfter',
+			args: {
+				after: '',
+				id: 'child_id'
+			},
+			id: 'parent_id'
+		});
 	});
 
 	it(`Should work when position is an object(position: After)`, () => {
@@ -91,19 +84,17 @@ describe('positionChildren', () => {
 			parent_type: 'block'
 		});
 
-		expect(deepEqual(parent.content, [ 'child_1_id', 'child_id' ])).toBe(true);
-		expect(
-			deepEqual(operation, {
-				path: [ 'content' ],
-				table: 'block',
-				command: 'listAfter',
-				args: {
-					after: 'child_1_id',
-					id: 'child_id'
-				},
-				id: 'parent_id'
-			})
-		).toBe(true);
+		expect(parent.content).toStrictEqual([ 'child_1_id', 'child_id' ]);
+		expect(operation).toStrictEqual({
+			path: [ 'content' ],
+			table: 'block',
+			command: 'listAfter',
+			args: {
+				after: 'child_1_id',
+				id: 'child_id'
+			},
+			id: 'parent_id'
+		});
 	});
 
 	it(`Should work when position is an object(position: Before)`, () => {
@@ -118,20 +109,17 @@ describe('positionChildren', () => {
 			parent_type: 'block'
 		});
 
-		expect(deepEqual(parent.content, [ 'child_id', 'child_1_id' ])).toBe(true);
-
-		expect(
-			deepEqual(operation, {
-				path: [ 'content' ],
-				table: 'block',
-				command: 'listBefore',
-				args: {
-					before: 'child_1_id',
-					id: 'child_id'
-				},
-				id: 'parent_id'
-			})
-		).toBe(true);
+		expect(parent.content).toStrictEqual([ 'child_id', 'child_1_id' ]);
+		expect(operation).toStrictEqual({
+			path: [ 'content' ],
+			table: 'block',
+			command: 'listBefore',
+			args: {
+				before: 'child_1_id',
+				id: 'child_id'
+			},
+			id: 'parent_id'
+		});
 	});
 
 	it(`Should throw an error if the pivot and content doesnt exist for number position`, () => {

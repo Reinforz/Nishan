@@ -1,6 +1,5 @@
 import { ICache } from '@nishans/cache';
 import { IHeader, IOperation, IPage } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -17,26 +16,14 @@ import {
 } from '../../../src';
 
 import { stackCacheMap, createContents, appendChildToParent } from '../../../utils/CreateData/createContents';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
 
-const space_id = '322c0b0c-5fb4-4fdc-97eb-84e7142b2a80',
-	user_id = '72e85506-b758-481a-92b1-73984a903002',
-	shard_id = 731776;
-
-const constructDefaultCache = () => {
-	return {
-		block: new Map([ [ 'page1_id', {} ], [ 'page2_id', { content: [] } ] ]),
-		collection: new Map([ [ 'collection1_id', {} ] ]),
-		space: new Map([ [ space_id, {} ] ]),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
-	} as ICache;
-};
+const space_id = 'space_1',
+	user_id = 'user_1',
+	shard_id = 123;
 
 const metadata = {
 	created_time: expect.any(Number),
@@ -47,7 +34,8 @@ const metadata = {
 	last_edited_by_id: user_id,
 	space_id,
 	shard_id,
-	version: 0
+	version: 0,
+	alive: true
 };
 
 describe('fetchAndCacheData', () => {
@@ -60,7 +48,7 @@ describe('fetchAndCacheData', () => {
 			} as any,
 			'token'
 		);
-		expect(deepEqual(data, { data: 'data' })).toBe(true);
+		expect(data).toStrictEqual({ data: 'data' });
 	});
 
 	it('doesnt exist in cache', async () => {
@@ -86,7 +74,7 @@ describe('fetchAndCacheData', () => {
 		expect(console_log_spy).toHaveBeenCalledTimes(1);
 		expect(console_log_spy).toHaveBeenCalledWith(colors.yellow.bold(`block:id doesnot exist in the cache`));
 
-		expect(deepEqual(data, { data: 'data' })).toBe(true);
+		expect(data).toStrictEqual({ data: 'data' });
 	});
 });
 
@@ -99,22 +87,20 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'block',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'content' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'block',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'content' ]
+				}
+			]);
 
-			expect(deepEqual(cache.block.get('parent_id'), { content: [ 'child_id' ] })).toBe(true);
+			expect(cache.block.get('parent_id')).toStrictEqual({ content: [ 'child_id' ] });
 		});
 
 		it(`path doesnt exists`, async () => {
@@ -124,22 +110,20 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'block',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'content' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'block',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'content' ]
+				}
+			]);
 
-			expect(deepEqual(cache.block.get('parent_id'), { content: [ 'child_id' ] })).toBe(true);
+			expect(cache.block.get('parent_id')).toStrictEqual({ content: [ 'child_id' ] });
 		});
 	});
 
@@ -151,22 +135,20 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'space',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'pages' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'space',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'pages' ]
+				}
+			]);
 
-			expect(deepEqual(cache.space.get('parent_id'), { pages: [ 'child_id' ] })).toBe(true);
+			expect(cache.space.get('parent_id')).toStrictEqual({ pages: [ 'child_id' ] });
 		});
 
 		it(`path doesnt exists`, async () => {
@@ -176,22 +158,20 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'space',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'pages' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'space',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'pages' ]
+				}
+			]);
 
-			expect(deepEqual(cache.space.get('parent_id'), { pages: [ 'child_id' ] })).toBe(true);
+			expect(cache.space.get('parent_id')).toStrictEqual({ pages: [ 'child_id' ] });
 		});
 	});
 
@@ -203,22 +183,20 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'collection',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'template_pages' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'collection',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'template_pages' ]
+				}
+			]);
 
-			expect(deepEqual(cache.collection.get('parent_id'), { template_pages: [ 'child_id' ] })).toBe(true);
+			expect(cache.collection.get('parent_id')).toStrictEqual({ template_pages: [ 'child_id' ] });
 		});
 
 		it(`path doesnt exists`, async () => {
@@ -228,29 +206,27 @@ describe('appendChildToParent', () => {
 				} as any;
 			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
 
-			expect(
-				deepEqual(stack, [
-					{
-						table: 'collection',
-						command: 'listAfter',
-						id: 'parent_id',
-						args: {
-							after: '',
-							id: 'child_id'
-						},
-						path: [ 'template_pages' ]
-					}
-				])
-			).toBe(true);
+			expect(stack).toStrictEqual([
+				{
+					table: 'collection',
+					command: 'listAfter',
+					id: 'parent_id',
+					args: {
+						after: '',
+						id: 'child_id'
+					},
+					path: [ 'template_pages' ]
+				}
+			]);
 
-			expect(deepEqual(cache.collection.get('parent_id'), { template_pages: [ 'child_id' ] })).toBe(true);
+			expect(cache.collection.get('parent_id')).toStrictEqual({ template_pages: [ 'child_id' ] });
 		});
 	});
 });
 
 describe('stackCacheMap', () => {
 	it(`name=string`, () => {
-		const cache = constructDefaultCache(),
+		const cache = createDefaultCache(),
 			stack: IOperation[] = [],
 			block_map: IBlockMap = { page: new Map() } as any,
 			data = { id: 'data_id', type: 'page', data: 'data' } as any;
@@ -270,25 +246,28 @@ describe('stackCacheMap', () => {
 			'name'
 		);
 
-		expect(deepEqual(stack, [ data ]));
-		expect(deepEqual(cache.block.get('data_id'), data)).toBe(true);
-		expect(deepEqual((block_map.page.get('data_id') as Page).getCachedData(), data)).toBe(true);
-		expect(deepEqual((block_map.page.get('name') as Page).getCachedData(), data)).toBe(true);
+		expect(stack).toStrictEqual([
+			{
+				args: data,
+				command: 'update',
+				id: 'data_id',
+				path: [],
+				table: 'block'
+			}
+		]);
+		expect(cache.block.get('data_id')).toStrictEqual(data);
+		expect((block_map.page.get('data_id') as Page).getCachedData()).toStrictEqual(data);
+		expect((block_map.page.get('name') as Page).getCachedData()).toStrictEqual(data);
 	});
 });
 
 describe('createContents', () => {
-	// * Assert the loggers
-	// * Assert the returned block map
-	// * Assert the cache
-	// * Assert the stack
-
 	describe('type=page', () => {
 		it(`is_template=false,is_private=true,contents=[{}],parent=space`, async () => {
-			const page_id = '48a3d30c-c259-4047-986f-74d9a6cb1305',
-				header_id = '48a3d30c-c259-4047-986f-74d9a6cb1304';
+			const page_id = v4(),
+				header_id = v4();
 
-			const cache = constructDefaultCache(),
+			const cache = { ...createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
 				stack: IOperation[] = [];
 
 			const logger_spy = jest.fn();
@@ -350,6 +329,7 @@ describe('createContents', () => {
 					properties: {
 						title: [ [ 'Page' ] ]
 					},
+					content: [],
 					format: {
 						page_font: 'Monaco'
 					},
@@ -378,16 +358,16 @@ describe('createContents', () => {
 			expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', header_id);
 			expect(logger_spy).toHaveBeenNthCalledWith(2, 'CREATE', 'block', page_id);
 
-			expect((block_map.page.get('Page') as Page).getCachedData()).toMatchSnapshot({
+			expect((block_map.page.get('Page') as Page).getCachedData()).toEqual({
 				...page_snapshot,
 				content: [ header_id ]
 			});
 
-			expect((block_map.header.get(header_id) as Block<IHeader, IHeaderInput>).getCachedData()).toMatchSnapshot(
+			expect(block_map.header.get(header_id)?.getCachedData()).toEqual(
 				header_snapshot
 			);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toEqual([
 				{
 					table: 'block',
 					command: 'update',
@@ -417,17 +397,16 @@ describe('createContents', () => {
 					id: space_id
 				}
 			]);
-			expect(
-				deepEqual(cache.space.get(space_id), {
-					pages: [ page_id ]
-				})
-			).toBe(true);
+
+			expect(cache.space.get(space_id)).toStrictEqual({
+				pages: [ page_id ]
+			});
 		});
 
 		it(`is_template=true,contents=[],parent=collection`, async () => {
 			const page_id = '48a3d30c-c259-4047-986f-74d9a6cb1305';
 
-			const cache = constructDefaultCache(),
+			const cache = { ...createDefaultCache(), collection: new Map([ [ 'collection_1', {} as any ] ]) },
 				stack: IOperation[] = [];
 
 			const logger_spy = jest.fn();
@@ -444,7 +423,7 @@ describe('createContents', () => {
 						id: page_id
 					}
 				],
-				'collection1_id',
+				'collection_1',
 				'collection',
 				{
 					cache,
@@ -460,14 +439,16 @@ describe('createContents', () => {
 
 			const page_snapshot = {
 				id: expect.any(String),
+        "is_template": true,
 				type: 'page',
 				properties: {
 					title: [ [ 'Page' ] ]
 				},
+				content: [],
 				format: {
 					page_font: 'Monaco'
 				},
-				parent_id: 'collection1_id',
+				parent_id: 'collection_1',
 				parent_table: 'collection',
 				alive: true,
 				permissions: [
@@ -491,12 +472,9 @@ describe('createContents', () => {
 			expect(logger_spy).toHaveBeenCalledTimes(1);
 			expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', page_id);
 
-			expect((block_map.page.get('Page') as Page).getCachedData()).toMatchSnapshot({
-				...page_snapshot,
-				content: []
-			});
+			expect((block_map.page.get('Page') as Page).getCachedData()).toEqual(page_snapshot)
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toEqual([
 				{
 					table: 'block',
 					command: 'update',
@@ -509,21 +487,19 @@ describe('createContents', () => {
 					table: 'collection',
 					command: 'listAfter',
 					args: { after: '', id: page_id },
-					id: 'collection1_id'
+					id: 'collection_1'
 				}
 			]);
 
-			expect(
-				deepEqual(cache.collection.get('collection1_id'), {
-					template_pages: [ page_id ]
-				})
-			).toBe(true);
+			expect(cache.collection.get('collection_1')).toStrictEqual({
+				template_pages: [ page_id ]
+			});
 		});
 	});
 
 	describe('type=collection_block', () => {
 		it(`type=collection_view_page,rows=[]`, async () => {
-			const cache = constructDefaultCache(),
+			const cache = { ...createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
 				stack: IOperation[] = [];
 
 			const logger_spy = jest.fn();
@@ -592,14 +568,14 @@ describe('createContents', () => {
 				],
 				...metadata
 			};
-			expect(collection_view_page).toMatchSnapshot(collection_view_page_snapshot);
+			expect(collection_view_page).toEqual(collection_view_page_snapshot);
 
 			expect(cache.block.get(collection_view_page.id)).toBeTruthy();
 			expect(cache.collection.get(collection_view_page.collection_id)).toBeTruthy();
 			expect(cache.collection_view.get(collection_view_page.view_ids[0])).toBeTruthy();
 			expect(stack.length).toBe(4);
 
-			expect(stack[2]).toMatchSnapshot({
+			expect(stack[2]).toEqual({
 				path: [],
 				table: 'block',
 				command: 'update',
@@ -609,7 +585,7 @@ describe('createContents', () => {
 		});
 
 		it(`type=collection_view,rows=[{}]`, async () => {
-			const cache = constructDefaultCache(),
+			const cache = {...createDefaultCache(), block: new Map([['page_1', {} as any]])},
 				stack: IOperation[] = [],
 				row_one_id = v4();
 
@@ -649,7 +625,7 @@ describe('createContents', () => {
 						]
 					}
 				],
-				'page1_id',
+				'page_1',
 				'block',
 				{
 					cache,
@@ -676,11 +652,11 @@ describe('createContents', () => {
 				type: 'collection_view',
 				collection_id: expect.any(String),
 				view_ids: [ expect.any(String) ],
-				parent_id: 'page1_id',
+				parent_id: 'page_1',
 				parent_table: 'block',
 				...metadata
 			};
-			expect(collection_view).toMatchSnapshot(collection_view_snapshot);
+			expect(collection_view).toEqual(collection_view_snapshot);
 
 			expect(cache.block.get(collection_view.id)).toBeTruthy();
 			expect(cache.block.get(row_one_id)).toBeTruthy();
@@ -689,7 +665,7 @@ describe('createContents', () => {
 
 			expect(stack.length).toBe(5);
 
-			expect(stack[2]).toMatchSnapshot({
+			expect(stack[2]).toEqual({
 				path: [],
 				table: 'block',
 				command: 'update',
@@ -701,7 +677,7 @@ describe('createContents', () => {
 
 	it(`type=link_to_page`, async () => {
 		const cache: any = {
-				block: new Map([ [ 'page1_id', { id: 'page1_id' } ] ]),
+				block: new Map([ [ 'page_1', { id: 'page_1' } ] ]),
 				collection: new Map(),
 				space: new Map(),
 				collection_view: new Map(),
@@ -719,7 +695,7 @@ describe('createContents', () => {
 					page_id: 'page_to_link'
 				}
 			],
-			'page1_id',
+			'page_1',
 			'block',
 			{
 				cache,
@@ -733,7 +709,7 @@ describe('createContents', () => {
 			}
 		);
 
-		expect(stack).toMatchSnapshot([
+		expect(stack).toEqual([
 			{
 				path: [ 'content' ],
 				table: 'block',
@@ -742,7 +718,7 @@ describe('createContents', () => {
 					after: '',
 					id: 'page_to_link'
 				},
-				id: 'page1_id'
+				id: 'page_1'
 			}
 		]);
 	});
@@ -871,7 +847,7 @@ describe('createContents', () => {
 
 	it(`type=linked_db`, async () => {
 		const cache: any = {
-				block: new Map([ [ 'page1_id', { id: 'page1_id' } ] ]),
+				block: new Map([ [ 'page_1', { id: 'page_1' } ] ]),
 				collection: new Map([
 					[
 						'collection_id',
@@ -915,7 +891,7 @@ describe('createContents', () => {
 					]
 				}
 			],
-			'page1_id',
+			'page_1',
 			'block',
 			{
 				cache,
@@ -936,11 +912,11 @@ describe('createContents', () => {
 			type: 'collection_view',
 			collection_id: expect.any(String),
 			view_ids: [ expect.any(String) ],
-			parent_id: 'page1_id',
+			parent_id: 'page_1',
 			parent_table: 'block',
 			...metadata
 		};
-		expect(collection_view).toMatchSnapshot(collection_view_snapshot);
+		expect(collection_view).toEqual(collection_view_snapshot);
 
 		expect(stack.length).toBe(3);
 	});

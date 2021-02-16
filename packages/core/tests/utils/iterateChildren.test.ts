@@ -1,6 +1,5 @@
 import { ICache } from '@nishans/cache';
 import { IOperation, IPage, ISpace, TBlock, TPage } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
 import colors from 'colors';
 
@@ -705,16 +704,14 @@ describe('iterateAndGetChildren', () => {
 			expect(logger).toHaveBeenCalledTimes(2);
 			expect(logger).toHaveBeenNthCalledWith(1, 'READ', 'block', 'child_one_id');
 			expect(logger).toHaveBeenNthCalledWith(2, 'READ', 'block', 'child_two_id');
-			expect(
-				deepEqual(container, [
-					{
-						id: 'child_one_id'
-					},
-					{
-						id: 'child_two_id'
-					}
-				])
-			).toBe(true);
+			expect(container).toStrictEqual([
+				{
+					id: 'child_one_id'
+				},
+				{
+					id: 'child_two_id'
+				}
+			]);
 		});
 
 		it('child_ids=string', async () => {
@@ -760,16 +757,14 @@ describe('iterateAndGetChildren', () => {
 				}
 			);
 
-			expect(
-				deepEqual(container, [
-					{
-						id: 'child_one_id'
-					},
-					{
-						id: 'child_two_id'
-					}
-				])
-			).toBe(true);
+			expect(container).toStrictEqual([
+				{
+					id: 'child_one_id'
+				},
+				{
+					id: 'child_two_id'
+				}
+			]);
 		});
 	});
 });

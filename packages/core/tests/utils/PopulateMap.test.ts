@@ -1,5 +1,6 @@
 import { IBlockMap, IPageMap, PopulateMap } from '../../src';
 import { NotionCacheObject } from '@nishans/cache';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -11,13 +12,8 @@ it(`PopulateMap.collection_block`, async () => {
   } as any, block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: "collection_1" };
 
   const cache = {
+    ...createDefaultCache(),
     collection: new Map([['collection_1', {name: [["Collection"]], id: 'collection_1'}]]),
-    collection_view: new Map(),
-    notion_user: new Map(),
-    space: new Map(),
-    space_view: new Map(),
-    user_root: new Map(),
-    user_settings: new Map(),
     block: new Map([['block_1', block_1]])
   } as any;
 
@@ -48,16 +44,7 @@ describe('PopulateMap.page', () => {
 			collection_view_page: new Map()
 		};
 
-		const cache = {
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map(),
-			block: new Map()
-		} as any;
+		const cache = createDefaultCache();
 
 		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
 			cache,
@@ -81,13 +68,8 @@ describe('PopulateMap.page', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
+      ...createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -123,13 +105,8 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
+      ...createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -162,13 +139,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'header' };
 
 		const cache = {
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map(),
+      ...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -192,13 +163,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view' };
 
 		const cache = {
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map(),
+      ...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 

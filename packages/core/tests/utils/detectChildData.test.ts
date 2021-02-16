@@ -1,33 +1,34 @@
-import deepEqual from 'deep-equal';
 import { detectChildData } from '../../src';
 
 describe('detectChildData', () => {
 	it(`Should return correct child data for space type`, () => {
-		expect(deepEqual(detectChildData('space'), [ 'pages', 'block' ])).toBe(true);
+		expect(detectChildData('space')).toStrictEqual([ 'pages', 'block' ]);
 	});
 
 	it(`Should return correct child data for user_root type`, () => {
-		expect(deepEqual(detectChildData('user_root'), [ 'space_views', 'space_view' ])).toBe(true);
+		expect(detectChildData('user_root')).toStrictEqual([ 'space_views', 'space_view' ]);
 	});
 
 	it(`Should return correct child data for collection type`, () => {
-		expect(deepEqual(detectChildData('collection'), [ 'template_pages', 'block' ])).toBe(true);
+		expect(detectChildData('collection')).toStrictEqual([ 'template_pages', 'block' ]);
 	});
 
 	it(`Should return correct child data for space_view type`, () => {
-		expect(deepEqual(detectChildData('space_view'), [ 'bookmarked_pages', 'block' ])).toBe(true);
+		expect(detectChildData('space_view')).toStrictEqual([ 'bookmarked_pages', 'block' ]);
 	});
 
 	it(`Should return correct child data for block type`, () => {
-		expect(deepEqual(detectChildData('block', { type: 'page' } as any), [ 'content', 'block' ])).toBe(true);
+		expect(detectChildData('block', { type: 'page' } as any)).toStrictEqual([ 'content', 'block' ]);
 
-		expect(
-			deepEqual(detectChildData('block', { type: 'collection_view_page' } as any), [ 'view_ids', 'collection_view' ])
-		).toBe(true);
+		expect(detectChildData('block', { type: 'collection_view_page' } as any)).toStrictEqual([
+			'view_ids',
+			'collection_view'
+		]);
 
-		expect(
-			deepEqual(detectChildData('block', { type: 'collection_view' } as any), [ 'view_ids', 'collection_view' ])
-		).toBe(true);
+		expect(detectChildData('block', { type: 'collection_view' } as any)).toStrictEqual([
+			'view_ids',
+			'collection_view'
+		]);
 
 		expect(() => detectChildData('block' as any)).toThrow(`type block requires second data argument`);
 		expect(() => detectChildData('block', { type: 'header' } as any)).toThrow(`Unsupported block type header`);

@@ -1,27 +1,14 @@
 import { ICollection, IOperation, Schema, TSchemaUnit } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
 import { getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../../src';
 
 import {generateRelationSchema, generateRollupSchema, createSchema} from "../../../utils/CreateData/createSchema";
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
-
-const generateDefaultCache = () => {
-  return {
-    block: new Map(),
-    space: new Map(),
-    collection_view: new Map(),
-    notion_user: new Map(),
-    space_view: new Map(),
-    user_root: new Map(),
-    user_settings: new Map(),
-    collection: new Map()
-  }
-}
 
 describe('generateRelationSchema', () => {
 	describe('Work correctly', () => {
@@ -36,7 +23,7 @@ describe('generateRelationSchema', () => {
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
 			} as any, cache = {
-        ...generateDefaultCache(),
+        ...createDefaultCache(),
         collection: new Map([ [ 'child_collection_id', child_collection ] ])
       };
 			const relation_schema_unit = await generateRelationSchema(
@@ -57,14 +44,14 @@ describe('generateRelationSchema', () => {
 
       const child_relation_schema_unit_id = getSchemaMap(child_collection.schema).get("Related to Parent Collection (Parent Relation Column)")?.schema_id ?? "";
 
-      expect(deepEqual(child_collection.schema[child_relation_schema_unit_id], {
+      expect(child_collection.schema[child_relation_schema_unit_id]).toStrictEqual({
         type: "relation",
         collection_id: "parent_collection_id",
         name: `Related to Parent Collection (Parent Relation Column)`,
         property: "parent_relation_schema_unit_id"
-      })).toBe(true);
+      });
 
-      expect(deepEqual(cache.collection.get("child_collection_id"), {
+      expect(cache.collection.get("child_collection_id")).toStrictEqual({
         name: [["Child Collection"]],
         id: 'child_collection_id',
         schema: {
@@ -78,17 +65,16 @@ describe('generateRelationSchema', () => {
 						name: 'Title',
 						type: 'title'
 					}
-        }
-      })).toBe(true);
+        }});
 
-      expect(deepEqual(relation_schema_unit, {
+      expect(relation_schema_unit).toStrictEqual({
         type: 'relation',
         property: child_relation_schema_unit_id,
         name: 'Parent Relation Column',
         collection_id: 'child_collection_id'
-      })).toBe(true)
+      })
 
-      expect(deepEqual(stack, [])).toBe(true)
+      expect(stack).toStrictEqual([])
 		});
 
     it(`Should work correctly (child_collection exists in db)`, async () => {
@@ -101,7 +87,7 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache = generateDefaultCache();
+			} as any, cache = createDefaultCache();
 
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         child_collection_id: {
@@ -133,7 +119,7 @@ describe('generateRelationSchema', () => {
       
       const child_relation_schema_unit_id = (getSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Related to Parent Collection (Parent Relation Column)") as ISchemaMapValue).schema_id;
       
-      expect(deepEqual(cache.collection.get("child_collection_id"), {
+      expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {
 					title: {
 						name: 'Title',
@@ -148,16 +134,16 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ],
-      })).toBe(true);
+      });
       
-      expect(deepEqual(relation_schema_unit, {
+      expect(relation_schema_unit).toStrictEqual({
         type: 'relation',
         property: child_relation_schema_unit_id,
         name: 'Parent Relation Column',
         collection_id: 'child_collection_id'
-      })).toBe(true);
+      });
 
-      expect(deepEqual(stack, [])).toBe(true);
+      expect(stack).toStrictEqual([]);
 		});
 
     it(`Should work correctly (child_collection does not exist in cache + custom child_collection_relation_schema_unit name)`, async () => {
@@ -170,7 +156,7 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache = generateDefaultCache();
+			} as any, cache = createDefaultCache();
 
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         child_collection_id: {
@@ -201,7 +187,7 @@ describe('generateRelationSchema', () => {
 
       const child_relation_schema_unit_id = (getSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Child Column") as ISchemaMapValue).schema_id;
       
-      expect(deepEqual(cache.collection.get("child_collection_id"), {
+      expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {
 					title: {
 						name: 'Title',
@@ -216,16 +202,16 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ],
-      })).toBe(true);
+      });
       
-      expect(deepEqual(relation_schema_unit, {
+      expect(relation_schema_unit).toStrictEqual({
         type: 'relation',
         property: child_relation_schema_unit_id,
         name: 'Parent Relation Column',
         collection_id: 'child_collection_id'
-      })).toBe(true);
+      });
 
-      expect(deepEqual(stack, [{
+      expect(stack).toStrictEqual([{
         table: "collection",
         command: "update",
         id: "child_collection_id",
@@ -236,7 +222,7 @@ describe('generateRelationSchema', () => {
           name: [["Child Column"]],
           property: "parent_relation_schema_unit_id"
         }
-      }])).toBe(true);
+      }]);
 		});
 	});
 
@@ -255,7 +241,7 @@ describe('generateRelationSchema', () => {
           name: 'Parent Relation Column',
         },
         {
-          cache: generateDefaultCache(),
+          cache: createDefaultCache(),
           parent_collection_id: 'parent_collection_id',
           parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
           name: [ [ 'Parent Collection' ] ],
@@ -318,7 +304,7 @@ describe('createSchema', () => {
           id: 'target_collection_id'
 				} as any,
 				cache = {
-          ...generateDefaultCache(),
+          ...createDefaultCache(),
 					collection: new Map([ [ 'child_collection_id', child_collection ], [ 'target_collection_id', target_collection ] ])
 				};
       
@@ -377,8 +363,8 @@ describe('createSchema', () => {
       ] as TSchemaUnit[];
 
 			expect(
-				deepEqual(output_schema_units, Object.values(schema))
-			).toBe(true);
+				output_schema_units
+			).toStrictEqual(Object.values(schema));
 
       expect(Array.from(schema_map.keys())).toStrictEqual(
         [
@@ -412,7 +398,7 @@ describe('createSchema', () => {
 						name: [ [ 'Parent' ] ],
             token: 'token',
             stack: [],
-            cache: generateDefaultCache(),
+            cache: createDefaultCache(),
             interval: 0,
             shard_id: 123,
             space_id: 'space_1',
@@ -436,7 +422,7 @@ describe('createSchema', () => {
 						name: [ [ 'Parent' ] ],
             token: 'token',
             stack: [],
-            cache: generateDefaultCache(),
+            cache: createDefaultCache(),
             interval: 0,
             shard_id: 123,
             space_id: 'space_1',
@@ -474,7 +460,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
-            ...generateDefaultCache(),
+            ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 title: {
@@ -490,7 +476,7 @@ describe('generateRollupSchema', () => {
           }
         });
   
-        expect(deepEqual(generated_rollup_schema2, {
+        expect(generated_rollup_schema2).toStrictEqual({
           type: "rollup",
           collection_id: "target_collection_id",
           name: "Rollup Column",
@@ -498,7 +484,7 @@ describe('generateRollupSchema', () => {
           target_property: "title",
           target_property_type: "title",
           aggregation: "average"
-        })).toBe(true);
+        });
       });
 
       it(`Should work correctly for target_property=text`, async () =>{
@@ -511,7 +497,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
-            ...generateDefaultCache(),
+            ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 text: {
@@ -527,7 +513,7 @@ describe('generateRollupSchema', () => {
           }
         });
   
-        expect(deepEqual(generated_rollup_schema2, {
+        expect(generated_rollup_schema2).toStrictEqual({
           type: "rollup",
           collection_id: "target_collection_id",
           name: "Rollup Column",
@@ -535,7 +521,7 @@ describe('generateRollupSchema', () => {
           target_property: "text",
           target_property_type: "text",
           aggregation: "average"
-        })).toBe(true);
+        });
       });
 
       it(`Should work correctly for target_property=rollup.title`, async ()=>{
@@ -548,7 +534,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
-            ...generateDefaultCache(),
+            ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 rollup: {
@@ -565,7 +551,7 @@ describe('generateRollupSchema', () => {
           }
         });
   
-        expect(deepEqual(generated_rollup_schema, {
+        expect(generated_rollup_schema).toStrictEqual({
           type: "rollup",
           collection_id: "target_collection_id",
           name: "Rollup Column",
@@ -573,7 +559,7 @@ describe('generateRollupSchema', () => {
           target_property: "rollup",
           target_property_type: "title",
           aggregation: "average"
-        })).toBe(true);
+        });
       })
 
       it(`Should work correctly for target_property=rollup.text`, async ()=>{
@@ -586,7 +572,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
-            ...generateDefaultCache(),
+            ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 rollup: {
@@ -603,7 +589,7 @@ describe('generateRollupSchema', () => {
           }
         });
 
-        expect(deepEqual(generated_rollup_schema, {
+        expect(generated_rollup_schema).toStrictEqual({
           type: "rollup",
           collection_id: "target_collection_id",
           name: "Rollup Column",
@@ -611,7 +597,7 @@ describe('generateRollupSchema', () => {
           target_property: "rollup",
           target_property_type: "text",
           aggregation: "average"
-        })).toBe(true);
+        });
       })
   
       it(`Should work correctly for target_property=formula.date`, async ()=>{
@@ -624,7 +610,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
-            ...generateDefaultCache(),
+            ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 formula: {
@@ -643,7 +629,7 @@ describe('generateRollupSchema', () => {
           }
         });
   
-        expect(deepEqual(generated_rollup_schema, {
+        expect(generated_rollup_schema).toStrictEqual({
           type: "rollup",
           collection_id: "target_collection_id",
           name: "Rollup Column",
@@ -651,12 +637,12 @@ describe('generateRollupSchema', () => {
           target_property: "formula",
           target_property_type: "date",
           aggregation: "average"
-        })).toBe(true);
+        });
       })
     })
     
     it(`Should work correctly (collection exists in db)`, async ()=>{
-      const cache = generateDefaultCache();
+      const cache = createDefaultCache();
   
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         target_collection_id: {
@@ -684,7 +670,7 @@ describe('generateRollupSchema', () => {
         token: 'token'
       });
   
-      expect(deepEqual(generated_rollup_schema, {
+      expect(generated_rollup_schema).toStrictEqual({
         type: "rollup",
         collection_id: "target_collection_id",
         name: "Rollup Column",
@@ -692,16 +678,16 @@ describe('generateRollupSchema', () => {
         target_property: "title",
         target_property_type: "title",
         aggregation: "average"
-      })).toBe(true);
+      });
   
-      expect(deepEqual(cache.collection.get("target_collection_id"), {
+      expect(cache.collection.get("target_collection_id")).toStrictEqual({
         schema: {
           title: {
             type: "title",
             name: "Title"
           }
         }
-      })).toBe(true)
+      })
     })
   })
 
@@ -715,7 +701,7 @@ describe('generateRollupSchema', () => {
         relation_property: "unknown",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: generateDefaultCache(),
+        cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Unknown property unknown referenced in relation_property`)
     });
@@ -750,7 +736,7 @@ describe('generateRollupSchema', () => {
         relation_property: "Title",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: generateDefaultCache(),
+        cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(
         `Property Title referenced in relation_property is not of the supported types\nGiven type: title\nSupported types: relation`
@@ -771,7 +757,7 @@ describe('generateRollupSchema', () => {
         relation_property: "Relation",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: generateDefaultCache(),
+        cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Collection:target_collection_id doesnot exist`)
     })

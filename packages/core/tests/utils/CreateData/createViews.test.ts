@@ -17,7 +17,6 @@ import {
 	Schema,
 	ViewSorts
 } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
 import {
 	createViews,
@@ -30,17 +29,7 @@ import {
 } from '../../../utils/CreateData/createViews';
 
 import {getSchemaMap} from "../../../src";
-
-const default_cache: ICache = {
-	block: new Map(),
-	collection: new Map(),
-	space: new Map(),
-	collection_view: new Map(),
-	notion_user: new Map(),
-	space_view: new Map(),
-	user_root: new Map(),
-	user_settings: new Map()
-};
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 const schema: Schema = {
 	title: {
@@ -96,15 +85,15 @@ describe('populateViewQuery2', () => {
 						type: 'table'
 					}) as ITableViewQuery2;
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							sort: [],
-							aggregations: []
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            sort: [],
+            aggregations: []
+          });
 				});
 			});
 		});
@@ -119,14 +108,14 @@ describe('populateViewQuery2', () => {
 						filter_operator: 'or'
 					}) as IListViewQuery2;
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'or',
-								filters: []
-							},
-							sort: []
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'or',
+              filters: []
+            },
+            sort: []
+          });
 				});
 			});
 		});
@@ -145,16 +134,16 @@ describe('populateViewQuery2', () => {
 					) as IBoardViewQuery2;
 
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							aggregations: [],
-							sort: [],
-							group_by: 'select'
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            aggregations: [],
+            sort: [],
+            group_by: 'select'
+          });
 				});
 			});
 		});
@@ -200,15 +189,15 @@ describe('populateViewQuery2', () => {
 						schema_map
 					) as ICalendarViewQuery2;
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							sort: [],
-							calendar_by: 'date'
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            sort: [],
+            calendar_by: 'date'
+          });
 				});
 
 				it(`Should output correctly for calendar view(formula.date property)`, () => {
@@ -221,15 +210,15 @@ describe('populateViewQuery2', () => {
 					) as ICalendarViewQuery2;
 
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							sort: [],
-							calendar_by: 'date_formula'
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            sort: [],
+            calendar_by: 'date_formula'
+          });
 				});
 			});
 		});
@@ -271,14 +260,14 @@ describe('populateViewQuery2', () => {
 						type: 'gallery'
 					}) as IGalleryViewQuery2;
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							sort: []
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            sort: []
+          });
 				});
 			});
 		});
@@ -297,16 +286,16 @@ describe('populateViewQuery2', () => {
 					) as ITimelineViewQuery2;
 
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							timeline_by: 'date',
-							sort: [],
-							aggregations: []
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            timeline_by: 'date',
+            sort: [],
+            aggregations: []
+          });
 				});
 
 				it(`Should output correctly for calendar view(formula.date property)`, () => {
@@ -318,16 +307,16 @@ describe('populateViewQuery2', () => {
 						schema_map
 					) as ITimelineViewQuery2;
 					expect(
-						deepEqual(query2, {
-							filter: {
-								operator: 'and',
-								filters: []
-							},
-							sort: [],
-							timeline_by: 'date_formula',
-							aggregations: []
-						})
-					).toBe(true);
+						query2
+					).toStrictEqual({
+            filter: {
+              operator: 'and',
+              filters: []
+            },
+            sort: [],
+            timeline_by: 'date_formula',
+            aggregations: []
+          });
 				});
 			});
 		});
@@ -373,13 +362,14 @@ describe('populateViewFormat', () => {
 					}) as ITableViewFormat;
 
 					expect(
-						deepEqual(format, {
-							table_properties: [],
-							table_wrap: false
-						})
-					);
+						format
+					).toStrictEqual({
+            table_properties: [],
+            table_wrap: false
+          });
 				});
 			});
+
 			describe('Default input', () => {
 				it(`Should work for table view`, () => {
 					const format = populateViewFormat({
@@ -387,11 +377,11 @@ describe('populateViewFormat', () => {
 					}) as ITableViewFormat;
 
 					expect(
-						deepEqual(format, {
-							table_properties: [],
-							table_wrap: true
-						})
-					);
+						format
+					).toStrictEqual({
+            table_properties: [],
+            table_wrap: false
+          });
 				});
 			});
 		});
@@ -406,10 +396,10 @@ describe('populateViewFormat', () => {
 					}) as IListViewFormat;
 
 					expect(
-						deepEqual(format, {
-							list_properties: []
-						})
-					);
+						format
+					).toStrictEqual({
+            list_properties: []
+          });
 				});
 			});
 		});
@@ -424,10 +414,10 @@ describe('populateViewFormat', () => {
 					}) as ICalendarViewFormat;
 
 					expect(
-						deepEqual(format, {
-							calendar_properties: []
-						})
-					);
+						format
+					).toStrictEqual({
+            calendar_properties: []
+          });
 				});
 			});
 		});
@@ -451,16 +441,16 @@ describe('populateViewFormat', () => {
 					) as IGalleryViewFormat;
 
 					expect(
-						deepEqual(format, {
-							gallery_cover: {
-								property: 'file',
-								type: 'property'
-							},
-							gallery_properties: [],
-							gallery_cover_aspect: 'cover',
-							gallery_cover_size: 'medium'
-						})
-					);
+						format
+					).toStrictEqual({
+            gallery_cover: {
+              property: 'file',
+              type: 'property'
+            },
+            gallery_properties: [],
+            gallery_cover_aspect: 'cover',
+            gallery_cover_size: 'medium'
+          });
 				});
 
 				it(`Should work for gallery_cover=page_cover`, () => {
@@ -477,15 +467,15 @@ describe('populateViewFormat', () => {
 					) as IGalleryViewFormat;
 
 					expect(
-						deepEqual(format, {
-							gallery_cover: {
-								type: 'page_cover'
-							},
-							gallery_properties: [],
-							gallery_cover_aspect: 'cover',
-							gallery_cover_size: 'medium'
-						})
-					);
+						format
+					).toStrictEqual({
+            gallery_cover: {
+              type: 'page_cover'
+            },
+            gallery_properties: [],
+            gallery_cover_aspect: 'cover',
+            gallery_cover_size: 'medium'
+          });
 				});
 			});
 
@@ -499,13 +489,13 @@ describe('populateViewFormat', () => {
 					) as IGalleryViewFormat;
 
 					expect(
-						deepEqual(format, {
-							gallery_cover: { type: 'page_cover' },
-							gallery_properties: [],
-							gallery_cover_aspect: 'contain',
-							gallery_cover_size: 'large'
-						})
-					);
+						format
+					).toStrictEqual({
+            gallery_cover: { type: 'page_cover' },
+            gallery_properties: [],
+            gallery_cover_aspect: 'contain',
+            gallery_cover_size: 'large'
+          });
 				});
 			});
 		});
@@ -562,16 +552,16 @@ describe('populateViewFormat', () => {
 					) as ITimelineViewFormat;
 
 					expect(
-						deepEqual(format, {
-							timeline_table_properties: [],
-							timeline_properties: [],
-							timeline_show_table: true,
-							timeline_preference: {
-								centerTimestamp: 2,
-								zoomLevel: 'month'
-							}
-						})
-					);
+						format
+					).toStrictEqual({
+            timeline_table_properties: [],
+            timeline_properties: [],
+            timeline_show_table: true,
+            timeline_preference: {
+              centerTimestamp: 2,
+              zoomLevel: 'month'
+            }
+          });
 				});
 			});
 			describe('Default input', () => {
@@ -584,16 +574,16 @@ describe('populateViewFormat', () => {
 					) as ITimelineViewFormat;
 
 					expect(
-						deepEqual(format, {
-							timeline_table_properties: [],
-							timeline_properties: [],
-							timeline_show_table: true,
-							timeline_preference: {
-								centerTimestamp: 1,
-								zoomLevel: 'month'
-							}
-						})
-					);
+						format
+					).toStrictEqual({
+            timeline_table_properties: [],
+            timeline_properties: [],
+            timeline_show_table: true,
+            timeline_preference: {
+              centerTimestamp: 1,
+              zoomLevel: 'month'
+            }
+          });
 				});
 			});
 		});
@@ -627,26 +617,26 @@ describe('populateViewFormat', () => {
 					) as IBoardViewFormat;
 
 					expect(
-						deepEqual(format, {
-							board_cover: {
-								property: 'file',
-								type: 'property'
-							},
-							board_properties: [],
-							board_cover_aspect: 'cover',
-							board_cover_size: 'medium',
-							board_groups2: [
-								{
-									hidden: false,
-									property: 'select',
-									value: {
-										type: 'select',
-										value: '123'
-									}
-								}
-							]
-						})
-					);
+						format
+					).toStrictEqual({
+            board_cover: {
+              property: 'file',
+              type: 'property'
+            },
+            board_properties: [],
+            board_cover_aspect: 'cover',
+            board_cover_size: 'medium',
+            board_groups2: [
+              {
+                hidden: false,
+                property: 'select',
+                value: {
+                  type: 'select',
+                  value: '123'
+                }
+              }
+            ]
+          });
 				});
 
 				it(`Should work for board_cover=page_cover`, () => {
@@ -663,15 +653,15 @@ describe('populateViewFormat', () => {
 					) as IBoardViewFormat;
 
 					expect(
-						deepEqual(format, {
-							board_cover: {
-								type: 'page_cover'
-							},
-							board_properties: [],
-							board_cover_aspect: 'cover',
-							board_cover_size: 'medium'
-						})
-					);
+						format
+					).toEqual(expect.objectContaining({
+            board_cover: {
+              type: 'page_cover'
+            },
+            board_properties: [],
+            board_cover_aspect: 'cover',
+            board_cover_size: 'medium'
+          }));
 				});
 			});
 
@@ -685,30 +675,30 @@ describe('populateViewFormat', () => {
 					) as IBoardViewFormat;
 
 					expect(
-						deepEqual(format, {
-							board_cover: { type: 'page_cover' },
-							board_properties: [],
-							board_cover_aspect: 'contain',
-							board_cover_size: 'large',
-							board_groups2: [
-								{
-									hidden: false,
-									property: 'select',
-									value: {
-										type: 'select'
-									}
-								},
-								{
-									hidden: false,
-									property: 'select',
-									value: {
-										type: 'select',
-										value: '123'
-									}
-								}
-							]
-						})
-					);
+						format
+					).toStrictEqual({
+            board_cover: { type: 'page_cover' },
+            board_properties: [],
+            board_cover_aspect: 'contain',
+            board_cover_size: 'large',
+            board_groups2: [
+              {
+                hidden: false,
+                property: 'select',
+                value: {
+                  type: 'select'
+                }
+              },
+              {
+                hidden: false,
+                property: 'select',
+                value: {
+                  type: 'select',
+                  value: '123'
+                }
+              }
+            ]
+          });
 				});
 			});
 		});
@@ -836,62 +826,62 @@ describe('populateViewFormat', () => {
 describe('populateViewProperties', () => {
 	it(`Should work with number input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }, 150), {
-				property: 'text',
-				visible: true,
-				width: 150
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' }, 150)
+		).toStrictEqual({
+      property: 'text',
+      visible: true,
+      width: 150
+    });
 	});
 
 	it(`Should work with boolean input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }, false), {
-				property: 'text',
-				visible: false,
-				width: 250
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' }, false)
+		).toStrictEqual({
+      property: 'text',
+      visible: false,
+      width: 250
+    });
 	});
 
 	it(`Should work with [boolean] input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }, [ false ] as any), {
-				property: 'text',
-				visible: false,
-				width: 250
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' }, [ false ] as any)
+		).toStrictEqual({
+      property: 'text',
+      visible: false,
+      width: 250
+    });
 	});
 
 	it(`Should work with [boolean, number] input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }, [ false, 120 ]), {
-				property: 'text',
-				visible: false,
-				width: 120
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' }, [ false, 120 ])
+		).toStrictEqual({
+      property: 'text',
+      visible: false,
+      width: 120
+    });
 	});
 
 	it(`Should work with [] input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }, [] as any), {
-				property: 'text',
-				visible: true,
-				width: 250
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' }, [] as any)
+		).toStrictEqual({
+      property: 'text',
+      visible: true,
+      width: 250
+    });
 	});
 
 	it(`Should work with no input`, () => {
 		expect(
-			deepEqual(populateViewProperties({ schema_id: 'text' }), {
-				property: 'text',
-				visible: true,
-				width: 250
-			})
-		).toBe(true);
+			populateViewProperties({ schema_id: 'text' })
+		).toStrictEqual({
+      property: 'text',
+      visible: true,
+      width: 250
+    });
 	});
 });
 
@@ -913,16 +903,16 @@ describe('populateQuery2SortAndAggregations', () => {
 		);
 
 		expect(
-			deepEqual(query2, {
-				sort: [],
-				aggregations: [
-					{
-						property: 'text',
-						aggregator: 'count'
-					}
-				]
-			})
-		).toBe(true);
+			query2
+		).toStrictEqual({
+      sort: [],
+      aggregations: [
+        {
+          property: 'text',
+          aggregator: 'count'
+        }
+      ]
+    });
 	});
 
 	it(`Sort text, aggregation text`, () => {
@@ -943,21 +933,21 @@ describe('populateQuery2SortAndAggregations', () => {
 		);
 
 		expect(
-			deepEqual(query2, {
-				sort: [
-					{
-						property: 'text',
-						direction: 'ascending'
-					}
-				],
-				aggregations: [
-					{
-						property: 'text',
-						aggregator: 'count'
-					}
-				]
-			})
-		).toBe(true);
+			query2
+		).toStrictEqual({
+      sort: [
+        {
+          property: 'text',
+          direction: 'ascending'
+        }
+      ],
+      aggregations: [
+        {
+          property: 'text',
+          aggregator: 'count'
+        }
+      ]
+    });
 	});
 
 	it(`Sort [TSort, number], Aggregation: undefined`, () => {
@@ -982,27 +972,26 @@ describe('populateQuery2SortAndAggregations', () => {
 		);
 
 		expect(
-			deepEqual(query2, {
-				sort: [
-					{
-						property: 'text',
-						direction: 'ascending'
-					},
-					{
-						property: 'number',
-						direction: 'descending'
-					}
-				],
-				aggregations: []
-			})
-		).toBe(true);
+			query2
+		).toStrictEqual({
+      sort: [
+        {
+          property: 'text',
+          direction: 'ascending'
+        },
+        {
+          property: 'number',
+          direction: 'descending'
+        }
+      ],
+      aggregations: []
+    });
 	});
 });
 
 describe('populateNonIncludedProperties', () => {
 	it(`Should work correctly`, () => {
 		expect(
-			deepEqual(
 				populateNonIncludedProperties(
 					{
 						title: {
@@ -1015,16 +1004,14 @@ describe('populateNonIncludedProperties', () => {
 						}
 					},
 					[ 'number' ]
-				),
-				[
-					{
-						property: 'title',
-						visible: false,
-						width: 250
-					}
-				]
 			)
-		).toBe(true);
+		).toStrictEqual([
+      {
+        property: 'title',
+        visible: false,
+        width: 250
+      }
+    ]);
 	});
 });
 
@@ -1067,21 +1054,21 @@ describe('generateViewData', () => {
 			space_id: 'space_id'
 		};
 
-		expect(deepEqual(view_data, expected_view_data)).toBe(true);
+		expect(view_data).toStrictEqual(expected_view_data);
 
 		expect(
-			deepEqual(stack, [
-				{
-					path: [],
-					table: 'collection_view',
-					command: 'set',
-					args: expected_view_data,
-					id
-				}
-			])
-		);
+			stack
+		).toStrictEqual([
+      {
+        path: [],
+        table: 'collection_view',
+        command: 'set',
+        args: expected_view_data,
+        id
+      }
+    ]);
 
-		expect(deepEqual(Array.from(cache.collection_view.entries()), [ [ id, expected_view_data ] ]));
+		expect(Array.from(cache.collection_view.entries())).toStrictEqual( [ [ id, expected_view_data ] ]);
 	});
 });
 
@@ -1090,7 +1077,7 @@ describe('createViews', () => {
     it(`Should work correctly`, () => {
       const id = v4(),
       stack: IOperation[] = [],
-      cache: ICache = default_cache;
+      cache: ICache = createDefaultCache();
       
       createViews(
         {
@@ -1221,20 +1208,98 @@ describe('createViews', () => {
         }
       );
       
-      expect(deepEqual(view_ids, [ id ])).toBe(true);
-      expect(deepEqual(view_map.table.get(id)?.getCachedData() as ITableView, expected_view_data)).toBe(true);
-      expect(deepEqual(cache.collection_view.get(id), expected_view_data)).toBe(true);
+      expect(view_ids).toStrictEqual([ id ]);
+      expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
+      expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
+      console.log(JSON.stringify(stack, null, 2));
+      
       expect(
-        deepEqual(stack, [
-          {
-            path: [],
-            table: 'collection_view',
-            command: 'set',
-            args: expected_view_data,
-            id
-          }
-        ])
-      );
+        stack
+      ).toStrictEqual([
+        {
+          "path": [],
+          "table": "collection_view",
+          "command": "set",
+          "args": {
+            "id": expect.any(String),
+            "version": 0,
+            "type": "table",
+            "name": "Table",
+            "page_sort": [],
+            "parent_id": "parent_id",
+            "parent_table": "block",
+            "alive": true,
+            "format": {
+              "table_properties": [
+                {
+                  "property": "title",
+                  "visible": true,
+                  "width": 250
+                }
+              ],
+              "table_wrap": false
+            },
+            "query2": {
+              "aggregations": [],
+              "sort": [],
+              "filter": {
+                "operator": "and",
+                "filters": []
+              }
+            },
+            "shard_id": 123,
+            "space_id": "space_id"
+          },
+          "id": expect.any(String)
+        },
+        {
+          "path": [],
+          "table": "collection_view",
+          "command": "set",
+          "args": {
+            "id": expect.any(String),
+            "version": 0,
+            "type": "table",
+            "name": "Table",
+            "page_sort": [],
+            "parent_id": "parent_id",
+            "parent_table": "block",
+            "alive": true,
+            "format": {
+              "table_properties": [
+                {
+                  "property": "title",
+                  "visible": true,
+                  "width": 250
+                }
+              ],
+              "table_wrap": false
+            },
+            "query2": {
+              "aggregations": [],
+              "sort": [],
+              "filter": {
+                "operator": "and",
+                "filters": [
+                  {
+                    "property": "title",
+                    "filter": {
+                      "operator": "string_is",
+                      "value": {
+                        "type": "exact",
+                        "value": "123"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "shard_id": 123,
+            "space_id": "space_id"
+          },
+          "id": expect.any(String)
+        }
+      ]);
     });
   });
 
@@ -1242,7 +1307,7 @@ describe('createViews', () => {
     it(`Should work correctly`, () => {
       const id = v4(),
         stack: IOperation[] = [],
-        cache: ICache = default_cache;
+        cache = createDefaultCache();
       expect(()=>createViews(
         {
           id: 'collection_id',

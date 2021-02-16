@@ -1,7 +1,6 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { ICache } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { v4 } from 'uuid';
 import { NotionData, CollectionViewPage, NotionUser, Page } from '../../src';
 import colors from 'colors';
@@ -166,7 +165,7 @@ describe('NotionUser', () => {
       });
 
       const space = await notion_user.getSpace('space_2');
-      expect(deepEqual(space.getCachedData(), { id: 'space_2', shard_id: 123 })).toBe(true);
+      expect(space.getCachedData()).toStrictEqual( { id: 'space_2', shard_id: 123 });
       expect(space.id).toBe('space_2');
     });
   });
@@ -241,7 +240,7 @@ describe('NotionUser', () => {
       user_id: 'user_1'
     });
     const user_settings = notion_user.getUserSettings();
-    expect(deepEqual(user_settings.getCachedData(), { id: 'user_1', name: 'User Settings 1' })).toBe(true);
+    expect(user_settings.getCachedData()).toStrictEqual({ id: 'user_1', name: 'User Settings 1' });
     expect(user_settings.id).toBe('user_1');
   });
 
@@ -263,7 +262,7 @@ describe('NotionUser', () => {
       user_id: 'user_1'
     });
     const user_root = notion_user.getUserRoot();
-    expect(deepEqual(user_root.getCachedData(), { id: 'user_1', name: 'User Root 1' })).toBe(true);
+    expect(user_root.getCachedData()).toStrictEqual({ id: 'user_1', name: 'User Root 1' });
     expect(user_root.id).toBe('user_1');
   });
 
@@ -360,14 +359,10 @@ describe('NotionUser', () => {
     expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
     expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(1, block_1_id, 'block');
     expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(2, block_2_id, 'block');
-    expect(deepEqual((page_map.page.get(block_1_id) as Page).getCachedData(), block_1)).toBe(true);
-    expect(
-      deepEqual((page_map.collection_view_page.get(block_2_id) as CollectionViewPage).getCachedData(), block_2)
-    ).toBe(true);
-    expect(deepEqual((page_map.page.get('Block One') as Page).getCachedData(), block_1)).toBe(true);
-    expect(
-      deepEqual((page_map.collection_view_page.get('Collection One') as CollectionViewPage).getCachedData(), block_2)
-    ).toBe(true);
+    expect((page_map.page.get(block_1_id) as Page).getCachedData()).toStrictEqual(block_1);
+    expect((page_map.collection_view_page.get(block_2_id) as CollectionViewPage).getCachedData()).toStrictEqual(block_2);
+    expect((page_map.page.get('Block One') as Page).getCachedData()).toStrictEqual(block_1);
+    expect((page_map.collection_view_page.get('Collection One') as CollectionViewPage).getCachedData()).toStrictEqual(block_2);
   });
 
   it('update', async () => {

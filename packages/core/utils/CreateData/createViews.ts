@@ -146,7 +146,9 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
           if(!schema_map_unit)
             throw new UnknownPropertyReferenceError(element.property, [`board_groups2.[${index}].property`])
           if(schema_map_unit.type !== "select" && schema_map_unit.type !== "multi_select")
-            throw new UnsupportedPropertyTypeError(element.property, [`board_groups2.[${index}].property`], schema_map_unit.type, ["select", "multi_select"])
+            throw new UnsupportedPropertyTypeError(element.property, [`board_groups2.[${index}].property`], schema_map_unit.type, ["select", "multi_select"]);
+
+          element.property = schema_map_unit.schema_id;
         }
       }
 

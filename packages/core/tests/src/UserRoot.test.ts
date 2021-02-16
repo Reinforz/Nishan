@@ -1,6 +1,5 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { UserRoot } from '../../src';
 import { createDefaultCache } from '../../utils/createDefaultCache';
 
@@ -28,7 +27,7 @@ it(`get space_views`, async () => {
 	});
 
 	const space_view = await user_root.getSpaceView('space_view_1');
-	expect(deepEqual(space_view.getCachedData(), { alive: true })).toBe(true);
+	expect(space_view.getCachedData()).toStrictEqual({ alive: true });
 });
 
 it(`update space_views`, async () => {

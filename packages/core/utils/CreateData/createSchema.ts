@@ -3,9 +3,9 @@ import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { Operation } from "@nishans/operations";
 import { IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
-import { getSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
-import { Logger, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../../types";
-import { createShortId } from "../../utils";
+import { getSchemaMap, SchemaUnit, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
+import { ISchemaUnitMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../../types";
+import { createSchemaUnitMap, createShortId } from "../../utils";
 
 interface ParentCollectionData {
   parent_collection_id: string
@@ -13,7 +13,7 @@ interface ParentCollectionData {
   token: string
   logger?: Logger,
   stack: IOperation[],
-  cache: Pick<ICache, "collection">,
+  cache: ICache,
   parent_relation_schema_unit_id: string,
 }
 
@@ -195,9 +195,10 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id">){
+export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
+  const schema_unit_map = createSchemaUnitMap();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const schema_map: ISchemaMap = new Map(), schema: Schema = {};
+  const schema_map: ISchemaMap = new Map(), schema: Schema = options.current_schema ?? {};
   // Iterate through each input schmea units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
@@ -227,9 +228,11 @@ export async function createSchema(input_schema_units: TSchemaUnitInput[], optio
     }
     // Set the schema unit in the schema map
     schema_map.set(name,  {...schema[schema_id], schema_id});
+    schema_unit_map[input_schema_unit.type].set(schema_id, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
+    schema_unit_map[input_schema_unit.type].set(input_schema_unit.name, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
   }
   // If title doesnt exist in the schema throw an error
   if(!schema["title"])
     throw new Error(`Schema must contain title type property`)
-  return [schema, schema_map] as [Schema, ISchemaMap];
+  return [schema, schema_map, schema_unit_map] as [Schema, ISchemaMap, ISchemaUnitMap];
 }

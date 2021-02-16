@@ -1,4 +1,3 @@
-import { ICache } from '@nishans/cache';
 import { ICollection, IOperation, Schema, TSchemaUnit } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import MockAdapter from 'axios-mock-adapter';
@@ -10,6 +9,19 @@ import {generateRelationSchema, generateRollupSchema, createSchema} from "../../
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
+
+const generateDefaultCache = () => {
+  return {
+    block: new Map(),
+    space: new Map(),
+    collection_view: new Map(),
+    notion_user: new Map(),
+    space_view: new Map(),
+    user_root: new Map(),
+    user_settings: new Map(),
+    collection: new Map()
+  }
+}
 
 describe('generateRelationSchema', () => {
 	describe('Work correctly', () => {
@@ -23,7 +35,8 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache: Pick<ICache, "collection"> = {
+			} as any, cache = {
+        ...generateDefaultCache(),
         collection: new Map([ [ 'child_collection_id', child_collection ] ])
       };
 			const relation_schema_unit = await generateRelationSchema(
@@ -88,9 +101,7 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache: Pick<ICache, "collection"> = {
-        collection: new Map()
-      };
+			} as any, cache = generateDefaultCache();
 
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         child_collection_id: {
@@ -159,9 +170,7 @@ describe('generateRelationSchema', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache: Pick<ICache, "collection"> = {
-        collection: new Map()
-      };
+			} as any, cache = generateDefaultCache();
 
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         child_collection_id: {
@@ -246,9 +255,7 @@ describe('generateRelationSchema', () => {
           name: 'Parent Relation Column',
         },
         {
-          cache: {
-            collection: new Map()
-          },
+          cache: generateDefaultCache(),
           parent_collection_id: 'parent_collection_id',
           parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
           name: [ [ 'Parent Collection' ] ],
@@ -310,11 +317,12 @@ describe('createSchema', () => {
 					name: 'Target Collection',
           id: 'target_collection_id'
 				} as any,
-				cache: Pick<ICache, 'collection'> = {
+				cache = {
+          ...generateDefaultCache(),
 					collection: new Map([ [ 'child_collection_id', child_collection ], [ 'target_collection_id', target_collection ] ])
 				};
       
-			const [schema] = await createSchema(
+			const [schema, schema_map, schema_unit_map] = await createSchema(
 				input_schema_units,
 				{
 					parent_collection_id: 'parent_collection_id',
@@ -322,6 +330,10 @@ describe('createSchema', () => {
           token: 'token',
           cache,
           stack: [],
+          interval: 0,
+          shard_id: 123,
+          space_id: 'space_1',
+          user_id: 'user_1'
 				}
 			);
 
@@ -366,6 +378,17 @@ describe('createSchema', () => {
 			expect(
 				deepEqual(output_schema_units, Object.values(schema))
 			).toBe(true);
+
+      expect(Array.from(schema_map.keys())).toStrictEqual(
+        [
+          'Title',
+          "Number",
+          "Formula",
+          "Parent Relation Column",     
+          "Rollup",
+        ]
+      );
+      expect(schema_unit_map.title.get("Title")).not.toBeUndefined();
 		});
 	});
 
@@ -388,9 +411,11 @@ describe('createSchema', () => {
 						name: [ [ 'Parent' ] ],
             token: 'token',
             stack: [],
-            cache: {
-              collection: new Map()
-            },
+            cache: generateDefaultCache(),
+            interval: 0,
+            shard_id: 123,
+            space_id: 'space_1',
+            user_id: 'user_1'
 					}
 				)
 			).rejects.toThrow(`Duplicate property Title`);
@@ -410,9 +435,11 @@ describe('createSchema', () => {
 						name: [ [ 'Parent' ] ],
             token: 'token',
             stack: [],
-            cache: {
-              collection: new Map()
-            },
+            cache: generateDefaultCache(),
+            interval: 0,
+            shard_id: 123,
+            space_id: 'space_1',
+            user_id: 'user_1'
 					}
 				)
 			).rejects.toThrow(`Schema must contain title type property`);
@@ -446,6 +473,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
+            ...generateDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 title: {
@@ -482,6 +510,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
+            ...generateDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 text: {
@@ -518,6 +547,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
+            ...generateDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 rollup: {
@@ -555,6 +585,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
+            ...generateDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 rollup: {
@@ -592,6 +623,7 @@ describe('generateRollupSchema', () => {
           aggregation: "average"
         },getSchemaMap(schema), {
           cache: {
+            ...generateDefaultCache(),
             collection: new Map([["target_collection_id", {
               schema: {
                 formula: {
@@ -621,10 +653,9 @@ describe('generateRollupSchema', () => {
         })).toBe(true);
       })
     })
+    
     it(`Should work correctly (collection exists in db)`, async ()=>{
-      const cache = {
-        collection: new Map()
-      }
+      const cache = generateDefaultCache();
   
       mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
         target_collection_id: {
@@ -683,9 +714,7 @@ describe('generateRollupSchema', () => {
         relation_property: "unknown",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: {
-          collection: new Map()
-        },
+        cache: generateDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Unknown property unknown referenced in relation_property`)
     });
@@ -707,7 +736,7 @@ describe('generateRollupSchema', () => {
               }
             }
           } as any]])
-        },
+        } as any,
         token: 'token'
       })).rejects.toThrow(`Unknown property unknown referenced in target_property`)
     });
@@ -720,9 +749,7 @@ describe('generateRollupSchema', () => {
         relation_property: "Title",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: {
-          collection: new Map()
-        },
+        cache: generateDefaultCache(),
         token: 'token'
       })).rejects.toThrow(
         `Property Title referenced in relation_property is not of the supported types\nGiven type: title\nSupported types: relation`
@@ -743,9 +770,7 @@ describe('generateRollupSchema', () => {
         relation_property: "Relation",
         target_property: "unknown"
       },getSchemaMap(schema), {
-        cache: {
-          collection: new Map()
-        },
+        cache: generateDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Collection:target_collection_id doesnot exist`)
     })

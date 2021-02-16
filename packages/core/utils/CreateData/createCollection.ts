@@ -10,21 +10,14 @@ import { CreateData, generateId } from '../../src';
  * @param props Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function createCollection (
-	input: ICollectionBlockInput,
-	parent_id: string,
-	props: Omit<NishanArg, 'id' | 'interval'>
-) {
+export async function createCollection (input: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, 'id'>) {
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection
 	const [ schema ] = await CreateData.createSchema(input.schema, {
 		parent_collection_id: collection_id,
 		name: input.name,
-		token: props.token,
-		stack: props.stack,
-		cache: props.cache,
-		logger: props.logger
+		...props
 	});
 	// construct the collection to store it in cache and in op stack
 	const collection_data: ICollection = {

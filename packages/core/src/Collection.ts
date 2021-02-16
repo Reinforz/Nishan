@@ -163,18 +163,13 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
   async createSchemaUnits(args: TSchemaUnitInput[]) {
-    const schema_unit_map = createSchemaUnitMap(), data = this.getCachedData();
-    const [generated_schema] = await CreateData.createSchema(args, {
+    const data = this.getCachedData();
+    const [,,schema_unit_map] = await CreateData.createSchema(args, {
       ...this.getProps(),
       name: data.name,
-      parent_collection_id: data.id
+      parent_collection_id: data.id,
+      current_schema: data.schema
     });
-
-    Object.entries(generated_schema).forEach(([schema_id, schema_unit])=>{
-      schema_unit_map[schema_unit.type].set(schema_id, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
-      schema_unit_map[schema_unit.type].set(schema_unit.name, new SchemaUnit({ schema_id, ...this.getProps(), id: this.id }) as any);
-    })
-    
     this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
     this.updateLastEditedProps();
     return schema_unit_map;

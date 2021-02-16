@@ -1,12 +1,9 @@
 export * from './logs';
 export * from './populateFilters';
-export * from './createViews';
-export * from './createCollection';
 export * from './generateId';
 export * from './createMaps';
 export * from './initializeView';
 export * from './createBlockClass';
-export * from './createContents';
 export * from './positionChildren';
 export * from './iterateChildren';
 export * from './detectChildData';
@@ -16,7 +13,10 @@ export * from './deepMerge';
 export * from './constructLogger';
 export * from './transformToMultiple';
 export * from './uuidConversion';
-export * from './CreateData';
 export * from './ChildTraverser';
 export * from './updateBookmarkedPages';
 export * from './PopulateMap';
+export * from './fetchAndCacheData';
+
+import CreateData from './CreateData';
+export { CreateData };

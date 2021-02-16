@@ -1,35 +1,14 @@
 import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, IPermission, IOperation, TDataType, TData, TBlock } from "@nishans/types";
-import { TBlockCreateInput, NishanArg, IBlockMap } from "../types";
-import { generateId, createViews, createBlockMap, createBlockClass, CreateData} from "../utils";
+import { TBlockCreateInput, NishanArg, IBlockMap } from "../../types";
+import { generateId, createBlockMap, createBlockClass, CreateData, fetchAndCacheData} from "../../utils";
 import { v4 as uuidv4 } from 'uuid';
 import { Queries } from "@nishans/endpoints";
 import { ICache } from "@nishans/cache";
-import { warn } from "../src";
+import { warn } from "../../src";
 import { Operation } from "@nishans/operations";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
   return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }
-}
-
-export async function fetchAndCacheData<D extends TData>(table: TDataType, id: string, cache: ICache, token: string){
-  let data = cache[table].get(id);
-  if(!data){
-    warn(`${table}:${id} doesnot exist in the cache`);
-    const {recordMap} = await Queries.syncRecordValues({
-      requests: [
-        {
-          id,
-          table,
-          version: 0
-        }
-      ]
-    }, {
-      token,
-      interval: 0
-    });
-    data = recordMap[table][id].value;
-  }
-  return data as D;
 }
 
 export async function appendChildToParent(parent_table: "space" | "block" | "collection", parent_id: string, content_id: string, cache: ICache, stack: IOperation[], token: string):Promise<void>{
@@ -155,7 +134,7 @@ export async function createContents(contents: TBlockCreateInput[], original_par
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
           collection = await fetchAndCacheData<ICollection>('collection', collection_id, props.cache, props.token),
-          [view_ids] = createViews(collection, views, props, block_id),
+          [view_ids] = CreateData.createViews(collection, views, props, block_id),
           collection_view_data: ICollectionView = {
             id: block_id,
             parent_id,

@@ -27,7 +27,6 @@ import {
 } from '../../types';
 import {
 	CreateData,
-	createViews,
 	getFiltersMap,
 	getFormatPropertiesMap,
 	getSchemaMap,

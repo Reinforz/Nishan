@@ -1,7 +1,7 @@
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-import { CreateData, createPageMap, error, fetchAndCacheData, populatePageMap, transformToMultiple } from '../utils';
+import { CreateData, createPageMap, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../utils';
 
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
 import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
@@ -96,8 +96,8 @@ export default class Space extends Data<ISpace> {
   async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & {collection: ICollection})>, multiple?: boolean) {
     return await this.getIterate<IPage | (ICollectionViewPage & {collection: ICollection}), IPageMap>(args, { container: createPageMap(), multiple, child_ids: "pages", child_type: "block" }, async (id) => {
       return await createSpaceIterateArguments(id, this.cache, this.token);
-    }, async (id, page, page_map) => {
-      await populatePageMap(page, page_map, {...this.getProps(), id});
+    }, async (_, page, page_map) => {
+      await PopulateMap.page(page, page_map, this.getProps());
     });
   }
 
@@ -123,8 +123,8 @@ export default class Space extends Data<ISpace> {
       container: createPageMap()
     }, async (id) => {
       return await createSpaceIterateArguments(id, this.cache, this.token);
-    }, async (id, page, __, page_map) => {
-      await populatePageMap(page, page_map, {...this.getProps(), id});
+    }, async (_, page, __, page_map) => {
+      await PopulateMap.page(page, page_map, this.getProps());
     });
   }
 

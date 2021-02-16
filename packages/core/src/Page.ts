@@ -14,7 +14,14 @@ import {
 	IBlockMap,
 	IPageCreateInput
 } from '../types';
-import { createBlockClass, createBlockMap, CreateData, transformToMultiple, updateBookmarkedPages } from '../utils';
+import {
+	createBlockClass,
+	createBlockMap,
+	CreateData,
+	PopulateMap,
+	transformToMultiple,
+	updateBookmarkedPages
+} from '../utils';
 import Block from './Block';
 
 /**
@@ -73,14 +80,8 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			args,
 			{ container: createBlockMap(), multiple, child_ids: 'content', child_type: 'block' },
 			(block_id) => this.cache.block.get(block_id) as TBlock,
-			(_, block, block_map) => {
-				const block_obj = createBlockClass(block.type, block.id, this.getProps());
-				if (block.type === 'page') block_map[block.type].set(block.properties.title[0][0], block_obj);
-				else if (block.type === 'collection_view' || block.type === 'collection_view_page') {
-					const collection = this.cache.collection.get(block.collection_id);
-					if (collection) block_map[block.type].set(collection.name[0][0], block_obj);
-				}
-				block_map[block.type].set(block.id, block_obj);
+			async (_, block, block_map) => {
+				await PopulateMap.block(block, block_map, this.getProps());
 			}
 		);
 	}
@@ -99,14 +100,8 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				container: createBlockMap()
 			},
 			(child_id) => this.cache.block.get(child_id),
-			(_, block, __, block_map) => {
-				const block_obj = createBlockClass(block.type, block.id, this.getProps());
-				if (block.type === 'page') block_map[block.type].set(block.properties.title[0][0], block_obj);
-				else if (block.type === 'collection_view' || block.type === 'collection_view_page') {
-					const collection = this.cache.collection.get(block.collection_id);
-					if (collection) block_map[block.type].set(collection.name[0][0], block_obj);
-				}
-				block_map[block.type].set(block.id, block_obj);
+			async (_, block, __, block_map) => {
+				await PopulateMap.block(block, block_map, this.getProps());
 			}
 		);
 	}

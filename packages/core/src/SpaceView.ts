@@ -1,6 +1,6 @@
 import Data from './Data';
 import Space from './Space';
-import { createPageMap, populatePageMap, transformToMultiple, updateBookmarkedPages } from '../utils';
+import { createPageMap, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
 import { ISpaceView, ISpace, TPage, IUserRoot, TBlock } from '@nishans/types';
 import {
 	NishanArg,
@@ -73,8 +73,8 @@ class SpaceView extends Data<ISpaceView> {
 				container: createPageMap()
 			},
 			(id) => this.cache.block.get(id) as TPage,
-			async (id, page, page_map) => {
-				populatePageMap(page, page_map, { ...this.getProps(), id });
+			async (_, page, page_map) => {
+				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);
 	}
@@ -109,7 +109,7 @@ class SpaceView extends Data<ISpaceView> {
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favourite_status, page_map) => {
 				updateBookmarkedPages(data, updated_favourite_status, id, this.Operations.stack);
-				populatePageMap(page, page_map, { ...this.getProps(), id });
+				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);
 	}

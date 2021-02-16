@@ -46,7 +46,7 @@ class View<T extends TView> extends Data<T> {
 		super({ ...arg, type: 'collection_view' });
 	}
 
-	protected getCollection = () => {
+	getCollection = () => {
 		return this.cache.collection.get(
 			(this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id
 		) as ICollection;

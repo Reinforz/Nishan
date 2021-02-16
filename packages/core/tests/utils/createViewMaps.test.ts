@@ -94,7 +94,10 @@ describe('getAggregationsMap', () => {
 						schema_id: 'title',
 						name: 'Title',
 						type: 'title',
-						aggregation: 'count'
+						aggregation: {
+							aggregator: 'count',
+							property: 'title'
+						}
 					}
 				]
 			])

@@ -21,7 +21,7 @@ export type ISchemaMap = Map<string, ISchemaMapValue>;
 
 export type ISchemaAggregationMapValue = {
 	schema_id: string;
-	aggregation: ViewAggregations['aggregator'];
+	aggregation: ViewAggregations;
 } & TSchemaUnit;
 export type ISchemaAggregationMap = Map<string, ISchemaAggregationMapValue>;
 

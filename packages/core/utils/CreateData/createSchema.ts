@@ -102,7 +102,7 @@ export async function generateRelationSchema(input_schema_unit: TRelationSchemaU
  * @param request_config The config object used to make reqest, validate and cache response
  * @return The newly constructed rollup schema unit
  */
-export async function generateRollupSchema({aggregation, name, collection_id, relation_property, target_property}: TRollupSchemaUnitInput, schema_map: ISchemaMap, request_config: Omit<ParentCollectionData, "id" | "name" | "parent_relation_schema_unit_id" | "stack">){
+export async function generateRollupSchema({aggregation, name, collection_id, relation_property, target_property}: TRollupSchemaUnitInput, schema_map: ISchemaMap, request_config: Omit<ParentCollectionData, "parent_collection_id" | "name" | "parent_relation_schema_unit_id" | "stack">){
   // Get the related schema unit from the passed schema map
   const relation_schema_unit = schema_map.get(relation_property);
   // If the passed schema map unit doesnot exist then throw a unknown property error

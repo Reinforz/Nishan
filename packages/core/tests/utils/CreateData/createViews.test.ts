@@ -22,13 +22,14 @@ import { v4 } from 'uuid';
 import {
 	createViews,
 	generateViewData,
-	getSchemaMap,
 	populateNonIncludedProperties,
 	populateQuery2SortAndAggregations,
 	populateViewFormat,
 	populateViewProperties,
 	populateViewQuery2
-} from '../../src';
+} from '../../../utils/CreateData/createViews';
+
+import {getSchemaMap} from "../../../src";
 
 const default_cache: ICache = {
 	block: new Map(),

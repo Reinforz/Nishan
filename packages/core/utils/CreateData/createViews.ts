@@ -6,6 +6,8 @@ import { TViewCreateInput, IViewMap, NishanArg, TViewQuery2CreateInput, TableVie
 import { generateId, error, createViewMap, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../utils";
 import { populateFilters } from "../populateFilters";
 
+console.log(getSchemaMap);
+
 // * Separate start and end date for timeline view
 
 export type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;
@@ -267,7 +269,7 @@ export function generateViewData({id, name, type}: Pick<TViewCreateInput, "id" |
 
 export function createViews(collection: Pick<ICollection, "id" | "schema" | "parent_id">, views: TViewCreateInput[], props: Omit<NishanArg, "id" | "interval">, parent_id?:string) {
   const schema_map = getSchemaMap(collection.schema), view_ids: string[] = [], view_map = createViewMap();
-  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../src/View/index");
+  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
   for (let index = 0; index < views.length; index++) {

@@ -4,7 +4,7 @@ import SpaceView from "./SpaceView";
 import { CreateData, createPageMap, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../utils';
 
 import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
-import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, RepositionParams, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
+import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { ICache } from '@nishans/cache';
 

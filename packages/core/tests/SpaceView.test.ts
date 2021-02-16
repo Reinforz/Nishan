@@ -157,7 +157,10 @@ it(`getSpace`, () => {
 it(`getBookmarkedPage`, async () => {
 	const cache: ICache = {
 			block: new Map([
-				[ 'block_1', { type: 'collection_view_page', collection_id: 'collection_1', view_ids: [] } as any ]
+				[
+					'block_1',
+					{ id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1', view_ids: [] } as any
+				]
 			]),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ] } as any ] ]),
 			collection_view: new Map(),
@@ -191,8 +194,8 @@ it(`updateBookmarkedPages`, async () => {
 	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
 			block: new Map([
-				[ 'block_1', { type: 'page', properties: { title: [ [ 'Block One' ] ] } } as any ],
-				[ 'block_2', { type: 'page', properties: { title: [ [ 'Block Two' ] ] } } as any ]
+				[ 'block_1', { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } } as any ],
+				[ 'block_2', { type: 'page', id: 'block_2', properties: { title: [ [ 'Block Two' ] ] } } as any ]
 			]),
 			collection: new Map(),
 			collection_view: new Map(),
@@ -232,4 +235,6 @@ it(`updateBookmarkedPages`, async () => {
 	});
 
 	expect(stack.length).toBe(3);
+
+	await space_view.updateBookmarkedPage([ 'block_1', false ]);
 });

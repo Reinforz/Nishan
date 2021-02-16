@@ -7,17 +7,16 @@ import axios from 'axios';
 import colors from 'colors';
 
 import {
-	appendChildToParent,
 	Block,
 	CollectionView,
 	CollectionViewPage,
 	fetchAndCacheData,
 	IBlockMap,
 	IHeaderInput,
-	createContents,
-	Page,
-	stackCacheMap
-} from '../../src';
+	Page
+} from '../../../src';
+
+import { stackCacheMap, createContents, appendChildToParent } from '../../../utils/CreateData/createContents';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);

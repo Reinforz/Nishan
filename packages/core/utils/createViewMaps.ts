@@ -1,4 +1,4 @@
-import { IBoardView, ICollection, ITableView, ITimelineView, IViewFilter, IViewFilters, Schema, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
+import { IBoardView, ITableView, ITimelineView, IViewFilter, IViewFilters, Schema, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
 import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
 

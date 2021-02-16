@@ -1,7 +1,5 @@
-import { Mutations, Queries } from '@nishans/endpoints';
-import { Operation } from '@nishans/operations';
-import { IPage, ISpace, ISpaceView, TExportType, TBlock } from '@nishans/types';
-import { NotionPermissions } from '../src';
+import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { NotionPermissions } from '../../src';
 
 import {
 	NishanArg,
@@ -13,15 +11,8 @@ import {
 	UpdateTypes,
 	IBlockMap,
 	IPageCreateInput
-} from '../types';
-import {
-	createBlockClass,
-	createBlockMap,
-	CreateData,
-	PopulateMap,
-	transformToMultiple,
-	updateBookmarkedPages
-} from '../utils';
+} from '../../types';
+import { createBlockMap, CreateData, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../utils';
 import Block from './Block';
 
 /**

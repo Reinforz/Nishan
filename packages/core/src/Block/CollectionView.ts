@@ -1,5 +1,5 @@
 import { ICollectionView, IPage } from '@nishans/types';
-import { NishanArg } from '../types';
+import { NishanArg } from '../../types';
 import CollectionBlock from './CollectionBlock';
 
 /**

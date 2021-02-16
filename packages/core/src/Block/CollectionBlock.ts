@@ -1,6 +1,6 @@
-import Collection from './Collection';
-import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './View';
-import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../utils';
+import Collection from '../Collection';
+import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './../View';
+import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../../utils';
 import { ICollection, TView, TViewUpdateInput, TCollectionBlock } from '@nishans/types';
 import {
 	NishanArg,
@@ -11,7 +11,7 @@ import {
 	TViewCreateInput,
 	IViewMap,
 	TCollectionBlockInput
-} from '../types';
+} from '../../types';
 import Block from './Block';
 import { Operation } from '@nishans/operations';
 

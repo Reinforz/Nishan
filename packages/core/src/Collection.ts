@@ -16,7 +16,7 @@ import {
 } from '../types';
 import { createSchemaUnitMap, getSchemaMap, CreateData, transformToMultiple, deepMerge } from '../utils';
 import Data from './Data';
-import Page from './Page';
+import Page from './Block/Page';
 import SchemaUnit from './SchemaUnit';
 
 /**

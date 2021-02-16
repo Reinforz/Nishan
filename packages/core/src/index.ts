@@ -1,21 +1,16 @@
 import {NotionCacheClass} from "@nishans/cache";
 import { INotionUser } from "@nishans/types";
 
-import Block from "./Block";
 import Collection from "./Collection";
-import CollectionViewPage from "./CollectionViewPage";
-import CollectionView from "./CollectionView";
+
 import NotionUser from "./NotionUser";
-import Page from "./Page";
 import UserSettings from "./UserSettings";
 import UserRoot from "./UserRoot";
 import SpaceView from "./SpaceView";
 import Space from "./Space";
 import SchemaUnit from "./SchemaUnit";
-import CollectionBlock from "./CollectionBlock";
 import NotionPermissions from "./Permissions";
 import NotionData from "./Data";
-export * from "./View";
 import { constructLogger, iterateAndGetChildren, transformToMultiple } from "../utils";
 import {Logger, NishanArg,FilterType, FilterTypes} from "../types";
 
@@ -83,20 +78,17 @@ class Nishan extends NotionCacheClass {
 export default Nishan;
 export * from "../types";
 export * from "../utils";
+export * from "./Block";
+export * from "./View";
 
 export {
-  Block,
   Collection,
-  CollectionViewPage,
-  CollectionView,
   NotionUser,
-  Page,
   UserSettings,
   UserRoot,
   SpaceView,
   Space,
   SchemaUnit,
-  CollectionBlock,
   NotionPermissions,
   NotionData
 }

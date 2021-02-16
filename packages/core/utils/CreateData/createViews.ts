@@ -6,8 +6,6 @@ import { TViewCreateInput, IViewMap, NishanArg, TViewQuery2CreateInput, TableVie
 import { generateId, error, createViewMap, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../utils";
 import { populateFilters } from "../populateFilters";
 
-console.log(getSchemaMap);
-
 // * Separate start and end date for timeline view
 
 export type TViewQuery2 = ITableViewQuery2 | ICalendarViewQuery2 | ITimelineViewQuery2 | IListViewQuery2 | IGalleryViewQuery2 | IBoardViewQuery2;

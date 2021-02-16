@@ -1,5 +1,13 @@
-import { IOperation } from '@nishans/types';
-import { Collection, createBlockMap, CreateData, IPageCreateInput, TCollectionUpdateKeys } from '../src';
+import { IOperation, Schema } from '@nishans/types';
+import {
+	Collection,
+	createBlockMap,
+	CreateData,
+	IPageCreateInput,
+	ISchemaUnitMap,
+	TCollectionUpdateKeys,
+	TSchemaUnitInput
+} from '../src';
 import { NotionData } from '../src';
 
 afterEach(() => {
@@ -519,4 +527,205 @@ it(`deleteRow`, async () => {
 	});
 
 	expect(block_1.alive).toBe(false);
+});
+
+it(`createSchemaUnits`, async () => {
+	const current_schema: Schema = {
+		title: {
+			type: 'title',
+			name: 'Title'
+		}
+	};
+	const collection_1 = {
+			id: 'collection_1',
+			name: [ [ 'Collection' ] ],
+			schema: current_schema
+		},
+		block_1 = { id: 'block_1' } as any,
+		cache = {
+			block: new Map([ [ 'block_1', block_1 ] ]),
+			collection: new Map([ [ 'collection_1', collection_1 ] ]),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map(),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any,
+		stack: IOperation[] = [];
+
+	const collection = new Collection({
+		cache,
+		id: 'collection_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack,
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const createSchemaMock = jest.spyOn(CreateData, 'createSchema').mockImplementationOnce(async () => {
+		return [ {} as Schema, new Map() as any, new Map() as any ];
+	});
+
+	const createSchemaUnitsArgs: TSchemaUnitInput[] = [
+		{
+			type: 'checkbox',
+			name: 'Checkbox'
+		}
+	];
+
+	await collection.createSchemaUnits(createSchemaUnitsArgs);
+
+	expect(createSchemaMock.mock.calls[0][0]).toStrictEqual(createSchemaUnitsArgs);
+	expect(createSchemaMock.mock.calls[0][1].name).toStrictEqual([ [ 'Collection' ] ]);
+	expect(createSchemaMock.mock.calls[0][1].parent_collection_id).toBe('collection_1');
+	expect(createSchemaMock.mock.calls[0][1].current_schema).toStrictEqual(current_schema);
+	expect(stack[0].command).toBe('update');
+	expect(stack[0].table).toBe('collection');
+	expect(stack[0].id).toBe('collection_1');
+});
+
+it(`getSchemaUnit`, async () => {
+	const current_schema: Schema = {
+		title: {
+			type: 'title',
+			name: 'Title'
+		}
+	};
+	const collection_1 = {
+			id: 'collection_1',
+			name: [ [ 'Collection' ] ],
+			schema: current_schema
+		},
+		block_1 = { id: 'block_1' } as any,
+		cache = {
+			block: new Map([ [ 'block_1', block_1 ] ]),
+			collection: new Map([ [ 'collection_1', collection_1 ] ]),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map(),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any,
+		stack: IOperation[] = [];
+
+	const collection = new Collection({
+		cache,
+		id: 'collection_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack,
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const schema_unit_map = await collection.getSchemaUnit('Title');
+	expect(schema_unit_map.title.get('Title')).not.toBeUndefined();
+	expect(schema_unit_map.title.get('title')).not.toBeUndefined();
+});
+
+it(`updateSchemaUnit`, async () => {
+	const current_schema: Schema = {
+		title: {
+			type: 'title',
+			name: 'Title'
+		}
+	};
+	const collection_1 = {
+			id: 'collection_1',
+			name: [ [ 'Collection' ] ],
+			schema: current_schema
+		},
+		block_1 = { id: 'block_1' } as any,
+		cache = {
+			block: new Map([ [ 'block_1', block_1 ] ]),
+			collection: new Map([ [ 'collection_1', collection_1 ] ]),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map(),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any,
+		stack: IOperation[] = [];
+
+	const collection = new Collection({
+		cache,
+		id: 'collection_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack,
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { type: 'checkbox', name: 'Checkbox' } ]);
+
+	expect(schema_unit_map.checkbox.get('Checkbox')).not.toBeUndefined();
+	expect(schema_unit_map.checkbox.get('title')).not.toBeUndefined();
+	expect(current_schema).toStrictEqual({
+		title: {
+			type: 'checkbox',
+			name: 'Checkbox'
+		}
+	});
+	expect(stack[0].command).toBe('update');
+	expect(stack[0].table).toBe('collection');
+});
+
+it(`deleteSchemaUnit`, async () => {
+	const current_schema: Schema = {
+		title: {
+			type: 'title',
+			name: 'Title'
+		},
+		checkbox: {
+			type: 'checkbox',
+			name: 'Checkbox'
+		}
+	};
+	const collection_1 = {
+			id: 'collection_1',
+			name: [ [ 'Collection' ] ],
+			schema: current_schema
+		},
+		block_1 = { id: 'block_1' } as any,
+		cache = {
+			block: new Map([ [ 'block_1', block_1 ] ]),
+			collection: new Map([ [ 'collection_1', collection_1 ] ]),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map(),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as any,
+		stack: IOperation[] = [];
+
+	const collection = new Collection({
+		cache,
+		id: 'collection_1',
+		interval: 0,
+		shard_id: 123,
+		space_id: 'space_1',
+		stack,
+		token: 'token',
+		user_id: 'user_root_1'
+	});
+
+	await collection.deleteSchemaUnit('Checkbox');
+
+	expect(current_schema).toStrictEqual({
+		title: {
+			type: 'title',
+			name: 'Title'
+		}
+	});
+	expect(stack[0].command).toBe('update');
+	expect(stack[0].table).toBe('collection');
 });

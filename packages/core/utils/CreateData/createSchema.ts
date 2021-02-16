@@ -198,7 +198,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
 export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
   const schema_unit_map = createSchemaUnitMap();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const schema_map: ISchemaMap = new Map(), schema: Schema = options.current_schema ?? {};
+  const schema: Schema = options.current_schema ?? {}, schema_map = getSchemaMap(schema);
   // Iterate through each input schmea units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 

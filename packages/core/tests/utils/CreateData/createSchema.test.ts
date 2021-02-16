@@ -269,35 +269,35 @@ describe('generateRelationSchema', () => {
 
 describe('createSchema', () => {
 	describe('Work correctly', () => {
-    const input_schema_units: TSchemaUnitInput[] = [
-      {
-        type: 'title',
-        name: 'Title'
-      },
-      {
-        type: 'number',
-        name: 'Number'
-      },
-      {
-        type: 'formula',
-        name: 'Formula',
-        formula: [ 'now()', 'string' ]
-      },
-      {
-        type: 'relation',
-        collection_id: 'child_collection_id',
-        name: 'Parent Relation Column'
-      },
-      {
-        type: "rollup",
-        collection_id: "target_collection_id",
-        name: "Rollup",
-        relation_property: "Parent Relation Column",
-        target_property: "Title",
-      }
-    ];
-
 		it(`createSchema should work correctly (collection exists in cache)`, async () => {
+      const input_schema_units: TSchemaUnitInput[] = [
+        {
+          type: 'title',
+          name: 'Title'
+        },
+        {
+          type: 'number',
+          name: 'Number'
+        },
+        {
+          type: 'formula',
+          name: 'Formula',
+          formula: [ 'now()', 'string' ]
+        },
+        {
+          type: 'relation',
+          collection_id: 'child_collection_id',
+          name: 'Parent Relation Column'
+        },
+        {
+          type: "rollup",
+          collection_id: "target_collection_id",
+          name: "Rollup",
+          relation_property: "Parent Relation Column",
+          target_property: "Title",
+        }
+      ];
+
 			const child_collection: ICollection = {
 					schema: {
 						title: {
@@ -333,7 +333,8 @@ describe('createSchema', () => {
           interval: 0,
           shard_id: 123,
           space_id: 'space_1',
-          user_id: 'user_1'
+          user_id: 'user_1',
+          current_schema: {}
 				}
 			);
 

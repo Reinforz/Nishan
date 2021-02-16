@@ -1,6 +1,6 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { CreateData, Page } from '../../src';
+import { CreateData, Page } from '../../../src';
 
 afterEach(() => {
 	jest.restoreAllMocks();

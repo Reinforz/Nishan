@@ -1,8 +1,11 @@
-import { CollectionView } from '../../src';
+import { CollectionViewPage } from '../../../src';
 
 it(`getCachedParentData`, () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2', parent_id: 'block_1' } ] ]),
+		block: new Map([
+			[ 'block_1', { id: 'block_1' } ],
+			[ 'block_2', { id: 'block_2', parent_id: 'block_1', parent_table: 'block' } ]
+		]),
 		collection: new Map(),
 		collection_view: new Map(),
 		notion_user: new Map(),
@@ -12,7 +15,7 @@ it(`getCachedParentData`, () => {
 		user_settings: new Map()
 	} as any;
 
-	const collection_view = new CollectionView({
+	const collection_view_page = new CollectionViewPage({
 		cache,
 		id: 'block_2',
 		interval: 0,
@@ -23,7 +26,7 @@ it(`getCachedParentData`, () => {
 		user_id: 'user_root_1'
 	});
 
-	const parent_data = collection_view.getCachedParentData();
+	const parent_data = collection_view_page.getCachedParentData();
 	expect(parent_data).toStrictEqual({
 		id: 'block_1'
 	});

@@ -2,6 +2,7 @@ import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../src';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -9,17 +10,11 @@ afterEach(() => {
 
 it('getCachedParentData', () => {
 	const cache = {
+		...createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', parent_table: 'block', parent_id: 'block_2' } ],
 			[ 'block_2', { id: 'block_2' } ]
-		]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		])
 	} as any;
 
 	const block = new Block({
@@ -41,17 +36,11 @@ it('getCachedParentData', () => {
 
 it('reposition', () => {
 	const cache = {
+		...createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', parent_table: 'block', parent_id: 'block_2' } ],
 			[ 'block_2', { id: 'block_2' } ]
-		]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		])
 	} as any;
 
 	const block = new Block({
@@ -76,14 +65,8 @@ it('reposition', () => {
 it('update', () => {
 	const block_1: any = { id: 'block_1' },
 		cache = {
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -133,14 +116,8 @@ describe('duplicate', () => {
 	it(`type=header,arg=number`, async () => {
 		const block_1: any = { id: 'block_1', type: 'header' },
 			cache = {
-				block: new Map([ [ 'block_1', block_1 ] ]),
-				collection: new Map(),
-				collection_view: new Map(),
-				notion_user: new Map(),
-				space: new Map(),
-				space_view: new Map(),
-				user_root: new Map(),
-				user_settings: new Map()
+				...createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ])
 			} as any,
 			stack: IOperation[] = [];
 
@@ -183,14 +160,8 @@ describe('duplicate', () => {
 	it(`type=collection_view_page,arg=number`, async () => {
 		const block_1: any = { parent_id: 'block_2', id: 'block_1', type: 'collection_view_page' },
 			cache = {
-				block: new Map([ [ 'block_1', block_1 ] ]),
-				collection: new Map(),
-				collection_view: new Map(),
-				notion_user: new Map(),
-				space: new Map(),
-				space_view: new Map(),
-				user_root: new Map(),
-				user_settings: new Map()
+				...createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ])
 			} as any,
 			stack: IOperation[] = [];
 
@@ -255,14 +226,8 @@ describe('duplicate', () => {
 it('convertTo', () => {
 	const block_1: any = { id: 'block_1' },
 		cache = {
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -304,14 +269,9 @@ it('convertTo', () => {
 it(`delete`, () => {
 	const block_1: any = { id: 'block_1', parent_table: 'space', parent_id: 'space_1' },
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map([ [ 'space_1', { id: 'space_1', pages: [ 'space_1' ] } ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: [ 'space_1' ] } ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -374,14 +334,8 @@ it(`transfer`, async () => {
 		block_2: any = { id: 'block_2', content: [ 'block_1' ] },
 		block_3: any = { id: 'block_3', content: [] },
 		cache = {
-			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ] ])
 		} as any,
 		stack: IOperation[] = [];
 

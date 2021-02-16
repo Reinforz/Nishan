@@ -9,6 +9,7 @@ import {
 	TSchemaUnitInput,
 	NotionData
 } from '../../src';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -16,17 +17,11 @@ afterEach(() => {
 
 it(`getRowPageIds`, async () => {
 	const cache = {
+		...createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', type: 'page', parent_table: 'collection', parent_id: 'collection_1' } ],
 			[ 'block_2', { id: 'block_2', type: 'page', parent_table: 'block', parent_id: 'block_1' } ]
-		]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		])
 	} as any;
 
 	const collection = new Collection({
@@ -64,14 +59,9 @@ it(`getCachedParentData`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -96,14 +86,9 @@ it(`update`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -140,14 +125,9 @@ it(`createTemplates`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -188,14 +168,8 @@ it(`getTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			block: new Map(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -233,14 +207,8 @@ it(`updateTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			block: new Map(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -281,14 +249,8 @@ it(`deleteTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			block: new Map(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -328,14 +290,9 @@ it(`createRows`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -376,14 +333,8 @@ it(`getRow`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			block: new Map(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -427,14 +378,8 @@ it(`updateRow`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			block: new Map(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
 	const collection = new Collection({
@@ -482,14 +427,9 @@ it(`deleteRow`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -543,14 +483,9 @@ it(`createSchemaUnits`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -601,14 +536,9 @@ it(`getSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -642,14 +572,9 @@ it(`updateSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -696,14 +621,9 @@ it(`deleteSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 

@@ -1,6 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { CreateData, Page } from '../../../src';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -11,14 +12,9 @@ it(`getCachedParentData`, async () => {
 			id: 'space_1'
 		},
 		cache = {
+  		...createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const page = new Page({
@@ -41,14 +37,9 @@ it(`createBlocks`, async () => {
 			id: 'space_1'
 		},
 		cache = {
+  		...createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const page = new Page({
@@ -84,17 +75,12 @@ it(`getBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
+  		...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const page = new Page({
@@ -117,17 +103,12 @@ it(`updateBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
+  		...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const page = new Page({
@@ -150,17 +131,12 @@ it(`updateBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
+  		...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const page = new Page({
@@ -181,16 +157,11 @@ it(`updateBlock`, async () => {
 it(`updateBookmarkedStatus`, async () => {
 	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
+  		...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', space_id: 'space_1' } as any ],
 			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
 			space_view: new Map([ [ 'space_view_2', {id: 'space_view_2', space_id: 'space_2'} ], [ 'space_view_1', space_view_1 as any ] ]),
-			space: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		},
 		stack: IOperation[] = [];
 

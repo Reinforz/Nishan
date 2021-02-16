@@ -1,19 +1,15 @@
 import { IOperation } from '@nishans/types';
 import { CollectionBlock, CreateData, TViewCreateInput } from '../../../src';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 it(`getCollection`, async () => {
 	const collection_1 = {
 			id: 'collection_1'
 		},
 		cache = {
+      ...createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', collection_id: 'collection_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any;
 
 	const collection_block = new CollectionBlock({
@@ -36,14 +32,9 @@ it(`createViews`, () => {
 			id: 'collection_1'
 		},
 		cache = {
+      ...createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'view_2' ] } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any,
 		stack: IOperation[] = [];
 
@@ -101,16 +92,12 @@ it(`getViews`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
+      ...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any,
 		stack: IOperation[] = [];
 
@@ -135,16 +122,12 @@ it(`updateView`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
+      ...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any,
 		stack: IOperation[] = [];
 
@@ -169,16 +152,12 @@ it(`deleteView`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
+      ...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
 		} as any,
 		stack: IOperation[] = [];
 

@@ -1,15 +1,10 @@
 import { CollectionView } from '../../../src';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 it(`getCachedParentData`, () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2', parent_id: 'block_1' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2', parent_id: 'block_1' } ] ])
 	} as any;
 
 	const collection_view = new CollectionView({

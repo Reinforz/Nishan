@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { UserRoot } from '../../src';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -9,14 +10,9 @@ afterEach(() => {
 
 it(`get space_views`, async () => {
 	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
+			...createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
-			user_settings: new Map()
+			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -37,14 +33,9 @@ it(`get space_views`, async () => {
 
 it(`update space_views`, async () => {
 	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
+			...createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
-			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
-			user_settings: new Map()
+			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},
 		stack: IOperation[] = [];
 

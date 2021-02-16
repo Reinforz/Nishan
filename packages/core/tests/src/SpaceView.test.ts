@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import deepEqual from 'deep-equal';
 import { NotionData, SpaceView } from '../../src';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -9,14 +10,9 @@ afterEach(() => {
 
 it(`getCachedParentData`, () => {
 	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
+			...createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
-			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
-			user_settings: new Map()
+			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -37,11 +33,7 @@ it(`getCachedParentData`, () => {
 
 it(`reposition`, () => {
 	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
+			...createDefaultCache(),
 			space_view: new Map([
 				[
 					'space_view_1',
@@ -50,8 +42,7 @@ it(`reposition`, () => {
 					} as any
 				]
 			]),
-			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ]),
-			user_settings: new Map()
+			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -80,16 +71,7 @@ it(`reposition`, () => {
 });
 
 it(`update`, () => {
-	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
-		},
+	const cache = createDefaultCache(),
 		stack: IOperation[] = [];
 
 	const space_view = new SpaceView({
@@ -122,14 +104,9 @@ it(`update`, () => {
 
 it(`getSpace`, () => {
 	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
+			...createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', space_id: 'space_1' } as any ] ]),
-			space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ]),
-			user_root: new Map(),
-			user_settings: new Map()
+			space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -155,6 +132,7 @@ it(`getSpace`, () => {
 
 it(`getBookmarkedPage`, async () => {
 	const cache: ICache = {
+			...createDefaultCache(),
 			block: new Map([
 				[
 					'block_1',
@@ -162,12 +140,7 @@ it(`getBookmarkedPage`, async () => {
 				]
 			]),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ] } as any ] ]),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] } as any ] ]),
-			space: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -192,17 +165,12 @@ it(`getBookmarkedPage`, async () => {
 it(`updateBookmarkedPages`, async () => {
 	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
+			...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } } as any ],
 				[ 'block_2', { type: 'page', id: 'block_2', properties: { title: [ [ 'Block Two' ] ] } } as any ]
 			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
-			space: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ])
 		},
 		stack: IOperation[] = [];
 

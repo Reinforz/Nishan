@@ -1,6 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { ViewAggregator } from '../../../src';
 import { detectAggregationErrors } from '../../../src/View/Aggregator';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 describe('detectAggregationErrors', () => {
 	it(`unknown property reference error`, () => {
@@ -113,14 +114,10 @@ it(`createAggregation`, () => {
 		} as any,
 		collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -185,14 +182,10 @@ it(`updateAggregations`, async () => {
 			}
 		} as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -259,14 +252,10 @@ it(`deleteAggregation`, async () => {
 			}
 		} as any,
 		cache = {
+			...createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
 		stack: IOperation[] = [];
 

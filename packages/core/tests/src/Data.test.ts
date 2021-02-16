@@ -1,6 +1,7 @@
 import { ChildTraverser, NotionData } from '../../src';
 import colors from 'colors';
 import { IHeader, IOperation } from '@nishans/types';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -8,14 +9,8 @@ afterEach(() => {
 
 it(`getLastEditedProps`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -40,14 +35,8 @@ it(`getLastEditedProps`, async () => {
 
 it(`updateLastEditedProps`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -82,14 +71,8 @@ it(`updateLastEditedProps`, async () => {
 describe('getCachedData', () => {
 	it(`data exists`, async () => {
 		const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
 		const logger = jest.fn();
@@ -114,14 +97,8 @@ describe('getCachedData', () => {
 
 	it(`data doesnt exists`, async () => {
 		const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
 		const consoleLogSpy = jest.spyOn(console, 'log');
@@ -145,14 +122,8 @@ describe('getCachedData', () => {
 
 	it(`data is not alive`, async () => {
 		const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 		} as any;
 
 		const consoleLogSpy = jest.spyOn(console, 'log');
@@ -176,14 +147,8 @@ describe('getCachedData', () => {
 
 it(`updateCachedData`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -208,14 +173,8 @@ it(`updateCachedData`, async () => {
 
 it(`deleteCachedData`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -236,17 +195,11 @@ it(`deleteCachedData`, async () => {
 
 it(`addToChildArray`, async () => {
 	const cache = {
+			...createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'header' } ],
 				[ 'block_2', { id: 'block_2', type: 'page' } ]
-			]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -268,14 +221,8 @@ it(`addToChildArray`, async () => {
 
 it(`updateCacheLocally`, async () => {
 	const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -321,14 +268,8 @@ it(`updateCacheLocally`, async () => {
 
 it(`initializeCacheForThisData`, async () => {
 	const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -360,14 +301,8 @@ it(`initializeCacheForThisData`, async () => {
 
 it(`getProps`, () => {
 	const cache = {
-			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ]),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -393,14 +328,8 @@ it(`getProps`, () => {
 
 it(`getIterate`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -432,14 +361,8 @@ it(`getIterate`, async () => {
 
 it(`updateIterate`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
 	const block = new NotionData({
@@ -471,14 +394,8 @@ it(`updateIterate`, async () => {
 
 it(`deleteIterate`, async () => {
 	const cache = {
-		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ]),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
+		...createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
 	const block = new NotionData({

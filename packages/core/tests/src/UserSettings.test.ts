@@ -1,22 +1,13 @@
-import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, UserSettings } from '../../src';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
 it(`update`, () => {
-	const cache: ICache = {
-			block: new Map(),
-			collection: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
-		},
+	const cache = createDefaultCache(),
 		stack: IOperation[] = [];
 
 	const user_settings = new UserSettings({

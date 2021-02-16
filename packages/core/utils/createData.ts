@@ -1,7 +1,8 @@
-import { createContents, createCollection, createViews } from './';
+import { createSchema, createContents, createCollection, createViews } from './';
 
 export const CreateData = {
 	createViews,
 	createCollection,
-	createContents
+	createContents,
+	createSchema
 };

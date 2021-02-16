@@ -85,7 +85,7 @@ export default class Space extends Data<ISpace> {
     this.logger && this.logger("DELETE", "space", this.id);
   }
 
-  async createRootPages(contents: ((ICollectionViewPageInput | IPageCreateInput) & { position?: RepositionParams })[]) {
+  async createRootPages(contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
     return await CreateData.createContents(contents, this.id, this.type as "space", this.getProps())
   }
 

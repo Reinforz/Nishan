@@ -2,19 +2,19 @@ import { ICache } from "@nishans/cache";
 import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { Operation } from "@nishans/operations";
-import { ICollection, IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValues, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
+import { ICollection, IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
 import { getSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../src";
-import { ICollectionBlockInput, IViewMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput } from "../types";
-import { createShortId, createViews, generateId } from "../utils";
+import { ICollectionBlockInput, IViewMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../types";
+import { CreateData, createShortId, generateId } from "../utils";
 
 interface ParentCollectionData {
-  id: string
+  parent_collection_id: string
   name: TTextFormat
   token: string
   logger?: Logger,
   stack: IOperation[],
   cache: Pick<ICache, "collection">,
-  parent_relation_schema_unit_id: string
+  parent_relation_schema_unit_id: string,
 }
 
 /**
@@ -24,7 +24,7 @@ interface ParentCollectionData {
  * @return The newly generated relation schema unit
  */
 export async function generateRelationSchema(input_schema_unit: TRelationSchemaUnitInput, collection_data: ParentCollectionData): Promise<RelationSchemaUnit>{
-  const {parent_relation_schema_unit_id, id: parent_collection_id, name: parent_collection_name, token, logger, cache, stack} = collection_data, child_relation_schema_unit_id = createShortId();
+  const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name, token, logger, cache, stack} = collection_data, child_relation_schema_unit_id = createShortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
   let child_collection = cache.collection.get(child_collection_id);
@@ -195,7 +195,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function generateSchema(input_schema_units: ICollectionBlockInput["schema"], collection_data: Omit<ParentCollectionData, "parent_relation_schema_unit_id">){
+export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id">){
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
   const schema_map: ISchemaMap = new Map(), schema: Schema = {};
   // Iterate through each input schmea units
@@ -217,16 +217,16 @@ export async function generateSchema(input_schema_units: ICollectionBlockInput["
         schema[schema_id] = {...input_schema_unit, formula: generateFormulaAST(input_schema_unit.formula[0] as any, input_schema_unit.formula[1] as any, schema_map)};
         break;
       case "rollup":
-        schema[schema_id] = await generateRollupSchema(input_schema_unit, schema_map, collection_data);
+        schema[schema_id] = await generateRollupSchema(input_schema_unit, schema_map, options);
         break;
       case "relation":
-        schema[schema_id] = await generateRelationSchema(input_schema_unit, {...collection_data, parent_relation_schema_unit_id: schema_id});
+        schema[schema_id] = await generateRelationSchema(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id});
         break;
       default:
         schema[schema_id] = input_schema_unit;
     }
     // Set the schema unit in the schema map
-    schema_map.set(name,  {...schema[schema_id], schema_id})
+    schema_map.set(name,  {...schema[schema_id], schema_id});
   }
   // If title doesnt exist in the schema throw an error
   if(!schema["title"])
@@ -245,7 +245,7 @@ export async function createCollection(input: ICollectionBlockInput, parent_id: 
   // Generate the collection id
   const collection_id = generateId(input.collection_id);
   // Generate the schema to store in the collection
-  const [schema] = await generateSchema(input.schema, {id: collection_id, name: input.name, token: props.token, stack: props.stack, cache: props.cache, logger: props.logger})
+  const [schema] = await CreateData.createSchema(input.schema, {parent_collection_id: collection_id, name: input.name, token: props.token, stack: props.stack, cache: props.cache, logger: props.logger})
   // construct the collection to store it in cache and in op stack
   const collection_data: ICollection = {
     id: collection_id,
@@ -261,7 +261,7 @@ export async function createCollection(input: ICollectionBlockInput, parent_id: 
   };
 
   // Create the views of the collection
-  const [view_ids, view_map] = createViews(collection_data, input.views, props);
+  const [view_ids, view_map] = CreateData.createViews(collection_data, input.views, props);
   // Push the collection create operation to stack
   props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))))
   // Store the collection in cache

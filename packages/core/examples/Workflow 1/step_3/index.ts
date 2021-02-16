@@ -459,7 +459,7 @@ export default async function step3 (target_page: Page) {
     const total_batch = Math.floor(subject.length / 10);
     for (let index = 0; index <= total_batch; index++) {
       const start = (10 * index) + 1, end = start + 9;
-      await Web3CVP_collection.createPages(returnSubjectSlice(start, end));
+      await Web3CVP_collection.createRows(returnSubjectSlice(start, end));
       console.log(`Deployed batch ${index + 1}`);
       await target_page.Operations.executeOperation();
     }

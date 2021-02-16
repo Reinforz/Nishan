@@ -4,7 +4,7 @@ import deepEqual from 'deep-equal';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
-import { createCollection, generateRelationSchema, generateRollupSchema, generateSchema, getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../src';
+import { createCollection, generateRelationSchema, generateRollupSchema, createSchema, getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../src';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
@@ -269,7 +269,7 @@ describe('generateRelationSchema', () => {
   })
 });
 
-describe('generateSchema', () => {
+describe('createSchema', () => {
 	describe('Work correctly', () => {
     const input_schema_units: TSchemaUnitInput[] = [
       {
@@ -299,7 +299,7 @@ describe('generateSchema', () => {
       }
     ];
 
-		it(`generateSchema should work correctly (collection exists in cache)`, async () => {
+		it(`createSchema should work correctly (collection exists in cache)`, async () => {
 			const child_collection: ICollection = {
 					schema: {
 						title: {
@@ -323,7 +323,7 @@ describe('generateSchema', () => {
 					collection: new Map([ [ 'child_collection_id', child_collection ], [ 'target_collection_id', target_collection ] ])
 				};
       
-			const [schema] = await generateSchema(
+			const [schema] = await createSchema(
 				input_schema_units,
 				{
 					id: 'parent_collection_id',
@@ -381,7 +381,7 @@ describe('generateSchema', () => {
 	describe('Throws error', () => {
 		it(`Should throw error for duplicate property name`, () => {
 			expect(() =>
-				generateSchema(
+				createSchema(
 					[
 						{
 							type: 'title',
@@ -407,7 +407,7 @@ describe('generateSchema', () => {
 
 		it(`Should throw error if title type property not present in schema`, () => {
 			expect(() =>
-				generateSchema(
+				createSchema(
 					[
 						{
 							type: 'number',

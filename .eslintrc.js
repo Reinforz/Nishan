@@ -12,6 +12,12 @@ module.exports = {
 		Atomics: 'readonly',
 		SharedArrayBuffer: 'readonly'
 	},
+  overrides: [{
+    files: ["**/**.test.ts"],
+    rules: {
+      "@typescript-eslint/no-empty-function": 'off'
+    }
+  }],
 	ignorePatterns: [ 'experiment', 'dist' ],
 	parserOptions: {
 		sourceType: 'module',

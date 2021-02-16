@@ -16,7 +16,7 @@ export * from './deepMerge';
 export * from './constructLogger';
 export * from './transformToMultiple';
 export * from './uuidConversion';
-export * from './createData';
+export * from './CreateData';
 export * from './ChildTraverser';
 export * from './updateBookmarkedPages';
 export * from './PopulateMap';

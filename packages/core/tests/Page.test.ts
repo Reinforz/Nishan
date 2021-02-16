@@ -187,7 +187,7 @@ it(`updateBookmarkedStatus`, async () => {
 			collection: new Map(),
 			collection_view: new Map(),
 			notion_user: new Map(),
-			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
+			space_view: new Map([ [ 'space_view_2', {id: 'space_view_2', space_id: 'space_2'} ], [ 'space_view_1', space_view_1 as any ] ]),
 			space: new Map(),
 			user_root: new Map(),
 			user_settings: new Map()

@@ -50,7 +50,7 @@ it(`update space_views`, async () => {
 	});
 
 	const space_view = await user_root.updateSpaceView([ 'space_view_1', { joined: false } ]);
-	expect(space_view.getCachedData()).toMatchSnapshot({
+	expect(space_view.getCachedData()).toStrictEqual({
 		alive: true,
 		last_edited_time: expect.any(Number),
 		last_edited_by_table: 'notion_user',
@@ -58,7 +58,7 @@ it(`update space_views`, async () => {
 		joined: false
 	} as any);
 
-	expect(stack).toMatchSnapshot([
+	expect(stack).toStrictEqual([
 		{
 			table: 'space_view',
 			id: 'space_view_1',

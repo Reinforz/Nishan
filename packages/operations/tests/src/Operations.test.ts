@@ -1,4 +1,4 @@
-import { Operation } from '../src';
+import { Operation } from '../../src';
 
 describe('Operation', () => {
 	it(`Should return correct operation`, () => {

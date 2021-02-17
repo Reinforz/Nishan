@@ -192,7 +192,7 @@ it(`updateBookmarkedPages`, async () => {
 	expect(page_map.page.get('Block One')).not.toBeUndefined();
 	expect(page_map.page.get('block_2')).not.toBeUndefined();
 
-	expect(space_view_1).toMatchSnapshot({
+	expect(space_view_1).toStrictEqual({
 		bookmarked_pages: [ 'block_2' ],
 		id: 'space_view_1',
 		last_edited_time: expect.any(Number),

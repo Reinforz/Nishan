@@ -850,14 +850,16 @@ describe('iterateAndDeleteChildren', () => {
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
+				id: 'parent_one_id',
+				type: 'page',
 				content: [ 'child_three_id' ],
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(deleted_data).toMatchSnapshot([
+			expect(deleted_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
@@ -874,13 +876,14 @@ describe('iterateAndDeleteChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
 					id: 'child_one_id',
 					path: [],
 					args: {
+						alive: false,
 						last_edited_by_table: 'notion_user',
 						last_edited_by_id: 'user_id',
 						last_edited_time: expect.any(Number)
@@ -901,6 +904,7 @@ describe('iterateAndDeleteChildren', () => {
 					id: 'child_two_id',
 					path: [],
 					args: {
+						alive: false,
 						last_edited_by_table: 'notion_user',
 						last_edited_by_id: 'user_id',
 						last_edited_time: expect.any(Number)
@@ -982,14 +986,15 @@ describe('iterateAndDeleteChildren', () => {
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
+				id: 'parent_one_id',
 				content: [ 'child_three_id' ],
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(deleted_data).toMatchSnapshot([
+			expect(deleted_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
@@ -1006,13 +1011,14 @@ describe('iterateAndDeleteChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
 					id: 'child_one_id',
 					path: [],
 					args: {
+						alive: false,
 						last_edited_by_table: 'notion_user',
 						last_edited_by_id: 'user_id',
 						last_edited_time: expect.any(Number)
@@ -1033,6 +1039,7 @@ describe('iterateAndDeleteChildren', () => {
 					id: 'child_two_id',
 					path: [],
 					args: {
+						alive: false,
 						last_edited_by_table: 'notion_user',
 						last_edited_by_id: 'user_id',
 						last_edited_time: expect.any(Number)
@@ -1116,14 +1123,15 @@ describe('iterateAndDeleteChildren', () => {
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
+				id: 'parent_one_id',
 				content: [ 'child_one_id', 'child_two_id', 'child_three_id' ],
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(deleted_data).toMatchSnapshot([
+			expect(deleted_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false
@@ -1134,7 +1142,7 @@ describe('iterateAndDeleteChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
@@ -1192,7 +1200,7 @@ describe('iterateAndDeleteChildren', () => {
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data as any).toMatchSnapshot({
+			expect(parent_data as any).toStrictEqual({
 				id: 'parent_one_id',
 				content: [ 'child_one_id', 'child_two_id' ],
 				last_edited_by_table: 'notion_user',
@@ -1200,7 +1208,7 @@ describe('iterateAndDeleteChildren', () => {
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(deleted_data as any).toMatchSnapshot([
+			expect(deleted_data as any).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
@@ -1210,7 +1218,7 @@ describe('iterateAndDeleteChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					args: {
 						alive: false,
@@ -1274,14 +1282,14 @@ describe('iterateAndDeleteChildren', () => {
 			} as any);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data as any).toMatchSnapshot({
+			expect(parent_data as any).toStrictEqual({
 				id: 'parent_one_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_by_id: 'user_id',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
@@ -1391,14 +1399,15 @@ describe('iterateAndUpdateChildren', () => {
 				}
 			);
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
 				content: child_ids,
+				id: 'parent_one_id',
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(updated_data).toMatchSnapshot([
+			expect(updated_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					content: 'child1',
@@ -1415,7 +1424,7 @@ describe('iterateAndUpdateChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
@@ -1506,14 +1515,15 @@ describe('iterateAndUpdateChildren', () => {
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
 				content: child_ids,
+				id: 'parent_one_id',
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(updated_data).toMatchSnapshot([
+			expect(updated_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					content: 'child1',
@@ -1530,7 +1540,7 @@ describe('iterateAndUpdateChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',
@@ -1623,14 +1633,15 @@ describe('iterateAndUpdateChildren', () => {
 			);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
-			expect(parent_data).toMatchSnapshot({
+			expect(parent_data).toStrictEqual({
 				content: child_ids,
+				id: 'parent_one_id',
 				last_edited_by_id: 'user_id',
 				last_edited_by_table: 'notion_user',
 				last_edited_time: expect.any(Number)
 			});
 
-			expect(updated_data).toMatchSnapshot([
+			expect(updated_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false
@@ -1641,7 +1652,7 @@ describe('iterateAndUpdateChildren', () => {
 				}
 			]);
 
-			expect(stack).toMatchSnapshot([
+			expect(stack).toStrictEqual([
 				{
 					command: 'update',
 					table: 'block',

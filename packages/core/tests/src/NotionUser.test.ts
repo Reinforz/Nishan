@@ -106,10 +106,10 @@ describe('NotionUser', () => {
 
     expect(space_views.length).toBe(1);
 
-    expect(cache.space_view.get(space_views[0])).toMatchSnapshot(space_view_snapshot_data);
-    expect(space_cached_data).toMatchSnapshot(space_snapshot_data);
+    expect(cache.space_view.get(space_views[0])).toStrictEqual(space_view_snapshot_data);
+    expect(space_cached_data).toStrictEqual(space_snapshot_data);
 
-    expect(stack.slice(0, 3)).toMatchSnapshot([
+    expect(stack.slice(0, 3)).toStrictEqual([
       {
         command: "update",
         table: "space",
@@ -200,14 +200,14 @@ describe('NotionUser', () => {
 
       const space = await notion_user.updateSpace(['space_1', { name: 'Space One' }]);
 
-      expect(space.getCachedData()).toMatchSnapshot({
+      expect(space.getCachedData()).toStrictEqual({
         id: 'space_1',
         shard_id: 123,
         name: 'Space One',
         ...updated_space_snapshot
       });
 
-      expect(stack).toMatchSnapshot([
+      expect(stack).toStrictEqual([
         {
           path: [],
           table: 'space',

@@ -4,7 +4,6 @@ import {
 	createBlockMap,
 	CreateData,
 	IPageCreateInput,
-	ISchemaUnitMap,
 	TCollectionUpdateKeys,
 	TSchemaUnitInput,
 	NotionData
@@ -453,7 +452,7 @@ it(`deleteRow`, async () => {
 	await collection.deleteRow('block_1');
 
 	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-	expect(stack[0]).toMatchSnapshot({
+	expect(stack[0]).toStrictEqual({
 		command: 'update',
 		table: 'block',
 		path: [],

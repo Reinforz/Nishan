@@ -11,7 +11,7 @@ describe('updateBookmarkedPages', () => {
 
 		updateBookmarkedPages(data, true, 'block_1', stack);
 
-		expect(stack).toMatchSnapshot([
+		expect(stack).toStrictEqual([
 			{
 				path: [ 'bookmarked_pages' ],
 				table: 'space_view',
@@ -33,7 +33,7 @@ describe('updateBookmarkedPages', () => {
 
 		updateBookmarkedPages(data, false, 'block_1', stack);
 
-		expect(stack).toMatchSnapshot([
+		expect(stack).toStrictEqual([
 			{
 				path: [ 'bookmarked_pages' ],
 				table: 'space_view',

@@ -9,6 +9,7 @@ import {
 	TSchemaUnitInput
 } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -459,9 +460,7 @@ it(`deleteRow`, async () => {
 		id: 'block_1',
 		args: {
 			alive: false,
-			last_edited_time: expect.any(Number),
-			last_edited_by_table: 'notion_user',
-			last_edited_by_id: 'user_root_1'
+			...last_edited_props
 		}
 	});
 

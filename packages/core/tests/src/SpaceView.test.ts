@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, SpaceView } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -195,9 +196,7 @@ it(`updateBookmarkedPages`, async () => {
 	expect(space_view_1).toStrictEqual({
 		bookmarked_pages: [ 'block_2' ],
 		id: 'space_view_1',
-		last_edited_time: expect.any(Number),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: 'user_root_1'
+		...last_edited_props
 	});
 
 	expect(stack.length).toBe(3);

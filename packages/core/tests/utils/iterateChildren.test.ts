@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation, IPage, ISpace, TBlock, TPage } from '@nishans/types';
 import colors from 'colors';
 import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
+import { last_edited_props } from '../lastEditedProps';
 
 describe('iterateChildren', () => {
 	describe('method=UPDATE', () => {
@@ -820,7 +821,7 @@ describe('iterateAndDeleteChildren', () => {
 					parent_type: 'block',
 					child_path: 'content',
 					stack,
-					user_id: 'user_id',
+					user_id: 'user_root_1',
 					logger: logger_spy
 				},
 				(id, data, container) => {
@@ -838,41 +839,31 @@ describe('iterateAndDeleteChildren', () => {
 			expect(cb_spy).toHaveBeenNthCalledWith(1, 'child_one_id', {
 				id: 'child_one_id',
 				alive: false,
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_id',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 			expect(cb_spy).toHaveBeenNthCalledWith(2, 'child_two_id', {
 				id: 'child_two_id',
 				alive: false,
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_id',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(parent_data).toStrictEqual({
 				id: 'parent_one_id',
 				type: 'page',
 				content: [ 'child_three_id' ],
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(deleted_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					id: 'child_two_id',
 					alive: false,
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				}
 			]);
 
@@ -884,9 +875,7 @@ describe('iterateAndDeleteChildren', () => {
 					path: [],
 					args: {
 						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -905,9 +894,7 @@ describe('iterateAndDeleteChildren', () => {
 					path: [],
 					args: {
 						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -924,11 +911,7 @@ describe('iterateAndDeleteChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -978,7 +961,7 @@ describe('iterateAndDeleteChildren', () => {
 					parent_type: 'block',
 					child_path: 'content',
 					stack,
-					user_id: 'user_id'
+					user_id: 'user_root_1'
 				},
 				(id, data, container) => {
 					container.push(data);
@@ -989,25 +972,19 @@ describe('iterateAndDeleteChildren', () => {
 			expect(parent_data).toStrictEqual({
 				id: 'parent_one_id',
 				content: [ 'child_three_id' ],
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(deleted_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					id: 'child_two_id',
 					alive: false,
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				}
 			]);
 
@@ -1019,9 +996,7 @@ describe('iterateAndDeleteChildren', () => {
 					path: [],
 					args: {
 						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1040,9 +1015,7 @@ describe('iterateAndDeleteChildren', () => {
 					path: [],
 					args: {
 						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1059,11 +1032,7 @@ describe('iterateAndDeleteChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1114,7 +1083,7 @@ describe('iterateAndDeleteChildren', () => {
 					child_path: 'content',
 					stack,
 					manual: true,
-					user_id: 'user_id'
+					user_id: 'user_root_1'
 				},
 				(id, data, container) => {
 					data.alive = false;
@@ -1126,9 +1095,7 @@ describe('iterateAndDeleteChildren', () => {
 			expect(parent_data).toStrictEqual({
 				id: 'parent_one_id',
 				content: [ 'child_one_id', 'child_two_id', 'child_three_id' ],
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(deleted_data).toStrictEqual([
@@ -1148,11 +1115,7 @@ describe('iterateAndDeleteChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1194,7 +1157,7 @@ describe('iterateAndDeleteChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id'
+					user_id: 'user_root_1'
 				} as any,
 				(_, data, container) => container.push(data)
 			);
@@ -1203,18 +1166,14 @@ describe('iterateAndDeleteChildren', () => {
 			expect(parent_data as any).toStrictEqual({
 				id: 'parent_one_id',
 				content: [ 'child_one_id', 'child_two_id' ],
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_id',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(deleted_data as any).toStrictEqual([
 				{
 					id: 'child_one_id',
 					alive: false,
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				}
 			]);
 
@@ -1222,9 +1181,7 @@ describe('iterateAndDeleteChildren', () => {
 				{
 					args: {
 						alive: false,
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					},
 					command: 'update',
 					id: 'child_one_id',
@@ -1236,11 +1193,7 @@ describe('iterateAndDeleteChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1278,15 +1231,13 @@ describe('iterateAndDeleteChildren', () => {
 				parent_id: 'parent_one_id',
 				parent_type: 'block',
 				stack,
-				user_id: 'user_id'
+				user_id: 'user_root_1'
 			} as any);
 			const parent_data = cache.block.get('parent_one_id') as IPage;
 
 			expect(parent_data as any).toStrictEqual({
 				id: 'parent_one_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_id',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(stack).toStrictEqual([
@@ -1295,11 +1246,7 @@ describe('iterateAndDeleteChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1355,7 +1302,7 @@ describe('iterateAndUpdateChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id',
+					user_id: 'user_root_1',
 					logger: logger_spy
 				},
 				(id, data, update_data, container) => {
@@ -1376,9 +1323,7 @@ describe('iterateAndUpdateChildren', () => {
 				{
 					id: 'child_one_id',
 					content: 'child1',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					content: 'child1'
@@ -1390,9 +1335,7 @@ describe('iterateAndUpdateChildren', () => {
 				{
 					id: 'child_two_id',
 					content: 'child2',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					content: 'child2'
@@ -1402,25 +1345,19 @@ describe('iterateAndUpdateChildren', () => {
 			expect(parent_data).toStrictEqual({
 				content: child_ids,
 				id: 'parent_one_id',
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(updated_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					content: 'child1',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					id: 'child_two_id',
 					content: 'child2',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				}
 			]);
 
@@ -1432,9 +1369,7 @@ describe('iterateAndUpdateChildren', () => {
 					path: [],
 					args: {
 						content: 'child1',
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1444,9 +1379,7 @@ describe('iterateAndUpdateChildren', () => {
 					path: [],
 					args: {
 						content: 'child2',
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1454,11 +1387,7 @@ describe('iterateAndUpdateChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1507,7 +1436,7 @@ describe('iterateAndUpdateChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id'
+					user_id: 'user_root_1'
 				},
 				(id, data, update_data, container) => {
 					container.push(data);
@@ -1518,25 +1447,19 @@ describe('iterateAndUpdateChildren', () => {
 			expect(parent_data).toStrictEqual({
 				content: child_ids,
 				id: 'parent_one_id',
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(updated_data).toStrictEqual([
 				{
 					id: 'child_one_id',
 					content: 'child1',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				},
 				{
 					id: 'child_two_id',
 					content: 'child2',
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: 'user_id',
-					last_edited_time: expect.any(Number)
+					...last_edited_props
 				}
 			]);
 
@@ -1548,9 +1471,7 @@ describe('iterateAndUpdateChildren', () => {
 					path: [],
 					args: {
 						content: 'child1',
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1560,9 +1481,7 @@ describe('iterateAndUpdateChildren', () => {
 					path: [],
 					args: {
 						content: 'child2',
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
+						...last_edited_props
 					}
 				},
 				{
@@ -1570,11 +1489,7 @@ describe('iterateAndUpdateChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});
@@ -1623,7 +1538,7 @@ describe('iterateAndUpdateChildren', () => {
 					parent_id: 'parent_one_id',
 					parent_type: 'block',
 					stack,
-					user_id: 'user_id',
+					user_id: 'user_root_1',
 					manual: true
 				},
 				(id, data, update_data, container) => {
@@ -1636,9 +1551,7 @@ describe('iterateAndUpdateChildren', () => {
 			expect(parent_data).toStrictEqual({
 				content: child_ids,
 				id: 'parent_one_id',
-				last_edited_by_id: 'user_id',
-				last_edited_by_table: 'notion_user',
-				last_edited_time: expect.any(Number)
+				...last_edited_props
 			});
 
 			expect(updated_data).toStrictEqual([
@@ -1658,11 +1571,7 @@ describe('iterateAndUpdateChildren', () => {
 					table: 'block',
 					id: 'parent_one_id',
 					path: [],
-					args: {
-						last_edited_by_table: 'notion_user',
-						last_edited_by_id: 'user_id',
-						last_edited_time: expect.any(Number)
-					}
+					args: last_edited_props
 				}
 			]);
 		});

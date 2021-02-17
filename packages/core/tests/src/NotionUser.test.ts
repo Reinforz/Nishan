@@ -5,6 +5,7 @@ import colors from 'colors';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -17,18 +18,18 @@ describe('NotionUser', () => {
     const spaceId = v4();
     const cache: ICache = {
       ...createDefaultCache(),
-      user_root: new Map([['user_1', { space_views: [] }] as any]),
+      user_root: new Map([['user_root_1', { space_views: [] }] as any]),
     };
     const notion_user = new NotionUser({
       cache,
       logger: logger_spy,
-      id: 'user_1',
+      id: 'user_root_1',
       stack,
       interval: 0,
       shard_id: 123,
       space_id: 'space_1',
       token: 'token',
-      user_id: 'user_1'
+      user_id: 'user_root_1'
     });
 
     const createSpace_spy = jest.spyOn(Mutations, 'createSpace').mockImplementationOnce(async () => {
@@ -47,15 +48,13 @@ describe('NotionUser', () => {
       ]
     });
 
-    const space_views = cache.user_root.get('user_1')?.space_views ?? [];
+    const space_views = cache.user_root.get('user_root_1')?.space_views ?? [];
 
     const space_cached_data = space.getCachedData(), space_snapshot_data = {
-      created_by_id: 'user_1',
+      created_by_id: 'user_root_1',
       created_by_table: 'notion_user',
       created_time: expect.any(Number),
-      last_edited_by_id: 'user_1',
-      last_edited_by_table: 'notion_user',
-      last_edited_time: expect.any(Number),
+      ...last_edited_props,
       version: 0,
       id: expect.any(String),
       invite_link_code: '',
@@ -78,7 +77,7 @@ describe('NotionUser', () => {
       notify_mobile: true,
       notify_desktop: true,
       notify_email: true,
-      parent_id: 'user_1',
+      parent_id: 'user_root_1',
       parent_table: 'user_root',
       alive: true,
       joined: true,
@@ -91,7 +90,7 @@ describe('NotionUser', () => {
 
     expect(logger_spy).toHaveBeenNthCalledWith(1, "CREATE", "space", spaceId);
     expect(logger_spy).toHaveBeenNthCalledWith(2, "CREATE", "space_view", space_views[0]);
-    expect(logger_spy).toHaveBeenNthCalledWith(3, "UPDATE", "user_root", 'user_1');
+    expect(logger_spy).toHaveBeenNthCalledWith(3, "UPDATE", "user_root", 'user_root_1');
     expect(logger_spy).toHaveBeenNthCalledWith(4, "UPDATE", "space", spaceId);
 
     expect(createSpace_spy).toHaveBeenCalledTimes(1);
@@ -99,7 +98,7 @@ describe('NotionUser', () => {
       { initialUseCases: [], name: 'Space One', planType: 'personal', icon: '' },
       {
         interval: 0,
-        user_id: 'user_1',
+        user_id: 'user_root_1',
         token: 'token'
       }
     );
@@ -155,13 +154,13 @@ describe('NotionUser', () => {
       };
       const notion_user = new NotionUser({
         cache,
-        id: 'user_1',
+        id: 'user_root_1',
         stack: [],
         interval: 0,
         shard_id: 123,
         space_id: 'space_1',
         token: 'token',
-        user_id: 'user_1'
+        user_id: 'user_root_1'
       });
 
       const space = await notion_user.getSpace('space_2');
@@ -183,20 +182,14 @@ describe('NotionUser', () => {
 
       const notion_user = new NotionUser({
         cache,
-        id: 'user_1',
+        id: 'user_root_1',
         stack,
         interval: 0,
         shard_id: 123,
         space_id: 'space_1',
         token: 'token',
-        user_id: 'user_1'
+        user_id: 'user_root_1'
       });
-
-      const updated_space_snapshot = {
-        last_edited_time: expect.any(Number),
-        last_edited_by_table: 'notion_user',
-        last_edited_by_id: 'user_1'
-      };
 
       const space = await notion_user.updateSpace(['space_1', { name: 'Space One' }]);
 
@@ -204,7 +197,7 @@ describe('NotionUser', () => {
         id: 'space_1',
         shard_id: 123,
         name: 'Space One',
-        ...updated_space_snapshot
+        ...last_edited_props,
       });
 
       expect(stack).toStrictEqual([
@@ -214,7 +207,7 @@ describe('NotionUser', () => {
           command: 'update',
           args: {
             name: 'Space One',
-            ...updated_space_snapshot
+            ...last_edited_props,
           },
           id: 'space_1'
         }
@@ -225,45 +218,45 @@ describe('NotionUser', () => {
   it('getUserSettings', () => {
     const cache: ICache = {
       ...createDefaultCache(),
-      user_settings: new Map([['user_1', { id: 'user_1', name: 'User Settings 1' }]] as any)
+      user_settings: new Map([['user_root_1', { id: 'user_root_1', name: 'User Settings 1' }]] as any)
     },
       stack: IOperation[] = [];
 
     const notion_user = new NotionUser({
       cache,
-      id: 'user_1',
+      id: 'user_root_1',
       stack,
       interval: 0,
       shard_id: 123,
       space_id: 'space_1',
       token: 'token',
-      user_id: 'user_1'
+      user_id: 'user_root_1'
     });
     const user_settings = notion_user.getUserSettings();
-    expect(user_settings.getCachedData()).toStrictEqual({ id: 'user_1', name: 'User Settings 1' });
-    expect(user_settings.id).toBe('user_1');
+    expect(user_settings.getCachedData()).toStrictEqual({ id: 'user_root_1', name: 'User Settings 1' });
+    expect(user_settings.id).toBe('user_root_1');
   });
 
   it('getUserRoot', () => {
     const cache: ICache = {
       ...createDefaultCache(),
-      user_root: new Map([['user_1', { id: 'user_1', name: 'User Root 1' }]] as any),
+      user_root: new Map([['user_root_1', { id: 'user_root_1', name: 'User Root 1' }]] as any),
     },
       stack: IOperation[] = [];
 
     const notion_user = new NotionUser({
       cache,
-      id: 'user_1',
+      id: 'user_root_1',
       stack,
       interval: 0,
       shard_id: 123,
       space_id: 'space_1',
       token: 'token',
-      user_id: 'user_1'
+      user_id: 'user_root_1'
     });
     const user_root = notion_user.getUserRoot();
-    expect(user_root.getCachedData()).toStrictEqual({ id: 'user_1', name: 'User Root 1' });
-    expect(user_root.id).toBe('user_1');
+    expect(user_root.getCachedData()).toStrictEqual({ id: 'user_root_1', name: 'User Root 1' });
+    expect(user_root.id).toBe('user_root_1');
   });
 
   describe('delete space', () => {
@@ -276,13 +269,13 @@ describe('NotionUser', () => {
 
       const notion_user = new NotionUser({
         cache,
-        id: 'user_1',
+        id: 'user_root_1',
         stack,
         interval: 0,
         shard_id: 123,
         space_id: 'space_1',
         token: 'token',
-        user_id: 'user_1'
+        user_id: 'user_root_1'
       });
 
       const enqueuetask_spy = jest.spyOn(Mutations, 'enqueueTask').mockImplementationOnce(async () => {
@@ -303,7 +296,7 @@ describe('NotionUser', () => {
         {
           interval: 0,
           token: 'token',
-          user_id: 'user_1'
+          user_id: 'user_root_1'
         }
       );
     });
@@ -336,13 +329,13 @@ describe('NotionUser', () => {
 
     const notion_user = new NotionUser({
       cache,
-      id: 'user_1',
+      id: 'user_root_1',
       stack,
       interval: 0,
       shard_id: 123,
       space_id: 'space_1',
       token: 'token',
-      user_id: 'user_1'
+      user_id: 'user_root_1'
     });
 
     const initializeCacheForSpecificDataMock = jest
@@ -371,13 +364,13 @@ describe('NotionUser', () => {
 
     const notion_user = new NotionUser({
       cache,
-      id: 'user_1',
+      id: 'user_root_1',
       stack,
       interval: 0,
       shard_id: 123,
       space_id: 'space_1',
       token: 'token',
-      user_id: 'user_1'
+      user_id: 'user_root_1'
     });
 
     const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {

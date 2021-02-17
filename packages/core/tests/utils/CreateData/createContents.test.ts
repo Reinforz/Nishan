@@ -13,6 +13,7 @@ import {
 } from '../../../src';
 import { appendChildToParent, createContents, stackCacheMap } from '../../../utils/CreateData/createContents';
 import { createDefaultCache } from '../../createDefaultCache';
+import { last_edited_props } from '../../lastEditedProps';
 
 
 
@@ -20,16 +21,14 @@ axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
 
 const space_id = 'space_1',
-	user_id = 'user_1',
+	user_id = 'user_root_1',
 	shard_id = 123;
 
 const metadata = {
 	created_time: expect.any(Number),
 	created_by_id: user_id,
 	created_by_table: 'notion_user',
-	last_edited_time: expect.any(Number),
-	last_edited_by_table: 'notion_user',
-	last_edited_by_id: user_id,
+	...last_edited_props,
 	space_id,
 	shard_id,
 	version: 0,
@@ -344,9 +343,7 @@ describe('createContents', () => {
 					created_time: expect.any(Number),
 					created_by_id: user_id,
 					created_by_table: 'notion_user',
-					last_edited_time: expect.any(Number),
-					last_edited_by_table: 'notion_user',
-					last_edited_by_id: user_id,
+          ...last_edited_props,
 					space_id,
 					shard_id,
 					version: 0
@@ -459,9 +456,7 @@ describe('createContents', () => {
 				created_time: expect.any(Number),
 				created_by_id: user_id,
 				created_by_table: 'notion_user',
-				last_edited_time: expect.any(Number),
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: user_id,
+        ...last_edited_props,
 				space_id,
 				shard_id,
 				version: 0

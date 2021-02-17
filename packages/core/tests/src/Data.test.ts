@@ -2,6 +2,7 @@ import { IHeader, IOperation } from '@nishans/types';
 import colors from 'colors';
 import { ChildTraverser, NotionData } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -26,11 +27,7 @@ it(`getLastEditedProps`, async () => {
 	});
 
 	const last_edited_props = (block as any).getLastEditedProps();
-	expect(last_edited_props).toStrictEqual({
-		last_edited_time: expect.any(Number),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: 'user_root_1'
-	});
+	expect(last_edited_props).toStrictEqual(last_edited_props);
 });
 
 it(`updateLastEditedProps`, async () => {
@@ -54,17 +51,13 @@ it(`updateLastEditedProps`, async () => {
 	(block as any).updateLastEditedProps();
 	expect(cache.block.get('block_1')).toStrictEqual({
 		id: 'block_1',
-		last_edited_time: expect.any(Number),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: 'user_root_1'
+		...last_edited_props
 	});
 
 	(block as any).updateLastEditedProps(cache.block.get('block_2'));
 	expect(cache.block.get('block_2')).toStrictEqual({
 		id: 'block_2',
-		last_edited_time: expect.any(Number),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: 'user_root_1'
+		...last_edited_props
 	});
 });
 

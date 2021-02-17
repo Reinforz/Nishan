@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { UserRoot } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -52,9 +53,7 @@ it(`update space_views`, async () => {
 	const space_view = await user_root.updateSpaceView([ 'space_view_1', { joined: false } ]);
 	expect(space_view.getCachedData()).toStrictEqual({
 		alive: true,
-		last_edited_time: expect.any(Number),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: 'user_root_1',
+		...last_edited_props,
 		joined: false
 	} as any);
 
@@ -65,9 +64,7 @@ it(`update space_views`, async () => {
 			command: 'update',
 			path: [],
 			args: {
-				last_edited_time: expect.any(Number),
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_root_1',
+				...last_edited_props,
 				joined: false
 			}
 		},
@@ -76,11 +73,7 @@ it(`update space_views`, async () => {
 			id: 'user_root_1',
 			command: 'update',
 			path: [],
-			args: {
-				last_edited_time: expect.any(Number),
-				last_edited_by_table: 'notion_user',
-				last_edited_by_id: 'user_root_1'
-			}
+			args: last_edited_props
 		}
 	] as any);
 });

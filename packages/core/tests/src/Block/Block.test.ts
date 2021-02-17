@@ -3,6 +3,7 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { last_edited_props } from '../../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -321,9 +322,7 @@ it(`delete`, () => {
 			command: 'update',
 			table: 'space',
 			id: 'space_1',
-			args: expect.objectContaining({
-				last_edited_time: expect.any(Number)
-			}),
+			args: last_edited_props,
 			path: []
 		})
 	]);
@@ -396,18 +395,14 @@ it(`transfer`, async () => {
 			command: 'update',
 			table: 'block',
 			id: 'block_2',
-			args: expect.objectContaining({
-				last_edited_time: expect.any(Number)
-			}),
+			args: last_edited_props,
 			path: []
 		}),
 		expect.objectContaining({
 			command: 'update',
 			table: 'block',
 			id: 'block_3',
-			args: expect.objectContaining({
-				last_edited_time: expect.any(Number)
-			}),
+			args: last_edited_props,
 			path: []
 		})
 	]);

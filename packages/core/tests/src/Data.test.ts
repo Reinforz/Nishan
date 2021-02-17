@@ -1,6 +1,6 @@
-import { ChildTraverser, NotionData } from '../../src';
-import colors from 'colors';
 import { IHeader, IOperation } from '@nishans/types';
+import colors from 'colors';
+import { ChildTraverser, NotionData } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {

@@ -1,16 +1,15 @@
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { NotionPermissions } from '../../src';
-
 import {
-	NishanArg,
-	TBlockCreateInput,
 	FilterType,
 	FilterTypes,
-	UpdateType,
-	TBlockInput,
-	UpdateTypes,
 	IBlockMap,
-	IPageCreateInput
+	IPageCreateInput,
+	NishanArg,
+	TBlockCreateInput,
+	TBlockInput,
+	UpdateType,
+	UpdateTypes
 } from '../../types';
 import { createBlockMap, CreateData, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../utils';
 import Block from './Block';

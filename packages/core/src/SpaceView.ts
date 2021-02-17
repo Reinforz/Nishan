@@ -1,18 +1,18 @@
-import Data from './Data';
-import Space from './Space';
-import { createPageMap, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
-import { ISpaceView, ISpace, TPage, IUserRoot, TBlock } from '@nishans/types';
+import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
 import {
-	NishanArg,
-	RepositionParams,
-	ISpaceViewUpdateInput,
-	TSpaceViewUpdateKeys,
 	FilterType,
 	FilterTypes,
-	UpdateTypes,
 	IPageMap,
-	UpdateType
+	ISpaceViewUpdateInput,
+	NishanArg,
+	RepositionParams,
+	TSpaceViewUpdateKeys,
+	UpdateType,
+	UpdateTypes
 } from '../types';
+import { createPageMap, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
+import Data from './Data';
+import Space from './Space';
 
 /**
  * A class to represent spaceview of Notion

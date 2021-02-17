@@ -1,10 +1,10 @@
 import { ICache } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
+import colors from "colors";
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
 import { createSpaceIterateArguments } from '../../src/Space';
-import colors from "colors";
 import { createDefaultCache } from '../createDefaultCache';
 
 afterAll(()=>{

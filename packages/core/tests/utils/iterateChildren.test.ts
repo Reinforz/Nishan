@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation, IPage, ISpace, TBlock, TPage } from '@nishans/types';
-import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
 import colors from 'colors';
+import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
 
 describe('iterateChildren', () => {
 	describe('method=UPDATE', () => {

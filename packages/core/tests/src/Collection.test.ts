@@ -4,9 +4,9 @@ import {
 	createBlockMap,
 	CreateData,
 	IPageCreateInput,
+	NotionData,
 	TCollectionUpdateKeys,
-	TSchemaUnitInput,
-	NotionData
+	TSchemaUnitInput
 } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
 

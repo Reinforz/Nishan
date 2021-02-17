@@ -1,6 +1,6 @@
-import { createShortId, generateId } from '../../src';
-import { v4 as uuidv4 } from 'uuid';
 import colors from 'colors';
+import { v4 as uuidv4 } from 'uuid';
+import { createShortId, generateId } from '../../src';
 
 describe('generateId', () => {
 	it(`Should generate random id when none provided`, () => {

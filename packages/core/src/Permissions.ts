@@ -1,6 +1,6 @@
-import { Queries, Mutations } from "@nishans/endpoints";
+import { Mutations, Queries } from "@nishans/endpoints";
 import { Operation } from "@nishans/operations";
-import { TPermissionRole, INotionUser, IPermission, TPublicPermissionRole, IPublicPermissionOptions, IPublicPermission, TSpacePermissionRole, ISpacePermission, TPage, TDataType } from "@nishans/types";
+import { INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TDataType, TPage, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 import { NishanArg } from "../types";
 import { error } from "../utils";
 import Data from "./Data";

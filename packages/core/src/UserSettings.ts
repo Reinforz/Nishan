@@ -1,5 +1,5 @@
 import { IUserSettings } from '@nishans/types';
-import { NishanArg, IUserSettingsUpdateInput, TUserSettingsUpdateKeys } from '../types';
+import { IUserSettingsUpdateInput, NishanArg, TUserSettingsUpdateKeys } from '../types';
 import Data from './Data';
 
 /**

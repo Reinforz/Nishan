@@ -1,5 +1,5 @@
-import { IBlockMap, IPageMap, PopulateMap } from '../../src';
 import { NotionCacheObject } from '@nishans/cache';
+import { IBlockMap, IPageMap, PopulateMap } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {

@@ -14,9 +14,9 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../types';
-import { createSchemaUnitMap, getSchemaMap, CreateData, transformToMultiple, deepMerge } from '../utils';
-import Data from './Data';
+import { CreateData, createSchemaUnitMap, deepMerge, getSchemaMap, transformToMultiple } from '../utils';
 import Page from './Block/Page';
+import Data from './Data';
 import SchemaUnit from './SchemaUnit';
 
 /**

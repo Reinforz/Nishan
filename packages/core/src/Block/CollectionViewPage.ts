@@ -1,4 +1,4 @@
-import { ISpace, IPage, ICollectionViewPage } from '@nishans/types';
+import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { NotionPermissions } from '../../src';
 import { NishanArg } from '../../types';
 import CollectionBlock from './CollectionBlock';

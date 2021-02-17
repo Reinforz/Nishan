@@ -1,16 +1,16 @@
 import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
-import { ITableView, IBoardView, ITimelineView } from '@nishans/types';
+import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
 import {
-	NishanArg,
-	TAggregationsCreateInput,
-	UpdateType,
-	UpdateTypes,
 	FilterType,
 	FilterTypes,
+	ISchemaAggregationMap,
 	ISchemaAggregationMapValue,
+	NishanArg,
+	TAggregationsCreateInput,
 	TAggregationsUpdateInput,
-	ISchemaAggregationMap
+	UpdateType,
+	UpdateTypes
 } from '../../types';
 import { getAggregationsMap, getSchemaMap, transformToMultiple, UnknownPropertyReferenceError } from '../../utils';
 import View from './View';

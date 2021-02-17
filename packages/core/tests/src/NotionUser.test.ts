@@ -1,9 +1,9 @@
 import { ICache } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { v4 } from 'uuid';
-import { NotionData, CollectionViewPage, NotionUser, Page } from '../../src';
 import colors from 'colors';
+import { v4 } from 'uuid';
+import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {

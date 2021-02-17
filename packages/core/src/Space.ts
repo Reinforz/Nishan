@@ -1,12 +1,10 @@
+import { ICache } from '@nishans/cache';
+import { Mutations, Queries } from '@nishans/endpoints';
+import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
+import { FilterType, FilterTypes, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageMap, IPageUpdateInput, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
+import { CreateData, createPageMap, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from "./SpaceView";
-
-import { CreateData, createPageMap, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../utils';
-
-import { ISpace, ISpaceView, TPage, IPage, ICollectionViewPage, ICollection, TSpaceMemberPermissionRole, INotionUser, IUserPermission } from '@nishans/types';
-import { NishanArg, ISpaceUpdateInput, TSpaceUpdateKeys, ICollectionViewPageInput, IPageCreateInput, FilterType, FilterTypes, UpdateType, IPageUpdateInput, UpdateTypes, ICollectionViewPageUpdateInput, IPageMap } from '../types';
-import { Mutations, Queries } from '@nishans/endpoints';
-import { ICache } from '@nishans/cache';
 
 export async function createSpaceIterateArguments(block_id: string, cache: ICache, token: string): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
   const data = cache.block.get(block_id) as IPage | (ICollectionViewPage & {collection: ICollection});

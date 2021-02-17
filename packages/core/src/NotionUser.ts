@@ -1,16 +1,14 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import Data from './Data';
-import UserRoot from "./UserRoot"
-
-import { CreateData, createPageMap, idToUuid, transformToMultiple, uuidToId, warn } from '../utils';
-import Space from './Space';
-import UserSettings from './UserSettings';
-import { INotionUser, IUserSettings, IUserRoot, ISpace, ISpaceView, IPage, ICollection, TPage } from '@nishans/types';
-import { NishanArg, INotionUserUpdateInput, TNotionUserUpdateKeys, ISpaceUpdateInput, FilterType, FilterTypes, UpdateType, UpdateTypes, ISpaceCreateInput } from '../types';
-import { Mutations} from '@nishans/endpoints';
-import { Page, CollectionViewPage } from '../src';
+import { Mutations } from '@nishans/endpoints';
 import { Operation } from '@nishans/operations';
+import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
+import { v4 as uuidv4 } from 'uuid';
+import { CollectionViewPage, Page } from '../src';
+import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
+import { CreateData, createPageMap, idToUuid, transformToMultiple, uuidToId, warn } from '../utils';
+import Data from './Data';
+import Space from './Space';
+import UserRoot from "./UserRoot";
+import UserSettings from './UserSettings';
 
 /**
  * A class to represent NotionUser of Notion

@@ -1,5 +1,5 @@
-import { error, warn } from '../../src';
 import colors from 'colors';
+import { error, warn } from '../../src';
 
 describe('warn', () => {
 	it(`Should log with correct format`, () => {

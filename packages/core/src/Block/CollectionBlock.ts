@@ -1,19 +1,19 @@
-import Collection from '../Collection';
-import { TableView, GalleryView, ListView, BoardView, TimelineView, CalendarView } from './../View';
-import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../../utils';
-import { ICollection, TView, TViewUpdateInput, TCollectionBlock } from '@nishans/types';
-import {
-	NishanArg,
-	FilterTypes,
-	UpdateType,
-	UpdateTypes,
-	FilterType,
-	TViewCreateInput,
-	IViewMap,
-	TCollectionBlockInput
-} from '../../types';
-import Block from './Block';
 import { Operation } from '@nishans/operations';
+import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
+import {
+	FilterType,
+	FilterTypes,
+	IViewMap,
+	NishanArg,
+	TCollectionBlockInput,
+	TViewCreateInput,
+	UpdateType,
+	UpdateTypes
+} from '../../types';
+import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../../utils';
+import Collection from '../Collection';
+import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
+import Block from './Block';
 
 const view_class = {
 	board: BoardView,

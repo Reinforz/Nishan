@@ -1,35 +1,35 @@
 import { ICache } from '@nishans/cache';
 import {
-	IBoardViewFormat,
-	IBoardViewQuery2,
-	ICalendarViewFormat,
-	ICalendarViewQuery2,
-	IGalleryViewFormat,
-	IGalleryViewQuery2,
-	IListViewFormat,
-	IListViewQuery2,
-	IOperation,
-	ITableView,
-	ITableViewFormat,
-	ITableViewQuery2,
-	ITimelineViewFormat,
-	ITimelineViewQuery2,
-	Schema,
-	ViewSorts
+  IBoardViewFormat,
+  IBoardViewQuery2,
+  ICalendarViewFormat,
+  ICalendarViewQuery2,
+  IGalleryViewFormat,
+  IGalleryViewQuery2,
+  IListViewFormat,
+  IListViewQuery2,
+  IOperation,
+
+  ITableViewFormat,
+  ITableViewQuery2,
+  ITimelineViewFormat,
+  ITimelineViewQuery2,
+  Schema,
+  ViewSorts
 } from '@nishans/types';
 import { v4 } from 'uuid';
+import { getSchemaMap } from "../../../src";
 import {
-	createViews,
-	generateViewData,
-	populateNonIncludedProperties,
-	populateQuery2SortAndAggregations,
-	populateViewFormat,
-	populateViewProperties,
-	populateViewQuery2
+  createViews,
+  generateViewData,
+  populateNonIncludedProperties,
+  populateQuery2SortAndAggregations,
+  populateViewFormat,
+  populateViewProperties,
+  populateViewQuery2
 } from '../../../utils/CreateData/createViews';
 import { createDefaultCache } from '../../createDefaultCache';
 
-import {getSchemaMap} from "../../../src";
 
 const schema: Schema = {
 	title: {

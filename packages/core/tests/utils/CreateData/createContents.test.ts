@@ -1,20 +1,20 @@
 import { ICache } from '@nishans/cache';
 import { IOperation, IPage } from '@nishans/types';
-import { v4 } from 'uuid';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import colors from 'colors';
-
+import { v4 } from 'uuid';
 import {
-	CollectionView,
-	CollectionViewPage,
-	fetchAndCacheData,
-	IBlockMap,
-	Page
+  CollectionView,
+  CollectionViewPage,
+  fetchAndCacheData,
+  IBlockMap,
+  Page
 } from '../../../src';
-
-import { stackCacheMap, createContents, appendChildToParent } from '../../../utils/CreateData/createContents';
+import { appendChildToParent, createContents, stackCacheMap } from '../../../utils/CreateData/createContents';
 import { createDefaultCache } from '../../createDefaultCache';
+
+
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);

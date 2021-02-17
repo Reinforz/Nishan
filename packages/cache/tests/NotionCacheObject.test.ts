@@ -1,5 +1,4 @@
 import { RecordMap } from '@nishans/types';
-import deepEqual from 'deep-equal';
 import { ICache, NotionCacheObject } from '../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -46,7 +45,7 @@ it('saveToCache', () => {
 	NotionCacheObject.saveToCache(recordMap, cache);
 
 	// After saving data to cache it should exist in the internal cache
-	expect(deepEqual(cache.block.get('block_2'), recordMap.block['block_2'].value)).toBe(true);
+	expect(cache.block.get('block_2')).toStrictEqual(recordMap.block['block_2'].value);
 	// Unknown data should not exist in the internal cache
 	expect(cache.block.get('block_3')).toBeUndefined();
 });
@@ -81,8 +80,7 @@ it(`returnNonCachedData`, () => {
 		cache
 	);
 
-	// the 2nd argument to deepEqual represents the data that doesnot exist in the internal cache
-	expect(deepEqual(non_cached_data, [ [ 'notion_user_1', 'notion_user' ] ])).toBe(true);
+	expect(non_cached_data).toStrictEqual([ [ 'notion_user_1', 'notion_user' ] ]);
 });
 
 describe(`initializeCache`, () => {
@@ -148,9 +146,9 @@ describe(`initializeCache`, () => {
 			cache
 		);
 
-		expect(deepEqual(cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
-		expect(deepEqual(cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
-		expect(deepEqual(cache.notion_user.get('user_root_2'), { id: 'user_root_2' })).toBe(true);
+		expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1' });
+		expect(cache.collection.get('collection_1')).toStrictEqual({ id: 'collection_1' });
+		expect(cache.notion_user.get('user_root_2')).toStrictEqual({ id: 'user_root_2' });
 		expect(cache.notion_user.get('user_root_3')).toBeUndefined();
 	});
 
@@ -203,8 +201,8 @@ it(`updateCacheManually`, async () => {
 		},
 		cache
 	);
-	expect(deepEqual(cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
-	expect(deepEqual(cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
+	expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1' });
+	expect(cache.collection.get('collection_1')).toStrictEqual({ id: 'collection_1' });
 });
 
 it(`updateCacheIfNotPresent method`, async () => {
@@ -248,9 +246,9 @@ it(`updateCacheIfNotPresent method`, async () => {
 		cache
 	);
 
-	expect(deepEqual(cache.block.get('block_1'), { id: 'block_1' })).toBe(true);
-	expect(deepEqual(cache.block.get('block_2'), { id: 'block_2' })).toBe(true);
-	expect(deepEqual(cache.collection.get('collection_1'), { id: 'collection_1' })).toBe(true);
+	expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1' });
+	expect(cache.block.get('block_2')).toStrictEqual({ id: 'block_2' });
+	expect(cache.collection.get('collection_1')).toStrictEqual({ id: 'collection_1' });
 	// Using empty arguments to check for else coverage
 	await NotionCacheObject.updateCacheIfNotPresent(
 		[],
@@ -329,10 +327,10 @@ describe('initializeCacheForSpecificData', () => {
 			},
 			cache
 		);
-		expect(deepEqual(cache.block.get('block_1'), block_1)).toBe(true);
-		expect(deepEqual(cache.block.get('block_2'), block_2)).toBe(true);
-		expect(deepEqual(cache.block.get('block_3'), block_3)).toBe(true);
-		expect(deepEqual(cache.collection.get('collection_1'), collection_1)).toBe(true);
+		expect(cache.block.get('block_1')).toStrictEqual(block_1);
+		expect(cache.block.get('block_2')).toStrictEqual(block_2);
+		expect(cache.block.get('block_3')).toStrictEqual(block_3);
+		expect(cache.collection.get('collection_1')).toStrictEqual(collection_1);
 	});
 
 	it(`type=collection_view_page`, async () => {
@@ -387,8 +385,8 @@ describe('initializeCacheForSpecificData', () => {
 			cache
 		);
 		// The collection and collection_view data should be present in the cache when cvp data is initialized
-		expect(deepEqual(cache.collection.get('collection_1'), collection_1.value)).toBe(true);
-		expect(deepEqual(cache.collection_view.get('collection_view_1'), collection_view_1.value)).toBe(true);
+		expect(cache.collection.get('collection_1')).toStrictEqual(collection_1.value);
+		expect(cache.collection_view.get('collection_view_1')).toStrictEqual(collection_view_1.value);
 	});
 
 	it(`Should work for type space`, async () => {
@@ -449,8 +447,8 @@ describe('initializeCacheForSpecificData', () => {
 			cache
 		);
 		// All the pages of the space should be loaded in the cache
-		expect(deepEqual(cache.block.get('block_1'), block_1.value)).toBe(true);
-		expect(deepEqual(cache.block.get('block_2'), block_2.value)).toBe(true);
+		expect(cache.block.get('block_1')).toStrictEqual(block_1.value);
+		expect(cache.block.get('block_2')).toStrictEqual(block_2.value);
 	});
 
 	it(`Should work for type user_root`, async () => {
@@ -480,7 +478,7 @@ describe('initializeCacheForSpecificData', () => {
 			},
 			cache
 		);
-		expect(deepEqual(cache.space_view.get('space_view_1'), space_view_1.value)).toBe(true);
+		expect(cache.space_view.get('space_view_1')).toStrictEqual(space_view_1.value);
 	});
 
 	it(`space_view`, async () => {
@@ -525,7 +523,7 @@ describe('initializeCacheForSpecificData', () => {
 			},
 			cache
 		);
-		expect(deepEqual(cache.block.get('block_1'), block_1.value)).toBe(true);
+		expect(cache.block.get('block_1')).toStrictEqual(block_1.value);
 
 		await NotionCacheObject.initializeCacheForSpecificData(
 			'space_view_2',
@@ -583,8 +581,8 @@ describe('initializeCacheForSpecificData', () => {
 				cache
 			);
 
-			expect(deepEqual(cache.block.get('block_1'), block_1.value)).toBe(true);
-			expect(deepEqual(cache.block.get('block_2'), block_2.value)).toBe(true);
+			expect(cache.block.get('block_1')).toStrictEqual(block_1.value);
+			expect(cache.block.get('block_2')).toStrictEqual(block_2.value);
 		});
 
 		it(`template_pages=undefined`, async () => {
@@ -620,7 +618,7 @@ describe('initializeCacheForSpecificData', () => {
 				cache
 			);
 
-			expect(deepEqual(cache.block.get('block_1'), block_1.value)).toBe(true);
+			expect(cache.block.get('block_1')).toStrictEqual(block_1.value);
 		});
 	});
 

@@ -1,7 +1,6 @@
 import { Mutations } from '../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import deepEqual from 'deep-equal';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
@@ -32,6 +31,6 @@ const request_data = {
 			token: 'token',
 			interval: 0
 		});
-		expect(deepEqual(response_data, response)).toBe(true);
+		expect(response_data).toStrictEqual(response);
 	});
 });

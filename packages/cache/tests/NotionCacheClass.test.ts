@@ -1,6 +1,5 @@
 import { NotionCacheClass, NotionCacheObject } from '../src';
 
-import deepEqual from 'deep-equal';
 import { RecordMap } from '@nishans/types';
 
 afterEach(() => {
@@ -27,13 +26,11 @@ describe('NotionCache class', () => {
 			token: 'token'
 		});
 
-		expect(
-			deepEqual(notion_cache.getConfigs(), {
-				token: 'token',
-				user_id: '',
-				interval: 500
-			})
-		).toBe(true);
+		expect(notion_cache.getConfigs()).toStrictEqual({
+			token: 'token',
+			user_id: '',
+			interval: 500
+		});
 	});
 
 	it(`saveToCache`, () => {

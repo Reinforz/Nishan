@@ -1,6 +1,5 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import deepEqual from 'deep-equal';
 
 import {
 	getCollectionBlock,
@@ -90,13 +89,11 @@ describe('constructHeaders', () => {
 	});
 
 	it(`Should return correct headers`, () => {
-		expect(
-			deepEqual(constructHeaders('token'), {
-				headers: {
-					cookie: `token_v2=token;`
-				}
-			})
-		).toBe(true);
+		expect(constructHeaders('token')).toStrictEqual({
+			headers: {
+				cookie: `token_v2=token;`
+			}
+		});
 	});
 });
 
@@ -109,20 +106,18 @@ describe('getCollectionBlock', () => {
 
 		const response = await getCollectionBlock('token', id);
 
-		expect(
-			deepEqual(JSON.parse(response.config.data), {
-				requests: [
-					{
-						table: 'block',
-						id: uuid,
-						version: 0
-					}
-				]
-			})
-		).toBe(true);
+		expect(JSON.parse(response.config.data)).toStrictEqual({
+			requests: [
+				{
+					table: 'block',
+					id: uuid,
+					version: 0
+				}
+			]
+		});
 
 		expect(response.request.responseURL).toBe(`https://www.notion.so/api/v3/syncRecordValues`);
-		expect(deepEqual(response.data, get_collection_block_response)).toBe(true);
+		expect(response.data).toStrictEqual(get_collection_block_response);
 	});
 
 	it('Should throw an error if id is empty or not provided', () => {
@@ -140,20 +135,18 @@ describe('getCollection', () => {
 
 		const response = await getCollection('token', id);
 
-		expect(
-			deepEqual(JSON.parse(response.config.data), {
-				requests: [
-					{
-						table: 'collection',
-						id: uuid,
-						version: 0
-					}
-				]
-			})
-		).toBe(true);
+		expect(JSON.parse(response.config.data)).toStrictEqual({
+			requests: [
+				{
+					table: 'collection',
+					id: uuid,
+					version: 0
+				}
+			]
+		});
 
 		expect(response.request.responseURL).toBe(`https://www.notion.so/api/v3/syncRecordValues`);
-		expect(deepEqual(response.data, get_collection_response)).toBe(true);
+		expect(response.data).toStrictEqual(get_collection_response);
 	});
 
 	it('Should throw an error if id is empty or not provided', () => {
@@ -164,26 +157,25 @@ describe('getCollection', () => {
 
 describe('collectionSchemaToSchemaMap', () => {
 	it('Should create correct schema_map keys', () => {
-		expect(
-			deepEqual(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).keys()), [ 'Date', 'Name' ])
-		).toBe(true);
+		expect(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).keys())).toStrictEqual([
+			'Date',
+			'Name'
+		]);
 	});
 
 	it('Should create correct schema_map values', () => {
-		expect(
-			deepEqual(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).values()), [
-				{
-					name: 'Date',
-					schema_id: ';pxx',
-					type: 'date'
-				},
-				{
-					name: 'Name',
-					schema_id: 'title',
-					type: 'title'
-				}
-			])
-		).toBe(true);
+		expect(Array.from(generateSchemaMapFromCollectionSchema(collection_schema).values())).toStrictEqual([
+			{
+				name: 'Date',
+				schema_id: ';pxx',
+				type: 'date'
+			},
+			{
+				name: 'Name',
+				schema_id: 'title',
+				type: 'title'
+			}
+		]);
 	});
 });
 
@@ -196,19 +188,17 @@ describe('generateSchemaMap', () => {
 			.replyOnce(200, get_collection_response);
 
 		const schema_map = await generateSchemaMap('token', '4b4bb21df68b4113b342830687a5337a');
-		expect(
-			deepEqual(Array.from(schema_map.values()), [
-				{
-					name: 'Date',
-					schema_id: ';pxx',
-					type: 'date'
-				},
-				{
-					name: 'Name',
-					schema_id: 'title',
-					type: 'title'
-				}
-			])
-		).toBe(true);
+		expect(Array.from(schema_map.values())).toStrictEqual([
+			{
+				name: 'Date',
+				schema_id: ';pxx',
+				type: 'date'
+			},
+			{
+				name: 'Name',
+				schema_id: 'title',
+				type: 'title'
+			}
+		]);
 	});
 });

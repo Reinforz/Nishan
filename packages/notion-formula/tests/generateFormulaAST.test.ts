@@ -1,5 +1,3 @@
-import deepEqual from 'deep-equal';
-
 import { generateFormulaAST, generateFormulaASTFromArray, generateFormulaASTFromObject } from '../src';
 import { test_schema_map } from './utils';
 
@@ -45,29 +43,24 @@ describe('Function formula parsing error', () => {
 
 describe('Variadic argument array representation parsing', () => {
 	it(`Should parse correctly when passed correct types`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'max',
+			type: 'function',
+			args: [
 				{
-					name: 'max',
-					type: 'function',
-					args: [
-						{
-							type: 'constant',
-							value: '1',
-							value_type: 'number',
-							result_type: 'number'
-						},
-						{
-							type: 'symbol',
-							name: 'e',
-							result_type: 'number'
-						}
-					],
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
 					result_type: 'number'
 				},
-				generateFormulaASTFromObject({ function: 'max', args: [ 1, 'e' ] }, test_schema_map)
-			)
-		).toBe(true);
+				{
+					type: 'symbol',
+					name: 'e',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject({ function: 'max', args: [ 1, 'e' ] }, test_schema_map));
 	});
 
 	it('Should throw for improper variadic argument type', () => {
@@ -79,16 +72,11 @@ describe('Variadic argument array representation parsing', () => {
 
 describe('Zero arity function parsing', () => {
 	it(`Should parse correctly when passed correct types`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'now',
-					type: 'function',
-					result_type: 'date'
-				},
-				generateFormulaASTFromObject({ function: 'now' }, test_schema_map)
-			)
-		).toBe(true);
+		expect({
+			name: 'now',
+			type: 'function',
+			result_type: 'date'
+		}).toStrictEqual(generateFormulaASTFromObject({ function: 'now' }, test_schema_map));
 	});
 
 	it('Should throw for improper zero arity function', () => {
@@ -100,80 +88,106 @@ describe('Zero arity function parsing', () => {
 
 describe('Function formula parsing success for literal arguments', () => {
 	it('Should match output for number x symbol argument variant', () => {
-		expect(
-			deepEqual(
-				{
-					type: 'symbol',
-					name: 'e',
-					result_type: 'number'
-				},
-				generateFormulaASTFromObject('e')
-			)
-		).toBe(true);
+		expect({
+			type: 'symbol',
+			name: 'e',
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject('e'));
 	});
 
 	it('Should match output for checkbox x symbol argument variant', () => {
-		expect(
-			deepEqual(
-				{
-					type: 'symbol',
-					name: 'true',
-					result_type: 'checkbox'
-				},
-				generateFormulaASTFromObject(true)
-			)
-		).toBe(true);
+		expect({
+			type: 'symbol',
+			name: 'true',
+			result_type: 'checkbox'
+		}).toStrictEqual(generateFormulaASTFromObject(true));
 	});
 
 	it('Should match output for string x constant argument variant', () => {
-		expect(
-			deepEqual(
-				{
-					type: 'constant',
-					value: 'text',
-					result_type: 'text',
-					value_type: 'string'
-				},
-				generateFormulaASTFromObject('text')
-			)
-		).toBe(true);
+		expect({
+			type: 'constant',
+			value: 'text',
+			result_type: 'text',
+			value_type: 'string'
+		}).toStrictEqual(generateFormulaASTFromObject('text'));
 	});
 
 	it('Should match output for number x constant argument variant', () => {
-		expect(
-			deepEqual(
-				{
-					type: 'constant',
-					value: '1',
-					result_type: 'number',
-					value_type: 'number'
-				},
-				generateFormulaASTFromObject(1)
-			)
-		).toBe(true);
+		expect({
+			type: 'constant',
+			value: '1',
+			result_type: 'number',
+			value_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject(1));
 	});
 
 	it('Should match output for number x property argument variant', () => {
-		expect(
-			deepEqual(
-				{
-					type: 'property',
-					name: 'number',
-					id: 'number',
-					result_type: 'number'
-				},
-				generateFormulaASTFromObject({ property: 'number' }, test_schema_map)
-			)
-		).toBe(true);
+		expect({
+			type: 'property',
+			name: 'number',
+			id: 'number',
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject({ property: 'number' }, test_schema_map));
 	});
 });
 
 describe('Function formula object representation parsing success for function argument', () => {
 	it(`Should match output for constant argument type`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
 				{
-					name: 'abs',
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject({ function: 'abs', args: [ 1 ] }, test_schema_map));
+	});
+
+	it(`Should match output for symbol argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					type: 'symbol',
+					name: 'e',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromObject({ function: 'abs', args: [ 'e' ] }, test_schema_map));
+	});
+
+	it(`Should match output for property argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					type: 'property',
+					name: 'number',
+					id: 'number',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(
+			generateFormulaASTFromObject({ function: 'abs', args: [ { property: 'number' } ] }, test_schema_map)
+		);
+	});
+
+	it(`Should match output for function argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					name: 'ceil',
 					type: 'function',
 					args: [
 						{
@@ -184,88 +198,70 @@ describe('Function formula object representation parsing success for function ar
 						}
 					],
 					result_type: 'number'
-				},
-				generateFormulaASTFromObject({ function: 'abs', args: [ 1 ] }, test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for symbol argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'symbol',
-							name: 'e',
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromObject({ function: 'abs', args: [ 'e' ] }, test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for property argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'property',
-							name: 'number',
-							id: 'number',
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromObject({ function: 'abs', args: [ { property: 'number' } ] }, test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for function argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							name: 'ceil',
-							type: 'function',
-							args: [
-								{
-									type: 'constant',
-									value: '1',
-									value_type: 'number',
-									result_type: 'number'
-								}
-							],
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromObject({ function: 'abs', args: [ { function: 'ceil', args: [ 1 ] } ] }, test_schema_map)
-			)
-		).toBe(true);
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(
+			generateFormulaASTFromObject({ function: 'abs', args: [ { function: 'ceil', args: [ 1 ] } ] }, test_schema_map)
+		);
 	});
 });
 
 describe('Function formula array representation parsing success', () => {
 	it(`Should match output for constant argument type`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
 				{
-					name: 'abs',
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromArray([ 'abs', [ 1 ] ], test_schema_map));
+	});
+
+	it(`Should match output for symbol argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					type: 'symbol',
+					name: 'e',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromArray([ 'abs', [ 'e' ] ], test_schema_map));
+	});
+
+	it(`Should match output for property argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					type: 'property',
+					name: 'number',
+					id: 'number',
+					result_type: 'number'
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromArray([ 'abs', [ { property: 'number' } ] ], test_schema_map));
+	});
+
+	it(`Should match output for function argument type`, () => {
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
+				{
+					name: 'ceil',
 					type: 'function',
 					args: [
 						{
@@ -276,143 +272,59 @@ describe('Function formula array representation parsing success', () => {
 						}
 					],
 					result_type: 'number'
-				},
-				generateFormulaASTFromArray([ 'abs', [ 1 ] ], test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for symbol argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'symbol',
-							name: 'e',
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromArray([ 'abs', [ 'e' ] ], test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for property argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'property',
-							name: 'number',
-							id: 'number',
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromArray([ 'abs', [ { property: 'number' } ] ], test_schema_map)
-			)
-		).toBe(true);
-	});
-
-	it(`Should match output for function argument type`, () => {
-		expect(
-			deepEqual(
-				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							name: 'ceil',
-							type: 'function',
-							args: [
-								{
-									type: 'constant',
-									value: '1',
-									value_type: 'number',
-									result_type: 'number'
-								}
-							],
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				},
-				generateFormulaASTFromArray([ 'abs', [ [ 'ceil', [ 1 ] ] ] ], test_schema_map)
-			)
-		).toBe(true);
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaASTFromArray([ 'abs', [ [ 'ceil', [ 1 ] ] ] ], test_schema_map));
 	});
 });
 
 describe('generateFormulaAST', () => {
 	it(`Should work for string representation`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
 				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'constant',
-							value: '1',
-							value_type: 'number',
-							result_type: 'number'
-						}
-					],
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
 					result_type: 'number'
-				},
-				generateFormulaAST('abs(1)', 'string', test_schema_map)
-			)
-		).toBe(true);
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaAST('abs(1)', 'string', test_schema_map));
 	});
 
 	it(`Should work for array representation`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
 				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'constant',
-							value: '1',
-							value_type: 'number',
-							result_type: 'number'
-						}
-					],
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
 					result_type: 'number'
-				},
-				generateFormulaAST([ 'abs', [ 1 ] ], 'array', test_schema_map)
-			)
-		).toBe(true);
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaAST([ 'abs', [ 1 ] ], 'array', test_schema_map));
 	});
 
 	it(`Should work for array representation`, () => {
-		expect(
-			deepEqual(
+		expect({
+			name: 'abs',
+			type: 'function',
+			args: [
 				{
-					name: 'abs',
-					type: 'function',
-					args: [
-						{
-							type: 'constant',
-							value: '1',
-							value_type: 'number',
-							result_type: 'number'
-						}
-					],
+					type: 'constant',
+					value: '1',
+					value_type: 'number',
 					result_type: 'number'
-				},
-				generateFormulaAST({ function: 'abs', args: [ 1 ] }, 'object', test_schema_map)
-			)
-		).toBe(true);
+				}
+			],
+			result_type: 'number'
+		}).toStrictEqual(generateFormulaAST({ function: 'abs', args: [ 1 ] }, 'object', test_schema_map));
 	});
 });

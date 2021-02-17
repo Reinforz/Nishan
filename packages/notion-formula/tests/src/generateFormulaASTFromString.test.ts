@@ -1,5 +1,5 @@
-import { generateFormulaASTFromString } from '../src';
-import { test_schema_map } from './utils';
+import { generateFormulaASTFromString } from '../../src';
+import { test_schema_map } from '../utils';
 
 describe('String function formula parsing error', () => {
 	it('Should throw for improper function argument length', () => {

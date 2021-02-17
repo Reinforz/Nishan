@@ -1,4 +1,4 @@
-import { Mutations } from '../src';
+import { Mutations } from '../../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 

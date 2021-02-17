@@ -1,5 +1,5 @@
-import { generateFormulaAST, generateFormulaASTFromArray, generateFormulaASTFromObject } from '../src';
-import { test_schema_map } from './utils';
+import { generateFormulaAST, generateFormulaASTFromArray, generateFormulaASTFromObject } from '../../src';
+import { test_schema_map } from '../utils';
 
 describe('Function formula parsing error', () => {
 	it(`Should throw for using unknown function`, () => {

@@ -1,4 +1,4 @@
-import Queries from '../src/Queries';
+import Queries from '../../src/Queries';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 

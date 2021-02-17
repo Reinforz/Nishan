@@ -6,9 +6,9 @@ import {
 	getCollection,
 	constructHeaders,
 	generateSchemaMapFromCollectionSchema
-} from '../src/generateSchemaMap';
+} from '../../src/generateSchemaMap';
 
-import { generateSchemaMap, idToUuid } from '../src';
+import { generateSchemaMap, idToUuid } from '../../src';
 import { RecordMap, Schema } from '@nishans/types';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';

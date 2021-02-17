@@ -1,4 +1,4 @@
-import { NotionCacheClass, NotionCacheObject } from '../src';
+import { NotionCacheClass, NotionCacheObject } from '../../src';
 
 import { RecordMap } from '@nishans/types';
 

@@ -1,5 +1,5 @@
 import { RecordMap } from '@nishans/types';
-import { ICache, NotionCacheObject } from '../src';
+import { ICache, NotionCacheObject } from '../../src';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 

@@ -1,5 +1,5 @@
-import { generateFormulaArgFromProperty, generateFormulaArgsFromLiterals } from '../src';
-import { test_schema_map } from './utils';
+import { generateFormulaArgFromProperty, generateFormulaArgsFromLiterals } from '../../src';
+import { test_schema_map } from '.';
 
 describe('Checking symbol type formula part', () => {
 	it('Should output correctly for symbol true', () => {

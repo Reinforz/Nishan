@@ -1,6 +1,10 @@
 import { IPage } from '@nishans/types';
 import { positionChildren } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('positionChildren', () => {
 	it(`Should work when parent doesnot contain container`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;

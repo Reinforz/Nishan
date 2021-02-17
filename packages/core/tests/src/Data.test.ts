@@ -57,13 +57,10 @@ describe('getCachedData', () => {
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
-		const logger = jest.fn();
-
 		const block = new NotionData({
 			...default_nishan_arg,
 			cache,
-			type: 'block',
-			logger
+			type: 'block'
 		});
 		const cached_data = block.getCachedData();
 		expect(cached_data).toStrictEqual({
@@ -88,7 +85,6 @@ describe('getCachedData', () => {
 		block.getCachedData();
 		expect(consoleLogSpy).toHaveBeenCalledTimes(1);
 		expect(consoleLogSpy).toHaveBeenCalledWith(colors.yellow.bold(`block:block_2 doesnot exist in the cache`));
-		consoleLogSpy.mockRestore();
 	});
 
 	it(`data is not alive`, async () => {

@@ -3,6 +3,10 @@ import { View } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it('getCollection', () => {
 	const collection_1 = {
 			schema: {

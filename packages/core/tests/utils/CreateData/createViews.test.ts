@@ -9,7 +9,6 @@ import {
   IListViewFormat,
   IListViewQuery2,
   IOperation,
-
   ITableViewFormat,
   ITableViewQuery2,
   ITimelineViewFormat,
@@ -30,6 +29,9 @@ import {
 } from '../../../utils/CreateData/createViews';
 import { createDefaultCache } from '../../createDefaultCache';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 const schema: Schema = {
 	title: {

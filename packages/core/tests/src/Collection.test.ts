@@ -3,6 +3,7 @@ import {
 	Collection,
 	createBlockMap,
 	CreateData,
+	ICollectionUpdateInput,
 	IPageCreateInput,
 	NotionData,
 	TCollectionUpdateKeys,
@@ -92,16 +93,13 @@ it(`update`, async () => {
 		.spyOn(NotionData.prototype, 'updateCacheLocally')
 		.mockImplementationOnce(() => {});
 
-	collection.update({
+	const collection_update_args: ICollectionUpdateInput = {
 		description: [ [ 'New Description' ] ]
-	});
+	};
 
-	expect(updateCacheLocallyMock).toHaveBeenCalledWith(
-		{
-			description: [ [ 'New Description' ] ]
-		},
-		TCollectionUpdateKeys
-	);
+	collection.update(collection_update_args);
+
+	expect(updateCacheLocallyMock).toHaveBeenCalledWith(collection_update_args, TCollectionUpdateKeys);
 });
 
 it(`createTemplates`, async () => {
@@ -138,9 +136,7 @@ it(`createTemplates`, async () => {
 	await collection.createTemplates(create_templates_params);
 
 	expect(updateCacheLocallyMock.mock.calls[0][0]).toStrictEqual(create_templates_params);
-
 	expect(updateCacheLocallyMock.mock.calls[0][1]).toStrictEqual('collection_1');
-
 	expect(updateCacheLocallyMock.mock.calls[0][2]).toStrictEqual('collection');
 });
 
@@ -201,12 +197,11 @@ it(`updateTemplates`, async () => {
 			return [];
 		});
 
-	await collection.updateTemplate([ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ]);
+	const update_template_args = [ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ] as any;
 
-	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([
-		[ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ]
-	]);
+	await collection.updateTemplate(update_template_args);
 
+	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([ update_template_args ]);
 	expect(updateIterateMock.mock.calls[0][1]).toStrictEqual({
 		child_ids: 'template_pages',
 		multiple: false,
@@ -239,7 +234,6 @@ it(`deleteTemplates`, async () => {
 	await collection.deleteTemplate('block_1');
 
 	expect(deleteIterateMock.mock.calls[0][0]).toStrictEqual([ 'block_1' ]);
-
 	expect(deleteIterateMock.mock.calls[0][1]).toStrictEqual({
 		child_ids: 'template_pages',
 		multiple: false,
@@ -283,9 +277,7 @@ it(`createRows`, async () => {
 	await collection.createRows(create_row_params);
 
 	expect(updateCacheLocallyMock.mock.calls[0][0]).toStrictEqual(create_row_params);
-
 	expect(updateCacheLocallyMock.mock.calls[0][1]).toStrictEqual('collection_1');
-
 	expect(updateCacheLocallyMock.mock.calls[0][2]).toStrictEqual('collection');
 });
 
@@ -319,7 +311,6 @@ it(`getRow`, async () => {
 	await collection.getRow('block_1');
 
 	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-
 	expect(getIterateMock.mock.calls[0][0]).toStrictEqual([ 'block_1' ]);
 	expect(getIterateMock.mock.calls[0][1]).toStrictEqual({
 		child_ids: [ 'block_1' ],
@@ -356,14 +347,12 @@ it(`updateRow`, async () => {
 		return [ 'block_1' ];
 	});
 
-	await collection.updateRow([ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ]);
+	const updaterow_args = [ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ] as any;
+
+	await collection.updateRow(updaterow_args);
 
 	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-
-	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([
-		[ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ]
-	]);
-
+	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([ updaterow_args ]);
 	expect(updateIterateMock.mock.calls[0][1]).toStrictEqual({
 		child_ids: [ 'block_1' ],
 		multiple: false,
@@ -455,12 +444,20 @@ it(`createSchemaUnits`, async () => {
 	await collection.createSchemaUnits(createSchemaUnitsArgs);
 
 	expect(createSchemaMock.mock.calls[0][0]).toStrictEqual(createSchemaUnitsArgs);
-	expect(createSchemaMock.mock.calls[0][1].name).toStrictEqual([ [ 'Collection' ] ]);
-	expect(createSchemaMock.mock.calls[0][1].parent_collection_id).toBe('collection_1');
-	expect(createSchemaMock.mock.calls[0][1].current_schema).toStrictEqual(current_schema);
-	expect(stack[0].command).toBe('update');
-	expect(stack[0].table).toBe('collection');
-	expect(stack[0].id).toBe('collection_1');
+	expect(createSchemaMock.mock.calls[0][1]).toEqual(
+		expect.objectContaining({
+			parent_collection_id: 'collection_1',
+			current_schema,
+			name: [ [ 'Collection' ] ]
+		})
+	);
+	expect(stack[0]).toEqual(
+		expect.objectContaining({
+			command: 'update',
+			id: 'collection_1',
+			table: 'collection'
+		})
+	);
 });
 
 it(`getSchemaUnit`, async () => {
@@ -532,8 +529,12 @@ it(`updateSchemaUnit`, async () => {
 			name: 'Checkbox'
 		}
 	});
-	expect(stack[0].command).toBe('update');
-	expect(stack[0].table).toBe('collection');
+	expect(stack[0]).toEqual(
+		expect.objectContaining({
+			command: 'update',
+			table: 'collection'
+		})
+	);
 });
 
 it(`deleteSchemaUnit`, async () => {
@@ -575,6 +576,10 @@ it(`deleteSchemaUnit`, async () => {
 			name: 'Title'
 		}
 	});
-	expect(stack[0].command).toBe('update');
-	expect(stack[0].table).toBe('collection');
+	expect(stack[0]).toEqual(
+		expect.objectContaining({
+			command: 'update',
+			table: 'collection'
+		})
+	);
 });

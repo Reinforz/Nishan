@@ -3,6 +3,10 @@ import { CollectionBlock, CreateData, TViewCreateInput } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it(`getCollection`, async () => {
 	const collection_1 = {
 			id: 'collection_1'

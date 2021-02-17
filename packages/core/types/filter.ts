@@ -1,4 +1,4 @@
-import { TSchemaUnitType, IViewFilterData, TViewGroupFilterOperator } from '@nishans/types';
+import { IViewFilterData, TSchemaUnitType, TViewGroupFilterOperator } from '@nishans/types';
 
 export interface IViewFilterCreateInput<T extends TSchemaUnitType> {
 	filter: IViewFilterData[T]['filter'];

@@ -1,5 +1,9 @@
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('initializeViewAggregations', () => {
 	it(`Should create query2 and return aggregations`, () => {
 		const view: any = {};

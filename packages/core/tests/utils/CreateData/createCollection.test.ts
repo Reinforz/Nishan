@@ -6,6 +6,10 @@ import { createDefaultCache } from '../../createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('createCollection', () => {
 	it(`createCollection should work correctly`, async () => {
 		const cache: ICache = createDefaultCache();

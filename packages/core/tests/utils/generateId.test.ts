@@ -2,6 +2,10 @@ import colors from 'colors';
 import { v4 as uuidv4 } from 'uuid';
 import { createShortId, generateId } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('generateId', () => {
 	it(`Should generate random id when none provided`, () => {
 		expect(generateId()).toBeTruthy();

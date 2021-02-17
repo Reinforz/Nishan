@@ -12,6 +12,10 @@ const schema_map = getSchemaMap({
 	}
 });
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('populateFilters', () => {
 	it(`Should populate unnested filter`, () => {
 		const parent_filter: IViewFilter = {

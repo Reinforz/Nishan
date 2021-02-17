@@ -6,6 +6,10 @@ import { default_nishan_arg } from '../defaultNishanArg';
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('Nishan', () => {
 	describe('get', () => {
 		it('arg=cb,multiple=true', async () => {

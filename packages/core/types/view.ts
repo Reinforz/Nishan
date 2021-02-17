@@ -1,15 +1,15 @@
 import {
-	TViewType,
-	ITableViewFormat,
 	IBoardViewFormat,
+	ICalendarViewFormat,
 	IGalleryViewFormat,
+	IListViewFormat,
+	ITableViewFormat,
 	ITimelineViewFormat,
+	IViewAggregationsAggregators,
 	TSchemaUnitType,
 	TSortValue,
 	TViewGroupFilterOperator,
-	IViewAggregationsAggregators,
-	IListViewFormat,
-	ICalendarViewFormat
+	TViewType
 } from '@nishans/types';
 import { RepositionParams } from './block';
 import { TViewFilterCreateInput } from './filter';

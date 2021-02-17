@@ -1,6 +1,10 @@
 import { IOperation } from '@nishans/types';
 import { updateBookmarkedPages } from '../../utils';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('updateBookmarkedPages', () => {
 	it(`updated_favourite_status=true,bookmarked_pages ! include id`, () => {
 		const stack: IOperation[] = [],

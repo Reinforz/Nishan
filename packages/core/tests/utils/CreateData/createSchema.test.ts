@@ -8,6 +8,10 @@ import { createDefaultCache } from '../../createDefaultCache';
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('generateRelationSchema', () => {
 	describe('Work correctly', () => {
 		it(`Should work correctly (child_collection exists in cache)`, async () => {

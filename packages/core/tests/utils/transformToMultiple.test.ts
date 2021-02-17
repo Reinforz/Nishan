@@ -1,5 +1,9 @@
 import { transformToMultiple } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('transformToMultiple', () => {
 	it(`arg=undefined`, () => {
 		const data = transformToMultiple();

@@ -2,11 +2,8 @@ import { FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput } from '@nish
 import {
 	CreatedBySchemaUnit,
 	CreatedTimeSchemaUnit,
-	IViewFilter,
-	IViewFilters,
 	LastEditedBySchemaUnit,
 	LastEditedTimeSchemaUnit,
-	RelationSchemaUnit,
 	RollupSchemaUnit,
 	TBasicSchemaUnit,
 	TSchemaUnit,

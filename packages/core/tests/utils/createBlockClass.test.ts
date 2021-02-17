@@ -15,6 +15,10 @@ const arg: NishanArg = {
 	id: '123'
 };
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('createBlockClass', () => {
 	([
 		'video',

@@ -15,10 +15,12 @@ import { appendChildToParent, createContents, stackCacheMap } from '../../../uti
 import { createDefaultCache } from '../../createDefaultCache';
 import { last_edited_props } from '../../lastEditedProps';
 
-
-
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
+
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 const space_id = 'space_1',
 	user_id = 'user_root_1',

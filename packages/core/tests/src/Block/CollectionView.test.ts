@@ -2,6 +2,10 @@ import { CollectionView } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it(`getCachedParentData`, () => {
 	const cache = {
 		...createDefaultCache(),

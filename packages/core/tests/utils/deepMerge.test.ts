@@ -1,5 +1,9 @@
 import { deepMerge } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it(`Should work for object source and target`, () => {
 	expect(deepMerge({ a: { b: 2, c: 3 } }, { a: { b: 1 } })).toStrictEqual({
 		a: {

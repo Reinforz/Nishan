@@ -1,7 +1,7 @@
-import { IPage, IVideo, IImage, IAudio, IWebBookmark, ICode, IFile, IColumnList, IText, IHeader, ISubHeader, ISubSubHeader, INumberedList, IBulletedList, IToggle, IQuote, TBlockType, IDivider, ICallout, ITodo, ITOC, IEquation, IFactory, IBreadcrumb, IEmbed, IDrive, ITweet, ICodepen, IMaps, IGist, IFigma, ISpace, ICollection, INotionUser, ISpaceView, IUserSettingsSettings, TTextFormat } from "@nishans/types";
+import { IAudio, IBreadcrumb, IBulletedList, ICallout, ICode, ICodepen, ICollection, IDivider, IDrive, IEmbed, IEquation, IFactory, IFigma, IFile, IGist, IHeader, IImage, IMaps, INotionUser, INumberedList, IPage, IQuote, ISpace, ISpaceView, ISubHeader, ISubSubHeader, IText, ITOC, ITodo, IToggle, ITweet, IUserSettingsSettings, IVideo, IWebBookmark, TBlockType, TTextFormat } from "@nishans/types";
+import { TSchemaUnitInput } from "./schema";
 import { ElementType } from "./utils";
 import { TViewCreateInput } from "./view";
-import {TSchemaUnitInput} from "./schema"
 
 interface IInput {
   id?: string,

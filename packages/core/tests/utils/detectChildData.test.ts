@@ -1,5 +1,9 @@
 import { detectChildData } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('detectChildData', () => {
 	it(`Should return correct child data for space type`, () => {
 		expect(detectChildData('space')).toStrictEqual([ 'pages', 'block' ]);

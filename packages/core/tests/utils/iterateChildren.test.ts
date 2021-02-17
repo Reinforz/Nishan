@@ -4,6 +4,10 @@ import colors from 'colors';
 import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
 import { last_edited_props } from '../lastEditedProps';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('iterateChildren', () => {
 	describe('method=UPDATE', () => {
 		describe('args=[[id, {}]]', () => {

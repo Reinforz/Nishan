@@ -16,6 +16,10 @@ const schema: Schema = {
 	}
 };
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('getSchemaMap', () => {
 	it(`Should create correct schema map`, () => {
 		const schema_map = getSchemaMap(schema);

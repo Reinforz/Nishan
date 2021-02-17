@@ -1,6 +1,10 @@
 import colors from 'colors';
 import { error, warn } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('warn', () => {
 	it(`Should log with correct format`, () => {
 		console.log = jest.fn();

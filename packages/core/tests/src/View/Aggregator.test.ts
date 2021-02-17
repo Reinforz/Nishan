@@ -4,6 +4,10 @@ import { detectAggregationErrors } from '../../../src/View/Aggregator';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('detectAggregationErrors', () => {
 	it(`unknown property reference error`, () => {
 		expect(() =>

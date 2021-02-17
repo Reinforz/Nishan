@@ -8,9 +8,9 @@ import { createSpaceIterateArguments } from '../../src/Space';
 import { createDefaultCache } from '../createDefaultCache';
 import { default_nishan_arg } from '../defaultNishanArg';
 
-afterAll(()=>{
-  jest.restoreAllMocks();
-})
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 describe('createSpaceIterateArguments', () => {
   it(`type=page`, async()=>{

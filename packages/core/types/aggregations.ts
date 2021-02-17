@@ -1,4 +1,4 @@
-import { TSchemaUnitType, IViewAggregationsAggregators } from '@nishans/types';
+import { IViewAggregationsAggregators, TSchemaUnitType } from '@nishans/types';
 
 interface IAggregationsCreateInput<T extends TSchemaUnitType> {
 	type: T;

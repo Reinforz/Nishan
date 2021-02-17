@@ -9,6 +9,10 @@ import {
 	IViewMap
 } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 const block_map_keys: (keyof IBlockMap)[] = [
 	'linked_db',
 	'collection_view_page',

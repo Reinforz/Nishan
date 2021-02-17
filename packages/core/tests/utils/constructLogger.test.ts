@@ -1,6 +1,10 @@
 import colors from 'colors';
 import { constructLogger } from '../../src';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 describe('constructLogger', () => {
 	it(`arg=false`, () => {
 		expect(constructLogger(false)).toBe(false);

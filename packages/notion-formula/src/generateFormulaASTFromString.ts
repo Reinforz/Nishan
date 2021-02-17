@@ -1,5 +1,5 @@
 import { TFunctionName } from '@nishans/types';
-import { ISchemaMap, function_formula_info_map } from '../src';
+import { function_formula_info_map, ISchemaMap } from '../src';
 import { generateFormulaASTFromArray } from './generateFormulaAST';
 
 /**

@@ -1,6 +1,5 @@
 import { Schema, SyncRecordValuesResult, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import axios from 'axios';
-
 import { idToUuid, uuidToId } from './uuidConversion';
 
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;

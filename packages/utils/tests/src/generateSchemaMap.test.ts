@@ -1,15 +1,13 @@
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
-
-import {
-	getCollectionBlock,
-	getCollection,
-	constructHeaders,
-	generateSchemaMapFromCollectionSchema
-} from '../../src/generateSchemaMap';
-
-import { generateSchemaMap, idToUuid } from '../../src';
 import { RecordMap, Schema } from '@nishans/types';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { generateSchemaMap, idToUuid } from '../../src';
+import {
+	constructHeaders,
+	generateSchemaMapFromCollectionSchema,
+	getCollection,
+	getCollectionBlock
+} from '../../src/generateSchemaMap';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 

@@ -15,21 +15,21 @@ import UserSettings from "./UserSettings";
 class Nishan extends NotionCacheClass {
   token: string;
   interval: number;
-  init_cache: boolean;
+  #init_cache: boolean;
   logger: Logger;
 
   constructor(arg: Pick<NishanArg, "token"> & { interval?: number, logger?: Logger }) {
     super(arg);
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
-    this.init_cache = false;
+    this.#init_cache = false;
     this.logger = constructLogger(arg.logger)
   }
 
   #initializeCache = async () => {
-    if (!this.init_cache) {
+    if (!this.#init_cache) {
       await this.initializeNotionCache();
-      this.init_cache = true;
+      this.#init_cache = true;
     }
   }
 

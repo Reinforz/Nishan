@@ -1,47 +1,29 @@
-import { Mutations, Queries } from "@nishans/endpoints";
+import { Queries } from "@nishans/endpoints";
 import { Operation } from "@nishans/operations";
-import { INotionUser, IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TDataType, TPage, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
+import { IPermission, IPublicPermission, IPublicPermissionOptions, ISpacePermission, TDataType, TPage, TPermissionRole, TPublicPermissionRole, TSpacePermissionRole } from "@nishans/types";
 import { NishanArg } from "../types";
 import { error } from "../utils";
 import Data from "./Data";
 
+interface UserIdentifier{
+  id?: string, 
+  email?: string
+}
 export default class NotionPermissions extends Data<TPage>{
   constructor(arg: NishanArg, id: string, type: TDataType){
-    super({...arg, id,type });
+    super({...arg, id, type });
   }
 
-  async addSharedUser(email: string, role: TPermissionRole) {
-    return (await this.addSharedUsers([[email, role]]))?.[0]
+  async addUserPermission(id: UserIdentifier, role: TPermissionRole) {
+    await this.addUserPermissions([[id, role]])
   }
 
   /**
    * Share page to users with specific permissions
    * @param args array of userid and role of user to share pages to
    */
-  async addSharedUsers(args: [string, TPermissionRole][]) {
-    const data = this.getCachedData(), notion_users: INotionUser[] = [];
-    const permissionItems: IPermission[] = [];
-    for (let i = 0; i < args.length; i++) {
-      const [email, permission] = args[i];
-      const { value } = await Queries.findUser({email}, this.getConfigs());
-      if (!value?.value) error(`User does not have a notion account`);
-      else{
-        const { value: notion_user } = value;
-        permissionItems.push({
-          role: permission,
-          type: "user_permission",
-          user_id: notion_user.id
-        });
-        notion_users.push(notion_user)
-      }
-    }
-    await Mutations.inviteGuestsToSpace({
-      blockId: data.id,
-      permissionItems,
-      spaceId: data.space_id
-    }, this.getConfigs());
-    await this.updateCacheManually([[this.id, 'block'], [data.space_id, "space"]]);
-    return notion_users;
+  async addUserPermissions(args: [UserIdentifier, TPermissionRole][]) {
+    await this.updateUserPermissions(args)
   }
 
   /**
@@ -49,19 +31,26 @@ export default class NotionPermissions extends Data<TPage>{
    * @param id Id of the user to update
    * @param role new Role of the user to update
    */
-  async updateSharedUser(id: string, role: TPermissionRole) {
-    return this.updateSharedUsers([[id, role]]);
+  async updateUserPermission(id: UserIdentifier, role: TPermissionRole) {
+    return this.updateUserPermissions([[id, role]]);
   }
 
   /**
    * Update the role of the current users based on their id
    * @param args array of array [id of the user, role type for the user]
    */
-  updateSharedUsers(args: [string, TPermissionRole][] ) {
+  async updateUserPermissions(args: [UserIdentifier, TPermissionRole][] ) {
     const data = this.getCachedData();
     for (let index = 0; index < args.length; index++) {
-      const arg = args[index];
-      const permission_data: IPermission = { role: arg[1], type: "user_permission", user_id: arg[0] }
+      const [{email, id}, role] = args[index];
+      let user_id = id as string;
+      if(email){
+        const { value } = await Queries.findUser({email}, this.getConfigs());
+        if (!value?.value) error(`User does not have a notion account`);
+        else
+          user_id = value.value.id;
+      }
+      const permission_data: IPermission = { role, type: "user_permission", user_id }
       this.Operations.stack.push({
         args: permission_data,
         command: "setPermissionItem",
@@ -79,16 +68,16 @@ export default class NotionPermissions extends Data<TPage>{
    * Remove a single user from the pages permission option
    * @param id Id of the user to remove from permission
    */
-  removeSharedUser(id: string) {
-    return this.removeSharedUsers([id]);
+  removeUserPermission(id: UserIdentifier) {
+    return this.removeUserPermissions([id]);
   }
 
   /**
    * Remove multiple users from the pages permission option
    * @param id array of the users id to remove from permission
    */
-  removeSharedUsers(ids: string[]) {
-    return this.updateSharedUsers(ids.map(id => [id, "none"]));
+  removeUserPermissions(ids: UserIdentifier[]) {
+    return this.updateUserPermissions(ids.map(id => [id, "none"]));
   }
 
   addPublicPermission(role: TPublicPermissionRole, options?: Partial<IPublicPermissionOptions> ) {

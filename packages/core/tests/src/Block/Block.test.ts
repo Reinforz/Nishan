@@ -3,6 +3,7 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 import { last_edited_props } from '../../lastEditedProps';
 
 afterEach(() => {
@@ -19,14 +20,8 @@ it('getCachedParentData', () => {
 	} as any;
 
 	const block = new Block({
-		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		...default_nishan_arg,
+		cache
 	});
 
 	const cached_parent_data = block.getCachedParentData();
@@ -73,14 +68,9 @@ it('update', () => {
 
 	const logger_spy = jest.fn();
 	const block = new Block({
+		...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -124,14 +114,9 @@ describe('duplicate', () => {
 
 		const logger_spy = jest.fn();
 		const block = new Block({
+			...default_nishan_arg,
 			cache,
-			id: 'block_1',
-			interval: 0,
-			shard_id: 123,
-			space_id: 'space_1',
 			stack,
-			token: 'token',
-			user_id: 'user_root_1',
 			logger: logger_spy
 		});
 
@@ -168,14 +153,9 @@ describe('duplicate', () => {
 
 		const logger_spy = jest.fn();
 		const block = new Block({
+			...default_nishan_arg,
 			cache,
-			id: 'block_1',
-			interval: 0,
-			shard_id: 123,
-			space_id: 'space_1',
 			stack,
-			token: 'token',
-			user_id: 'user_root_1',
 			logger: logger_spy
 		});
 
@@ -234,14 +214,9 @@ it('convertTo', () => {
 
 	const logger_spy = jest.fn();
 	const block = new Block({
+		...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -278,14 +253,9 @@ it(`delete`, () => {
 
 	const logger_spy = jest.fn();
 	const block = new Block({
+		...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -340,14 +310,9 @@ it(`transfer`, async () => {
 
 	const logger_spy = jest.fn();
 	const block = new Block({
+		...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 

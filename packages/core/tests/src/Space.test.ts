@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
 import { createSpaceIterateArguments } from '../../src/Space';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 
 afterAll(()=>{
   jest.restoreAllMocks();
@@ -56,14 +57,10 @@ it(`getSpaceView`, async () => {
 		stack: IOperation[] = [];
 	const logger_spy = jest.fn();
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -81,14 +78,10 @@ it(`update`, () => {
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
@@ -115,14 +108,10 @@ it(`delete`, async () => {
 	const logger_spy = jest.fn();
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -160,14 +149,10 @@ it(`createRootPages`, async () => {
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 	});
 
 	const block_map = await space.createRootPages([
@@ -215,14 +200,10 @@ it(`getRootPage`, async () => {
 	const logger_spy = jest.fn();
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 		logger: logger_spy
 	});
 
@@ -243,14 +224,10 @@ it(`updateRootPage`, async()=>{
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 	});
 
 	const block_map = await space.updateRootPage(['block_1',
@@ -275,14 +252,10 @@ it(`deleteRootPage`, async()=>{
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 	});
 
 	await space.deleteRootPage('block_1');
@@ -301,14 +274,10 @@ it(`addMembers`, async()=>{
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 	});
 
   const findUser = jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
@@ -373,14 +342,10 @@ it(`removeUsers`, async()=>{
 		stack: IOperation[] = [];
 
 	const space = new Space({
+    ...default_nishan_arg,
 		cache,
 		id: 'space_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1',
 	});
 
   const removeUsersFromSpaceMock = jest.spyOn(Mutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{

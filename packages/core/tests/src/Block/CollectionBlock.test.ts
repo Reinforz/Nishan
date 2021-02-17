@@ -1,6 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { CollectionBlock, CreateData, TViewCreateInput } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 
 it(`getCollection`, async () => {
 	const collection_1 = {
@@ -13,14 +14,8 @@ it(`getCollection`, async () => {
 		} as any;
 
 	const collection_block = new CollectionBlock({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const collection = await collection_block.getCollection();
@@ -39,14 +34,9 @@ it(`createViews`, () => {
 		stack: IOperation[] = [];
 
 	const collection_block = new CollectionBlock({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const createViews_params: TViewCreateInput[] = [
@@ -102,14 +92,9 @@ it(`getViews`, async () => {
 		stack: IOperation[] = [];
 
 	const collection_block = new CollectionBlock({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const view_map = await collection_block.getViews(()=>true);
@@ -132,14 +117,9 @@ it(`updateView`, async () => {
 		stack: IOperation[] = [];
 
 	const collection_block = new CollectionBlock({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const view_map = await collection_block.updateView(['collection_view_1', {type: "board"}]);
@@ -162,14 +142,9 @@ it(`deleteView`, async () => {
 		stack: IOperation[] = [];
 
 	const collection_block = new CollectionBlock({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	await collection_block.deleteView('collection_view_1');

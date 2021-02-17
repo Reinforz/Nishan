@@ -1,6 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Nishan from '../../src';
+import { default_nishan_arg } from '../defaultNishanArg';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);
@@ -11,11 +12,8 @@ describe('Nishan', () => {
 			const logger_spy = jest.fn();
 
 			const nishan = new Nishan({
-				token: 'token',
-				interval: 0,
-				logger: (method, data_type, id) => {
-					logger_spy(method, data_type, id);
-				}
+				...default_nishan_arg,
+				logger: logger_spy
 			});
 
 			mock.onPost(`/getSpaces`).replyOnce(200, {
@@ -55,10 +53,8 @@ describe('Nishan', () => {
 			const logger_spy = jest.fn();
 
 			const nishan = new Nishan({
-				token: 'token',
-				logger: (method, data_type, id) => {
-					logger_spy(method, data_type, id);
-				}
+				...default_nishan_arg,
+				logger: logger_spy
 			});
 
 			mock.onPost(`/getSpaces`).replyOnce(200, {
@@ -98,10 +94,8 @@ describe('Nishan', () => {
 			const logger_spy = jest.fn();
 
 			const nishan = new Nishan({
-				token: 'token',
-				logger: (method, data_type, id) => {
-					logger_spy(method, data_type, id);
-				}
+				...default_nishan_arg,
+				logger: logger_spy
 			});
 
 			mock.onPost(`/getSpaces`).replyOnce(200, {

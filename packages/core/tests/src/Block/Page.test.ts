@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { CreateData, Page } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -18,14 +19,8 @@ it(`getCachedParentData`, async () => {
 		} as any;
 
 	const page = new Page({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const space = page.getCachedParentData();
@@ -43,14 +38,8 @@ it(`createBlocks`, async () => {
 		} as any;
 
 	const page = new Page({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const createContentsMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(() => {
@@ -84,14 +73,8 @@ it(`getBlock`, async () => {
 		} as any;
 
 	const page = new Page({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const block_map = await page.getBlock('block_2');
@@ -112,14 +95,8 @@ it(`updateBlock`, async () => {
 		} as any;
 
 	const page = new Page({
+    ...default_nishan_arg,
 		cache,
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	const block_map = await page.updateBlock([ 'block_2', { alive: false } as any ]);
@@ -168,15 +145,10 @@ it(`updateBookmarkedStatus`, async () => {
 	const logger_spy = jest.fn();
 
 	const page = new Page({
+    ...default_nishan_arg,
 		cache,
 		logger: logger_spy,
-		id: 'block_1',
 		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
 	});
 
 	await page.updateBookmarkedStatus(false);

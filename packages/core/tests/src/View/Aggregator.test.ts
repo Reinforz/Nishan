@@ -2,6 +2,7 @@ import { IOperation } from '@nishans/types';
 import { ViewAggregator } from '../../../src';
 import { detectAggregationErrors } from '../../../src/View/Aggregator';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 
 describe('detectAggregationErrors', () => {
 	it(`unknown property reference error`, () => {
@@ -122,14 +123,10 @@ it(`createAggregation`, () => {
 		stack: IOperation[] = [];
 
 	const view_aggregator = new ViewAggregator({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	view_aggregator.createAggregation({
@@ -190,14 +187,10 @@ it(`updateAggregations`, async () => {
 		stack: IOperation[] = [];
 
 	const view_aggregator = new ViewAggregator({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	await view_aggregator.updateAggregation([
@@ -260,14 +253,10 @@ it(`deleteAggregation`, async () => {
 		stack: IOperation[] = [];
 
 	const view_aggregator = new ViewAggregator({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	await view_aggregator.deleteAggregation('Title');

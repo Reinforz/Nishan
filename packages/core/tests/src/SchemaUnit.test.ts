@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { SchemaUnit } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 
 it(`update`, () => {
   const cache: ICache = {
@@ -24,15 +25,11 @@ it(`update`, () => {
 
   const logger = jest.fn();
   const schema_unit = new SchemaUnit({
+    ...default_nishan_arg,
     cache,
     id: 'collection_1',
-    interval: 0,
     schema_id: 'schema_id_1',
-    shard_id: 123,
-    space_id: 'space_1',
     stack,
-    token: 'token',
-    user_id: 'user_root_1',
     logger
   });
 
@@ -95,15 +92,11 @@ describe('delete', () => {
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({
+      ...default_nishan_arg,
       cache,
       id: 'collection_1',
-      interval: 0,
       schema_id: 'schema_id_1',
-      shard_id: 123,
-      space_id: 'space_1',
       stack,
-      token: 'token',
-      user_id: 'user_root_1',
       logger
     });
 
@@ -158,15 +151,11 @@ describe('delete', () => {
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({
+      ...default_nishan_arg,
       cache,
       id: 'collection_1',
-      interval: 0,
       schema_id: 'schema_id_1',
-      shard_id: 123,
-      space_id: 'space_1',
       stack,
-      token: 'token',
-      user_id: 'user_root_1',
       logger
     });
 
@@ -207,15 +196,11 @@ describe('duplicate', () => {
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({
+      ...default_nishan_arg,
       cache,
       id: 'collection_1',
-      interval: 0,
       schema_id: 'schema_id_1',
-      shard_id: 123,
-      space_id: 'space_1',
       stack,
-      token: 'token',
-      user_id: 'user_root_1',
       logger
     });
 
@@ -247,15 +232,11 @@ describe('duplicate', () => {
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({
+      ...default_nishan_arg,
       cache,
       id: 'collection_1',
-      interval: 0,
       schema_id: 'schema_id_1',
-      shard_id: 123,
-      space_id: 'space_1',
       stack,
-      token: 'token',
-      user_id: 'user_root_1',
       logger
     });
 
@@ -287,15 +268,11 @@ it(`getCachedChildData`, () => {
     stack: IOperation[] = [];
 
   const schema_unit = new SchemaUnit({
+    ...default_nishan_arg,
     cache,
     id: 'collection_1',
-    interval: 0,
     schema_id: 'schema_id_1',
-    shard_id: 123,
-    space_id: 'space_1',
     stack,
-    token: 'token',
-    user_id: 'user_root_1',
   });
 
   expect(schema_unit.getCachedChildData()).toStrictEqual({

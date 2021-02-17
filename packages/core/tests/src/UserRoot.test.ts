@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { UserRoot } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
@@ -17,14 +18,10 @@ it(`get space_views`, async () => {
 		stack: IOperation[] = [];
 
 	const user_root = new UserRoot({
+		...default_nishan_arg,
 		cache,
 		id: 'user_root_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const space_view = await user_root.getSpaceView('space_view_1');
@@ -40,14 +37,10 @@ it(`update space_views`, async () => {
 		stack: IOperation[] = [];
 
 	const user_root = new UserRoot({
+		...default_nishan_arg,
 		cache,
 		id: 'user_root_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const space_view = await user_root.updateSpaceView([ 'space_view_1', { joined: false } ]);

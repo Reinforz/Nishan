@@ -9,6 +9,7 @@ import {
 	TSchemaUnitInput
 } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
@@ -25,14 +26,9 @@ it(`getRowPageIds`, async () => {
 	} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const initializeCacheForThisDataMock = jest
@@ -65,14 +61,9 @@ it(`getCachedParentData`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const parent_data = collection.getCachedParentData();
@@ -92,14 +83,9 @@ it(`update`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const updateCacheLocallyMock = jest
@@ -131,14 +117,9 @@ it(`createTemplates`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
@@ -173,14 +154,9 @@ it(`getTemplates`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const getIterateMock = jest
@@ -212,14 +188,9 @@ it(`updateTemplates`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const updateIterateMock = jest
@@ -254,14 +225,9 @@ it(`deleteTemplates`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const deleteIterateMock = jest
@@ -296,14 +262,9 @@ it(`createRows`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
@@ -338,14 +299,9 @@ it(`getRow`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const getIterateMock = jest
@@ -383,14 +339,9 @@ it(`updateRow`, async () => {
 		} as any;
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
-		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'collection_1'
 	});
 
 	const updateIterateMock = jest
@@ -434,14 +385,10 @@ it(`deleteRow`, async () => {
 		stack: IOperation[] = [];
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const getRowPageIdsMock = jest.spyOn(Collection.prototype, 'getRowPageIds').mockImplementationOnce(async () => {
@@ -488,14 +435,10 @@ it(`createSchemaUnits`, async () => {
 		stack: IOperation[] = [];
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const createSchemaMock = jest.spyOn(CreateData, 'createSchema').mockImplementationOnce(async () => {
@@ -541,14 +484,10 @@ it(`getSchemaUnit`, async () => {
 		stack: IOperation[] = [];
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const schema_unit_map = await collection.getSchemaUnit('Title');
@@ -577,14 +516,10 @@ it(`updateSchemaUnit`, async () => {
 		stack: IOperation[] = [];
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { type: 'checkbox', name: 'Checkbox' } ]);
@@ -626,14 +561,10 @@ it(`deleteSchemaUnit`, async () => {
 		stack: IOperation[] = [];
 
 	const collection = new Collection({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	await collection.deleteSchemaUnit('Checkbox');

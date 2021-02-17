@@ -1,6 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { NotionData, UserSettings } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -11,14 +12,10 @@ it(`update`, () => {
 		stack: IOperation[] = [];
 
 	const user_settings = new UserSettings({
+		...default_nishan_arg,
 		cache,
 		id: 'user_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_1'
+		stack
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {

@@ -2,6 +2,7 @@ import { IHeader, IOperation } from '@nishans/types';
 import colors from 'colors';
 import { ChildTraverser, NotionData } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
@@ -15,15 +16,9 @@ it(`getLastEditedProps`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		type: 'block'
 	});
 
 	const last_edited_props = (block as any).getLastEditedProps();
@@ -37,15 +32,9 @@ it(`updateLastEditedProps`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		type: 'block'
 	});
 
 	(block as any).updateLastEditedProps();
@@ -71,15 +60,9 @@ describe('getCachedData', () => {
 		const logger = jest.fn();
 
 		const block = new NotionData({
+			...default_nishan_arg,
 			cache,
 			type: 'block',
-			id: 'block_1',
-			interval: 0,
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token',
-			user_id: '',
 			logger
 		});
 		const cached_data = block.getCachedData();
@@ -97,15 +80,10 @@ describe('getCachedData', () => {
 		const consoleLogSpy = jest.spyOn(console, 'log');
 
 		const block = new NotionData({
+			...default_nishan_arg,
 			cache,
 			type: 'block',
-			id: 'block_2',
-			interval: 0,
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token',
-			user_id: ''
+			id: 'block_2'
 		});
 		block.getCachedData();
 		expect(consoleLogSpy).toHaveBeenCalledTimes(1);
@@ -122,15 +100,9 @@ describe('getCachedData', () => {
 		const consoleLogSpy = jest.spyOn(console, 'log');
 
 		const block = new NotionData({
+			...default_nishan_arg,
 			cache,
-			type: 'block',
-			id: 'block_1',
-			interval: 0,
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token',
-			user_id: ''
+			type: 'block'
 		});
 		block.getCachedData();
 		expect(consoleLogSpy).toHaveBeenCalledTimes(1);
@@ -145,15 +117,9 @@ it(`updateCachedData`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: ''
+		type: 'block'
 	});
 
 	const updateCacheManuallyMock = jest.spyOn(NotionData.prototype, 'updateCacheManually').mockImplementationOnce(() => {
@@ -171,15 +137,9 @@ it(`deleteCachedData`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: ''
+		type: 'block'
 	});
 
 	(block as any).deleteCachedData();
@@ -197,15 +157,10 @@ it(`addToChildArray`, async () => {
 		stack: IOperation[] = [];
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
 		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: ''
+		stack
 	});
 
 	(block as any).addToChildArray('block', { id: 'block_2', type: 'page' }, 0);
@@ -222,15 +177,10 @@ it(`updateCacheLocally`, async () => {
 	const logger = jest.fn();
 
 	const block = new NotionData<IHeader>({
+		...default_nishan_arg,
 		cache,
 		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
 		stack,
-		token: 'token',
-		user_id: '',
 		logger
 	});
 
@@ -267,15 +217,10 @@ it(`initializeCacheForThisData`, async () => {
 		stack: IOperation[] = [];
 
 	const block = new NotionData<IHeader>({
+		...default_nishan_arg,
 		cache,
 		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: ''
+		stack
 	});
 	const initializeCacheForSpecificDataMock = jest
 		.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
@@ -300,21 +245,16 @@ it(`getProps`, () => {
 		stack: IOperation[] = [];
 
 	const block = new NotionData<IHeader>({
+		...default_nishan_arg,
 		cache,
 		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_1'
+		stack
 	});
 
 	const props = block.getProps();
 	expect(props.token).toBe('token');
 	expect(props.interval).toBe(0);
-	expect(props.user_id).toBe('user_1');
+	expect(props.user_id).toBe('user_root_1');
 	expect(props.shard_id).toBe(123);
 	expect(props.space_id).toBe('space_1');
 });
@@ -326,15 +266,9 @@ it(`getIterate`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest
@@ -359,15 +293,9 @@ it(`updateIterate`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest
@@ -392,15 +320,9 @@ it(`deleteIterate`, async () => {
 	} as any;
 
 	const block = new NotionData({
+		...default_nishan_arg,
 		cache,
-		type: 'block',
-		id: 'block_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest

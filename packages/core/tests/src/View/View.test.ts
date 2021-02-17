@@ -1,6 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { View } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 
 it('getCollection', () => {
 	const collection_1 = {
@@ -21,14 +22,10 @@ it('getCollection', () => {
 		stack: IOperation[] = [];
 
 	const view = new View({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	expect(view.getCollection()).toStrictEqual(collection_1);
@@ -44,14 +41,10 @@ it('getCachedParentData', () => {
 		stack: IOperation[] = [];
 
 	const view = new View({
+		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	expect(view.getCachedParentData()).toStrictEqual({ collection_id: 'collection_1', id: 'block_1' });

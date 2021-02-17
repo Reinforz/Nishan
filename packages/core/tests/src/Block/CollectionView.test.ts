@@ -1,5 +1,6 @@
 import { CollectionView } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
+import { default_nishan_arg } from '../../defaultNishanArg';
 
 it(`getCachedParentData`, () => {
 	const cache = {
@@ -8,14 +9,9 @@ it(`getCachedParentData`, () => {
 	} as any;
 
 	const collection_view = new CollectionView({
+		...default_nishan_arg,
 		cache,
-		id: 'block_2',
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [],
-		token: 'token',
-		user_id: 'user_root_1'
+		id: 'block_2'
 	});
 
 	const parent_data = collection_view.getCachedParentData();

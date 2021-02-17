@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, SpaceView } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
+import { default_nishan_arg } from '../defaultNishanArg';
 import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
@@ -17,14 +18,10 @@ it(`getCachedParentData`, () => {
 		stack: IOperation[] = [];
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		id: 'space_view_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const parent_data = space_view.getCachedParentData();
@@ -47,14 +44,10 @@ it(`reposition`, () => {
 		stack: IOperation[] = [];
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		id: 'space_view_2',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 	const addToChildArrayMock = jest.spyOn(NotionData.prototype, 'addToChildArray' as any);
 
@@ -75,14 +68,10 @@ it(`update`, () => {
 		stack: IOperation[] = [];
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		id: 'space_view_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
@@ -113,15 +102,11 @@ it(`getSpace`, () => {
 	const logger_spy = jest.fn();
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
 		id: 'space_view_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const space = space_view.getSpace();
@@ -147,15 +132,11 @@ it(`getBookmarkedPage`, async () => {
 	const logger_spy = jest.fn();
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
 		id: 'space_view_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const page_map = await space_view.getBookmarkedPage('block_1');
@@ -177,15 +158,11 @@ it(`updateBookmarkedPages`, async () => {
 	const logger_spy = jest.fn();
 
 	const space_view = new SpaceView({
+		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
 		id: 'space_view_1',
-		stack,
-		interval: 0,
-		shard_id: 123,
-		space_id: 'space_1',
-		token: 'token',
-		user_id: 'user_root_1'
+		stack
 	});
 
 	const page_map = await space_view.updateBookmarkedPages([ [ 'block_1', false ], [ 'block_2', true ] ]);

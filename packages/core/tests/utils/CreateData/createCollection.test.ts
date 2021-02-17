@@ -3,7 +3,7 @@ import { IOperation } from '@nishans/types';
 import axios from 'axios';
 
 import { createCollection } from '../../../utils/CreateData/createCollection';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 

@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { UserRoot } from '../../src';
-import { createDefaultCache } from '../../utils/createDefaultCache';
+import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -1,5 +1,5 @@
 import { GalleryView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`GalleryView`, () => {
 	new GalleryView({

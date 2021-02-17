@@ -1,5 +1,5 @@
 import { CollectionView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`getCachedParentData`, () => {
 	const cache = {

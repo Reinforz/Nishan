@@ -27,9 +27,9 @@ import {
 	populateViewProperties,
 	populateViewQuery2
 } from '../../../utils/CreateData/createViews';
+import { createDefaultCache } from '../../createDefaultCache';
 
 import {getSchemaMap} from "../../../src";
-import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 const schema: Schema = {
 	title: {

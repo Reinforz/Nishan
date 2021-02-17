@@ -1,5 +1,5 @@
 import { ListView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`ListView`, () => {
 	new ListView({

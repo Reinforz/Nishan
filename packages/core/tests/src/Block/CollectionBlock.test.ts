@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
 import { CollectionBlock, CreateData, TViewCreateInput } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`getCollection`, async () => {
 	const collection_1 = {

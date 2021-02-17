@@ -1,7 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { ViewAggregator } from '../../../src';
 import { detectAggregationErrors } from '../../../src/View/Aggregator';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 describe('detectAggregationErrors', () => {
 	it(`unknown property reference error`, () => {

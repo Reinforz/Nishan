@@ -8,7 +8,7 @@ import {
 	TSchemaUnitInput,
 	NotionData
 } from '../../src';
-import { createDefaultCache } from '../../utils/createDefaultCache';
+import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

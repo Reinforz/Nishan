@@ -2,7 +2,7 @@ import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

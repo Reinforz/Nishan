@@ -1,7 +1,7 @@
 import { ChildTraverser, NotionData } from '../../src';
 import colors from 'colors';
 import { IHeader, IOperation } from '@nishans/types';
-import { createDefaultCache } from '../../utils/createDefaultCache';
+import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

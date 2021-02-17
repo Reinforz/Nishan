@@ -1,5 +1,5 @@
 import { TableView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`TableView`, () => {
 	new TableView({

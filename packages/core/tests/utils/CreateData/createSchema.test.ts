@@ -1,11 +1,9 @@
 import { ICollection, IOperation, Schema, TSchemaUnit } from '@nishans/types';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-
+import MockAdapter from 'axios-mock-adapter';
 import { getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../../src';
-
-import {generateRelationSchema, generateRollupSchema, createSchema} from "../../../utils/CreateData/createSchema";
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createSchema, generateRelationSchema, generateRollupSchema } from "../../../utils/CreateData/createSchema";
+import { createDefaultCache } from '../../createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 const mock = new MockAdapter(axios);

@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
 import { createSpaceIterateArguments } from '../../src/Space';
 import colors from "colors";
-import { createDefaultCache } from '../../utils/createDefaultCache';
+import { createDefaultCache } from '../createDefaultCache';
 
 afterAll(()=>{
   jest.restoreAllMocks();

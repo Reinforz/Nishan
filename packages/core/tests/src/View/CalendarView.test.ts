@@ -1,5 +1,5 @@
 import { CalendarView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`CalendarView`, () => {
 	new CalendarView({

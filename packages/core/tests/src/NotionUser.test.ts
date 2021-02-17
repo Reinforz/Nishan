@@ -4,7 +4,7 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NotionData, CollectionViewPage, NotionUser, Page } from '../../src';
 import colors from 'colors';
-import { createDefaultCache } from '../../utils/createDefaultCache';
+import { createDefaultCache } from '../createDefaultCache';
 
 afterEach(() => {
   jest.resetAllMocks();

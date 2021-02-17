@@ -1,5 +1,5 @@
 import { BoardView } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it(`BoardView`, () => {
 	new BoardView({

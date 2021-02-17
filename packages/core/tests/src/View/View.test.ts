@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
 import { View } from '../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { createDefaultCache } from '../../createDefaultCache';
 
 it('getCollection', () => {
 	const collection_1 = {

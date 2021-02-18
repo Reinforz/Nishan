@@ -1,15 +1,15 @@
 import { createTransaction, Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionOperationPlugin } from './types';
+import { NotionOperationPluginFunction } from './types';
 
 export class NotionOperationsClass {
 	stack: IOperation[] = [];
 	space_id: string;
 	shard_id: number;
 	token: string;
-  #plugins: NotionOperationPlugin[];
+  #plugins: NotionOperationPluginFunction[];
 
-	constructor (args: { token: string; space_id: string; shard_id: number; stack: IOperation[], plugins?: NotionOperationPlugin[] }) {
+	constructor (args: { token: string; space_id: string; shard_id: number; stack: IOperation[], plugins?: NotionOperationPluginFunction[] }) {
 		this.space_id = args.space_id;
 		this.shard_id = args.shard_id;
 		this.stack = args.stack;
@@ -33,7 +33,7 @@ export class NotionOperationsClass {
         let updated_operation: false | IOperation = operation;
         for (let index = 0; index < this.#plugins.length; index++) {
           const plugin = this.#plugins[index];
-          updated_operation = plugin(updated_operation);
+            updated_operation = plugin(updated_operation);
           if(updated_operation === false)
             break;
         }

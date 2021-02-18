@@ -1,8 +1,20 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationPlugin } from '../';
+import { removeLastEditedPropsPlugin } from '../../../src';
 
-export const removeLastEditedPropsPlugin: NotionOperationPlugin = (operation: IOperation) => {
-	const { args } = JSON.parse(JSON.stringify(operation));
-	[ 'last_edited_time', 'last_edited_by_id', 'last_edited_table' ].forEach((prop) => args[prop] && delete args[prop]);
-	return operation;
-};
+it(`Should work for empty args`, () => {
+	const args = {
+			last_edited_by_id: 'id',
+			last_edited_time: Date.now(),
+			last_edited_by_table: 'notion_user',
+			other_data: 'data'
+		},
+		operation: IOperation = {
+			args,
+			command: 'update',
+			id: '123',
+			path: [],
+			table: 'block'
+		};
+
+	expect(removeLastEditedPropsPlugin(operation)).toStrictEqual({ ...operation, args: { other_data: 'data' } });
+});

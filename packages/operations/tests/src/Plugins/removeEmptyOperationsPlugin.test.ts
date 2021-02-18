@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { removeEmptyOperationsPlugin } from '../../../';
+import { removeEmptyOperationsPlugin } from '../../../src';
 
 describe('removeEmptyOperationsPlugin', () => {
 	it(`Should work for empty args`, () => {
@@ -12,7 +12,7 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		expect(removeEmptyOperationsPlugin(operation)).toBe(false);
+		expect(removeEmptyOperationsPlugin(operation)).toStrictEqual(false);
 	});
 
 	it(`Should work for non empty args`, () => {
@@ -27,6 +27,6 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		expect(removeEmptyOperationsPlugin(operation)).toBe(operation);
+		expect(removeEmptyOperationsPlugin(operation)).toStrictEqual(operation);
 	});
 });

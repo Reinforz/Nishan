@@ -1,9 +1,9 @@
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionOperationsClass } from '../../src';
+import { NotionOperationsClass, removeEmptyOperationsPlugin, removeLastEditedPropsPlugin } from '../../src';
 
 afterEach(() => {
-	jest.resetAllMocks();
+	jest.restoreAllMocks();
 });
 
 describe('executeOperation', () => {
@@ -82,4 +82,61 @@ it(`printStack`, async () => {
 	expect(jsonStringifyMock).toHaveBeenCalledWith(stack, null, 2);
 	expect(consoleLogMock).toHaveBeenCalledTimes(1);
 	expect(consoleLogMock).toHaveBeenCalledWith('mocked value');
+});
+
+it(`applyPluginsToOperationsStack`, () => {
+	const stack: IOperation[] = [
+		{
+			args: {},
+			command: 'update',
+			id: 'id',
+			path: [],
+			table: 'block'
+		},
+		{
+			args: {
+				last_edited_time: Date.now(),
+				last_edited_by_id: 'id',
+				last_edited_by_table: 'notion_user',
+				other_data: 'other data'
+			},
+			command: 'update',
+			id: 'id',
+			path: [],
+			table: 'block'
+		},
+		{
+			args: {
+				last_edited_time: Date.now(),
+				last_edited_by_id: 'id',
+				last_edited_by_table: 'notion_user'
+			},
+			command: 'update',
+			id: 'id',
+			path: [],
+			table: 'block'
+		}
+	];
+
+	const operations = new NotionOperationsClass({
+		shard_id: 123,
+		space_id: 'space_1',
+		stack,
+		token: 'token',
+		plugins: [ removeLastEditedPropsPlugin, removeEmptyOperationsPlugin ]
+	});
+
+	const updated_operations = operations.applyPluginsToOperationsStack();
+
+	expect(updated_operations).toStrictEqual([
+		{
+			args: {
+				other_data: 'other data'
+			},
+			command: 'update',
+			id: 'id',
+			path: [],
+			table: 'block'
+		}
+	]);
 });

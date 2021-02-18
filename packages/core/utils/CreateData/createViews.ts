@@ -1,9 +1,9 @@
 import { ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
 import { Operation } from "@nishans/operations";
-import { ViewFormatProperties, ITableViewFormat, IBoardViewFormat, IGalleryViewFormat, ICalendarViewQuery2, ITimelineViewFormat, ICollection, IListViewFormat, ICalendarViewFormat, ITableViewQuery2, ITimelineViewQuery2, IListViewQuery2, IGalleryViewQuery2, IBoardViewQuery2, MultiSelectSchemaUnit, TSchemaUnitType, SelectSchemaUnit, ViewAggregations, Schema, TView, IOperation } from "@nishans/types";
+import { IBoardViewFormat, IBoardViewQuery2, ICalendarViewFormat, ICalendarViewQuery2, ICollection, IGalleryViewFormat, IGalleryViewQuery2, IListViewFormat, IListViewQuery2, ITableViewFormat, ITableViewQuery2, ITimelineViewFormat, ITimelineViewQuery2, MultiSelectSchemaUnit, Schema, SelectSchemaUnit, TView, ViewAggregations, ViewFormatProperties } from "@nishans/types";
 import { getSchemaMap } from "../../src";
-import { TViewCreateInput, IViewMap, NishanArg, TViewQuery2CreateInput, TableViewQuery2CreateInput, BoardViewQuery2CreateInput, ListViewQuery2CreateInput, GalleryViewQuery2CreateInput, CalendarViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewFormatCreateInput, BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewSchemaUnitsCreateInput } from "../../types";
-import { generateId, error, createViewMap, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../utils";
+import { BoardViewFormatCreateInput, BoardViewQuery2CreateInput, CalendarViewFormatCreateInput, CalendarViewQuery2CreateInput, GalleryViewFormatCreateInput, GalleryViewQuery2CreateInput, IViewMap, ListViewFormatCreateInput, ListViewQuery2CreateInput, NishanArg, TableViewFormatCreateInput, TableViewQuery2CreateInput, TimelineViewFormatCreateInput, TimelineViewQuery2CreateInput, TViewCreateInput, TViewFormatCreateInput, TViewQuery2CreateInput, TViewSchemaUnitsCreateInput } from "../../types";
+import { createViewMap, generateId, NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../utils";
 import { populateFilters } from "../populateFilters";
 
 // * Separate start and end date for timeline view
@@ -283,7 +283,7 @@ export function createViews(collection: Pick<ICollection, "id" | "schema" | "par
         populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2)
         properties.push(populateViewProperties(schema_map_unit, format))
       } else
-        throw new Error(error(`Collection:${collection.id} does not contain SchemeUnit.name:${name}`))
+        throw new UnknownPropertyReferenceError(name, ['name']);
     })
 
     properties.push(...populateNonIncludedProperties(collection.schema, included_units));

@@ -1,39 +1,31 @@
 import { Operation } from '@nishans/operations';
+import { ICollection, TCollectionBlock, TView, TViewFilters, TViewUpdateInput } from '@nishans/types';
 import {
-	TView,
-	TCollectionBlock,
-	ICollection,
-	TViewFilters,
-	ViewSorts,
-	ViewFormatProperties,
-	ICollectionBlock
-} from '@nishans/types';
-import {
-	NishanArg,
-	RepositionParams,
-	UpdateType,
-	UpdateTypes,
-	FilterTypes,
-	FilterType,
-	TViewCreateInput,
-	TViewFilterCreateInput,
-	ISchemaSortsMapValue,
-	ISchemaFiltersMapValue,
-	ISchemaFormatMapValue,
-	TSortCreateInput,
-	TSortUpdateInput,
-	TViewFilterUpdateInput,
-	SchemaFormalPropertiesUpdateInput
+  FilterType,
+  FilterTypes,
+  ISchemaFiltersMapValue,
+  ISchemaFormatMapValue,
+  ISchemaSortsMapValue,
+  NishanArg,
+  RepositionParams,
+  SchemaFormatPropertiesUpdateInput,
+  TSortCreateInput,
+  TSortUpdateInput,
+  TViewFilterCreateInput,
+  TViewFilterUpdateInput,
+  UpdateType,
+  UpdateTypes
 } from '../../types';
 import {
-	CreateData,
-	getFiltersMap,
-	getFormatPropertiesMap,
-	getSchemaMap,
-	getSortsMap,
-	initializeViewFilters,
-	populateFilters,
-	transformToMultiple
+  deepMerge,
+  getFiltersMap,
+  getFormatPropertiesMap,
+  getSchemaMap,
+  getSortsMap,
+  initializeViewFilters,
+  populateFilters,
+  transformToMultiple,
+  UnknownPropertyReferenceError
 } from '../../utils';
 import Data from '../Data';
 
@@ -65,42 +57,44 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-	update (param: TViewCreateInput) {
-		const data = this.getCachedData(),
-			collection = this.cache.collection.get(
-				(this.cache.block.get(data.parent_id) as ICollectionBlock).collection_id
-			) as ICollection,
-			[ , view_map ] = CreateData.createViews(collection, [ param ], this.getProps());
+	update (updated_data: TViewUpdateInput) {
+		const view_data = this.getCachedData();
+		deepMerge(view_data, updated_data);
+		this.Operations.stack.push(
+			Operation.collection_view.update(this.id, [], { ...updated_data, ...this.getLastEditedProps() })
+		);
 		this.updateLastEditedProps();
-		return view_map;
 	}
 
 	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
-			schema_map = getSchemaMap(this.getCollection().schema),
-			[ , sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
+			collection = this.getCollection(),
+			schema_map = getSchemaMap(collection.schema),
+			[ sorts_map, sorts ] = getSortsMap(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
-				target_sort = schema_map.get(arg[0]);
-			if (target_sort) {
-				if (typeof arg[2] === 'number') {
-					sorts.splice(arg[2], 0, {
-						property: target_sort.schema_id,
-						direction: arg[1]
-					});
-				} else
-					sorts.push({
-						property: target_sort.schema_id,
-						direction: arg[1]
-					});
+				schema_map_unit = schema_map.get(arg[0]),
+				target_sort = sorts_map.get(arg[0]);
+			if (!schema_map_unit) throw new UnknownPropertyReferenceError(arg[0], [ '[0]' ]);
+			else {
+				if (!target_sort) {
+					if (typeof arg[2] === 'number') {
+						sorts.splice(arg[2], 0, {
+							property: schema_map_unit.schema_id,
+							direction: arg[1]
+						});
+					} else
+						sorts.push({
+							property: schema_map_unit.schema_id,
+							direction: arg[1]
+						});
+				} else throw new Error(`Property ${arg[0]} already has sort ${target_sort.sort}`);
 			}
 		}
 
 		this.updateLastEditedProps();
 		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				query2: data.query2
-			})
+			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
 
@@ -110,7 +104,8 @@ class View<T extends TView> extends Data<T> {
 
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
+			collection = this.getCollection(),
+			[ sorts_map, sorts ] = getSortsMap(data, collection.schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
@@ -118,27 +113,31 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				manual: true,
-				container: []
+				container: [],
+        initialize_cache: false
 			},
 			(schema_id) => sorts_map.get(schema_id),
-			(_, sort, data) => {
-				if (Array.isArray(data)) {
-					const index = sorts.findIndex((data) => data.property === sort.schema_id);
-					const [ direction, position ] = data;
-					if (position !== null && position !== undefined) {
-						sorts.splice(index, 1);
-						sorts.splice(position, 0, {
-							property: sort.schema_id,
-							direction
-						});
-					}
-				} else {
-					const target_sort = sorts.find((data) => data.property === sort.schema_id) as ViewSorts;
-					target_sort.direction = data;
+			(_, sort, update_input) => {
+				const index = sorts.findIndex((data) => data.property === sort.schema_id);
+				if (Array.isArray(update_input)) {
+					const [ direction, position ] = update_input;
+					sorts.splice(index, 1);
+					sorts.splice(position, 0, {
+						property: sort.schema_id,
+						direction
+					});
+				} else if (typeof update_input === 'string') sorts[index].direction = update_input;
+				else {
+					const sort = sorts[index];
+					sorts.splice(index, 1);
+					sorts.splice(update_input, 0, sort);
 				}
 			}
 		);
-		this.Operations.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
+
+		this.Operations.stack.push(
+			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
+		);
 	}
 
 	async deleteSort (arg: FilterType<ISchemaSortsMapValue>) {
@@ -146,8 +145,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
-		const data = this.getCachedData(),
-			[ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
+		const [ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -155,26 +153,27 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				manual: true,
-				container: []
+				container: [],
+        initialize_cache: false
 			},
 			(schema_id) => sorts_map.get(schema_id),
 			(_, sort) => {
 				sorts.splice(sorts.findIndex((data) => data.property === sort.schema_id), 1);
 			}
 		);
-		this.Operations.stack.push(Operation.collection_view.update(this.id, [], { query2: data.query2 }));
+		this.Operations.stack.push(
+			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
+		);
 	}
 
 	createFilters (args: TViewFilterCreateInput[]) {
 		const schema_map = getSchemaMap(this.getCollection().schema),
 			data = this.getCachedData(),
-			filters = initializeViewFilters(this.getCachedData()).filters;
+			filters = initializeViewFilters(data).filters;
 		populateFilters(args, filters, schema_map);
 		this.updateLastEditedProps();
 		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				query2: data.query2
-			})
+			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
 
@@ -183,8 +182,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
-		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection().schema),
-			data = this.getCachedData();
+		const data = this.getCachedData(), [ filters_map, { filters } ] = getFiltersMap(data, this.getCollection().schema);
 
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
@@ -193,7 +191,8 @@ class View<T extends TView> extends Data<T> {
 				child_type: 'collection_view',
 				multiple,
 				manual: true,
-				container: []
+				container: [],
+        initialize_cache: false
 			},
 			(schema_id) => filters_map.get(schema_id),
 			(_, original_filter, updated_data) => {
@@ -209,9 +208,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				query2: data.query2
-			})
+			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
 
@@ -243,141 +240,46 @@ class View<T extends TView> extends Data<T> {
 		);
 	}
 
-	async updateFormatVisibilityProperty (arg: UpdateType<ISchemaFormatMapValue, boolean>) {
-		return await this.updateFormatVisibilityProperties(transformToMultiple(arg), false);
-	}
-
-	async updateFormatVisibilityProperties (args: UpdateTypes<ISchemaFormatMapValue, boolean>, multiple?: boolean) {
-		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
-		await this.updateIterate<ISchemaFormatMapValue, boolean>(
-			args,
-			{
-				child_type: 'collection_view',
-				multiple,
-				child_ids: Array.from(format_properties_map.keys()),
-				manual: true,
-				container: []
-			},
-			(name) => format_properties_map.get(name),
-			(name, current_data, updated_data) => {
-				const target_format_property = format_properties.find(
-					(format_property) => format_property.property === current_data.schema_id
-				) as ViewFormatProperties;
-				target_format_property.visible = updated_data;
-			}
-		);
-		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				format: data.format
-			})
-		);
-	}
-
-	async updateFormatWidthProperty (arg: UpdateType<ISchemaFormatMapValue, number>) {
-		return await this.updateFormatWidthProperties(transformToMultiple(arg), false);
-	}
-
-	async updateFormatWidthProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
-		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
-		await this.updateIterate<ISchemaFormatMapValue, number>(
-			args,
-			{
-				child_type: 'collection_view',
-				multiple,
-				child_ids: Array.from(format_properties_map.keys()),
-				manual: true,
-				container: []
-			},
-			(name) => format_properties_map.get(name),
-			(name, current_data, updated_data) => {
-				const target_format_property = format_properties.find(
-					(format_property) => format_property.property === current_data.schema_id
-				) as ViewFormatProperties;
-				target_format_property.width = updated_data;
-			}
-		);
-		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				format: data.format
-			})
-		);
-	}
-
-	async updateFormatPositionProperty (arg: UpdateType<ISchemaFormatMapValue, number>) {
-		return await this.updateFormatPositionProperties(transformToMultiple(arg), false);
-	}
-
-	async updateFormatPositionProperties (args: UpdateTypes<ISchemaFormatMapValue, number>, multiple?: boolean) {
-		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
-		await this.updateIterate<ISchemaFormatMapValue, number>(
-			args,
-			{
-				child_type: 'collection_view',
-				multiple,
-				child_ids: Array.from(format_properties_map.keys()),
-				manual: true,
-				container: []
-			},
-			(name) => format_properties_map.get(name),
-			(name, current_data, new_position) => {
-				const target_format_property_index = format_properties.findIndex(
-						(format_property) => format_property.property === current_data.schema_id
-					),
-					target_format_property = format_properties[target_format_property_index];
-				if (target_format_property_index !== new_position) {
-					format_properties.splice(target_format_property_index, 1);
-					format_properties.splice(new_position, 0, target_format_property);
-				}
-			}
-		);
-		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				format: data.format
-			})
-		);
-	}
-
-	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>) {
+	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>) {
 		await this.updateFormatProperties(transformToMultiple(arg), false);
 	}
 
 	async updateFormatProperties (
-		args: UpdateTypes<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>,
+		args: UpdateTypes<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>,
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
 			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
-		await this.updateIterate<ISchemaFormatMapValue, SchemaFormalPropertiesUpdateInput>(
+		await this.updateIterate<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>(
 			args,
 			{
 				child_type: 'collection_view',
 				multiple,
 				child_ids: Array.from(format_properties_map.keys()),
 				manual: true,
-				container: []
+				container: [],
+        initialize_cache: false
 			},
 			(name) => format_properties_map.get(name),
-			(name, current_data, updated_data, container) => {
+			(name, current_data, updated_data) => {
 				const target_format_property_index = format_properties.findIndex(
 						(format_property) => format_property.property === current_data.schema_id
 					),
 					target_format_property = format_properties[target_format_property_index];
 				const { position, visible, width } = updated_data;
+
 				if (target_format_property_index !== position && position !== undefined && position !== null) {
 					format_properties.splice(target_format_property_index, 1);
 					format_properties.splice(position, 0, target_format_property);
 				}
-				if (visible !== undefined && visible !== null) target_format_property.visible = visible;
-				if (width !== undefined && width !== null) target_format_property.width = width;
+
+				target_format_property.visible = visible ?? target_format_property.visible;
+				target_format_property.width = width ?? target_format_property.width;
 			}
 		);
+    
 		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				format: data.format
-			})
+			Operation.collection_view.update(this.id, [`format`, `${data.type}_properties`], format_properties)
 		);
 	}
 }

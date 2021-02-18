@@ -236,48 +236,47 @@ describe('getFiltersMap', () => {
 	});
 
 	it(`Should create correct schema map`, () => {
+		const filter0_0 = {
+				property: 'title',
+				filter: {
+					operator: 'string_is',
+					value: {
+						type: 'exact',
+						value: '123'
+					}
+				}
+			},
+			filter0_1 = {
+				property: 'text',
+				filter: {
+					operator: 'string_contains',
+					value: {
+						type: 'exact',
+						value: '123'
+					}
+				}
+			},
+			filter1 = {
+				property: 'title',
+				filter: {
+					operator: 'string_starts_with',
+					value: {
+						type: 'exact',
+						value: '123'
+					}
+				}
+			},
+			filter0 = {
+				operator: 'or',
+				filters: [ filter0_0, filter0_1 ]
+			};
+
 		const [ filters_map ] = getFiltersMap(
 			{
 				query2: {
 					filter: {
 						operator: 'and',
-						filters: [
-							{
-								filters: [
-									{
-										property: 'title',
-										filter: {
-											operator: 'string_is',
-											value: {
-												type: 'exact',
-												value: '123'
-											}
-										}
-									},
-									{
-										property: 'text',
-										filter: {
-											operator: 'string_contains',
-											value: {
-												type: 'exact',
-												value: '123'
-											}
-										}
-									}
-								],
-								operator: 'or'
-							},
-							{
-								property: 'title',
-								filter: {
-									operator: 'string_starts_with',
-									value: {
-										type: 'exact',
-										value: '123'
-									}
-								}
-							}
-						]
+						filters: [ filter0, filter1 ]
 					}
 				}
 			} as any,
@@ -286,44 +285,36 @@ describe('getFiltersMap', () => {
 
 		expect(Array.from(filters_map.entries())).toStrictEqual([
 			[
-				'Title',
+				'0.0',
 				{
 					schema_id: 'title',
 					name: 'Title',
 					type: 'title',
-					filters: [
-						{
-							operator: 'string_is',
-							value: {
-								type: 'exact',
-								value: '123'
-							}
-						},
-						{
-							operator: 'string_starts_with',
-							value: {
-								type: 'exact',
-								value: '123'
-							}
-						}
-					]
+					parent_filter: filter0,
+					child_filter: filter0_0
 				}
 			],
 			[
-				'Text',
+				'0.1',
 				{
 					schema_id: 'text',
 					name: 'Text',
 					type: 'text',
-					filters: [
-						{
-							operator: 'string_contains',
-							value: {
-								type: 'exact',
-								value: '123'
-							}
-						}
-					]
+					parent_filter: filter0,
+					child_filter: filter0_1
+				}
+			],
+			[
+				'1',
+				{
+					schema_id: 'title',
+					name: 'Title',
+					type: 'title',
+					parent_filter: {
+						operator: 'and',
+						filters: [ filter0, filter1 ]
+					},
+					child_filter: filter1
 				}
 			]
 		]);

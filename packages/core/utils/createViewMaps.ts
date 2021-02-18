@@ -1,4 +1,4 @@
-import { IBoardView, ITableView, ITimelineView, IViewFilter, IViewFilters, Schema, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
+import { IBoardView, ITableView, ITimelineView, IViewFilter, Schema, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
 import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
 
@@ -50,29 +50,26 @@ export function getFiltersMap(data: TView, schema: Schema){
   const filters = initializeViewFilters(data),
     filters_map: ISchemaFiltersMap = new Map();
 
-  function populateFilterMap(parent: IViewFilter){
-    parent.filters.forEach(filter => {
-      if((filter as IViewFilter).filters) populateFilterMap((filter as IViewFilter))
+  function populateFilterMap(parent: IViewFilter, indexes: number[]){
+    parent.filters.forEach((filter, index) => {
+      if((filter as IViewFilter).filters) populateFilterMap((filter as IViewFilter), indexes.concat(index))
       else {
         const target_filter = filter as TViewFilters, 
           schema_unit = schema[target_filter.property];
         if(schema_unit){
-          const schema_map_unit = filters_map.get(schema_unit.name);
-          if(!schema_map_unit)
-            filters_map.set(schema_unit.name, {
-              ...schema_unit,
-              schema_id: target_filter.property,
-              filters: [ target_filter.filter ]
-            })
-          else
-            schema_map_unit.filters.push(target_filter.filter)
+          filters_map.set(indexes.concat(index).join("."), {
+            ...schema_unit,
+            schema_id: target_filter.property,
+            parent_filter: parent,
+            child_filter: target_filter
+          })
         } else
           throw new Error(`Unknown property ${target_filter.property} referenced`)
       }
     })
   }
 
-  populateFilterMap((data.query2 as any).filter as IViewFilter);
+  populateFilterMap((data.query2 as any).filter as IViewFilter, []);
 
   return [filters_map, filters] as const;
 }

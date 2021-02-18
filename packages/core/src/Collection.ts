@@ -229,7 +229,6 @@ class Collection extends Data<ICollection> {
    */
 	async getSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		// Since all the data is in the cache, no need to initialize cache
-		this.init_cache = true;
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(data.schema);
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
@@ -238,7 +237,8 @@ class Collection extends Data<ICollection> {
 				container: createSchemaUnitMap(),
 				child_ids: Array.from(schema_map.keys()),
 				child_type: 'collection',
-				multiple
+				multiple,
+				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id, name, type }, schema_unit_map) => {
@@ -264,7 +264,6 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
 	async updateSchemaUnits (args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
-		this.init_cache = true;
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(data.schema);
 		const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ISchemaUnitMap>(
@@ -274,7 +273,8 @@ class Collection extends Data<ICollection> {
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: createSchemaUnitMap()
+				container: createSchemaUnitMap(),
+				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id }, updated_data, results) => {
@@ -304,7 +304,6 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
 	async deleteSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
-		this.init_cache = true;
 		const data = this.getCachedData(),
 			schema_map = getSchemaMap(data.schema);
 		await this.deleteIterate<ISchemaMapValue>(
@@ -314,7 +313,8 @@ class Collection extends Data<ICollection> {
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: []
+				container: [],
+				initialize_cache: false
 			},
 			(name) => {
 				return schema_map.get(name);

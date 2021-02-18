@@ -69,7 +69,6 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		args: UpdateTypes<ISchemaAggregationMapValue, TAggregationsUpdateInput>,
 		multiple?: boolean
 	) {
-		this.init_cache = true;
 		const data = this.getCachedData(),
 			[ aggregations_map ] = getAggregationsMap(this.getCachedData(), this.getCollection().schema);
 
@@ -80,7 +79,8 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 				child_type: 'collection_view',
 				manual: true,
 				container: [],
-				multiple
+				multiple,
+				initialize_cache: false
 			},
 			(name) => aggregations_map.get(name),
 			(_, { aggregation }, updated_data) => {
@@ -101,7 +101,6 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	}
 
 	async deleteAggregations (args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-		this.init_cache = true;
 		const [ aggregations_map, aggregations ] = getAggregationsMap(this.getCachedData(), this.getCollection().schema),
 			data = this.getCachedData();
 		await this.deleteIterate<ISchemaAggregationMapValue>(
@@ -111,7 +110,8 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 				multiple,
 				child_ids: Array.from(aggregations_map.keys()),
 				manual: true,
-				container: []
+				container: [],
+				initialize_cache: false
 			},
 			(name) => aggregations_map.get(name),
 			(_, aggregation) => {

@@ -1,4 +1,4 @@
-import { Mutations, createTransaction } from '@nishans/endpoints';
+import { createTransaction, Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 
 export class NotionOperationsClass {
@@ -10,7 +10,7 @@ export class NotionOperationsClass {
 	constructor (args: { token: string; space_id: string; shard_id: number; stack: IOperation[] }) {
 		this.space_id = args.space_id;
 		this.shard_id = args.shard_id;
-		this.stack = args.stack || [];
+		this.stack = args.stack;
 		this.token = args.token;
 	}
 

@@ -16,5 +16,5 @@ it(`Should work for empty args`, () => {
 			table: 'block'
 		};
 
-	expect(removeLastEditedPropsPlugin(operation)).toStrictEqual({ ...operation, args: { other_data: 'data' } });
+	expect(removeLastEditedPropsPlugin()(operation)).toStrictEqual({ ...operation, args: { other_data: 'data' } });
 });

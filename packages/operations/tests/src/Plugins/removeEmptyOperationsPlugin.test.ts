@@ -12,7 +12,7 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		expect(removeEmptyOperationsPlugin(operation)).toStrictEqual(false);
+		expect(removeEmptyOperationsPlugin()(operation)).toStrictEqual(false);
 	});
 
 	it(`Should work for non empty args`, () => {
@@ -27,6 +27,6 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		expect(removeEmptyOperationsPlugin(operation)).toStrictEqual(operation);
+		expect(removeEmptyOperationsPlugin()(operation)).toStrictEqual(operation);
 	});
 });

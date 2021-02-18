@@ -123,7 +123,7 @@ it(`applyPluginsToOperationsStack`, () => {
 		space_id: 'space_1',
 		stack,
 		token: 'token',
-		plugins: [ removeLastEditedPropsPlugin, removeEmptyOperationsPlugin ]
+		plugins: [ removeLastEditedPropsPlugin(), removeEmptyOperationsPlugin() ]
 	});
 
 	const updated_operations = operations.applyPluginsToOperationsStack();

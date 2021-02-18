@@ -1213,8 +1213,6 @@ describe('createViews', () => {
       expect(view_ids).toStrictEqual([ id ]);
       expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
       expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
-      console.log(JSON.stringify(stack, null, 2));
-      
       expect(
         stack
       ).toStrictEqual([
@@ -1305,48 +1303,45 @@ describe('createViews', () => {
     });
   });
 
-  describe('Throw error', () => {
-    it(`Should work correctly`, () => {
-      const id = v4(),
-        stack: IOperation[] = [],
-        cache = createDefaultCache();
-      expect(()=>createViews(
-        {
-          id: 'collection_id',
-          schema: {
-            title: {
-              type: "title",
-              name: "Title"
-            }
-          },
-          parent_id: 'parent_id'
+  it(`Throw error`, () => {
+    const id = v4(),
+      stack: IOperation[] = [],
+      cache = createDefaultCache();
+    expect(()=>createViews(
+      {
+        id: 'collection_id',
+        schema: {
+          title: {
+            type: "title",
+            name: "Title"
+          }
         },
-        [
-          {
-            id,
-            type: 'table',
-            name: 'Table',
-            schema_units: [
-              {
-                name: "URL",
-                type: "url",
-              }
-            ]
-          }
-        ],
+        parent_id: 'parent_id'
+      },
+      [
         {
-          token: 'token',
-          user_id: 'user_id',
-          stack,
-          cache,
-          space_id: 'space_id',
-          shard_id: 123,
-          logger: ()=>{
-            return
-          }
+          id,
+          type: 'table',
+          name: 'Table',
+          schema_units: [
+            {
+              name: "URL",
+              type: "url",
+            }
+          ]
         }
-      )).toThrow(`Collection:collection_id does not contain SchemeUnit.name:URL`)
-    });
-  })
-  
+      ],
+      {
+        token: 'token',
+        user_id: 'user_id',
+        stack,
+        cache,
+        space_id: 'space_id',
+        shard_id: 123,
+        logger: ()=>{
+          return
+        }
+      }
+    )).toThrow(`Unknown property URL referenced in name`)
+  });
 });

@@ -228,7 +228,6 @@ it(`initializeCacheForThisData`, async () => {
 
 	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
 	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
-	expect(block.init_cache).toBe(true);
 
 	await block.initializeCacheForThisData();
 });

@@ -16,12 +16,11 @@ describe('generateId', () => {
 	});
 
 	it(`Should generate random id when correct id is not provided`, () => {
-		console.log = jest.fn();
+		const consoleLogMock = jest.spyOn(console, 'log');
 		const generated_id = generateId(uuidv4().slice(1));
 		expect(generated_id).toBeTruthy();
-		expect(console.log).toHaveBeenCalledWith(colors.yellow.bold('Invalid uuid provided'));
-		expect(console.log).toHaveBeenCalledTimes(1);
-		(console.log as jest.Mock<any, any>).mockReset();
+		expect(consoleLogMock).toHaveBeenCalledWith(colors.yellow.bold('Invalid uuid provided'));
+		expect(consoleLogMock).toHaveBeenCalledTimes(1);
 	});
 });
 

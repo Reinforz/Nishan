@@ -1,5 +1,6 @@
+import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
-import { ICollection, TCollectionBlock, TView, TViewFilters, TViewUpdateInput } from '@nishans/types';
+import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
   FilterType,
   FilterTypes,
@@ -33,6 +34,14 @@ import Data from '../Data';
  * A class to represent view of Notion
  * @noInheritDoc
  */
+
+export function setPropertyFromName(name: string, schema_map: ISchemaMap, data: {property: string}){
+  const schema_map_unit = schema_map.get(name);
+  if(!schema_map_unit)
+    throw new UnknownPropertyReferenceError(name, ['name'])
+  data.property = schema_map_unit.schema_id;
+}
+
 class View<T extends TView> extends Data<T> {
 	constructor (arg: NishanArg) {
 		super({ ...arg, type: 'collection_view' });
@@ -182,8 +191,11 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
-		const data = this.getCachedData(), [ filters_map, { filters } ] = getFiltersMap(data, this.getCollection().schema);
-
+		const data = this.getCachedData(), 
+      {schema} = this.getCollection(), 
+      schema_map = getSchemaMap(schema), 
+      [ filters_map ] = getFiltersMap(data, schema);
+    
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
 			{
@@ -195,18 +207,22 @@ class View<T extends TView> extends Data<T> {
         initialize_cache: false
 			},
 			(schema_id) => filters_map.get(schema_id),
-			(_, original_filter, updated_data) => {
-				const index = filters.findIndex((data) => (data as any).property === original_filter.schema_id),
-					filter = filters[index] as TViewFilters,
-					{ filter: _filter, position } = updated_data;
+			(_, {child_filter, parent_filter}, updated_data) => {
+				const filter_index = parent_filter.filters.findIndex((filter) => filter === child_filter), {filters} = parent_filter,
+					{ filter: updated_filter, position, name } = updated_data;
+          
+        if(name)
+          setPropertyFromName(name, schema_map, child_filter)
 
-				filter.filter = _filter;
+				deepMerge(child_filter.filter, updated_filter);
+
 				if (position !== null && position !== undefined) {
-					filters.splice(index, 1);
-					filters.splice(position, 0, original_filter as any);
+					filters.splice(filter_index, 1);
+					filters.splice(position, 0, child_filter as any);
 				}
 			}
 		);
+    
 		this.Operations.stack.push(
 			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
@@ -217,8 +233,10 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
-		const [ filters_map, { filters } ] = getFiltersMap(this.getCachedData(), this.getCollection().schema),
-			data = this.getCachedData();
+    const data = this.getCachedData(), 
+      {schema} = this.getCollection(), 
+      [ filters_map ] = getFiltersMap(data, schema);
+
 		await this.deleteIterate<ISchemaFiltersMapValue>(
 			args,
 			{
@@ -226,17 +244,17 @@ class View<T extends TView> extends Data<T> {
 				multiple,
 				manual: true,
 				container: [],
-				child_ids: Array.from(filters_map.keys())
+				child_ids: Array.from(filters_map.keys()),
+        initialize_cache: false
 			},
 			(schema_id) => filters_map.get(schema_id),
-			(_, filter) => {
-				filters.splice(filters.findIndex((data) => (data as any).property === filter.schema_id), 1);
+			(_, {child_filter, parent_filter}) => {
+        parent_filter.filters.splice(parent_filter.filters.findIndex((filter) => filter === child_filter),1);
 			}
 		);
+    
 		this.Operations.stack.push(
-			Operation.collection_view.update(this.id, [], {
-				query2: data.query2
-			})
+			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
 
@@ -261,7 +279,7 @@ class View<T extends TView> extends Data<T> {
         initialize_cache: false
 			},
 			(name) => format_properties_map.get(name),
-			(name, current_data, updated_data) => {
+			(_, current_data, updated_data) => {
 				const target_format_property_index = format_properties.findIndex(
 						(format_property) => format_property.property === current_data.schema_id
 					),

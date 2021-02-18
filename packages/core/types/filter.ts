@@ -12,7 +12,7 @@ export interface IViewFilterCreateInput<T extends TSchemaUnitType> {
 export interface IViewFilterUpdateInput<T extends TSchemaUnitType> {
 	filter: IViewFilterData[T]['filter'];
 	filter_operator?: TViewGroupFilterOperator;
-	children?: TViewFilterCreateInput[];
+	name?: string;
 	type: T;
 	position?: number;
 }

@@ -1,7 +1,9 @@
 import { ICache } from '@nishans/cache';
+import { ISchemaMap } from '@nishans/notion-formula';
 import { IOperation } from '@nishans/types';
 import { View } from '../../../src';
 import Data from '../../../src/Data';
+import { setPropertyFromName } from '../../../src/View/View';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 import { last_edited_props } from '../../lastEditedProps';
@@ -774,5 +776,275 @@ describe('createFilters', () => {
 				args: filters
 			}
 		]);
+	});
+});
+
+describe('updateFilters', () => {
+	it(`separate property and same position`, async () => {
+		const collection_1: any = {
+				id: 'collection_1',
+				schema: {
+					title: {
+						name: 'Title',
+						type: 'title'
+					},
+					text: {
+						name: 'Text',
+						type: 'text'
+					}
+				}
+			},
+			collection_view_1 = {
+				parent_id: 'block_1',
+				id: 'collection_view_1',
+				type: 'table',
+				query2: {
+					filter: {
+						operator: 'and',
+						filters: [
+							{
+								property: 'title',
+								filter: {
+									operator: 'string_contains',
+									value: {
+										type: 'exact',
+										value: 'Something'
+									}
+								}
+							}
+						]
+					}
+				}
+			} as any,
+			cache: ICache = {
+				...createDefaultCache(),
+				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
+				collection: new Map([ [ 'collection_1', collection_1 ] ]),
+				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+			},
+			stack: IOperation[] = [];
+
+		const view = new View({
+			...default_nishan_arg,
+			cache,
+			id: 'collection_view_1',
+			stack
+		});
+
+		const filter_value = {
+				operator: 'string_starts_with',
+				value: {
+					type: 'exact',
+					value: 'Otherthing'
+				}
+			},
+			filters = {
+				operator: 'and',
+				filters: [
+					{
+						property: 'text',
+						filter: filter_value
+					}
+				]
+			};
+
+		await view.updateFilter([
+			'0',
+			{
+				name: 'Text',
+				type: 'text',
+				filter: filter_value as any
+			}
+		]);
+
+		expect(collection_view_1.query2.filter).toStrictEqual(filters);
+		expect(stack[1]).toStrictEqual({
+			table: 'collection_view',
+			command: 'update',
+			id: 'collection_view_1',
+			path: [ 'query2', 'filter' ],
+			args: filters
+		});
+	});
+
+	it(`same property and different position`, async () => {
+		const filter1 = {
+				property: 'text',
+				filter: {
+					operator: 'string_is',
+					value: {
+						type: 'exact',
+						value: 'Something'
+					}
+				}
+			},
+			collection_1: any = {
+				id: 'collection_1',
+				schema: {
+					title: {
+						name: 'Title',
+						type: 'title'
+					},
+					text: {
+						name: 'Text',
+						type: 'text'
+					}
+				}
+			},
+			collection_view_1 = {
+				parent_id: 'block_1',
+				id: 'collection_view_1',
+				type: 'table',
+				query2: {
+					filter: {
+						operator: 'and',
+						filters: [
+							{
+								property: 'title',
+								filter: {
+									operator: 'string_contains',
+									value: {
+										type: 'exact',
+										value: 'Something'
+									}
+								}
+							},
+							filter1
+						]
+					}
+				}
+			} as any,
+			cache: ICache = {
+				...createDefaultCache(),
+				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
+				collection: new Map([ [ 'collection_1', collection_1 ] ]),
+				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+			},
+			stack: IOperation[] = [];
+
+		const view = new View({
+			...default_nishan_arg,
+			cache,
+			id: 'collection_view_1',
+			stack
+		});
+
+		const filter_value = {
+				operator: 'string_starts_with',
+				value: {
+					type: 'exact',
+					value: 'Otherthing'
+				}
+			},
+			filters = {
+				operator: 'and',
+				filters: [
+					filter1,
+					{
+						property: 'title',
+						filter: filter_value
+					}
+				]
+			};
+
+		await view.updateFilter([
+			'0',
+			{
+				type: 'title',
+				position: 1,
+				filter: filter_value as any
+			}
+		]);
+
+		expect(collection_view_1.query2.filter).toStrictEqual(filters);
+		expect(stack[1]).toStrictEqual({
+			table: 'collection_view',
+			command: 'update',
+			id: 'collection_view_1',
+			path: [ 'query2', 'filter' ],
+			args: filters
+		});
+	});
+});
+
+it(`deleteFilter`, async () => {
+	const filter1 = {
+			property: 'text',
+			filter: {
+				operator: 'string_is',
+				value: {
+					type: 'exact',
+					value: 'Something'
+				}
+			}
+		},
+		collection_1: any = {
+			id: 'collection_1',
+			schema: {
+				title: {
+					name: 'Title',
+					type: 'title'
+				},
+				text: {
+					name: 'Text',
+					type: 'text'
+				}
+			}
+		},
+		collection_view_1 = {
+			parent_id: 'block_1',
+			id: 'collection_view_1',
+			type: 'table',
+			query2: {
+				filter: {
+					operator: 'and',
+					filters: [ filter1 ]
+				}
+			}
+		} as any,
+		cache: ICache = {
+			...createDefaultCache(),
+			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
+			collection: new Map([ [ 'collection_1', collection_1 ] ]),
+			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+		},
+		stack: IOperation[] = [];
+
+	const view = new View({
+		...default_nishan_arg,
+		cache,
+		id: 'collection_view_1',
+		stack
+	});
+
+	const filters = {
+		operator: 'and',
+		filters: []
+	};
+
+	await view.deleteFilter('0');
+
+	expect(collection_view_1.query2.filter).toStrictEqual(filters);
+	expect(stack[1]).toStrictEqual({
+		table: 'collection_view',
+		command: 'update',
+		id: 'collection_view_1',
+		path: [ 'query2', 'filter' ],
+		args: filters
+	});
+});
+
+describe('setPropertyFromName', () => {
+	it(`should change property value`, () => {
+		const data = { property: 'Name' };
+		const schema_map: ISchemaMap = new Map([ [ 'Title', { schema_id: 'title' } as any ] ]);
+		setPropertyFromName('Title', schema_map, data);
+		expect(data.property).toBe('title');
+	});
+
+	it(`Should throw an error if unknown property is referenced`, () => {
+		const data = { property: 'Name' };
+		const schema_map: ISchemaMap = new Map([ [ 'Title', { schema_id: 'title' } as any ] ]);
+		expect(() => setPropertyFromName('Name', schema_map, data)).toThrow(`Unknown property Name referenced in name`);
 	});
 });

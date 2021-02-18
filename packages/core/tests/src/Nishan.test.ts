@@ -98,7 +98,7 @@ describe('Nishan', () => {
 			const logger_spy = jest.fn();
 
 			const nishan = new Nishan({
-				...default_nishan_arg,
+				token: 'token',
 				logger: logger_spy
 			});
 

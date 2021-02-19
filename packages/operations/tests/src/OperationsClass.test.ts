@@ -1,6 +1,6 @@
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionOperationsClass, removeEmptyOperationsPlugin, removeLastEditedPropsPlugin } from '../../src';
+import { NotionOperationsClass, Plugin } from '../../src';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -184,7 +184,7 @@ it(`applyPluginsToOperationsStack`, () => {
 		space_id: 'space_1',
 		stack,
 		token: 'token',
-		plugins: [ removeLastEditedPropsPlugin(), removeEmptyOperationsPlugin() ]
+		plugins: [ Plugin.removeLastEditedProps(), Plugin.removeEmptyOperations() ]
 	});
 
 	const updated_operations = operations.applyPluginsToOperationsStack();

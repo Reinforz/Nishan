@@ -53,7 +53,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				params,
 				this.getProps()
 			);
-		this.Operations.stack.push(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
+		this.Operations.pushToStack(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();
 		return view_map;

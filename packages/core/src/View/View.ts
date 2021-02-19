@@ -69,7 +69,7 @@ class View<T extends TView> extends Data<T> {
 	update (updated_data: TViewUpdateInput) {
 		const view_data = this.getCachedData();
 		deepMerge(view_data, updated_data);
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [], { ...updated_data, ...this.getLastEditedProps() })
 		);
 		this.updateLastEditedProps();
@@ -102,7 +102,7 @@ class View<T extends TView> extends Data<T> {
 		}
 
 		this.updateLastEditedProps();
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
@@ -144,7 +144,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
@@ -170,7 +170,7 @@ class View<T extends TView> extends Data<T> {
 				sorts.splice(sorts.findIndex((data) => data.property === sort.schema_id), 1);
 			}
 		);
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
@@ -181,7 +181,7 @@ class View<T extends TView> extends Data<T> {
 			filters = initializeViewFilters(data).filters;
 		populateFilters(args, filters, schema_map);
 		this.updateLastEditedProps();
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
@@ -223,7 +223,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
     
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
@@ -253,7 +253,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
     
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
 		);
 	}
@@ -296,7 +296,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
     
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [`format`, `${data.type}_properties`], format_properties)
 		);
 	}

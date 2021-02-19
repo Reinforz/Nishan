@@ -132,10 +132,12 @@ class NotionUser extends Data<INotionUser> {
       const user_root = this.cache.user_root.get(this.user_id) as IUserRoot;
       user_root.space_views.push(space_view_id);
 
-      this.Operations.stack.push(
-        Operation.space.update(space_id, [], space_op_data),
-        Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
-        Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id }),
+      this.Operations.pushToStack(
+        [
+          Operation.space.update(space_id, [], space_op_data),
+          Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
+          Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
+        ],
       );
 
       this.logger && this.logger(`CREATE`, 'space', space_id);

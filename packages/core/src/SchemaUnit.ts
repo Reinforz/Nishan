@@ -20,7 +20,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 	update (arg: T) {
 		const data = this.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
 		);
 		this.logger && this.logger('UPDATE', 'collection', this.id);
@@ -31,7 +31,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			delete data.schema[this.schema_id];
-			this.Operations.stack.push(
+			this.Operations.pushToStack(
 				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
 			);
 			this.logger && this.logger('DELETE', 'collection', this.id);
@@ -44,7 +44,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection>
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			data.schema[id] = data.schema[this.schema_id];
-			this.Operations.stack.push(
+			this.Operations.pushToStack(
 				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
 			);
 			this.logger && this.logger('UPDATE', 'collection', id);

@@ -193,7 +193,7 @@ class Collection extends Data<ICollection> {
 			(child_id, child_data) => {
 				child_data.alive = false;
 				this.updateLastEditedProps(child_data);
-				this.Operations.stack.push(
+				this.Operations.pushToStack(
 					Operation.block.update(child_id, [], { alive: false, ...this.getLastEditedProps() })
 				);
 			}
@@ -213,7 +213,7 @@ class Collection extends Data<ICollection> {
 			parent_collection_id: data.id,
 			current_schema: data.schema
 		});
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
 		this.updateLastEditedProps();
 		return schema_unit_map;
 	}
@@ -285,7 +285,7 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
 		return results;
 	}
 
@@ -324,7 +324,7 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.stack.push(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
 	}
 }
 

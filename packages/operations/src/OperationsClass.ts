@@ -50,6 +50,10 @@ export class NotionOperationsClass {
     else this.#stack.push(operations);
   }
 
+  get stack(){
+    return this.#stack;
+  }
+
 	async executeOperation () {
 		if (this.#stack.length === 0) console.log(`The operation stack is empty`);
 		else {

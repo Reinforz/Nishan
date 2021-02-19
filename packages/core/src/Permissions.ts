@@ -56,7 +56,7 @@ export default class NotionPermissions extends Data<TPage> {
 		} else {
 			permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
 		}
-		this.Operations.stack.push(Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data));
+		this.Operations.pushToStack(Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data));
 		const { permissions } = this.getCachedData();
 		const permission_index = permissions.findIndex((permission) => {
 			if (permission_type === 'public_permission' || permission_type === 'space_permission')
@@ -101,7 +101,7 @@ export default class NotionPermissions extends Data<TPage> {
 		}
 		this.logger && this.logger('UPDATE', 'block', this.id);
 		this.updateLastEditedProps();
-		this.Operations.stack.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+		this.Operations.pushToStack(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
 	}
 
 	/**
@@ -132,7 +132,7 @@ export default class NotionPermissions extends Data<TPage> {
 		this.updatePermissionsArray(permission_type, options as IPublicPermission);
 		this.logger && this.logger('UPDATE', 'block', this.id);
 		this.updateLastEditedProps();
-		this.Operations.stack.push(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+		this.Operations.pushToStack(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
 	}
 
 	addPublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {

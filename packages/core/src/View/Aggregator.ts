@@ -54,7 +54,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			});
 		}
 
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'aggregations' ], {
 				aggregations: (data.query2 as any).aggregations
 			})
@@ -89,7 +89,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'aggregations' ], {
 				aggregations: (data.query2 as any).aggregations
 			})
@@ -119,7 +119,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		this.Operations.stack.push(
+		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, [ 'query2', 'aggregations' ], {
 				aggregations: (data.query2 as any).aggregations
 			})

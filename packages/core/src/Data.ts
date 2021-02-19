@@ -108,7 +108,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
   }
 
   protected addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
-    this.Operations.stack.push(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
+    this.Operations.pushToStack(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
   }
 
   updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
@@ -122,7 +122,7 @@ export default class Data<T extends TData> extends NotionCacheClass {
     })
 
     this.logger && this.logger("UPDATE", this.type as any, this.id)
-    this.Operations.stack.push(
+    this.Operations.pushToStack(
       Operation[this.type].update(this.id, [], data)
     );
   }

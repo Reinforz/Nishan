@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFactory } from '../';
-import { skipOption } from './utils';
+import { PluginOptions } from './Options';
 
 /**
  * Removes certain keys from operation args
@@ -8,7 +8,7 @@ import { skipOption } from './utils';
  */
 export const removeLastEditedPropsPlugin: NotionOperationPluginFactory = (options) => {
 	return (operation: IOperation) => {
-		skipOption(operation, options?.skip);
+		PluginOptions.skip(operation, options?.skip);
 		// Deeply copy arg to remove reference in other places
 		const copied_operation = JSON.parse(JSON.stringify(operation));
 		const { args } = copied_operation;

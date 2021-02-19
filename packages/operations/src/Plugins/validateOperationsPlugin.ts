@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFactory, OPERATION_COMMANDS, OPERATION_TABLES } from '../';
-import { skipOption } from './utils';
+import { PluginOptions } from './Options';
 
 /**
  * Validates the passed operation
@@ -9,7 +9,7 @@ import { skipOption } from './utils';
 export const validateOperationsPlugin: NotionOperationPluginFactory = (options) => {
 	return (operation: IOperation) => {
 		// Checks to see if the operation is to be skipped, ie not further process by the plugin
-		skipOption(operation, options?.skip);
+		PluginOptions.skip(operation, options?.skip);
 		// Checks if the operation table is one of the supported values
 		const is_correct_table = OPERATION_TABLES.includes(operation.table);
 		// Throws an error if the passed operation table is not of the supported value

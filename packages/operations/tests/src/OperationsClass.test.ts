@@ -6,6 +6,67 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+it(`emptyStack`, () => {
+	const operations_class = new NotionOperationsClass({
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [
+			{
+				args: {},
+				command: 'update',
+				id: '123',
+				path: [],
+				table: 'block'
+			}
+		],
+		token: 'token'
+	});
+	operations_class.emptyStack();
+	expect(operations_class.stack).toStrictEqual([]);
+});
+
+describe('pushToStack', () => {
+	it(`single op`, () => {
+		const op: IOperation = {
+			args: {},
+			command: 'update',
+			id: '123',
+			path: [],
+			table: 'block'
+		};
+
+		const operations_class = new NotionOperationsClass({
+			shard_id: 123,
+			space_id: 'space_1',
+			stack: [],
+			token: 'token'
+		});
+
+		operations_class.pushToStack(op);
+		expect(operations_class.stack).toStrictEqual([ op ]);
+	});
+
+	it(`array of ops`, () => {
+		const op: IOperation = {
+			args: {},
+			command: 'update',
+			id: '123',
+			path: [],
+			table: 'block'
+		};
+
+		const operations_class = new NotionOperationsClass({
+			shard_id: 123,
+			space_id: 'space_1',
+			stack: [],
+			token: 'token'
+		});
+
+		operations_class.pushToStack([ op ]);
+		expect(operations_class.stack).toStrictEqual([ op ]);
+	});
+});
+
 describe('executeOperation', () => {
 	it(`print to console if the stack is empty`, async () => {
 		const consoleLogMock = jest.spyOn(console, 'log');

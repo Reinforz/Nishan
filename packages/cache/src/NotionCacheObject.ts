@@ -1,3 +1,4 @@
+import { NotionRequestConfigs, Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import {
 	ICollection,
 	ISpace,
@@ -9,7 +10,6 @@ import {
 	TDataType
 } from '@nishans/types';
 import { ICache } from '../src';
-import { NotionRequestConfigs, Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 
 export const NotionCacheObject = {
 	/**
@@ -160,24 +160,27 @@ export const NotionCacheObject = {
 			if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 		} else throw new Error(`${type} data is not supported`);
 
-		// Filters data that doesnt exist in the cache
+		// Filters data that doesn't exist in the cache
 		const non_cached = NotionCacheObject.returnNonCachedData(container, cache);
 
 		if (non_cached.length) await NotionCacheObject.updateCacheManually(non_cached, configs, cache);
 
-		// If the block is a page, for all the collection block contents, fetch the collection attached with it as well
+		// If the block is a page, for all the collection block **contents**, fetch the collection attached with it as well
 		if (type === 'block') {
 			const data = cache[type].get(id) as TBlock;
 			if (data.type === 'page') {
-				const collection_blocks_ids: UpdateCacheManuallyParam = [];
+				const sync_records: UpdateCacheManuallyParam = [];
 				for (let index = 0; index < data.content.length; index++) {
 					const content_id = data.content[index],
 						content = cache.block.get(content_id);
-					if (content && (content.type === 'collection_view_page' || content.type === 'collection_view'))
-						collection_blocks_ids.push([ content.collection_id, 'collection' ]);
+					// Only if the content is of type cvp or cv, fetch its collection and views
+					if (content && (content.type === 'collection_view_page' || content.type === 'collection_view')) {
+						sync_records.push([ content.collection_id, 'collection' ]);
+						content.view_ids.map((view_id) => sync_records.push([ view_id, 'collection_view' ]));
+					}
 				}
 				await NotionCacheObject.updateCacheManually(
-					NotionCacheObject.returnNonCachedData(collection_blocks_ids, cache),
+					NotionCacheObject.returnNonCachedData(sync_records, cache),
 					configs,
 					cache
 				);
@@ -194,7 +197,7 @@ export const NotionCacheObject = {
 	},
 
 	/**
- * Fetches notion data only if it doesnt exist in the cache
+ * Fetches notion data only if it doesn't exist in the cache
  * @param arg Array of id and data_type tuple to fetch from notion and store
  */
 	updateCacheIfNotPresent: async function (
@@ -208,6 +211,11 @@ export const NotionCacheObject = {
 			cache
 		);
 	},
+
+	/**
+   * Validates the passed cache 
+   * @param cache The cache to validate
+   */
 	validateCache: function (cache: ICache) {
 		const cache_keys: (keyof ICache)[] = [
 			'block',

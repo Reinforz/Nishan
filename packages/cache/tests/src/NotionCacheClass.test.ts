@@ -1,7 +1,5 @@
 import { NotionCacheClass, NotionCacheObject } from '../../src';
 
-import { RecordMap } from '@nishans/types';
-
 afterEach(() => {
 	jest.clearAllMocks();
 });
@@ -59,9 +57,7 @@ describe('NotionCache class', () => {
 		});
 		notion_cache.returnNonCachedData([ [ '123', 'block' ] ]);
 		expect(returnNonCachedDataMock.mock.calls.length).toBe(1);
-		expect(returnNonCachedDataMock.mock.calls[returnNonCachedDataMock.mock.calls.length - 1][0]).toStrictEqual([
-			[ '123', 'block' ]
-		]);
+		expect(returnNonCachedDataMock.mock.calls[0][0]).toStrictEqual([ [ '123', 'block' ] ]);
 	});
 
 	it(`initializeNotionCache`, async () => {
@@ -76,7 +72,7 @@ describe('NotionCache class', () => {
 			});
 		await notion_cache.initializeNotionCache();
 		expect(initializeNotionCacheMock.mock.calls.length).toBe(1);
-		expect(initializeNotionCacheMock.mock.calls[initializeNotionCacheMock.mock.calls.length - 1][0]).toStrictEqual({
+		expect(initializeNotionCacheMock.mock.calls[0][0]).toStrictEqual({
 			interval: 0,
 			token: 'token',
 			user_id: ''
@@ -93,10 +89,8 @@ describe('NotionCache class', () => {
 		});
 		await notion_cache.updateCacheManually([ [ '123', 'block' ] ]);
 		expect(updateCacheManuallyMock.mock.calls.length).toBe(1);
-		expect(updateCacheManuallyMock.mock.calls[updateCacheManuallyMock.mock.calls.length - 1][0]).toStrictEqual([
-			[ '123', 'block' ]
-		]);
-		expect(updateCacheManuallyMock.mock.calls[updateCacheManuallyMock.mock.calls.length - 1][1]).toStrictEqual({
+		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ '123', 'block' ] ]);
+		expect(updateCacheManuallyMock.mock.calls[0][1]).toStrictEqual({
 			interval: 0,
 			token: 'token',
 			user_id: ''
@@ -115,10 +109,8 @@ describe('NotionCache class', () => {
 			});
 		await notion_cache.updateCacheIfNotPresent([ [ '123', 'block' ] ]);
 		expect(updateCacheIfNotPresentMock.mock.calls.length).toBe(1);
-		expect(updateCacheIfNotPresentMock.mock.calls[updateCacheIfNotPresentMock.mock.calls.length - 1][0]).toStrictEqual([
-			[ '123', 'block' ]
-		]);
-		expect(updateCacheIfNotPresentMock.mock.calls[updateCacheIfNotPresentMock.mock.calls.length - 1][1]).toStrictEqual({
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ '123', 'block' ] ]);
+		expect(updateCacheIfNotPresentMock.mock.calls[0][1]).toStrictEqual({
 			interval: 0,
 			token: 'token',
 			user_id: ''
@@ -138,15 +130,9 @@ describe('NotionCache class', () => {
 			});
 		await notion_cache.initializeCacheForSpecificData('123', 'block');
 		expect(initializeCacheForSpecificDataMock.mock.calls.length).toBe(1);
-		expect(
-			initializeCacheForSpecificDataMock.mock.calls[initializeCacheForSpecificDataMock.mock.calls.length - 1][0]
-		).toStrictEqual('123');
-		expect(
-			initializeCacheForSpecificDataMock.mock.calls[initializeCacheForSpecificDataMock.mock.calls.length - 1][1]
-		).toStrictEqual('block');
-		expect(
-			initializeCacheForSpecificDataMock.mock.calls[initializeCacheForSpecificDataMock.mock.calls.length - 1][2]
-		).toStrictEqual({
+		expect(initializeCacheForSpecificDataMock.mock.calls[0][0]).toStrictEqual('123');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0][1]).toStrictEqual('block');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0][2]).toStrictEqual({
 			interval: 0,
 			token: 'token',
 			user_id: '123'

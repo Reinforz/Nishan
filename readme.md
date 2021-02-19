@@ -16,17 +16,19 @@
 
 # Nishan
 
-Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more.
+An ecosystem of packages for notion written in typescript.
 
 This monorepo contains/will contain the following packages:-
 
-### Legend
+## Packages
+
+Legend:
 
 1. NPM: Packages released in npm
 2. WIP: Packages under heavy construction
 3. NSY: Package development not started yet
 
-### Packages
+---
 
 1. @nishans/core [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core/): Core package for nishan with all crud api
 2. @nishans/types [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [NPM](https://www.npmjs.com/package/@nishans/types) [Docs](https://nishan-docs.netlify.app/docs/types): Typescript typings for Notion only
@@ -44,7 +46,7 @@ This monorepo contains/will contain the following packages:-
 14. @nishans/notion-formula [Github](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) [NPM](https://www.npmjs.com/package/@nishans/notion-formula) [Docs](https://nishan-docs.netlify.app/docs/notion-formula/): A package to generate notion formula with ease
 15. @nishans/schema-builder [Github](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder) (NSY): A package to create notion collection schema painlessly
 16. @nishans/cache [Github](https://github.com/Devorein/Nishan/tree/master/packages/cache) [NPM](https://www.npmjs.com/package/@nishans/cache) [Docs](https://nishan-docs.netlify.app/docs/cache/): A cache specially designed to store notion data in memory
-17. @nishans/operations [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) (NSY): A package to inspect, modify and store notion operations.
+17. @nishans/operations [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) [NPM](https://www.npmjs.com/package/@nishans/operations) [Docs](https://nishan-docs.netlify.app/docs/operations/): A package to inspect, modify and store notion operations.
 
 ### Apps
 

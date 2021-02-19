@@ -1,7 +1,7 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.17",
-  "description": "Typescript typings for notion",
+  "version": "0.0.18",
+  "description": "Typescript type definitions for notion",
   "keywords": [
     "notion",
     "notion-types",

@@ -1,21 +1,21 @@
 import {
-	IUserPermission,
-	ISpacePermission,
-	ICollectionView,
-	ICollectionViewPage,
-	TBlock,
-	ICollection,
-	TPlanType,
-	Node,
+	CreateProps,
 	IBoardView,
 	ICalendarView,
+	ICollection,
+	ICollectionView,
+	ICollectionViewPage,
 	IGalleryView,
 	IListView,
+	ISpacePermission,
 	ITableView,
-	CreateProps,
+	IUserPermission,
 	LastEditedProps,
+	Node,
+	TBlock,
 	TLocale,
-	TPermissionRole
+	TPermissionRole,
+	TPlanType
 } from './';
 
 export interface CollectionViewData {

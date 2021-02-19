@@ -1,4 +1,4 @@
-import { ISpace, ISpaceView, INotionUser, IUserSettings, IUserRoot, RecordMap, ICollection, TBlock, TView } from '.';
+import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, RecordMap, TBlock, TView } from '.';
 
 export type Args = any;
 

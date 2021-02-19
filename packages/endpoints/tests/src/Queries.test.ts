@@ -1,6 +1,6 @@
-import Queries from '../../src/Queries';
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import Queries from '../../src/Queries';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
@@ -23,7 +23,8 @@ const mock = new MockAdapter(axios);
 	'recordPageVisit',
 	'getUserNotifications',
 	'getTasks',
-	'search'
+	'search',
+	'getClientExperiments'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const request_data = {

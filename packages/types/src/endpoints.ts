@@ -1,24 +1,40 @@
 import {
-	TViewType,
-	TSchemaUnitType,
-	ViewSorts,
-	TPlanType,
-	TDataType,
-	TPermissionRole,
+	BlockData,
+	IDrive,
+	INotionUser,
 	IPermission,
 	IViewFilter,
-	TViewAggregationsAggregators,
-	ViewAggregations,
-	BlockData,
-	SpaceData,
-	RecordMap,
-	INotionUser,
-	TGenericEmbedBlockType,
 	MediaFormat,
-	IDrive,
+	RecordMap,
+	SpaceData,
+	SubscribedSubscriptionData,
+	TDataType,
+	TGenericEmbedBlockType,
+	TPermissionRole,
+	TPlanType,
+	TSchemaUnitType,
+	TViewAggregationsAggregators,
+	TViewType,
 	UnsubscribedSubscriptionData,
-	SubscribedSubscriptionData
+	ViewAggregations,
+	ViewSorts
 } from './';
+
+export interface GetClientExperimentsParams {
+	deviceId: string;
+}
+
+export interface GetClientExperimentsResult {
+	deviceId: string;
+	isLoaded: boolean;
+	test: boolean;
+	userId: string;
+	experiments: {
+		experimentId: string;
+		experimentVersion: number;
+		group?: string;
+	}[];
+}
 
 export interface GoogleDriveFileUser {
 	displayName: string;

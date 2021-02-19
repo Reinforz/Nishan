@@ -1,4 +1,4 @@
-import { ISpace, TFormatBlockColor, TCodeLanguage, Schema, IPermission, TTextFormat } from '.';
+import { IPermission, ISpace, Schema, TCodeLanguage, TFormatBlockColor, TTextFormat } from '.';
 
 export interface Node {
 	alive: boolean;

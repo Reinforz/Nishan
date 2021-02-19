@@ -1,4 +1,4 @@
-import { TTextColor, TFormula, RollupViewAggregationsAggregator } from '.';
+import { RollupViewAggregationsAggregator, TFormula, TTextColor } from '.';
 
 export type TNumberFormat =
 	| 'number'

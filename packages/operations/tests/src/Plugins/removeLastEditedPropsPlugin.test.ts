@@ -1,5 +1,10 @@
 import { IOperation } from '@nishans/types';
-import { removeLastEditedPropsPlugin } from '../../../src';
+import { Plugin } from '../../../src';
+import { PluginOptions } from '../../../src/Plugins/Options';
+
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 it(`removeLastEditedPropsPlugin`, () => {
 	const args = {
@@ -16,5 +21,12 @@ it(`removeLastEditedPropsPlugin`, () => {
 			table: 'block'
 		};
 
-	expect(removeLastEditedPropsPlugin()(operation)).toStrictEqual({ ...operation, args: { other_data: 'data' } });
+	const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+
+	expect(
+		Plugin.removeLastEditedProps({
+			skip: undefined
+		})(operation)
+	).toStrictEqual({ ...operation, args: { other_data: 'data' } });
+	expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 });

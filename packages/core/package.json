@@ -35,15 +35,15 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcore"
   },
   "dependencies": {
-    "@nishans/endpoints": "^0.0.18",
-    "@nishans/operations": "^0.0.16",
-    "@nishans/cache": "^0.0.19",
+    "@nishans/endpoints": "^0.0.19",
+    "@nishans/operations": "^0.0.18",
+    "@nishans/cache": "^0.0.20",
     "@nishans/notion-formula": "^0.0.15",
     "colors": "^1.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.17",
+    "@nishans/types": "0.0.18",
     "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0"
   }

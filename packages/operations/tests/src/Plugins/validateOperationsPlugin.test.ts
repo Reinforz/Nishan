@@ -1,5 +1,10 @@
 import { IOperation } from '@nishans/types';
-import { validateOperationsPlugin } from '../../../src';
+import { Plugin } from '../../../src';
+import { PluginOptions } from '../../../src/Plugins/Options';
+
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 describe('validateOperationsPlugin', () => {
 	it(`Should throw for unsupported operation table`, () => {
@@ -11,7 +16,14 @@ describe('validateOperationsPlugin', () => {
 			table: 'blocks' as any
 		};
 
-		expect(() => validateOperationsPlugin()(operation)).toThrow(`Unsupported operation table blocks`);
+		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+
+		expect(() =>
+			Plugin.validateOperations({
+				skip: undefined
+			})(operation)
+		).toThrow(`Unsupported operation table blocks`);
+		expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 	});
 
 	it(`Should throw for unsupported operation command`, () => {
@@ -23,7 +35,14 @@ describe('validateOperationsPlugin', () => {
 			table: 'block'
 		};
 
-		expect(() => validateOperationsPlugin()(operation)).toThrow(`Unsupported operation command updates`);
+		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+
+		expect(() =>
+			Plugin.validateOperations({
+				skip: undefined
+			})(operation)
+		).toThrow(`Unsupported operation command updates`);
+		expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 	});
 
 	it(`Should return operation if no error is found`, () => {
@@ -35,6 +54,9 @@ describe('validateOperationsPlugin', () => {
 			table: 'block'
 		};
 
-		expect(validateOperationsPlugin()(operation)).toStrictEqual(operation);
+		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+
+		expect(Plugin.validateOperations()(operation)).toStrictEqual(operation);
+		expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 	});
 });

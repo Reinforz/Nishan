@@ -25,6 +25,12 @@ function constructNotionHeaders (configs?: Partial<NotionRequestConfigs>): Notio
 	return headers;
 }
 
+/**
+ * Sends an api request to a particular notion endpoint
+ * @param endpoint The notion endpoint to send a request to
+ * @param arg The payload that is to be sent along with the request
+ * @param configs The notion header configs, used to set the token, user_id and the interval
+ */
 const sendRequest = <T>(
 	endpoint: string,
 	arg: any,
@@ -45,6 +51,12 @@ const sendRequest = <T>(
 	});
 };
 
+/**
+ * Create a transaction object suitable to be sent to the saveTransaction endpoint
+ * @param shardId The shard id of the workspace
+ * @param spaceId The id of the workspace
+ * @param operations The operations array to be added to the transaction
+ */
 function createTransaction (shardId: number, spaceId: string, operations: IOperation[]) {
 	return {
 		requestId: uuidv4(),

@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
-import { Plugin } from '../../../src';
-import { PluginOptions } from '../../../src/Plugins/Options';
+import { NotionOperationsPlugin } from '../../../src';
+import { NotionOperationsPluginOptions } from '../../../src/Plugins/Options';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -16,10 +16,12 @@ describe('validateOperationsPlugin', () => {
 			table: 'blocks' as any
 		};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
 		expect(() =>
-			Plugin.validateOperations({
+			NotionOperationsPlugin.validateOperations({
 				skip: undefined
 			})(operation)
 		).toThrow(`Unsupported operation table blocks`);
@@ -35,10 +37,12 @@ describe('validateOperationsPlugin', () => {
 			table: 'block'
 		};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
 		expect(() =>
-			Plugin.validateOperations({
+			NotionOperationsPlugin.validateOperations({
 				skip: undefined
 			})(operation)
 		).toThrow(`Unsupported operation command updates`);
@@ -54,9 +58,11 @@ describe('validateOperationsPlugin', () => {
 			table: 'block'
 		};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
-		expect(Plugin.validateOperations()(operation)).toStrictEqual(operation);
+		expect(NotionOperationsPlugin.validateOperations()(operation)).toStrictEqual(operation);
 		expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 	});
 });

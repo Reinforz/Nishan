@@ -1,10 +1,8 @@
-import { Mutations } from '../../src';
-import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
+import { Mutations, NotionRequest } from '../../src';
 
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
-
-const mock = new MockAdapter(axios);
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
 const request_data = {
 		req: 'request_data'
@@ -26,11 +24,14 @@ const request_data = {
 	'initializeGoogleDriveBlock'
 ] as (keyof typeof Mutations)[]).forEach((method) => {
 	it(method, async () => {
-		mock.onPost(`/${method}`).replyOnce(200, response_data);
-		const response = await Mutations[method](request_data as any, {
+		const configs = {
 			token: 'token',
 			interval: 0
-		});
+		};
+		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
+		const response = await Mutations[method](request_data as any, configs);
+
+		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);
 	});
 });

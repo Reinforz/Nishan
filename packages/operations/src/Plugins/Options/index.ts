@@ -1,5 +1,5 @@
-import { skipOption } from './skipOption';
+import { skipOption } from './skip';
 
-export const PluginOptions = {
+export const NotionOperationsPluginOptions = {
 	skip: skipOption
 };

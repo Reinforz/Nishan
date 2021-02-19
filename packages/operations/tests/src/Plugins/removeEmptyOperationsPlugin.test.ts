@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
-import { Plugin } from '../../../src';
-import { PluginOptions } from '../../../src/Plugins/Options';
+import { NotionOperationsPlugin } from '../../../src';
+import { NotionOperationsPluginOptions } from '../../../src/Plugins/Options';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -17,10 +17,12 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
 		expect(
-			Plugin.removeEmptyOperations({
+			NotionOperationsPlugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(false);
@@ -38,10 +40,12 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
 		expect(
-			Plugin.removeEmptyOperations({
+			NotionOperationsPlugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(false);
@@ -61,10 +65,12 @@ describe('removeEmptyOperationsPlugin', () => {
 				table: 'block'
 			};
 
-		const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+		const skipPluginOptionMock = jest
+			.spyOn(NotionOperationsPluginOptions, 'skip')
+			.mockImplementationOnce(() => operation);
 
 		expect(
-			Plugin.removeEmptyOperations({
+			NotionOperationsPlugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(operation);

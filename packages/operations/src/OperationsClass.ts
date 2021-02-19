@@ -1,4 +1,4 @@
-import { createTransaction, Mutations } from '@nishans/endpoints';
+import { Mutations, NotionRequest } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFunction } from './types';
 
@@ -82,7 +82,7 @@ export class NotionOperationsClass {
 		if (this.#stack.length === 0) console.log(`The operation stack is empty`);
 		else {
       // Create a transaction using the space_id, shard_id and the list of operations
-      const created_transaction = createTransaction(this.shard_id, this.space_id, this.#stack);
+      const created_transaction = NotionRequest.createTransaction(this.shard_id, this.space_id, this.#stack);
       // get the operations list after processing it with the list of plugins 
       created_transaction.transactions[0].operations = this.applyPluginsToOperationsStack();
       // Execute the operations, by sending a request to notion's server

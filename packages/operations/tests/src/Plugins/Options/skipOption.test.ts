@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { skipOption } from '../../../../src/Plugins/Options/skipOption';
+import { skipOption } from '../../../../src/Plugins/Options/skip';
 
 describe('skipOption', () => {
 	const operation: IOperation = {

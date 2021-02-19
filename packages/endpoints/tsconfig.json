@@ -4,7 +4,6 @@
       "ESNext",
       "dom",
     ],
-    "baseUrl": "./",
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES2015",
@@ -17,7 +16,8 @@
     "declaration": true,
     "sourceMap": false,
     "noUnusedLocals": false,
-    "incremental": false
+    "incremental": false,
+    "rootDir": "./"
   },
   "include": [
     "./src/index.ts",

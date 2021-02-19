@@ -1,10 +1,20 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import Queries from '../../src/Queries';
+import { NotionRequest } from '../../utils';
 
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
+afterEach(() => {
+	jest.restoreAllMocks();
+});
 
-const mock = new MockAdapter(axios);
+const configs = {
+		token: 'token',
+		interval: 0
+	},
+	request_data = {
+		req: 'request_data'
+	},
+	response_data = {
+		res: 'response_data'
+	};
 
 ([
 	'getPageVisits',
@@ -27,17 +37,9 @@ const mock = new MockAdapter(axios);
 	'getClientExperiments'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
-		const request_data = {
-				req: 'request_data'
-			},
-			response_data = {
-				res: 'response_data'
-			};
-		mock.onPost(`/${method}`).replyOnce(200, response_data);
-		const response = await Queries[method](request_data as any, {
-			token: 'token',
-			interval: 0
-		});
+		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
+		const response = await Queries[method](request_data as any, configs);
+		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);
 	});
 });
@@ -52,14 +54,9 @@ const mock = new MockAdapter(axios);
 	'isEmailEducation'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
-		const response_data = {
-			res: 'response_data'
-		};
-		mock.onPost(`/${method}`).replyOnce(200, response_data);
-		const response = await Queries[method]({
-			token: 'token',
-			interval: 0
-		} as any);
+		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
+		const response = await Queries[method](configs as any);
+		expect(notionRequestSendMock).toHaveBeenCalledWith(method, {}, configs);
 		expect(response_data).toStrictEqual(response);
 	});
 });

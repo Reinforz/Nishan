@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
-import { Plugin } from '../../../src';
-import { PluginOptions } from '../../../src/Plugins/Options';
+import { NotionOperationsPlugin } from '../../../src';
+import { NotionOperationsPluginOptions } from '../../../src/Plugins/Options';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -21,10 +21,12 @@ it(`removeLastEditedPropsPlugin`, () => {
 			table: 'block'
 		};
 
-	const skipPluginOptionMock = jest.spyOn(PluginOptions, 'skip').mockImplementationOnce(() => operation);
+	const skipPluginOptionMock = jest
+		.spyOn(NotionOperationsPluginOptions, 'skip')
+		.mockImplementationOnce(() => operation);
 
 	expect(
-		Plugin.removeLastEditedProps({
+		NotionOperationsPlugin.removeLastEditedProps({
 			skip: undefined
 		})(operation)
 	).toStrictEqual({ ...operation, args: { other_data: 'data' } });

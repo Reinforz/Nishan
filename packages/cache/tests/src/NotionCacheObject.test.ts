@@ -44,6 +44,57 @@ it('saveToCache', () => {
 	expect(cache.block.get('block_3')).toBeUndefined();
 });
 
+describe('constructSyncRecordsParams', () => {
+	it(`sync_record_values is not empty`, async () => {
+		const cache = createDefaultCache(),
+			sync_record_values_response = {
+				recordMap: {
+					data: 'data'
+				}
+			} as any;
+
+		const syncRecordValuesMock = jest
+				.spyOn(Queries, 'syncRecordValues')
+				.mockImplementationOnce(async () => sync_record_values_response),
+			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
+
+		await NotionCacheObject.constructSyncRecordsParams([ [ '123', 'block' ] ], notion_request_configs, cache);
+
+		expect(syncRecordValuesMock).toHaveBeenCalledWith(
+			{
+				requests: [
+					{
+						table: 'block',
+						id: '123',
+						version: 0
+					}
+				]
+			},
+			notion_request_configs
+		);
+		expect(saveToCacheMock.mock.calls[0][0]).toStrictEqual(sync_record_values_response.recordMap);
+	});
+
+	it(`sync_record_values is empty`, async () => {
+		const cache = createDefaultCache(),
+			sync_record_values_response = {
+				recordMap: {
+					data: 'data'
+				}
+			} as any;
+
+		const syncRecordValuesMock = jest
+				.spyOn(Queries, 'syncRecordValues')
+				.mockImplementationOnce(async () => sync_record_values_response),
+			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
+
+		await NotionCacheObject.constructSyncRecordsParams([], notion_request_configs, cache);
+
+		expect(syncRecordValuesMock).not.toHaveBeenCalled();
+		expect(saveToCacheMock).not.toHaveBeenCalled();
+	});
+});
+
 it(`returnNonCachedData`, () => {
 	const recordMap: RecordMap = {
 		block: {
@@ -314,7 +365,7 @@ describe('initializeCacheForSpecificData', () => {
 		]);
 	});
 
-	it.only(`Should work for type user_root`, async () => {
+	it(`Should work for type user_root`, async () => {
 		const user_root_1: any = {
 				space_views: [ 'space_view_1' ],
 				id: 'user_root_1'
@@ -329,23 +380,49 @@ describe('initializeCacheForSpecificData', () => {
 		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'space_view_1', 'space_view' ] ]);
 	});
 
-	it.only(`space_view`, async () => {
-		const space_view_1: any = {
-				id: 'user_root_1',
-				bookmarked_pages: [ 'block_1' ]
-			},
-			cache: ICache = { ...createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+	describe('space_view', () => {
+		it(`bookmarked_pages=[id]`, async () => {
+			const space_view_1: any = {
+					id: 'user_root_1',
+					bookmarked_pages: [ 'block_1' ]
+				},
+				cache: ICache = { ...createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
 
-		const updateCacheManuallyMock = jest
-			.spyOn(NotionCacheObject, 'updateCacheManually')
-			.mockImplementationOnce(async () => undefined);
+			const updateCacheManuallyMock = jest
+				.spyOn(NotionCacheObject, 'updateCacheManually')
+				.mockImplementationOnce(async () => undefined);
 
-		await NotionCacheObject.initializeCacheForSpecificData('space_view_1', 'space_view', notion_request_configs, cache);
-		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+			await NotionCacheObject.initializeCacheForSpecificData(
+				'space_view_1',
+				'space_view',
+				notion_request_configs,
+				cache
+			);
+			expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+		});
+
+		it(`bookmarked_pages=undefined`, async () => {
+			const space_view_1: any = {
+					id: 'user_root_1'
+				},
+				cache: ICache = { ...createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+
+			const updateCacheManuallyMock = jest
+				.spyOn(NotionCacheObject, 'updateCacheManually')
+				.mockImplementationOnce(async () => undefined);
+
+			await NotionCacheObject.initializeCacheForSpecificData(
+				'space_view_1',
+				'space_view',
+				notion_request_configs,
+				cache
+			);
+			expect(updateCacheManuallyMock).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('collection', () => {
-		it.only(`template_pages=[]`, async () => {
+		it(`template_pages=[]`, async () => {
 			const collection_1 = {
 					id: 'collection_1',
 					template_pages: [ 'block_1' ]

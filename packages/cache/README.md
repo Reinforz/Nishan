@@ -21,4 +21,4 @@
 </p>
 
 <p align="center"><b>
-A cache specially designed to store notion data in memory</b></p>
+A cache specially designed to retrieve and store notion data in memory</b></p>

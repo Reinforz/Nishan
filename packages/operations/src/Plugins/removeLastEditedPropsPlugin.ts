@@ -1,8 +1,10 @@
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFactory } from '../';
+import { skipOption } from './utils';
 
-export const removeLastEditedPropsPlugin: NotionOperationPluginFactory = () => {
+export const removeLastEditedPropsPlugin: NotionOperationPluginFactory = (options) => {
 	return (operation: IOperation) => {
+		skipOption(options, operation);
 		const copied_operation = JSON.parse(JSON.stringify(operation));
 		const { args } = copied_operation;
 

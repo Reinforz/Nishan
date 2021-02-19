@@ -1,6 +1,6 @@
-import { Args, IOperation, TOperationCommand, TDataType } from '@nishans/types';
+import { Args, IOperation, TDataType, TOperationCommand } from '@nishans/types';
 
-const tables = [
+export const OPERATION_TABLES = [
 	'space',
 	'space_view',
 	'collection',
@@ -11,7 +11,7 @@ const tables = [
 	'user_root'
 ] as TDataType[];
 
-const commands = [
+export const OPERATION_COMMANDS = [
 	'setPermissionItem',
 	'listRemove',
 	'listBefore',
@@ -25,9 +25,9 @@ export const Operation: Record<
 	Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>
 > = {} as any;
 
-tables.forEach((table) => {
+OPERATION_TABLES.forEach((table) => {
 	Operation[table] = {} as any;
-	commands.forEach((command) => {
+	OPERATION_COMMANDS.forEach((command) => {
 		Operation[table][command] = (id: string, path: string[], args: Args): IOperation => {
 			return {
 				path,

@@ -1,7 +1,7 @@
 import { IOperation } from '@nishans/types';
 import { removeLastEditedPropsPlugin } from '../../../src';
 
-it(`Should work for empty args`, () => {
+it(`removeLastEditedPropsPlugin`, () => {
 	const args = {
 			last_edited_by_id: 'id',
 			last_edited_time: Date.now(),

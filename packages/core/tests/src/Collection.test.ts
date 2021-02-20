@@ -1,8 +1,7 @@
 import { IOperation, Schema } from '@nishans/types';
+import { CreateData, CreateMaps } from '../../libs';
 import {
 	Collection,
-	CreateData,
-	CreateMaps,
 	ICollectionUpdateInput,
 	IPageCreateInput,
 	NotionData,

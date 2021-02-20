@@ -1,7 +1,8 @@
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
-import { Block, NotionData, PopulateMap } from '../../../src';
+import { PopulateMap } from '../../../libs';
+import { Block, NotionData } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 import { last_edited_props } from '../../lastEditedProps';

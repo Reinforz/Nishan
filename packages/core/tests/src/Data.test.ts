@@ -1,6 +1,7 @@
 import { IHeader, IOperation } from '@nishans/types';
 import colors from 'colors';
-import { ChildTraverser, NotionData } from '../../src';
+import { ChildTraverser } from '../../libs';
+import { NotionData } from '../../src';
 import { createDefaultCache } from '../createDefaultCache';
 import { default_nishan_arg } from '../defaultNishanArg';
 import { last_edited_props } from '../lastEditedProps';

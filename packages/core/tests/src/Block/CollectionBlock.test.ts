@@ -1,5 +1,7 @@
 import { IOperation } from '@nishans/types';
-import { CollectionBlock, CreateData, TViewCreateInput } from '../../../src';
+import { CreateData } from '../../../libs';
+import { CollectionBlock } from "../../../src";
+import { TViewCreateInput } from '../../../types';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 

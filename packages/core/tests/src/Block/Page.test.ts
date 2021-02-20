@@ -1,6 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { CreateData, Page } from '../../../src';
+import { CreateData } from '../../../libs';
+import { Page } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { default_nishan_arg } from '../../defaultNishanArg';
 

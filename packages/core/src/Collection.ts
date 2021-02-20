@@ -54,7 +54,7 @@ class Collection extends Data<ICollection> {
    * @param rows Array of Objects for configuring template options
    */
 	async createTemplates (rows: IPageCreateInput[]) {
-		return await CreateData.createContents(rows, this.id, this.type as 'collection', this.getProps());
+		return await CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
 	async createRows (rows: IPageCreateInput[]) {
-		return await CreateData.createContents(rows, this.id, this.type as 'collection', this.getProps());
+		return await CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
 	}
 
 	async getRow (arg?: FilterType<IPage>) {
@@ -207,7 +207,7 @@ class Collection extends Data<ICollection> {
    */
 	async createSchemaUnits (args: TSchemaUnitInput[]) {
 		const data = this.getCachedData();
-		const [ , , schema_unit_map ] = await CreateData.createSchema(args, {
+		const [ , , schema_unit_map ] = await CreateData.schema(args, {
 			...this.getProps(),
 			name: data.name,
 			parent_collection_id: data.id,

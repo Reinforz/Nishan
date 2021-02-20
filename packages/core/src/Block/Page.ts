@@ -54,7 +54,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @returns Array of newly created block content objects
    */
 	async createBlocks (contents: TBlockCreateInput[]) {
-		return await CreateData.createContents(contents, this.id, this.type as 'block', this.getProps());
+		return await CreateData.contents(contents, this.id, this.type as 'block', this.getProps());
 	}
 
 	async getBlock (arg?: FilterType<TBlock>) {

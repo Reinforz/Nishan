@@ -84,7 +84,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async createRootPages(contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
-    return await CreateData.createContents(contents, this.id, this.type as "space", this.getProps())
+    return await CreateData.contents(contents, this.id, this.type as "space", this.getProps())
   }
 
   async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & ICollection)>) {

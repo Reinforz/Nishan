@@ -48,7 +48,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 
 	createViews (params: TViewCreateInput[]) {
 		const data = this.getCachedData(),
-			[ view_ids, view_map ] = CreateData.createViews(
+			[ view_ids, view_map ] = CreateData.views(
 				this.cache.collection.get(data.collection_id) as ICollection,
 				params,
 				this.getProps()

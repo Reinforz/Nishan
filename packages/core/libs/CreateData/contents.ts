@@ -2,7 +2,7 @@ import { ICache } from "@nishans/cache";
 import { Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IOperation, IPage, IPermission, ISpace, TBlock } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
-import { createBlockClass, CreateData, CreateMaps, fetchAndCacheData, generateId } from "../";
+import { createBlockClass, CreateData, CreateMaps, fetchAndCacheData, generateId } from "..";
 import { IBlockMap, NishanArg, TBlockCreateInput } from "../../types";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
@@ -106,7 +106,7 @@ export async function createContents(contents: TBlockCreateInput[], original_par
 
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         const {type} = content;
-        const [collection_id, view_ids] = await CreateData.createCollection(content, block_id, props);
+        const [collection_id, view_ids] = await CreateData.collection(content, block_id, props);
         const data: ICollectionBlock = {
           ...common_data,
           collection_id,
@@ -132,7 +132,7 @@ export async function createContents(contents: TBlockCreateInput[], original_par
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
           collection = await fetchAndCacheData<ICollection>('collection', collection_id, props.cache, props.token),
-          [view_ids] = CreateData.createViews(collection, views, props, block_id),
+          [view_ids] = CreateData.views(collection, views, props, block_id),
           collection_view_data: ICollectionView = {
             id: block_id,
             parent_id,

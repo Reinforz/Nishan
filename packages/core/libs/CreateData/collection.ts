@@ -14,7 +14,7 @@ export async function createCollection (input: ICollectionBlockInput, parent_id:
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection
-	const [ schema ] = await CreateData.createSchema(input.schema, {
+	const [ schema ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,
 		name: input.name,
 		...props
@@ -34,7 +34,7 @@ export async function createCollection (input: ICollectionBlockInput, parent_id:
 	};
 
 	// Create the views of the collection
-	const [ view_ids, view_map ] = CreateData.createViews(collection_data, input.views, props);
+	const [ view_ids, view_map ] = CreateData.views(collection_data, input.views, props);
 	// Push the collection create operation to stack
 	props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))));
 	// Store the collection in cache

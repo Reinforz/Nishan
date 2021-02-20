@@ -145,7 +145,7 @@ class NotionUser extends Data<INotionUser> {
       this.logger && this.logger(`UPDATE`, 'user_root', this.user_id);
       this.logger && this.logger(`UPDATE`, 'space', space_id);
 
-      await CreateData.createContents(opt.contents, space_id, "space", {...this.getProps(), space_id})
+      await CreateData.contents(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };
 
     return spaces;

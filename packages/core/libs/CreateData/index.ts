@@ -1,11 +1,11 @@
-import { createCollection } from './createCollection';
-import { createContents } from './createContents';
-import { createSchema } from './createSchema';
-import { createViews } from './createViews';
+import { createCollection } from './collection';
+import { createContents } from './contents';
+import { createSchema } from './schema';
+import { createViews } from './views';
 
 export const CreateData = {
-	createViews,
-	createCollection,
-	createContents,
-	createSchema
+	views: createViews,
+	collection: createCollection,
+	contents: createContents,
+	schema: createSchema
 };

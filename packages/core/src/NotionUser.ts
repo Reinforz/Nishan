@@ -4,7 +4,7 @@ import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings,
 import { v4 as uuidv4 } from 'uuid';
 import { CollectionViewPage, Page } from '../src';
 import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
-import { CreateData, createPageMap, idToUuid, transformToMultiple, uuidToId, warn } from '../utils';
+import { CreateData, CreateMaps, idToUuid, transformToMultiple, uuidToId, warn } from '../utils';
 import Data from './Data';
 import Space from './Space';
 import UserRoot from "./UserRoot";
@@ -220,7 +220,7 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async getPagesById(ids: string[]) {
-    const tpage_map = createPageMap();
+    const tpage_map = CreateMaps.page();
     await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
     for (let index = 0; index < ids.length; index++) {
       const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;

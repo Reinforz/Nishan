@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation, IPage, ISpace, TBlock, TPage } from '@nishans/types';
 import colors from 'colors';
-import { iterateAndDeleteChildren, iterateAndGetChildren, iterateAndUpdateChildren, iterateChildren } from '../../src';
+import { ChildTraverser, iterateChildren } from '../../src';
 import { last_edited_props } from '../lastEditedProps';
 
 afterEach(() => {
@@ -650,7 +650,7 @@ describe('iterateChildren', () => {
 	});
 });
 
-describe('iterateAndGetChildren', () => {
+describe('ChildTraverser.get', () => {
 	describe('args=[ids]', () => {
 		it('child_ids=array', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
@@ -681,7 +681,7 @@ describe('iterateAndGetChildren', () => {
 
 			const logger = jest.fn(),
 				cb_spy = jest.fn();
-			const container = await iterateAndGetChildren<ISpace, TPage, TBlock[]>(
+			const container = await ChildTraverser.get<ISpace, TPage, TBlock[]>(
 				child_ids,
 				(id) => cache.block.get(id) as TPage,
 				{
@@ -746,7 +746,7 @@ describe('iterateAndGetChildren', () => {
 				])
 			} as any;
 
-			const container = await iterateAndGetChildren<IPage, IPage, IPage[]>(
+			const container = await ChildTraverser.get<IPage, IPage, IPage[]>(
 				child_ids,
 				(id) => cache.block.get(id) as IPage,
 				{
@@ -774,7 +774,7 @@ describe('iterateAndGetChildren', () => {
 	});
 });
 
-describe('iterateAndDeleteChildren', () => {
+describe('ChildTraverser.delete', () => {
 	describe('args=[ids]', () => {
 		it(`manual=false,child_ids=[ids]`, async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ],
@@ -813,7 +813,7 @@ describe('iterateAndDeleteChildren', () => {
 			const logger_spy = jest.fn(),
 				cb_spy = jest.fn();
 
-			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>(
+			const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
 				[ 'child_one_id', 'child_two_id' ],
 				(id) => cache.block.get(id),
 				{
@@ -953,7 +953,7 @@ describe('iterateAndDeleteChildren', () => {
 				])
 			} as any;
 
-			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>(
+			const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
 				[ 'child_one_id', 'child_two_id' ],
 				(id) => cache.block.get(id),
 				{
@@ -1074,7 +1074,7 @@ describe('iterateAndDeleteChildren', () => {
 				])
 			} as any;
 
-			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>(
+			const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
 				[ 'child_one_id', 'child_two_id' ],
 				(id) => cache.block.get(id),
 				{
@@ -1150,7 +1150,7 @@ describe('iterateAndDeleteChildren', () => {
 					]
 				])
 			} as any;
-			const deleted_data = await iterateAndDeleteChildren<IPage, TBlock>(
+			const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
 				[ 'child_one_id' ],
 				(id) => cache.block.get(id),
 				{
@@ -1227,7 +1227,7 @@ describe('iterateAndDeleteChildren', () => {
 				])
 			} as any;
 
-			await iterateAndDeleteChildren<IPage, TBlock>([ 'child_one_id' ], (id) => cache.block.get(id), {
+			await ChildTraverser.delete<IPage, TBlock>([ 'child_one_id' ], (id) => cache.block.get(id), {
 				container: [],
 				cache,
 				child_ids: 'content',
@@ -1257,7 +1257,7 @@ describe('iterateAndDeleteChildren', () => {
 	});
 });
 
-describe('iterateAndUpdateChildren', () => {
+describe('ChildTraverser.update', () => {
 	describe('args=[ids]', () => {
 		it(`manual=false,child_ids=[ids]`, async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ],
@@ -1295,7 +1295,7 @@ describe('iterateAndUpdateChildren', () => {
 			const logger_spy = jest.fn(),
 				cb_spy = jest.fn();
 
-			const updated_data = await iterateAndUpdateChildren<IPage, TBlock, TBlock>(
+			const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
 				[ [ 'child_one_id', { content: 'child1' } as any ], [ 'child_two_id', { content: 'child2' } as any ] ],
 				(id) => cache.block.get(id),
 				{
@@ -1429,7 +1429,7 @@ describe('iterateAndUpdateChildren', () => {
 				])
 			} as any;
 
-			const updated_data = await iterateAndUpdateChildren<IPage, TBlock, TBlock>(
+			const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
 				[ [ 'child_one_id', { content: 'child1' } as any ], [ 'child_two_id', { content: 'child2' } as any ] ],
 				(id) => cache.block.get(id),
 				{
@@ -1531,7 +1531,7 @@ describe('iterateAndUpdateChildren', () => {
 				])
 			} as any;
 
-			const updated_data = await iterateAndUpdateChildren<IPage, TBlock, TBlock>(
+			const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
 				[ [ 'child_one_id', { content: 'child1' } as any ], [ 'child_two_id', { content: 'child2' } as any ] ],
 				(id) => cache.block.get(id),
 				{

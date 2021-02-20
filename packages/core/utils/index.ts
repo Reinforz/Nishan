@@ -8,7 +8,6 @@ export * from './errors';
 export * from './fetchAndCacheData';
 export * from './generateId';
 export * from './initializeView';
-export * from './iterateChildren';
 export * from './logs';
 export * from './populateFilters';
 export * from './PopulateMap';

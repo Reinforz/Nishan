@@ -17,7 +17,7 @@ import {
   ViewSorts
 } from '@nishans/types';
 import { v4 } from 'uuid';
-import { getSchemaMap } from "../../../src";
+import { populateSchemaMap } from "../../../src";
 import {
   createViews,
   generateViewData,
@@ -76,7 +76,7 @@ const schema: Schema = {
 	}
 };
 
-const schema_map = getSchemaMap(schema);
+const schema_map = populateSchemaMap(schema);
 
 describe('populateViewQuery2', () => {
 	describe('Table view', () => {
@@ -797,7 +797,7 @@ describe('populateViewFormat', () => {
 			it(`Should throw error for board view (schema doesnot contain any select or multiselect)`, () => {
 				const custom_schema = JSON.parse(JSON.stringify(schema));
 				delete custom_schema.select;
-				const custom_schema_map = getSchemaMap(custom_schema);
+				const custom_schema_map = populateSchemaMap(custom_schema);
 				expect(() =>
 					populateViewFormat(
 						{
@@ -811,7 +811,7 @@ describe('populateViewFormat', () => {
 			it(`Should throw error for board view (select doesnt have any options)`, () => {
 				const custom_schema = JSON.parse(JSON.stringify(schema));
 				custom_schema.select.options.pop();
-				const custom_schema_map = getSchemaMap(custom_schema);
+				const custom_schema_map = populateSchemaMap(custom_schema);
 				expect(() =>
 					populateViewFormat(
 						{

@@ -14,7 +14,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../types';
-import { CreateData, createSchemaUnitMap, deepMerge, populateSchemaMap, transformToMultiple } from '../utils';
+import { CreateData, CreateMaps, deepMerge, populateSchemaMap, transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';
 import SchemaUnit from './SchemaUnit';
@@ -234,7 +234,7 @@ class Collection extends Data<ICollection> {
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
-				container: createSchemaUnitMap(),
+				container: CreateMaps.schema_unit(),
 				child_ids: Array.from(schema_map.keys()),
 				child_type: 'collection',
 				multiple,
@@ -273,7 +273,7 @@ class Collection extends Data<ICollection> {
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: createSchemaUnitMap(),
+				container: CreateMaps.schema_unit(),
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),

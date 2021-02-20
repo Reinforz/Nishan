@@ -10,7 +10,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../types';
-import { createPageMap, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
+import { CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
 import Data from './Data';
 import Space from './Space';
 
@@ -70,7 +70,7 @@ class SpaceView extends Data<ISpaceView> {
 				child_ids: 'bookmarked_pages',
 				child_type: 'block',
 				multiple,
-				container: createPageMap()
+				container: CreateMaps.page()
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (_, page, page_map) => {
@@ -104,7 +104,7 @@ class SpaceView extends Data<ISpaceView> {
 				child_type: 'block',
 				multiple,
 				manual: true,
-				container: createPageMap()
+				container: CreateMaps.page()
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favourite_status, page_map) => {

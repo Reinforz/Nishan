@@ -10,7 +10,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import { CreateData, createViewMap, fetchAndCacheData, transformToMultiple } from '../../utils';
+import { CreateData, CreateMaps, fetchAndCacheData, transformToMultiple } from '../../utils';
 import Collection from '../Collection';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
 import Block from './Block';
@@ -66,7 +66,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
 		return await this.getIterate<TView, IViewMap>(
 			args,
-			{ multiple, container: createViewMap(), child_ids: 'view_ids', child_type: 'collection_view' },
+			{ multiple, container: CreateMaps.view(), child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
 			(view_id, { type, name }, view_map) => {
 				const view_obj = new view_class[type]({
@@ -87,7 +87,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 		return await this.updateIterate<TView, TViewUpdateInput, IViewMap>(
 			args,
 			{
-				container: createViewMap(),
+				container: CreateMaps.view(),
 				multiple,
 				child_ids: 'view_ids',
 				child_type: 'collection_view'

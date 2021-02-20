@@ -1,7 +1,7 @@
 import { IViewFilter } from '@nishans/types';
-import { getSchemaMap, populateFilters } from '../../src';
+import { populateFilters, populateSchemaMap } from '../../src';
 
-const schema_map = getSchemaMap({
+const schema_map = populateSchemaMap({
 	title: {
 		type: 'text',
 		name: 'Title'

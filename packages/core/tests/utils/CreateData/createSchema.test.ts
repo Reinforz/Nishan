@@ -1,7 +1,7 @@
 import { ICollection, IOperation, Schema, TSchemaUnit } from '@nishans/types';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { getSchemaMap, ISchemaMapValue, TSchemaUnitInput } from '../../../src';
+import { ISchemaMapValue, populateSchemaMap, TSchemaUnitInput } from '../../../src';
 import { createSchema, generateRelationSchema, generateRollupSchema } from "../../../utils/CreateData/createSchema";
 import { createDefaultCache } from '../../createDefaultCache';
 
@@ -44,7 +44,7 @@ describe('generateRelationSchema', () => {
 				}
 			);
 
-      const child_relation_schema_unit_id = getSchemaMap(child_collection.schema).get("Related to Parent Collection (Parent Relation Column)")?.schema_id ?? "";
+      const child_relation_schema_unit_id = populateSchemaMap(child_collection.schema).get("Related to Parent Collection (Parent Relation Column)")?.schema_id ?? "";
 
       expect(child_collection.schema[child_relation_schema_unit_id]).toStrictEqual({
         type: "relation",
@@ -119,7 +119,7 @@ describe('generateRelationSchema', () => {
 				}
 			);
       
-      const child_relation_schema_unit_id = (getSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Related to Parent Collection (Parent Relation Column)") as ISchemaMapValue).schema_id;
+      const child_relation_schema_unit_id = (populateSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Related to Parent Collection (Parent Relation Column)") as ISchemaMapValue).schema_id;
       
       expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {
@@ -187,7 +187,7 @@ describe('generateRelationSchema', () => {
 				}
 			);
 
-      const child_relation_schema_unit_id = (getSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Child Column") as ISchemaMapValue).schema_id;
+      const child_relation_schema_unit_id = (populateSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Child Column") as ISchemaMapValue).schema_id;
       
       expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {
@@ -326,8 +326,8 @@ describe('createSchema', () => {
 				}
 			);
 
-      const child_relation_schema_unit_id = (getSchemaMap(child_collection.schema).get("Related to Parent (Parent Relation Column)") as ISchemaMapValue).schema_id;
-      const parent_relation_schema_unit_id = (getSchemaMap(schema).get("Parent Relation Column") as ISchemaMapValue).schema_id;
+      const child_relation_schema_unit_id = (populateSchemaMap(child_collection.schema).get("Related to Parent (Parent Relation Column)") as ISchemaMapValue).schema_id;
+      const parent_relation_schema_unit_id = (populateSchemaMap(schema).get("Parent Relation Column") as ISchemaMapValue).schema_id;
 
       const output_schema_units = [
         {
@@ -460,7 +460,7 @@ describe('generateRollupSchema', () => {
           relation_property: "Relation",
           target_property: "Title",
           aggregation: "average"
-        },getSchemaMap(schema), {
+        },populateSchemaMap(schema), {
           cache: {
             ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
@@ -497,7 +497,7 @@ describe('generateRollupSchema', () => {
           relation_property: "Relation",
           target_property: "Text",
           aggregation: "average"
-        },getSchemaMap(schema), {
+        },populateSchemaMap(schema), {
           cache: {
             ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
@@ -534,7 +534,7 @@ describe('generateRollupSchema', () => {
           relation_property: "Relation",
           target_property: "Rollup",
           aggregation: "average"
-        },getSchemaMap(schema), {
+        },populateSchemaMap(schema), {
           cache: {
             ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
@@ -572,7 +572,7 @@ describe('generateRollupSchema', () => {
           relation_property: "Relation",
           target_property: "Rollup",
           aggregation: "average"
-        },getSchemaMap(schema), {
+        },populateSchemaMap(schema), {
           cache: {
             ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
@@ -610,7 +610,7 @@ describe('generateRollupSchema', () => {
           relation_property: "Relation",
           target_property: "Formula",
           aggregation: "average"
-        },getSchemaMap(schema), {
+        },populateSchemaMap(schema), {
           cache: {
             ...createDefaultCache(),
             collection: new Map([["target_collection_id", {
@@ -667,7 +667,7 @@ describe('generateRollupSchema', () => {
         relation_property: "Relation",
         target_property: "Title",
         aggregation: "average"
-      },getSchemaMap(schema), {
+      },populateSchemaMap(schema), {
         cache,
         token: 'token'
       });
@@ -702,7 +702,7 @@ describe('generateRollupSchema', () => {
         name: "Rollup Column",
         relation_property: "unknown",
         target_property: "unknown"
-      },getSchemaMap(schema), {
+      },populateSchemaMap(schema), {
         cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Unknown property unknown referenced in relation_property`)
@@ -715,7 +715,7 @@ describe('generateRollupSchema', () => {
         name: "Rollup Column",
         relation_property: "Relation",
         target_property: "unknown"
-      },getSchemaMap(schema), {
+      },populateSchemaMap(schema), {
         cache: {
           collection: new Map([["target_collection_id", {
             schema: {
@@ -737,7 +737,7 @@ describe('generateRollupSchema', () => {
         name: "Rollup Column",
         relation_property: "Title",
         target_property: "unknown"
-      },getSchemaMap(schema), {
+      },populateSchemaMap(schema), {
         cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(
@@ -758,7 +758,7 @@ describe('generateRollupSchema', () => {
         name: "Rollup Column",
         relation_property: "Relation",
         target_property: "unknown"
-      },getSchemaMap(schema), {
+      },populateSchemaMap(schema), {
         cache: createDefaultCache(),
         token: 'token'
       })).rejects.toThrow(`Collection:target_collection_id doesnot exist`)

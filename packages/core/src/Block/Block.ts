@@ -3,7 +3,7 @@ import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NishanArg, RepositionParams, TBlockInput } from '../../types';
-import { createBlockMap, deepMerge, detectChildData, fetchAndCacheData, generateId, PopulateMap } from '../../utils';
+import { CreateMaps, deepMerge, detectChildData, fetchAndCacheData, generateId, PopulateMap } from '../../utils';
 import Data from '../Data';
 
 /**
@@ -30,7 +30,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @returns A block map
    */
 	async duplicate (infos: number | string[]) {
-		const block_map = createBlockMap(),
+		const block_map = CreateMaps.block(),
 			block = this.getCachedData();
 		const ids: string[] = typeof infos === 'number' ? Array(infos).fill(v4()) : infos.map((info) => generateId(info));
 

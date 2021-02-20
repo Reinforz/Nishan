@@ -5,7 +5,7 @@ import { Operation } from "@nishans/operations";
 import { IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
 import { populateSchemaMap, SchemaUnit, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
 import { ISchemaUnitMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../../types";
-import { createSchemaUnitMap, createShortId } from "../../utils";
+import { CreateMaps, createShortId } from "../../utils";
 
 interface ParentCollectionData {
   parent_collection_id: string
@@ -196,7 +196,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
  * @returns Tuple of the constructed schema and schema map
  */
 export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
-  const schema_unit_map = createSchemaUnitMap();
+  const schema_unit_map = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
   const schema: Schema = options.current_schema ?? {}, schema_map = populateSchemaMap(schema);
   // Iterate through each input schmea units

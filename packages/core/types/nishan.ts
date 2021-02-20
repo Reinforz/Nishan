@@ -23,3 +23,50 @@ export type UpdateTypes<T1, T2> =
 	| [string, T2][]
 	| ((T: T1, index: number) => Promise<T2> | T2 | void | null | undefined);
 export type UpdateType<T1, T2> = [string, T2] | ((T: T1, index: number) => Promise<T2> | T2 | void | null | undefined);
+
+export interface IterateOptions<T, C> {
+	/**
+   * The data type of the child
+   */
+	child_type: TDataType;
+	/**
+   * A container of child ids or a key of the parent that stores the child ids
+   */
+	child_ids: string[] | keyof T;
+	/**
+   * Matches multiple based on the value
+   */
+	multiple?: boolean;
+	/**
+   * A container that stores the data
+   */
+	container: C;
+
+	initialize_cache?: boolean;
+}
+
+export interface IterateAndGetOptions<T, C> extends IterateOptions<T, C> {}
+
+export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> &
+	(
+		| {
+				/**
+   * Whether or not the user will manually handle all the mutations
+   */
+				manual: true;
+				/**
+   * The key of the parent which contains the child ids
+   */
+				child_path?: keyof T;
+			}
+		| {
+				manual?: false;
+				child_path: keyof T;
+			});
+
+export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
+	/**
+   * Whether or not the user will manually handle all the mutations
+   */
+	manual?: boolean;
+};

@@ -1,8 +1,8 @@
 import { IOperation, Schema } from '@nishans/types';
 import {
 	Collection,
-	createBlockMap,
 	CreateData,
+	CreateMaps,
 	ICollectionUpdateInput,
 	IPageCreateInput,
 	NotionData,
@@ -121,7 +121,7 @@ it(`createTemplates`, async () => {
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
-		return createBlockMap();
+		return CreateMaps.block();
 	});
 
 	const create_templates_params: IPageCreateInput[] = [
@@ -262,7 +262,7 @@ it(`createRows`, async () => {
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
-		return createBlockMap();
+		return CreateMaps.block();
 	});
 
 	const create_row_params: IPageCreateInput[] = [

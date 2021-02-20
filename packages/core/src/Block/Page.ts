@@ -11,7 +11,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import { createBlockMap, CreateData, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../utils';
+import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../utils';
 import Block from './Block';
 
 /**
@@ -68,7 +68,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	async getBlocks (args?: FilterTypes<TBlock>, multiple?: boolean) {
 		return await this.getIterate<TBlock, IBlockMap>(
 			args,
-			{ container: createBlockMap(), multiple, child_ids: 'content', child_type: 'block' },
+			{ container: CreateMaps.block(), multiple, child_ids: 'content', child_type: 'block' },
 			(block_id) => this.cache.block.get(block_id) as TBlock,
 			async (_, block, block_map) => {
 				await PopulateMap.block(block, block_map, this.getProps());
@@ -87,7 +87,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				multiple,
 				child_ids: 'content',
 				child_type: 'block',
-				container: createBlockMap()
+				container: CreateMaps.block()
 			},
 			(child_id) => this.cache.block.get(child_id),
 			async (_, block, __, block_map) => {

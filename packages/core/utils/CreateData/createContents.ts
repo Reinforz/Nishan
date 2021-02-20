@@ -1,9 +1,9 @@
-import { ICollection, IPage, IColumnList, IColumn, ICollectionBlock, ICollectionViewPage, IFactory, ICollectionView, ISpace, IPermission, IOperation, TBlock } from "@nishans/types";
-import { TBlockCreateInput, NishanArg, IBlockMap } from "../../types";
-import { generateId, createBlockMap, createBlockClass, CreateData, fetchAndCacheData} from "../../utils";
-import { v4 as uuidv4 } from 'uuid';
 import { ICache } from "@nishans/cache";
 import { Operation } from "@nishans/operations";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IOperation, IPage, IPermission, ISpace, TBlock } from "@nishans/types";
+import { v4 as uuidv4 } from 'uuid';
+import { IBlockMap, NishanArg, TBlockCreateInput } from "../../types";
+import { createBlockClass, CreateData, CreateMaps, fetchAndCacheData, generateId } from "../../utils";
 
 function populatePermissions(user_id: string, is_private?: boolean): IPermission{
   return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }
@@ -46,7 +46,7 @@ export function stackCacheMap<T extends TBlock>(block_map: IBlockMap, data: T, p
 }
 
 export async function createContents(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
-  const block_map = createBlockMap();
+  const block_map = CreateMaps.block();
 
   const metadata = {
     created_time: Date.now(),

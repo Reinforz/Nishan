@@ -1,7 +1,7 @@
 import { NotionCacheClass } from "@nishans/cache";
 import { INotionUser } from "@nishans/types";
 import { FilterType, FilterTypes, Logger, NishanArg } from "../types";
-import { constructLogger, iterateAndGetChildren, transformToMultiple } from "../utils";
+import { ChildTraverser, constructLogger, transformToMultiple } from "../utils";
 import Collection from "./Collection";
 import NotionData from "./Data";
 import NotionUser from "./NotionUser";
@@ -61,7 +61,7 @@ class Nishan extends NotionCacheClass {
       notion_user_ids.push(notion_user_id)
     }
 
-    return await iterateAndGetChildren<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
+    return await ChildTraverser.get<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
       ...common_props,
       multiple,
       child_ids: notion_user_ids,

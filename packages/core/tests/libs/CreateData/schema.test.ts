@@ -1,6 +1,6 @@
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { populateSchemaMap } from '../../../libs';
-import { createSchema } from '../../../libs/CreateData/schema';
+import { CreateData } from '../../../libs/CreateData';
 import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
 import { createDefaultCache } from '../../createDefaultCache';
 
@@ -8,9 +8,9 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('createSchema', () => {
+describe('CreateData.schema', () => {
 	describe('Work correctly', () => {
-		it(`createSchema should work correctly (collection exists in cache)`, async () => {
+		it(`CreateData.schema should work correctly (collection exists in cache)`, async () => {
 			const input_schema_units: TSchemaUnitInput[] = [
 				{
 					type: 'title',
@@ -67,7 +67,7 @@ describe('createSchema', () => {
 					])
 				};
 
-			const [ schema, schema_map, schema_unit_map ] = await createSchema(input_schema_units, {
+			const [ schema, schema_map, schema_unit_map ] = await CreateData.schema(input_schema_units, {
 				parent_collection_id: 'parent_collection_id',
 				name: [ [ 'Parent' ] ],
 				token: 'token',
@@ -138,7 +138,7 @@ describe('createSchema', () => {
 	describe('Throws error', () => {
 		it(`Should throw error for duplicate property name`, () => {
 			expect(() =>
-				createSchema(
+				CreateData.schema(
 					[
 						{
 							type: 'title',
@@ -166,7 +166,7 @@ describe('createSchema', () => {
 
 		it(`Should throw error if title type property not present in schema`, () => {
 			expect(() =>
-				createSchema(
+				CreateData.schema(
 					[
 						{
 							type: 'number',

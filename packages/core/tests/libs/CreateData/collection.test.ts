@@ -1,10 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import axios from 'axios';
 import { CreateData } from '../../../libs/CreateData';
 import { createDefaultCache } from '../../createDefaultCache';
-
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
 
 afterEach(() => {
 	jest.restoreAllMocks();

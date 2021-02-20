@@ -2,7 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { ICollection, TBlock, TCollectionBlock, TPage } from '@nishans/types';
 import { CollectionView, CollectionViewPage } from '../src';
 import { IBlockMap, IPageMap, NishanArg } from '../types';
-import { createBlockClass } from '../utils';
+import { createBlockClass } from './createBlockClass';
 
 async function populateCollectionBlockMap (
 	block: TCollectionBlock,

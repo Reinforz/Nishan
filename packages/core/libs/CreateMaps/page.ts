@@ -3,7 +3,7 @@ import { IPageMap } from '../../types';
 /**
  * Returns an object with keys representing all the page types, and values containing a map of objects representing those page types
  */
-export function createPageMap () {
+export function page () {
 	return {
 		page: new Map(),
 		collection_view_page: new Map()

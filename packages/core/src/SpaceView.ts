@@ -1,4 +1,5 @@
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
+import { CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -10,7 +11,6 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../types';
-import { CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../utils';
 import Data from './Data';
 import Space from './Space';
 

@@ -3,7 +3,7 @@ import { ISchemaUnitMap } from '../../types';
 /**
  * Returns an object with keys representing all the schema_unit types, and values containing a map of objects representing those schema_unit types
  */
-export function createSchemaUnitMap () {
+export function schema_unit () {
 	return {
 		text: new Map(),
 		number: new Map(),

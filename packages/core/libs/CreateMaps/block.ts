@@ -3,7 +3,7 @@ import { IBlockMap } from '../../types';
 /**
  * Returns an object with keys representing all the block types, and values containing a map of objects representing those block types
  */
-export function createBlockMap () {
+export function block () {
 	return {
 		linked_db: new Map(),
 		collection_view_page: new Map(),

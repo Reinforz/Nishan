@@ -1,4 +1,5 @@
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../libs';
 import { NotionPermissions } from '../../src';
 import {
 	FilterType,
@@ -11,7 +12,6 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../utils';
 import Block from './Block';
 
 /**

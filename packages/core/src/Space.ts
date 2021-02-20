@@ -1,8 +1,8 @@
 import { ICache } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
+import { CreateData, CreateMaps, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../libs';
 import { FilterType, FilterTypes, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageMap, IPageUpdateInput, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
-import { CreateData, CreateMaps, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from "./SpaceView";
 

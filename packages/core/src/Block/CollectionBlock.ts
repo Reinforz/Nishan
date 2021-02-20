@@ -1,5 +1,6 @@
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
+import { CreateData, CreateMaps, fetchAndCacheData, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -10,7 +11,6 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import { CreateData, CreateMaps, fetchAndCacheData, transformToMultiple } from '../../utils';
 import Collection from '../Collection';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
 import Block from './Block';

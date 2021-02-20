@@ -2,6 +2,12 @@ import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
 import {
+	populateAggregationsMap,
+	populateSchemaMap,
+	transformToMultiple,
+	UnknownPropertyReferenceError
+} from '../../libs';
+import {
 	FilterType,
 	FilterTypes,
 	ISchemaAggregationMap,
@@ -12,12 +18,6 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import {
-	populateAggregationsMap,
-	populateSchemaMap,
-	transformToMultiple,
-	UnknownPropertyReferenceError
-} from '../../utils';
 import View from './View';
 
 export function detectAggregationErrors (

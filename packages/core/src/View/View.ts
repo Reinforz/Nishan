@@ -2,6 +2,15 @@ import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
+  deepMerge,
+  initializeViewFilters,
+  populateFilters, populateFiltersMap,
+  populateFormatPropertiesMap,
+  populateSchemaMap, populateSortsMap,
+  transformToMultiple,
+  UnknownPropertyReferenceError
+} from '../../libs';
+import {
   FilterType,
   FilterTypes,
   ISchemaFiltersMapValue,
@@ -17,15 +26,6 @@ import {
   UpdateType,
   UpdateTypes
 } from '../../types';
-import {
-  deepMerge,
-  initializeViewFilters,
-  populateFilters, populateFiltersMap,
-  populateFormatPropertiesMap,
-  populateSchemaMap, populateSortsMap,
-  transformToMultiple,
-  UnknownPropertyReferenceError
-} from '../../utils';
 import Data from '../Data';
 
 /**

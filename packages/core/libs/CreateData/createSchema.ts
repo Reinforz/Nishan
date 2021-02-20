@@ -3,9 +3,9 @@ import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { Operation } from "@nishans/operations";
 import { IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
-import { populateSchemaMap, SchemaUnit, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
+import { CreateMaps, createShortId, populateSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../";
+import { SchemaUnit } from "../../src";
 import { ISchemaUnitMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../../types";
-import { CreateMaps, createShortId } from "../../utils";
 
 interface ParentCollectionData {
   parent_collection_id: string

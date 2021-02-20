@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
 import { TData, TDataType } from '@nishans/types';
-import { warn } from '../src';
+import { warn } from './';
 
 export async function fetchAndCacheData<D extends TData> (table: TDataType, id: string, cache: ICache, token: string) {
 	let data = cache[table].get(id);

@@ -2,8 +2,8 @@ import { Mutations } from '@nishans/endpoints';
 import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { v4 } from 'uuid';
+import { CreateMaps, deepMerge, detectChildData, fetchAndCacheData, generateId, PopulateMap } from '../../libs';
 import { NishanArg, RepositionParams, TBlockInput } from '../../types';
-import { CreateMaps, deepMerge, detectChildData, fetchAndCacheData, generateId, PopulateMap } from '../../utils';
 import Data from '../Data';
 
 /**

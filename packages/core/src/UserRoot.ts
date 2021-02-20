@@ -1,8 +1,7 @@
-import { IUserRoot, ISpaceView } from '@nishans/types';
-import { transformToMultiple } from '../utils';
-import { NishanArg, FilterType, FilterTypes, UpdateType, ISpaceViewUpdateInput, UpdateTypes } from '../types';
+import { ISpaceView, IUserRoot } from '@nishans/types';
+import { transformToMultiple } from '../libs';
+import { FilterType, FilterTypes, ISpaceViewUpdateInput, NishanArg, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
-
 import SpaceView from './SpaceView';
 
 class UserRoot extends Data<IUserRoot> {

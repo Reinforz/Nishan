@@ -12,8 +12,8 @@ import {
 	TSpacePermissionRole,
 	TUserPermissionRole
 } from '@nishans/types';
+import { deepMerge } from '../libs';
 import { NishanArg } from '../types';
-import { deepMerge } from '../utils';
 import Data from './Data';
 
 interface UserIdentifier {

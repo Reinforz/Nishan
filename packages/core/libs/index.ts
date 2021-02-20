@@ -1,7 +1,8 @@
 export * from './ChildTraverser/index';
 export * from './constructLogger';
 export * from './createBlockClass';
-export * from './createMaps';
+export * from './CreateData/index';
+export * from './CreateMaps/index';
 export * from './deepMerge';
 export * from './detectChildData';
 export * from './errors';
@@ -16,6 +17,3 @@ export * from './positionChildren';
 export * from './transformToMultiple';
 export * from './updateBookmarkedPages';
 export * from './uuidConversion';
-export { CreateData };
-
-import CreateData from './CreateData';

@@ -1,15 +1,12 @@
-import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '../../src';
-
 import {
-	generateFormulaASTFromArray,
 	NumberAddFunctionArray,
 	NumberIfFunctionArray,
 	TFormulaArray,
 	TNumberArrayArgument
 } from '@nishans/notion-formula';
-
-import { status, phase, priority, subject } from './data';
 import { v4 as uuidv4 } from 'uuid';
+import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '../../src';
+import { phase, priority, status, subject } from './data';
 
 export const status_phase_combos = [
 	[ 'To Complete', 'Learn', 'Learning' ],

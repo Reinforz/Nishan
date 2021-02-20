@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-
 import { CollectionViewPage, Page, TBlockInput } from '../../../src';
-import { goalViewItem, CommonMultiSelectSchema } from '../util';
+import { CommonMultiSelectSchema, goalViewItem } from '../util';
 
 const months = [
   ['January', 31],

@@ -1,4 +1,4 @@
-export * from './ChildTraverser';
+export * from './ChildTraverser/index';
 export * from './constructLogger';
 export * from './createBlockClass';
 export * from './createMaps';

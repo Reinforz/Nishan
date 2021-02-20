@@ -51,12 +51,12 @@ export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> &
 	(
 		| {
 				/**
-   * Whether or not the user will manually handle all the mutations
-   */
+ * Whether or not the user will manually handle all the mutations
+ */
 				manual: true;
 				/**
-   * The key of the parent which contains the child ids
-   */
+ * The key of the parent which contains the child ids
+ */
 				child_path?: keyof T;
 			}
 		| {
@@ -70,3 +70,29 @@ export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
    */
 	manual?: boolean;
 };
+
+export type IterateChildren<TD = any, RD = any> =
+	| {
+			args: FilterTypes<TD>;
+			cb: (id: string, data: TD) => any;
+			method: 'READ' | 'DELETE';
+		}
+	| {
+			args: UpdateTypes<TD, RD>;
+			cb: (id: string, data: TD, updated_data: RD) => any;
+			method: 'UPDATE';
+		};
+
+export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<NishanArg, 'cache'> {
+	parent_type: TDataType;
+	parent_id: string;
+	logger?: Logger;
+}
+export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
+
+export type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id'> &
+	IterateAndUpdateOptions<T, C> &
+	IterateChildrenOptions<T, C>;
+export type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id'> &
+	IterateAndDeleteOptions<T, C> &
+	IterateChildrenOptions<T, C>;

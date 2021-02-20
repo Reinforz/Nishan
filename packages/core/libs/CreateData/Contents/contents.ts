@@ -5,7 +5,7 @@ import { CreateData, CreateMaps, fetchAndCacheData, generateId } from "../../";
 import { NishanArg, TBlockCreateInput } from "../../../types";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
 
-export async function createContents(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
+export async function contents(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
   const block_map = CreateMaps.block();
 
   const metadata = {

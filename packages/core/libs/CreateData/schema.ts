@@ -11,11 +11,11 @@ import { ParentCollectionData } from "./types";
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
+export async function schema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
   const schema_unit_map = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
   const schema: Schema = options.current_schema ?? {}, schema_map = populateSchemaMap(schema);
-  // Iterate through each input schmea units
+  // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
       {type, name} = input_schema_unit,
@@ -47,7 +47,7 @@ export async function createSchema(input_schema_units: TSchemaUnitInput[], optio
     schema_unit_map[input_schema_unit.type].set(schema_id, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
     schema_unit_map[input_schema_unit.type].set(input_schema_unit.name, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
   }
-  // If title doesnt exist in the schema throw an error
+  // If title doesn't exist in the schema throw an error
   if(!schema["title"])
     throw new Error(`Schema must contain title type property`)
   return [schema, schema_map, schema_unit_map] as [Schema, ISchemaMap, ISchemaUnitMap];

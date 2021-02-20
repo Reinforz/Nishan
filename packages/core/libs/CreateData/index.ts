@@ -1,13 +1,13 @@
 import { collection } from './collection';
-import { createContents } from './Contents/contents';
-import { createSchema } from './schema';
+import { contents } from './Contents/contents';
+import { schema } from './schema';
 import { CreateSchemaUnitData } from './SchemaUnit';
-import { createViews } from './views';
+import { views } from './Views/views';
 
 export const CreateData = {
-	views: createViews,
+	views,
 	collection,
-	contents: createContents,
-	schema: createSchema,
+	contents,
+	schema,
 	schema_unit: CreateSchemaUnitData
 };

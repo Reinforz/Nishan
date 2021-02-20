@@ -1,49 +1,9 @@
-import { ICache } from "@nishans/cache";
 import { Operation } from "@nishans/operations";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IOperation, IPage, IPermission, ISpace, TBlock } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
-import { createBlockClass, CreateData, CreateMaps, fetchAndCacheData, generateId } from "..";
-import { IBlockMap, NishanArg, TBlockCreateInput } from "../../types";
-
-function populatePermissions(user_id: string, is_private?: boolean): IPermission{
-  return { type: is_private ? 'user_permission' : 'space_permission', role: 'editor', user_id: user_id }
-}
-
-export async function appendChildToParent(parent_table: "space" | "block" | "collection", parent_id: string, content_id: string, cache: ICache, stack: IOperation[], token: string):Promise<void>{
-  switch(parent_table){
-    case "block": {
-      stack.push(Operation.block.listAfter(parent_id, ['content'], { after: '', id: content_id }))
-      const parent = await fetchAndCacheData<IPage>(parent_table, parent_id, cache, token);
-      if(!parent['content']) parent['content'] = [];
-      parent['content'].push(content_id);
-      break;
-    }
-    case "space": {
-      stack.push(Operation.space.listAfter(parent_id, ['pages'], { after: '', id: content_id }))
-      const parent = await fetchAndCacheData<ISpace>(parent_table, parent_id, cache, token);
-      if(!parent['pages']) parent['pages'] = []
-      parent['pages'].push(content_id);
-      break;
-    }
-    case "collection": {
-      stack.push(Operation.collection.listAfter(parent_id, ['template_pages'], { after: '', id: content_id }))
-      const parent = await fetchAndCacheData<ICollection>(parent_table, parent_id, cache, token);;
-      if(!parent['template_pages']) parent['template_pages'] = []
-      parent['template_pages'].push(content_id)
-      break;
-    }
-  }
-}
-
-export function stackCacheMap<T extends TBlock>(block_map: IBlockMap, data: T, props: Omit<NishanArg, "id">, name?: string){
-  const {id, type} = data;
-  props.stack.push(Operation.block.update(id, [], JSON.parse(JSON.stringify(data))))
-  props.cache.block.set(id, JSON.parse(JSON.stringify(data)))
-  const block_obj = createBlockClass(type, id, props);
-  block_map[type].set(id, block_obj);
-  if(name)
-    block_map[type].set(name, block_obj);
-}
+import { CreateData, CreateMaps, fetchAndCacheData, generateId } from "../../";
+import { NishanArg, TBlockCreateInput } from "../../../types";
+import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
 
 export async function createContents(contents: TBlockCreateInput[], original_parent_id: string, parent_table: 'collection' | 'block' | 'space', props: Omit<NishanArg, "id">) {
   const block_map = CreateMaps.block();

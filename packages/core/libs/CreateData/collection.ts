@@ -10,7 +10,7 @@ import { ICollectionBlockInput, IViewMap, NishanArg } from '../../types';
  * @param props Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function createCollection (input: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, 'id'>) {
+export async function collection (input: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, 'id'>) {
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection

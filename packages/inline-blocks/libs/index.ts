@@ -1,2 +1,2 @@
 export * from './HighlightColor';
-export * from './StyleFormat';
+export * from './StyleFormatter';

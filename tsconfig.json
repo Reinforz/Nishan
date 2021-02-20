@@ -9,6 +9,9 @@
       "path": "./packages/types/tsconfig.json"
     },
     {
+      "path": "./packages/inline-blocks/tsconfig.json"
+    },
+    {
       "path": "./packages/endpoints/tsconfig.json"
     },
     {

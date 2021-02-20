@@ -2,7 +2,7 @@ import { TBlockType } from '@nishans/types';
 import { v4 } from 'uuid';
 import { createBlockClass } from '../../libs';
 import { NishanArg } from '../../src';
-import { createDefaultCache } from '../createDefaultCache';
+import { createDefaultCache } from '../utils/createDefaultCache';
 
 const arg: NishanArg = {
 	token: 'token',

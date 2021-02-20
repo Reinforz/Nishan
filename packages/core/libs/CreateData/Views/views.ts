@@ -7,7 +7,7 @@ import { generateViewData, populateNonIncludedProperties, populateQuery2SortAndA
 
 export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id">, views: TViewCreateInput[], props: Omit<NishanArg, "id" | "interval">, parent_id?:string) {
   const schema_map = populateSchemaMap(collection.schema), view_ids: string[] = [], view_map = CreateMaps.view();
-  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../src/View/index");
+  const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
   for (let index = 0; index < views.length; index++) {

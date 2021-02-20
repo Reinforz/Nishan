@@ -3,9 +3,9 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { PopulateMap } from '../../../libs';
 import { Block, NotionData } from '../../../src';
-import { createDefaultCache } from '../../createDefaultCache';
-import { default_nishan_arg } from '../../defaultNishanArg';
-import { last_edited_props } from '../../lastEditedProps';
+import { createDefaultCache } from '../../utils/createDefaultCache';
+import { default_nishan_arg } from '../../utils/defaultNishanArg';
+import { last_edited_props } from '../../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -1,4 +1,4 @@
-import { NishanArg } from '../types';
+import { NishanArg } from '../../types';
 import { createDefaultCache } from './createDefaultCache';
 
 export const default_nishan_arg: NishanArg = {

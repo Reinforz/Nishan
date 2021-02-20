@@ -1,7 +1,7 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { PopulateMap } from '../../libs';
 import { IBlockMap, IPageMap } from '../../types';
-import { createDefaultCache } from '../createDefaultCache';
+import { createDefaultCache } from '../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

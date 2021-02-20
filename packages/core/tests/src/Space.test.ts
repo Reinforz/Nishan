@@ -5,8 +5,8 @@ import colors from "colors";
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
 import { createSpaceIterateArguments } from '../../src/Space';
-import { createDefaultCache } from '../createDefaultCache';
-import { default_nishan_arg } from '../defaultNishanArg';
+import { createDefaultCache } from '../utils/createDefaultCache';
+import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {
 	jest.restoreAllMocks();

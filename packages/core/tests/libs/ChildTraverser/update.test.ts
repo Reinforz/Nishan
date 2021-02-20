@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../../libs';
-import { last_edited_props } from '../../lastEditedProps';
+import { last_edited_props } from '../../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();

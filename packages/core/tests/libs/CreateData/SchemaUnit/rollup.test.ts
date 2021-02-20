@@ -2,7 +2,7 @@ import { Queries } from '@nishans/endpoints';
 import { Schema } from '@nishans/types';
 import { populateSchemaMap } from '../../../../libs';
 import { rollup } from '../../../../libs/CreateData/SchemaUnit/rollup';
-import { createDefaultCache } from '../../../createDefaultCache';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 describe('rollup', () => {
 	const schema: Schema = {

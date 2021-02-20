@@ -1,8 +1,8 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { SchemaUnit } from '../../src';
-import { createDefaultCache } from '../createDefaultCache';
-import { default_nishan_arg } from '../defaultNishanArg';
+import { createDefaultCache } from '../utils/createDefaultCache';
+import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {
 	jest.restoreAllMocks();

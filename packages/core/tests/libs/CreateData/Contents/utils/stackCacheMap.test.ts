@@ -1,7 +1,7 @@
 import { IOperation, IPage } from '@nishans/types';
 import { stackCacheMap } from '../../../../../libs/CreateData/Contents/utils';
 import { IBlockMap, Page } from '../../../../../src';
-import { createDefaultCache } from '../../../../createDefaultCache';
+import { createDefaultCache } from '../../../../utils/createDefaultCache';
 
 describe('stackCacheMap', () => {
 	it(`name=string`, () => {

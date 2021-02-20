@@ -3,7 +3,7 @@ import { ISchemaMapValue } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
 import { populateSchemaMap } from "../../../../libs";
 import { relation } from "../../../../libs/CreateData/SchemaUnit/relation";
-import { createDefaultCache } from "../../../createDefaultCache";
+import { createDefaultCache } from "../../../utils/createDefaultCache";
 
 describe('relation', () => {
 	describe('Work correctly', () => {

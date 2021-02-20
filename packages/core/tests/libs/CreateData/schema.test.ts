@@ -2,7 +2,7 @@ import { ICollection, TSchemaUnit } from '@nishans/types';
 import { populateSchemaMap } from '../../../libs';
 import { CreateData } from '../../../libs/CreateData';
 import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
-import { createDefaultCache } from '../../createDefaultCache';
+import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();

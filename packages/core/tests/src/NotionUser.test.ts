@@ -4,9 +4,9 @@ import { IOperation } from '@nishans/types';
 import colors from 'colors';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
-import { createDefaultCache } from '../createDefaultCache';
-import { default_nishan_arg } from '../defaultNishanArg';
-import { last_edited_props } from '../lastEditedProps';
+import { createDefaultCache } from '../utils/createDefaultCache';
+import { default_nishan_arg } from '../utils/defaultNishanArg';
+import { last_edited_props } from '../utils/lastEditedProps';
 
 afterEach(() => {
   jest.resetAllMocks();

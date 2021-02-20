@@ -8,9 +8,9 @@ import {
 	TCollectionUpdateKeys,
 	TSchemaUnitInput
 } from '../../src';
-import { createDefaultCache } from '../createDefaultCache';
-import { default_nishan_arg } from '../defaultNishanArg';
-import { last_edited_props } from '../lastEditedProps';
+import { createDefaultCache } from '../utils/createDefaultCache';
+import { default_nishan_arg } from '../utils/defaultNishanArg';
+import { last_edited_props } from '../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();

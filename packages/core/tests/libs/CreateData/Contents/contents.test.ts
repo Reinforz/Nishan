@@ -5,14 +5,14 @@ import { v4 } from 'uuid';
 import {
   fetchAndCacheData
 } from '../../../../libs';
-import { createContents } from '../../../../libs/CreateData/Contents/contents';
+import { CreateData } from '../../../../libs/CreateData';
 import {
   CollectionView,
   CollectionViewPage,
   Page
 } from '../../../../src';
-import { createDefaultCache } from '../../../createDefaultCache';
-import { last_edited_props } from '../../../lastEditedProps';
+import { createDefaultCache } from '../../../utils/createDefaultCache';
+import { last_edited_props } from '../../../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -75,7 +75,7 @@ describe('fetchAndCacheData', () => {
 	});
 });
 
-describe('createContents', () => {
+describe('CreateData.contents', () => {
 	describe('type=page', () => {
 		it(`is_template=false,is_private=true,contents=[{}],parent=space`, async () => {
 			const page_id = v4(),
@@ -86,7 +86,7 @@ describe('createContents', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await createContents(
+			const block_map = await CreateData.contents(
 				[
 					{
 						type: 'page',
@@ -223,7 +223,7 @@ describe('createContents', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await createContents(
+			const block_map = await CreateData.contents(
 				[
 					{
 						type: 'page',
@@ -314,7 +314,7 @@ describe('createContents', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await createContents(
+			const block_map = await CreateData.contents(
 				[
 					{
 						type: 'collection_view_page',
@@ -401,7 +401,7 @@ describe('createContents', () => {
 
 			const logger_spy = jest.fn();
 
-			const block_map = await createContents(
+			const block_map = await CreateData.contents(
 				[
 					{
 						type: 'collection_view',
@@ -498,7 +498,7 @@ describe('createContents', () => {
 			},
 			stack: IOperation[] = [];
 
-		await createContents(
+		await CreateData.contents(
 			[
 				{
 					type: 'link_to_page',
@@ -545,7 +545,7 @@ describe('createContents', () => {
 				user_settings: new Map()
 			},
 			stack: IOperation[] = [];
-		await createContents(
+		await CreateData.contents(
 			[
 				{
 					type: 'column_list',
@@ -594,7 +594,7 @@ describe('createContents', () => {
 				user_settings: new Map()
 			},
 			stack: IOperation[] = [];
-		const block_map = await createContents(
+		const block_map = await CreateData.contents(
 			[
 				{
 					type: 'factory',
@@ -626,7 +626,7 @@ describe('createContents', () => {
 			}
 		);
 
-		await createContents(
+		await CreateData.contents(
 			[
 				{
 					type: 'factory',
@@ -682,7 +682,7 @@ describe('createContents', () => {
 			},
 			stack: IOperation[] = [];
 
-		const block_map = await createContents(
+		const block_map = await CreateData.contents(
 			[
 				{
 					type: 'linked_db',

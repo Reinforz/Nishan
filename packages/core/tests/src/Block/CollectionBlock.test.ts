@@ -2,8 +2,8 @@ import { IOperation } from '@nishans/types';
 import { CreateData } from '../../../libs';
 import { CollectionBlock } from "../../../src";
 import { TViewCreateInput } from '../../../types';
-import { createDefaultCache } from '../../createDefaultCache';
-import { default_nishan_arg } from '../../defaultNishanArg';
+import { createDefaultCache } from '../../utils/createDefaultCache';
+import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {
 	jest.restoreAllMocks();

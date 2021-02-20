@@ -1,20 +1,18 @@
-import { ICache } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
-import { IOperation, IPage } from '@nishans/types';
+import { IOperation } from '@nishans/types';
 import colors from 'colors';
 import { v4 } from 'uuid';
 import {
   fetchAndCacheData
-} from '../../../libs';
-import { appendChildToParent, createContents, stackCacheMap } from '../../../libs/CreateData/contents';
+} from '../../../../libs';
+import { createContents } from '../../../../libs/CreateData/Contents/contents';
 import {
   CollectionView,
   CollectionViewPage,
-  IBlockMap,
   Page
-} from '../../../src';
-import { createDefaultCache } from '../../createDefaultCache';
-import { last_edited_props } from '../../lastEditedProps';
+} from '../../../../src';
+import { createDefaultCache } from '../../../createDefaultCache';
+import { last_edited_props } from '../../../lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -74,189 +72,6 @@ describe('fetchAndCacheData', () => {
 		expect(console_log_spy).toHaveBeenCalledWith(colors.yellow.bold(`block:id doesnot exist in the cache`));
 
 		expect(data).toStrictEqual({ data: 'data' });
-	});
-});
-
-describe('appendChildToParent', () => {
-	describe(`type=block`, () => {
-		it(`path exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					block: new Map([ [ 'parent_id', { content: [] } ] ])
-				} as any;
-			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'block',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'content' ]
-				}
-			]);
-
-			expect(cache.block.get('parent_id')).toStrictEqual({ content: [ 'child_id' ] });
-		});
-
-		it(`path doesnt exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					block: new Map([ [ 'parent_id', {} ] ])
-				} as any;
-			await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'block',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'content' ]
-				}
-			]);
-
-			expect(cache.block.get('parent_id')).toStrictEqual({ content: [ 'child_id' ] });
-		});
-	});
-
-	describe(`type=space`, () => {
-		it(`path exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					space: new Map([ [ 'parent_id', { pages: [] } ] ])
-				} as any;
-			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'space',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'pages' ]
-				}
-			]);
-
-			expect(cache.space.get('parent_id')).toStrictEqual({ pages: [ 'child_id' ] });
-		});
-
-		it(`path doesnt exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					space: new Map([ [ 'parent_id', {} ] ])
-				} as any;
-			await appendChildToParent('space', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'space',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'pages' ]
-				}
-			]);
-
-			expect(cache.space.get('parent_id')).toStrictEqual({ pages: [ 'child_id' ] });
-		});
-	});
-
-	describe(`type=collection`, () => {
-		it(`path exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					collection: new Map([ [ 'parent_id', { template_pages: [] } ] ])
-				} as any;
-			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'collection',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'template_pages' ]
-				}
-			]);
-
-			expect(cache.collection.get('parent_id')).toStrictEqual({ template_pages: [ 'child_id' ] });
-		});
-
-		it(`path doesnt exists`, async () => {
-			const stack: IOperation[] = [],
-				cache: ICache = {
-					collection: new Map([ [ 'parent_id', {} ] ])
-				} as any;
-			await appendChildToParent('collection', 'parent_id', 'child_id', cache, stack, 'token');
-
-			expect(stack).toStrictEqual([
-				{
-					table: 'collection',
-					command: 'listAfter',
-					id: 'parent_id',
-					args: {
-						after: '',
-						id: 'child_id'
-					},
-					path: [ 'template_pages' ]
-				}
-			]);
-
-			expect(cache.collection.get('parent_id')).toStrictEqual({ template_pages: [ 'child_id' ] });
-		});
-	});
-});
-
-describe('stackCacheMap', () => {
-	it(`name=string`, () => {
-		const cache = createDefaultCache(),
-			stack: IOperation[] = [],
-			block_map: IBlockMap = { page: new Map() } as any,
-			data = { id: 'data_id', type: 'page', data: 'data' } as any;
-		stackCacheMap<IPage>(
-			block_map,
-			data,
-			{
-				cache,
-				interval: 0,
-				logger: false,
-				shard_id,
-				space_id,
-				stack,
-				token: 'token',
-				user_id
-			},
-			'name'
-		);
-
-		expect(stack).toStrictEqual([
-			{
-				args: data,
-				command: 'update',
-				id: 'data_id',
-				path: [],
-				table: 'block'
-			}
-		]);
-		expect(cache.block.get('data_id')).toStrictEqual(data);
-		expect((block_map.page.get('data_id') as Page).getCachedData()).toStrictEqual(data);
-		expect((block_map.page.get('name') as Page).getCachedData()).toStrictEqual(data);
 	});
 });
 

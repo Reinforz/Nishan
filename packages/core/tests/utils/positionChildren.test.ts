@@ -6,7 +6,7 @@ afterEach(() => {
 });
 
 describe('positionChildren', () => {
-	it(`Should work when parent doesnot contain container`, () => {
+	it(`Should work when parent doesn't contain container`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
 		delete (parent as any).content;
 		const operation = positionChildren({
@@ -126,7 +126,7 @@ describe('positionChildren', () => {
 		});
 	});
 
-	it(`Should throw an error if the pivot and content doesnt exist for number position`, () => {
+	it(`Should throw an error if the pivot and content doesn't exist for number position`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
 		delete (parent as any).content;
 		expect(() =>
@@ -136,10 +136,10 @@ describe('positionChildren', () => {
 				position: 3,
 				parent_type: 'block'
 			})
-		).toThrow(`Parent doesnot contain any children at index 3`);
+		).toThrow(`Parent doesn't contain any children at index 3`);
 	});
 
-	it(`Should throw an error if the pivot doesnt exist for number position`, () => {
+	it(`Should throw an error if the pivot doesn't exist for number position`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [] } as any;
 		expect(() =>
 			positionChildren({
@@ -148,10 +148,10 @@ describe('positionChildren', () => {
 				position: 3,
 				parent_type: 'block'
 			})
-		).toThrow(`Parent doesnot contain any children at index 3`);
+		).toThrow(`Parent doesn't contain any children at index 3`);
 	});
 
-	it(`Should throw an error if the pivot doesnt exist for object position`, () => {
+	it(`Should throw an error if the pivot doesn't exist for object position`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [] } as any;
 		expect(() =>
 			positionChildren({
@@ -163,6 +163,6 @@ describe('positionChildren', () => {
 				},
 				parent_type: 'block'
 			})
-		).toThrow(`Parent doesnot contain any children with id 456`);
+		).toThrow(`Parent doesn't contain any children with id 456`);
 	});
 });

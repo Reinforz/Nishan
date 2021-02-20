@@ -19,12 +19,10 @@ import {
 } from '../../types';
 import {
   deepMerge,
-  getFiltersMap,
-  getFormatPropertiesMap,
-  getSchemaMap,
-  getSortsMap,
   initializeViewFilters,
-  populateFilters,
+  populateFilters, populateFiltersMap,
+  populateFormatPropertiesMap,
+  populateSchemaMap, populateSortsMap,
   transformToMultiple,
   UnknownPropertyReferenceError
 } from '../../utils';
@@ -78,8 +76,8 @@ class View<T extends TView> extends Data<T> {
 	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			schema_map = getSchemaMap(collection.schema),
-			[ sorts_map, sorts ] = getSortsMap(data, collection.schema);
+			schema_map = populateSchemaMap(collection.schema),
+			[ sorts_map, sorts ] = populateSortsMap(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
 				schema_map_unit = schema_map.get(arg[0]),
@@ -114,7 +112,7 @@ class View<T extends TView> extends Data<T> {
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			[ sorts_map, sorts ] = getSortsMap(data, collection.schema);
+			[ sorts_map, sorts ] = populateSortsMap(data, collection.schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
@@ -154,7 +152,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
-		const [ sorts_map, sorts ] = getSortsMap(this.getCachedData(), this.getCollection().schema);
+		const [ sorts_map, sorts ] = populateSortsMap(this.getCachedData(), this.getCollection().schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -176,7 +174,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	createFilters (args: TViewFilterCreateInput[]) {
-		const schema_map = getSchemaMap(this.getCollection().schema),
+		const schema_map = populateSchemaMap(this.getCollection().schema),
 			data = this.getCachedData(),
 			filters = initializeViewFilters(data).filters;
 		populateFilters(args, filters, schema_map);
@@ -193,8 +191,8 @@ class View<T extends TView> extends Data<T> {
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(), 
       {schema} = this.getCollection(), 
-      schema_map = getSchemaMap(schema), 
-      [ filters_map ] = getFiltersMap(data, schema);
+      schema_map = populateSchemaMap(schema), 
+      [ filters_map ] = populateFiltersMap(data, schema);
     
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
@@ -235,7 +233,7 @@ class View<T extends TView> extends Data<T> {
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
     const data = this.getCachedData(), 
       {schema} = this.getCollection(), 
-      [ filters_map ] = getFiltersMap(data, schema);
+      [ filters_map ] = populateFiltersMap(data, schema);
 
 		await this.deleteIterate<ISchemaFiltersMapValue>(
 			args,
@@ -267,7 +265,7 @@ class View<T extends TView> extends Data<T> {
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = getFormatPropertiesMap(data, this.getCollection().schema);
+			[ format_properties_map, format_properties ] = populateFormatPropertiesMap(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>(
 			args,
 			{

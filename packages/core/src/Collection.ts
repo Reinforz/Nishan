@@ -14,7 +14,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../types';
-import { CreateData, createSchemaUnitMap, deepMerge, getSchemaMap, transformToMultiple } from '../utils';
+import { CreateData, createSchemaUnitMap, deepMerge, populateSchemaMap, transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';
 import SchemaUnit from './SchemaUnit';
@@ -230,7 +230,7 @@ class Collection extends Data<ICollection> {
 	async getSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		// Since all the data is in the cache, no need to initialize cache
 		const data = this.getCachedData(),
-			schema_map = getSchemaMap(data.schema);
+			schema_map = populateSchemaMap(data.schema);
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
@@ -265,7 +265,7 @@ class Collection extends Data<ICollection> {
    */
 	async updateSchemaUnits (args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = getSchemaMap(data.schema);
+			schema_map = populateSchemaMap(data.schema);
 		const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ISchemaUnitMap>(
 			args,
 			{
@@ -305,7 +305,7 @@ class Collection extends Data<ICollection> {
    */
 	async deleteSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = getSchemaMap(data.schema);
+			schema_map = populateSchemaMap(data.schema);
 		await this.deleteIterate<ISchemaMapValue>(
 			args,
 			{

@@ -12,7 +12,12 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../../types';
-import { getAggregationsMap, getSchemaMap, transformToMultiple, UnknownPropertyReferenceError } from '../../utils';
+import {
+	populateAggregationsMap,
+	populateSchemaMap,
+	transformToMultiple,
+	UnknownPropertyReferenceError
+} from '../../utils';
 import View from './View';
 
 export function detectAggregationErrors (
@@ -43,8 +48,8 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	createAggregations (args: TAggregationsCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			schema_map = getSchemaMap(collection.schema),
-			[ aggregations_map, aggregations ] = getAggregationsMap(this.getCachedData(), collection.schema);
+			schema_map = populateSchemaMap(collection.schema),
+			[ aggregations_map, aggregations ] = populateAggregationsMap(this.getCachedData(), collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const { aggregator } = args[index];
 			const schema_map_unit = detectAggregationErrors(schema_map, args[index], aggregations_map);
@@ -70,7 +75,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ aggregations_map ] = getAggregationsMap(this.getCachedData(), this.getCollection().schema);
+			[ aggregations_map ] = populateAggregationsMap(this.getCachedData(), this.getCollection().schema);
 
 		await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(
 			args,
@@ -101,7 +106,10 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	}
 
 	async deleteAggregations (args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-		const [ aggregations_map, aggregations ] = getAggregationsMap(this.getCachedData(), this.getCollection().schema),
+		const [ aggregations_map, aggregations ] = populateAggregationsMap(
+				this.getCachedData(),
+				this.getCollection().schema
+			),
 			data = this.getCachedData();
 		await this.deleteIterate<ISchemaAggregationMapValue>(
 			args,

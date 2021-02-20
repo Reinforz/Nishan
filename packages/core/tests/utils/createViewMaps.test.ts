@@ -1,5 +1,11 @@
 import { Schema } from '@nishans/types';
-import { getAggregationsMap, getFiltersMap, getFormatPropertiesMap, getSchemaMap, getSortsMap } from '../../src';
+import {
+	populateAggregationsMap,
+	populateFiltersMap,
+	populateFormatPropertiesMap,
+	populateSchemaMap,
+	populateSortsMap
+} from '../../src';
 
 const schema: Schema = {
 	title: {
@@ -20,9 +26,9 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('getSchemaMap', () => {
+describe('populateSchemaMap', () => {
 	it(`Should create correct schema map`, () => {
-		const schema_map = getSchemaMap(schema);
+		const schema_map = populateSchemaMap(schema);
 
 		expect(Array.from(schema_map.entries())).toStrictEqual([
 			[
@@ -53,10 +59,10 @@ describe('getSchemaMap', () => {
 	});
 });
 
-describe('getAggregationsMap', () => {
+describe('populateAggregationsMap', () => {
 	it(`Should throw an error if unknown property is referenced`, () => {
 		expect(() =>
-			getAggregationsMap(
+			populateAggregationsMap(
 				{
 					query2: {
 						aggregations: [
@@ -73,7 +79,7 @@ describe('getAggregationsMap', () => {
 	});
 
 	it(`Should create correct schema map`, () => {
-		const [ aggregations_map ] = getAggregationsMap(
+		const [ aggregations_map ] = populateAggregationsMap(
 			{
 				query2: {
 					aggregations: [
@@ -104,10 +110,10 @@ describe('getAggregationsMap', () => {
 	});
 });
 
-describe('getSortsMap', () => {
+describe('populateSortsMap', () => {
 	it(`Should throw error when unknown property is referenced`, () => {
 		expect(() =>
-			getSortsMap(
+			populateSortsMap(
 				{
 					query2: {
 						sort: [
@@ -124,7 +130,7 @@ describe('getSortsMap', () => {
 	});
 
 	it(`Should create correct schema map`, () => {
-		const [ sorts_map ] = getSortsMap(
+		const [ sorts_map ] = populateSortsMap(
 			{
 				query2: {
 					sort: [
@@ -152,10 +158,10 @@ describe('getSortsMap', () => {
 	});
 });
 
-describe('getFormatPropertiesMap', () => {
+describe('populateFormatPropertiesMap', () => {
 	it(`Should throw an error if unknown property is referenced`, () => {
 		expect(() =>
-			getFormatPropertiesMap(
+			populateFormatPropertiesMap(
 				{
 					type: 'table',
 					format: {
@@ -174,7 +180,7 @@ describe('getFormatPropertiesMap', () => {
 	});
 
 	it(`Should create correct schema map`, () => {
-		const [ format_map ] = getFormatPropertiesMap(
+		const [ format_map ] = populateFormatPropertiesMap(
 			{
 				type: 'table',
 				format: {
@@ -207,10 +213,10 @@ describe('getFormatPropertiesMap', () => {
 	});
 });
 
-describe('getFiltersMap', () => {
+describe('populateFiltersMap', () => {
 	it(`Should throw error for using unknown property`, () => {
 		expect(() =>
-			getFiltersMap(
+			populateFiltersMap(
 				{
 					query2: {
 						filter: {
@@ -271,7 +277,7 @@ describe('getFiltersMap', () => {
 				filters: [ filter0_0, filter0_1 ]
 			};
 
-		const [ filters_map ] = getFiltersMap(
+		const [ filters_map ] = populateFiltersMap(
 			{
 				query2: {
 					filter: {

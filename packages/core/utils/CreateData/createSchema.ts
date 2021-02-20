@@ -3,7 +3,7 @@ import { Queries } from "@nishans/endpoints";
 import { formulateResultTypeFromSchemaType, generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
 import { Operation } from "@nishans/operations";
 import { IOperation, RelationSchemaUnit, RollupSchemaUnit, Schema, SyncRecordValuesParams, TTextFormat } from "@nishans/types";
-import { getSchemaMap, SchemaUnit, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
+import { populateSchemaMap, SchemaUnit, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../src";
 import { ISchemaUnitMap, Logger, NishanArg, TRelationSchemaUnitInput, TRollupSchemaUnitInput, TSchemaUnitInput } from "../../types";
 import { createSchemaUnitMap, createShortId } from "../../utils";
 
@@ -160,7 +160,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
 
   // Log the collection read operation
   logger && logger("READ", "collection", target_collection.id);
-  const target_collection_schema_map = getSchemaMap(target_collection.schema);
+  const target_collection_schema_map = populateSchemaMap(target_collection.schema);
   // Get the target collection schema unit map from the target collection schema map using the passed target property
   const target_collection_schema_unit_map = target_collection_schema_map.get(target_property);
   // The target collection schema unit map doesnot exist throw an error
@@ -198,7 +198,7 @@ export async function generateRollupSchema({aggregation, name, collection_id, re
 export async function createSchema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
   const schema_unit_map = createSchemaUnitMap();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const schema: Schema = options.current_schema ?? {}, schema_map = getSchemaMap(schema);
+  const schema: Schema = options.current_schema ?? {}, schema_map = populateSchemaMap(schema);
   // Iterate through each input schmea units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 

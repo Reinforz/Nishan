@@ -2,7 +2,7 @@ import { IBoardView, ITableView, ITimelineView, IViewFilter, Schema, TView, TVie
 import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
 
-export function getSchemaMap (schema: Schema) {
+export function populateSchemaMap (schema: Schema) {
 	const schema_map: ISchemaMap = new Map();
 	Object.entries(schema).forEach(([ schema_id, value ]) => {
 		schema_map.set(value.name, {
@@ -13,7 +13,7 @@ export function getSchemaMap (schema: Schema) {
 	return schema_map;
 }
 
-export function getAggregationsMap(data: ITableView | IBoardView | ITimelineView, schema: Schema){
+export function populateAggregationsMap(data: ITableView | IBoardView | ITimelineView, schema: Schema){
   const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = initializeViewAggregations(data);
   ((data.query2 as any).aggregations as ViewAggregations[]).forEach((aggregation) => {
     const schema_unit = schema[aggregation.property];
@@ -29,7 +29,7 @@ export function getAggregationsMap(data: ITableView | IBoardView | ITimelineView
   return [aggregations_map, aggregations] as const;
 }
 
-export function getSortsMap(data: TView, schema: Schema){
+export function populateSortsMap(data: TView, schema: Schema){
   const sorts_map: ISchemaSortsMap = new Map(), sorts = initializeViewSorts(data);
   ((data.query2 as any).sort as ViewSorts[]).forEach(sort => {
     const schema_unit = schema[sort.property];
@@ -46,7 +46,7 @@ export function getSortsMap(data: TView, schema: Schema){
   return [sorts_map, sorts] as const;
 }
 
-export function getFiltersMap(data: TView, schema: Schema){
+export function populateFiltersMap(data: TView, schema: Schema){
   const filters = initializeViewFilters(data),
     filters_map: ISchemaFiltersMap = new Map();
 
@@ -74,7 +74,7 @@ export function getFiltersMap(data: TView, schema: Schema){
   return [filters_map, filters] as const;
 }
 
-export function getFormatPropertiesMap(data: TView, schema: Schema){
+export function populateFormatPropertiesMap(data: TView, schema: Schema){
   const format_properties_map: ISchemaFormatMap = new Map(), format_properties = (data.format as any)[`${data.type}_properties`] as ViewFormatProperties[];
   format_properties.forEach(format_property => {
     const schema_unit = schema[format_property.property];

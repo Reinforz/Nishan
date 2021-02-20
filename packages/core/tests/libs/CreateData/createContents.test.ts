@@ -1,7 +1,6 @@
 import { ICache } from '@nishans/cache';
+import { Queries } from '@nishans/endpoints';
 import { IOperation, IPage } from '@nishans/types';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import colors from 'colors';
 import { v4 } from 'uuid';
 import {
@@ -16,9 +15,6 @@ import {
 } from '../../../src';
 import { createDefaultCache } from '../../createDefaultCache';
 import { last_edited_props } from '../../lastEditedProps';
-
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
-const mock = new MockAdapter(axios);
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -54,16 +50,17 @@ describe('fetchAndCacheData', () => {
 
 	it('doesnt exist in cache', async () => {
 		const console_log_spy = jest.spyOn(console, 'log');
-		mock.onPost(`/syncRecordValues`).replyOnce(200, {
-			recordMap: {
+    const syncRecordValuesMock = jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+      return {recordMap: {
 				block: {
 					id: {
 						role: 'editor',
 						value: { data: 'data' }
 					}
 				}
-			}
-		});
+			} as any}
+    })
+
 		const data = await fetchAndCacheData(
 			'block',
 			'id',
@@ -72,6 +69,7 @@ describe('fetchAndCacheData', () => {
 			} as any,
 			'token'
 		);
+    expect(syncRecordValuesMock).toHaveBeenCalledTimes(1);
 		expect(console_log_spy).toHaveBeenCalledTimes(1);
 		expect(console_log_spy).toHaveBeenCalledWith(colors.yellow.bold(`block:id doesnot exist in the cache`));
 

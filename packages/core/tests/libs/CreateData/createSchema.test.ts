@@ -1,13 +1,9 @@
+import { Queries } from '@nishans/endpoints';
 import { ICollection, IOperation, Schema, TSchemaUnit } from '@nishans/types';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import { populateSchemaMap } from '../../../libs';
 import { createSchema, generateRelationSchema, generateRollupSchema } from "../../../libs/CreateData/createSchema";
 import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
 import { createDefaultCache } from '../../createDefaultCache';
-
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
-const mock = new MockAdapter(axios);
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -92,13 +88,15 @@ describe('generateRelationSchema', () => {
 				name: [ [ 'Child Collection' ] ]
 			} as any, cache = createDefaultCache();
 
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
-        child_collection_id: {
-          role: "editor",
-          value: child_collection
-        }
-      }}})
-      
+      jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+        return {recordMap: {collection: {
+          child_collection_id: {
+            role: "editor",
+            value: child_collection
+          }
+        }}} as any
+      })
+
 			const relation_schema_unit = await generateRelationSchema(
 				{
 					type: 'relation',
@@ -161,12 +159,14 @@ describe('generateRelationSchema', () => {
 				name: [ [ 'Child Collection' ] ]
 			} as any, cache = createDefaultCache();
 
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
-        child_collection_id: {
-          role: "editor",
-          value: child_collection
-        }
-      }}});
+      jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+        return {recordMap: {collection: {
+          child_collection_id: {
+            role: "editor",
+            value: child_collection
+          }
+        }}} as any
+      })
 
 			const relation_schema_unit = await generateRelationSchema(
 				{
@@ -231,12 +231,14 @@ describe('generateRelationSchema', () => {
 
   describe('Throw errors', () => {
     it(`Should throw error if non existent collection id is referenced`, async ()=>{
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
-        child_collection_id: {
-          role: "editor",
-        }
-      }}});
-  
+      jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+        return {recordMap: {collection: {
+          child_collection_id: {
+            role: "editor",
+          }
+        }}} as any
+      })
+
       await expect(generateRelationSchema(
         {
           type: 'relation',
@@ -646,21 +648,23 @@ describe('generateRollupSchema', () => {
     
     it(`Should work correctly (collection exists in db)`, async ()=>{
       const cache = createDefaultCache();
-  
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
-        target_collection_id: {
-          role: "editor",
-          value: {
-            schema: {
-              title: {
-                type: "title",
-                name: "Title"
+      
+      jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+        return {recordMap: {collection: {
+          target_collection_id: {
+            role: "editor",
+            value: {
+              schema: {
+                title: {
+                  type: "title",
+                  name: "Title"
+                }
               }
             }
           }
-        }
-      }}});
-  
+        }}} as any
+      })
+
       const generated_rollup_schema = await generateRollupSchema({
         type: "rollup",
         collection_id: "target_collection_id",
@@ -747,11 +751,14 @@ describe('generateRollupSchema', () => {
     })
 
     it(`Should throw error if collection doesnt exist in cache and db`, async()=>{
-      mock.onPost(`/syncRecordValues`).replyOnce(200, {recordMap: {collection: {
-        target_collection_id: {
-          role: "editor",
-        }
-      }}});
+      
+      jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
+        return {recordMap: {collection: {
+          target_collection_id: {
+            role: "editor",
+          }
+        }}} as any
+      });
 
       await expect(generateRollupSchema({
         type: "rollup",

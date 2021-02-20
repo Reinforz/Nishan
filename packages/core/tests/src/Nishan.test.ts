@@ -1,10 +1,6 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+import { Queries } from '@nishans/endpoints';
 import Nishan from '../../src';
 import { default_nishan_arg } from '../defaultNishanArg';
-
-axios.defaults.baseURL = 'https://www.notion.so/api/v3';
-const mock = new MockAdapter(axios);
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -20,27 +16,29 @@ describe('Nishan', () => {
 				logger: logger_spy
 			});
 
-			mock.onPost(`/getSpaces`).replyOnce(200, {
-				'1': {
-					space: {
-						'1': {
-							value: { permissions: [ { user_id: 'a' } ] }
-						}
-					},
-					notion_user: {
-						a: {
-							value: { id: 'a', data: 'data' }
+			jest.spyOn(Queries, 'getSpaces').mockImplementationOnce(async () => {
+				return {
+					'1': {
+						space: {
+							'1': {
+								value: { permissions: [ { user_id: 'a' } ] }
+							}
 						},
-						b: {
-							value: { id: 'b', data: 'data' }
-						}
-					},
-					user_root: {
-						a: {
-							value: { id: 'a', data: 'data' }
+						notion_user: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							},
+							b: {
+								value: { id: 'b', data: 'data' }
+							}
+						},
+						user_root: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							}
 						}
 					}
-				}
+				} as any;
 			});
 
 			const users = await nishan.getNotionUsers((user) => {
@@ -61,27 +59,29 @@ describe('Nishan', () => {
 				logger: logger_spy
 			});
 
-			mock.onPost(`/getSpaces`).replyOnce(200, {
-				'1': {
-					space: {
-						'1': {
-							value: { permissions: [ { user_id: 'a' } ] }
-						}
-					},
-					notion_user: {
-						a: {
-							value: { id: 'a', data: 'data' }
+			jest.spyOn(Queries, 'getSpaces').mockImplementationOnce(async () => {
+				return {
+					'1': {
+						space: {
+							'1': {
+								value: { permissions: [ { user_id: 'a' } ] }
+							}
 						},
-						b: {
-							value: { id: 'b', data: 'data' }
-						}
-					},
-					user_root: {
-						a: {
-							value: { id: 'a', data: 'data' }
+						notion_user: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							},
+							b: {
+								value: { id: 'b', data: 'data' }
+							}
+						},
+						user_root: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							}
 						}
 					}
-				}
+				} as any;
 			});
 
 			const user = await nishan.getNotionUser((user) => {
@@ -102,27 +102,29 @@ describe('Nishan', () => {
 				logger: logger_spy
 			});
 
-			mock.onPost(`/getSpaces`).replyOnce(200, {
-				'1': {
-					space: {
-						'1': {
-							value: { permissions: [ { user_id: 'a' } ] }
-						}
-					},
-					notion_user: {
-						a: {
-							value: { id: 'a', data: 'data' }
+			jest.spyOn(Queries, 'getSpaces').mockImplementationOnce(async () => {
+				return {
+					'1': {
+						space: {
+							'1': {
+								value: { permissions: [ { user_id: 'a' } ] }
+							}
 						},
-						b: {
-							value: { id: 'b', data: 'data' }
-						}
-					},
-					user_root: {
-						a: {
-							value: { id: 'a', data: 'data' }
+						notion_user: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							},
+							b: {
+								value: { id: 'b', data: 'data' }
+							}
+						},
+						user_root: {
+							a: {
+								value: { id: 'a', data: 'data' }
+							}
 						}
 					}
-				}
+				} as any;
 			});
 
 			const user_a = await nishan.getNotionUser('a');

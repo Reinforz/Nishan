@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import axios from 'axios';
-import { createCollection } from '../../../libs/CreateData/createCollection';
+import { CreateData } from '../../../libs/CreateData';
 import { createDefaultCache } from '../../createDefaultCache';
 
 axios.defaults.baseURL = 'https://www.notion.so/api/v3';
@@ -14,7 +14,7 @@ describe('createCollection', () => {
 	it(`createCollection should work correctly`, async () => {
 		const cache: ICache = createDefaultCache();
 		const stack: IOperation[] = [];
-		const [ collection_id ] = await createCollection(
+		const [ collection_id ] = await CreateData.collection(
 			{
 				name: [ [ 'Collection Name' ] ],
 				schema: [

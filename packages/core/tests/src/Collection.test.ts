@@ -119,7 +119,7 @@ it(`createTemplates`, async () => {
 		id: 'collection_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
+	const updateCacheLocallyMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => {
 		return CreateMaps.block();
 	});
 
@@ -260,7 +260,7 @@ it(`createRows`, async () => {
 		id: 'collection_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(async () => {
+	const updateCacheLocallyMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => {
 		return CreateMaps.block();
 	});
 
@@ -429,7 +429,7 @@ it(`createSchemaUnits`, async () => {
 		stack
 	});
 
-	const createSchemaMock = jest.spyOn(CreateData, 'createSchema').mockImplementationOnce(async () => {
+	const createSchemaMock = jest.spyOn(CreateData, 'schema').mockImplementationOnce(async () => {
 		return [ {} as Schema, new Map() as any, new Map() as any ];
 	});
 

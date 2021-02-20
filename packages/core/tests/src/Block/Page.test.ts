@@ -43,7 +43,7 @@ it(`createBlocks`, async () => {
 		cache,
 	});
 
-	const createContentsMock = jest.spyOn(CreateData, 'createContents').mockImplementationOnce(() => {
+	const createContentsMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(() => {
 		return {} as any;
 	});
 

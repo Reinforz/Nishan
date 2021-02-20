@@ -58,7 +58,7 @@ it(`createViews`, () => {
 		}
 	];
 
-	const createViewsMock = jest.spyOn(CreateData, 'createViews').mockImplementationOnce(() => {
+	const createViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(() => {
 		return [
 			[ 'view_1' ],
 			{

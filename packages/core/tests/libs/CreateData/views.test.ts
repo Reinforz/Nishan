@@ -26,7 +26,7 @@ import {
   populateViewFormat,
   populateViewProperties,
   populateViewQuery2
-} from '../../../libs/CreateData/createViews';
+} from '../../../libs/CreateData/views';
 import { createDefaultCache } from '../../createDefaultCache';
 
 afterEach(() => {

@@ -6,7 +6,7 @@ import { v4 } from 'uuid';
 import {
   fetchAndCacheData
 } from '../../../libs';
-import { appendChildToParent, createContents, stackCacheMap } from '../../../libs/CreateData/createContents';
+import { appendChildToParent, createContents, stackCacheMap } from '../../../libs/CreateData/contents';
 import {
   CollectionView,
   CollectionViewPage,

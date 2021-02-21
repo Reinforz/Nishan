@@ -1,6 +1,6 @@
 {
   "name": "@nishans/errors",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A small package that contains various notion specific error classes",
   "keywords": [
     "notion",

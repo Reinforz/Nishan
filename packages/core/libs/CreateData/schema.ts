@@ -1,3 +1,4 @@
+import { NonExistentSchemaUnitTypeError, SchemaDuplicatePropertyNameError } from "@nishans/errors";
 import { createShortId } from "@nishans/idz";
 import { generateFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
@@ -27,7 +28,7 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
     const schema_map_unit = schema_map.get(name);
     // If it exists throw an error since duplicate schema_unit name is not allowed 
     if(schema_map_unit)
-      throw new Error(`Duplicate property ${name}`);
+      throw new SchemaDuplicatePropertyNameError(name);
 
     // For specific schema unit type, the corresponding schema unit has to be generated using specific functions 
     switch(input_schema_unit.type){
@@ -50,6 +51,6 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
   }
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])
-    throw new Error(`Schema must contain title type property`)
+    throw new NonExistentSchemaUnitTypeError(["title"])
   return [schema, schema_map, schema_unit_map] as [Schema, ISchemaMap, ISchemaUnitMap];
 }

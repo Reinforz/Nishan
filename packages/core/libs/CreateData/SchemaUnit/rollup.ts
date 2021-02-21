@@ -1,5 +1,5 @@
 import { Queries } from '@nishans/endpoints';
-import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
+import { NonExistentDataError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
 import { formulateResultTypeFromSchemaType, generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { RollupSchemaUnit, SyncRecordValuesParams } from '@nishans/types';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
@@ -9,7 +9,7 @@ import { ParentCollectionData } from '../types';
  * 
  * @param input_schema_unit The rollup schema unit input
  * @param schema_map The schema map used for resolving property reference
- * @param request_config The config object used to make reqest, validate and cache response
+ * @param request_config The config object used to make request, validate and cache response
  * @return The newly constructed rollup schema unit
  */
 export async function rollup (
@@ -22,7 +22,7 @@ export async function rollup (
 ) {
 	// Get the related schema unit from the passed schema map
 	const relation_schema_unit = schema_map.get(relation_property);
-	// If the passed schema map unit doesnot exist then throw a unknown property error
+	// If the passed schema map unit doesn't exist then throw a unknown property error
 	if (!relation_schema_unit) throw new UnknownPropertyReferenceError(relation_property, [ 'relation_property' ]);
 	// If the schema unit is not of type relation, throw an error as well since only relation schema units can be used in rollup schema unit
 	if (relation_schema_unit.type !== 'relation')
@@ -50,9 +50,9 @@ export async function rollup (
 		target_property_type: 'title'
 	};
 
-	// If the target collection doesnot exist obtain it from notion's db
+	// If the target collection doesn't exist obtain it from notion's db
 	if (!target_collection) {
-		// Construct the reqest params used to obtain the target collection
+		// Construct the request params used to obtain the target collection
 		const sync_record_values_param: SyncRecordValuesParams = {
 			requests: [
 				{
@@ -69,8 +69,8 @@ export async function rollup (
 			interval: 0
 		});
 
-		// If the request responded with an empty value, throw an error warning the user that the collection doesnot exist
-		if (!recordMap.collection[collection_id].value) throw new Error(`Collection:${collection_id} doesnot exist`);
+		// If the request responded with an empty value, throw an error warning the user that the collection doesn't exist
+		if (!recordMap.collection[collection_id].value) throw new NonExistentDataError('collection', collection_id);
 		// Set the returned value from the response
 		target_collection = recordMap.collection[collection_id].value;
 		// Store the target collection value to the cache
@@ -82,7 +82,7 @@ export async function rollup (
 	const target_collection_schema_map = generateSchemaMapFromCollectionSchema(target_collection.schema);
 	// Get the target collection schema unit map from the target collection schema map using the passed target property
 	const target_collection_schema_unit_map = target_collection_schema_map.get(target_property);
-	// The target collection schema unit map doesnot exist throw an error
+	// The target collection schema unit map doesn't exist throw an error
 	if (!target_collection_schema_unit_map)
 		throw new UnknownPropertyReferenceError(target_property, [ 'target_property' ]);
 

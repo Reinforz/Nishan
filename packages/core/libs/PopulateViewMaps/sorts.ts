@@ -4,11 +4,8 @@ import { ISchemaSortsMap } from "../../src";
 
 export function sorts(data: TView, schema: Schema){
   const sorts_map: ISchemaSortsMap = new Map(), sorts = initializeViewSorts(data);
-  ((data.query2 as any).sort as ViewSorts[]).forEach(sort => {
+  ((data.query2 as any).sort as ViewSorts[]).forEach((sort) => {
     const schema_unit = schema[sort.property];
-    if(!schema_unit)
-      throw new Error(`Unknown property ${sort.property} referenced`)
-
     sorts_map.set(schema_unit.name, {
       ...schema_unit,
       schema_id: sort.property,

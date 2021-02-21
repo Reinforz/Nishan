@@ -1,4 +1,5 @@
 import { Queries } from "@nishans/endpoints";
+import { NonExistentDataError } from "@nishans/errors";
 import { createShortId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { RelationSchemaUnit } from "@nishans/types";
@@ -16,8 +17,9 @@ export async function relation(input_schema_unit: TRelationSchemaUnitInput, coll
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
   let child_collection = cache.collection.get(child_collection_id);
-  // If child collection doesnt exist in the cache passed, sent a api request to notion's db to get the data
+  // If child collection doesn't exist in the cache passed, sent a api request to notion's db to get the data
   if(!child_collection){
+    // * Use fetch and cache data from NotionCacheObject
     // Fetching only the collection data from notion's db, using the token provided
     const {recordMap} = await Queries.syncRecordValues({
       requests: [{
@@ -30,9 +32,9 @@ export async function relation(input_schema_unit: TRelationSchemaUnitInput, coll
       interval: 0
     });
 
-    // If the collection doesnot exist even in notion's db then its an invalid request, so throw an error 
+    // If the collection doesn't exist even in notion's db then its an invalid request, so throw an error 
     if(!recordMap.collection[child_collection_id].value)
-      throw new Error(`Collection:${child_collection_id} doesnot exist`);
+      throw new NonExistentDataError('collection', child_collection_id)
     
     // Replace the child_collection to the one obtained from the api request
     child_collection = recordMap.collection[child_collection_id].value
@@ -43,7 +45,7 @@ export async function relation(input_schema_unit: TRelationSchemaUnitInput, coll
   // Log the event of reading the child collection
   logger && logger("READ", "collection", child_collection_id);
 
-  // Construct the relation_schema_unit, its errorneous now, as it uses incorrect data passed from the input
+  // Construct the relation_schema_unit, its erroneous now, as it uses incorrect data passed from the input
   const relation_schema_unit: RelationSchemaUnit = {
     type: "relation",
     // The child collection relation schema unit that is related to this schema unit 

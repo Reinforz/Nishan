@@ -1,4 +1,4 @@
-import { UnknownPropertyReferenceError } from '@nishans/errors';
+import { PreExistentValueError, UnknownPropertyReferenceError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
@@ -21,15 +21,16 @@ export function detectAggregationErrors (
 	input: Omit<TAggregationsCreateInput, 'aggregator'>,
 	aggregations_map: ISchemaAggregationMap
 ) {
-	const { type, name } = input;
+	const { name } = input;
 	const schema_map_unit = schema_map.get(name);
 	if (!schema_map_unit) throw new UnknownPropertyReferenceError(name, [ 'name' ]);
-	if (type !== schema_map_unit.type) throw new Error(`Type mismatch, ${type} not equal to ${schema_map_unit.type}`);
-	if (aggregations_map.get(name)) throw new Error(`An aggregation for ${name} already exists.`);
+	const current_aggregation = aggregations_map.get(name);
+	if (current_aggregation)
+		throw new PreExistentValueError('aggregation', name, current_aggregation.aggregation.aggregator);
 	return schema_map_unit;
 }
 /**
- * A class to represent the aggregrator methods for views that supports it
+ * A class to represent the aggregator methods for views that supports it
  * @noInheritDoc
  */
 class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View<T> {

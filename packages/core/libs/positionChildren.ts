@@ -1,3 +1,4 @@
+import { ChildIndexOutofBoundError } from '@nishans/errors';
 import { Operation } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
 import { Logger, RepositionParams } from '../types';
@@ -39,7 +40,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 			container.splice(position, 0, child_id);
 			// IF the container doesn't exist and position is not zero or if the pivot_id is undefined or null, which could be the case if the position is outta index, throw an error
 			if ((!contains_container && position !== 0) || pivot_id === undefined || pivot_id === null)
-				throw new Error(`Parent doesn't contain any children at index ${position}`);
+				throw new ChildIndexOutofBoundError(position, container.length, child_path);
 			// If the container exists make where to be Before, reason is that, it should be occupying the index of the pivot_id
 			// else make if after, ie push to last since its the first and only element
 			where = contains_container ? 'Before' : 'After';

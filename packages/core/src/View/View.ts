@@ -1,4 +1,4 @@
-import { UnknownPropertyReferenceError } from "@nishans/errors";
+import { PreExistentValueError, UnknownPropertyReferenceError } from "@nishans/errors";
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
@@ -81,7 +81,7 @@ class View<T extends TView> extends Data<T> {
 			const arg = args[index],
 				schema_map_unit = schema_map.get(arg[0]),
 				target_sort = sorts_map.get(arg[0]);
-			if (!schema_map_unit) throw new UnknownPropertyReferenceError(arg[0], [ '[0]' ]);
+			if (!schema_map_unit) throw new UnknownPropertyReferenceError(arg[0], [ `${index}` ]);
 			else {
 				if (!target_sort) {
 					if (typeof arg[2] === 'number') {
@@ -94,7 +94,7 @@ class View<T extends TView> extends Data<T> {
 							property: schema_map_unit.schema_id,
 							direction: arg[1]
 						});
-				} else throw new Error(`Property ${arg[0]} already has sort ${target_sort.sort}`);
+				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort);
 			}
 		}
 

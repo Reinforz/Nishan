@@ -74,8 +74,6 @@ describe('createBlockClass', () => {
 	});
 
 	it(`Should throw for unsupported data type`, () => {
-		expect(() => createBlockClass('collection_view_pag' as any, v4(), arg)).toThrow(
-			'Unsupported data type collection_view_pag passed'
-		);
+		expect(() => createBlockClass('collection_view_pag' as any, v4(), arg)).toThrow();
 	});
 });

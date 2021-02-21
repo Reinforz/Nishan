@@ -12,15 +12,12 @@ export function filters(data: TView, schema: Schema){
       else {
         const target_filter = filter as TViewFilters, 
           schema_unit = schema[target_filter.property];
-        if(schema_unit){
           filters_map.set(indexes.concat(index).join("."), {
             ...schema_unit,
             schema_id: target_filter.property,
             parent_filter: parent,
             child_filter: target_filter
           })
-        } else
-          throw new Error(`Unknown property ${target_filter.property} referenced`)
       }
     })
   }

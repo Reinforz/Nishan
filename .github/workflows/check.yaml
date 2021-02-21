@@ -23,6 +23,12 @@ jobs:
       - run: yarn test
       - uses: codecov/codecov-action@v1
         with:
+          files: ./packages/inline_blocks/coverage/lcov.info
+          flags: inline_blocks
+          name: "@nishans/inline-blocks"
+      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v1
+        with:
           files: ./packages/core/coverage/lcov.info
           flags: core
           name: "@nishans/core"

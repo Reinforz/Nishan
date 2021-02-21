@@ -1,6 +1,6 @@
 {
   "name": "@nishans/inline-blocks",
-  "version": "0.0.0",
+  "version": "0.0.19",
   "description": "Package providing an easy to use api to generate contents for notion inline blocks",
   "keywords": [
     "notion",
@@ -18,7 +18,7 @@
   },
   "files": [
     "dist/src",
-    "dist/lib"
+    "dist/libs"
   ],
   "repository": {
     "type": "git",

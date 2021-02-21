@@ -49,6 +49,7 @@ Legend:
 17. **`@nishans/operations`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) [NPM](https://www.npmjs.com/package/@nishans/operations) [Docs](https://nishan-docs.netlify.app/docs/operations/): A package to inspect, modify and store notion operations.
 18. **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks) [Docs](https://nishan-docs.netlify.app/docs/inline-blocks/): Package providing an easy to use api to generate contents for notion inline blocks.
 19. **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz) [Docs](https://nishan-docs.netlify.app/docs/idz/): A small package to validate, generate and parse notion ids.
+20. **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package that contains various notion specific error classes.
 
 ### Apps
 

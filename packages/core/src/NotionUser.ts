@@ -1,8 +1,7 @@
 import { Mutations } from '@nishans/endpoints';
-import { idToUuid, uuidToId } from '@nishans/idz';
+import { generateId, idToUuid, uuidToId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateData, CreateMaps, transformToMultiple, warn } from '../libs';
 import { CollectionViewPage, Page } from '../src';
 import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
@@ -81,7 +80,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = uuidv4(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
 
       spaces.push(new Space({
         id: space_id,

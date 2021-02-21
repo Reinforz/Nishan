@@ -2,7 +2,6 @@ import { Mutations } from '@nishans/endpoints';
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
-import { v4 } from 'uuid';
 import { CreateMaps, deepMerge, detectChildData, fetchAndCacheData, PopulateMap } from '../../libs';
 import { NishanArg, RepositionParams, TBlockInput } from '../../types';
 import Data from '../Data';
@@ -33,7 +32,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	async duplicate (infos: number | string[]) {
 		const block_map = CreateMaps.block(),
 			block = this.getCachedData();
-		const ids: string[] = typeof infos === 'number' ? Array(infos).fill(v4()) : infos.map((info) => generateId(info));
+		const ids: string[] =
+			typeof infos === 'number' ? Array(infos).fill(generateId()) : infos.map((info) => generateId(info));
 
 		for (let index = 0; index < ids.length; index++) {
 			const block_id = ids[index];

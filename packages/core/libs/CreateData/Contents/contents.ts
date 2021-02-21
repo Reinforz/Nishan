@@ -1,7 +1,6 @@
 import { generateId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage } from "@nishans/types";
-import { v4 as uuidv4 } from 'uuid';
 import { CreateData, CreateMaps, fetchAndCacheData } from "../../";
 import { NishanArg, TBlockCreateInput } from "../../../types";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
@@ -130,7 +129,7 @@ export async function contents(contents: TBlockCreateInput[], original_parent_id
         stackCacheMap(block_map, column_list_data, props);
 
         for (let index = 0; index < contents.length; index++) {
-          const column_id = uuidv4(), column_data: IColumn = {
+          const column_id = generateId(), column_data: IColumn = {
             id: column_id,
             parent_id: block_id,
             parent_table: "block",

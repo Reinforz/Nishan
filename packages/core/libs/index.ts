@@ -5,7 +5,6 @@ export * from './CreateData/index';
 export * from './CreateMaps/index';
 export * from './deepMerge';
 export * from './detectChildData';
-export * from './errors';
 export * from './fetchAndCacheData';
 export * from './initializeView';
 export * from './logs';

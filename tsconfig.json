@@ -12,6 +12,9 @@
       "path": "./packages/idz/tsconfig.json"
     },
     {
+      "path": "./packages/errors/tsconfig.json"
+    },
+    {
       "path": "./packages/inline-blocks/tsconfig.json"
     },
     {

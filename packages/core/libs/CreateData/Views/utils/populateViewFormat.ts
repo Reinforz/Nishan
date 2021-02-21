@@ -1,5 +1,5 @@
+import { NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "@nishans/errors";
 import { IBoardViewFormat, ICalendarViewFormat, IGalleryViewFormat, IListViewFormat, ITableViewFormat, ITimelineViewFormat, MultiSelectSchemaUnit, SelectSchemaUnit } from "@nishans/types";
-import { NonExistentSchemaUnitTypeError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from "../../../../libs";
 import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../../../../types";
 
 export type TViewFormat = ITableViewFormat | ICalendarViewFormat | ITimelineViewFormat | IListViewFormat | IGalleryViewFormat | IBoardViewFormat;

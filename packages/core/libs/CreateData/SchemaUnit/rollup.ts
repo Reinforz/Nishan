@@ -1,7 +1,8 @@
 import { Queries } from '@nishans/endpoints';
+import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
 import { formulateResultTypeFromSchemaType } from '@nishans/notion-formula';
 import { RollupSchemaUnit, SyncRecordValuesParams } from '@nishans/types';
-import { populateSchemaMap, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '../../../libs';
+import { populateSchemaMap } from '../../../libs';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
 

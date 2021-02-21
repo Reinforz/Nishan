@@ -1,3 +1,4 @@
+import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
@@ -7,8 +8,7 @@ import {
   populateFilters, populateFiltersMap,
   populateFormatPropertiesMap,
   populateSchemaMap, populateSortsMap,
-  transformToMultiple,
-  UnknownPropertyReferenceError
+  transformToMultiple
 } from '../../libs';
 import {
   FilterType,

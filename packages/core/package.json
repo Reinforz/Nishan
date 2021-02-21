@@ -40,6 +40,7 @@
     "@nishans/cache": "^0.0.20",
     "@nishans/notion-formula": "^0.0.15",
     "@nishans/idz": "^0.0.15",
+    "@nishans/errors": "^0.0.15",
     "colors": "^1.4.0"
   },
   "devDependencies": {

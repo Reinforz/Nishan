@@ -1,12 +1,8 @@
+import { UnknownPropertyReferenceError } from '@nishans/errors';
 import { ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import {
-	populateAggregationsMap,
-	populateSchemaMap,
-	transformToMultiple,
-	UnknownPropertyReferenceError
-} from '../../libs';
+import { populateAggregationsMap, populateSchemaMap, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,

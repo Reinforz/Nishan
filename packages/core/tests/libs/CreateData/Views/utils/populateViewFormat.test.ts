@@ -476,7 +476,7 @@ describe('board view', () => {
 					},
 					custom_schema_map
 				)
-			).toThrow(`Schema doesnot contain any property of type select | multi_select`);
+			).toThrow(`Schema doesn't contain any property of type select | multi_select`);
 		});
 
 		it(`Should throw error for board view (select doesnt have any options)`, () => {

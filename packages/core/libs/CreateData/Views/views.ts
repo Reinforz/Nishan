@@ -1,5 +1,6 @@
+import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { ICollection, ViewFormatProperties } from "@nishans/types";
-import { CreateMaps, populateFilters, populateSchemaMap, UnknownPropertyReferenceError } from "../../";
+import { CreateMaps, populateFilters, populateSchemaMap } from "../../";
 import { IViewMap, NishanArg, TViewCreateInput } from "../../../types";
 import { generateViewData, populateNonIncludedProperties, populateQuery2SortAndAggregations, populateViewFormat, populateViewProperties, populateViewQuery2 } from "./utils";
 

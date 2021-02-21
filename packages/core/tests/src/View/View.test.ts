@@ -283,9 +283,7 @@ describe('createSorts', () => {
 			id: 'collection_view_1'
 		});
 
-		expect(() => view.createSorts([ [ 'Title', 'ascending', 0 ] ])).toThrow(
-			`Property Title already has sort descending`
-		);
+		expect(() => view.createSorts([ [ 'Title', 'ascending', 0 ] ])).toThrow();
 	});
 
 	it(`throws error when property doesnot exist in the schema_map `, () => {
@@ -315,7 +313,7 @@ describe('createSorts', () => {
 			id: 'collection_view_1'
 		});
 
-		expect(() => view.createSorts([ [ 'Text', 'ascending', 0 ] ])).toThrow(`Unknown property Text referenced in [0]`);
+		expect(() => view.createSorts([ [ 'Text', 'ascending', 0 ] ])).toThrow();
 	});
 });
 
@@ -1045,6 +1043,6 @@ describe('setPropertyFromName', () => {
 	it(`Should throw an error if unknown property is referenced`, () => {
 		const data = { property: 'Name' };
 		const schema_map: ISchemaMap = new Map([ [ 'Title', { schema_id: 'title' } as any ] ]);
-		expect(() => setPropertyFromName('Name', schema_map, data)).toThrow(`Unknown property Name referenced in name`);
+		expect(() => setPropertyFromName('Name', schema_map, data)).toThrow();
 	});
 });

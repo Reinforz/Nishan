@@ -333,7 +333,7 @@ describe('rollup', () => {
 						token: 'token'
 					}
 				)
-			).rejects.toThrow(`Unknown property unknown referenced in relation_property`);
+			).rejects.toThrow();
 		});
 
 		it(`Should throw for using unknown target_property`, async () => {
@@ -366,7 +366,7 @@ describe('rollup', () => {
 						token: 'token'
 					}
 				)
-			).rejects.toThrow(`Unknown property unknown referenced in target_property`);
+			).rejects.toThrow();
 		});
 
 		it(`Should throw error if relation property is not relation type`, async () => {
@@ -385,9 +385,7 @@ describe('rollup', () => {
 						token: 'token'
 					}
 				)
-			).rejects.toThrow(
-				`Property Title referenced in relation_property is not of the supported types\nGiven type: title\nSupported types: relation`
-			);
+			).rejects.toThrow();
 		});
 
 		it(`Should throw error if collection doesnt exist in cache and db`, async () => {
@@ -418,7 +416,7 @@ describe('rollup', () => {
 						token: 'token'
 					}
 				)
-			).rejects.toThrow(`Collection:target_collection_id doesnot exist`);
+			).rejects.toThrow();
 		});
 	});
 });

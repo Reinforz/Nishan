@@ -27,7 +27,7 @@ export function updateChildContainer<T extends TData> (
 		parent_data[child_path] = container.filter((page_id) => page_id !== child_id) as any;
 		stack.push(
 			Operation[parent_type].listRemove(parent_data.id, [ child_path ], {
-				child_id
+				id: child_id
 			})
 		);
 	} else if (keep && !container.includes(child_id)) {
@@ -37,7 +37,7 @@ export function updateChildContainer<T extends TData> (
 		container.push(child_id);
 		stack.push(
 			Operation[parent_type].listAfter(parent_data.id, [ child_path ], {
-				child_id
+				id: child_id
 			})
 		);
 	}

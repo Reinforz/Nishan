@@ -18,7 +18,7 @@ it(`Should throw an error if unknown property is referenced`, () => {
 			} as any,
 			schema
 		)
-	).toThrow(`Unknown property unknown referenced`);
+	).toThrow();
 });
 
 it(`Should create correct schema map`, () => {

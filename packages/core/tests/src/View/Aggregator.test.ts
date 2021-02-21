@@ -25,34 +25,7 @@ describe('detectAggregationErrors', () => {
 				{ type: 'title', name: 'Unknown' },
 				new Map() as any
 			)
-		).toThrow(`Unknown property Unknown referenced in name`);
-	});
-
-	it(`Type mismatch error`, () => {
-		expect(() =>
-			detectAggregationErrors(
-				new Map([
-					[
-						'Title',
-						{
-							schema_id: 'title',
-							type: 'title',
-							name: 'Title'
-						}
-					],
-					[
-						'Text',
-						{
-							schema_id: 'text',
-							type: 'title',
-							name: 'Text'
-						}
-					]
-				]),
-				{ type: 'text', name: 'Text' },
-				new Map() as any
-			)
-		).toThrow(`Type mismatch, text not equal to title`);
+		).toThrow();
 	});
 
 	it(`Aggregation already exists`, () => {
@@ -79,7 +52,7 @@ describe('detectAggregationErrors', () => {
 				{ type: 'text', name: 'Text' },
 				new Map([ [ 'Text', {} as any ] ]) as any
 			)
-		).toThrow(`An aggregation for Text already exists.`);
+		).toThrow();
 	});
 
 	it(`Works correctly`, () => {

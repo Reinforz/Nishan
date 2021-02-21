@@ -161,7 +161,7 @@ describe('CreateData.schema', () => {
 						user_id: 'user_1'
 					}
 				)
-			).rejects.toThrow(`Duplicate property Title`);
+			).rejects.toThrow();
 		});
 
 		it(`Should throw error if title type property not present in schema`, () => {
@@ -185,7 +185,7 @@ describe('CreateData.schema', () => {
 						user_id: 'user_1'
 					}
 				)
-			).rejects.toThrow(`Schema must contain title type property`);
+			).rejects.toThrow();
 		});
 	});
 });

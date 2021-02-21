@@ -248,7 +248,7 @@ describe('relation', () => {
           stack: [],
           token: 'token',
         }
-      )).rejects.toThrow(`Collection:child_collection_id doesnot exist`)
+      )).rejects.toThrow()
     })
   })
 });

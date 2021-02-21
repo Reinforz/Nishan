@@ -1,3 +1,4 @@
+import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
 import { initializeViewFilters } from "..";
 import { ISchemaFiltersMap } from "../../src";
@@ -12,6 +13,8 @@ export function filters(data: TView, schema: Schema){
       else {
         const target_filter = filter as TViewFilters, 
           schema_unit = schema[target_filter.property];
+          if(!schema_unit)
+            throw new UnknownPropertyReferenceError(target_filter.property, ["query2", "filter", "filters", indexes.join(".")])
           filters_map.set(indexes.concat(index).join("."), {
             ...schema_unit,
             schema_id: target_filter.property,

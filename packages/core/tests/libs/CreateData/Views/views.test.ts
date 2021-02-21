@@ -324,6 +324,6 @@ describe('CreateData.views', () => {
           return
         }
       }
-    )).toThrow(`Unknown property URL referenced in name`)
+    )).toThrow()
   });
 });

@@ -35,7 +35,7 @@ describe('detectChildData', () => {
 		]);
 
 		expect(() => detectChildData('block' as any)).toThrow(`type block requires second data argument`);
-		expect(() => detectChildData('block', { type: 'header' } as any)).toThrow(`Unsupported block type header`);
-		expect(() => detectChildData('notion_user' as any)).toThrow(`Unsupported notion_user data provided`);
+		expect(() => detectChildData('block', { type: 'header' } as any)).toThrow();
+		expect(() => detectChildData('notion_user' as any)).toThrow();
 	});
 });

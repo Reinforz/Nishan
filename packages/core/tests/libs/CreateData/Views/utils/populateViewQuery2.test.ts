@@ -130,7 +130,7 @@ describe('Board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property unknown referenced in group_by`);
+			).toThrow();
 		});
 
 		it(`Should throw error if schema doesnot contain any select | multiselect`, () => {
@@ -142,9 +142,7 @@ describe('Board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in group_by is not of the supported types\nGiven type: text\nSupported types: select | multi_select`
-			);
+			).toThrow();
 		});
 	});
 });
@@ -201,7 +199,7 @@ describe('Calendar view', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property unknown referenced in calendar_by`);
+			).toThrow();
 		});
 
 		it(`Should throw error if property is of unsupported type`, () => {
@@ -213,9 +211,7 @@ describe('Calendar view', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in calendar_by is not of the supported types\nGiven type: text\nSupported types: last_edited_time | created_time | date | formula`
-			);
+			).toThrow();
 		});
 	});
 });
@@ -293,7 +289,7 @@ describe('Timeline', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property unknown referenced in timeline_by`);
+			).toThrow();
 		});
 
 		it(`Should throw error if property is of unsupported type`, () => {
@@ -305,9 +301,7 @@ describe('Timeline', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in timeline_by is not of the supported types\nGiven type: text\nSupported types: last_edited_time | created_time | date | formula`
-			);
+			).toThrow();
 		});
 	});
 });

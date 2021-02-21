@@ -194,7 +194,7 @@ describe('Gallery view', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property unknown referenced in gallery_cover.property`);
+			).toThrow();
 		});
 
 		it(`Should throw error for gallery view (property not of type file)`, () => {
@@ -209,9 +209,7 @@ describe('Gallery view', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in gallery_cover.property is not of the supported types\nGiven type: text\nSupported types: file`
-			);
+			).toThrow();
 		});
 	});
 });
@@ -401,7 +399,7 @@ describe('board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property unknown referenced in board_groups2.[0].property`);
+			).toThrow();
 		});
 
 		it(`Should throw an error if custom groups2 property is referencing unsupported type property`, () => {
@@ -428,9 +426,7 @@ describe('board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in board_groups2.[0].property is not of the supported types\nGiven type: text\nSupported types: select | multi_select`
-			);
+			).toThrow();
 		});
 
 		it(`Should throw error for board view (property not of type file)`, () => {
@@ -445,9 +441,7 @@ describe('board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(
-				`Property Text referenced in board_cover.property is not of the supported types\nGiven type: text\nSupported types: file`
-			);
+			).toThrow();
 		});
 
 		it(`Should throw error for board view (unknown property referenced)`, () => {
@@ -462,7 +456,7 @@ describe('board view', () => {
 					},
 					schema_map
 				)
-			).toThrow(`Unknown property file referenced in board_cover.property`);
+			).toThrow();
 		});
 
 		it(`Should throw error for board view (schema doesnot contain any select or multiselect)`, () => {
@@ -476,7 +470,7 @@ describe('board view', () => {
 					},
 					custom_schema_map
 				)
-			).toThrow(`Schema doesn't contain any property of type select | multi_select`);
+			).toThrow();
 		});
 
 		it(`Should throw error for board view (select doesnt have any options)`, () => {

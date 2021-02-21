@@ -34,9 +34,6 @@
     },
     {
       "path": "./packages/sync/tsconfig.json"
-    },
-    {
-      "path": "./packages/utils/tsconfig.json"
     }
   ]
 }

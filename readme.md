@@ -32,7 +32,7 @@ Legend:
 
 1. **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core/): Core package for nishan with all crud api
 2. **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [NPM](https://www.npmjs.com/package/@nishans/types) [Docs](https://nishan-docs.netlify.app/docs/types): Typescript typings for Notion only
-3. **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [NPM](https://www.npmjs.com/package/@nishans/utils) [Docs](https://nishan-docs.netlify.app/docs/utils): Utility package to make working with notion easier
+3. **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package that contains various notion specific error classes.
 4. **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [NPM](https://www.npmjs.com/package/@nishans/sync) [Docs](https://nishan-docs.netlify.app/docs/sync): A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
 5. **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (NSY): A graphql server and client UI to make working with nishan a breeze
 6. **`@nishans/cli`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cli) (NSY): A package to interact with the nishan api from the terminal
@@ -49,7 +49,6 @@ Legend:
 17. **`@nishans/operations`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) [NPM](https://www.npmjs.com/package/@nishans/operations) [Docs](https://nishan-docs.netlify.app/docs/operations/): A package to inspect, modify and store notion operations.
 18. **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks) [Docs](https://nishan-docs.netlify.app/docs/inline-blocks/): Package providing an easy to use api to generate contents for notion inline blocks.
 19. **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz) [Docs](https://nishan-docs.netlify.app/docs/idz/): A small package to validate, generate and parse notion ids.
-20. **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package that contains various notion specific error classes.
 
 ### Apps
 

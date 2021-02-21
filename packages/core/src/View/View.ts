@@ -5,9 +5,8 @@ import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans
 import {
   deepMerge,
   initializeViewFilters,
-  populateFilters, populateFiltersMap,
-  populateFormatPropertiesMap,
-  populateSortsMap,
+  populateFilters,
+  PopulateViewMaps,
   transformToMultiple
 } from '../../libs';
 import {
@@ -77,7 +76,7 @@ class View<T extends TView> extends Data<T> {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
-			[ sorts_map, sorts ] = populateSortsMap(data, collection.schema);
+			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
 				schema_map_unit = schema_map.get(arg[0]),
@@ -112,7 +111,7 @@ class View<T extends TView> extends Data<T> {
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			[ sorts_map, sorts ] = populateSortsMap(data, collection.schema);
+			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
@@ -152,7 +151,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
-		const [ sorts_map, sorts ] = populateSortsMap(this.getCachedData(), this.getCollection().schema);
+		const [ sorts_map, sorts ] = PopulateViewMaps.sorts(this.getCachedData(), this.getCollection().schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -192,7 +191,7 @@ class View<T extends TView> extends Data<T> {
 		const data = this.getCachedData(), 
       {schema} = this.getCollection(), 
       schema_map = generateSchemaMapFromCollectionSchema(schema), 
-      [ filters_map ] = populateFiltersMap(data, schema);
+      [ filters_map ] = PopulateViewMaps.filters(data, schema);
     
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
@@ -233,7 +232,7 @@ class View<T extends TView> extends Data<T> {
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
     const data = this.getCachedData(), 
       {schema} = this.getCollection(), 
-      [ filters_map ] = populateFiltersMap(data, schema);
+      [ filters_map ] = PopulateViewMaps.filters(data, schema);
 
 		await this.deleteIterate<ISchemaFiltersMapValue>(
 			args,
@@ -265,7 +264,7 @@ class View<T extends TView> extends Data<T> {
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = populateFormatPropertiesMap(data, this.getCollection().schema);
+			[ format_properties_map, format_properties ] = PopulateViewMaps.properties(data, this.getCollection().schema);
 		await this.updateIterate<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>(
 			args,
 			{

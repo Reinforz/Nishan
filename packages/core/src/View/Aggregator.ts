@@ -2,7 +2,7 @@ import { UnknownPropertyReferenceError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { populateAggregationsMap, transformToMultiple } from '../../libs';
+import { PopulateViewMaps, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -45,7 +45,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
-			[ aggregations_map, aggregations ] = populateAggregationsMap(this.getCachedData(), collection.schema);
+			[ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(this.getCachedData(), collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const { aggregator } = args[index];
 			const schema_map_unit = detectAggregationErrors(schema_map, args[index], aggregations_map);
@@ -71,7 +71,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ aggregations_map ] = populateAggregationsMap(this.getCachedData(), this.getCollection().schema);
+			[ aggregations_map ] = PopulateViewMaps.aggregations(this.getCachedData(), this.getCollection().schema);
 
 		await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(
 			args,
@@ -102,7 +102,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	}
 
 	async deleteAggregations (args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-		const [ aggregations_map, aggregations ] = populateAggregationsMap(
+		const [ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(
 				this.getCachedData(),
 				this.getCollection().schema
 			),

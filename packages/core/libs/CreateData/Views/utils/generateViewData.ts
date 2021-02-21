@@ -1,7 +1,7 @@
+import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { TView, TViewQuery2 } from '@nishans/types';
 import { TViewFormat } from '.';
-import { generateId } from '../../../../libs';
 import { NishanArg, TViewCreateInput } from '../../../../types';
 
 export function generateViewData (

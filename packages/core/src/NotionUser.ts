@@ -1,8 +1,9 @@
 import { Mutations } from '@nishans/endpoints';
+import { idToUuid, uuidToId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateData, CreateMaps, idToUuid, transformToMultiple, uuidToId, warn } from '../libs';
+import { CreateData, CreateMaps, transformToMultiple, warn } from '../libs';
 import { CollectionViewPage, Page } from '../src';
 import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
@@ -220,26 +221,26 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async getPagesById(ids: string[]) {
-    const tpage_map = CreateMaps.page();
+    const page_map = CreateMaps.page();
     await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
     for (let index = 0; index < ids.length; index++) {
       const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;
       if (page.type === "page") {
         const page_obj = new Page({ ...this.getProps(), id: page.id })
-        tpage_map.page.set(page.id, page_obj)
-        tpage_map.page.set(page.properties.title[0][0], page_obj);
+        page_map.page.set(page.id, page_obj)
+        page_map.page.set(page.properties.title[0][0], page_obj);
         await this.initializeCacheForSpecificData(page.id, "block");
       } else if (page.type === "collection_view_page"){
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
-        tpage_map.collection_view_page.set(collection.name[0][0], cvp_obj);
-        tpage_map.collection_view_page.set(page.id, cvp_obj);
+        page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
+        page_map.collection_view_page.set(page.id, cvp_obj);
         await this.initializeCacheForSpecificData(page.id, "block");
       }
       else
         warn(`The data is neither a page nor a cvp`)
     }
-    return tpage_map;
+    return page_map;
   }
 }
 

@@ -1,6 +1,7 @@
+import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection } from '@nishans/types';
-import { CreateData, generateId } from '../';
+import { CreateData } from '../';
 import { ICollectionBlockInput, IViewMap, NishanArg } from '../../types';
 
 /**

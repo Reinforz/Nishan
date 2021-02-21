@@ -1,7 +1,7 @@
 import { Queries } from "@nishans/endpoints";
+import { createShortId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { RelationSchemaUnit } from "@nishans/types";
-import { createShortId } from "../..";
 import { TRelationSchemaUnitInput } from "../../../types";
 import { ParentCollectionData } from "../types";
 

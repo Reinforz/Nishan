@@ -39,8 +39,8 @@
     "@nishans/operations": "^0.0.18",
     "@nishans/cache": "^0.0.20",
     "@nishans/notion-formula": "^0.0.15",
-    "colors": "^1.4.0",
-    "uuid": "^8.3.2"
+    "@nishans/idz": "^0.0.15",
+    "colors": "^1.4.0"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.18",

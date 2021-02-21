@@ -8,5 +8,5 @@ export function generateId (id?: string) {
 			console.log('Invalid uuid provided');
 			return v4();
 		}
-	}
+	} else return v4();
 }

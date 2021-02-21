@@ -1,6 +1,6 @@
+import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { TBlockType } from '@nishans/types';
 import { NishanArg } from '../types';
-
 /**
  * Create class from passed data
  * @param type The type of data
@@ -60,6 +60,40 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 			return new CollectionViewPage(obj);
 		default:
 			// Throws an error if an unsupported data type is passed
-			throw new Error(`Unsupported data type ${type} passed`);
+			throw new UnsupportedBlockTypeError(type, [
+				'page',
+				'collection_view',
+				'collection_view_page',
+				'linked_db',
+				'video',
+				'audio',
+				'image',
+				'bookmark',
+				'code',
+				'file',
+				'tweet',
+				'gist',
+				'codepen',
+				'maps',
+				'figma',
+				'drive',
+				'text',
+				'table_of_contents',
+				'column_list',
+				'column',
+				'equation',
+				'breadcrumb',
+				'factory',
+				'to_do',
+				'header',
+				'sub_header',
+				'sub_sub_header',
+				'bulleted_list',
+				'numbered_list',
+				'toggle',
+				'quote',
+				'divider',
+				'callout'
+			]);
 	}
 }

@@ -1,7 +1,7 @@
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
 
 /**
- * Transforms the parameter that is suitable to be used in a multiple=true internal method
+ * Transforms the parameter that is suitable to be used in a multiple=true Nishan method
  * @param arg The argument to transform
  */
 export function transformToMultiple (arg?: FilterType<any>): FilterTypes<any>;

@@ -49,7 +49,8 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			favorite_status,
 			data.id,
 			'bookmarked_pages',
-			this.Operations.stack
+			this.Operations.stack,
+			'space_view'
 		);
 	}
 

@@ -13,7 +13,7 @@ describe('updateChildContainer', () => {
 				id: 'space_view_1'
 			} as any;
 
-		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack);
+		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack, 'space_view');
 
 		expect(stack).toStrictEqual([
 			{
@@ -35,7 +35,7 @@ describe('updateChildContainer', () => {
 				id: 'space_view_1'
 			} as any;
 
-		updateChildContainer<typeof data>(data, false, 'block_1', 'bookmarked_pages', stack);
+		updateChildContainer<typeof data>(data, false, 'block_1', 'bookmarked_pages', stack, 'space_view');
 
 		expect(stack).toStrictEqual([
 			{
@@ -57,7 +57,7 @@ describe('updateChildContainer', () => {
 				id: 'space_view_1'
 			} as any;
 
-		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack);
+		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack, 'space_view');
 
 		expect(stack).toStrictEqual([]);
 

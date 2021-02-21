@@ -210,6 +210,6 @@ describe('populateFilters', () => {
 				[],
 				schema_map
 			)
-		).toThrow(`Unknown property Texto referenced`);
+		).toThrow();
 	});
 });

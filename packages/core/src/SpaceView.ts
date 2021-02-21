@@ -108,7 +108,14 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
-				updateChildContainer<typeof data>(data, updated_favorite_status, id, 'bookmarked_pages', this.Operations.stack);
+				updateChildContainer<typeof data>(
+					data,
+					updated_favorite_status,
+					id,
+					'bookmarked_pages',
+					this.Operations.stack,
+					'space_view'
+				);
 				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);

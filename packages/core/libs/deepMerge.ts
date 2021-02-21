@@ -2,6 +2,11 @@ export function isObject (item: any) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
 
+/**
+ * deeply merges source object into target object 
+ * @param target The target object to merge into
+ * @param source The source object to merge
+ */
 export function deepMerge (target: any, source: any) {
 	if (isObject(target) && isObject(source)) {
 		Object.keys(source).forEach((key) => {

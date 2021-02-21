@@ -1,7 +1,8 @@
+import { NotionCacheObject } from "@nishans/cache";
 import { generateId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage } from "@nishans/types";
-import { CreateData, CreateMaps, fetchAndCacheData } from "../../";
+import { CreateData, CreateMaps } from "../../";
 import { NishanArg, TBlockCreateInput } from "../../../types";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
 
@@ -91,7 +92,7 @@ export async function contents(contents: TBlockCreateInput[], original_parent_id
       }
       else if (content.type === "linked_db") {
         const { collection_id, views } = content,
-          collection = await fetchAndCacheData<ICollection>('collection', collection_id, props.cache, props.token),
+          collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', collection_id, {token: props.token, interval: 0}, props.cache),
           [view_ids] = CreateData.views(collection, views, props, block_id),
           collection_view_data: ICollectionView = {
             id: block_id,

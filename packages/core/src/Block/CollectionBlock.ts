@@ -1,6 +1,7 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
-import { CreateData, CreateMaps, fetchAndCacheData, transformToMultiple } from '../../libs';
+import { CreateData, CreateMaps, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -39,7 +40,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
    */
 	async getCollection () {
 		const data = this.getCachedData();
-		await fetchAndCacheData('collection', data.collection_id, this.cache, this.token);
+		await NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, this.getConfigs(), this.cache);
 		return new Collection({
 			...this.getProps(),
 			id: data.collection_id

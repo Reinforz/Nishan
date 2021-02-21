@@ -1,7 +1,7 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateData, CreateMaps, error, fetchAndCacheData, PopulateMap, transformToMultiple } from '../libs';
+import { CreateData, CreateMaps, error, PopulateMap, transformToMultiple } from '../libs';
 import { FilterType, FilterTypes, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageMap, IPageUpdateInput, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
 import SpaceView from "./SpaceView";
@@ -12,7 +12,7 @@ export async function createSpaceIterateArguments(block_id: string, cache: ICach
     if(data.type === "page")
       return data;
     else if(data.type === "collection_view_page"){
-      fetchAndCacheData('collection', data.collection_id, cache, token);
+      NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, {token, interval: 0}, cache);
       return {
         ...data,
         collection: cache.collection.get(data.collection_id) as ICollection

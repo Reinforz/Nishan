@@ -1,8 +1,9 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
-import { CreateMaps, deepMerge, detectChildData, fetchAndCacheData, PopulateMap } from '../../libs';
+import { CreateMaps, deepMerge, detectChildData, PopulateMap } from '../../libs';
 import { NishanArg, RepositionParams, TBlockInput } from '../../types';
 import Data from '../Data';
 
@@ -136,7 +137,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param new_parent_id Id of the new parent page
    */
 	async transfer (new_parent_id: string) {
-		await fetchAndCacheData('block', new_parent_id, this.cache, this.token);
+		await NotionCacheObject.fetchDataOrReturnCached('block', new_parent_id, this.getConfigs(), this.cache);
 
 		const data = this.getCachedData(),
 			parent_data = this.cache.block.get(data.parent_id) as IPage,

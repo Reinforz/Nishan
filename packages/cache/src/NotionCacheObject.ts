@@ -7,6 +7,7 @@ import {
 	RecordMap,
 	SyncRecordValues,
 	TBlock,
+	TData,
 	TDataType
 } from '@nishans/types';
 import { ICache } from '../src';
@@ -243,5 +244,31 @@ export const NotionCacheObject = {
 			if (!is_map) throw new Error(`${cache_item} is not an instance of Map`);
 		});
 		return cache;
+	},
+
+	fetchDataOrReturnCached: async <D extends TData>(
+		table: TDataType,
+		id: string,
+		configs: NotionRequestConfigs,
+		cache: ICache
+	) => {
+		const data = cache[table].get(id);
+		if (!data) {
+			console.log(`${table}:${id} doesn't exist in the cache`);
+			const { recordMap } = await Queries.syncRecordValues(
+				{
+					requests: [
+						{
+							id,
+							table,
+							version: 0
+						}
+					]
+				},
+				configs
+			);
+			return recordMap[table][id].value as D;
+		}
+		return data as D;
 	}
 };

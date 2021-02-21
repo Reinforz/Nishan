@@ -87,4 +87,8 @@ export class NotionCacheClass {
   async initializeCacheForSpecificData(id: string, type: TDataType){
 		await NotionCacheObject.initializeCacheForSpecificData(id, type, this.getConfigs(), this.cache);
   }
+
+  async fetchDataOrReturnCached(table: TDataType, id: string){
+		return await NotionCacheObject.fetchDataOrReturnCached(table, id, this.getConfigs(), this.cache,);
+  }
 }

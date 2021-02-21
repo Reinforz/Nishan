@@ -1,7 +1,6 @@
 import { Queries } from "@nishans/endpoints";
-import { ISchemaMapValue } from "@nishans/notion-formula";
+import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
-import { populateSchemaMap } from "../../../../libs";
 import { relation } from "../../../../libs/CreateData/SchemaUnit/relation";
 import { createDefaultCache } from "../../../utils/createDefaultCache";
 
@@ -37,7 +36,7 @@ describe('relation', () => {
 				}
 			);
 
-      const child_relation_schema_unit_id = populateSchemaMap(child_collection.schema).get("Related to Parent Collection (Parent Relation Column)")?.schema_id ?? "";
+      const child_relation_schema_unit_id = generateSchemaMapFromCollectionSchema(child_collection.schema).get("Related to Parent Collection (Parent Relation Column)")?.schema_id ?? "";
 
       expect(child_collection.schema[child_relation_schema_unit_id]).toStrictEqual({
         type: "relation",
@@ -114,7 +113,7 @@ describe('relation', () => {
 				}
 			);
       
-      const child_relation_schema_unit_id = (populateSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Related to Parent Collection (Parent Relation Column)") as ISchemaMapValue).schema_id;
+      const child_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema((cache.collection.get("child_collection_id") as ICollection).schema).get("Related to Parent Collection (Parent Relation Column)") as ISchemaMapValue).schema_id;
       
       expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {
@@ -184,7 +183,7 @@ describe('relation', () => {
 				}
 			);
 
-      const child_relation_schema_unit_id = (populateSchemaMap((cache.collection.get("child_collection_id") as ICollection).schema).get("Child Column") as ISchemaMapValue).schema_id;
+      const child_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema((cache.collection.get("child_collection_id") as ICollection).schema).get("Child Column") as ISchemaMapValue).schema_id;
       
       expect(cache.collection.get("child_collection_id")).toStrictEqual({
         schema: {

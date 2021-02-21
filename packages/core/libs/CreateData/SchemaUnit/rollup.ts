@@ -1,8 +1,7 @@
 import { Queries } from '@nishans/endpoints';
 import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
-import { formulateResultTypeFromSchemaType } from '@nishans/notion-formula';
+import { formulateResultTypeFromSchemaType, generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { RollupSchemaUnit, SyncRecordValuesParams } from '@nishans/types';
-import { populateSchemaMap } from '../../../libs';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
 
@@ -80,7 +79,7 @@ export async function rollup (
 
 	// Log the collection read operation
 	logger && logger('READ', 'collection', target_collection.id);
-	const target_collection_schema_map = populateSchemaMap(target_collection.schema);
+	const target_collection_schema_map = generateSchemaMapFromCollectionSchema(target_collection.schema);
 	// Get the target collection schema unit map from the target collection schema map using the passed target property
 	const target_collection_schema_unit_map = target_collection_schema_map.get(target_property);
 	// The target collection schema unit map doesnot exist throw an error

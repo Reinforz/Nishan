@@ -1,13 +1,14 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
+import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
 import { ICollection, ViewFormatProperties } from "@nishans/types";
-import { CreateMaps, populateFilters, populateSchemaMap } from "../../";
+import { CreateMaps, populateFilters } from "../../";
 import { IViewMap, NishanArg, TViewCreateInput } from "../../../types";
 import { generateViewData, populateNonIncludedProperties, populateQuery2SortAndAggregations, populateViewFormat, populateViewProperties, populateViewQuery2 } from "./utils";
 
 // * Separate start and end date for timeline view
 
 export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id">, views: TViewCreateInput[], props: Omit<NishanArg, "id" | "interval">, parent_id?:string) {
-  const schema_map = populateSchemaMap(collection.schema), view_ids: string[] = [], view_map = CreateMaps.view();
+  const schema_map = generateSchemaMapFromCollectionSchema(collection.schema), view_ids: string[] = [], view_map = CreateMaps.view();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 

@@ -1,12 +1,11 @@
 import { ICache } from '@nishans/cache';
 import {
-    IOperation,
-    Schema
+  IOperation,
+  Schema
 } from '@nishans/types';
 import { v4 } from 'uuid';
-import { populateSchemaMap } from "../../../../libs";
 import {
-    CreateData
+  CreateData
 } from '../../../../libs/CreateData';
 import { createDefaultCache } from '../../../utils/createDefaultCache';
 
@@ -56,10 +55,6 @@ const schema: Schema = {
 		}
 	}
 };
-
-const schema_map = populateSchemaMap(schema);
-
-
 
 describe('CreateData.views', () => {
 	describe('Output correctly', () => {

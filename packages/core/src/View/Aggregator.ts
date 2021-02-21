@@ -1,8 +1,8 @@
 import { UnknownPropertyReferenceError } from '@nishans/errors';
-import { ISchemaMap } from '@nishans/notion-formula';
+import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { populateAggregationsMap, populateSchemaMap, transformToMultiple } from '../../libs';
+import { populateAggregationsMap, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -44,7 +44,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	createAggregations (args: TAggregationsCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			schema_map = populateSchemaMap(collection.schema),
+			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 			[ aggregations_map, aggregations ] = populateAggregationsMap(this.getCachedData(), collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const { aggregator } = args[index];

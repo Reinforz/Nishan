@@ -1,5 +1,5 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
-import { ISchemaMap } from '@nishans/notion-formula';
+import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
@@ -7,7 +7,7 @@ import {
   initializeViewFilters,
   populateFilters, populateFiltersMap,
   populateFormatPropertiesMap,
-  populateSchemaMap, populateSortsMap,
+  populateSortsMap,
   transformToMultiple
 } from '../../libs';
 import {
@@ -76,7 +76,7 @@ class View<T extends TView> extends Data<T> {
 	createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
-			schema_map = populateSchemaMap(collection.schema),
+			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 			[ sorts_map, sorts ] = populateSortsMap(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
@@ -174,7 +174,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	createFilters (args: TViewFilterCreateInput[]) {
-		const schema_map = populateSchemaMap(this.getCollection().schema),
+		const schema_map = generateSchemaMapFromCollectionSchema(this.getCollection().schema),
 			data = this.getCachedData(),
 			filters = initializeViewFilters(data).filters;
 		populateFilters(args, filters, schema_map);
@@ -191,7 +191,7 @@ class View<T extends TView> extends Data<T> {
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(), 
       {schema} = this.getCollection(), 
-      schema_map = populateSchemaMap(schema), 
+      schema_map = generateSchemaMapFromCollectionSchema(schema), 
       [ filters_map ] = populateFiltersMap(data, schema);
     
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(

@@ -1,17 +1,6 @@
 import { IBoardView, ITableView, ITimelineView, IViewFilter, Schema, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from '@nishans/types';
-import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaMap, ISchemaSortsMap } from '../types';
+import { ISchemaAggregationMap, ISchemaFiltersMap, ISchemaFormatMap, ISchemaSortsMap } from '../types';
 import { initializeViewAggregations, initializeViewFilters, initializeViewSorts } from './initializeView';
-
-export function populateSchemaMap (schema: Schema) {
-	const schema_map: ISchemaMap = new Map();
-	Object.entries(schema).forEach(([ schema_id, value ]) => {
-		schema_map.set(value.name, {
-			schema_id,
-			...value
-		});
-	});
-	return schema_map;
-}
 
 export function populateAggregationsMap(data: ITableView | IBoardView | ITimelineView, schema: Schema){
   const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = initializeViewAggregations(data);

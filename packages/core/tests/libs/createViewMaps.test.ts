@@ -1,11 +1,5 @@
 import { Schema } from '@nishans/types';
-import {
-	populateAggregationsMap,
-	populateFiltersMap,
-	populateFormatPropertiesMap,
-	populateSchemaMap,
-	populateSortsMap
-} from '../../libs';
+import { populateAggregationsMap, populateFiltersMap, populateFormatPropertiesMap, populateSortsMap } from '../../libs';
 
 const schema: Schema = {
 	title: {
@@ -24,39 +18,6 @@ const schema: Schema = {
 
 afterEach(() => {
 	jest.restoreAllMocks();
-});
-
-describe('populateSchemaMap', () => {
-	it(`Should create correct schema map`, () => {
-		const schema_map = populateSchemaMap(schema);
-
-		expect(Array.from(schema_map.entries())).toStrictEqual([
-			[
-				'Title',
-				{
-					schema_id: 'title',
-					name: 'Title',
-					type: 'title'
-				}
-			],
-			[
-				'Number',
-				{
-					schema_id: 'number',
-					name: 'Number',
-					type: 'number'
-				}
-			],
-			[
-				'Text',
-				{
-					schema_id: 'text',
-					name: 'Text',
-					type: 'text'
-				}
-			]
-		]);
-	});
 });
 
 describe('populateAggregationsMap', () => {

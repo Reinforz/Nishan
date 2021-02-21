@@ -1,5 +1,5 @@
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
-import { populateSchemaMap } from '../../../../../libs';
 import { populateViewFormat } from '../../../../../libs/CreateData/Views/utils';
 
 const schema: Schema = {
@@ -45,7 +45,7 @@ const schema: Schema = {
 	}
 };
 
-const schema_map = populateSchemaMap(schema);
+const schema_map = generateSchemaMapFromCollectionSchema(schema);
 
 describe('Table view', () => {
 	describe('Output correctly', () => {
@@ -468,7 +468,7 @@ describe('board view', () => {
 		it(`Should throw error for board view (schema doesnot contain any select or multiselect)`, () => {
 			const custom_schema = JSON.parse(JSON.stringify(schema));
 			delete custom_schema.select;
-			const custom_schema_map = populateSchemaMap(custom_schema);
+			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
 			expect(() =>
 				populateViewFormat(
 					{
@@ -482,7 +482,7 @@ describe('board view', () => {
 		it(`Should throw error for board view (select doesnt have any options)`, () => {
 			const custom_schema = JSON.parse(JSON.stringify(schema));
 			custom_schema.select.options.pop();
-			const custom_schema_map = populateSchemaMap(custom_schema);
+			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
 			expect(() =>
 				populateViewFormat(
 					{

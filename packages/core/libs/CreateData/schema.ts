@@ -1,7 +1,7 @@
 import { createShortId } from "@nishans/idz";
-import { generateFormulaAST, ISchemaMap } from "@nishans/notion-formula";
+import { generateFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
-import { CreateMaps, populateSchemaMap } from "..";
+import { CreateMaps } from "..";
 import { SchemaUnit } from "../../src";
 import { ISchemaUnitMap, NishanArg, TSchemaUnitInput } from "../../types";
 import { CreateSchemaUnitData } from "./SchemaUnit";
@@ -15,7 +15,7 @@ import { ParentCollectionData } from "./types";
 export async function schema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
   const schema_unit_map = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const schema: Schema = options.current_schema ?? {}, schema_map = populateSchemaMap(schema);
+  const schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
   // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 

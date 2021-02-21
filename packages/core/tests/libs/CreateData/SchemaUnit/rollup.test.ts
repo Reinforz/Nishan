@@ -1,6 +1,6 @@
 import { Queries } from '@nishans/endpoints';
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Schema } from '@nishans/types';
-import { populateSchemaMap } from '../../../../libs';
 import { rollup } from '../../../../libs/CreateData/SchemaUnit/rollup';
 import { createDefaultCache } from '../../../utils/createDefaultCache';
 
@@ -30,7 +30,7 @@ describe('rollup', () => {
 						target_property: 'Title',
 						aggregation: 'average'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							...createDefaultCache(),
@@ -76,7 +76,7 @@ describe('rollup', () => {
 						target_property: 'Text',
 						aggregation: 'average'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							...createDefaultCache(),
@@ -122,7 +122,7 @@ describe('rollup', () => {
 						target_property: 'Rollup',
 						aggregation: 'average'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							...createDefaultCache(),
@@ -169,7 +169,7 @@ describe('rollup', () => {
 						target_property: 'Rollup',
 						aggregation: 'average'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							...createDefaultCache(),
@@ -216,7 +216,7 @@ describe('rollup', () => {
 						target_property: 'Formula',
 						aggregation: 'average'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							...createDefaultCache(),
@@ -288,7 +288,7 @@ describe('rollup', () => {
 					target_property: 'Title',
 					aggregation: 'average'
 				},
-				populateSchemaMap(schema),
+				generateSchemaMapFromCollectionSchema(schema),
 				{
 					cache,
 					token: 'token'
@@ -327,7 +327,7 @@ describe('rollup', () => {
 						relation_property: 'unknown',
 						target_property: 'unknown'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: createDefaultCache(),
 						token: 'token'
@@ -346,7 +346,7 @@ describe('rollup', () => {
 						relation_property: 'Relation',
 						target_property: 'unknown'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
 							collection: new Map([
@@ -379,7 +379,7 @@ describe('rollup', () => {
 						relation_property: 'Title',
 						target_property: 'unknown'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: createDefaultCache(),
 						token: 'token'
@@ -412,7 +412,7 @@ describe('rollup', () => {
 						relation_property: 'Relation',
 						target_property: 'unknown'
 					},
-					populateSchemaMap(schema),
+					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: createDefaultCache(),
 						token: 'token'

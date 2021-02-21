@@ -1,5 +1,5 @@
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, TSchemaUnit } from '@nishans/types';
-import { populateSchemaMap } from '../../../libs';
 import { CreateData } from '../../../libs/CreateData';
 import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
 import { createDefaultCache } from '../../utils/createDefaultCache';
@@ -80,10 +80,10 @@ describe('CreateData.schema', () => {
 				current_schema: {}
 			});
 
-			const child_relation_schema_unit_id = (populateSchemaMap(child_collection.schema).get(
+			const child_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema(child_collection.schema).get(
 				'Related to Parent (Parent Relation Column)'
 			) as ISchemaMapValue).schema_id;
-			const parent_relation_schema_unit_id = (populateSchemaMap(schema).get(
+			const parent_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema(schema).get(
 				'Parent Relation Column'
 			) as ISchemaMapValue).schema_id;
 

@@ -1,6 +1,7 @@
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
-import { CreateData, CreateMaps, deepMerge, populateSchemaMap, transformToMultiple } from '../libs';
+import { CreateData, CreateMaps, deepMerge, transformToMultiple } from '../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -230,7 +231,7 @@ class Collection extends Data<ICollection> {
 	async getSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		// Since all the data is in the cache, no need to initialize cache
 		const data = this.getCachedData(),
-			schema_map = populateSchemaMap(data.schema);
+			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
@@ -265,7 +266,7 @@ class Collection extends Data<ICollection> {
    */
 	async updateSchemaUnits (args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = populateSchemaMap(data.schema);
+			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
 		const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ISchemaUnitMap>(
 			args,
 			{
@@ -305,7 +306,7 @@ class Collection extends Data<ICollection> {
    */
 	async deleteSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = populateSchemaMap(data.schema);
+			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
 		await this.deleteIterate<ISchemaMapValue>(
 			args,
 			{

@@ -30,7 +30,7 @@ it(`PopulateMap.collection_block`, async () => {
     stack: [],
     token: 'token',
     user_id: 'user_root_1'
-  }, {} as any, block_map, );
+  }, block_map, );
 
   expect(block_map.collection_view_page.get('Collection')).not.toBeUndefined();
   expect(initializeCacheForSpecificDataMock).toBeCalledTimes(1);

@@ -4,6 +4,13 @@ import { deepMerge } from '..';
 import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../../src';
 import { iterateChildren, updateLastEditedProps } from './utils';
 
+/**
+ * Iterates over the children of a parent and updates it
+ * @param args Array of id and updated_data tuple or a cb passed with the transformed data
+ * @param transform Cb to get the data using the id
+ * @param options Options for update function
+ * @param cb additional callback
+ */
 export const update = async <T extends TData, CD, RD, C = any[]>(
 	args: UpdateTypes<CD, RD>,
 	transform: ((id: string) => CD | undefined | Promise<CD | undefined>),
@@ -22,7 +29,9 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			stack,
 			parent_type
 		} = options,
+		// get the data from the cache
 		data = cache[parent_type].get(parent_id) as T,
+		// Get the child ids array
 		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) as string[],
 		last_updated_props = {
 			last_edited_time: Date.now(),
@@ -35,6 +44,10 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 		logger && logger('UPDATE', child_type, child_id);
 
 		if (!manual) {
+			// If data update is not manual
+			// 1. Update the last edited props of the data
+			// 2. deeply merge the new data with the existing data
+			// 3. Push the updated properties to the stack
 			updateLastEditedProps(child_data, user_id);
 			deepMerge(child_data, updated_data);
 			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
@@ -49,6 +62,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 		parent_type
 	});
 
+	// if parent data exists, update the last_edited_props for the cache and push to stack
 	if (data) {
 		updateLastEditedProps(data, user_id);
 		stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));

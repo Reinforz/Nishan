@@ -106,4 +106,17 @@ describe('NotionCache class', () => {
 		expect(initializeCacheForSpecificDataMock.mock.calls[0][1]).toStrictEqual('block');
 		expect(initializeCacheForSpecificDataMock.mock.calls[0][2]).toStrictEqual(notion_request_configs);
 	});
+
+	it(`fetchDataOrReturnCached`, async () => {
+		const block_1: any = {
+			id: 'block_1'
+		};
+		const notion_cache = new NotionCacheClass(notion_request_configs);
+		const fetchDataOrReturnCachedMock = jest
+			.spyOn(NotionCacheObject, 'fetchDataOrReturnCached')
+			.mockImplementationOnce(async () => block_1);
+		await notion_cache.fetchDataOrReturnCached('block', 'block_1');
+		expect(fetchDataOrReturnCachedMock.mock.calls[0][0]).toBe('block');
+		expect(fetchDataOrReturnCachedMock.mock.calls[0][1]).toBe('block_1');
+	});
 });

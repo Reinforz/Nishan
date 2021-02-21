@@ -12,6 +12,54 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+describe('fetchDataOrReturnCached', () => {
+	it(`data exists in cache`, async () => {
+		const block_1 = {
+				id: 'block_1'
+			},
+			cache: ICache = {
+				block: new Map([ [ 'block_1', block_1 ] ])
+			} as any;
+		const data = await NotionCacheObject.fetchDataOrReturnCached('block', 'block_1', notion_request_configs, cache);
+		expect(data).toBe(block_1);
+	});
+
+	it(`fetches from db`, async () => {
+		const block_1 = {
+				id: 'block_1'
+			},
+			cache: ICache = {
+				block: new Map()
+			} as any;
+		const syncRecordValuesMock = jest.spyOn(Queries, 'syncRecordValues');
+		syncRecordValuesMock.mockImplementationOnce(async () => {
+			return {
+				recordMap: {
+					block: {
+						block_1: {
+							value: block_1
+						}
+					}
+				}
+			} as any;
+		});
+		const data = await NotionCacheObject.fetchDataOrReturnCached('block', 'block_1', notion_request_configs, cache);
+		expect(data).toBe(block_1);
+		expect(syncRecordValuesMock).toHaveBeenCalledWith(
+			{
+				requests: [
+					{
+						id: 'block_1',
+						table: 'block',
+						version: 0
+					}
+				]
+			},
+			notion_request_configs
+		);
+	});
+});
+
 it('saveToCache', () => {
 	const recordMap: RecordMap = {
 		block: {

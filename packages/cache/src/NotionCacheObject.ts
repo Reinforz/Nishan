@@ -246,15 +246,25 @@ export const NotionCacheObject = {
 		return cache;
 	},
 
+	/**
+   * Fetch data from notion's db if it doesn't exist in the cache
+   * @param table The table of the data
+   * @param id the id of the data
+   * @param configs Notion request configs
+   * @param cache Internal notion cache
+   */
 	fetchDataOrReturnCached: async <D extends TData>(
 		table: TDataType,
 		id: string,
 		configs: NotionRequestConfigs,
 		cache: ICache
 	) => {
+		// Get the data from the cache first
 		const data = cache[table].get(id);
 		if (!data) {
+			// If data doesn't exist in the cache, log a warning
 			console.log(`${table}:${id} doesn't exist in the cache`);
+			// Fetch the data from notion's db
 			const { recordMap } = await Queries.syncRecordValues(
 				{
 					requests: [
@@ -267,6 +277,7 @@ export const NotionCacheObject = {
 				},
 				configs
 			);
+			// return the fetched data
 			return recordMap[table][id].value as D;
 		}
 		return data as D;

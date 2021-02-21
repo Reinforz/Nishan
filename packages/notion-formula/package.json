@@ -1,6 +1,6 @@
 {
   "name": "@nishans/notion-formula",
-  "version": "0.0.15",
+  "version": "0.0.18",
   "description": "A package to generate notion formula with ease",
   "keywords": [
     "notion",
@@ -27,6 +27,7 @@
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
   "scripts": {
+    "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
     "build": "npx npx del-cli ./dist && tsc --sourceMap false",
     "test": "npx jest --runInBand ./tests"
@@ -34,7 +35,11 @@
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fnotion-formula"
   },
+  "dependencies": {
+    "@nishans/idz": "0.0.15",
+    "@nishans/endpoints": "0.0.19"
+  },
   "devDependencies": {
-    "@nishans/types": "0.0.15"
+    "@nishans/types": "0.0.18"
   }
 }

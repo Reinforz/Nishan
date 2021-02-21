@@ -12,4 +12,4 @@ export * from './PopulateMap';
 export * from './populateViewMaps';
 export * from './positionChildren';
 export * from './transformToMultiple';
-export * from './updateBookmarkedPages';
+export * from './updateChildContainer';

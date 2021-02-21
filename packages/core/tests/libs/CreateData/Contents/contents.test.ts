@@ -1,10 +1,5 @@
-import { Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import colors from 'colors';
 import { v4 } from 'uuid';
-import {
-  fetchAndCacheData
-} from '../../../../libs';
 import { CreateData } from '../../../../libs/CreateData';
 import {
   CollectionView,
@@ -32,48 +27,6 @@ const metadata = {
 	version: 0,
 	alive: true
 };
-
-describe('fetchAndCacheData', () => {
-	it('exist in cache', async () => {
-		const data = await fetchAndCacheData(
-			'block',
-			'id',
-			{
-				block: new Map([ [ 'id', { data: 'data' } ] ])
-			} as any,
-			'token'
-		);
-		expect(data).toStrictEqual({ data: 'data' });
-	});
-
-	it('doesnt exist in cache', async () => {
-		const console_log_spy = jest.spyOn(console, 'log');
-    const syncRecordValuesMock = jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
-      return {recordMap: {
-				block: {
-					id: {
-						role: 'editor',
-						value: { data: 'data' }
-					}
-				}
-			} as any}
-    })
-
-		const data = await fetchAndCacheData(
-			'block',
-			'id',
-			{
-				block: new Map()
-			} as any,
-			'token'
-		);
-    expect(syncRecordValuesMock).toHaveBeenCalledTimes(1);
-		expect(console_log_spy).toHaveBeenCalledTimes(1);
-		expect(console_log_spy).toHaveBeenCalledWith(colors.yellow.bold(`block:id doesnot exist in the cache`));
-
-		expect(data).toStrictEqual({ data: 'data' });
-	});
-});
 
 describe('CreateData.contents', () => {
 	describe('type=page', () => {

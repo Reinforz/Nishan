@@ -1,5 +1,5 @@
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
-import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../../libs';
+import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateChildContainer } from '../../libs';
 import { NotionPermissions } from '../../src';
 import {
 	FilterType,
@@ -33,9 +33,9 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	}
 
 	/**
-   * Add/remove this page from the favourite list
+   * Add/remove this page from the favorite list
    */
-	async updateBookmarkedStatus (favourite_status: boolean) {
+	async updateBookmarkedStatus (favorite_status: boolean) {
 		const data = this.getCachedData();
 		let target_space_view: ISpaceView = null as any;
 		for (const [ , space_view ] of this.cache.space_view) {
@@ -44,8 +44,13 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-
-		updateBookmarkedPages(target_space_view, favourite_status, data.id, this.Operations.stack);
+		updateChildContainer<typeof target_space_view>(
+			target_space_view,
+			favorite_status,
+			data.id,
+			'bookmarked_pages',
+			this.Operations.stack
+		);
 	}
 
 	/**

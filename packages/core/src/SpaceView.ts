@@ -1,5 +1,5 @@
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import { CreateMaps, PopulateMap, transformToMultiple, updateBookmarkedPages } from '../libs';
+import { CreateMaps, PopulateMap, transformToMultiple, updateChildContainer } from '../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -107,8 +107,8 @@ class SpaceView extends Data<ISpaceView> {
 				container: CreateMaps.page()
 			},
 			(id) => this.cache.block.get(id) as TPage,
-			async (id, page, updated_favourite_status, page_map) => {
-				updateBookmarkedPages(data, updated_favourite_status, id, this.Operations.stack);
+			async (id, page, updated_favorite_status, page_map) => {
+				updateChildContainer<typeof data>(data, updated_favorite_status, id, 'bookmarked_pages', this.Operations.stack);
 				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);

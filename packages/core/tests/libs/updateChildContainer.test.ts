@@ -1,19 +1,19 @@
 import { IOperation } from '@nishans/types';
-import { updateBookmarkedPages } from '../../libs';
+import { updateChildContainer } from '../../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('updateBookmarkedPages', () => {
-	it(`updated_favourite_status=true,bookmarked_pages ! include id`, () => {
+describe('updateChildContainer', () => {
+	it(`keep=true,bookmarked_pages doesn't include id`, () => {
 		const stack: IOperation[] = [],
 			data = {
 				bookmarked_pages: [],
 				id: 'space_view_1'
 			} as any;
 
-		updateBookmarkedPages(data, true, 'block_1', stack);
+		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack);
 
 		expect(stack).toStrictEqual([
 			{
@@ -28,14 +28,14 @@ describe('updateBookmarkedPages', () => {
 		expect(data.bookmarked_pages).toStrictEqual([ 'block_1' ]);
 	});
 
-	it(`updated_favourite_status=false,bookmarked_pages include id`, () => {
+	it(`keep=false,bookmarked_pages include id`, () => {
 		const stack: IOperation[] = [],
 			data = {
 				bookmarked_pages: [ 'block_1' ],
 				id: 'space_view_1'
 			} as any;
 
-		updateBookmarkedPages(data, false, 'block_1', stack);
+		updateChildContainer<typeof data>(data, false, 'block_1', 'bookmarked_pages', stack);
 
 		expect(stack).toStrictEqual([
 			{
@@ -50,14 +50,14 @@ describe('updateBookmarkedPages', () => {
 		expect(data.bookmarked_pages).toStrictEqual([]);
 	});
 
-	it(`updated_favourite_status=true,bookmarked_pages include id`, () => {
+	it(`keep=true,bookmarked_pages include id`, () => {
 		const stack: IOperation[] = [],
 			data = {
 				bookmarked_pages: [ 'block_1' ],
 				id: 'space_view_1'
 			} as any;
 
-		updateBookmarkedPages(data, true, 'block_1', stack);
+		updateChildContainer<typeof data>(data, true, 'block_1', 'bookmarked_pages', stack);
 
 		expect(stack).toStrictEqual([]);
 

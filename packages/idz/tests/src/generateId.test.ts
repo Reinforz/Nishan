@@ -1,12 +1,16 @@
 import { v4 } from 'uuid';
-import { generateId } from '../../src';
+import { generateId, uuidToId } from '../../src';
 
 it(`Should generate random id when none provided`, () => {
 	expect(generateId()).toBeTruthy();
 });
 
-it(`Should return passed id when correct id is provided`, () => {
+it(`Should return passed id when correct uuid is provided`, () => {
 	expect(generateId(v4())).toBeTruthy();
+});
+
+it(`Should return passed id when correct id is provided`, () => {
+	expect(generateId(uuidToId(v4()))).toBeTruthy();
 });
 
 it(`Should generate random id when correct id is not provided`, () => {

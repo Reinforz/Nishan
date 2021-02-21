@@ -1,6 +1,15 @@
 import { TSchemaUnitType } from '@nishans/types';
 
+/**
+ * A notion specific error class, that is thrown when the property type doesn't match the supported types
+ */
 export class UnsupportedPropertyTypeError extends Error {
+	/**
+   * @param property The name of the property
+   * @param path The path to the property
+   * @param given_type The given type of the property
+   * @param supported_types The supported type of the property
+   */
 	constructor (property: string, path: string[], given_type: TSchemaUnitType, supported_types: TSchemaUnitType[]) {
 		const message = `Property ${property} referenced in ${path.join(
 			'.'

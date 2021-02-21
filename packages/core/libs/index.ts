@@ -1,4 +1,3 @@
-export * from '@nishans/errors/src/logs';
 export * from './ChildTraverser';
 export * from './constructLogger';
 export * from './createBlockClass';

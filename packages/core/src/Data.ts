@@ -1,7 +1,8 @@
 import { NotionCacheClass } from '@nishans/cache';
+import { warn } from '@nishans/errors';
 import { NotionOperationsClass, Operation } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
-import { ChildTraverser, constructLogger, positionChildren, warn } from "../libs";
+import { ChildTraverser, constructLogger, positionChildren } from "../libs";
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, Logger, NishanArg, RepositionParams, UpdateTypes } from '../types';
 
 /**

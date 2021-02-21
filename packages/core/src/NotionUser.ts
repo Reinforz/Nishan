@@ -1,8 +1,9 @@
 import { Mutations } from '@nishans/endpoints';
+import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
-import { CreateData, CreateMaps, transformToMultiple, warn } from '../libs';
+import { CreateData, CreateMaps, transformToMultiple } from '../libs';
 import { CollectionViewPage, Page } from '../src';
 import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
@@ -237,7 +238,7 @@ class NotionUser extends Data<INotionUser> {
         await this.initializeCacheForSpecificData(page.id, "block");
       }
       else
-        warn(`The data is neither a page nor a cvp`)
+        throw new UnsupportedBlockTypeError((page as any).type,['page', 'collection_view_page'])
     }
     return page_map;
   }

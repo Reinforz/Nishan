@@ -1,4 +1,4 @@
-import { warn } from '@nishans/errors/src/logs';
+import { warn } from '@nishans/errors';
 import { TDataType } from '@nishans/types';
 import { IterateChildren } from '../../../types';
 

@@ -1,7 +1,8 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
+import { error } from '@nishans/errors';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateData, CreateMaps, error, PopulateMap, transformToMultiple } from '../libs';
+import { CreateData, CreateMaps, PopulateMap, transformToMultiple } from '../libs';
 import { FilterType, FilterTypes, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageMap, IPageUpdateInput, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
 import SpaceView from "./SpaceView";

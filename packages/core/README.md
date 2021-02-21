@@ -21,5 +21,3 @@
 </p>
 
 <p align="center"><b>Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more.</b></p>
-
-**NOTE**: Please note that even if the patch version changes, there could be breaking changes since this package is still under heavy development. Majority of the functionality will stay intact during this experimental and unstable time, but please use with caution.

@@ -35,6 +35,9 @@
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
   },
+  "dependencies": {
+    "colors": "^1.4.0"
+  },
   "devDependencies": {
     "@nishans/types": "^0.0.18"
   }

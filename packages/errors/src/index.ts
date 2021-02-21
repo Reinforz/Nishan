@@ -1,4 +1,5 @@
 export * from './ChildIndexOutofBoundError';
+export * from './logs';
 export * from './NonExistentDataError';
 export * from './NonExistentSchemaUnitTypeError';
 export * from './PreExistentValueError';

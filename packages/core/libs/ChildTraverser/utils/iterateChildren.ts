@@ -1,6 +1,6 @@
+import { warn } from '@nishans/errors/src/logs';
 import { TDataType } from '@nishans/types';
 import { IterateChildren } from '../../../types';
-import { warn } from '../../logs';
 
 export async function iterateChildren<TD, RD = any> (
 	args: IterateChildren<TD, RD>,

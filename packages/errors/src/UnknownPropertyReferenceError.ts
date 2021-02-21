@@ -1,3 +1,5 @@
+import colors from 'colors';
+
 /**
  * A notion specific error class, that is thrown when an unknown property, that doesn't exist in the schema is referenced
  */
@@ -8,6 +10,6 @@ export class UnknownPropertyReferenceError extends Error {
    * @param path The path to the property
    */
 	constructor (property: string, path: string[]) {
-		super(`Unknown property ${property} referenced in ${path.join('.')}`);
+		super(colors.bold.red(`Unknown property ${property} referenced in ${path.join('.')}`));
 	}
 }

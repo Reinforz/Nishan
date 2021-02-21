@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { error, warn } from '../../libs';
+import { error, warn } from '../../src';
 
 afterEach(() => {
 	jest.restoreAllMocks();

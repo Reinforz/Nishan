@@ -1,3 +1,4 @@
+export * from '@nishans/errors/src/logs';
 export * from './ChildTraverser';
 export * from './constructLogger';
 export * from './createBlockClass';
@@ -6,7 +7,6 @@ export * from './CreateMaps';
 export * from './deepMerge';
 export * from './detectChildData';
 export * from './initializeView';
-export * from './logs';
 export * from './populateFilters';
 export * from './PopulateMap';
 export * from './PopulateViewMaps';

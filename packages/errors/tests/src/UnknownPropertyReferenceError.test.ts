@@ -1,7 +1,8 @@
+import colors from 'colors';
 import { UnknownPropertyReferenceError } from '../../src/';
 
 it(`UnknownPropertyReferenceError`, () => {
 	expect(new UnknownPropertyReferenceError('Name', [ 'arg', 'name' ]).message).toBe(
-		`Unknown property Name referenced in arg.name`
+		colors.bold.red(`Unknown property Name referenced in arg.name`)
 	);
 });

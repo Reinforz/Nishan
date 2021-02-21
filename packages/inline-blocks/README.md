@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>A package to generate notion formula with ease</b></p>
+<p align="center"><b>Package providing an easy to use api to generate contents for notion inline blocks</b></p>

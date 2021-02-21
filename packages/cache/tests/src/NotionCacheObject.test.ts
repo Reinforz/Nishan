@@ -1,8 +1,7 @@
 import { Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap } from '@nishans/types';
-import { createDefaultCache } from '../../../core/tests/createDefaultCache';
-import { ICache } from '../../dist/src';
-import { NotionCacheObject } from '../../src';
+import { createDefaultCache } from '../../../core/tests/utils/createDefaultCache';
+import { ICache, NotionCacheObject } from '../../src';
 
 const notion_request_configs = {
 	token: 'token',

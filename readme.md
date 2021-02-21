@@ -32,7 +32,7 @@ Legend:
 
 1. **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core/): Core package for nishan with all crud api
 2. **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [NPM](https://www.npmjs.com/package/@nishans/types) [Docs](https://nishan-docs.netlify.app/docs/types): Typescript typings for Notion only
-3. **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package that contains various notion specific error classes.
+3. **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package containing various notion specific error classes.
 4. **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [NPM](https://www.npmjs.com/package/@nishans/sync) [Docs](https://nishan-docs.netlify.app/docs/sync): A package to keep remote notion data in sync with local data stored in mongodb or in a file, by downloading remote data locally and restoring notion using local data.
 5. **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (NSY): A graphql server and client UI to make working with nishan a breeze
 6. **`@nishans/cli`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cli) (NSY): A package to interact with the nishan api from the terminal

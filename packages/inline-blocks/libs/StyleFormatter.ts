@@ -2,7 +2,7 @@ import { TFormatBlockColor, TTextFormat } from '@nishans/types';
 import { HighlightColor } from './HighlightColor';
 
 /**
- * A class to add inline text formatters
+ * A class to add text style formatters
  */
 export class StyleFormatter extends HighlightColor {
 	constructor (text?: TTextFormat) {
@@ -29,10 +29,18 @@ export class StyleFormatter extends HighlightColor {
 		return this.addFormat([ '_' ]);
 	}
 
+	/**
+   * Adds a highlight format to the current text content
+   * @param color The highlight color, could be for text or background
+   */
 	highlight (color: TFormatBlockColor) {
 		return this.addFormat([ 'h', color ]);
 	}
 
+	/**
+   * Adds a link format to the current text content
+   * @param url The url to link the current text content to
+   */
 	linkTo (url: string) {
 		return this.addFormat([ 'a', url ]);
 	}

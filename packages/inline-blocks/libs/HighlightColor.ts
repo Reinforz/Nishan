@@ -2,7 +2,7 @@ import { InlineFormat, TTextFormat } from '@nishans/types';
 import { NotionInlineBlock } from '../src';
 
 /**
- * A class used to format inline text by highlighting their colors and background colors 
+ * A class used to style inline text through their text and background colors 
  */
 export class HighlightColor extends NotionInlineBlock {
 	constructor (text?: TTextFormat) {
@@ -11,9 +11,12 @@ export class HighlightColor extends NotionInlineBlock {
 
   addFormat(format: InlineFormat){
     const {StyleFormatter} = require("./StyleFormatter");
+    // if the content property doesn't have a text content then throw an error as formatting would be useless without a text content target
     if(!this.content[this.content.length - 1]?.[0])
       throw new Error(`No text content to add format to`);
+    // Else if the format array doesn't exist, create it and add the passed content as its only item
     if(!this.content[this.content.length - 1][1]) this.content[this.content.length - 1][1] = [format];
+    // Else push the format to the last of the format array
     else (this.content[this.content.length - 1][1] as any).push(format)
     return new StyleFormatter(this.content);
   }

@@ -1,4 +1,5 @@
 import { IPermission, ISpace, Schema, TCodeLanguage, TFormatBlockColor, TTextFormat } from '.';
+import { ViewFormatProperties } from './view';
 
 export interface Node {
 	alive: boolean;
@@ -392,6 +393,14 @@ export interface ICollection extends Node, ParentProps {
 	name: TTextFormat;
 	schema: Schema;
 	template_pages?: string[];
+	format: {
+		property_visibility?: {
+			property: string;
+			visibility: 'show' | 'hide_if_empty' | 'hide';
+		}[];
+		page_section_visibility?: PageFormat['page_section_visibility'];
+    collection_page_properties?: ViewFormatProperties[]
+	};
 }
 
 export type TPage = IPage | ICollectionViewPage;

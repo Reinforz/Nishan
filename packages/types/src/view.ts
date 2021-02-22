@@ -26,7 +26,7 @@ export type TViewQuery2 =
 	| ITimelineViewQuery2;
 export interface ITableViewFormat {
 	table_wrap: boolean;
-	table_properties: ViewFormatProperties[];
+	table_properties: (ViewFormatProperties & { width: number })[];
 	inline_collection_first_load_limit: ICollectionLoadLimit;
 }
 
@@ -111,8 +111,8 @@ export interface ITimelineViewFormatPreference {
 export interface ITimelineViewFormat {
 	timeline_preference: ITimelineViewFormatPreference;
 	timeline_properties: ViewFormatProperties[];
-	timeline_show_table: boolean;
 	timeline_table_properties: ViewFormatProperties[];
+	timeline_show_table: boolean;
 	inline_collection_first_load_limit: ICollectionLoadLimit;
 }
 
@@ -129,7 +129,6 @@ export interface ITimelineView extends Node, ParentProps, SpaceShardProps {
 export type TTimelineViewZoomLevel = 'hours' | 'day' | 'week' | 'bi_week' | 'month' | 'quarter' | 'year';
 
 export interface ViewFormatProperties {
-	width?: number;
 	visible: boolean;
 	property: string;
 }

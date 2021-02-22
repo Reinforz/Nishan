@@ -5,8 +5,6 @@ import { CreateMaps, populateFilters } from "../../";
 import { IViewMap, NishanArg, TViewCreateInput } from "../../../types";
 import { generateViewData, populateNonIncludedProperties, populateQuery2SortAndAggregations, populateViewFormat, populateViewProperties, populateViewQuery2 } from "./utils";
 
-// * Separate start and end date for timeline view
-
 export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id">, views: TViewCreateInput[], props: Omit<NishanArg, "id" | "interval">, parent_id?:string) {
   const schema_map = generateSchemaMapFromCollectionSchema(collection.schema), view_ids: string[] = [], view_map = CreateMaps.view();
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../../src/View/index");

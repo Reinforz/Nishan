@@ -1,4 +1,4 @@
-import { inlineText, InlineTextFormatter } from '@nishans/utils';
+import { inlineText, InlineTextFormatter } from '@nishans/inline-blocks';
 import { InlineFormat } from '@nishans/types';
 import { ASTNode } from 'src';
 

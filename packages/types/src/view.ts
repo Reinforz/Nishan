@@ -5,7 +5,12 @@ export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type:
 
 export type TView = ITableView | IListView | IBoardView | IGalleryView | ICalendarView | ITimelineView;
 export type TViewUpdateInput = Partial<TView>;
-
+export type ICollectionLoadLimit =
+	| { type: 'load_all' }
+	| {
+			type: 'load_limit';
+			limit: 10 | 25 | 50 | 100;
+		};
 export interface IViewQuery2 {
 	aggregations: ViewAggregations[];
 	sort: ViewSorts[];
@@ -22,6 +27,7 @@ export type TViewQuery2 =
 export interface ITableViewFormat {
 	table_wrap: boolean;
 	table_properties: ViewFormatProperties[];
+	inline_collection_first_load_limit: ICollectionLoadLimit;
 }
 
 export type ITableViewQuery2 = Partial<IViewQuery2>;
@@ -35,6 +41,7 @@ export interface ITableView extends Node, ParentProps, SpaceShardProps {
 
 export interface IListViewFormat {
 	list_properties: ViewFormatProperties[];
+	inline_collection_first_load_limit: ICollectionLoadLimit;
 }
 
 export type IListViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>>;
@@ -65,6 +72,7 @@ export interface IBoardView extends Node, ParentProps, SpaceShardProps {
 }
 
 export interface IGalleryViewFormat {
+	inline_collection_first_load_limit: ICollectionLoadLimit;
 	gallery_cover?: TViewFormatCover;
 	gallery_cover_aspect?: 'contain' | 'cover';
 	gallery_cover_size?: 'small' | 'medium' | 'large';
@@ -105,6 +113,7 @@ export interface ITimelineViewFormat {
 	timeline_properties: ViewFormatProperties[];
 	timeline_show_table: boolean;
 	timeline_table_properties: ViewFormatProperties[];
+	inline_collection_first_load_limit: ICollectionLoadLimit;
 }
 
 export type ITimelineViewQuery2 = Partial<IViewQuery2> & {

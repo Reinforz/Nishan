@@ -19,7 +19,7 @@ export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id
       if (schema_map_unit) {
         included_units.push(schema_map_unit.schema_id);
         populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2)
-        properties.push(populateViewProperties(schema_map_unit.schema_id, format))
+        properties.push(populateViewProperties(type as any, schema_map_unit.schema_id, format))
       } else
         throw new UnknownPropertyReferenceError(name, ['name']);
     })

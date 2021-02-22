@@ -151,18 +151,18 @@ export type TViewCreateInput =
 	| CalendarViewCreateInput
 	| TimelineViewCreateInput;
 
-interface IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> {
-	// name of the schema unit
+type IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> = {
 	name: string;
-	// schemaunit type
 	type: SUT;
-	// sort targetting the schemaunit
 	sort?: TSortValue | [TSortValue, number];
-	// format targetting the schemaunit
-	format?: boolean | number | [boolean, number];
-	// aggregation targetting the schemaunit
 	aggregation?: IViewAggregationsAggregators[SUT];
-}
+} & (
+	| {
+			format?: boolean | number | [boolean, number];
+		}
+	| {
+			format?: boolean;
+		});
 
 export type TViewSchemaUnitsCreateInput =
 	| IViewSchemaUnitsCreateInput<'text'>

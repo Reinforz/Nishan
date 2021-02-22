@@ -129,6 +129,6 @@ export default class Data<T extends TData> extends NotionCacheClass {
       cache: this.cache,
       logger: this.logger,
       stack: this.Operations.stack
-    } as NishanArg
+    } as Omit<NishanArg, "id">
   }
 }

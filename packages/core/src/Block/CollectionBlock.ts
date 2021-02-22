@@ -93,7 +93,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				child_ids: 'view_ids',
 				child_type: 'collection_view'
 			},
-			(view_id) => this.cache.collection_view.get(view_id),
+			(view_id) => this.cache.collection_view.get(view_id) as any,
 			(id, { type, name }, _, view_map) => {
 				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
 				view_map[type].set(id, view_obj);
@@ -125,7 +125,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				multiple,
 				container: []
 			},
-			(view_id) => this.cache.collection_view.get(view_id)
+			(view_id) => this.cache.collection_view.get(view_id) as any
 		);
 	}
 }

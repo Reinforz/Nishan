@@ -8,7 +8,6 @@ afterEach(() => {
 describe('positionChildren', () => {
 	it(`Should work when parent doesn't contain container`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
-		delete (parent as any).content;
 		const operation = positionChildren({
 			parent,
 			child_id: 'child_id',

@@ -9,6 +9,7 @@ import {
 	TBasicSchemaUnit,
 	TSchemaUnit,
 	TViewFilters,
+	TViewType,
 	ViewAggregations,
 	ViewFormatProperties,
 	ViewSorts
@@ -36,7 +37,9 @@ export type ISchemaFiltersMap = Map<string, ISchemaFiltersMapValue>;
 export type ISchemaFormatMapValue = { schema_id: string; format: Omit<ViewFormatProperties, 'property'> } & TSchemaUnit;
 export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 
-export type SchemaFormatPropertiesUpdateInput = Partial<{ position: number; visible: boolean; width: number }>;
+export type SchemaFormatPropertiesUpdateInput =
+	| ({ type: 'table' } & Partial<{ position: number; visible: boolean; width: number }>)
+	| ({ type: Exclude<TViewType, 'table'> } & Partial<{ position: number; visible: boolean }>);
 
 export type TFormulaSchemaUnitInput = {
 	type: 'formula';

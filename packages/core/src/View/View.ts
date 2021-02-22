@@ -281,7 +281,7 @@ class View<T extends TView> extends Data<T> {
 						(format_property) => format_property.property === current_data.schema_id
 					),
 					target_format_property = format_properties[target_format_property_index];
-				const { position, visible, width } = updated_data;
+				const { position, visible } = updated_data;
 
 				if (target_format_property_index !== position && position !== undefined && position !== null) {
 					format_properties.splice(target_format_property_index, 1);
@@ -289,7 +289,8 @@ class View<T extends TView> extends Data<T> {
 				}
 
 				target_format_property.visible = visible ?? target_format_property.visible;
-				target_format_property.width = width ?? target_format_property.width;
+        if(updated_data.type === "table")
+				  (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
 			}
 		);
     

@@ -17,14 +17,6 @@ describe('view_type=table', () => {
 		});
 	});
 
-	it(`Should work with [boolean] input`, () => {
-		expect(populateViewProperties('table', 'text', [ false ] as any)).toStrictEqual({
-			property: 'text',
-			visible: false,
-			width: 250
-		});
-	});
-
 	it(`Should work with [boolean, number] input`, () => {
 		expect(populateViewProperties('table', 'text', [ false, 120 ])).toStrictEqual({
 			property: 'text',

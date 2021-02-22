@@ -685,7 +685,69 @@ describe('updateFormatProperty', () => {
 			stack
 		});
 
-		await view.updateFormatProperty([ 'Title', { type: 'list', position: 1, visible: false } ]);
+		await view.updateFormatProperty([ 'Title', { type: 'table' } ]);
+
+		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
+		expect(stack[1]).toStrictEqual({
+			table: 'collection_view',
+			command: 'update',
+			id: 'collection_view_1',
+			path: [ 'format', 'table_properties' ],
+			args: table_properties
+		});
+	});
+
+	it(`type!=table,format, width and position none given`, async () => {
+		const table_properties = [
+			{
+				width: 150,
+				visible: true,
+				property: 'title'
+			},
+			{
+				width: 150,
+				visible: true,
+				property: 'text'
+			}
+		];
+
+		const collection_1: any = {
+				id: 'collection_1',
+				schema: {
+					title: {
+						name: 'Title',
+						type: 'title'
+					},
+					text: {
+						name: 'Text',
+						type: 'text'
+					}
+				}
+			},
+			collection_view_1 = {
+				parent_id: 'block_1',
+				id: 'collection_view_1',
+				type: 'table',
+				format: {
+					table_properties
+				}
+			} as any,
+			cache: ICache = {
+				...createDefaultCache(),
+				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
+				collection: new Map([ [ 'collection_1', collection_1 ] ]),
+				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+			},
+			stack: IOperation[] = [];
+
+		const view = new View({
+			...default_nishan_arg,
+			cache,
+			id: 'collection_view_1',
+			stack
+		});
+
+		await view.updateFormatProperty([ 'Title', { type: 'list' } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
 		expect(stack[1]).toStrictEqual({

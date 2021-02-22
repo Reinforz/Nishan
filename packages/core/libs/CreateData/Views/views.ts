@@ -24,7 +24,7 @@ export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id
         throw new UnknownPropertyReferenceError(name, ['name']);
     })
 
-    properties.push(...populateNonIncludedProperties(collection.schema, included_units));
+    properties.push(...populateNonIncludedProperties(type, collection.schema, included_units));
 
     const input_filters = views[index].filters;
     if(input_filters && filter)

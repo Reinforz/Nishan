@@ -82,3 +82,8 @@ Feel free to submit a pull request or open a new issue, contributions are more t
 2. Go: [notionapi](https://github.com/kjk/notionapi)
 3. Ruby: [notion-ruby](https://github.com/danmurphy1217/notion-ruby)
 4. Kotlin: [notion-sdk-kotlin](https://github.com/notionsdk/notion-sdk-kotlin)
+
+## Related Projects
+
+1. [react-notion-x](https://github.com/NotionX/react-notion-x) Fast and accurate React renderer for Notion. TS batteries included.
+2. [ntast](https://github.com/phuctm97/ntast) Notion Abstract Syntax Tree specification..

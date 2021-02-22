@@ -393,7 +393,7 @@ export interface ICollection extends Node, ParentProps {
 	name: TTextFormat;
 	schema: Schema;
 	template_pages?: string[];
-	format: {
+	format?: {
 		property_visibility?: {
 			property: string;
 			visibility: 'show' | 'hide_if_empty' | 'hide';

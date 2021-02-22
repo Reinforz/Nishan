@@ -1,6 +1,6 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Typescript type definitions for notion",
   "keywords": [
     "notion",

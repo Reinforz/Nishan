@@ -1,7 +1,6 @@
 import { TTextColor } from '@nishans/types';
-
-import { TEcosystem } from './ecosystem';
 import { TCategory } from './category';
+import { TEcosystem } from './ecosystem';
 
 interface Item {
 	category: TCategory[];
@@ -52,7 +51,7 @@ const arr: Item[] = [
 		image: 'https://www.docker.com/sites/default/files/d8/2019-07/vertical-logo-monochromatic.png'
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		title: 'Docusaurus',
 		image: 'https://v2.docusaurus.io/img/docusaurus_keytar.svg',
 		category: [ 'Doc Generator', 'Library' ],
@@ -191,13 +190,13 @@ const arr: Item[] = [
 	},
 	{
 		category: [ 'Database' ],
-		color: 'green',
+		color: 'teal',
 		title: 'Mongodb',
 		image: 'https://i.dlpng.com/static/png/5403741-mongodb-png-dlpngcom-mongodb-png-399_468_preview.png'
 	},
 	{
 		category: [ 'Dbaas' ],
-		color: 'green',
+		color: 'teal',
 		title: 'Mongodb Atlas',
 		image:
 			'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/128809035/original/117787e8d664b2ddffeb04f250c3d812eaa18305/create-a-mongodb-atlas-database-ecosystem-you.png'
@@ -217,7 +216,7 @@ const arr: Item[] = [
 		ecosystem: [ 'Mongodb', 'Javascript' ]
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		category: [ 'Reverse Proxy', 'Load Balancer', 'Server' ],
 		title: 'Nginx',
 		image: 'https://linuxtips.us/wp-content/uploads/nginx-logo.png'
@@ -237,13 +236,13 @@ const arr: Item[] = [
 		ecosystem: [ 'Javascript', 'React' ]
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		title: 'Netlify',
 		category: [ 'Cloud Platform', 'Tools' ],
 		image: 'https://www.netlify.com/img/press/logos/logomark.png'
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		title: 'Vercel',
 		category: [ 'Cloud Platform', 'Tools' ],
 		image: 'https://i.pinimg.com/originals/c4/35/6c/c4356cd5454d06585e0a46066b555172.png'
@@ -256,7 +255,7 @@ const arr: Item[] = [
 		image: 'https://cdn.iconscout.com/icon/free/png-512/react-1-282599.png'
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		title: 'Node',
 		category: [ 'Runtime' ],
 		ecosystem: [ 'Javascript' ],
@@ -433,7 +432,7 @@ const arr: Item[] = [
 		image: 'https://cdn.freebiesupply.com/logos/large/2x/vim-logo-png-transparent.png'
 	},
 	{
-		color: 'green',
+		color: 'teal',
 		title: 'Vue',
 		category: [ 'Framework' ],
 		ecosystem: [ 'Javascript' ],

@@ -4,7 +4,7 @@ export type TTextColor =
 	| 'brown'
 	| 'orange'
 	| 'yellow'
-	| 'green'
+	| 'teal'
 	| 'blue'
 	| 'purple'
 	| 'pink'

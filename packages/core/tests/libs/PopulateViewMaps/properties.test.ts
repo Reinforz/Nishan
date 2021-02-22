@@ -46,6 +46,7 @@ it(`Should create correct schema map`, () => {
 				name: 'Title',
 				type: 'title',
 				format: {
+					property: 'title',
 					width: 150,
 					visible: false
 				}

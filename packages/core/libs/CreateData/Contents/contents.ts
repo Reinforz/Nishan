@@ -76,7 +76,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           token: accounts[0].token
         });
       } */
-
+      
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         // Construct the collection first
         const [collection_id, view_ids] = await CreateData.collection(content, block_id, props);

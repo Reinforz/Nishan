@@ -1,7 +1,6 @@
 import { ICache } from '@nishans/cache';
 import {
-  IOperation,
-  Schema
+  IOperation
 } from '@nishans/types';
 import { v4 } from 'uuid';
 import {
@@ -12,49 +11,6 @@ import { createDefaultCache } from '../../../utils/createDefaultCache';
 afterEach(() => {
 	jest.restoreAllMocks();
 });
-
-const schema: Schema = {
-	title: {
-		type: 'title',
-		name: 'Title'
-	},
-	number: {
-		type: 'number',
-		name: 'Number'
-	},
-	text: {
-		type: 'text',
-		name: 'Text'
-	},
-	file: {
-		type: 'file',
-		name: 'File'
-	},
-	date: {
-		type: 'date',
-		name: 'Date'
-	},
-	select: {
-		type: 'select',
-		name: 'Select',
-		options: [
-			{
-				color: 'red',
-				id: '123',
-				value: '123'
-			}
-		]
-	},
-	date_formula: {
-		type: 'formula',
-		name: 'Date Formula',
-		formula: {
-			type: 'function',
-			name: 'now',
-			result_type: 'date'
-		}
-	}
-};
 
 describe('CreateData.views', () => {
 	describe('Output correctly', () => {
@@ -201,7 +157,7 @@ describe('CreateData.views', () => {
         {
           "path": [],
           "table": "collection_view",
-          "command": "set",
+          "command": "update",
           "args": {
             "id": expect.any(String),
             "version": 0,
@@ -237,7 +193,7 @@ describe('CreateData.views', () => {
         {
           "path": [],
           "table": "collection_view",
-          "command": "set",
+          "command": "update",
           "args": {
             "id": expect.any(String),
             "version": 0,

@@ -4,8 +4,8 @@
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
-    "notion client",
-    "notion api"
+    "notion api",
+    "notion client"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.19",
-    "@nishans/operations": "^0.0.18",
+    "@nishans/operations": "^0.0.19",
     "@nishans/cache": "^0.0.21",
     "@nishans/notion-formula": "^0.0.18",
     "@nishans/idz": "^0.0.15",
@@ -44,7 +44,7 @@
     "colors": "^1.4.0"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.18",
+    "@nishans/types": "^0.0.19",
     "@types/node": "^14.14.17",
     "@types/uuid": "^8.3.0"
   }

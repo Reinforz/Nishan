@@ -46,7 +46,7 @@ describe('view_type!=table', () => {
 	it(`Should work with number input`, () => {
 		expect(populateViewProperties('list', 'text', false)).toStrictEqual({
 			property: 'text',
-			visible: true
+			visible: false
 		});
 	});
 });

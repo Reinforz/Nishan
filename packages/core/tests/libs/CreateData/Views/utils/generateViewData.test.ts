@@ -14,7 +14,9 @@ describe('generateViewData', () => {
 			{
 				id,
 				name: 'Table',
-				type: 'table'
+				type: 'table',
+				format: {} as any,
+				query2: {} as any
 			},
 			{
 				user_id: 'user_id',
@@ -23,8 +25,6 @@ describe('generateViewData', () => {
 				space_id: 'space_id',
 				shard_id: 123
 			},
-			{} as any,
-			{} as any,
 			'parent_id'
 		);
 		const expected_view_data = {
@@ -48,7 +48,7 @@ describe('generateViewData', () => {
 			{
 				path: [],
 				table: 'collection_view',
-				command: 'set',
+				command: 'update',
 				args: expected_view_data,
 				id
 			}

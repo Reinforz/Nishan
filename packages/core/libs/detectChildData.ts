@@ -16,13 +16,18 @@ export function detectChildData (type: SupportedTDataType, data?: TBlock): [stri
 	if (type === 'block') {
 		// If type is block, infer child data based on the data passed
 		if (data) {
-			if (data.type === 'page') child_path = 'content';
+			if (data.type.match(/^(column_list|column|page|factory)$/)) child_path = 'content';
 			else if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				child_path = 'view_ids';
 				child_type = 'collection_view';
 			} else
 				// if data.type is not a parent type, throw an error as it doesn't contain any child
-				throw new UnsupportedBlockTypeError(data.type, [ 'page', 'collection_view', 'collection_view_page' ]);
+				throw new UnsupportedBlockTypeError(data.type, [
+					'page',
+					'collection_view',
+					'collection_view_page',
+					'factory'
+				]);
 			// Throw error if the data parameter was not passed, which is required when type = block
 		} else throw new Error(`type block requires second data argument`);
 	} else if (type === 'space') child_path = 'pages';

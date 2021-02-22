@@ -30,6 +30,7 @@ export async function appendChildToParent (
 		{ token, interval: 0 },
 		cache
 	);
+
 	// Detect the child data using the parent
 	const [ child_path ] = detectChildData(parent_table as any, parent as any);
 	// Push the child id to the parent's child container

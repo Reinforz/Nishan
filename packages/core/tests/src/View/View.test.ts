@@ -623,7 +623,7 @@ describe('updateFormatProperty', () => {
 				property: 'title'
 			}
 		];
-		await view.updateFormatProperty([ 'Title', { position: 1, visible: false, width: 125 } ]);
+		await view.updateFormatProperty([ 'Title', { type: 'table', position: 1, visible: false, width: 125 } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
 		expect(stack[1]).toStrictEqual({
@@ -685,7 +685,7 @@ describe('updateFormatProperty', () => {
 			stack
 		});
 
-		await view.updateFormatProperty([ 'Title', {} ]);
+		await view.updateFormatProperty([ 'Title', { type: 'list', position: 1, visible: false } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
 		expect(stack[1]).toStrictEqual({

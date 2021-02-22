@@ -9,6 +9,12 @@ export function populateViewQuery2(view: GalleryViewQuery2CreateInput): IGallery
 export function populateViewQuery2(view: TimelineViewQuery2CreateInput, schema_map: ISchemaMap): ITimelineViewQuery2;
 export function populateViewQuery2(view: CalendarViewQuery2CreateInput, schema_map: ISchemaMap): ICalendarViewQuery2;
 export function populateViewQuery2(view: BoardViewQuery2CreateInput, schema_map: ISchemaMap): IBoardViewQuery2;
+/**
+ * Populates and returns the query2 data of a view
+ * @param view View create input data
+ * @param schema_map Schema map used to resolve property reference
+ * @returns Populated query2 data with sort, filter, aggregations and other view specific infos
+ */
 export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: ISchemaMap): TViewQuery2 {
   const query2: TViewQuery2 = {} as any, operator = view.filter_operator ?? "and";
   switch (view.type) {
@@ -26,6 +32,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       const schema_map_unit = schema_map && schema_map.get(view.group_by);
       if(!schema_map_unit)
         throw new UnknownPropertyReferenceError(view.group_by, ["group_by"])
+      // group_by should reference a select or multi select property
       if(schema_map_unit.type !== "select" && schema_map_unit.type !== "multi_select")
         throw new UnsupportedPropertyTypeError(schema_map_unit.name, ["group_by"], schema_map_unit.type, ["select", "multi_select"])
 
@@ -52,7 +59,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       const schema_map_unit = schema_map && schema_map.get(view.calendar_by);
       if(!schema_map_unit)
         throw new UnknownPropertyReferenceError(view.calendar_by, ["calendar_by"])
-
+      // calendar_by should reference a date property
       if(!schema_map_unit.type.match(/^(last_edited_time|created_time|date|formula)$/) || (schema_map_unit.type === "formula" && schema_map_unit.formula.result_type !== "date"))
         throw new UnsupportedPropertyTypeError(view.calendar_by, ["calendar_by"], schema_map_unit.type, ["last_edited_time", "created_time", "date", "formula"]);
         
@@ -69,7 +76,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       const schema_map_unit = schema_map && schema_map.get(view.timeline_by);
       if(!schema_map_unit)
         throw new UnknownPropertyReferenceError(view.timeline_by, ["timeline_by"])
-
+      // timeline_by should reference a date property
       if(!schema_map_unit.type.match(/^(last_edited_time|created_time|date|formula)$/) || (schema_map_unit.type === "formula" && schema_map_unit.formula.result_type !== "date"))
         throw new UnsupportedPropertyTypeError(view.timeline_by, ["timeline_by"], schema_map_unit.type, ["last_edited_time", "created_time", "date", "formula"]);
 

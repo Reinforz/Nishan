@@ -2,7 +2,7 @@ import { populateViewProperties } from '../../../../../libs/CreateData/Views/uti
 
 describe('populateViewProperties', () => {
 	it(`Should work with number input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' }, 150)).toStrictEqual({
+		expect(populateViewProperties('text', 150)).toStrictEqual({
 			property: 'text',
 			visible: true,
 			width: 150
@@ -10,7 +10,7 @@ describe('populateViewProperties', () => {
 	});
 
 	it(`Should work with boolean input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' }, false)).toStrictEqual({
+		expect(populateViewProperties('text', false)).toStrictEqual({
 			property: 'text',
 			visible: false,
 			width: 250
@@ -18,7 +18,7 @@ describe('populateViewProperties', () => {
 	});
 
 	it(`Should work with [boolean] input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' }, [ false ] as any)).toStrictEqual({
+		expect(populateViewProperties('text', [ false ] as any)).toStrictEqual({
 			property: 'text',
 			visible: false,
 			width: 250
@@ -26,7 +26,7 @@ describe('populateViewProperties', () => {
 	});
 
 	it(`Should work with [boolean, number] input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' }, [ false, 120 ])).toStrictEqual({
+		expect(populateViewProperties('text', [ false, 120 ])).toStrictEqual({
 			property: 'text',
 			visible: false,
 			width: 120
@@ -34,7 +34,7 @@ describe('populateViewProperties', () => {
 	});
 
 	it(`Should work with [] input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' }, [] as any)).toStrictEqual({
+		expect(populateViewProperties('text', [] as any)).toStrictEqual({
 			property: 'text',
 			visible: true,
 			width: 250
@@ -42,7 +42,7 @@ describe('populateViewProperties', () => {
 	});
 
 	it(`Should work with no input`, () => {
-		expect(populateViewProperties({ schema_id: 'text' })).toStrictEqual({
+		expect(populateViewProperties('text')).toStrictEqual({
 			property: 'text',
 			visible: true,
 			width: 250

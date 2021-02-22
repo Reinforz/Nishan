@@ -21,7 +21,7 @@ export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id
       if (schema_map_unit) {
         included_units.push(schema_map_unit.schema_id);
         populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2)
-        properties.push(populateViewProperties(schema_map_unit, format))
+        properties.push(populateViewProperties(schema_map_unit.schema_id, format))
       } else
         throw new UnknownPropertyReferenceError(name, ['name']);
     })
@@ -32,7 +32,7 @@ export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id
     if(input_filters && filter)
       populateFilters(input_filters, filter.filters, schema_map);
 
-    const view_data = generateViewData(view, props, format, query2, parent_id ?? collection.parent_id);
+    const view_data = generateViewData({...view, format, query2}, props, parent_id ?? collection.parent_id);
     view_ids.push(view_data.id);
     const view_object = new view_classes[type]({ ...props, id: view_data.id })
     view_map[type].set(view_data.id, view_object);

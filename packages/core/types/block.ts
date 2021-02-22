@@ -45,19 +45,19 @@ export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageIn
 export interface IVideoInput extends IInput {
   type: 'video',
   properties: IVideo["properties"],
-  format: IVideo["format"],
+  format?: IVideo["format"],
 }
 
 export interface IImageInput extends IInput {
   type: 'image',
   properties: IImage["properties"],
-  format: IImage["format"],
+  format?: IImage["format"],
 }
 
 export interface IAudioInput extends IInput {
   type: 'audio',
   properties: IAudio["properties"],
-  format: IAudio["format"],
+  format?: IAudio["format"],
 }
 
 export interface IWebBookmarkInput extends IInput {
@@ -114,49 +114,49 @@ export interface ICollectionViewPageUpdateInput{
 
 export interface ITextInput extends IInput {
   properties: IText["properties"],
-  format: IText["format"],
+  format?: IText["format"],
   type: 'text'
 }
 
 export interface IHeaderInput extends IInput {
   properties: IHeader["properties"],
-  format: IHeader["format"],
+  format?: IHeader["format"],
   type: 'header'
 }
 
 export interface ISubHeaderInput extends IInput {
   properties: ISubHeader["properties"],
-  format: ISubHeader["format"],
+  format?: ISubHeader["format"],
   type: 'sub_header'
 }
 
 export interface ISubSubHeaderInput extends IInput {
   properties: ISubSubHeader["properties"],
-  format: ISubSubHeader["format"],
+  format?: ISubSubHeader["format"],
   type: 'sub_sub_header'
 }
 
 export interface INumberedListInput extends IInput {
   properties: INumberedList["properties"],
-  format: INumberedList["format"],
+  format?: INumberedList["format"],
   type: 'numbered_list'
 }
 
 export interface IBulletedListInput extends IInput {
   properties: IBulletedList["properties"],
-  format: IBulletedList["format"],
+  format?: IBulletedList["format"],
   type: 'bulleted_list'
 }
 
 export interface IToggleInput extends IInput {
   properties: IToggle["properties"],
-  format: IToggle["format"],
+  format?: IToggle["format"],
   type: 'toggle'
 }
 
 export interface IQuoteInput extends IInput {
   properties: IQuote["properties"],
-  format: IQuote["format"],
+  format?: IQuote["format"],
   type: 'quote'
 }
 

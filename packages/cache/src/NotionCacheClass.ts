@@ -11,16 +11,7 @@ export class NotionCacheClass {
 
 	constructor ({ cache, token, interval, user_id }: Omit<CtorArgs, 'shard_id' | 'space_id'>) {
     // Validate the cache first if its passed, otherwise store a default one
-		this.cache = (cache && NotionCacheObject.validateCache(cache)) || {
-			block: new Map(),
-			collection: new Map(),
-			space: new Map(),
-			collection_view: new Map(),
-			notion_user: new Map(),
-			space_view: new Map(),
-			user_root: new Map(),
-			user_settings: new Map()
-		};
+		this.cache = (cache && NotionCacheObject.validateCache(cache)) || NotionCacheObject.createDefaultCache();
     if(!token)
       throw new Error(`Token not provided`);
 		this.token = token;

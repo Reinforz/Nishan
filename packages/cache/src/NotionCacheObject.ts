@@ -13,6 +13,18 @@ import {
 import { ICache } from '../src';
 
 export const NotionCacheObject = {
+	createDefaultCache () {
+		return {
+			block: new Map(),
+			collection: new Map(),
+			collection_view: new Map(),
+			notion_user: new Map(),
+			space: new Map(),
+			space_view: new Map(),
+			user_root: new Map(),
+			user_settings: new Map()
+		} as ICache;
+	},
 	/**
  * Save all the items of a recordMap in internal cache
  * @param recordMap The recordMap to save to cache

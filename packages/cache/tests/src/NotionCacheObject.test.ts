@@ -12,6 +12,10 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+it(`createDefaultCache`, ()=>{
+  expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy()
+});
+
 describe('fetchDataOrReturnCached', () => {
 	it(`data exists in cache`, async () => {
 		const block_1 = {

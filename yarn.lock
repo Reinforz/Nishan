@@ -2571,10 +2571,10 @@
     colors "^1.4.0"
     uuid "^8.3.2"
 
-"@nishans/operations@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.18.tgz#43872eba788d5696694b577a2b61998ce020964d"
-  integrity sha512-z22W0/D6qS8TE+vfDBxI70Ze94CNUQ4DMxTzsffJ+wkLdxUQDGk1fQ/ZWAIWUYBsNlStqIfurY2yiPzmWnGZ+A==
+"@nishans/inline-blocks@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.20.tgz#c51caccd444d156a0e5eb1936871c3bd9ea2a038"
+  integrity sha512-Umo8c2SR+7SLVucW7a/xsvxqSIyv3WJ4mxrhfLol10sO62qOI4h9SvZCazU0dtuAQiePAr8ZGUFR0/7BsMzqhw==
 
 "@nishans/types@0.0.11":
   version "0.0.11"
@@ -2590,11 +2590,6 @@
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.10.tgz#4e052e2159a8ad577b78d6ef6a2a43f739413f83"
   integrity sha512-E+BO1gvB70mGhkjotauz6TEkgFBXW1+f1VZk5hKz1KjdFf+y58SlPW8tYkClRzl5hX7sHFE2MoGuhLoW6QJtog==
-
-"@nishans/utils@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.5.tgz#2062447e49518033be2e4c3294d41f1963cdd40d"
-  integrity sha512-MveIGhNjDjQgoizM0XweaO1SSVCX1jqnCUOlo8GIadm+nNZ6+dMUFrFvNFOGHavYRnnVT0C8WrUqq6FNaqHF5Q==
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -9079,10 +9074,10 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
-handlebars@^4.7.6:
-  version "4.7.6"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
-  integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
+handlebars@^4.7.6, handlebars@^4.7.7:
+  version "4.7.7"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
+  integrity sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==
   dependencies:
     minimist "^1.2.5"
     neo-async "^2.6.0"
@@ -11398,10 +11393,10 @@ lodash.uniq@4.5.0, lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@4.x, "lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.5, lodash@^4.2.1, lodash@~4.17.10:
-  version "4.17.20"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
-  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+lodash@4.x, "lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.5, lodash@^4.2.1, lodash@~4.17.10:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loglevel@^1.6.8:
   version "1.7.1"
@@ -17082,14 +17077,14 @@ typedoc-plugin-no-inherit@^1.2.0:
   integrity sha512-jAAslwDbm5sVpA6EQIg5twYctRi/bnT9TgZ5SwbrNpCD5xCIIylPRX9KxIoi1RJliVgCIAxWbSUzzLKGwJCkeA==
 
 typedoc@^0.20.16:
-  version "0.20.25"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.25.tgz#f84b0b00dff545e945b63e2d5fff670fc9e86878"
-  integrity sha512-ZQZnjJPrt0rjp216gp6FQC1QC4ojcoKikhfOJ/51CqaJunVDilRLlIO5tCGWj1tzlYYT9eOGhJv7MF3t7rxSmw==
+  version "0.20.28"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.20.28.tgz#6c454904d864dd43a2de9228c44b91e3c53d98ce"
+  integrity sha512-8j0T8u9FuyDkoe+M/3cyoaGJSVgXCY9KwVoo7TLUnmQuzXwqH+wkScY530ZEdK6G39UZ2LFTYPIrL5eykWjx6A==
   dependencies:
     colors "^1.4.0"
     fs-extra "^9.1.0"
-    handlebars "^4.7.6"
-    lodash "^4.17.20"
+    handlebars "^4.7.7"
+    lodash "^4.17.21"
     lunr "^2.3.9"
     marked "^2.0.0"
     minimatch "^3.0.0"

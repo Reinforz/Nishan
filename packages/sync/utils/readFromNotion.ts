@@ -1,14 +1,12 @@
-import axios from 'axios';
 import {
-	ICollection,
-	IPage,
-	QueryCollectionResult,
-	SyncRecordValuesResult,
-	TCollectionBlock,
-	TView
+  ICollection,
+  IPage,
+  NotionEndpoints,
+  TCollectionBlock,
+  TView
 } from '@nishans/types';
-import { extractCollectionData, extractPagesData, extractViewsData, idToUuid } from '.';
-import { LocalFileStructure } from '../src/types';
+import axios from 'axios';
+import { idToUuid } from '.';
 import { extractData } from './extractData';
 
 export async function readFromNotion (token: string, database_id: string) {
@@ -18,7 +16,7 @@ export async function readFromNotion (token: string, database_id: string) {
 		}
 	};
 	database_id = idToUuid(database_id);
-	const { data } = await axios.post<SyncRecordValuesResult>(
+	const { data } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
 		'https://www.notion.so/api/v3/syncRecordValues',
 		{
 			requests: [
@@ -36,7 +34,7 @@ export async function readFromNotion (token: string, database_id: string) {
 
 	const { collection_id, view_ids } = block_data;
 
-	const { data: { recordMap } } = await axios.post<SyncRecordValuesResult>(
+	const { data: { recordMap } } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
 		'https://www.notion.so/api/v3/syncRecordValues',
 		{
 			requests: [
@@ -53,7 +51,7 @@ export async function readFromNotion (token: string, database_id: string) {
 	const collection = recordMap.collection[collection_id].value as ICollection;
 	const views = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
 
-	const { data: { recordMap: { block } } } = await axios.post<QueryCollectionResult>(
+	const { data: { recordMap: { block } } } = await axios.post<NotionEndpoints["queryCollection"]["response"]>(
 		'https://www.notion.so/api/v3/queryCollection',
 		{
 			collectionId: collection_id,
@@ -76,7 +74,7 @@ export async function readFromNotion (token: string, database_id: string) {
 	const template_pages_data: IPage[] = [];
 
 	if (collection.template_pages) {
-		const { data: { recordMap: { block: template_blocks } } } = await axios.post<SyncRecordValuesResult>(
+		const { data: { recordMap: { block: template_blocks } } } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
 			'https://www.notion.so/api/v3/syncRecordValues',
 			{
 				requests: [ ...collection.template_pages.map((page_id) => ({ id: page_id, table: 'block', version: 0 })) ]

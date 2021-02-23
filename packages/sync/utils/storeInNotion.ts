@@ -1,9 +1,8 @@
-import { IOperation, ISpace, IUserPermission, LoadUserContentResult } from '@nishans/types';
-import { v4 as uuidv4 } from 'uuid';
+import { IOperation, ISpace, IUserPermission, NotionEndpoints } from '@nishans/types';
 import axios from 'axios';
-
-import { createTransaction } from './';
+import { v4 as uuidv4 } from 'uuid';
 import { LocalFileStructure } from '../src/types';
+import { createTransaction } from './';
 
 export async function storeInNotion (
 	token: string,
@@ -17,7 +16,7 @@ export async function storeInNotion (
 		}
 	};
 
-	const { data: { recordMap } } = await axios.post<LoadUserContentResult>(
+	const { data: { recordMap } } = await axios.post<NotionEndpoints['loadUserContent']['response']>(
 		'https://www.notion.so/api/v3/loadUserContent',
 		{},
 		headers

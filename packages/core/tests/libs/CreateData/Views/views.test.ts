@@ -1,6 +1,6 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { NotionCacheObject } from '@nishans/cache';
 import {
-  IOperation
+  IOperation, Schema
 } from '@nishans/types';
 import { v4 } from 'uuid';
 import {
@@ -11,78 +11,114 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('CreateData.views', () => {
-	describe('Output correctly', () => {
-    it(`Should work correctly`, () => {
-      const id = v4(),
-      stack: IOperation[] = [],
-      cache: ICache = NotionCacheObject.createDefaultCache();
-      
-      CreateData.views(
+const default_nishan_arg = {
+  token: 'token',
+  user_id: 'user_id',
+  space_id: 'space_id',
+  shard_id: 123,
+}
+
+const default_collection = {
+  id: 'collection_id',
+  schema: {
+    title: {
+      type: "title",
+      name: "Title"
+    }
+  } as Schema,
+  parent_id: 'parent_id'
+};
+
+describe('Output correctly', () => {
+  it(`Should work correctly`, () => {
+    const id = v4(),
+    stack: IOperation[] = [],
+    cache = NotionCacheObject.createDefaultCache();
+    
+    CreateData.views(
+      default_collection,
+      [
         {
-          id: 'collection_id',
-          schema: {
-            title: {
+          id,
+          type: 'table',
+          name: 'Table',
+          schema_units: [
+            {
+              name: "Title",
               type: "title",
-              name: "Title"
             }
-          },
-          parent_id: 'collection_parent_id'
+          ]
+        }
+      ],
+      {
+        stack,
+        cache,
+        logger: ()=>{
+          return
         },
-        [
+        ...default_nishan_arg
+      },
+      'parent_id'
+    );
+
+    
+    const expected_view_data = {
+      id,
+      "version": 0,
+      "type": "table",
+      "name": "Table",
+      "page_sort": [],
+      "parent_id": "parent_id",       
+      "parent_table": "block",        
+      "alive": true,
+      "format": {
+        "table_properties": [
           {
-            id,
-            type: 'table',
-            name: 'Table',
-            schema_units: [
-              {
-                name: "Title",
-                type: "title",
-              }
-            ]
+            "property": "title",      
+            "visible": true,
+            "width": 250
           }
         ],
-        {
-          token: 'token',
-          user_id: 'user_id',
-          stack,
-          cache,
-          space_id: 'space_id',
-          shard_id: 123,
-          logger: ()=>{
-            return
-          }
-        },
-        'parent_id'
-      );
+        "table_wrap": false
+      },
+      "query2": {
+        "aggregations": [],
+        "sort": [],
+        "filter": {
+          "operator": "and",
+          "filters": [{
+            property: "title",
+            filter: {
+              operator: "string_is",
+              value: {
+                type: "exact",
+                value: "123"
+              }
+            }
+          }]
+        }
+      },
+      "shard_id": 123,
+      "space_id": "space_id"
+    };
 
-      
-      const expected_view_data = {
-        id,
-        "version": 0,
-        "type": "table",
-        "name": "Table",
-        "page_sort": [],
-        "parent_id": "parent_id",       
-        "parent_table": "block",        
-        "alive": true,
-        "format": {
-          "table_properties": [
+    const [ view_ids, view_map ] = CreateData.views(
+      default_collection,
+      [
+        {
+          id,
+          type: 'table',
+          name: 'Table',
+          schema_units: [
             {
-              "property": "title",      
-              "visible": true,
-              "width": 250
+              name: "Title",
+              type: "title",
             }
           ],
-          "table_wrap": false
-        },
-        "query2": {
-          "aggregations": [],
-          "sort": [],
-          "filter": {
-            "operator": "and",
-            "filters": [{
-              property: "title",
+          filters: [
+            {
+              name: "Title",
+              type: "title",
               filter: {
                 operator: "string_is",
                 value: {
@@ -90,174 +126,79 @@ describe('CreateData.views', () => {
                   value: "123"
                 }
               }
-            }]
-          }
-        },
-        "shard_id": 123,
-        "space_id": "space_id"
-      };
-  
-      const [ view_ids, view_map ] = CreateData.views(
-        {
-          id: 'collection_id',
-          schema: {
-            title: {
-              type: "title",
-              name: "Title"
             }
-          },
-          parent_id: 'parent_id'
-        },
-        [
-          {
-            id,
-            type: 'table',
-            name: 'Table',
-            schema_units: [
+          ]
+        }
+      ],
+      {
+        stack,
+        cache,
+        ...default_nishan_arg,
+        logger: ()=>{
+          return
+        }
+      }
+    );
+    
+    expect(view_ids).toStrictEqual([ id ]);
+    expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
+    expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
+    expect(
+      stack
+    ).toStrictEqual([
+      {
+        "path": [],
+        "table": "collection_view",
+        "command": "update",
+        "args": {
+          "id": expect.any(String),
+          "version": 0,
+          "type": "table",
+          "name": "Table",
+          "page_sort": [],
+          "parent_id": "parent_id",
+          "parent_table": "block",
+          "alive": true,
+          "format": {
+            "table_properties": [
               {
-                name: "Title",
-                type: "title",
+                "property": "title",
+                "visible": true,
+                "width": 250
               }
             ],
-            filters: [
-              {
-                name: "Title",
-                type: "title",
-                filter: {
-                  operator: "string_is",
-                  value: {
-                    type: "exact",
-                    value: "123"
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        {
-          token: 'token',
-          user_id: 'user_id',
-          stack,
-          cache,
-          space_id: 'space_id',
-          shard_id: 123,
-          logger: ()=>{
-            return
-          }
-        }
-      );
-      
-      expect(view_ids).toStrictEqual([ id ]);
-      expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
-      expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
-      expect(
-        stack
-      ).toStrictEqual([
-        {
-          "path": [],
-          "table": "collection_view",
-          "command": "update",
-          "args": {
-            "id": expect.any(String),
-            "version": 0,
-            "type": "table",
-            "name": "Table",
-            "page_sort": [],
-            "parent_id": "parent_id",
-            "parent_table": "block",
-            "alive": true,
-            "format": {
-              "table_properties": [
-                {
-                  "property": "title",
-                  "visible": true,
-                  "width": 250
-                }
-              ],
-              "table_wrap": false
-            },
-            "query2": {
-              "aggregations": [],
-              "sort": [],
-              "filter": {
-                "operator": "and",
-                "filters": []
-              }
-            },
-            "shard_id": 123,
-            "space_id": "space_id"
+            "table_wrap": false
           },
-          "id": expect.any(String)
-        },
-        {
-          "path": [],
-          "table": "collection_view",
-          "command": "update",
-          "args": {
-            "id": expect.any(String),
-            "version": 0,
-            "type": "table",
-            "name": "Table",
-            "page_sort": [],
-            "parent_id": "parent_id",
-            "parent_table": "block",
-            "alive": true,
-            "format": {
-              "table_properties": [
-                {
-                  "property": "title",
-                  "visible": true,
-                  "width": 250
-                }
-              ],
-              "table_wrap": false
-            },
-            "query2": {
-              "aggregations": [],
-              "sort": [],
-              "filter": {
-                "operator": "and",
-                "filters": [
-                  {
-                    "property": "title",
-                    "filter": {
-                      "operator": "string_is",
-                      "value": {
-                        "type": "exact",
-                        "value": "123"
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            "shard_id": 123,
-            "space_id": "space_id"
+          "query2": {
+            "aggregations": [],
+            "sort": [],
+            "filter": {
+              "operator": "and",
+              "filters": []
+            }
           },
-          "id": expect.any(String)
-        }
-      ]);
-    });
-  });
-
-  it(`Throw error`, () => {
-    const id = v4(),
-      stack: IOperation[] = [],
-      cache = NotionCacheObject.createDefaultCache();
-    expect(()=>CreateData.views(
-      {
-        id: 'collection_id',
-        schema: {
-          title: {
-            type: "title",
-            name: "Title"
-          }
+          "shard_id": 123,
+          "space_id": "space_id"
         },
-        parent_id: 'parent_id'
+        "id": expect.any(String)
       },
+      {
+        "path": [],
+        "table": "collection_view",
+        "command": "update",
+        "args": expected_view_data,
+        "id": expect.any(String)
+      }
+    ]);
+  });
+});
+
+describe('throws error', () => {
+  it(`when unknown property is referenced`, () => {
+    expect(()=>CreateData.views(
+      default_collection,
       [
         {
-          id,
           type: 'table',
           name: 'Table',
           schema_units: [
@@ -269,16 +210,29 @@ describe('CreateData.views', () => {
         }
       ],
       {
-        token: 'token',
-        user_id: 'user_id',
-        stack,
-        cache,
-        space_id: 'space_id',
-        shard_id: 123,
+        ...default_nishan_arg,
+        stack: [],
+        cache: NotionCacheObject.createDefaultCache(),
         logger: ()=>{
           return
         }
       }
     )).toThrow()
   });
-});
+
+  it(`when unknown property is referenced`, () => {
+    expect(()=>CreateData.views(
+      default_collection,
+      [],
+      {
+        ...default_nishan_arg,
+        stack: [],
+        cache: NotionCacheObject.createDefaultCache(),
+        logger: ()=>{
+          return
+        }
+      }
+    )).toThrow(`schema_units input array cannot be empty`)
+  });
+})
+

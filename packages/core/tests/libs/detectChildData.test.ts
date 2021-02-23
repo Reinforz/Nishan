@@ -22,7 +22,11 @@ describe('detectChildData', () => {
 	});
 
 	it(`Should return correct child data for block type`, () => {
-		expect(detectChildData('block', { type: 'page' } as any)).toStrictEqual([ 'content', 'block' ]);
+		describe('child_path=content', () => {
+			[ 'page', 'column_list', 'column', 'factory' ].forEach((block_type) => {
+				expect(detectChildData('block', { type: block_type } as any)).toStrictEqual([ 'content', 'block' ]);
+			});
+		});
 
 		expect(detectChildData('block', { type: 'collection_view_page' } as any)).toStrictEqual([
 			'view_ids',

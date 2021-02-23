@@ -55,7 +55,7 @@ async function populateBlockMap (block: TBlock, block_map: IBlockMap, props: Omi
 	else {
 		const block_obj = createBlockClass(block.type, block.id, props);
 		block_map[block.type].set(block.id, block_obj);
-		const title = (block as any)?.properties?.title as TTextFormat;
+		const title = (block as any).properties?.title as TTextFormat;
 		if (title) block_map[block.type].set(extractInlineBlockContent(title), block_obj);
 	}
 }

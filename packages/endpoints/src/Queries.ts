@@ -1,4 +1,6 @@
 import {
+	CheckEmailTypeParams,
+	CheckEmailTypeResult,
 	FindUserParams,
 	FindUserResult,
 	GetBackLinksForBlockParams,
@@ -47,6 +49,14 @@ import { NotionRequestConfigs } from '.';
 import { NotionRequest } from '../utils';
 
 const Queries = {
+	async ping (configs?: Partial<NotionRequestConfigs>) {
+		return await NotionRequest.send<Record<string, never>>('ping', {}, configs);
+	},
+
+	async checkEmailType (params: CheckEmailTypeParams, configs?: Partial<NotionRequestConfigs>) {
+		return await NotionRequest.send<CheckEmailTypeResult>('checkEmailType', params, configs);
+	},
+
 	async getClientExperiments (params: GetClientExperimentsParams, configs?: Partial<NotionRequestConfigs>) {
 		return await NotionRequest.send<GetClientExperimentsResult>('getClientExperiments', params, configs);
 	},

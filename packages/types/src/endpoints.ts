@@ -32,8 +32,6 @@ export interface CheckEmailTypeResult {
 	mustReverify: boolean;
 }
 
-export interface PingParams {}
-
 export interface LoginWithEmailParams {
 	email: string;
 	password: string;

@@ -8,6 +8,8 @@ import {
 	InitializePageTemplateParams,
 	InitializePageTemplateResult,
 	InviteGuestsToSpaceParams,
+	LoginWithEmailParams,
+	LoginWithEmailResult,
 	RemoveUsersFromSpaceParams,
 	RemoveUsersFromSpaceResult,
 	SaveTransactionParams,
@@ -48,6 +50,9 @@ const Mutations = {
 	},
 	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs: NotionRequestConfigs) {
 		return await NotionRequest.send<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
+	},
+	async loginWithEmail (params: LoginWithEmailParams, configs: NotionRequestConfigs) {
+		return await NotionRequest.send<LoginWithEmailResult>('loginWithEmail', params, configs);
 	}
 };
 

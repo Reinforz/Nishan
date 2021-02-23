@@ -34,7 +34,8 @@ const configs = {
 	'getUserNotifications',
 	'getTasks',
 	'search',
-	'getClientExperiments'
+	'getClientExperiments',
+	'checkEmailType'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
@@ -51,7 +52,8 @@ const configs = {
 	'loadUserContent',
 	'getJoinableSpaces',
 	'isUserDomainJoinable',
-	'isEmailEducation'
+	'isEmailEducation',
+	'ping'
 ] as (keyof typeof Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);

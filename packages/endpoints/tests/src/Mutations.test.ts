@@ -21,7 +21,8 @@ const request_data = {
 	'enqueueTask',
 	'setBookmarkMetadata',
 	'initializePageTemplate',
-	'initializeGoogleDriveBlock'
+	'initializeGoogleDriveBlock',
+	'loginWithEmail'
 ] as (keyof typeof Mutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {

@@ -27,7 +27,7 @@
     "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
-    "test": "npx jest --runInBand ./tests"
+    "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"

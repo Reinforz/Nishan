@@ -10,6 +10,8 @@ export function views(collection: Pick<ICollection, "id" | "schema" | "parent_id
   const { TableView, ListView, GalleryView, BoardView, CalendarView, TimelineView } = require("../../../src/View/index");
   const view_classes = { table: TableView, list: ListView, gallery: GalleryView, board: BoardView, calendar: CalendarView, timeline: TimelineView };
 
+  if(views.length === 0)
+    throw new Error(`views input array cannot be empty`);
   for (let index = 0; index < views.length; index++) {
     const view = views[index], 
       { name, type, schema_units} = view, included_units: string[] = [], query2 = populateViewQuery2(view as any, schema_map) , {filter} = query2, format = populateViewFormat(view as any, schema_map), properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];

@@ -1,7 +1,7 @@
-import { Queries } from '@nishans/endpoints';
-import { NonExistentDataError, UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
+import { NotionCacheObject } from '@nishans/cache';
+import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
 import { formulateResultTypeFromSchemaType, generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { RollupSchemaUnit, SyncRecordValuesParams } from '@nishans/types';
+import { ICollection, RollupSchemaUnit } from '@nishans/types';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
 
@@ -32,7 +32,12 @@ export async function rollup (
 	// Get the info required for making the request and store in cache
 	const { cache, token, logger } = request_config;
 	// Get the target collection from the passed cache
-	let target_collection = cache.collection.get(collection_id);
+	const target_collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>(
+		'collection',
+		collection_id,
+		{ token, interval: 0 },
+		cache
+	);
 	// Construct the rollup schema unit
 	const rollup_schema_unit: RollupSchemaUnit = {
 		// The related collection id
@@ -49,33 +54,6 @@ export async function rollup (
 		// The return type of the target schema unit
 		target_property_type: 'title'
 	};
-
-	// If the target collection doesn't exist obtain it from notion's db
-	if (!target_collection) {
-		// Construct the request params used to obtain the target collection
-		const sync_record_values_param: SyncRecordValuesParams = {
-			requests: [
-				{
-					table: 'collection',
-					id: collection_id,
-					version: 0
-				}
-			]
-		};
-
-		// Get the record map from the response
-		const { recordMap } = await Queries.syncRecordValues(sync_record_values_param, {
-			token,
-			interval: 0
-		});
-
-		// If the request responded with an empty value, throw an error warning the user that the collection doesn't exist
-		if (!recordMap.collection[collection_id].value) throw new NonExistentDataError('collection', collection_id);
-		// Set the returned value from the response
-		target_collection = recordMap.collection[collection_id].value;
-		// Store the target collection value to the cache
-		cache.collection.set(collection_id, target_collection);
-	}
 
 	// Log the collection read operation
 	logger && logger('READ', 'collection', target_collection.id);

@@ -20,6 +20,30 @@ import {
 	ViewSorts
 } from './';
 
+export interface CheckEmailTypeParams {
+	allowAdminBypass: boolean;
+	email: string;
+}
+
+export interface CheckEmailTypeResult {
+	hasAccount: boolean;
+	hasPassword: boolean;
+	isGoogleAppsEmail: boolean;
+	mustReverify: boolean;
+}
+
+export interface PingParams {}
+
+export interface LoginWithEmailParams {
+	email: string;
+	password: string;
+}
+
+export interface LoginWithEmailResult {
+	isNewSignup: boolean;
+	userId: string;
+}
+
 export interface GetClientExperimentsParams {
 	deviceId: string;
 }

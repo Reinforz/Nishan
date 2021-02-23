@@ -1,8 +1,7 @@
-import { Queries } from "@nishans/endpoints";
-import { NonExistentDataError } from "@nishans/errors";
+import { NotionCacheObject } from "@nishans/cache";
 import { createShortId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
-import { RelationSchemaUnit } from "@nishans/types";
+import { ICollection, RelationSchemaUnit } from "@nishans/types";
 import { TRelationSchemaUnitInput } from "../../../types";
 import { ParentCollectionData } from "../types";
 
@@ -16,32 +15,10 @@ export async function relation(input_schema_unit: TRelationSchemaUnitInput, coll
   const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name, token, logger, cache, stack} = collection_data, child_relation_schema_unit_id = createShortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
-  let child_collection = cache.collection.get(child_collection_id);
-  // If child collection doesn't exist in the cache passed, sent a api request to notion's db to get the data
-  if(!child_collection){
-    // * Use fetch and cache data from NotionCacheObject
-    // Fetching only the collection data from notion's db, using the token provided
-    const {recordMap} = await Queries.syncRecordValues({
-      requests: [{
-        table: "collection",
-        id: child_collection_id,
-        version: 0
-      }]
-    }, {
-      token,
-      interval: 0
-    });
-
-    // If the collection doesn't exist even in notion's db then its an invalid request, so throw an error 
-    if(!recordMap.collection[child_collection_id].value)
-      throw new NonExistentDataError('collection', child_collection_id)
-    
-    // Replace the child_collection to the one obtained from the api request
-    child_collection = recordMap.collection[child_collection_id].value
-
-    // Set the new child_collection in the cache
-    cache.collection.set(child_collection_id, child_collection);
-  }
+  const child_collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, {
+    token,
+    interval: 0
+  }, cache);
   // Log the event of reading the child collection
   logger && logger("READ", "collection", child_collection_id);
 

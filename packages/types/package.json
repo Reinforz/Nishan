@@ -12,12 +12,12 @@
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/types/README.md",
   "license": "MIT",
   "main": "",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "directories": {
     "lib": "src"
   },
   "files": [
-    "dist"
+    "dist/src"
   ],
   "repository": {
     "type": "git",

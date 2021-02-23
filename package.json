@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "nishans",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "description": "An ecosystem of packages for notion written in typescript",
   "workspaces": [
     "packages/*"

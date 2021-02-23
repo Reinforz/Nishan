@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "dom",
+    ],
+    "baseUrl": "./",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2015",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "watch": false,
+    "declaration": true,
+    "sourceMap": true,
+    "noUnusedLocals": false,
+    "incremental": false
+  }
+}

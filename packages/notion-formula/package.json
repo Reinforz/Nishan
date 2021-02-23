@@ -29,7 +29,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "prebuild": "npm run test",
-    "build": "npx npx del-cli ./dist && tsc --sourceMap false",
+    "build": "npx del-cli ./dist && tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "bugs": {

@@ -25,8 +25,7 @@ export type DateViewFiltersOperator =
 	| 'date_is_before'
 	| 'date_is_after'
 	| 'date_is_on_or_before'
-	| 'date_is_on_or_after'
-	| 'date_is_within';
+	| 'date_is_on_or_after';
 export type PersonViewFiltersOperator = 'person_contains' | 'person_does_not_contain';
 export type FileViewFiltersOperator = EmptyViewFiltersOperator;
 export type CheckboxViewFiltersOperator = 'checkbox_is' | 'checkbox_is_not';
@@ -212,6 +211,13 @@ export type PhoneNumberViewFilters = IViewFilters<
 	PhoneNumberViewFiltersType,
 	PhoneNumberViewFiltersValue
 >;
+export type DateViewFilterDateIsWithinValue =
+	| 'the_past_week'
+	| 'the_past_month'
+	| 'the_past_year'
+	| 'the_next_week'
+	| 'the_next_month'
+	| 'the_next_year';
 export interface DateViewFilters {
 	property: string;
 	filter:
@@ -227,6 +233,13 @@ export interface DateViewFilters {
 							start_date: string;
 							type: 'exact';
 						};
+			}
+		| {
+				operator: 'date_is_within';
+				value: {
+					type: 'relative';
+					value: DateViewFilterDateIsWithinValue;
+				};
 			};
 }
 

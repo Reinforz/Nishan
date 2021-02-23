@@ -6,19 +6,28 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+const operation: IOperation = {
+	args: {},
+	command: 'update',
+	id: '123',
+	path: [],
+	table: 'block'
+};
+
+const returnDefaultOperationsClassArgs = () => {
+	return {
+		shard_id: 123,
+		space_id: 'space_1',
+		stack: [],
+		token: 'token'
+	};
+};
+
 it(`emptyStack`, () => {
 	const operations_class = new NotionOperationsClass({
 		shard_id: 123,
 		space_id: 'space_1',
-		stack: [
-			{
-				args: {},
-				command: 'update',
-				id: '123',
-				path: [],
-				table: 'block'
-			}
-		],
+		stack: [ operation ],
 		token: 'token'
 	});
 	operations_class.emptyStack();
@@ -26,79 +35,38 @@ it(`emptyStack`, () => {
 });
 
 describe('pushToStack', () => {
+	let operations_class: NotionOperationsClass = null as any;
+	beforeEach(() => {
+		operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
+	});
+
 	it(`single op`, () => {
-		const op: IOperation = {
-			args: {},
-			command: 'update',
-			id: '123',
-			path: [],
-			table: 'block'
-		};
-
-		const operations_class = new NotionOperationsClass({
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token'
-		});
-
-		operations_class.pushToStack(op);
-		expect(operations_class.stack).toStrictEqual([ op ]);
+		operations_class.pushToStack(operation);
+		expect(operations_class.stack).toStrictEqual([ operation ]);
 	});
 
 	it(`array of ops`, () => {
-		const op: IOperation = {
-			args: {},
-			command: 'update',
-			id: '123',
-			path: [],
-			table: 'block'
-		};
-
-		const operations_class = new NotionOperationsClass({
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token'
-		});
-
-		operations_class.pushToStack([ op ]);
-		expect(operations_class.stack).toStrictEqual([ op ]);
+		operations_class.pushToStack([ operation ]);
+		expect(operations_class.stack).toStrictEqual([ operation ]);
 	});
 });
 
 describe('executeOperation', () => {
 	it(`print to console if the stack is empty`, async () => {
 		const consoleLogMock = jest.spyOn(console, 'log');
-		const operations_class = new NotionOperationsClass({
-			shard_id: 123,
-			space_id: 'space_1',
-			stack: [],
-			token: 'token'
-		});
+		const operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
 		await operations_class.executeOperation();
 		expect(consoleLogMock).toHaveBeenCalledWith(`The operation stack is empty`);
 	});
 
 	it(`executes operations`, async () => {
-		const saveTransactionsMock = jest
-			.spyOn(Mutations, 'saveTransactions')
-			.mockImplementationOnce(async () => undefined);
-		const stack: IOperation[] = [
-			{
-				args: {},
-				command: 'update',
-				id: 'id',
-				path: [],
-				table: 'block'
-			}
-		];
+		const saveTransactionsMock = jest.spyOn(Mutations, 'saveTransactions').mockImplementationOnce(async () => ({}));
+		const stack: IOperation[] = [ operation ];
 		const operations_class = new NotionOperationsClass({
-			shard_id: 123,
-			space_id: 'space_1',
-			stack,
-			token: 'token'
+			...returnDefaultOperationsClassArgs(),
+			stack
 		});
+
 		await operations_class.executeOperation();
 		expect(saveTransactionsMock).toHaveBeenCalledWith(
 			{
@@ -122,22 +90,12 @@ describe('executeOperation', () => {
 });
 
 it(`printStack`, async () => {
-	const stack: IOperation[] = [
-		{
-			args: {},
-			command: 'update',
-			id: 'id',
-			path: [],
-			table: 'block'
-		}
-	];
+	const stack: IOperation[] = [ operation ];
 	const consoleLogMock = jest.spyOn(console, 'log');
 	const jsonStringifyMock = jest.spyOn(JSON, 'stringify').mockImplementationOnce(() => 'mocked value');
 	const operations_class = new NotionOperationsClass({
-		shard_id: 123,
-		space_id: 'space_1',
-		stack,
-		token: 'token'
+		...returnDefaultOperationsClassArgs(),
+		stack
 	});
 	operations_class.printStack();
 	expect(jsonStringifyMock).toHaveBeenCalledWith(stack, null, 2);
@@ -147,13 +105,7 @@ it(`printStack`, async () => {
 
 it(`applyPluginsToOperationsStack`, () => {
 	const stack: IOperation[] = [
-		{
-			args: {},
-			command: 'update',
-			id: 'id',
-			path: [],
-			table: 'block'
-		},
+		operation,
 		{
 			args: {
 				last_edited_time: Date.now(),
@@ -180,10 +132,8 @@ it(`applyPluginsToOperationsStack`, () => {
 	];
 
 	const operations = new NotionOperationsClass({
-		shard_id: 123,
-		space_id: 'space_1',
+		...returnDefaultOperationsClassArgs(),
 		stack,
-		token: 'token',
 		plugins: [ NotionOperationsPlugin.removeLastEditedProps(), NotionOperationsPlugin.removeEmptyOperations() ]
 	});
 

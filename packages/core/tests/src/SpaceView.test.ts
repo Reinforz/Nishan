@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, SpaceView } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -11,7 +10,7 @@ afterEach(() => {
 
 it(`getCachedParentData`, () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},
@@ -30,7 +29,7 @@ it(`getCachedParentData`, () => {
 
 it(`reposition`, () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			space_view: new Map([
 				[
 					'space_view_1',
@@ -64,7 +63,7 @@ it(`reposition`, () => {
 });
 
 it(`update`, () => {
-	const cache = createDefaultCache(),
+	const cache = NotionCacheObject.createDefaultCache(),
 		stack: IOperation[] = [];
 
 	const space_view = new SpaceView({
@@ -93,7 +92,7 @@ it(`update`, () => {
 
 it(`getSpace`, () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', space_id: 'space_1' } as any ] ]),
 			space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
 		},
@@ -117,7 +116,7 @@ it(`getSpace`, () => {
 
 it(`getBookmarkedPage`, async () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[
 					'block_1',
@@ -146,7 +145,7 @@ it(`getBookmarkedPage`, async () => {
 it(`updateBookmarkedPages`, async () => {
 	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } } as any ],
 				[ 'block_2', { type: 'page', id: 'block_2', properties: { title: [ [ 'Block Two' ] ] } } as any ]

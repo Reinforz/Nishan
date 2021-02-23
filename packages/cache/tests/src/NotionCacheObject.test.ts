@@ -1,6 +1,5 @@
 import { Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap } from '@nishans/types';
-import { createDefaultCache } from '../../../core/tests/utils/createDefaultCache';
 import { ICache, NotionCacheObject } from '../../src';
 
 const notion_request_configs = {
@@ -12,7 +11,7 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`createDefaultCache`, ()=>{
+it(`NotionCacheObject.createDefaultCache`, ()=>{
   expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy()
 });
 
@@ -97,7 +96,7 @@ it('saveToCache', () => {
 
 describe('constructSyncRecordsParams', () => {
 	it(`sync_record_values is not empty`, async () => {
-		const cache = createDefaultCache(),
+		const cache = NotionCacheObject.createDefaultCache(),
 			sync_record_values_response = {
 				recordMap: {
 					data: 'data'
@@ -127,7 +126,7 @@ describe('constructSyncRecordsParams', () => {
 	});
 
 	it(`sync_record_values is empty`, async () => {
-		const cache = createDefaultCache(),
+		const cache = NotionCacheObject.createDefaultCache(),
 			sync_record_values_response = {
 				recordMap: {
 					data: 'data'
@@ -215,7 +214,7 @@ describe(`initializeNotionCache`, () => {
 	};
 
 	it(`Fetches external notion_user data,external user = 1`, async () => {
-		const cache = createDefaultCache();
+		const cache = NotionCacheObject.createDefaultCache();
 		const sync_record_values_response = {
 			recordMap: {
 				notion_user: {
@@ -253,7 +252,7 @@ describe(`initializeNotionCache`, () => {
 
 	it(`Fetches external notion_user data,external user = 0`, async () => {
 		get_spaces_response.space_1.space.space_1.value.permissions.pop();
-		const cache = createDefaultCache();
+		const cache = NotionCacheObject.createDefaultCache();
 		const sync_record_values_response = {
 			recordMap: {
 				notion_user: {
@@ -284,14 +283,14 @@ it(`updateCacheManually`, async () => {
 	const constructSyncRecordsParamsMock = jest
 		.spyOn(NotionCacheObject, 'constructSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
-	await NotionCacheObject.updateCacheManually(update_cache_manually_args, notion_request_configs, createDefaultCache());
+	await NotionCacheObject.updateCacheManually(update_cache_manually_args, notion_request_configs, NotionCacheObject.createDefaultCache());
 	expect(constructSyncRecordsParamsMock.mock.calls[0][0]).toBe(update_cache_manually_args);
 	expect(constructSyncRecordsParamsMock.mock.calls[0][1]).toBe(notion_request_configs);
 });
 
 it(`updateCacheIfNotPresent method`, async () => {
 	const cache: ICache = {
-		...createDefaultCache(),
+		...NotionCacheObject.createDefaultCache(),
 		collection: new Map([ [ 'collection_1', { id: 'collection_1' } as any ] ])
 	};
 
@@ -334,7 +333,7 @@ describe('initializeCacheForSpecificData', () => {
 			};
 
 		const cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		};
 
@@ -373,7 +372,7 @@ describe('initializeCacheForSpecificData', () => {
 				view_ids: [ 'collection_view_1' ]
 			},
 			cache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
@@ -402,7 +401,7 @@ describe('initializeCacheForSpecificData', () => {
 				id: 'space_1',
 				pages: [ 'block_1' ]
 			},
-			cache: ICache = { ...createDefaultCache(), space: new Map([ [ 'space_1', space_1 ] ]) };
+			cache: ICache = { ...NotionCacheObject.createDefaultCache(), space: new Map([ [ 'space_1', space_1 ] ]) };
 
 		const updateCacheManuallyMock = jest
 			.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -421,7 +420,7 @@ describe('initializeCacheForSpecificData', () => {
 				space_views: [ 'space_view_1' ],
 				id: 'user_root_1'
 			},
-			cache: ICache = { ...createDefaultCache(), user_root: new Map([ [ 'user_root_1', user_root_1 ] ]) };
+			cache: ICache = { ...NotionCacheObject.createDefaultCache(), user_root: new Map([ [ 'user_root_1', user_root_1 ] ]) };
 
 		const updateCacheManuallyMock = jest
 			.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -437,7 +436,7 @@ describe('initializeCacheForSpecificData', () => {
 					id: 'user_root_1',
 					bookmarked_pages: [ 'block_1' ]
 				},
-				cache: ICache = { ...createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+				cache: ICache = { ...NotionCacheObject.createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
 
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -456,7 +455,7 @@ describe('initializeCacheForSpecificData', () => {
 			const space_view_1: any = {
 					id: 'user_root_1'
 				},
-				cache: ICache = { ...createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+				cache: ICache = { ...NotionCacheObject.createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
 
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -479,7 +478,7 @@ describe('initializeCacheForSpecificData', () => {
 					template_pages: [ 'block_1' ]
 				} as any,
 				cache = {
-					...createDefaultCache(),
+					...NotionCacheObject.createDefaultCache(),
 					collection: new Map([ [ 'collection_1', collection_1 ] ])
 				},
 				query_collection_response = {
@@ -521,7 +520,7 @@ describe('initializeCacheForSpecificData', () => {
 					id: 'collection_1'
 				} as any,
 				cache = {
-					...createDefaultCache(),
+					...NotionCacheObject.createDefaultCache(),
 					collection: new Map([ [ 'collection_1', collection_1 ] ])
 				},
 				query_collection_response = {
@@ -560,7 +559,7 @@ describe('initializeCacheForSpecificData', () => {
 	});
 
 	it(`Should throw error for unsupported data`, async () => {
-		const cache = createDefaultCache();
+		const cache = NotionCacheObject.createDefaultCache();
 
 		expect(() =>
 			NotionCacheObject.initializeCacheForSpecificData(
@@ -577,7 +576,7 @@ describe('validateCache', () => {
 	it(`Should fail if cache_item is not a Map`, () => {
 		expect(() =>
 			NotionCacheObject.validateCache({
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: true
 			} as any)
 		).toThrow(`block is not an instance of Map`);
@@ -600,7 +599,7 @@ describe('validateCache', () => {
 	it(`Should fail if an unknown cache_item is passed`, () => {
 		expect(() =>
 			NotionCacheObject.validateCache({
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				unknown: new Map()
 			} as any)
 		).toThrow(`Unknown key unknown passed`);
@@ -609,7 +608,7 @@ describe('validateCache', () => {
 	it(`Should return cache if no error is thrown`, () => {
 		expect(
 			NotionCacheObject.validateCache({
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ '4b4bb21d-f68b-4113-b342-830687a5337b', { value: {} } ] as any ])
 			})
 		).toBeTruthy();

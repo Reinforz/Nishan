@@ -1,10 +1,9 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { ISchemaMap } from '@nishans/notion-formula';
 import { IOperation } from '@nishans/types';
 import { View } from '../../../src';
 import Data from '../../../src/Data';
 import { setPropertyFromName } from '../../../src/View/View';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 import { last_edited_props } from '../../utils/lastEditedProps';
 
@@ -23,7 +22,7 @@ it('getCollection', () => {
 		} as any,
 		collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -44,7 +43,7 @@ it('getCachedParentData', () => {
 	const collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
 		block_1: any = { collection_id: 'collection_1', id: 'block_1' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
@@ -64,7 +63,7 @@ it('reposition', () => {
 	const collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
 		block_1: any = { collection_id: 'collection_1', id: 'block_1' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
@@ -88,7 +87,7 @@ it('reposition', () => {
 it('update', () => {
 	const collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		},
 		stack: IOperation[] = [];
@@ -144,7 +143,7 @@ describe('createSorts', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -205,7 +204,7 @@ describe('createSorts', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -271,7 +270,7 @@ describe('createSorts', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -301,7 +300,7 @@ describe('createSorts', () => {
 				id: 'collection_view_1'
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -341,7 +340,7 @@ describe('updateSort', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -405,7 +404,7 @@ describe('updateSort', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -473,7 +472,7 @@ describe('updateSort', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -534,7 +533,7 @@ it(`deleteSort`, async () => {
 			}
 		} as any,
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -597,7 +596,7 @@ describe('updateFormatProperty', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -671,7 +670,7 @@ describe('updateFormatProperty', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -733,7 +732,7 @@ describe('updateFormatProperty', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -782,7 +781,7 @@ describe('createFilters', () => {
 				query2: {}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -877,7 +876,7 @@ describe('updateFilters', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -975,7 +974,7 @@ describe('updateFilters', () => {
 				}
 			} as any,
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ]),
 				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
@@ -1063,7 +1062,7 @@ it(`deleteFilter`, async () => {
 			}
 		} as any,
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])

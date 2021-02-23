@@ -1,8 +1,8 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Schema } from '@nishans/types';
 import { rollup } from '../../../../libs/CreateData/SchemaUnit/rollup';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 describe('rollup', () => {
 	const schema: Schema = {
@@ -33,7 +33,7 @@ describe('rollup', () => {
 					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
-							...createDefaultCache(),
+							...NotionCacheObject.createDefaultCache(),
 							collection: new Map([
 								[
 									'target_collection_id',
@@ -79,7 +79,7 @@ describe('rollup', () => {
 					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
-							...createDefaultCache(),
+							...NotionCacheObject.createDefaultCache(),
 							collection: new Map([
 								[
 									'target_collection_id',
@@ -125,7 +125,7 @@ describe('rollup', () => {
 					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
-							...createDefaultCache(),
+							...NotionCacheObject.createDefaultCache(),
 							collection: new Map([
 								[
 									'target_collection_id',
@@ -172,7 +172,7 @@ describe('rollup', () => {
 					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
-							...createDefaultCache(),
+							...NotionCacheObject.createDefaultCache(),
 							collection: new Map([
 								[
 									'target_collection_id',
@@ -219,7 +219,7 @@ describe('rollup', () => {
 					generateSchemaMapFromCollectionSchema(schema),
 					{
 						cache: {
-							...createDefaultCache(),
+							...NotionCacheObject.createDefaultCache(),
 							collection: new Map([
 								[
 									'target_collection_id',
@@ -257,7 +257,7 @@ describe('rollup', () => {
 		});
 
 		it(`Should work correctly (collection exists in db)`, async () => {
-			const cache = createDefaultCache();
+			const cache = NotionCacheObject.createDefaultCache();
 
 			jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async () => {
 				return {
@@ -329,7 +329,7 @@ describe('rollup', () => {
 					},
 					generateSchemaMapFromCollectionSchema(schema),
 					{
-						cache: createDefaultCache(),
+						cache: NotionCacheObject.createDefaultCache(),
 						token: 'token'
 					}
 				)
@@ -381,7 +381,7 @@ describe('rollup', () => {
 					},
 					generateSchemaMapFromCollectionSchema(schema),
 					{
-						cache: createDefaultCache(),
+						cache: NotionCacheObject.createDefaultCache(),
 						token: 'token'
 					}
 				)
@@ -412,7 +412,7 @@ describe('rollup', () => {
 					},
 					generateSchemaMapFromCollectionSchema(schema),
 					{
-						cache: createDefaultCache(),
+						cache: NotionCacheObject.createDefaultCache(),
 						token: 'token'
 					}
 				)

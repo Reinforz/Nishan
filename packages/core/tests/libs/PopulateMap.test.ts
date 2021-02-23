@@ -1,7 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { PopulateMap } from '../../libs';
 import { IBlockMap, IPageMap } from '../../types';
-import { createDefaultCache } from '../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -13,7 +12,7 @@ it(`PopulateMap.collection_block`, async () => {
   } as any, block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: "collection_1" };
 
   const cache = {
-    ...createDefaultCache(),
+    ...NotionCacheObject.createDefaultCache(),
     collection: new Map([['collection_1', {name: [["Collection"]], id: 'collection_1'}]]),
     block: new Map([['block_1', block_1]])
   } as any;
@@ -45,7 +44,7 @@ describe('PopulateMap.page', () => {
 			collection_view_page: new Map()
 		};
 
-		const cache = createDefaultCache();
+		const cache = NotionCacheObject.createDefaultCache();
 
 		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
 			cache,
@@ -69,7 +68,7 @@ describe('PopulateMap.page', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
@@ -106,7 +105,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
@@ -140,7 +139,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'header' };
 
 		const cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -164,7 +163,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view' };
 
 		const cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 

@@ -1,5 +1,5 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { CollectionViewPage } from '../../../src';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -8,7 +8,7 @@ afterEach(() => {
 
 it(`getCachedParentData`, () => {
 	const cache = {
-		...createDefaultCache(),
+		...NotionCacheObject.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1' } ],
 			[ 'block_2', { id: 'block_2', parent_id: 'block_1', parent_table: 'block' } ]

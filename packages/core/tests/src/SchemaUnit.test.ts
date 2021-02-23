@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { SchemaUnit } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -10,7 +9,7 @@ afterEach(() => {
 
 it(`update`, () => {
   const cache: ICache = {
-    ...createDefaultCache(),
+    ...NotionCacheObject.createDefaultCache(),
     collection: new Map([
       [
         'collection_1',
@@ -73,7 +72,7 @@ it(`update`, () => {
 describe('delete', () => {
   it(`type=text`, () => {
     const cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -136,7 +135,7 @@ describe('delete', () => {
 
   it(`type=text`, () => {
     const cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -188,7 +187,7 @@ describe('duplicate', () => {
         }
       }
     }, cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -224,7 +223,7 @@ describe('duplicate', () => {
         }
       }
     }, cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -261,7 +260,7 @@ it(`getCachedChildData`, () => {
       }
     }
   }, cache: ICache = {
-    ...createDefaultCache(),
+    ...NotionCacheObject.createDefaultCache(),
     collection: new Map([
       [
         'collection_1',

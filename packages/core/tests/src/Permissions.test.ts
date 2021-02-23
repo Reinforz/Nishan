@@ -1,8 +1,7 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionPermissions } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -36,7 +35,7 @@ it(`removeUserPermission`, async () => {
 it('updateUserPermission', async () => {
 	const block_1: any = { id: 'block_1', permissions: [] },
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
 		stack: IOperation[] = [];
@@ -117,7 +116,7 @@ describe('updatePermissionsArray', () => {
 				]
 			},
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			},
 			stack: IOperation[] = [];
@@ -152,7 +151,7 @@ describe('updatePermissionsArray', () => {
 				permissions: []
 			},
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			},
 			stack: IOperation[] = [];
@@ -192,7 +191,7 @@ describe('updatePermissionsArray', () => {
 				]
 			},
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			},
 			stack: IOperation[] = [];
@@ -232,7 +231,7 @@ describe('updatePermissionsArray', () => {
 				]
 			},
 			cache: ICache = {
-				...createDefaultCache(),
+				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			},
 			stack: IOperation[] = [];
@@ -284,7 +283,7 @@ it(`updateNonUserSpecificPermission`, () => {
 			permissions: []
 		},
 		cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
 		stack: IOperation[] = [],

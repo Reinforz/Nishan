@@ -1,8 +1,8 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { NishanArg } from '../../types';
-import { createDefaultCache } from './createDefaultCache';
 
 export const default_nishan_arg: NishanArg = {
-	cache: createDefaultCache(),
+	cache: NotionCacheObject.createDefaultCache(),
 	id: 'block_1',
 	interval: 0,
 	shard_id: 123,

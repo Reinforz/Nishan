@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { UserRoot } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -11,7 +10,7 @@ afterEach(() => {
 
 it(`get space_views`, async () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ])
 		},
@@ -30,7 +29,7 @@ it(`get space_views`, async () => {
 
 it(`update space_views`, async () => {
 	const cache: ICache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},

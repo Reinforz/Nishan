@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import {
   IOperation
 } from '@nishans/types';
@@ -6,7 +6,6 @@ import { v4 } from 'uuid';
 import {
   CreateData
 } from '../../../../libs/CreateData';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -17,7 +16,7 @@ describe('CreateData.views', () => {
     it(`Should work correctly`, () => {
       const id = v4(),
       stack: IOperation[] = [],
-      cache: ICache = createDefaultCache();
+      cache: ICache = NotionCacheObject.createDefaultCache();
       
       CreateData.views(
         {
@@ -244,7 +243,7 @@ describe('CreateData.views', () => {
   it(`Throw error`, () => {
     const id = v4(),
       stack: IOperation[] = [],
-      cache = createDefaultCache();
+      cache = NotionCacheObject.createDefaultCache();
     expect(()=>CreateData.views(
       {
         id: 'collection_id',

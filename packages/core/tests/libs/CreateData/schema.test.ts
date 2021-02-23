@@ -1,8 +1,8 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { CreateData } from '../../../libs/CreateData';
 import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -60,7 +60,7 @@ describe('CreateData.schema', () => {
 					id: 'target_collection_id'
 				} as any,
 				cache = {
-					...createDefaultCache(),
+					...NotionCacheObject.createDefaultCache(),
 					collection: new Map([
 						[ 'child_collection_id', child_collection ],
 						[ 'target_collection_id', target_collection ]
@@ -154,7 +154,7 @@ describe('CreateData.schema', () => {
 						name: [ [ 'Parent' ] ],
 						token: 'token',
 						stack: [],
-						cache: createDefaultCache(),
+						cache: NotionCacheObject.createDefaultCache(),
 						interval: 0,
 						shard_id: 123,
 						space_id: 'space_1',
@@ -178,7 +178,7 @@ describe('CreateData.schema', () => {
 						name: [ [ 'Parent' ] ],
 						token: 'token',
 						stack: [],
-						cache: createDefaultCache(),
+						cache: NotionCacheObject.createDefaultCache(),
 						interval: 0,
 						shard_id: 123,
 						space_id: 'space_1',

@@ -1,8 +1,8 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { CreateData } from '../../../libs';
 import { CollectionBlock } from "../../../src";
 import { TViewCreateInput } from '../../../types';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -14,7 +14,7 @@ it(`getCollection`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', collection_id: 'collection_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 		} as any;
@@ -33,7 +33,7 @@ it(`createViews`, () => {
 			id: 'collection_1'
 		},
 		cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'view_2' ] } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 		} as any,
@@ -88,7 +88,7 @@ it(`getViews`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),
@@ -113,7 +113,7 @@ it(`updateView`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),
@@ -138,7 +138,7 @@ it(`deleteView`, async () => {
 			id: 'collection_1'
 		}, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
 		cache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
 			]),

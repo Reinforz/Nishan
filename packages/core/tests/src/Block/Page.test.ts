@@ -1,8 +1,7 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { CreateData } from '../../../libs';
 import { Page } from '../../../src';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -14,7 +13,7 @@ it(`getCachedParentData`, async () => {
 			id: 'space_1'
 		},
 		cache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
 			space: new Map([ [ 'space_1', space_1 ] ]),
 		} as any;
@@ -33,7 +32,7 @@ it(`createBlocks`, async () => {
 			id: 'space_1'
 		},
 		cache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', parent_table: 'space', parent_id: 'space_1' } ] ]),
 			space: new Map([ [ 'space_1', space_1 ] ]),
 		} as any;
@@ -65,7 +64,7 @@ it(`getBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
@@ -87,7 +86,7 @@ it(`updateBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
@@ -109,7 +108,7 @@ it(`updateBlock`, async () => {
 			id: 'space_1'
 		},
 		cache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
@@ -135,7 +134,7 @@ it(`updateBlock`, async () => {
 it(`updateBookmarkedStatus`, async () => {
 	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
-  		...createDefaultCache(),
+  		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'page', space_id: 'space_1' } as any ],
 			]),

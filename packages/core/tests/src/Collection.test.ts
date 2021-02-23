@@ -1,3 +1,4 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, Schema } from '@nishans/types';
 import { CreateData, CreateMaps } from '../../libs';
 import {
@@ -8,7 +9,6 @@ import {
 	TCollectionUpdateKeys,
 	TSchemaUnitInput
 } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -18,7 +18,7 @@ afterEach(() => {
 
 it(`getRowPageIds`, async () => {
 	const cache = {
-		...createDefaultCache(),
+		...NotionCacheObject.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', type: 'page', parent_table: 'collection', parent_id: 'collection_1' } ],
 			[ 'block_2', { id: 'block_2', type: 'page', parent_table: 'block', parent_id: 'block_1' } ]
@@ -55,7 +55,7 @@ it(`getCachedParentData`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -77,7 +77,7 @@ it(`update`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -108,7 +108,7 @@ it(`createTemplates`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -144,7 +144,7 @@ it(`getTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
@@ -178,7 +178,7 @@ it(`updateTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
@@ -214,7 +214,7 @@ it(`deleteTemplates`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
@@ -249,7 +249,7 @@ it(`createRows`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -285,7 +285,7 @@ it(`getRow`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
@@ -324,7 +324,7 @@ it(`updateRow`, async () => {
 			id: 'collection_1'
 		},
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
@@ -366,7 +366,7 @@ it(`deleteRow`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
@@ -416,7 +416,7 @@ it(`createSchemaUnits`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
@@ -473,7 +473,7 @@ it(`getSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
@@ -505,7 +505,7 @@ it(`updateSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,
@@ -554,7 +554,7 @@ it(`deleteSchemaUnit`, async () => {
 		},
 		block_1 = { id: 'block_1' } as any,
 		cache = {
-			...createDefaultCache(),
+			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any,

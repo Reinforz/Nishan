@@ -1,3 +1,4 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CreateData } from '../../../../libs/CreateData';
@@ -6,7 +7,6 @@ import {
   CollectionViewPage,
   Page
 } from '../../../../src';
-import { createDefaultCache } from '../../../utils/createDefaultCache';
 import { last_edited_props } from '../../../utils/lastEditedProps';
 
 afterEach(() => {
@@ -33,7 +33,7 @@ describe('type=page', () => {
     const page_id = v4(),
       header_id = v4();
 
-    const cache = { ...createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
+    const cache = { ...NotionCacheObject.createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
       stack: IOperation[] = [];
 
     const logger_spy = jest.fn();
@@ -170,7 +170,7 @@ describe('type=page', () => {
   it(`is_template=true,contents=[],parent=collection`, async () => {
     const page_id = '48a3d30c-c259-4047-986f-74d9a6cb1305';
 
-    const cache = { ...createDefaultCache(), collection: new Map([ [ 'collection_1', {} as any ] ]) },
+    const cache = { ...NotionCacheObject.createDefaultCache(), collection: new Map([ [ 'collection_1', {} as any ] ]) },
       stack: IOperation[] = [];
 
     const logger_spy = jest.fn();
@@ -261,7 +261,7 @@ describe('type=page', () => {
 
 describe('type=collection_block', () => {
   it(`type=collection_view_page,rows=[]`, async () => {
-    const cache = { ...createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
+    const cache = { ...NotionCacheObject.createDefaultCache(), space: new Map([ [ 'space_1', {} as any ] ]) },
       stack: IOperation[] = [];
 
     const logger_spy = jest.fn();
@@ -347,7 +347,7 @@ describe('type=collection_block', () => {
   });
 
   it(`type=collection_view,rows=[{}]`, async () => {
-    const cache = {...createDefaultCache(), block: new Map([['page_1', {type: "page"} as any]])},
+    const cache = {...NotionCacheObject.createDefaultCache(), block: new Map([['page_1', {type: "page"} as any]])},
       stack: IOperation[] = [],
       row_one_id = v4();
 

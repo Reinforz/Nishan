@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { CreateData } from '../../../libs/CreateData';
-import { createDefaultCache } from '../../utils/createDefaultCache';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -9,7 +8,7 @@ afterEach(() => {
 
 describe('createCollection', () => {
 	it(`createCollection should work correctly`, async () => {
-		const cache: ICache = createDefaultCache();
+		const cache: ICache = NotionCacheObject.createDefaultCache();
 		const stack: IOperation[] = [];
 		const [ collection_id ] = await CreateData.collection(
 			{

@@ -1,6 +1,6 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, UserSettings } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 it(`update`, () => {
-	const cache = createDefaultCache(),
+	const cache = NotionCacheObject.createDefaultCache(),
 		stack: IOperation[] = [];
 
 	const user_settings = new UserSettings({

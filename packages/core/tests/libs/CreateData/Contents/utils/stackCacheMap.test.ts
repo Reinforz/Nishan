@@ -1,11 +1,11 @@
+import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, IPage } from '@nishans/types';
 import { stackCacheMap } from '../../../../../libs/CreateData/Contents/utils';
 import { IBlockMap, Page } from '../../../../../src';
-import { createDefaultCache } from '../../../../utils/createDefaultCache';
 
 describe('stackCacheMap', () => {
 	it(`name=string`, () => {
-		const cache = createDefaultCache(),
+		const cache = NotionCacheObject.createDefaultCache(),
 			stack: IOperation[] = [],
 			block_map: IBlockMap = { page: new Map() } as any,
 			data = { id: 'data_id', type: 'page', data: 'data' } as any;

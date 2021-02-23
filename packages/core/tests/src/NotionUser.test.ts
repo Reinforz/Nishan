@@ -1,9 +1,8 @@
-import { ICache } from '@nishans/cache';
+import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
-import { createDefaultCache } from '../utils/createDefaultCache';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -17,7 +16,7 @@ describe('NotionUser', () => {
 
     const spaceId = v4();
     const cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       user_root: new Map([['user_root_1', { space_views: [] }] as any]),
     };
     const notion_user = new NotionUser({
@@ -142,7 +141,7 @@ describe('NotionUser', () => {
   describe('get space', () => {
     it(`multiple=false,arg=string`, async () => {
       const cache: ICache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         space: new Map([
           ['space_1', { id: 'space_1', shard_id: 123 }],
           ['space_2', { id: 'space_2', shard_id: 123 }]
@@ -163,7 +162,7 @@ describe('NotionUser', () => {
   describe('update space', () => {
     it(`multiple=false,arg=string`, async () => {
       const cache: ICache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         space: new Map([
           ['space_1', { id: 'space_1', shard_id: 123, name: 'Space 1' }],
           ['space_2', { id: 'space_2', shard_id: 123, name: 'Space 2' }]
@@ -204,7 +203,7 @@ describe('NotionUser', () => {
 
   it('getUserSettings', () => {
     const cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       user_settings: new Map([['user_root_1', { id: 'user_root_1', name: 'User Settings 1' }]] as any)
     },
       stack: IOperation[] = [];
@@ -222,7 +221,7 @@ describe('NotionUser', () => {
 
   it('getUserRoot', () => {
     const cache: ICache = {
-      ...createDefaultCache(),
+      ...NotionCacheObject.createDefaultCache(),
       user_root: new Map([['user_root_1', { id: 'user_root_1', name: 'User Root 1' }]] as any),
     },
       stack: IOperation[] = [];
@@ -241,7 +240,7 @@ describe('NotionUser', () => {
   describe('delete space', () => {
     it(`multiple=false,arg=string`, async () => {
       const cache: ICache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         space: new Map([['space_1', { id: 'space_1', name: 'Space One' }]] as any),
       },
         stack: IOperation[] = [];
@@ -290,7 +289,7 @@ describe('NotionUser', () => {
           view_ids: ['collection_view_1']
         } as any;
       const cache: ICache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         block: new Map([
           [block_1_id, block_1],
           [block_2_id, block_2]
@@ -333,7 +332,7 @@ describe('NotionUser', () => {
       const block_1_id = v4(),
         block_1 = { id: block_1_id, type: 'header' } as any,
       cache: ICache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         block: new Map([
           [block_1_id, block_1]
         ]),
@@ -355,7 +354,7 @@ describe('NotionUser', () => {
   })
 
   it('update', async () => {
-    const cache = createDefaultCache(),
+    const cache = NotionCacheObject.createDefaultCache(),
       stack: IOperation[] = [];
 
     const notion_user = new NotionUser({

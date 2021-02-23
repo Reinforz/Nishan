@@ -1,8 +1,8 @@
+import { NotionCacheObject } from "@nishans/cache";
 import { Queries } from "@nishans/endpoints";
 import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
 import { relation } from "../../../../libs/CreateData/SchemaUnit/relation";
-import { createDefaultCache } from "../../../utils/createDefaultCache";
 
 describe('relation', () => {
 	describe('Work correctly', () => {
@@ -17,7 +17,7 @@ describe('relation', () => {
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
 			} as any, cache = {
-        ...createDefaultCache(),
+        ...NotionCacheObject.createDefaultCache(),
         collection: new Map([ [ 'child_collection_id', child_collection ] ])
       };
 			const relation_schema_unit = await relation(
@@ -81,7 +81,7 @@ describe('relation', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache = createDefaultCache();
+			} as any, cache = NotionCacheObject.createDefaultCache();
 
       jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
         return {recordMap: {collection: {
@@ -152,7 +152,7 @@ describe('relation', () => {
 				},
 				id: 'child_collection_id',
 				name: [ [ 'Child Collection' ] ]
-			} as any, cache = createDefaultCache();
+			} as any, cache = NotionCacheObject.createDefaultCache();
 
       jest.spyOn(Queries, 'syncRecordValues').mockImplementationOnce(async ()=>{
         return {recordMap: {collection: {
@@ -241,7 +241,7 @@ describe('relation', () => {
           name: 'Parent Relation Column',
         },
         {
-          cache: createDefaultCache(),
+          cache: NotionCacheObject.createDefaultCache(),
           parent_collection_id: 'parent_collection_id',
           parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
           name: [ [ 'Parent Collection' ] ],

@@ -1,5 +1,7 @@
 import {
 	BlockData,
+	EnqueueTaskParams,
+	EnqueueTaskResult,
 	IDrive,
 	INotionUser,
 	IPermission,
@@ -26,6 +28,7 @@ interface NotionEndpoint<P, R> {
 	response: R;
 }
 export interface NotionEndpoints {
+	enqueueTask: NotionEndpoint<EnqueueTaskParams, EnqueueTaskResult>;
 	checkEmailType: NotionEndpoint<
 		{
 			allowAdminBypass: boolean;
@@ -290,7 +293,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getBackLinksForBlock: NotionEndpoint<
+	getBacklinksForBlock: NotionEndpoint<
 		{
 			blockId: string;
 		},
@@ -397,7 +400,7 @@ export interface NotionEndpoints {
 		Record<string, unknown>
 	>;
 
-	getJoinableSpace: NotionEndpoint<
+	getJoinableSpaces: NotionEndpoint<
 		Record<string, unknown>,
 		{
 			results: {

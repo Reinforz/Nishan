@@ -1,58 +1,87 @@
-import {
-	CreateSpaceParams,
-	CreateSpaceResult,
-	EnqueueTaskParams,
-	EnqueueTaskResult,
-	InitializeGoogleDriveBlockParams,
-	InitializeGoogleDriveBlockResult,
-	InitializePageTemplateParams,
-	InitializePageTemplateResult,
-	InviteGuestsToSpaceParams,
-	LoginWithEmailParams,
-	LoginWithEmailResult,
-	RemoveUsersFromSpaceParams,
-	RemoveUsersFromSpaceResult,
-	SaveTransactionParams,
-	SetBookmarkMetadataParams,
-	SetPageNotificationsAsReadParams,
-	SetSpaceNotificationsAsReadParams
-} from '@nishans/types';
+import { NotionEndpoints } from '@nishans/types';
 import { NotionRequestConfigs } from '.';
 import { NotionRequest } from '../utils';
 
 const Mutations = {
-	async setPageNotificationsAsRead (params: SetPageNotificationsAsReadParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send('setPageNotificationsAsRead', params, configs);
+	async setPageNotificationsAsRead (
+		params: NotionEndpoints['setPageNotificationsAsRead']['payload'],
+		configs: NotionRequestConfigs
+	) {
+		return await NotionRequest.send<NotionEndpoints['setPageNotificationsAsRead']['response']>(
+			'setPageNotificationsAsRead',
+			params,
+			configs
+		);
 	},
-	async setSpaceNotificationsAsRead (params: SetSpaceNotificationsAsReadParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send('setSpaceNotificationsAsRead', params, configs);
+	async setSpaceNotificationsAsRead (
+		params: NotionEndpoints['setSpaceNotificationsAsRead']['payload'],
+		configs: NotionRequestConfigs
+	) {
+		return await NotionRequest.send<NotionEndpoints['setSpaceNotificationsAsRead']['response']>(
+			'setSpaceNotificationsAsRead',
+			params,
+			configs
+		);
 	},
-	async removeUsersFromSpace (params: RemoveUsersFromSpaceParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<RemoveUsersFromSpaceResult>('removeUsersFromSpace', params, configs);
+	async removeUsersFromSpace (
+		params: NotionEndpoints['removeUsersFromSpace']['payload'],
+		configs: NotionRequestConfigs
+	) {
+		return await NotionRequest.send<NotionEndpoints['removeUsersFromSpace']['response']>(
+			'removeUsersFromSpace',
+			params,
+			configs
+		);
 	},
-	async inviteGuestsToSpace (params: InviteGuestsToSpaceParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send('inviteGuestsToSpace', params, configs);
+	async inviteGuestsToSpace (params: NotionEndpoints['inviteGuestsToSpace']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['inviteGuestsToSpace']['response']>(
+			'inviteGuestsToSpace',
+			params,
+			configs
+		);
 	},
-	async createSpace (params: CreateSpaceParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<CreateSpaceResult>('createSpace', params, configs);
+	async createSpace (params: NotionEndpoints['createSpace']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['createSpace']['response']>('createSpace', params, configs);
 	},
-	async saveTransactions (params: SaveTransactionParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send('saveTransactions', params, configs);
+	async saveTransactions (params: NotionEndpoints['saveTransaction']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['saveTransaction']['response']>(
+			'saveTransactions',
+			params,
+			configs
+		);
 	},
-	async enqueueTask (params: EnqueueTaskParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<EnqueueTaskResult>('enqueueTask', params, configs);
+	async enqueueTask (params: NotionEndpoints['enqueueTask']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['enqueueTask']['response']>('enqueueTask', params, configs);
 	},
-	async setBookmarkMetadata (params: SetBookmarkMetadataParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send('setBookmarkMetadata', params, configs);
+	async setBookmarkMetadata (params: NotionEndpoints['setBookmarkMetadata']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['setBookmarkMetadata']['response']>(
+			'setBookmarkMetadata',
+			params,
+			configs
+		);
 	},
-	async initializePageTemplate (params: InitializePageTemplateParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<InitializePageTemplateResult>('initializePageTemplate', params, configs);
+	async initializePageTemplate (
+		params: NotionEndpoints['initializePageTemplate']['payload'],
+		configs: NotionRequestConfigs
+	) {
+		return await NotionRequest.send<NotionEndpoints['initializePageTemplate']['response']>(
+			'initializePageTemplate',
+			params,
+			configs
+		);
 	},
-	async initializeGoogleDriveBlock (params: InitializeGoogleDriveBlockParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<InitializeGoogleDriveBlockResult>('initializeGoogleDriveBlock', params, configs);
+	async initializeGoogleDriveBlock (
+		params: NotionEndpoints['initializeGoogleDriveBlock']['payload'],
+		configs: NotionRequestConfigs
+	) {
+		return await NotionRequest.send<NotionEndpoints['initializeGoogleDriveBlock']['response']>(
+			'initializeGoogleDriveBlock',
+			params,
+			configs
+		);
 	},
-	async loginWithEmail (params: LoginWithEmailParams, configs: NotionRequestConfigs) {
-		return await NotionRequest.send<LoginWithEmailResult>('loginWithEmail', params, configs);
+	async loginWithEmail (params: NotionEndpoints['loginWithEmail']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['loginWithEmail']['response']>('loginWithEmail', params, configs);
 	}
 };
 

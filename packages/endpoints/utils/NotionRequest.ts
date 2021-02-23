@@ -1,4 +1,4 @@
-import { IOperation, SaveTransactionParams } from '@nishans/types';
+import { IOperation, NotionEndpoints } from '@nishans/types';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { NotionHeaders, NotionRequestConfigs } from '../src';
@@ -68,7 +68,7 @@ function createTransaction (shardId: number, spaceId: string, operations: IOpera
 				operations
 			}
 		]
-	} as SaveTransactionParams;
+	} as NotionEndpoints["saveTransaction"]["payload"];
 }
 
 export const NotionRequest = {

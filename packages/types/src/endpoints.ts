@@ -21,34 +21,38 @@ import {
 	ViewSorts
 } from './';
 
+interface NotionEndpoint<P, R> {
+	payload: P;
+	response: R;
+}
 export interface NotionEndpoints {
-	checkEmailType: {
-		payload: {
+	checkEmailType: NotionEndpoint<
+		{
 			allowAdminBypass: boolean;
 			email: string;
-		};
-		response: {
+		},
+		{
 			hasAccount: boolean;
 			hasPassword: boolean;
 			isGoogleAppsEmail: boolean;
 			mustReverify: boolean;
-		};
-	};
-	loginWithEmail: {
-		payload: {
+		}
+	>;
+	loginWithEmail: NotionEndpoint<
+		{
 			email: string;
 			password: string;
-		};
-		response: {
+		},
+		{
 			isNewSignup: boolean;
 			userId: string;
-		};
-	};
-	getClientExperiments: {
-		payload: {
+		}
+	>;
+	getClientExperiments: NotionEndpoint<
+		{
 			deviceId: string;
-		};
-		response: {
+		},
+		{
 			deviceId: string;
 			isLoaded: boolean;
 			test: boolean;
@@ -58,29 +62,29 @@ export interface NotionEndpoints {
 				experimentVersion: number;
 				group?: string;
 			}[];
-		};
-	};
-	setPageNotificationsAsRead: {
-		payload: {
+		}
+	>;
+	setPageNotificationsAsRead: NotionEndpoint<
+		{
 			navigableBlockId: string;
 			spaceId: string;
 			timestamp: number;
-		};
-		response: Record<string, never>;
-	};
-	setSpaceNotificationsAsRead: {
-		payload: {
+		},
+		Record<string, never>
+	>;
+	setSpaceNotificationsAsRead: NotionEndpoint<
+		{
 			spaceId: string;
 			timestamp: number;
-		};
-		response: Record<string, never>;
-	};
-	getPageVisits: {
-		payload: {
+		},
+		Record<string, never>
+	>;
+	getPageVisits: NotionEndpoint<
+		{
 			blockId: string;
 			limit: number;
-		};
-		response: {
+		},
+		{
 			recordMap: {
 				page_visit: {
 					[key: string]: {
@@ -90,26 +94,26 @@ export interface NotionEndpoints {
 				};
 			};
 			pageVisits: IPageVisits[];
-		};
-	};
-	getUserSharedPages: {
-		payload: {
+		}
+	>;
+	getUserSharedPages: NotionEndpoint<
+		{
 			includeDeleted?: boolean;
-		};
-		response: {
+		},
+		{
 			pages: { id: string; spaceId: string }[];
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
-		};
-	};
-	getPublicPageData: {
-		payload: {
+		}
+	>;
+	getPublicPageData: NotionEndpoint<
+		{
 			blockId?: string;
 			name?: 'page';
 			saveParent?: boolean;
 			showMoveTo?: boolean;
 			type?: 'block-space';
-		};
-		response: {
+		},
+		{
 			betaEnabled: boolean;
 			canJoinSpace: boolean;
 			canRequestAccess: boolean;
@@ -119,112 +123,112 @@ export interface NotionEndpoints {
 			spaceId: string;
 			spaceName: string;
 			userHasExplicitAccess: boolean;
-		};
-	};
+		}
+	>;
 
-	getPublicSpaceData: {
-		payload: {
+	getPublicSpaceData: NotionEndpoint<
+		{
 			type: 'space-ids';
 			spaceIds: string[];
-		};
-		response: {
+		},
+		{
 			results: IPublicSpaceData[];
-		};
-	};
+		}
+	>;
 
-	getSubscriptionData: {
-		payload: {
+	getSubscriptionData: NotionEndpoint<
+		{
 			spaceId: string;
-		};
-		response: UnsubscribedSubscriptionData | SubscribedSubscriptionData;
-	};
+		},
+		UnsubscribedSubscriptionData | SubscribedSubscriptionData
+	>;
 
-	removeUsersFromSpace: {
-		payload: {
+	removeUsersFromSpace: NotionEndpoint<
+		{
 			removePagePermissions: boolean;
 			revokeUserTokens: boolean;
 			spaceId: string;
 			userIds: string[];
-		};
-		response: {
+		},
+		{
 			recordMap: {
 				block: BlockData;
 				space: SpaceData;
 			};
-		};
-	};
+		}
+	>;
 
-	initializePageTemplate: {
-		payload: {
+	initializePageTemplate: NotionEndpoint<
+		{
 			recordMap: Record<string, unknown>;
 			sourceBlockId: string;
 			spaceId: string;
 			targetBlockId: string;
-		};
-		response: {
+		},
+		{
 			recordMap: {
 				block: BlockData;
 			};
-		};
-	};
+		}
+	>;
 
-	loadBlockSubtree: {
-		payload: {
+	loadBlockSubtree: NotionEndpoint<
+		{
 			blockId: string;
 			shallow: boolean;
-		};
-		response: {
+		},
+		{
 			subtreeRecordMap: {
 				block: BlockData;
 			};
-		};
-	};
+		}
+	>;
 
-	getSpaces: {
-		payload: Record<string, never>;
-		response: {
+	getSpaces: NotionEndpoint<
+		Record<string, never>,
+		{
 			[k: string]: RecordMap;
-		};
-	};
+		}
+	>;
 
-	getGenericEmbedBlockData: {
-		payload: {
+	getGenericEmbedBlockData: NotionEndpoint<
+		{
 			pageWidth: number;
 			source: string;
 			type: TGenericEmbedBlockType;
-		};
-		response: {
+		},
+		{
 			format: MediaFormat;
 			properties: {
 				source: string[][];
 			};
 			type: TGenericEmbedBlockType;
-		};
-	};
+		}
+	>;
 
-	getUploadFileUrl: {
-		payload: {
+	getUploadFileUrl: NotionEndpoint<
+		{
 			bucket: 'secure';
 			contentType: string;
 			name: string;
-		};
-		response: {
+		},
+		{
 			signedGetUrl: string;
 			signedPutUrl: string;
 			url: string;
-		};
-	};
+		}
+	>;
 
-	setBookmarkMetadata: {
-		payload: {
+	setBookmarkMetadata: NotionEndpoint<
+		{
 			blockId: string;
 			url: string;
-		};
-		response: Record<string, never>;
-	};
+		},
+		Record<string, never>
+	>;
 
-	queryCollection: {
-		payload: {
+	queryCollection: NotionEndpoint<
+		{
 			collectionId: string;
 			collectionViewId: string;
 			query: {
@@ -246,8 +250,8 @@ export interface NotionEndpoints {
 				loadContentCover: boolean;
 				userTimeZone?: string;
 			};
-		};
-		response: {
+		},
+		{
 			result: {
 				aggregationResults: {
 					type: 'number';
@@ -258,172 +262,172 @@ export interface NotionEndpoints {
 				type: 'table';
 			};
 			recordMap: Pick<RecordMap, 'collection' | 'space' | 'collection_view' | 'block'>;
-		};
-	};
-	getGoogleDriveAccounts: {
-		payload: Record<string, unknown>;
-		response: {
+		}
+	>;
+	getGoogleDriveAccounts: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			accounts: {
 				accountId: string;
 				accountName: string;
 				token: Token;
 			}[];
-		};
-	};
-	initializeGoogleDriveBlock: {
-		payload: {
+		}
+	>;
+	initializeGoogleDriveBlock: NotionEndpoint<
+		{
 			blockId: string;
 			fileId: string;
 			token: Token;
-		};
-		response: {
+		},
+		{
 			file: GoogleDriveFile;
 			recordMap: {
 				block: {
 					[key: string]: IDrive;
 				};
 			};
-		};
-	};
+		}
+	>;
 
-	getBackLinksForBlock: {
-		payload: {
+	getBackLinksForBlock: NotionEndpoint<
+		{
 			blockId: string;
-		};
-		response: {
+		},
+		{
 			recordMap: {
 				block: BlockData;
 			};
-		};
-	};
+		}
+	>;
 
-	syncRecordValues: {
-		payload: {
+	syncRecordValues: NotionEndpoint<
+		{
 			requests: {
 				id: string;
 				table: TOperationTable;
 				version: number;
 			}[];
-		};
-		response: {
+		},
+		{
 			recordMap: RecordMap;
-		};
-	};
+		}
+	>;
 
-	findUser: {
-		payload: {
+	findUser: NotionEndpoint<
+		{
 			email: string;
-		};
-		response: {
+		},
+		{
 			value?: {
 				role: TPermissionRole;
 				value: INotionUser;
 			};
-		};
-	};
+		}
+	>;
 
-	createSpace: {
-		payload: {
+	createSpace: NotionEndpoint<
+		{
 			icon: string;
 			initialUseCases: string[];
 			name: string;
 			planType: 'personal';
-		};
-		response: {
+		},
+		{
 			recordMap: {
 				space: SpaceData;
 			};
 			spaceId: string;
-		};
-	};
+		}
+	>;
 
-	loadUserContent: {
-		payload: Record<string, unknown>;
-		response: {
+	loadUserContent: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			recordMap: Omit<RecordMap, 'collection_view'>;
-		};
-	};
+		}
+	>;
 
-	getUserSharePages: {
-		payload: Record<string, unknown>;
-		response: {
+	getUserSharePages: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			pages: { id: string; spaceId: string }[];
 			recordMap: {
 				block: BlockData;
 				space: SpaceData;
 			};
-		};
-	};
+		}
+	>;
 
-	inviteGuestsToSpace: {
-		payload: {
+	inviteGuestsToSpace: NotionEndpoint<
+		{
 			blockId: string;
 			permissionItems: IPermission[];
 			spaceId: string;
-		};
-		response: Record<string, unknown>;
-	};
+		},
+		Record<string, unknown>
+	>;
 
-	loadPageChunk: {
-		payload: {
+	loadPageChunk: NotionEndpoint<
+		{
 			chunkNumber: number;
 			cursor: Cursor;
 			limit: number;
 			pageId: string;
 			verticalColumns: boolean;
-		};
-		response: {
+		},
+		{
 			cursor: Cursor;
 			recordMap: RecordMap;
-		};
-	};
+		}
+	>;
 
-	getUserTasks: {
-		payload: Record<string, unknown>;
-		response: {
+	getUserTasks: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			taskIds: string[];
-		};
-	};
+		}
+	>;
 
-	saveTransaction: {
-		payload: {
+	saveTransaction: NotionEndpoint<
+		{
 			requestId: string;
 			transactions: Transaction[];
-		};
-		response: Record<string, unknown>;
-	};
+		},
+		Record<string, unknown>
+	>;
 
-	getJoinableSpace: {
-		response: {
+	getJoinableSpace: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			results: {
 				id: string;
 				name: string;
 				canJoinSpace: boolean;
 				guestPageIds: string[];
 			}[];
-		};
-		payload: Record<string, unknown>;
-	};
+		}
+	>;
 
-	isUserDomainJoinable: {
-		payload: Record<string, unknown>;
-		response: {
+	isUserDomainJoinable: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			isJoinable: boolean;
-		};
-	};
+		}
+	>;
 
-	isEmailEducation: {
-		payload: Record<string, unknown>;
-		response: {
+	isEmailEducation: NotionEndpoint<
+		Record<string, unknown>,
+		{
 			isEligible: boolean;
-		};
-	};
+		}
+	>;
 
-	getUserNotifications: {
-		payload: {
+	getUserNotifications: NotionEndpoint<
+		{
 			size: number;
-		};
-		result: {
+		},
+		{
 			recordMap: Record<string, unknown>;
 			results: {
 				spaceId: string;
@@ -436,25 +440,25 @@ export interface NotionEndpoints {
 					notificationIds: string[];
 				};
 			}[];
-		};
-	};
+		}
+	>;
 
-	getTasks: {
-		payload: {
+	getTasks: NotionEndpoint<
+		{
 			taskIds: string[];
-		};
-		response: Record<string, unknown>;
-	};
-	recordPageVisit: {
-		payload: {
+		},
+		Record<string, unknown>
+	>;
+	recordPageVisit: NotionEndpoint<
+		{
 			blockId: string;
 			timestamp: number;
-		};
-		response: NotionEndpoints['getPageVisits']['response'];
-	};
+		},
+		NotionEndpoints['getPageVisits']['response']
+	>;
 
-	search: {
-		payload: {
+	search: NotionEndpoint<
+		{
 			type: 'CollectionsInSpace';
 			query: string;
 			spaceId: string;
@@ -472,8 +476,8 @@ export interface NotionEndpoints {
 			};
 			sort: 'Relevance';
 			source: 'relation_setup_menu';
-		};
-		response: {
+		},
+		{
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
 			results: {
 				id: string;
@@ -481,8 +485,8 @@ export interface NotionEndpoints {
 				score: number;
 			}[];
 			total: number;
-		};
-	};
+		}
+	>;
 }
 
 export interface Cursor {

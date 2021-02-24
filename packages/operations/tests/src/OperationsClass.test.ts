@@ -21,17 +21,13 @@ const returnDefaultOperationsClassArgs = () => {
 		shard_id: 123,
 		space_id: 'space_1',
 		stack: [],
-		token: 'token'
+		token: 'token',
+		user_id: '123'
 	};
 };
 
 it(`emptyStack`, () => {
-	const operations_class = new NotionOperationsClass({
-		shard_id: 123,
-		space_id: 'space_1',
-		stack: [ operation ],
-		token: 'token'
-	});
+	const operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
 	operations_class.emptyStack();
 	expect(operations_class.stack).toStrictEqual([]);
 });
@@ -84,7 +80,8 @@ describe('executeOperation', () => {
 			},
 			{
 				token: 'token',
-				interval: 0
+				interval: 0,
+				user_id: '123'
 			}
 		);
 		expect(stack).toHaveLength(0);
@@ -103,6 +100,15 @@ it(`printStack`, async () => {
 	expect(jsonStringifyMock).toHaveBeenCalledWith(stack, null, 2);
 	expect(consoleLogMock).toHaveBeenCalledTimes(1);
 	expect(consoleLogMock).toHaveBeenCalledWith('mocked value');
+});
+
+it(`getPlugins`, () => {
+	const removeLastEditedPropsFn = NotionOperationsPlugin.removeLastEditedProps();
+	const operations_class = new NotionOperationsClass({
+		...returnDefaultOperationsClassArgs(),
+		notion_operation_plugins: [ removeLastEditedPropsFn ]
+	});
+	expect(operations_class.getPlugins()).toStrictEqual([ removeLastEditedPropsFn ]);
 });
 
 it(`applyPluginsToOperationsStack`, () => {
@@ -140,7 +146,10 @@ it(`applyPluginsToOperationsStack`, () => {
 	const operations = new NotionOperationsClass({
 		...returnDefaultOperationsClassArgs(),
 		stack,
-		plugins: [ NotionOperationsPlugin.removeLastEditedProps(), NotionOperationsPlugin.removeEmptyOperations() ]
+		notion_operation_plugins: [
+			NotionOperationsPlugin.removeLastEditedProps(),
+			NotionOperationsPlugin.removeEmptyOperations()
+		]
 	});
 
 	const updated_operations = operations.applyPluginsToOperationsStack();

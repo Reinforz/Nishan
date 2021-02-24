@@ -36,6 +36,6 @@
     "@nishans/endpoints": "0.0.20"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.20"
+    "@nishans/types": "0.0.21"
   }
 }

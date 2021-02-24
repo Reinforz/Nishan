@@ -39,6 +39,6 @@
     "colors": "^1.4.0"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.20"
+    "@nishans/types": "^0.0.21"
   }
 }

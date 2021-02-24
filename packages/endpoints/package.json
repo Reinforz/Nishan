@@ -31,7 +31,7 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.20"
+    "@nishans/types": "0.0.21"
   },
   "scripts": {
     "prepublishOnly": "npm run build",

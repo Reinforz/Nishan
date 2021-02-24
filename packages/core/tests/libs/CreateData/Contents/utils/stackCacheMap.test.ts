@@ -29,9 +29,11 @@ describe('stackCacheMap', () => {
 			{
 				args: data,
 				command: 'update',
-				id: 'data_id',
 				path: [],
-				table: 'block'
+				pointer: {
+					id: 'data_id',
+					table: 'block'
+				}
 			}
 		]);
 		expect(cache.block.get('data_id')).toStrictEqual(data);

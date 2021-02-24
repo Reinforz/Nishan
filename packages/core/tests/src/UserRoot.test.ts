@@ -51,8 +51,10 @@ it(`update space_views`, async () => {
 
 	expect(stack).toStrictEqual([
 		{
-			table: 'space_view',
-			id: 'space_view_1',
+			pointer: {
+				table: 'space_view',
+				id: 'space_view_1'
+			},
 			command: 'update',
 			path: [],
 			args: {
@@ -61,8 +63,10 @@ it(`update space_views`, async () => {
 			}
 		},
 		{
-			table: 'user_root',
-			id: 'user_root_1',
+			pointer: {
+				table: 'user_root',
+				id: 'user_root_1'
+			},
 			command: 'update',
 			path: [],
 			args: last_edited_props

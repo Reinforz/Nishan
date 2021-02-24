@@ -11,9 +11,11 @@ it(`path exists`, async () => {
 
 	expect(stack).toStrictEqual([
 		{
-			table: 'block',
+			pointer: {
+				table: 'block',
+				id: 'parent_id'
+			},
 			command: 'listAfter',
-			id: 'parent_id',
 			args: {
 				after: '',
 				id: 'child_id'
@@ -32,9 +34,11 @@ it(`path doesn't exists`, async () => {
 
 	expect(stack).toStrictEqual([
 		{
-			table: 'block',
+			pointer: {
+				table: 'block',
+				id: 'parent_id'
+			},
 			command: 'listAfter',
-			id: 'parent_id',
 			args: {
 				after: '',
 				id: 'child_id'

@@ -1,5 +1,6 @@
 import { IPage } from '@nishans/types';
 import { positionChildren } from '../../libs';
+import { o } from '../utils/operations';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -17,16 +18,12 @@ describe('positionChildren', () => {
 
 		expect(parent.content[0]).toBe('child_id');
 
-		expect(operation).toStrictEqual({
-			path: [ 'content' ],
-			table: 'block',
-			command: 'listAfter',
-			args: {
+		expect(operation).toStrictEqual(
+			o.b.la('parent_id', [ 'content' ], {
 				after: '',
 				id: 'child_id'
-			},
-			id: 'parent_id'
-		});
+			})
+		);
 	});
 
 	it(`Should work when position is a number`, () => {
@@ -39,16 +36,12 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content[0]).toBe('child_id');
-		expect(operation).toStrictEqual({
-			path: [ 'content' ],
-			table: 'block',
-			command: 'listBefore',
-			args: {
+		expect(operation).toStrictEqual(
+			o.b.lb('parent_id', [ 'content' ], {
 				before: 'child_1_id',
 				id: 'child_id'
-			},
-			id: 'parent_id'
-		});
+			})
+		);
 	});
 
 	it(`Should push to last if position not provided`, () => {
@@ -60,16 +53,12 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content.pop()).toBe('child_id');
-		expect(operation).toStrictEqual({
-			path: [ 'content' ],
-			table: 'block',
-			command: 'listAfter',
-			args: {
+		expect(operation).toStrictEqual(
+			o.b.la('parent_id', [ 'content' ], {
 				after: '',
 				id: 'child_id'
-			},
-			id: 'parent_id'
-		});
+			})
+		);
 	});
 
 	it(`Should work when position is an object(position: After)`, () => {
@@ -88,16 +77,12 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content).toStrictEqual([ 'child_1_id', 'child_id' ]);
-		expect(operation).toStrictEqual({
-			path: [ 'content' ],
-			table: 'block',
-			command: 'listAfter',
-			args: {
+		expect(operation).toStrictEqual(
+			o.b.la('parent_id', [ 'content' ], {
 				after: 'child_1_id',
 				id: 'child_id'
-			},
-			id: 'parent_id'
-		});
+			})
+		);
 	});
 
 	it(`Should work when position is an object(position: Before)`, () => {
@@ -113,16 +98,12 @@ describe('positionChildren', () => {
 		});
 
 		expect(parent.content).toStrictEqual([ 'child_id', 'child_1_id' ]);
-		expect(operation).toStrictEqual({
-			path: [ 'content' ],
-			table: 'block',
-			command: 'listBefore',
-			args: {
+		expect(operation).toStrictEqual(
+			o.b.lb('parent_id', [ 'content' ], {
 				before: 'child_1_id',
 				id: 'child_id'
-			},
-			id: 'parent_id'
-		});
+			})
+		);
 	});
 
 	it(`Should throw an error if the pivot and content doesn't exist for number position`, () => {

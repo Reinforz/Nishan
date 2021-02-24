@@ -11,6 +11,7 @@ import {
 } from '../../src';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
+import { o } from '../utils/operations';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -388,16 +389,12 @@ it(`deleteRow`, async () => {
 	await collection.deleteRow('block_1');
 
 	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-	expect(stack[0]).toStrictEqual({
-		command: 'update',
-		table: 'block',
-		path: [],
-		id: 'block_1',
-		args: {
+	expect(stack[0]).toStrictEqual(
+		o.b.u('block_1', [], {
 			alive: false,
 			...last_edited_props
-		}
-	});
+		})
+	);
 
 	expect(block_1.alive).toBe(false);
 });
@@ -453,8 +450,10 @@ it(`createSchemaUnits`, async () => {
 	expect(stack[0]).toEqual(
 		expect.objectContaining({
 			command: 'update',
-			id: 'collection_1',
-			table: 'collection'
+			pointer: {
+				id: 'collection_1',
+				table: 'collection'
+			}
 		})
 	);
 });
@@ -531,7 +530,9 @@ it(`updateSchemaUnit`, async () => {
 	expect(stack[0]).toEqual(
 		expect.objectContaining({
 			command: 'update',
-			table: 'collection'
+			pointer: expect.objectContaining({
+				table: 'collection'
+			})
 		})
 	);
 });
@@ -578,7 +579,9 @@ it(`deleteSchemaUnit`, async () => {
 	expect(stack[0]).toEqual(
 		expect.objectContaining({
 			command: 'update',
-			table: 'collection'
+			pointer: expect.objectContaining({
+				table: 'collection'
+			})
 		})
 	);
 });

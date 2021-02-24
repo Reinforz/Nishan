@@ -74,8 +74,10 @@ it(`createViews`, () => {
 
 	expect(stack[stack.length - 1]).toStrictEqual({
 		command: 'update',
-		table: 'block',
-		id: 'block_1',
+		pointer: {
+      table: 'block',
+		  id: 'block_1',
+    },
 		path: [],
 		args: {
 			view_ids: [ 'view_2', 'view_1' ]

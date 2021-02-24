@@ -47,10 +47,12 @@ describe('generateViewData', () => {
 		expect(stack).toStrictEqual([
 			{
 				path: [],
-				table: 'collection_view',
+				pointer: {
+					table: 'collection_view',
+					id
+				},
 				command: 'update',
-				args: expected_view_data,
-				id
+				args: expected_view_data
 			}
 		]);
 

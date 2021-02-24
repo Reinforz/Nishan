@@ -65,9 +65,11 @@ describe('createCollection', () => {
 		expect(typeof collection_id).toBe('string');
 		expect(stack.length).toBe(2);
 		expect(stack[1]).toStrictEqual({
-			table: 'collection',
+			pointer: {
+				table: 'collection',
+				id: collection_id
+			},
 			command: 'update',
-			id: collection_id,
 			args: output_collection,
 			path: []
 		});

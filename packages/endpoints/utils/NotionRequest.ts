@@ -21,7 +21,6 @@ function constructNotionHeaders (configs?: Partial<NotionRequestConfigs>): Notio
 		headers.headers.cookie += `notion_user_id=${configs.user_id};`;
 		headers.headers['x-notion-active-user-header'] = configs.user_id;
 	}
-
 	return headers;
 }
 

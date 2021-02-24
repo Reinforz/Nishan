@@ -4,7 +4,7 @@ import { skipOption } from '../../../../src/Plugins/Options/skip';
 describe('skipOption', () => {
 	const operation: IOperation = {
 		args: {},
-		command: 'keyedObjectListAfter',
+		command: 'update',
 		path: [],
 		pointer: {
 			id: '123',

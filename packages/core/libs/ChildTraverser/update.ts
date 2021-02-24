@@ -63,7 +63,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 	});
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (data) {
+	if (parent_type === 'block') {
 		updateLastEditedProps(data, user_id);
 		stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
 	}

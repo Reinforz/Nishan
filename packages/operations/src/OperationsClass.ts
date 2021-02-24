@@ -8,13 +8,15 @@ export class NotionOperationsClass {
 	space_id: string;
 	shard_id: number;
 	token: string;
+	user_id: string;
 
-	constructor (args: { token: string; space_id: string; shard_id: number; stack: IOperation[], plugins?: NotionOperationPluginFunction[] }) {
+	constructor (args: { user_id: string, token: string; space_id: string; shard_id: number; stack: IOperation[], plugins?: NotionOperationPluginFunction[] }) {
 		this.space_id = args.space_id;
 		this.shard_id = args.shard_id;
 		this.token = args.token;
 		this.#stack = args.stack;
-    this.#plugins = args.plugins ?? []; 
+    this.#plugins = args.plugins ?? [];
+    this.user_id = args.user_id;
 	}
 
   /**
@@ -88,7 +90,8 @@ export class NotionOperationsClass {
       // Execute the operations, by sending a request to notion's server
 			await Mutations.saveTransactions(created_transaction, {
 				token: this.token,
-				interval: 0
+				interval: 0,
+        user_id: this.user_id
 			});
       // Empty the operations stack since its been executed
 			this.emptyStack();

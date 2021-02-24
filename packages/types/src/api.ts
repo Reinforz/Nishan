@@ -53,3 +53,5 @@ export interface NotionApiValidationError extends INotionApiError {
 		untried: string[];
 	};
 }
+
+// {errorId: "ca711485-1ebe-4d17-8fcf-30ac9baa5603", name: "ValidationError", message: "Invalid input."}

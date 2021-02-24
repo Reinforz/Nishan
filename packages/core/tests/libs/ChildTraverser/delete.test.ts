@@ -2,7 +2,24 @@ import { ICache } from '@nishans/cache';
 import { IOperation, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../../libs';
 import { last_edited_props } from '../../utils/lastEditedProps';
-import { c1, c1do, c1ro, c2, c2do, c2ro, cc, constructCache, delete_props_1, delete_props_2, puo } from './utils';
+import {
+	c1do,
+	c1id,
+	c1ro,
+	c2do,
+	c2id,
+	c2ro,
+	c3id,
+	cd,
+	constructCache,
+	dc1d,
+	dc2d,
+	delete_props_1,
+	delete_props_2,
+	p1id,
+	p1uo,
+	up1d
+} from './utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -10,16 +27,16 @@ afterEach(() => {
 
 const expectOnDelete = (parent_data: IPage, deleted_data: any, stack: IOperation[]) => {
 	expect(parent_data).toStrictEqual({
-		id: 'parent_one_id',
-		content: [ 'child_three_id' ],
+		id: p1id,
+		content: [ c3id ],
 		...last_edited_props
 	});
-	expect(deleted_data).toStrictEqual([ c1, c2 ]);
-	expect(stack).toStrictEqual([ c1do, c1ro, c2do, c2ro, puo ]);
+	expect(deleted_data).toStrictEqual([ dc1d, dc2d ]);
+	expect(stack).toStrictEqual([ c1do, c1ro, c2do, c2ro, p1uo ]);
 };
 
 it(`manual=false,child_ids=[ids]`, async () => {
-	const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ],
+	const child_ids = [ c1id, c2id, c3id ],
 		stack: IOperation[] = [];
 	const cache = constructCache(child_ids);
 
@@ -27,7 +44,7 @@ it(`manual=false,child_ids=[ids]`, async () => {
 		cb_spy = jest.fn();
 
 	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
-		[ 'child_one_id', 'child_two_id' ],
+		[ c1id, c2id ],
 		(id) => cache.block.get(id),
 		{
 			container: [],
@@ -42,23 +59,18 @@ it(`manual=false,child_ids=[ids]`, async () => {
 			container.push(data);
 		}
 	);
-	const parent_data = cache.block.get('parent_one_id') as IPage;
 
-	expect(logger_spy.mock.calls).toEqual([
-		[ 'DELETE', 'block', 'child_one_id' ],
-		[ 'DELETE', 'block', 'child_two_id' ]
-	]);
-
-	expect(cb_spy.mock.calls).toEqual([ [ 'child_one_id', c1 ], [ 'child_two_id', c2 ] ]);
-	expectOnDelete(parent_data, deleted_data, stack);
+	expect(logger_spy.mock.calls).toEqual([ [ 'DELETE', 'block', c1id ], [ 'DELETE', 'block', c2id ] ]);
+	expect(cb_spy.mock.calls).toEqual([ [ c1id, dc1d ], [ c2id, dc2d ] ]);
+	expectOnDelete(cache.block.get(p1id) as any, deleted_data, stack);
 });
 
 it(`manual=false,child_ids=string`, async () => {
-	const cache = constructCache([ 'child_one_id', 'child_two_id', 'child_three_id' ]),
+	const cache = constructCache([ c1id, c2id, c3id ]),
 		stack: IOperation[] = [];
 
 	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
-		[ 'child_one_id', 'child_two_id' ],
+		[ c1id, c2id ],
 		(id) => cache.block.get(id),
 		{
 			container: [],
@@ -71,16 +83,16 @@ it(`manual=false,child_ids=string`, async () => {
 			container.push(data);
 		}
 	);
-	const parent_data = cache.block.get('parent_one_id') as IPage;
-	expectOnDelete(parent_data, deleted_data, stack);
+
+	expectOnDelete(cache.block.get(p1id) as any, deleted_data, stack);
 });
 
 it(`manual=true,child_ids=string`, async () => {
 	const stack: IOperation[] = [];
-	const cache = constructCache([ 'child_one_id', 'child_two_id', 'child_three_id' ]);
+	const cache = constructCache([ c1id, c2id, c3id ]);
 
 	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
-		[ 'child_one_id', 'child_two_id' ],
+		[ c1id, c2id ],
 		(id) => cache.block.get(id),
 		{
 			container: [],
@@ -90,38 +102,31 @@ it(`manual=true,child_ids=string`, async () => {
 			manual: true,
 			...delete_props_2
 		},
-		(id, data, container) => {
+		(_, data, container) => {
 			data.alive = false;
 			container.push(data);
 		}
 	);
-	const parent_data = cache.block.get('parent_one_id') as IPage;
 
-	expect(parent_data).toStrictEqual({
-		id: 'parent_one_id',
-		content: [ 'child_one_id', 'child_two_id', 'child_three_id' ],
-		...last_edited_props
-	});
-
+	expect(cache.block.get(p1id)).toStrictEqual(up1d);
 	expect(deleted_data).toStrictEqual([
 		{
-			id: 'child_one_id',
+			id: c1id,
 			alive: false
 		},
 		{
-			id: 'child_two_id',
+			id: c2id,
 			alive: false
 		}
 	]);
-
-	expect(stack).toStrictEqual([ puo ]);
+	expect(stack).toStrictEqual([ p1uo ]);
 });
 
 it(`manual=false,child_path=undefined`, async () => {
 	const stack: IOperation[] = [];
-	const cache = constructCache([ 'child_one_id', 'child_two_id' ]);
+	const cache = constructCache([ c1id, c2id ]);
 	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
-		[ 'child_one_id' ],
+		[ c1id ],
 		(id) => cache.block.get(id),
 		{
 			container: [],
@@ -131,37 +136,32 @@ it(`manual=false,child_path=undefined`, async () => {
 		} as any,
 		(_, data, container) => container.push(data)
 	);
-	const parent_data = cache.block.get('parent_one_id') as IPage;
 
-	expect(parent_data as any).toStrictEqual({
-		id: 'parent_one_id',
-		content: [ 'child_one_id', 'child_two_id' ],
+	expect(cache.block.get(p1id)).toStrictEqual({
+		id: p1id,
+		content: [ c1id, c2id ],
 		...last_edited_props
 	});
-
-	expect(deleted_data as any).toStrictEqual([ c1 ]);
-
-	expect(stack).toStrictEqual([ c1do, puo ]);
+	expect(deleted_data as any).toStrictEqual([ dc1d ]);
+	expect(stack).toStrictEqual([ c1do, p1uo ]);
 });
 
 it(`manual=true,child_ids=string,content=undefined`, async () => {
 	const stack: IOperation[] = [];
 	const cache: ICache = {
-		block: new Map([ cc('parent_one_id'), cc('child_one_id'), cc('child_two_id') ])
+		block: new Map([ cd(p1id), cd(c1id), cd(c2id) ])
 	} as any;
 
-	await ChildTraverser.delete<IPage, TBlock>([ 'child_one_id' ], (id) => cache.block.get(id), {
+	await ChildTraverser.delete<IPage, TBlock>([ c1id ], (id) => cache.block.get(id), {
 		container: [],
 		cache,
 		...delete_props_2,
 		stack
 	} as any);
-	const parent_data = cache.block.get('parent_one_id') as IPage;
 
-	expect(parent_data as any).toStrictEqual({
-		id: 'parent_one_id',
+	expect(cache.block.get(p1id)).toStrictEqual({
+		id: p1id,
 		...last_edited_props
 	});
-
-	expect(stack).toStrictEqual([ puo ]);
+	expect(stack).toStrictEqual([ p1uo ]);
 });

@@ -30,9 +30,9 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			parent_type
 		} = options,
 		// get the data from the cache
-		data = cache[parent_type].get(parent_id) as T,
+		parent_data = cache[parent_type].get(parent_id) as T,
 		// Get the child ids array
-		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : data[options.child_ids]) as string[],
+		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : parent_data[options.child_ids]) as string[],
 		last_updated_props = {
 			last_edited_time: Date.now(),
 			last_edited_by_table: 'notion_user',
@@ -64,7 +64,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
 	if (parent_type === 'block') {
-		updateLastEditedProps(data, user_id);
+		updateLastEditedProps(parent_data, user_id);
 		stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
 	}
 

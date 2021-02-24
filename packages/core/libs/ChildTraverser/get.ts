@@ -17,9 +17,9 @@ export const get = async <T extends TData, TD, C = any[]>(
 ) => {
 	const { container, parent_id, multiple = true, child_type, logger, cache, parent_type } = options,
 		// get the data from the cache
-		parent = cache[parent_type].get(parent_id) as T,
+		parent_data = cache[parent_type].get(parent_id) as T,
 		// Get the child ids array
-		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : parent[options.child_ids]) as string[];
+		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : parent_data[options.child_ids]) as string[];
 
 	const iterateUtil = async (child_id: string, child_data: TD) => {
 		cb && (await cb(child_id, child_data, container));

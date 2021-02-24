@@ -2,29 +2,42 @@ import { ICache } from '@nishans/cache';
 import { last_edited_props } from '../../utils/lastEditedProps';
 import { o } from '../../utils/operations';
 
-// child delete operation generator
+export const c1id = 'child_one_id';
+export const c2id = 'child_two_id';
+export const c3id = 'child_three_id';
+export const p1id = 'parent_one_id';
+
+// delete operation generator
 export const cdo = (id: string) =>
 	o.b.u(id, [], {
 		alive: false,
 		...last_edited_props
 	});
+export const cuo = (id: string) =>
+	o.b.u(id, [], {
+		data: id,
+		...last_edited_props
+	});
 // child remove operation generator
 export const cro = (id: string) =>
-	o.b.lr('parent_one_id', [ 'content' ], {
+	o.b.lr(p1id, [ 'content' ], {
 		id
 	});
 // Child delete operations
-export const c1do = cdo('child_one_id');
-export const c2do = cdo('child_two_id');
+export const c1do = cdo(c1id);
+export const c2do = cdo(c2id);
+// Child update operations
+export const c1uo = cuo(c1id);
+export const c2uo = cuo(c2id);
 // Child remove operations
-export const c1ro = cro('child_one_id');
-export const c2ro = cro('child_two_id');
+export const c1ro = cro(c1id);
+export const c2ro = cro(c2id);
 // parent update operation
-export const puo = o.b.u('parent_one_id', [], last_edited_props);
+export const p1uo = o.b.u(p1id, [], last_edited_props);
 
 export const delete_props_common = {
 	child_type: 'block',
-	parent_id: 'parent_one_id',
+	parent_id: p1id,
 	parent_type: 'block',
 	user_id: 'user_root_1'
 };
@@ -39,38 +52,62 @@ export const delete_props_2 = {
 	child_ids: 'content'
 } as any;
 
-// child data generator
-export const c = (id: string) => ({
+export const update_props = {
+	child_type: 'block',
+	parent_id: p1id,
+	parent_type: 'block',
+	user_id: 'user_root_1'
+} as any;
+
+// deleted child data generator
+export const dcd = (id: string) => ({
 	id,
 	alive: false,
 	...last_edited_props
 });
-export const c1 = c('child_one_id');
-export const c2 = c('child_two_id');
+// deleted child data
+export const dc1d = dcd(c1id);
+export const dc2d = dcd(c2id);
 
-// construct child cache data
-export const cc = (id: string) =>
-	[
-		id,
-		{
-			id
-		}
-	] as any;
+// updated child data generator
+export const ucd: any = (id: string) => ({
+	id,
+	data: id,
+	...last_edited_props
+});
+// updated child data
+export const uc1d = ucd(c1id);
+export const uc2d = ucd(c2id);
+export const up1d: any = {
+	id: p1id,
+	content: [ c1id, c2id, c3id ],
+	...last_edited_props
+};
+// data generator
+export const d: any = (id: string) => ({ id });
+
+// cache data generator
+export const cd: any = (id: string) => [
+	id,
+	{
+		id
+	}
+];
 
 // constructs the cache for all delete call
 export const constructCache = (child_ids: string[]) => {
 	return {
 		block: new Map([
 			[
-				'parent_one_id',
+				p1id,
 				{
-					id: 'parent_one_id',
+					id: p1id,
 					content: child_ids
 				}
 			],
-			cc('child_one_id'),
-			cc('child_two_id'),
-			cc('child_three_id')
+			cd(c1id),
+			cd(c2id),
+			cd(c3id)
 		])
 	} as ICache;
 };

@@ -9,9 +9,11 @@ afterEach(() => {
 const operation: IOperation = {
 	args: {},
 	command: 'update',
-	id: '123',
-	path: [],
-	table: 'block'
+	pointer: {
+		table: 'block',
+		id: '123'
+	},
+	path: []
 };
 
 const returnDefaultOperationsClassArgs = () => {
@@ -114,9 +116,11 @@ it(`applyPluginsToOperationsStack`, () => {
 				other_data: 'other data'
 			},
 			command: 'update',
-			id: 'id',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: 'id',
+				table: 'block'
+			}
 		},
 		{
 			args: {
@@ -125,9 +129,11 @@ it(`applyPluginsToOperationsStack`, () => {
 				last_edited_by_table: 'notion_user'
 			},
 			command: 'update',
-			id: 'id',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: 'id',
+				table: 'block'
+			}
 		}
 	];
 
@@ -145,9 +151,11 @@ it(`applyPluginsToOperationsStack`, () => {
 				other_data: 'other data'
 			},
 			command: 'update',
-			id: 'id',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: 'id',
+				table: 'block'
+			}
 		}
 	]);
 });

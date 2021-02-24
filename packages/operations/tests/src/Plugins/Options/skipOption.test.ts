@@ -5,17 +5,19 @@ describe('skipOption', () => {
 	const operation: IOperation = {
 		args: {},
 		command: 'keyedObjectListAfter',
-		id: '123',
 		path: [],
-		table: 'block'
+		pointer: {
+			id: '123',
+			table: 'block'
+		}
 	};
 
 	it(`Should skip based on skip value`, () => {
-		expect(skipOption(operation, (op) => op.id === '123')).toStrictEqual(operation);
+		expect(skipOption(operation, (op) => op.pointer.id === '123')).toStrictEqual(operation);
 	});
 
 	it(`Should not skip based on skip value`, () => {
-		expect(skipOption(operation, (op) => op.id === '1234')).toStrictEqual(undefined);
+		expect(skipOption(operation, (op) => op.pointer.id === '1234')).toStrictEqual(undefined);
 	});
 
 	it(`Should not skip if skip option not provided`, () => {

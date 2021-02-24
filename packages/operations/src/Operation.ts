@@ -39,11 +39,13 @@ OPERATION_TABLES.forEach((table) => {
 	OPERATION_COMMANDS.forEach((command) => {
 		Operation[table][command] = (id: string, path: string[], args: Args): IOperation => {
 			return {
+				pointer: {
+					table,
+					id
+				},
 				path,
-				table,
 				command,
-				args,
-				id
+				args
 			};
 		};
 	});

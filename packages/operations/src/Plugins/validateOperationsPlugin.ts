@@ -11,9 +11,9 @@ export const validateOperationsPlugin: NotionOperationPluginFactory = (options) 
 		// Checks to see if the operation is to be skipped, ie not further process by the plugin
 		NotionOperationsPluginOptions.skip(operation, options?.skip);
 		// Checks if the operation table is one of the supported values
-		const is_correct_table = OPERATION_TABLES.includes(operation.table);
+		const is_correct_table = OPERATION_TABLES.includes(operation.pointer.table);
 		// Throws an error if the passed operation table is not of the supported value
-		if (!is_correct_table) throw new Error(`Unsupported operation table ${operation.table}`);
+		if (!is_correct_table) throw new Error(`Unsupported operation table ${operation.pointer.table}`);
 		// Checks if the operation command is one of the supported values
 		const is_correct_command = OPERATION_COMMANDS.includes(operation.command);
 		// Throws an error if the passed operation command is not of the supported value

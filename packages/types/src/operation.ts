@@ -29,8 +29,10 @@ export interface Transaction {
 }
 
 export interface IOperation {
-	table: TDataType;
-	id: string;
+	pointer: {
+		table: TDataType;
+		id: string;
+	};
 	command: TOperationCommand;
 	path: string[];
 	args: any;

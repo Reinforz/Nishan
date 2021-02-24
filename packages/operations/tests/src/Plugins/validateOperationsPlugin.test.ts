@@ -11,9 +11,11 @@ describe('validateOperationsPlugin', () => {
 		const operation: IOperation = {
 			args: {},
 			command: 'update',
-			id: '123',
-			path: [],
-			table: 'blocks' as any
+			pointer: {
+				id: '123',
+				table: 'blocks' as any
+			},
+			path: []
 		};
 
 		const skipPluginOptionMock = jest
@@ -32,9 +34,11 @@ describe('validateOperationsPlugin', () => {
 		const operation: IOperation = {
 			args: {},
 			command: 'updates' as any,
-			id: '123',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: '123',
+				table: 'block'
+			}
 		};
 
 		const skipPluginOptionMock = jest
@@ -53,9 +57,11 @@ describe('validateOperationsPlugin', () => {
 		const operation: IOperation = {
 			args: {},
 			command: 'update',
-			id: '123',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: '123',
+				table: 'block'
+			}
 		};
 
 		const skipPluginOptionMock = jest

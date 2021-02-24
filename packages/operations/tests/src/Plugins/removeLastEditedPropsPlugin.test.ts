@@ -16,9 +16,11 @@ it(`removeLastEditedPropsPlugin`, () => {
 		operation: IOperation = {
 			args,
 			command: 'update',
-			id: '123',
 			path: [],
-			table: 'block'
+			pointer: {
+				id: '123',
+				table: 'block'
+			}
 		};
 
 	const skipPluginOptionMock = jest

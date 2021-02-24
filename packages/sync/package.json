@@ -38,7 +38,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.20",
+    "@nishans/types": "0.0.21",
     "@types/js-yaml": "^4.0.0",
     "@types/mongodb": "^3.6.3",
     "@types/node": "^14.14.17",

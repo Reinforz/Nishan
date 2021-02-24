@@ -280,7 +280,6 @@ describe('NotionUser', () => {
     it('Work correctly for type=page & cvp', async () => {
       const block_1_id = v4(),
         block_2_id = v4(),
-        block_3_id = v4(),
         block_1 = { id: block_1_id, type: 'page', properties: { title: [['Block One']] } } as any,
         block_2 = {
           id: block_2_id,

@@ -1,9 +1,8 @@
-import unified from 'unified';
-import markdown from 'remark-parse';
-import frontmatter from 'remark-frontmatter';
-import fs from 'fs';
-import gfm from 'remark-gfm';
 import notion from '@nishans/remark-notion';
+import fs from 'fs';
+import frontmatter from 'remark-frontmatter';
+import markdown from 'remark-parse';
+import unified from 'unified';
 
 const processor = unified().use(markdown).use(frontmatter, [ 'yaml' ]).use(notion);
 

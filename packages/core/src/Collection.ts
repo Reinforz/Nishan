@@ -32,7 +32,7 @@ class Collection extends Data<ICollection> {
 	async getRowPageIds () {
 		await this.initializeCacheForThisData();
 		const page_ids: string[] = [];
-		for (const [ _, page ] of this.cache.block)
+		for (const [ , page ] of this.cache.block)
 			if (page.type === 'page' && page.parent_table === 'collection' && page.parent_id === this.id && !page.is_template)
 				page_ids.push(page.id);
 		return page_ids;

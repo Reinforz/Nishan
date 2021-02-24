@@ -35,22 +35,14 @@ export const c2ro = cro(c2id);
 // parent update operation
 export const p1uo = o.b.u(p1id, [], last_edited_props);
 
-export const delete_props_common = {
+export const delete_props: any = {
 	child_type: 'block',
 	parent_id: p1id,
 	parent_type: 'block',
-	user_id: 'user_root_1'
-};
-
-export const delete_props_1 = {
-	...delete_props_common,
-	child_path: 'content'
-} as any;
-
-export const delete_props_2 = {
-	...delete_props_common,
+	user_id: 'user_root_1',
+	child_path: 'content',
 	child_ids: 'content'
-} as any;
+};
 
 export const update_props = {
 	child_type: 'block',

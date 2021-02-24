@@ -1,5 +1,6 @@
 import { TData } from '@nishans/types';
 import { FilterTypes, IterateAndGetChildrenOptions } from '../../src';
+import { getChildIds } from './utils';
 import { iterateChildren } from './utils/iterateChildren';
 
 /**
@@ -15,11 +16,8 @@ export const get = async <T extends TData, TD, C = any[]>(
 	options: IterateAndGetChildrenOptions<T, C>,
 	cb?: ((id: string, data: TD, container: C) => any)
 ) => {
-	const { container, parent_id, multiple = true, child_type, logger, cache, parent_type } = options,
-		// get the data from the cache
-		parent_data = cache[parent_type].get(parent_id) as T,
-		// Get the child ids array
-		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : parent_data[options.child_ids]) as string[];
+	const { container, parent_id, multiple = true, child_type, logger, cache, parent_type, child_ids } = options,
+		parent_data = cache[parent_type].get(parent_id) as T;
 
 	const iterateUtil = async (child_id: string, child_data: TD) => {
 		cb && (await cb(child_id, child_data, container));
@@ -27,7 +25,7 @@ export const get = async <T extends TData, TD, C = any[]>(
 	};
 
 	await iterateChildren<TD, boolean>({ args, method: 'READ', cb: iterateUtil }, transform, {
-		child_ids,
+		child_ids: getChildIds(child_ids, parent_data),
 		multiple,
 		child_type,
 		parent_id,

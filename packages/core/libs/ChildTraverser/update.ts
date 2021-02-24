@@ -2,7 +2,7 @@ import { Operation } from '@nishans/operations';
 import { TData } from '@nishans/types';
 import { deepMerge } from '..';
 import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../../src';
-import { iterateChildren, updateLastEditedProps } from './utils';
+import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**
  * Iterates over the children of a parent and updates it
@@ -27,35 +27,31 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			logger,
 			cache,
 			stack,
-			parent_type
+			parent_type,
+			child_ids
 		} = options,
-		// get the data from the cache
-		parent_data = cache[parent_type].get(parent_id) as T,
-		// Get the child ids array
-		child_ids = (Array.isArray(options.child_ids) ? options.child_ids : parent_data[options.child_ids]) as string[],
-		last_updated_props = {
-			last_edited_time: Date.now(),
-			last_edited_by_table: 'notion_user',
-			last_edited_by_id: user_id
-		};
+		parent_data = cache[parent_type].get(parent_id) as T;
 
 	const iterateUtil = async (child_id: string, child_data: CD, updated_data: RD) => {
 		cb && (await cb(child_id, child_data, updated_data, container));
 		logger && logger('UPDATE', child_type, child_id);
 
+		let last_edited_props = {};
 		if (!manual) {
 			// If data update is not manual
 			// 1. Update the last edited props of the data
 			// 2. deeply merge the new data with the existing data
 			// 3. Push the updated properties to the stack
-			updateLastEditedProps(child_data, user_id);
+
+			if (child_type === 'block') last_edited_props = updateLastEditedProps(child_data, user_id);
+
 			deepMerge(child_data, updated_data);
-			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_updated_props }));
+			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
 		}
 	};
 
 	await iterateChildren<CD, RD>({ args, cb: iterateUtil, method: 'UPDATE' }, transform, {
-		child_ids,
+		child_ids: getChildIds(child_ids, parent_data),
 		multiple,
 		child_type,
 		parent_id,
@@ -63,10 +59,8 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 	});
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (parent_type === 'block') {
-		updateLastEditedProps(parent_data, user_id);
-		stack.push(Operation[parent_type].update(parent_id, [], { ...last_updated_props }));
-	}
+	if (parent_type === 'block')
+		stack.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
 
 	return container as C;
 };

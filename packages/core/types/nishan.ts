@@ -1,4 +1,5 @@
 import { ICache } from '@nishans/cache';
+import { NotionOperationPluginFunction } from '@nishans/operations';
 import { IOperation, TDataType } from '@nishans/types';
 import { Predicate } from './utils';
 
@@ -7,7 +8,7 @@ export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
 export type Logger = false | ((method: TMethodType, subject: TDataType, id: string) => void);
 export interface NishanArg {
 	token: string;
-	interval: number;
+	interval?: number;
 	user_id: string;
 	shard_id: number;
 	space_id: string;
@@ -15,6 +16,7 @@ export interface NishanArg {
 	id: string;
 	logger?: Logger;
 	stack: IOperation[];
+	notion_operation_plugins?: NotionOperationPluginFunction[];
 }
 
 export type FilterTypes<T> = undefined | string[] | Predicate<T>;

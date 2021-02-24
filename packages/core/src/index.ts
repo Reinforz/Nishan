@@ -1,4 +1,5 @@
 import { NotionCacheClass } from "@nishans/cache";
+import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
 import { ChildTraverser, constructLogger, transformToMultiple } from "../libs";
 import { FilterType, FilterTypes, Logger, NishanArg } from "../types";
@@ -17,13 +18,15 @@ class Nishan extends NotionCacheClass {
   interval: number;
   #init_cache: boolean;
   logger: Logger;
+  notion_operation_plugins: NotionOperationPluginFunction[];
 
-  constructor(arg: Pick<NishanArg, "token"> & { interval?: number, logger?: Logger }) {
+  constructor(arg: Pick<NishanArg, "token" | "interval" | "logger" | "notion_operation_plugins">) {
     super(arg);
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;
     this.logger = constructLogger(arg.logger)
+    this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
   }
 
   #initializeCache = async () => {
@@ -54,6 +57,7 @@ class Nishan extends NotionCacheClass {
       interval: this.interval,
       logger: this.logger,
       stack: [],
+      notion_operation_plugins: this.notion_operation_plugins
     }
 
     const notion_user_ids: string[] = [];

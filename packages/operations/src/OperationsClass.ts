@@ -10,14 +10,18 @@ export class NotionOperationsClass {
 	token: string;
 	user_id: string;
 
-	constructor (args: { user_id: string, token: string; space_id: string; shard_id: number; stack: IOperation[], plugins?: NotionOperationPluginFunction[] }) {
+	constructor (args: { user_id: string, token: string; space_id: string; shard_id: number; stack: IOperation[], notion_operation_plugins?: NotionOperationPluginFunction[] }) {
 		this.space_id = args.space_id;
 		this.shard_id = args.shard_id;
 		this.token = args.token;
 		this.#stack = args.stack;
-    this.#plugins = args.plugins ?? [];
+    this.#plugins = args.notion_operation_plugins ?? [];
     this.user_id = args.user_id;
 	}
+
+  getPlugins(){
+    return this.#plugins;
+  }
 
   /**
    * Empty the operation stack, useful after all the operations has been executed

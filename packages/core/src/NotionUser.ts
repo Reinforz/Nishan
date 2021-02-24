@@ -167,6 +167,8 @@ class NotionUser extends Data<INotionUser> {
    * @returns An array of space objects
    */
   async getSpaces(args?: FilterTypes<ISpace>, multiple?: boolean) {
+    console.log(this.Operations.getPlugins());
+    
     return await this.getIterate<ISpace, Space[]>(args, {
       multiple,
       container: [],

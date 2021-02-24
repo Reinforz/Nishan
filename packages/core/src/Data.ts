@@ -128,7 +128,8 @@ export default class Data<T extends TData> extends NotionCacheClass {
       space_id: this.Operations.space_id,
       cache: this.cache,
       logger: this.logger,
-      stack: this.Operations.stack
+      stack: this.Operations.stack,
+      notion_operation_plugins: this.Operations.getPlugins()
     } as Omit<NishanArg, "id">
   }
 }

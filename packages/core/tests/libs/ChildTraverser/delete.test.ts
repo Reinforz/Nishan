@@ -2,84 +2,11 @@ import { ICache } from '@nishans/cache';
 import { IOperation, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../../libs';
 import { last_edited_props } from '../../utils/lastEditedProps';
-import { o } from '../../utils/operations';
+import { c1, c1do, c1ro, c2, c2do, c2ro, cc, constructCache, delete_props_1, delete_props_2, puo } from './utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
-
-// child delete operation generator
-const cdo = (id: string) =>
-	o.b.u(id, [], {
-		alive: false,
-		...last_edited_props
-	});
-// child remove operation generator
-const cro = (id: string) =>
-	o.b.lr('parent_one_id', [ 'content' ], {
-		id
-	});
-// Child delete operations
-const c1do = cdo('child_one_id');
-const c2do = cdo('child_two_id');
-// Child remove operations
-const c1ro = cro('child_one_id');
-const c2ro = cro('child_two_id');
-// parent update operation
-const puo = o.b.u('parent_one_id', [], last_edited_props);
-
-const delete_props_common = {
-	child_type: 'block',
-	parent_id: 'parent_one_id',
-	parent_type: 'block',
-	user_id: 'user_root_1'
-};
-
-const delete_props_1 = {
-	...delete_props_common,
-	child_path: 'content'
-} as any;
-
-const delete_props_2 = {
-	...delete_props_common,
-	child_ids: 'content'
-} as any;
-
-// child data generator
-const c = (id: string) => ({
-	id,
-	alive: false,
-	...last_edited_props
-});
-const c1 = c('child_one_id');
-const c2 = c('child_two_id');
-
-// construct child cache data
-const cc = (id: string) =>
-	[
-		id,
-		{
-			id
-		}
-	] as any;
-
-// constructs the cache for all delete call
-const constructCache = (child_ids: string[]) => {
-	return {
-		block: new Map([
-			[
-				'parent_one_id',
-				{
-					id: 'parent_one_id',
-					content: child_ids
-				}
-			],
-			cc('child_one_id'),
-			cc('child_two_id'),
-			cc('child_three_id')
-		])
-	} as ICache;
-};
 
 const expectOnDelete = (parent_data: IPage, deleted_data: any, stack: IOperation[]) => {
 	expect(parent_data).toStrictEqual({
@@ -140,7 +67,7 @@ it(`manual=false,child_ids=string`, async () => {
 			...delete_props_1,
 			stack
 		},
-		(id, data, container) => {
+		(_, data, container) => {
 			container.push(data);
 		}
 	);

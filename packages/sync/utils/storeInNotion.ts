@@ -50,9 +50,11 @@ export async function storeInNotion (
 			view_ids: string[] = [],
 			template_page_ids: string[] = [];
 		const collection_create_block_op: IOperation = {
-			id: collection_block_id,
 			path: [],
-			table: 'block',
+			pointer: {
+				id: collection_block_id,
+				table: 'block'
+			},
 			args: {
 				id: collection_block_id,
 				type: 'collection_view_page',
@@ -82,8 +84,10 @@ export async function storeInNotion (
 				},
 				command: 'update',
 				path: [],
-				table: 'block',
-				id: row_page_id
+				pointer: {
+					table: 'block',
+					id: row_page_id
+				}
 			} as IOperation;
 		});
 
@@ -105,8 +109,10 @@ export async function storeInNotion (
 				},
 				path: [],
 				command: 'update',
-				id: template_page_id,
-				table: 'block'
+				pointer: {
+					id: template_page_id,
+					table: 'block'
+				}
 			} as IOperation;
 		});
 
@@ -122,8 +128,10 @@ export async function storeInNotion (
 				template_pages: template_page_ids,
 				...metadata
 			},
-			table: 'collection',
-			id: collection_id,
+			pointer: {
+				table: 'collection',
+				id: collection_id
+			},
 			command: 'update',
 			path: []
 		};
@@ -144,8 +152,10 @@ export async function storeInNotion (
 				},
 				command: 'update',
 				path: [],
-				table: 'collection_view',
-				id: view_id
+				pointer: {
+					table: 'collection_view',
+					id: view_id
+				}
 			} as IOperation;
 		});
 
@@ -155,9 +165,11 @@ export async function storeInNotion (
 				id: collection_block_id
 			},
 			path: [ 'pages' ],
-			table: 'space',
 			command: 'listAfter',
-			id: space_id
+			pointer: {
+				table: 'space',
+				id: space_id
+			}
 		};
 
 		const operations: IOperation[] = [

@@ -86,4 +86,4 @@ Feel free to submit a pull request or open a new issue, contributions are more t
 ## Related Projects
 
 1. [react-notion-x](https://github.com/NotionX/react-notion-x) Fast and accurate React renderer for Notion. TS batteries included.
-2. [ntast](https://github.com/phuctm97/ntast) Notion Abstract Syntax Tree specification..
+2. [ntast](https://github.com/phuctm97/ntast) Notion Abstract Syntax Tree specification.

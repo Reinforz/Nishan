@@ -42,6 +42,7 @@
     "@nishans/notion-formula": "^0.0.19",
     "@nishans/idz": "^0.0.15",
     "@nishans/errors": "^0.0.17",
+    "@nishans/fabricator": "^0.0.17",
     "colors": "^1.4.0"
   },
   "devDependencies": {

@@ -1,6 +1,9 @@
 import { ICache } from '@nishans/cache';
-import { IOperation, TTextFormat } from '@nishans/types';
-import { Logger } from '../../types';
+import { IOperation, TDataType, TTextFormat } from '@nishans/types';
+
+export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
+
+export type Logger = false | ((method: TMethodType, subject: TDataType, id: string) => void);
 
 export interface ParentCollectionData {
 	parent_collection_id: string;

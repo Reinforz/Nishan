@@ -1,11 +1,8 @@
 import { ICache } from '@nishans/cache';
+import { Logger } from '@nishans/fabricator';
 import { NotionOperationPluginFunction } from '@nishans/operations';
 import { IOperation, TDataType } from '@nishans/types';
 import { Predicate } from './utils';
-
-export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
-
-export type Logger = false | ((method: TMethodType, subject: TDataType, id: string) => void);
 export interface NishanArg {
 	token: string;
 	interval?: number;

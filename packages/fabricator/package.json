@@ -1,6 +1,6 @@
 {
   "name": "@nishans/fabricator",
-  "version": "0.0.0",
+  "version": "0.0.17",
   "description": "A package to generate notion blocks using a simple api",
   "keywords": [
     "notion",

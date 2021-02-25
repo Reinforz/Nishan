@@ -1,9 +1,9 @@
-import { TSchemaUnit } from '@nishans/types';
+import { TitleSchemaUnit } from '@nishans/types';
 
 /**
  * Title schema unit
  */
-export const tsu: TSchemaUnit = {
+export const tsu: TitleSchemaUnit = {
 	type: 'title',
 	name: 'Title'
 };

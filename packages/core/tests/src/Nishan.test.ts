@@ -13,6 +13,7 @@ describe('Nishan', () => {
 
 			const nishan = new Nishan({
 				...default_nishan_arg,
+				notion_operation_plugins: [],
 				logger: logger_spy
 			});
 

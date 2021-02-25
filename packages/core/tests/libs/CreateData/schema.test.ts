@@ -1,8 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { ICollection, TSchemaUnit } from '@nishans/types';
 import { CreateData } from '../../../libs/CreateData';
-import { ISchemaMapValue, TSchemaUnitInput } from '../../../types';
+import { TSchemaUnitInput } from '../../../types';
 import { default_nishan_arg } from '../../utils';
 import { tsu } from './utils';
 
@@ -13,86 +11,40 @@ afterEach(() => {
 describe('Work correctly', () => {
 	it(`CreateData.schema should work correctly (collection exists in cache)`, async () => {
 		const input_schema_units: TSchemaUnitInput[] = [
-			{
-				type: 'title',
-				name: 'Title'
-			},
-			{
-				type: 'number',
-				name: 'Number'
-			},
+			tsu,
 			{
 				type: 'formula',
 				name: 'Formula',
 				formula: [ 'now()', 'string' ]
 			},
 			{
-				type: 'relation',
-				collection_id: 'child_collection_id',
-				name: 'Parent Relation Column'
+				type: 'rollup',
+				name: 'Rollup'
 			},
 			{
-				type: 'rollup',
-				collection_id: 'target_collection_id',
-				name: 'Rollup',
-				relation_property: 'Parent Relation Column',
-				target_property: 'Title'
+				type: 'relation',
+				name: 'Relation'
 			}
-		];
+		] as any;
 
-		const child_collection: ICollection = {
-				schema: {
-					title: {
-						type: 'title',
-						name: 'Title'
-					}
-				},
-				name: 'Child',
-				id: 'child_collection_id'
-			} as any,
-			target_collection: ICollection = {
-				schema: {
-					title: {
-						type: 'title',
-						name: 'Title'
-					}
-				},
-				name: 'Target Collection',
-				id: 'target_collection_id'
-			} as any,
-			cache = {
-				...NotionCacheObject.createDefaultCache(),
-				collection: new Map([
-					[ 'child_collection_id', child_collection ],
-					[ 'target_collection_id', target_collection ]
-				])
-			};
+		const cache = NotionCacheObject.createDefaultCache(),
+			createSchemaUnitRollupMock = jest
+				.spyOn(CreateData.schema_unit, 'rollup')
+				.mockImplementationOnce(async () => input_schema_units[2] as any),
+			createSchemaUnitRelationMock = jest
+				.spyOn(CreateData.schema_unit, 'relation')
+				.mockImplementationOnce(async () => input_schema_units[3] as any);
 
 		const [ schema, schema_map, schema_unit_map ] = await CreateData.schema(input_schema_units, {
 			...default_nishan_arg,
 			parent_collection_id: 'parent_collection_id',
 			name: [ [ 'Parent' ] ],
 			cache,
-			token: 'token',
 			current_schema: {}
 		});
 
-		const child_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema(child_collection.schema).get(
-			'Related to Parent (Parent Relation Column)'
-		) as ISchemaMapValue).schema_id;
-		const parent_relation_schema_unit_id = (generateSchemaMapFromCollectionSchema(schema).get(
-			'Parent Relation Column'
-		) as ISchemaMapValue).schema_id;
-
 		const output_schema_units = [
-			{
-				type: 'title',
-				name: 'Title'
-			},
-			{
-				type: 'number',
-				name: 'Number'
-			},
+			tsu,
 			{
 				type: 'formula',
 				name: 'Formula',
@@ -102,32 +54,14 @@ describe('Work correctly', () => {
 					type: 'function'
 				}
 			},
-			{
-				type: 'relation',
-				collection_id: 'child_collection_id',
-				name: 'Parent Relation Column',
-				property: child_relation_schema_unit_id
-			},
-			{
-				type: 'rollup',
-				collection_id: 'target_collection_id',
-				name: 'Rollup',
-				relation_property: parent_relation_schema_unit_id,
-				target_property: 'title',
-				target_property_type: 'title',
-				aggregation: undefined
-			}
-		] as TSchemaUnit[];
+			input_schema_units[2],
+			input_schema_units[3]
+		];
 
+		expect(createSchemaUnitRollupMock).toHaveBeenCalledTimes(1);
+		expect(createSchemaUnitRelationMock).toHaveBeenCalledTimes(1);
 		expect(output_schema_units).toStrictEqual(Object.values(schema));
-
-		expect(Array.from(schema_map.keys())).toStrictEqual([
-			'Title',
-			'Number',
-			'Formula',
-			'Parent Relation Column',
-			'Rollup'
-		]);
+		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title', 'Formula', 'Rollup', 'Relation' ]);
 		expect(schema_unit_map.title.get('Title')).not.toBeUndefined();
 	});
 });

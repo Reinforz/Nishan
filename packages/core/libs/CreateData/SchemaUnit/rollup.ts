@@ -6,7 +6,7 @@ import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
 
 /**
- * 
+ * Generate rollup schema unit
  * @param input_schema_unit The rollup schema unit input
  * @param schema_map The schema map used for resolving property reference
  * @param request_config The config object used to make request, validate and cache response

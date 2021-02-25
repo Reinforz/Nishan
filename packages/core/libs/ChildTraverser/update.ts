@@ -43,7 +43,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			// 2. deeply merge the new data with the existing data
 			// 3. Push the updated properties to the stack
 
-			if (child_type === 'block') last_edited_props = updateLastEditedProps(child_data, user_id);
+			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
 			deepMerge(child_data, updated_data);
 			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
@@ -58,8 +58,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 		parent_type
 	});
 
-	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (parent_type === 'block')
+	if (parent_type.match(/^(block|space)$/))
 		stack.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
 
 	return container as C;

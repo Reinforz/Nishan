@@ -1,6 +1,7 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { SchemaUnit } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -52,20 +53,14 @@ it(`update`, () => {
   });
 
   expect(stack).toStrictEqual([
-    {
-      command: "update",
-      table: "collection",
-      path: [],
-      id: 'collection_1',
-      args: {
-        schema: {
-          schema_id_1: {
-            type: 'text',
-            name: 'New Name'
-          }
+    o.c.u('collection_1', [], {
+      schema: {
+        schema_id_1: {
+          type: 'text',
+          name: 'New Name'
         }
       }
-    }
+    }),
   ])
 });
 
@@ -116,20 +111,14 @@ describe('delete', () => {
     });
 
     expect(stack).toStrictEqual([
-      {
-        command: "update",
-        table: "collection",
-        path: [],
-        id: 'collection_1',
-        args: {
-          schema: {
-            schema_id_2: {
-              type: 'title',
-              name: 'Title'
-            }
+      o.c.u('collection_1', [], {
+        schema: {
+          schema_id_2: {
+            type: 'title',
+            name: 'Title'
           }
         }
-      }
+      }),
     ])
   });
 

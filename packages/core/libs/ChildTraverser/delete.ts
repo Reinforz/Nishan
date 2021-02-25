@@ -45,7 +45,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			const updated_data = { alive: false };
 
 			// Only attach last_edited_props if the child_type is block
-			if (child_type === 'block') last_edited_props = updateLastEditedProps(child_data, user_id);
+			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
 			deepMerge(child_data, updated_data);
 			// Push the updated block data to the stack
@@ -65,7 +65,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 	});
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (parent_type === 'block')
+	if (parent_type.match(/^(block|space)$/))
 		stack.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
 
 	return container;

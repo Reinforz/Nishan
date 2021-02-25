@@ -1,8 +1,8 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { NotionData, SpaceView } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
-import { last_edited_props } from '../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -164,18 +164,18 @@ it(`updateBookmarkedPages`, async () => {
 		stack
 	});
 
-	const page_map = await space_view.updateBookmarkedPages([ [ 'block_1', false ], [ 'block_2', true ] ]);
+	const page_map = await space_view.updateBookmarkedPage([ 'block_2', true ]);
 
-	expect(page_map.page.get('Block One')).not.toBeUndefined();
 	expect(page_map.page.get('block_2')).not.toBeUndefined();
 
 	expect(space_view_1).toStrictEqual({
-		bookmarked_pages: [ 'block_2' ],
-		id: 'space_view_1',
-		...last_edited_props
+		bookmarked_pages: [ 'block_1', 'block_2' ],
+		id: 'space_view_1'
 	});
 
-	expect(stack.length).toBe(3);
-
-	await space_view.updateBookmarkedPage([ 'block_1', false ]);
+	expect(stack).toStrictEqual([
+		o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
+			id: 'block_2'
+		})
+	]);
 });

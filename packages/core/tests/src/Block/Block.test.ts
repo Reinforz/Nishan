@@ -4,6 +4,7 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { PopulateMap } from '../../../libs';
 import { Block, NotionData } from '../../../src';
+import { o } from '../../utils';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 import { last_edited_props } from '../../utils/lastEditedProps';
 
@@ -90,17 +91,15 @@ it('update', () => {
 
 	expect(logger_spy).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
 	expect(stack).toEqual([
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_1',
-			path: [],
-			args: expect.objectContaining({
+		o.b.u(
+			'block_1',
+			[],
+			expect.objectContaining({
 				properties: {
 					title: [ [ 'New Title' ] ]
 				}
 			})
-		})
+		)
 	]);
 });
 
@@ -133,15 +132,7 @@ describe('duplicate', () => {
 		expect(cache.block.get(id)).toStrictEqual(cached_data);
 		expect(logger_spy).toHaveBeenCalledWith('CREATE', 'block', id);
 		expect(PopulateMapBlockMock).toHaveBeenCalledTimes(1);
-		expect(stack).toEqual([
-			expect.objectContaining({
-				command: 'update',
-				table: 'block',
-				id,
-				path: [],
-				args: expect.objectContaining(cached_data)
-			})
-		]);
+		expect(stack).toEqual([ o.b.u(id, [], expect.objectContaining(cached_data)) ]);
 	});
 
 	it(`type=collection_view_page,arg=number`, async () => {
@@ -176,15 +167,7 @@ describe('duplicate', () => {
 		expect(logger_spy).toHaveBeenCalledWith('CREATE', 'block', expect.any(String));
 
 		expect(PopulateMapBlockMock).toHaveBeenCalledTimes(1);
-		expect(stack).toEqual([
-			expect.objectContaining({
-				command: 'update',
-				table: 'block',
-				id: expect.any(String),
-				path: [],
-				args: expect.objectContaining(cached_data)
-			})
-		]);
+		expect(stack).toEqual([ o.b.u(expect.any(String), [], expect.objectContaining(cached_data)) ]);
 		expect(MutationsEnqueueTaskMock).toHaveBeenCalledWith(
 			{
 				task: {
@@ -229,15 +212,13 @@ it('convertTo', () => {
 	});
 
 	expect(stack).toEqual([
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_1',
-			path: [],
-			args: expect.objectContaining({
+		o.b.u(
+			'block_1',
+			[],
+			expect.objectContaining({
 				type: 'header'
 			})
-		})
+		)
 	]);
 
 	expect(logger_spy).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
@@ -271,31 +252,17 @@ it(`delete`, () => {
 		})
 	);
 	expect(stack).toEqual([
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_1',
-			args: expect.objectContaining({
+		o.b.u(
+			'block_1',
+			[],
+			expect.objectContaining({
 				alive: false
-			}),
-			path: []
+			})
+		),
+		o.s.lr('space_1', [ 'pages' ], {
+			id: 'block_1'
 		}),
-		expect.objectContaining({
-			command: 'listRemove',
-			table: 'space',
-			id: 'space_1',
-			args: expect.objectContaining({
-				id: 'block_1'
-			}),
-			path: [ 'pages' ]
-		}),
-		expect.objectContaining({
-			command: 'update',
-			table: 'space',
-			id: 'space_1',
-			args: last_edited_props,
-			path: []
-		})
+		o.s.u('space_1', [], last_edited_props)
 	]);
 });
 
@@ -328,48 +295,30 @@ it(`transfer`, async () => {
 	expect(block_3.content).toEqual([ 'block_1' ]);
 
 	expect(stack).toEqual([
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_1',
-			args: expect.objectContaining({
+		o.b.u(
+			'block_1',
+			[],
+			expect.objectContaining({
 				alive: true,
 				parent_table: 'block',
 				parent_id: 'block_3'
-			}),
-			path: []
-		}),
-		expect.objectContaining({
-			command: 'listRemove',
-			table: 'block',
-			id: 'block_2',
-			args: expect.objectContaining({
+			})
+		),
+		o.b.lr(
+			'block_2',
+			[ 'content' ],
+			expect.objectContaining({
 				id: 'block_1'
-			}),
-			path: [ 'content' ]
-		}),
-		expect.objectContaining({
-			command: 'listAfter',
-			table: 'block',
-			id: 'block_3',
-			args: expect.objectContaining({
+			})
+		),
+		o.b.la(
+			'block_3',
+			[ 'content' ],
+			expect.objectContaining({
 				id: 'block_1'
-			}),
-			path: [ 'content' ]
-		}),
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_2',
-			args: last_edited_props,
-			path: []
-		}),
-		expect.objectContaining({
-			command: 'update',
-			table: 'block',
-			id: 'block_3',
-			args: last_edited_props,
-			path: []
-		})
+			})
+		),
+		o.b.u('block_2', [], last_edited_props),
+		o.b.u('block_3', [], last_edited_props)
 	]);
 });

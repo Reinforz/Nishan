@@ -3,6 +3,7 @@ import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -104,37 +105,19 @@ describe('NotionUser', () => {
     expect(space_cached_data).toStrictEqual(space_snapshot_data);
 
     expect(stack.slice(0, 3)).toStrictEqual([
-      {
-        command: "update",
-        table: "space",
-        path: [],
-        id: expect.any(String),
-        args: {
-          disable_public_access: false,
-          disable_export: false,
-          disable_guests: false,
-          disable_move_to_space: false,
-          beta_enabled: true,
-          invite_link_enabled: true,
-        }
-      },
-      {
-        command: "update",
-        table: "space_view",
-        path: [],
-        id: expect.any(String),
-        args: space_view_snapshot_data
-      },
-      {
-        command: "listAfter",
-        table: "user_root",
-        path: ['space_views'],
-        id: expect.any(String),
-        args: {
-          after: '',
-          id: expect.any(String)
-        }
-      }
+      o.s.u(expect.any(String), [], {
+        disable_public_access: false,
+        disable_export: false,
+        disable_guests: false,
+        disable_move_to_space: false,
+        beta_enabled: true,
+        invite_link_enabled: true,
+      }),
+      o.sv.u(expect.any(String), [], space_view_snapshot_data),
+      o.ur.la(expect.any(String), ['space_views'], {
+        after: '',
+        id: expect.any(String)
+      }),
     ]);
   });
 
@@ -187,16 +170,10 @@ describe('NotionUser', () => {
       });
 
       expect(stack).toStrictEqual([
-        {
-          path: [],
-          table: 'space',
-          command: 'update',
-          args: {
-            name: 'Space One',
+        o.s.u('space_1', [], {
+          name: 'Space One',
             ...last_edited_props,
-          },
-          id: 'space_1'
-        }
+        }),
       ]);
     });
   });

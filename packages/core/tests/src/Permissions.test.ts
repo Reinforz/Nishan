@@ -2,6 +2,7 @@ import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionPermissions } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -130,17 +131,11 @@ describe('updatePermissionsArray', () => {
 		notion_permissions.updatePermissionsArray('user_permission', { role: 'none' }, 'notion_user_1');
 
 		expect(stack).toStrictEqual([
-			{
-				args: {
-					type: 'user_permission',
-					user_id: 'notion_user_1',
-					role: 'none'
-				},
-				command: 'setPermissionItem',
-				id: 'block_1',
-				path: [ 'permissions' ],
-				table: 'block'
-			}
+			o.b.sp('block_1', [ 'permissions' ], {
+				type: 'user_permission',
+				user_id: 'notion_user_1',
+				role: 'none'
+			})
 		]);
 		expect(block_1.permissions).toStrictEqual([]);
 	});
@@ -168,15 +163,7 @@ describe('updatePermissionsArray', () => {
 			user_id: 'notion_user_1',
 			role: 'editor'
 		};
-		expect(stack).toStrictEqual([
-			{
-				args: permission,
-				command: 'setPermissionItem',
-				id: 'block_1',
-				path: [ 'permissions' ],
-				table: 'block'
-			}
-		]);
+		expect(stack).toStrictEqual([ o.b.sp('block_1', [ 'permissions' ], permission) ]);
 		expect(block_1.permissions).toStrictEqual([ permission ]);
 	});
 
@@ -207,15 +194,7 @@ describe('updatePermissionsArray', () => {
 			type: 'space_permission',
 			role: 'comment_only'
 		};
-		expect(stack).toStrictEqual([
-			{
-				args: permission,
-				command: 'setPermissionItem',
-				id: 'block_1',
-				path: [ 'permissions' ],
-				table: 'block'
-			}
-		]);
+		expect(stack).toStrictEqual([ o.b.sp('block_1', [ 'permissions' ], permission) ]);
 		expect(block_1.permissions).toStrictEqual([ permission ]);
 	});
 
@@ -249,15 +228,7 @@ describe('updatePermissionsArray', () => {
 		};
 
 		notion_permissions.updatePermissionsArray('user_permission', { role: 'read_and_write' }, 'notion_user_1');
-		expect(stack).toStrictEqual([
-			{
-				args: permission,
-				command: 'setPermissionItem',
-				id: 'block_1',
-				path: [ 'permissions' ],
-				table: 'block'
-			}
-		]);
+		expect(stack).toStrictEqual([ o.b.sp('block_1', [ 'permissions' ], permission) ]);
 		expect(block_1.permissions).toStrictEqual([ permission ]);
 	});
 });
@@ -303,15 +274,7 @@ it(`updateNonUserSpecificPermission`, () => {
 
 	expect(updatePermissionsArrayMock).toHaveBeenCalledWith('public_permission', { role: 'read_and_write' });
 	expect(logger).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
-	expect(stack).toStrictEqual([
-		{
-			command: 'update',
-			table: 'block',
-			path: [],
-			id: 'block_1',
-			args: last_edited_props
-		}
-	]);
+	expect(stack).toStrictEqual([ o.b.u('block_1', [], last_edited_props) ]);
 });
 
 it(`updatePublicPermission`, () => {

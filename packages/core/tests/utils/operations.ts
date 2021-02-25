@@ -5,7 +5,15 @@ export const o = {
 		s: Operation.block.set,
 		la: Operation.block.listAfter,
 		lb: Operation.block.listBefore,
-		lr: Operation.block.listRemove
+		lr: Operation.block.listRemove,
+		sp: Operation.block.setPermissionItem
+	},
+	ur: {
+		u: Operation.user_root.update,
+		s: Operation.user_root.set,
+		la: Operation.user_root.listAfter,
+		lb: Operation.user_root.listBefore,
+		lr: Operation.user_root.listRemove
 	},
 	sv: {
 		u: Operation.space_view.update,

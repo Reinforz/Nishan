@@ -3,6 +3,7 @@ import { IHeader, IOperation } from '@nishans/types';
 import colors from 'colors';
 import { ChildTraverser } from '../../libs';
 import { NotionData } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 
@@ -194,15 +195,9 @@ it(`updateCacheLocally`, async () => {
 
 	expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1', type: 'header', alive: false });
 	expect(stack).toStrictEqual([
-		{
-			command: 'update',
-			table: 'block',
-			id: 'block_1',
-			path: [],
-			args: {
-				alive: false
-			}
-		}
+		o.b.u('block_1', [], {
+			alive: false
+		})
 	]);
 });
 

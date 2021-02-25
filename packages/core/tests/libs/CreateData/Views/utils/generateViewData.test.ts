@@ -2,6 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { generateViewData } from '../../../../../libs/CreateData/Views/utils';
+import { o } from '../../../../utils';
 
 describe('generateViewData', () => {
 	const id = v4(),
@@ -44,17 +45,7 @@ describe('generateViewData', () => {
 
 		expect(view_data).toStrictEqual(expected_view_data);
 
-		expect(stack).toStrictEqual([
-			{
-				path: [],
-				pointer: {
-					table: 'collection_view',
-					id
-				},
-				command: 'update',
-				args: expected_view_data
-			}
-		]);
+		expect(stack).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);
 
 		expect(Array.from(cache.collection_view.entries())).toStrictEqual([ [ id, expected_view_data ] ]);
 	});

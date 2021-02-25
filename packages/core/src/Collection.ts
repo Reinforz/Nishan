@@ -214,7 +214,7 @@ class Collection extends Data<ICollection> {
 			parent_collection_id: data.id,
 			current_schema: data.schema
 		});
-		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
 		this.updateLastEditedProps();
 		return schema_unit_map;
 	}
@@ -286,7 +286,7 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
 		return results;
 	}
 
@@ -325,7 +325,7 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation.collection.update(this.id, [], { schema: data.schema }));
+		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
 	}
 }
 

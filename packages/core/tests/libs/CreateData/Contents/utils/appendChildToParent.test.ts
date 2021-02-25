@@ -1,6 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { appendChildToParent } from '../../../../../libs/CreateData/Contents/utils';
+import { o } from '../../../../utils';
 
 it(`path exists`, async () => {
 	const stack: IOperation[] = [],
@@ -10,18 +11,10 @@ it(`path exists`, async () => {
 	await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
 	expect(stack).toStrictEqual([
-		{
-			pointer: {
-				table: 'block',
-				id: 'parent_id'
-			},
-			command: 'listAfter',
-			args: {
-				after: '',
-				id: 'child_id'
-			},
-			path: [ 'content' ]
-		}
+		o.b.la('parent_id', [ 'content' ], {
+			after: '',
+			id: 'child_id'
+		})
 	]);
 });
 
@@ -33,17 +26,9 @@ it(`path doesn't exists`, async () => {
 	await appendChildToParent('block', 'parent_id', 'child_id', cache, stack, 'token');
 
 	expect(stack).toStrictEqual([
-		{
-			pointer: {
-				table: 'block',
-				id: 'parent_id'
-			},
-			command: 'listAfter',
-			args: {
-				after: '',
-				id: 'child_id'
-			},
-			path: [ 'content' ]
-		}
+		o.b.la('parent_id', [ 'content' ], {
+			after: '',
+			id: 'child_id'
+		})
 	]);
 });

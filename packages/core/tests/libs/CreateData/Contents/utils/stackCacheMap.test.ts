@@ -2,6 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, IPage } from '@nishans/types';
 import { stackCacheMap } from '../../../../../libs/CreateData/Contents/utils';
 import { IBlockMap, Page } from '../../../../../src';
+import { o } from '../../../../utils';
 
 describe('stackCacheMap', () => {
 	it(`name=string`, () => {
@@ -25,17 +26,7 @@ describe('stackCacheMap', () => {
 			'name'
 		);
 
-		expect(stack).toStrictEqual([
-			{
-				args: data,
-				command: 'update',
-				path: [],
-				pointer: {
-					id: 'data_id',
-					table: 'block'
-				}
-			}
-		]);
+		expect(stack).toStrictEqual([ o.b.u('data_id', [], data) ]);
 		expect(cache.block.get('data_id')).toStrictEqual(data);
 		expect((block_map.page.get('data_id') as Page).getCachedData()).toStrictEqual(data);
 		expect((block_map.page.get('name') as Page).getCachedData()).toStrictEqual(data);

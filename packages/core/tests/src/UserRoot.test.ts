@@ -1,8 +1,8 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { UserRoot } from '../../src';
+import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
-import { last_edited_props } from '../utils/lastEditedProps';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -45,31 +45,12 @@ it(`update space_views`, async () => {
 	const space_view = await user_root.updateSpaceView([ 'space_view_1', { joined: false } ]);
 	expect(space_view.getCachedData()).toStrictEqual({
 		alive: true,
-		...last_edited_props,
 		joined: false
 	} as any);
 
 	expect(stack).toStrictEqual([
-		{
-			pointer: {
-				table: 'space_view',
-				id: 'space_view_1'
-			},
-			command: 'update',
-			path: [],
-			args: {
-				...last_edited_props,
-				joined: false
-			}
-		},
-		{
-			pointer: {
-				table: 'user_root',
-				id: 'user_root_1'
-			},
-			command: 'update',
-			path: [],
-			args: last_edited_props
-		}
+		o.sv.u('space_view_1', [], {
+			joined: false
+		})
 	] as any);
 });

@@ -3,6 +3,7 @@ import { IOperation } from '@nishans/types';
 import { CreateData } from '../../../libs';
 import { CollectionBlock } from "../../../src";
 import { TViewCreateInput } from '../../../types';
+import { o } from '../../utils';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {
@@ -72,17 +73,10 @@ it(`createViews`, () => {
 	expect(createViewsMock.mock.calls[0][0]).toStrictEqual(collection_1);
 	expect(createViewsMock.mock.calls[0][1]).toStrictEqual(createViews_params);
 
-	expect(stack[stack.length - 1]).toStrictEqual({
-		command: 'update',
-		pointer: {
-      table: 'block',
-		  id: 'block_1',
-    },
-		path: [],
-		args: {
+	expect(stack[stack.length - 1]).toStrictEqual(
+		o.b.u('block_1', [], {
 			view_ids: [ 'view_2', 'view_1' ]
-		}
-	});
+		}));
 });
 
 it(`getViews`, async () => {

@@ -426,10 +426,6 @@ it(`createSchemaUnits`, async () => {
 		stack
 	});
 
-	const createSchemaMock = jest.spyOn(CreateData, 'schema').mockImplementationOnce(async () => {
-		return [ {} as Schema, new Map() as any, new Map() as any ];
-	});
-
 	const createSchemaUnitsArgs: TSchemaUnitInput[] = [
 		{
 			type: 'checkbox',
@@ -439,22 +435,17 @@ it(`createSchemaUnits`, async () => {
 
 	await collection.createSchemaUnits(createSchemaUnitsArgs);
 
-	expect(createSchemaMock.mock.calls[0][0]).toStrictEqual(createSchemaUnitsArgs);
-	expect(createSchemaMock.mock.calls[0][1]).toEqual(
-		expect.objectContaining({
-			parent_collection_id: 'collection_1',
-			current_schema,
-			name: [ [ 'Collection' ] ]
-		})
-	);
 	expect(stack[0]).toEqual(
-		expect.objectContaining({
-			command: 'update',
-			pointer: {
-				id: 'collection_1',
-				table: 'collection'
-			}
-		})
+		o.c.u(
+			'collection_1',
+			[ 'schema' ],
+			expect.objectContaining({
+				title: {
+					type: 'title',
+					name: 'Title'
+				}
+			})
+		)
 	);
 });
 
@@ -528,11 +519,11 @@ it(`updateSchemaUnit`, async () => {
 		}
 	});
 	expect(stack[0]).toEqual(
-		expect.objectContaining({
-			command: 'update',
-			pointer: expect.objectContaining({
-				table: 'collection'
-			})
+		o.c.u('collection_1', [ 'schema' ], {
+			title: {
+				type: 'checkbox',
+				name: 'Checkbox'
+			}
 		})
 	);
 });
@@ -577,11 +568,11 @@ it(`deleteSchemaUnit`, async () => {
 		}
 	});
 	expect(stack[0]).toEqual(
-		expect.objectContaining({
-			command: 'update',
-			pointer: expect.objectContaining({
-				table: 'collection'
-			})
+		o.c.u('collection_1', [ 'schema' ], {
+			title: {
+				type: 'title',
+				name: 'Title'
+			}
 		})
 	);
 });

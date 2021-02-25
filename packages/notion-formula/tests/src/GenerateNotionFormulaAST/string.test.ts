@@ -1,5 +1,5 @@
 import { GenerateNotionFormulaAST } from '../../../src';
-import { test_schema_map } from '../utils';
+import { abs, cn, ct, pn, pt, sc, sn, test_schema_map } from '../utils';
 
 describe('String function formula parsing error', () => {
 	it('Should throw for improper function argument length', () => {
@@ -36,19 +36,7 @@ describe('Variadic argument string representation parsing', () => {
 		expect({
 			name: 'max',
 			type: 'function',
-			args: [
-				{
-					type: 'constant',
-					value: '1',
-					value_type: 'number',
-					result_type: 'number'
-				},
-				{
-					type: 'symbol',
-					name: 'e',
-					result_type: 'number'
-				}
-			],
+			args: [ cn, sn ],
 			result_type: 'number'
 		}).toStrictEqual(GenerateNotionFormulaAST.string('max(1, e)', test_schema_map));
 	});
@@ -88,169 +76,66 @@ describe('Zero arity function formula string parsing', () => {
 
 describe('Function formula string parsing success for literal arguments', () => {
 	it('Should match output for number x symbol argument variant', () => {
-		expect({
-			type: 'symbol',
-			name: 'e',
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('e'));
+		expect(sn).toStrictEqual(GenerateNotionFormulaAST.string('e'));
 	});
 
 	it('Should match output for checkbox x symbol argument variant', () => {
-		expect({
-			type: 'symbol',
-			name: 'true',
-			result_type: 'checkbox'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('true'));
+		expect(sc).toStrictEqual(GenerateNotionFormulaAST.string('true'));
 	});
 
 	it('Should match output for string x constant argument variant', () => {
-		expect({
-			type: 'constant',
-			value: 'text',
-			result_type: 'text',
-			value_type: 'string'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('"text"'));
+		expect(ct).toStrictEqual(GenerateNotionFormulaAST.string('"text"'));
 	});
 
 	it('Should match output for string(with space) x constant argument variant', () => {
 		expect({
-			type: 'constant',
-			value: 'text with space',
-			result_type: 'text',
-			value_type: 'string'
+			...ct,
+			value: 'text with space'
 		}).toStrictEqual(GenerateNotionFormulaAST.string('"text with space"'));
 	});
 
 	it('Should match output for number x constant argument variant', () => {
-		expect({
-			type: 'constant',
-			value: '1',
-			result_type: 'number',
-			value_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('1'));
+		expect(cn).toStrictEqual(GenerateNotionFormulaAST.string('1'));
 	});
 
 	it('Should match output for number x property argument variant', () => {
-		expect({
-			type: 'property',
-			name: 'number',
-			id: 'number',
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('prop("number")', test_schema_map));
+		expect(pn).toStrictEqual(GenerateNotionFormulaAST.string('prop("number")', test_schema_map));
 	});
 });
 
 describe('Function formula string representation parsing success', () => {
 	it(`Should match output for constant argument type`, () => {
-		expect({
-			name: 'abs',
-			type: 'function',
-			args: [
-				{
-					type: 'constant',
-					value: '1',
-					value_type: 'number',
-					result_type: 'number'
-				}
-			],
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('abs(1)', test_schema_map));
+		expect(abs([ cn ])).toStrictEqual(GenerateNotionFormulaAST.string('abs(1)', test_schema_map));
 	});
 
 	it(`Should match output for symbol argument type`, () => {
-		expect({
-			name: 'abs',
-			type: 'function',
-			args: [
-				{
-					type: 'symbol',
-					name: 'e',
-					result_type: 'number'
-				}
-			],
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('abs(e)', test_schema_map));
+		expect(abs([ sn ])).toStrictEqual(GenerateNotionFormulaAST.string('abs(e)', test_schema_map));
 	});
 
 	it(`Should match output for property argument type`, () => {
-		expect({
-			name: 'abs',
-			type: 'function',
-			args: [
-				{
-					type: 'property',
-					name: 'number',
-					id: 'number',
-					result_type: 'number'
-				}
-			],
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('abs(prop("number"))', test_schema_map));
+		expect(abs([ pn ])).toStrictEqual(GenerateNotionFormulaAST.string('abs(prop("number"))', test_schema_map));
 	});
 
 	it(`Should match output for checkbox symbol argument type`, () => {
 		expect({
 			name: 'and',
 			type: 'function',
-			args: [
-				{
-					type: 'symbol',
-					name: 'true',
-					result_type: 'checkbox'
-				},
-				{
-					type: 'symbol',
-					name: 'false',
-					result_type: 'checkbox'
-				}
-			],
+			args: [ sc, sc ],
 			result_type: 'checkbox'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('and(true, false)', test_schema_map));
+		}).toStrictEqual(GenerateNotionFormulaAST.string('and(true, true)', test_schema_map));
 	});
 
 	it(`Should match output for function argument type`, () => {
-		expect({
-			name: 'abs',
-			type: 'function',
-			args: [
-				{
-					name: 'ceil',
-					type: 'function',
-					args: [
-						{
-							type: 'constant',
-							value: '1',
-							value_type: 'number',
-							result_type: 'number'
-						}
-					],
-					result_type: 'number'
-				}
-			],
-			result_type: 'number'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('abs(ceil(1))', test_schema_map));
+		expect(abs([ abs([ cn ]) ])).toStrictEqual(GenerateNotionFormulaAST.string('abs(abs(1))', test_schema_map));
 	});
 
 	it(`Should match output for string x constant argument variant`, () => {
 		expect({
 			name: 'concat',
 			type: 'function',
-			args: [
-				{
-					type: 'constant',
-					value: 'a',
-					value_type: 'string',
-					result_type: 'text'
-				},
-				{
-					type: 'constant',
-					value: 'b',
-					value_type: 'string',
-					result_type: 'text'
-				}
-			],
+			args: [ ct, ct ],
 			result_type: 'text'
-		}).toStrictEqual(GenerateNotionFormulaAST.string('concat("a", "b")', test_schema_map));
+		}).toStrictEqual(GenerateNotionFormulaAST.string('concat("text", "text")', test_schema_map));
 	});
 
 	it(`Should match output for string(with spaces) x constant argument variant`, () => {
@@ -259,16 +144,12 @@ describe('Function formula string representation parsing success', () => {
 			type: 'function',
 			args: [
 				{
-					type: 'constant',
-					value: 'a space',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'a space'
 				},
 				{
-					type: 'constant',
-					value: 'b space',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'b space'
 				}
 			],
 			result_type: 'text'
@@ -283,16 +164,12 @@ describe('Test parsing of special characters inside text constants', () => {
 			type: 'function',
 			args: [
 				{
-					type: 'constant',
-					value: 'a space',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'a space'
 				},
 				{
-					type: 'property',
-					id: 'text',
-					name: 'text space',
-					result_type: 'text'
+					...pt,
+					name: 'text space'
 				}
 			],
 			result_type: 'text'
@@ -305,16 +182,12 @@ describe('Test parsing of special characters inside text constants', () => {
 			type: 'function',
 			args: [
 				{
-					type: 'constant',
-					value: 'a,commas',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'a,commas'
 				},
 				{
-					type: 'property',
-					id: 'text',
-					name: 'text,commas',
-					result_type: 'text'
+					...pt,
+					name: 'text,commas'
 				}
 			],
 			result_type: 'text'
@@ -327,16 +200,12 @@ describe('Test parsing of special characters inside text constants', () => {
 			type: 'function',
 			args: [
 				{
-					type: 'constant',
-					value: 'a(left parenthesis',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'a(left parenthesis'
 				},
 				{
-					type: 'property',
-					id: 'text',
-					name: 'text(left parenthesis',
-					result_type: 'text'
+					...pt,
+					name: 'text(left parenthesis'
 				}
 			],
 			result_type: 'text'
@@ -351,16 +220,12 @@ describe('Test parsing of special characters inside text constants', () => {
 			type: 'function',
 			args: [
 				{
-					type: 'constant',
-					value: 'a)right parenthesis',
-					value_type: 'string',
-					result_type: 'text'
+					...ct,
+					value: 'a)right parenthesis'
 				},
 				{
-					type: 'property',
-					id: 'text',
-					name: 'text)right parenthesis',
-					result_type: 'text'
+					...pt,
+					name: 'text)right parenthesis'
 				}
 			],
 			result_type: 'text'

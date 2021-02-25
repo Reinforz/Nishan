@@ -1,2 +1,2 @@
-export * from './formulateResultTypeFromSchemaType';
 export * from './generateNotionFormulaAST';
+export * from './getResultTypeFromSchemaType';

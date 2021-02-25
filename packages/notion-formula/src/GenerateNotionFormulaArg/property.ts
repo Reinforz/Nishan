@@ -1,6 +1,6 @@
 import { TFormulaResultType, TPropertyFormula } from '@nishans/types';
 import { ISchemaMap } from '../';
-import { formulateResultTypeFromSchemaType } from '../GenerateNotionFormulaAST/utils';
+import { getResultTypeFromSchemaType } from '../GenerateNotionFormulaAST/utils';
 
 /**
  * Generate function formula argument using information from the passed schema_map
@@ -26,7 +26,7 @@ export function generateNotionFormulaArgFromProperty (
 		const result_type: TFormulaResultType =
 			schema_info.type === 'formula'
 				? schema_info.formula.result_type
-				: formulateResultTypeFromSchemaType(schema_info.type === 'rollup' ? schema_info.target_property_type : type);
+				: getResultTypeFromSchemaType(schema_info.type === 'rollup' ? schema_info.target_property_type : type);
 		return {
 			type: 'property',
 			id: schema_id,

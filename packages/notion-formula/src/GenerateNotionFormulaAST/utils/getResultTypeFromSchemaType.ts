@@ -5,7 +5,7 @@ import { TFormulaResultType, TSchemaUnitType } from '@nishans/types';
  * @param type The schema_unit type
  * @returns The appropriate formula result_type
  */
-export function formulateResultTypeFromSchemaType (type: TSchemaUnitType): TFormulaResultType {
+export function getResultTypeFromSchemaType (type: TSchemaUnitType): TFormulaResultType {
 	switch (type) {
 		case 'checkbox':
 			return 'checkbox';

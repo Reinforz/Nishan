@@ -1,5 +1,91 @@
 import { ISchemaMap } from '../../src';
 
+// Title schema unit
+export const tsu: any = {
+	type: 'title',
+	name: 'Title'
+};
+
+// Date schema unit
+export const dsu: any = {
+	type: 'date',
+	name: 'Date'
+};
+
+// Title schema map unit
+export const tsmu: any = [
+	'Title',
+	{
+		schema_id: 'title',
+		...tsu
+	}
+];
+
+// Date schema map unit
+export const dsmu: any = [
+	'Date',
+	{
+		schema_id: 'date',
+		...dsu
+	}
+];
+
+// constant text
+
+export const ct = {
+	type: 'constant',
+	value: 'text',
+	result_type: 'text',
+	value_type: 'string'
+};
+
+export const pt = {
+	type: 'property',
+	name: 'text',
+	result_type: 'text',
+	id: 'text'
+};
+
+// Constant 1
+export const cn = {
+	type: 'constant',
+	value: '1',
+	value_type: 'number',
+	result_type: 'number'
+};
+
+// Symbol e
+export const sn = {
+	type: 'symbol',
+	name: 'e',
+	result_type: 'number'
+};
+
+// Symbol true
+export const sc = {
+	type: 'symbol',
+	name: 'true',
+	result_type: 'checkbox'
+};
+
+// property number
+export const pn = {
+	type: 'property',
+	name: 'number',
+	id: 'number',
+	result_type: 'number'
+};
+
+// abs fn ast
+export const abs = (args: any) => {
+	return {
+		name: 'abs',
+		type: 'function',
+		args,
+		result_type: 'number'
+	};
+};
+
 export const test_schema_map: ISchemaMap = new Map([
 	[ 'number', { schema_id: 'number', type: 'number', name: 'number' } ],
 	[ 'text', { schema_id: 'text', type: 'text', name: 'text' } ],

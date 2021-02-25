@@ -1,7 +1,7 @@
 import { relation } from './relation';
 import { rollup } from './rollup';
 
-export const CreateSchemaUnitData = {
+export const CreateSchemaUnit = {
 	relation,
 	rollup
 };

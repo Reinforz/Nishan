@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
-import { formulateResultTypeFromSchemaType, generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
@@ -38,22 +38,6 @@ export async function rollup (
 		{ token, interval: 0 },
 		cache
 	);
-	// Construct the rollup schema unit
-	const rollup_schema_unit: RollupSchemaUnit = {
-		// The related collection id
-		collection_id,
-		// The name of the related schema unit
-		name,
-		// The name of the related schema_unit
-		relation_property: relation_schema_unit.schema_id,
-		type: 'rollup',
-		// The type of aggregation used in the schema_unit
-		aggregation,
-		// The name of the target schema_unit
-		target_property,
-		// The return type of the target schema unit
-		target_property_type: 'title'
-	};
 
 	// Log the collection read operation
 	logger && logger('READ', 'collection', target_collection.id);
@@ -64,24 +48,20 @@ export async function rollup (
 	if (!target_collection_schema_unit_map)
 		throw new UnknownPropertyReferenceError(target_property, [ 'target_property' ]);
 
-	// Set the correct data to the previously constructed rollup schema unit
-	rollup_schema_unit.target_property = target_collection_schema_unit_map.schema_id;
-	rollup_schema_unit.target_property_type =
-		// If the target property is of type title keep title
-		target_collection_schema_unit_map.type === 'title'
-			? 'title'
-			: // Else if its of type formula, use the formula's result_type
-				target_collection_schema_unit_map.type === 'formula'
-				? target_collection_schema_unit_map.formula.result_type
-				: // Else if its of type rollup
-					target_collection_schema_unit_map.type === 'rollup'
-					? // f the target property is of type title keep title
-						target_collection_schema_unit_map.target_property_type === 'title'
-						? 'title'
-						: // Else get it from the function
-							formulateResultTypeFromSchemaType(target_collection_schema_unit_map.target_property_type)
-					: formulateResultTypeFromSchemaType(target_collection_schema_unit_map.type);
-
-	// Return the constructed rollup schema unit
-	return rollup_schema_unit;
+	// Construct the rollup schema unit
+	return {
+		// The related collection id
+		collection_id,
+		// The name of the related schema unit
+		name,
+		// The name of the related schema_unit
+		relation_property: relation_schema_unit.schema_id,
+		type: 'rollup',
+		// The type of aggregation used in the schema_unit
+		aggregation,
+		// The name of the target schema_unit
+		target_property: target_collection_schema_unit_map.schema_id,
+		// The return type of the target schema unit
+		target_property_type: target_collection_schema_unit_map.type
+	} as RollupSchemaUnit;
 }

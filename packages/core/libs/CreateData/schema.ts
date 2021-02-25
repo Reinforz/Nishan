@@ -1,11 +1,11 @@
 import { NonExistentSchemaUnitTypeError, SchemaDuplicatePropertyNameError } from "@nishans/errors";
 import { createShortId } from "@nishans/idz";
-import { generateFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
+import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
 import { CreateMaps } from "..";
 import { SchemaUnit } from "../../src";
 import { ISchemaUnitMap, NishanArg, TSchemaUnitInput } from "../../types";
-import { CreateSchemaUnitData } from "./SchemaUnit";
+import { CreateSchemaUnit } from "./SchemaUnit";
 import { ParentCollectionData } from "./types";
 /**
  * Generates a full schema from a passed input schema
@@ -33,13 +33,13 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
     // For specific schema unit type, the corresponding schema unit has to be generated using specific functions 
     switch(input_schema_unit.type){
       case "formula":
-        schema[schema_id] = {...input_schema_unit, formula: generateFormulaAST(input_schema_unit.formula[0] as any, input_schema_unit.formula[1] as any, schema_map)};
+        schema[schema_id] = {...input_schema_unit, formula: GenerateNotionFormulaAST[input_schema_unit.formula[1]](input_schema_unit.formula[0] as any, schema_map)};
         break;
       case "rollup":
-        schema[schema_id] = await CreateSchemaUnitData.rollup(input_schema_unit, schema_map, options);
+        schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, options);
         break;
       case "relation":
-        schema[schema_id] = await CreateSchemaUnitData.relation(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id});
+        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id});
         break;
       default:
         schema[schema_id] = input_schema_unit;

@@ -1,7 +1,7 @@
 import { collection } from './collection';
 import { contents } from './Contents/contents';
 import { schema } from './schema';
-import { CreateSchemaUnitData } from './SchemaUnit';
+import { CreateSchemaUnit } from './SchemaUnit';
 import { views } from './Views/views';
 
 export const CreateData = {
@@ -9,5 +9,5 @@ export const CreateData = {
 	collection,
 	contents,
 	schema,
-	schema_unit: CreateSchemaUnitData
+	schema_unit: CreateSchemaUnit
 };

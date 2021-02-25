@@ -5,6 +5,7 @@ export * from './CreateData';
 export * from './CreateMaps';
 export * from './deepMerge';
 export * from './detectChildData';
+export * from './getSchemaMapUnit';
 export * from './initializeView';
 export * from './populateFilters';
 export * from './PopulateMap';

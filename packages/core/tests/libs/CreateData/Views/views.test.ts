@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import {
   CreateData
 } from '../../../../libs/CreateData';
+import { tsu } from "../utils";
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -21,10 +22,7 @@ const default_nishan_arg = {
 const default_collection = {
   id: 'collection_id',
   schema: {
-    title: {
-      type: "title",
-      name: "Title"
-    }
+    title: tsu
   } as Schema,
   parent_id: 'parent_id'
 };
@@ -43,22 +41,18 @@ describe('Output correctly', () => {
           type: 'table',
           name: 'Table',
           schema_units: [
-            {
-              name: "Title",
-              type: "title",
-            }
+            tsu
           ]
         }
       ],
       {
+        ...default_nishan_arg,
         stack,
         cache,
         logger: ()=>{
           return
         },
-        ...default_nishan_arg
       },
-      'parent_id'
     );
 
     
@@ -142,7 +136,6 @@ describe('Output correctly', () => {
     
     expect(view_ids).toStrictEqual([ id ]);
     expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
-    expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
     expect(
       stack
     ).toStrictEqual([
@@ -181,13 +174,6 @@ describe('Output correctly', () => {
           "space_id": "space_id"
         },
         "id": expect.any(String)
-      },
-      {
-        "path": [],
-        "table": "collection_view",
-        "command": "update",
-        "args": expected_view_data,
-        "id": expect.any(String)
       }
     ]);
   });
@@ -220,7 +206,7 @@ describe('throws error', () => {
     )).toThrow()
   });
 
-  it(`when unknown property is referenced`, () => {
+  it(`empty input values`, () => {
     expect(()=>CreateData.views(
       default_collection,
       [],
@@ -232,7 +218,7 @@ describe('throws error', () => {
           return
         }
       }
-    )).toThrow(`schema_units input array cannot be empty`)
+    )).toThrow(`input views array cannot be empty`)
   });
 })
 

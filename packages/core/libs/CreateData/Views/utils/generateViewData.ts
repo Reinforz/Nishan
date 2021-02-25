@@ -1,8 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
-import { TView, TViewQuery2 } from '@nishans/types';
-import { TViewFormat } from '.';
-import { NishanArg, TViewCreateInput } from '../../../../types';
+import { TView } from '@nishans/types';
+import { NishanArg } from '../../../../types';
 
 /**
  * Construct and return the view data using the passed info and stores it in cache and operation stack
@@ -13,13 +12,7 @@ import { NishanArg, TViewCreateInput } from '../../../../types';
  * @param parent_id The parent id of the view
  */
 export function generateViewData (
-	{
-		id,
-		name,
-		type,
-		format,
-		query2
-	}: Pick<TViewCreateInput, 'id' | 'name' | 'type'> & { format: TViewFormat; query2: TViewQuery2 },
+	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
 	{ stack, cache, space_id, shard_id }: Pick<NishanArg, 'stack' | 'cache' | 'space_id' | 'shard_id' | 'user_id'>,
 	parent_id: string
 ) {

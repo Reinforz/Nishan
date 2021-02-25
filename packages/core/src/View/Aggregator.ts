@@ -1,8 +1,8 @@
-import { PreExistentValueError, UnknownPropertyReferenceError } from '@nishans/errors';
+import { PreExistentValueError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { PopulateViewMaps, transformToMultiple } from '../../libs';
+import { getSchemaMapUnit, PopulateViewMaps, transformToMultiple } from '../../libs';
 import {
 	FilterType,
 	FilterTypes,
@@ -22,8 +22,7 @@ export function detectAggregationErrors (
 	aggregations_map: ISchemaAggregationMap
 ) {
 	const { name } = input;
-	const schema_map_unit = schema_map.get(name);
-	if (!schema_map_unit) throw new UnknownPropertyReferenceError(name, [ 'name' ]);
+	const schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
 	const current_aggregation = aggregations_map.get(name);
 	if (current_aggregation)
 		throw new PreExistentValueError('aggregation', name, current_aggregation.aggregation.aggregator);

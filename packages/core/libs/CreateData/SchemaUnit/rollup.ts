@@ -1,7 +1,8 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { UnknownPropertyReferenceError, UnsupportedPropertyTypeError } from '@nishans/errors';
+import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
+import { getSchemaMapUnit } from '../..';
 import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
 import { ParentCollectionData } from '../types';
 
@@ -18,9 +19,7 @@ export async function rollup (
 	request_config: Pick<ParentCollectionData, 'token' | 'logger' | 'cache'>
 ) {
 	// Get the related schema unit from the passed schema map
-	const relation_schema_unit = schema_map.get(relation_property);
-	// If the passed schema map unit doesn't exist then throw a unknown property error
-	if (!relation_schema_unit) throw new UnknownPropertyReferenceError(relation_property, [ 'relation_property' ]);
+	const relation_schema_unit = getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);
 	// If the schema unit is not of type relation, throw an error as well since only relation schema units can be used in rollup schema unit
 	if (relation_schema_unit.type !== 'relation')
 		throw new UnsupportedPropertyTypeError(relation_property, [ 'relation_property' ], relation_schema_unit.type, [
@@ -38,12 +37,12 @@ export async function rollup (
 
 	// Log the collection read operation
 	logger && logger('READ', 'collection', collection_id);
-	const target_collection_schema_unit_map = generateSchemaMapFromCollectionSchema(target_collection.schema).get(
-		target_property
+
+	const target_collection_schema_unit_map = getSchemaMapUnit(
+		generateSchemaMapFromCollectionSchema(target_collection.schema),
+		target_property,
+		[ 'target_property' ]
 	);
-	// The target collection schema unit map doesn't exist throw an error
-	if (!target_collection_schema_unit_map)
-		throw new UnknownPropertyReferenceError(target_property, [ 'target_property' ]);
 
 	// Construct the rollup schema unit
 	return {

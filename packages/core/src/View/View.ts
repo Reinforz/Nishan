@@ -1,9 +1,10 @@
-import { PreExistentValueError, UnknownPropertyReferenceError } from "@nishans/errors";
+import { PreExistentValueError } from "@nishans/errors";
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
   deepMerge,
+  getSchemaMapUnit,
   initializeViewFilters,
   populateFilters,
   PopulateViewMaps,
@@ -33,10 +34,7 @@ import Data from '../Data';
  */
 
 export function setPropertyFromName(name: string, schema_map: ISchemaMap, data: {property: string}){
-  const schema_map_unit = schema_map.get(name);
-  if(!schema_map_unit)
-    throw new UnknownPropertyReferenceError(name, ['name'])
-  data.property = schema_map_unit.schema_id;
+  data.property = getSchemaMapUnit(schema_map, name, ['name']).schema_id;
 }
 
 class View<T extends TView> extends Data<T> {
@@ -79,10 +77,8 @@ class View<T extends TView> extends Data<T> {
 			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
-				schema_map_unit = schema_map.get(arg[0]),
+				schema_map_unit = getSchemaMapUnit(schema_map, arg[0],  [ `${index}` ]),
 				target_sort = sorts_map.get(arg[0]);
-			if (!schema_map_unit) throw new UnknownPropertyReferenceError(arg[0], [ `${index}` ]);
-			else {
 				if (!target_sort) {
 					if (typeof arg[2] === 'number') {
 						sorts.splice(arg[2], 0, {
@@ -95,7 +91,6 @@ class View<T extends TView> extends Data<T> {
 							direction: arg[1]
 						});
 				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort);
-			}
 		}
 
 		this.updateLastEditedProps();

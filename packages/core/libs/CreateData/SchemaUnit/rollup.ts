@@ -13,12 +13,9 @@ import { ParentCollectionData } from '../types';
  * @return The newly constructed rollup schema unit
  */
 export async function rollup (
-	{ aggregation, name, collection_id, relation_property, target_property }: TRollupSchemaUnitInput,
+	{ aggregation, name, collection_id, relation_property, target_property }: Omit<TRollupSchemaUnitInput, 'type'>,
 	schema_map: ISchemaMap,
-	request_config: Omit<
-		ParentCollectionData,
-		'parent_collection_id' | 'name' | 'parent_relation_schema_unit_id' | 'stack'
-	>
+	request_config: Pick<ParentCollectionData, 'token' | 'logger' | 'cache'>
 ) {
 	// Get the related schema unit from the passed schema map
 	const relation_schema_unit = schema_map.get(relation_property);
@@ -40,10 +37,10 @@ export async function rollup (
 	);
 
 	// Log the collection read operation
-	logger && logger('READ', 'collection', target_collection.id);
-	const target_collection_schema_map = generateSchemaMapFromCollectionSchema(target_collection.schema);
-	// Get the target collection schema unit map from the target collection schema map using the passed target property
-	const target_collection_schema_unit_map = target_collection_schema_map.get(target_property);
+	logger && logger('READ', 'collection', collection_id);
+	const target_collection_schema_unit_map = generateSchemaMapFromCollectionSchema(target_collection.schema).get(
+		target_property
+	);
 	// The target collection schema unit map doesn't exist throw an error
 	if (!target_collection_schema_unit_map)
 		throw new UnknownPropertyReferenceError(target_property, [ 'target_property' ]);

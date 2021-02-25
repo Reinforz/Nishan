@@ -1,7 +1,7 @@
 import { ICache, NotionCacheObject } from "@nishans/cache";
 import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
-import { relation } from "../../../../libs/CreateData/SchemaUnit/relation";
+import { CreateData } from "../../../../libs/CreateData";
 import { ParentCollectionData } from "../../../../libs/CreateData/types";
 import { o } from "../../../utils";
 import { tsu } from "../utils";
@@ -50,7 +50,7 @@ const common_child_collection_relation_schema_unit = {
 
 it(`Should work correctly (default child_collection_relation_schema_unit name)`, async () => {
   const  [child_collection, stack, parent_collection_data] = returnChildCollectionAndCache();
-  const relation_schema_unit = await relation(
+  const relation_schema_unit = await CreateData.schema_unit.relation(
     relation_arg,
     parent_collection_data
   );
@@ -73,7 +73,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
   const [child_collection, stack, parent_collection_data] = returnChildCollectionAndCache();
 
-  const relation_schema_unit = await relation(
+  const relation_schema_unit = await CreateData.schema_unit.relation(
     {
       ...relation_arg,
       relation_schema_unit_name: "Child Column"

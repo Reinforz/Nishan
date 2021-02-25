@@ -3,12 +3,12 @@ import { ICollection, IViewFilter, TViewQuery2, ViewFormatProperties } from '@ni
 import { CreateMaps, getSchemaMapUnit, populateFilters } from '../../';
 import { IViewMap, NishanArg, TViewCreateInput } from '../../../types';
 import {
-	generateViewData,
-	populateNonIncludedProperties,
-	populateQuery2SortAndAggregations,
-	populateViewFormat,
-	populateViewProperties,
-	populateViewQuery2
+  generateViewData,
+  populateNonIncludedProperties,
+  populateQuery2SortAndAggregations,
+  populateViewFormat,
+  populateViewProperties,
+  populateViewQuery2
 } from './utils';
 
 /**
@@ -25,7 +25,8 @@ import {
 export function views (
 	collection: Pick<ICollection, 'id' | 'schema' | 'parent_id'>,
 	views: TViewCreateInput[],
-	props: Omit<NishanArg, 'id'>
+	props: Omit<NishanArg, 'id'>,
+  parent_id?:string
 ) {
 	const schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 		view_ids: string[] = [],
@@ -69,7 +70,7 @@ export function views (
 		const input_filters = views[index].filters;
 		if (input_filters) populateFilters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 
-		const view_data = generateViewData({ ...view, format, query2 }, props, collection.parent_id);
+		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id ?? collection.parent_id);
 		view_ids.push(view_data.id);
 		const view_object = new view_classes[type]({ ...props, id: view_data.id });
 		view_map[type].set(view_data.id, view_object);

@@ -7,6 +7,7 @@ import {
   CollectionViewPage,
   Page
 } from '../../../../src';
+import { o } from '../../../utils';
 import { last_edited_props } from '../../../utils/lastEditedProps';
 
 afterEach(() => {
@@ -132,34 +133,10 @@ describe('type=page', () => {
     );
 
     expect(stack).toEqual([
-      {
-        table: 'block',
-        command: 'update',
-        path: [],
-        id: page_id,
-        args: page_snapshot
-      },
-      {
-        table: 'block',
-        command: 'update',
-        path: [],
-        id: header_id,
-        args: header_snapshot
-      },
-      {
-        path: [ 'content' ],
-        table: 'block',
-        command: 'listAfter',
-        args: { after: '', id: header_id },
-        id: page_id
-      },
-      {
-        path: [ 'pages' ],
-        table: 'space',
-        command: 'listAfter',
-        args: { after: '', id: page_id },
-        id: space_id
-      }
+      o.b.u(page_id, [], page_snapshot),
+      o.b.u(header_id, [], header_snapshot),
+      o.b.la(page_id, ['content'], { after: '', id: header_id }),
+      o.s.la(space_id, ['pages'], { after: '', id: page_id }),
     ]);
 
     expect(cache.space.get(space_id)).toStrictEqual({
@@ -237,20 +214,8 @@ describe('type=page', () => {
     expect((block_map.page.get('Page') as Page).getCachedData()).toEqual(page_snapshot)
 
     expect(stack).toEqual([
-      {
-        table: 'block',
-        command: 'update',
-        path: [],
-        id: page_id,
-        args: page_snapshot
-      },
-      {
-        path: [ 'template_pages' ],
-        table: 'collection',
-        command: 'listAfter',
-        args: { after: '', id: page_id },
-        id: 'collection_1'
-      }
+      o.b.u(page_id, [], page_snapshot),
+      o.c.la('collection_1', ['template_pages'], { after: '', id: page_id }),
     ]);
 
     expect(cache.collection.get('collection_1')).toStrictEqual({
@@ -337,13 +302,9 @@ describe('type=collection_block', () => {
     expect(cache.collection_view.get(collection_view_page.view_ids[0])).toBeTruthy();
     expect(stack.length).toBe(4);
 
-    expect(stack[2]).toEqual({
-      path: [],
-      table: 'block',
-      command: 'update',
-      args: collection_view_page_snapshot,
-      id: expect.any(String)
-    });
+    expect(stack[2]).toEqual(
+      o.b.u(expect.any(String), [], collection_view_page_snapshot)
+    );
   });
 
   it(`type=collection_view,rows=[{}]`, async () => {
@@ -427,13 +388,9 @@ describe('type=collection_block', () => {
 
     expect(stack.length).toBe(5);
 
-    expect(stack[2]).toEqual({
-      path: [],
-      table: 'block',
-      command: 'update',
-      args: collection_view_snapshot,
-      id: expect.any(String)
-    });
+    expect(stack[2]).toEqual(
+      o.b.u(expect.any(String), [], collection_view_snapshot)
+    );
   });
 });
 
@@ -472,16 +429,10 @@ it(`type=link_to_page`, async () => {
   );
 
   expect(stack).toEqual([
-    {
-      path: [ 'content' ],
-      table: 'block',
-      command: 'listAfter',
-      args: {
-        after: '',
-        id: 'page_to_link'
-      },
-      id: 'page_1'
-    }
+    o.b.la('page_1', ['content'], {
+      after: '',
+      id: 'page_to_link'
+    })
   ]);
 });
 

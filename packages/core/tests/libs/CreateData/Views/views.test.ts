@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import {
   CreateData
 } from '../../../../libs/CreateData';
+import { o } from "../../../utils";
 import { tsu } from "../utils";
 
 afterEach(() => {
@@ -29,15 +30,11 @@ const default_collection = {
 
 describe('Output correctly', () => {
   it(`Should work correctly`, () => {
-    const id = v4(),
-    stack: IOperation[] = [],
-    cache = NotionCacheObject.createDefaultCache();
-    
+    // for covering other areas
     CreateData.views(
       default_collection,
       [
         {
-          id,
           type: 'table',
           name: 'Table',
           schema_units: [
@@ -46,15 +43,22 @@ describe('Output correctly', () => {
         }
       ],
       {
+        stack: [],
+        cache: NotionCacheObject.createDefaultCache(),
         ...default_nishan_arg,
-        stack,
-        cache,
-        logger: ()=>{
-          return
-        },
       },
+      'parent_id'
     );
 
+    const id = v4(),
+    stack: IOperation[] = [],
+    cache = NotionCacheObject.createDefaultCache(), filter: any = {
+      operator: "string_is",
+      value: {
+        type: "exact",
+        value: "123"
+      }
+    }, logger = jest.fn();
     
     const expected_view_data = {
       id,
@@ -82,13 +86,7 @@ describe('Output correctly', () => {
           "operator": "and",
           "filters": [{
             property: "title",
-            filter: {
-              operator: "string_is",
-              value: {
-                type: "exact",
-                value: "123"
-              }
-            }
+            filter
           }]
         }
       },
@@ -104,22 +102,12 @@ describe('Output correctly', () => {
           type: 'table',
           name: 'Table',
           schema_units: [
-            {
-              name: "Title",
-              type: "title",
-            }
+            tsu
           ],
           filters: [
             {
-              name: "Title",
-              type: "title",
-              filter: {
-                operator: "string_is",
-                value: {
-                  type: "exact",
-                  value: "123"
-                }
-              }
+              ...tsu,
+              filter
             }
           ]
         }
@@ -128,9 +116,7 @@ describe('Output correctly', () => {
         stack,
         cache,
         ...default_nishan_arg,
-        logger: ()=>{
-          return
-        }
+        logger
       }
     );
     
@@ -138,74 +124,13 @@ describe('Output correctly', () => {
     expect(view_map.table.get(id)?.getCachedData()).toStrictEqual(expected_view_data);
     expect(
       stack
-    ).toStrictEqual([
-      {
-        "path": [],
-        "table": "collection_view",
-        "command": "update",
-        "args": {
-          "id": expect.any(String),
-          "version": 0,
-          "type": "table",
-          "name": "Table",
-          "page_sort": [],
-          "parent_id": "parent_id",
-          "parent_table": "block",
-          "alive": true,
-          "format": {
-            "table_properties": [
-              {
-                "property": "title",
-                "visible": true,
-                "width": 250
-              }
-            ],
-            "table_wrap": false
-          },
-          "query2": {
-            "aggregations": [],
-            "sort": [],
-            "filter": {
-              "operator": "and",
-              "filters": []
-            }
-          },
-          "shard_id": 123,
-          "space_id": "space_id"
-        },
-        "id": expect.any(String)
-      }
+    ).toStrictEqual([o.cv.u(id, [], expected_view_data)
     ]);
+    expect(logger).toHaveBeenCalledWith("CREATE", "collection_view", id)
   });
 });
 
 describe('throws error', () => {
-  it(`when unknown property is referenced`, () => {
-    expect(()=>CreateData.views(
-      default_collection,
-      [
-        {
-          type: 'table',
-          name: 'Table',
-          schema_units: [
-            {
-              name: "URL",
-              type: "url",
-            }
-          ]
-        }
-      ],
-      {
-        ...default_nishan_arg,
-        stack: [],
-        cache: NotionCacheObject.createDefaultCache(),
-        logger: ()=>{
-          return
-        }
-      }
-    )).toThrow()
-  });
-
   it(`empty input values`, () => {
     expect(()=>CreateData.views(
       default_collection,

@@ -4,6 +4,7 @@ import { IOperation } from '@nishans/types';
 import { View } from '../../../src';
 import Data from '../../../src/Data';
 import { setPropertyFromName } from '../../../src/View/View';
+import { o } from '../../utils';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 import { last_edited_props } from '../../utils/lastEditedProps';
 
@@ -111,16 +112,10 @@ it('update', () => {
 	});
 
 	expect(stack).toStrictEqual([
-		{
-			command: 'update',
-			table: 'collection_view',
-			path: [],
-			id: 'collection_view_1',
-			args: {
-				alive: false,
-				...last_edited_props
-			}
-		}
+		o.cv.u('collection_view_1', [], {
+			alive: false,
+			...last_edited_props
+		})
 	]);
 });
 
@@ -166,15 +161,7 @@ describe('createSorts', () => {
 		view.createSorts([ [ 'Title', 'ascending' ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack).toStrictEqual([
-			{
-				table: 'collection_view',
-				command: 'update',
-				id: 'collection_view_1',
-				path: [ 'query2', 'sort' ],
-				args: sort
-			}
-		]);
+		expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`pos=number`, () => {
@@ -232,15 +219,7 @@ describe('createSorts', () => {
 		view.createSorts([ [ 'Text', 'ascending', 0 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack).toStrictEqual([
-			{
-				table: 'collection_view',
-				command: 'update',
-				id: 'collection_view_1',
-				path: [ 'query2', 'sort' ],
-				args: sort
-			}
-		]);
+		expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`throws error when property already has a sort `, () => {
@@ -364,13 +343,7 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', 'descending' ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'query2', 'sort' ],
-			args: sort
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 
 	it(`pos=number`, async () => {
@@ -432,13 +405,7 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', 1 ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'query2', 'sort' ],
-			args: sort
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 
 	it(`pos=[direction,number]`, async () => {
@@ -500,13 +467,7 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', [ 'descending', 1 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'query2', 'sort' ],
-			args: sort
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 });
 
@@ -552,13 +513,7 @@ it(`deleteSort`, async () => {
 	await view.deleteSort('Title');
 
 	expect(collection_view_1.query2.sort).toStrictEqual(sort);
-	expect(stack[1]).toStrictEqual({
-		table: 'collection_view',
-		command: 'update',
-		id: 'collection_view_1',
-		path: [ 'query2', 'sort' ],
-		args: sort
-	});
+	expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
 });
 
 describe('updateFormatProperty', () => {
@@ -625,13 +580,7 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'table', position: 1, visible: false, width: 125 } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'format', 'table_properties' ],
-			args: table_properties
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 
 	it(`format, width and position none given`, async () => {
@@ -687,13 +636,7 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'table' } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'format', 'table_properties' ],
-			args: table_properties
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 
 	it(`type!=table,format, width and position none given`, async () => {
@@ -749,13 +692,7 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'list' } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'format', 'table_properties' ],
-			args: table_properties
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 });
 
@@ -826,15 +763,7 @@ describe('createFilters', () => {
 		]);
 
 		expect(collection_view_1.query2.filter).toStrictEqual(filters);
-		expect(stack).toStrictEqual([
-			{
-				table: 'collection_view',
-				command: 'update',
-				id: 'collection_view_1',
-				path: [ 'query2', 'filter' ],
-				args: filters
-			}
-		]);
+		expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'filter' ], filters) ]);
 	});
 });
 
@@ -917,13 +846,7 @@ describe('updateFilters', () => {
 		]);
 
 		expect(collection_view_1.query2.filter).toStrictEqual(filters);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'query2', 'filter' ],
-			args: filters
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'filter' ], filters));
 	});
 
 	it(`same property and different position`, async () => {
@@ -1016,13 +939,7 @@ describe('updateFilters', () => {
 		]);
 
 		expect(collection_view_1.query2.filter).toStrictEqual(filters);
-		expect(stack[1]).toStrictEqual({
-			table: 'collection_view',
-			command: 'update',
-			id: 'collection_view_1',
-			path: [ 'query2', 'filter' ],
-			args: filters
-		});
+		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'filter' ], filters));
 	});
 });
 
@@ -1084,13 +1001,7 @@ it(`deleteFilter`, async () => {
 	await view.deleteFilter('0');
 
 	expect(collection_view_1.query2.filter).toStrictEqual(filters);
-	expect(stack[1]).toStrictEqual({
-		table: 'collection_view',
-		command: 'update',
-		id: 'collection_view_1',
-		path: [ 'query2', 'filter' ],
-		args: filters
-	});
+	expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'filter' ], filters));
 });
 
 describe('setPropertyFromName', () => {

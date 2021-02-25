@@ -16,11 +16,17 @@ export const o = {
 	},
 	c: {
 		u: Operation.collection.update,
-		s: Operation.collection.set
+		s: Operation.collection.set,
+		la: Operation.collection.listAfter,
+		lb: Operation.collection.listBefore,
+		lr: Operation.collection.listRemove
 	},
 	s: {
 		u: Operation.space.update,
-		s: Operation.space.set
+		s: Operation.space.set,
+		la: Operation.space.listAfter,
+		lb: Operation.space.listBefore,
+		lr: Operation.space.listRemove
 	},
 	cv: {
 		u: Operation.collection_view.update,

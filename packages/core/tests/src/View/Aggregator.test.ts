@@ -2,32 +2,13 @@ import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { ViewAggregator } from '../../../src';
 import { detectAggregationErrors } from '../../../src/View/Aggregator';
-import { default_nishan_arg } from '../../utils/defaultNishanArg';
+import { default_nishan_arg, o } from '../../utils/';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
 describe('detectAggregationErrors', () => {
-	it(`unknown property reference error`, () => {
-		expect(() =>
-			detectAggregationErrors(
-				new Map([
-					[
-						'Title',
-						{
-							schema_id: 'title',
-							type: 'title',
-							name: 'Title'
-						}
-					]
-				]),
-				{ type: 'title', name: 'Unknown' },
-				new Map() as any
-			)
-		).toThrow();
-	});
-
 	it(`Aggregation already exists`, () => {
 		expect(() =>
 			detectAggregationErrors(
@@ -121,17 +102,7 @@ it(`createAggregation`, () => {
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
 
-	expect(stack).toStrictEqual([
-		expect.objectContaining({
-			command: 'update',
-			table: 'collection_view',
-			id: 'collection_view_1',
-			path: [ 'query2', 'aggregations' ],
-			args: {
-				aggregations
-			}
-		})
-	]);
+	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
 });
 
 it(`updateAggregations`, async () => {
@@ -187,17 +158,7 @@ it(`updateAggregations`, async () => {
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
 
-	expect(stack[1]).toStrictEqual(
-		expect.objectContaining({
-			command: 'update',
-			table: 'collection_view',
-			id: 'collection_view_1',
-			path: [ 'query2', 'aggregations' ],
-			args: {
-				aggregations
-			}
-		})
-	);
+	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
 });
 
 it(`deleteAggregation`, async () => {
@@ -241,16 +202,5 @@ it(`deleteAggregation`, async () => {
 	const aggregations: any[] = [];
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
-
-	expect(stack[1]).toStrictEqual(
-		expect.objectContaining({
-			command: 'update',
-			table: 'collection_view',
-			id: 'collection_view_1',
-			path: [ 'query2', 'aggregations' ],
-			args: {
-				aggregations
-			}
-		})
-	);
+	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
 });

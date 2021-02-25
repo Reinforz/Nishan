@@ -1,6 +1,6 @@
 import { TFormula } from '@nishans/types';
 import { FormulaObjectSchemaUnitInput, ISchemaMap } from '..';
-import { generateFormulaAST } from './utils';
+import { generateNotionFormulaAST } from './utils';
 
 /**
   * Generates a notion client compatible formula object using an easier object based representation
@@ -12,5 +12,5 @@ export function generateFormulaASTFromObject (
 	formula: FormulaObjectSchemaUnitInput['formula'] | boolean | 'e' | 'pi' | string | number | { property: string },
 	schema_map?: ISchemaMap
 ): TFormula {
-	return generateFormulaAST(formula, 'object', schema_map);
+	return generateNotionFormulaAST(formula, 'object', schema_map);
 }

@@ -2,6 +2,7 @@ import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@
 import { GenerateNotionFormulaAST } from '..';
 import {
   FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput,
+  GenerateNotionFormulaArg,
   IFunctionFormulaSignature,
   ISchemaMap,
   NotionFunctionFormulaInfoMap,
@@ -9,7 +10,6 @@ import {
   TFormulaObject,
   TFormulaObjectArgument
 } from '../../';
-import { generateFormulaArgFromProperty, generateFormulaArgsFromLiterals } from './';
 
 /**
  * Generates a notion formula fully compatible with the client, using either an easier array or object representation
@@ -17,22 +17,22 @@ import { generateFormulaArgFromProperty, generateFormulaArgsFromLiterals } from 
  * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
  * @returns The generated formula ast
  */
-export function generateFormulaAST (
+export function generateNotionFormulaAST (
 	input_formula: FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
   representation: 'array',
 	schema_map?: ISchemaMap,
 ): TFormula;
-export function generateFormulaAST (
+export function generateNotionFormulaAST (
 	input_formula: FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
   representation: 'object',
 	schema_map?: ISchemaMap,
 ): TFormula
-export function generateFormulaAST (
+export function generateNotionFormulaAST (
 	input_formula: string,
   representation: 'string',
 	schema_map?: ISchemaMap,
 ): TFormula
-export function generateFormulaAST (
+export function generateNotionFormulaAST (
 	input_formula: FormulaArraySchemaUnitInput['formula'] | FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
   representation: 'array' | 'object' | 'string',
 	schema_map?: ISchemaMap,
@@ -80,7 +80,7 @@ export function generateFormulaAST (
             // finds the matched signature, its found if either one of signature takes variadic arguments or the result_type of the input and supported signature matches at every index
             matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>(signature.variadic || (signature.arity as any)[index]) === input_arity))
             if(!matched_signature)
-              // Throw an error if the given signature doesnt match any of the allowed signatures
+              // Throw an error if the given signature doesn't match any of the allowed signatures
               throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)
             else
               (function_formula_arg as any).args.push(parsed_argument)
@@ -99,9 +99,9 @@ export function generateFormulaAST (
       // If a schema_map is not provided but a property of the schema is referenced, throw an error, as the schema_map is required to deduce information for that specific property argument
 			if (!schema_map)
         throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`);
-      return generateFormulaArgFromProperty(arg as { property: string }, schema_map);
+      return GenerateNotionFormulaArg.property(arg as { property: string }, schema_map);
 		} else 
-      return generateFormulaArgsFromLiterals(arg as any);
+      return GenerateNotionFormulaArg.literal(arg as any);
 	}
 
 	return (representation === "string" && typeof input_formula === "string") ? GenerateNotionFormulaAST.string(input_formula, schema_map) : traverseArguments(input_formula);

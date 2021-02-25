@@ -1,4 +1,4 @@
-import { formulateResultTypeFromSchemaType } from '../../src';
+import { formulateResultTypeFromSchemaType } from '../../../../src/GenerateNotionFormulaAST/utils';
 
 describe('Return result type from schema type', () => {
 	it(`Should return correct result_type for checkbox`, () => {

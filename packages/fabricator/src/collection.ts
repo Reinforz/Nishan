@@ -1,8 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection } from '@nishans/types';
-import { ICollectionBlockInput, NishanArg } from '../../types';
-import { CreateData } from './';
+import { CreateData, FabricatorProps, ICollectionBlockInput } from './';
 
 /**
  * Creates a collection from the input
@@ -11,7 +10,7 @@ import { CreateData } from './';
  * @param props Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function collection (input: ICollectionBlockInput, parent_id: string, props: Omit<NishanArg, 'id'>) {
+export async function collection (input: ICollectionBlockInput, parent_id: string, props: FabricatorProps) {
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection
@@ -35,7 +34,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	};
 
 	// Create the views of the collection
-	const [ view_ids, view_map ] = CreateData.views(collection_data, input.views, props);
+	const [ view_ids ] = CreateData.views(collection_data, input.views, props);
 	// Push the collection create operation to stack
 	props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))));
 	// Store the collection in cache
@@ -43,5 +42,5 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	// Log the collection creation
 	props.logger && props.logger('CREATE', 'collection', collection_id);
 
-	return [ collection_id, view_ids, view_map ] as [string, string[], IViewMap];
+	return [ collection_id, view_ids ] as [string, string[]];
 }

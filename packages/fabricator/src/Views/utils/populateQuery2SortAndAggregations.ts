@@ -1,5 +1,5 @@
 import { TViewQuery2, ViewAggregations } from '@nishans/types';
-import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from '../../../../types';
+import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from '../../';
 
 /**
  * Populates query2 sort and aggregations using the passed input schema

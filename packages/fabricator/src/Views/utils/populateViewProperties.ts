@@ -1,5 +1,5 @@
 import { ITableViewFormat, TViewType, ViewFormatProperties } from "@nishans/types";
-import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from "../../../../types";
+import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from "../..";
 
 /**
  * * Returns a view format property based on the passed view_type

@@ -2,8 +2,7 @@ import { NotionCacheObject } from "@nishans/cache";
 import { createShortId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
-import { TRelationSchemaUnitInput } from "../../../types";
-import { ParentCollectionData } from "../types";
+import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
 
 /**
  * Generates a new relation schema by validating the input relation schema unit passed   

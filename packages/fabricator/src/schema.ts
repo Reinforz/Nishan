@@ -2,19 +2,17 @@ import { NonExistentSchemaUnitTypeError, SchemaDuplicatePropertyNameError } from
 import { createShortId } from "@nishans/idz";
 import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
-import { CreateMaps } from "..";
-import { SchemaUnit } from "../../src";
-import { ISchemaUnitMap, NishanArg, TSchemaUnitInput } from "../../types";
+import { ParentCollectionData, TSchemaUnitInput } from ".";
+import { FabricatorProps } from "../types";
 import { CreateSchemaUnit } from "./SchemaUnit";
-import { ParentCollectionData } from "./types";
 /**
  * Generates a full schema from a passed input schema
  * @param input_schema_units The input schemas
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function schema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & Omit<NishanArg, 'id'>){
-  const schema_unit_map = CreateMaps.schema_unit();
+export async function schema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & FabricatorProps){
+  // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
   const schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
   console.log(schema);
@@ -47,11 +45,12 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
     }
     // Set the schema unit in the schema map
     schema_map.set(name,  {...schema[schema_id], schema_id});
-    schema_unit_map[input_schema_unit.type].set(schema_id, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
-    schema_unit_map[input_schema_unit.type].set(input_schema_unit.name, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
+
+    /* schema_unit_map[input_schema_unit.type].set(schema_id, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any);
+    schema_unit_map[input_schema_unit.type].set(input_schema_unit.name, new SchemaUnit({ schema_id, ...options, id: options.parent_collection_id }) as any); */
   }
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])
     throw new NonExistentSchemaUnitTypeError(["title"])
-  return [schema, schema_map, schema_unit_map] as [Schema, ISchemaMap, ISchemaUnitMap];
+  return [schema, schema_map] as [Schema, ISchemaMap];
 }

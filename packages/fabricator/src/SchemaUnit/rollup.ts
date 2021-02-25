@@ -1,10 +1,9 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { UnsupportedPropertyTypeError } from '@nishans/errors';
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
+import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
-import { getSchemaMapUnit } from '../..';
-import { ISchemaMap, TRollupSchemaUnitInput } from '../../../types';
-import { ParentCollectionData } from '../types';
+import { ParentCollectionData, TRollupSchemaUnitInput } from '..';
+import { getSchemaMapUnit } from '../../libs';
 
 /**
  * Generate rollup schema unit

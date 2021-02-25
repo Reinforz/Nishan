@@ -1,7 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { TView } from '@nishans/types';
-import { NishanArg } from '../../../../types';
+import { FabricatorProps } from '../../';
 
 /**
  * Construct and return the view data using the passed info and stores it in cache and operation stack
@@ -13,7 +13,7 @@ import { NishanArg } from '../../../../types';
  */
 export function generateViewData (
 	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
-	{ stack, cache, space_id, shard_id }: Pick<NishanArg, 'stack' | 'cache' | 'space_id' | 'shard_id' | 'user_id'>,
+	{ stack, cache, space_id, shard_id }: FabricatorProps,
 	parent_id: string
 ) {
 	// construct the view id, using a custom id

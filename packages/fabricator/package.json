@@ -33,6 +33,9 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
+    "@nishans/notion-formula": "^0.0.21",
+    "@nishans/errors": "^0.0.21",
+    "@nishans/cache": "^0.0.21",
     "colors": "^1.4.0"
   },
   "devDependencies": {

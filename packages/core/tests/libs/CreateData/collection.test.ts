@@ -1,16 +1,36 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { CreateData } from '../../../libs/CreateData';
-import { o } from '../../utils/operations';
+import { CreateData, CreateMaps } from '../../../libs';
+import { TViewCreateInput } from '../../../src';
+import { default_nishan_arg, o } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
 it(`createCollection should work correctly`, async () => {
+	const view_ids = [ '123' ],
+		view_input: TViewCreateInput[] = [
+			{
+				type: 'table',
+				name: 'Table View',
+				schema_units: [
+					{
+						type: 'title',
+						name: 'Title'
+					}
+				]
+			}
+		];
 	const cache: ICache = NotionCacheObject.createDefaultCache();
 	const stack: IOperation[] = [];
-	const [ collection_id ] = await CreateData.collection(
+
+	const createDataViewsMock = jest
+			.spyOn(CreateData, 'views')
+			.mockImplementationOnce(() => [ view_ids, CreateMaps.view() ]),
+		logger = jest.fn();
+
+	const [ collection_id, created_view_ids ] = await CreateData.collection(
 		{
 			name: [ [ 'Collection Name' ] ],
 			schema: [
@@ -19,33 +39,17 @@ it(`createCollection should work correctly`, async () => {
 					name: 'Title'
 				}
 			],
-			views: [
-				{
-					type: 'table',
-					name: 'Table View',
-					schema_units: [
-						{
-							type: 'title',
-							name: 'Title'
-						}
-					]
-				}
-			]
+			views: view_input
 		},
 		'parent_id',
 		{
-			interval: 0,
+			...default_nishan_arg,
 			cache,
 			stack,
-			logger () {
-				return;
-			},
-			shard_id: 123,
-			space_id: 'space_id',
-			token: 'token',
-			user_id: 'user_id'
+			logger
 		}
 	);
+
 	const output_collection = {
 		id: collection_id,
 		schema: {
@@ -62,8 +66,15 @@ it(`createCollection should work correctly`, async () => {
 		version: 0
 	};
 
-	expect(typeof collection_id).toBe('string');
-	expect(stack.length).toBe(2);
-	expect(stack[1]).toStrictEqual(o.c.u(collection_id, [], output_collection));
+	expect(createDataViewsMock).toHaveBeenCalledTimes(1);
+	expect(createDataViewsMock.mock.calls[0][0]).toStrictEqual({
+		...output_collection,
+		cover: undefined,
+		icon: undefined
+	});
+	expect(createDataViewsMock.mock.calls[0][1]).toBe(view_input);
+	expect(logger).toHaveBeenCalledWith('CREATE', 'collection', collection_id);
+	expect(stack).toStrictEqual([ o.c.u(collection_id, [], output_collection) ]);
 	expect(cache.collection.get(collection_id)).toStrictEqual(output_collection);
+	expect(created_view_ids).toBe(view_ids);
 });

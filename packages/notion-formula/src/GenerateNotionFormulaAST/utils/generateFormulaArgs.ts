@@ -1,5 +1,5 @@
 import { TConstantFormula, TFormulaResultType, TPropertyFormula, TSymbolFormula } from '@nishans/types';
-import { ISchemaMap } from '../types/formula-object';
+import { ISchemaMap } from '../../';
 import { formulateResultTypeFromSchemaType } from './formulateResultTypeFromSchemaType';
 
 /**

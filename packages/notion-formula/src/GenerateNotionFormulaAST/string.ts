@@ -1,6 +1,6 @@
 import { TFunctionName } from '@nishans/types';
-import { function_formula_info_map, ISchemaMap } from '../src';
-import { generateFormulaASTFromArray } from './generateFormulaAST';
+import { GenerateNotionFormulaAST } from '.';
+import { ISchemaMap, NotionFunctionFormulaInfoMap } from '../../src';
 
 /**
  * Generate notion client compatible formula ast from string 
@@ -25,7 +25,7 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			number_constant_match = last_arg.match(/^(\d+)$/),
 			number_symbol_match = last_arg.match(/^(e|pi)$/),
 			checkbox_symbol_match = last_arg.match(/^(true|false)$/),
-			function_match = Boolean(function_formula_info_map.get(last_arg as TFunctionName));
+			function_match = Boolean(NotionFunctionFormulaInfoMap.get(last_arg as TFunctionName));
 
     // capturing the parent args container and parent function
 		const parent_args = parents[parents.length - 1]?.[1],
@@ -75,5 +75,5 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 		}
   }
   
-	return generateFormulaASTFromArray(parents[0], schema_map);
+	return GenerateNotionFormulaAST.array(parents[0], schema_map);
 }

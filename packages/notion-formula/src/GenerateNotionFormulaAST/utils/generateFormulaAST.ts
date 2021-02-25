@@ -1,14 +1,15 @@
 import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
+import { GenerateNotionFormulaAST } from '..';
 import {
   FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput,
+  IFunctionFormulaSignature,
   ISchemaMap,
-
+  NotionFunctionFormulaInfoMap,
   TFormulaArrayArgument,
   TFormulaObject,
   TFormulaObjectArgument
-} from '../types';
-import { function_formula_info_map, generateFormulaArgFromProperty, generateFormulaArgsFromLiterals, IFunctionForumlaSignature } from '../utils';
-import { generateFormulaASTFromString } from './generateFormulaASTFromString';
+} from '../../';
+import { generateFormulaArgFromProperty, generateFormulaArgsFromLiterals } from './';
 
 /**
  * Generates a notion formula fully compatible with the client, using either an easier array or object representation
@@ -47,7 +48,7 @@ export function generateFormulaAST (
 					? (arg as TFormulaObject).function
 					: (arg as any)[0],
 				input_args = is_arg_object_function ? (arg as TFormulaObject).args : (arg as any)[1];
-      const arg_container = [] as any, function_info = function_formula_info_map.get(function_name);
+      const arg_container = [] as any, function_info = NotionFunctionFormulaInfoMap.get(function_name);
       // Throws error when an unsupported function is used
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
@@ -65,7 +66,7 @@ export function generateFormulaAST (
 
         // Go through each arguments of the function if any and pass parent function specific data used for capturing error information
         // a variable to store the signature matched with the supported one and the input passed
-        let matched_signature : IFunctionForumlaSignature | undefined = undefined;
+        let matched_signature : IFunctionFormulaSignature | undefined = undefined;
         const input_arities: TFormulaResultType[] = [], {signatures} = function_info;
         if(input_args){
           // Only add args property to the formula object if the function supports arguments
@@ -89,7 +90,7 @@ export function generateFormulaAST (
           matched_signature = signatures.find(signature=>(signature as any).arity.length === 0)
         }
         // setting the result_type in the formula ast using the matched signature
-        function_formula_arg.result_type = (matched_signature as IFunctionForumlaSignature).result_type
+        function_formula_arg.result_type = (matched_signature as IFunctionFormulaSignature).result_type
         return function_formula_arg;
       }
     }
@@ -103,28 +104,10 @@ export function generateFormulaAST (
       return generateFormulaArgsFromLiterals(arg as any);
 	}
 
-	return (representation === "string" && typeof input_formula === "string") ? generateFormulaASTFromString(input_formula, schema_map) : traverseArguments(input_formula);
+	return (representation === "string" && typeof input_formula === "string") ? GenerateNotionFormulaAST.string(input_formula, schema_map) : traverseArguments(input_formula);
 }
 
-/**
-  * Generates a notion client compatible formula object using an easier object based representation
-  * @param formula The simple object representation of the formula
-  * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
-  * @returns The generated formula ast
- */
-export function generateFormulaASTFromObject (formula: FormulaObjectSchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string}, schema_map?: ISchemaMap): TFormula {
-	return generateFormulaAST(formula, 'object', schema_map);
-}
 
-/**
- * Generates a notion client compatible formula object using an easier object based representation
- * @param formula The simple array representation of the formula
- * @param schema_map A specific schema map of the collection used to reference properties used inside the formula
- * @returns The generated formula ast
- */
-export function generateFormulaASTFromArray (
-	formula: FormulaArraySchemaUnitInput['formula'] | boolean | "e" | "pi" | string | number | {property: string},
-	schema_map?: ISchemaMap
-): TFormula {
-	return generateFormulaAST(formula, 'array', schema_map);
-}
+
+
+

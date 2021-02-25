@@ -24,7 +24,7 @@ export const test_schema_map: ISchemaMap = new Map([
 						type: 'constant',
 						value: '1',
 						value_type: 'number',
-						retunr_type: 'number'
+						return_type: 'number'
 					}
 				]
 			}

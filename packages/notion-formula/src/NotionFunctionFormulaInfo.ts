@@ -1,12 +1,12 @@
 import { TFormulaResultType, TFunctionName, TOperator } from '@nishans/types';
 
-export type IFunctionForumlaSignature = {
+export type IFunctionFormulaSignature = {
 	arity?: TFormulaResultType[];
 	result_type: TFormulaResultType;
 	variadic?: TFormulaResultType;
 };
 export interface IFunctionFormulaInfo {
-	signatures: IFunctionForumlaSignature[];
+	signatures: IFunctionFormulaSignature[];
 	function_name: TFunctionName;
 	description: string;
 	operator?: TOperator;
@@ -29,7 +29,7 @@ function generateFormulaInfo (
 /**
  * An array that contains the result_type and the variations of arguments (number and types) supported by all the notion formulas
  */
-export const function_formula_info_arr: IFunctionFormulaInfo[] = [
+export const NotionFunctionFormulaInfoArray: IFunctionFormulaInfo[] = [
 	generateFormulaInfo('Switches between two options based on another value.', 'if', [
 		[ 'number', [ 'checkbox', 'number', 'number' ] ],
 		[ 'text', [ 'checkbox', 'text', 'text' ] ],
@@ -190,7 +190,7 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 		'/'
 	),
 	generateFormulaInfo(
-		'Returns base to the exponent power, that is, baseexponent.',
+		'Returns base to the exponent power, that is, base exponent.',
 		'pow',
 		[ [ 'number', [ 'number', 'number' ] ] ],
 		'^'
@@ -324,8 +324,8 @@ export const function_formula_info_arr: IFunctionFormulaInfo[] = [
 	])
 ];
 
-export const function_formula_info_map: Map<TFunctionName, IFunctionFormulaInfo> = new Map(
-	function_formula_info_arr.map((function_formula_info) => [
+export const NotionFunctionFormulaInfoMap: Map<TFunctionName, IFunctionFormulaInfo> = new Map(
+	NotionFunctionFormulaInfoArray.map((function_formula_info) => [
 		function_formula_info.function_name,
 		function_formula_info
 	])

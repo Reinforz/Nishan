@@ -77,7 +77,7 @@ it(`manual=true`, async () => {
 	expect(stack).toStrictEqual([ p1uo ]);
 });
 
-it(`manual=false,child_path=undefined`, async () => {
+it(`child_path & parent_path != block, child_path=undefined`, async () => {
 	const stack: IOperation[] = [];
 	const cache = {
 		collection: new Map([

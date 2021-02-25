@@ -38,10 +38,8 @@ const block_map_keys: (keyof IBlockMap)[] = [
 	'column'
 ];
 
-describe('createBlockMap', () => {
-	const block_map = CreateMaps.block();
+const block_map = CreateMaps.block();
 
-	it(`Should contain correct keys and value`, () => {
-		block_map_keys.forEach((block_map_key) => expect(block_map[block_map_key] instanceof Map).toBe(true));
-	});
+it(`Should contain correct keys and value`, () => {
+	block_map_keys.forEach((block_map_key) => expect(block_map[block_map_key] instanceof Map).toBe(true));
 });

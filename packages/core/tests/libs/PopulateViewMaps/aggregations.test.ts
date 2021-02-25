@@ -1,5 +1,5 @@
 import { PopulateViewMaps } from '../../../libs';
-import { schema } from './schema';
+import { schema, tsmu } from './utils';
 
 it(`Should throw an error if unknown property is referenced`, () => {
 	expect(() =>
@@ -38,9 +38,7 @@ it(`Should create correct schema map`, () => {
 		[
 			'Title',
 			{
-				schema_id: 'title',
-				name: 'Title',
-				type: 'title',
+				...tsmu,
 				aggregation: {
 					aggregator: 'count',
 					property: 'title'

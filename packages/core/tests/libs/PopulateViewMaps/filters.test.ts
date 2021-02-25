@@ -1,5 +1,5 @@
 import { PopulateViewMaps } from '../../../libs';
-import { schema } from './schema';
+import { schema, tsmu } from './utils';
 
 it(`Should throw error for using unknown property`, () => {
 	expect(() =>
@@ -80,9 +80,7 @@ it(`Should create correct schema map`, () => {
 		[
 			'0.0',
 			{
-				schema_id: 'title',
-				name: 'Title',
-				type: 'title',
+				...tsmu,
 				parent_filter: filter0,
 				child_filter: filter0_0
 			}
@@ -100,9 +98,7 @@ it(`Should create correct schema map`, () => {
 		[
 			'1',
 			{
-				schema_id: 'title',
-				name: 'Title',
-				type: 'title',
+				...tsmu,
 				parent_filter: {
 					operator: 'and',
 					filters: [ filter0, filter1 ]

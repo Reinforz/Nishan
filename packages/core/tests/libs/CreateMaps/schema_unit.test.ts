@@ -23,12 +23,10 @@ const schema_unit_map_keys: (keyof ISchemaUnitMap)[] = [
 	'last_edited_by'
 ];
 
-describe('createSchemaUnitMap', () => {
-	const schema_unit_map = CreateMaps.schema_unit();
+const schema_unit_map = CreateMaps.schema_unit();
 
-	it(`Should contain correct keys and value`, () => {
-		schema_unit_map_keys.forEach((schema_unit_map_key) =>
-			expect(schema_unit_map[schema_unit_map_key] instanceof Map).toBe(true)
-		);
-	});
+it(`Should contain correct keys and value`, () => {
+	schema_unit_map_keys.forEach((schema_unit_map_key) =>
+		expect(schema_unit_map[schema_unit_map_key] instanceof Map).toBe(true)
+	);
 });

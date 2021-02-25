@@ -14,3 +14,10 @@ export const schema: Schema = {
 		name: 'Text'
 	}
 };
+
+// title schema map unit
+export const tsmu = {
+	schema_id: 'title',
+	name: 'Title',
+	type: 'title'
+};

@@ -8,7 +8,7 @@ import {
 	ITimelineViewQuery2,
 	Schema
 } from '@nishans/types';
-import { populateViewQuery2 } from '../../../../../libs/CreateData/Views/utils';
+import { populateViewQuery2 } from '../../../../src/Views/utils';
 
 const schema: Schema = {
 	title: {

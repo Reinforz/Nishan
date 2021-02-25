@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { appendChildToParent } from '../../../../../libs/CreateData/Contents/utils';
-import { o } from '../../../../utils';
+import { o } from '../../../../../core/tests/utils';
+import { appendChildToParent } from '../../../../src/Contents/utils';
 
 it(`path exists`, async () => {
 	const stack: IOperation[] = [],

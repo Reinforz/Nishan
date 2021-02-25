@@ -1,4 +1,4 @@
-import { populateViewProperties } from '../../../../../libs/CreateData/Views/utils';
+import { populateViewProperties } from '../../../../src/Views/utils';
 
 describe('view_type=table', () => {
 	it(`Should work with number input`, () => {

@@ -1,7 +1,7 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { CreateData } from '../../../libs/CreateData';
-import { TSchemaUnitInput } from '../../../types';
-import { default_nishan_arg } from '../../utils';
+import { default_nishan_arg } from '../../../core/tests/utils';
+import { CreateData } from '../../src';
+import { TSchemaUnitInput } from '../../types';
 import { tsu } from './utils';
 
 afterEach(() => {

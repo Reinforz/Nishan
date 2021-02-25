@@ -3,11 +3,10 @@ import {
   IOperation, Schema
 } from '@nishans/types';
 import { v4 } from 'uuid';
-import {
-  CreateData
-} from '../../../../libs/CreateData';
-import { o } from "../../../utils";
+import { o } from "../../../../core/tests/utils";
+import { CreateData } from '../../../src';
 import { tsu } from "../utils";
+
 
 afterEach(() => {
 	jest.restoreAllMocks();

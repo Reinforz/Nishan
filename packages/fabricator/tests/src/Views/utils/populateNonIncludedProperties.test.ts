@@ -1,4 +1,4 @@
-import { populateNonIncludedProperties } from '../../../../../libs/CreateData/Views/utils';
+import { populateNonIncludedProperties } from '../../../../src/Views/utils';
 
 describe('populateNonIncludedProperties', () => {
 	it(`type=table`, () => {

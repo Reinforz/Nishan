@@ -1,9 +1,9 @@
 import { ICache, NotionCacheObject } from "@nishans/cache";
 import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
-import { CreateData } from "../../../../libs/CreateData";
-import { ParentCollectionData } from "../../../../libs/CreateData/types";
-import { o } from "../../../utils";
+import { o } from "../../../../core/tests/utils";
+import { CreateData } from "../../../src";
+import { ParentCollectionData } from "../../../types";
 import { tsu } from "../utils";
 
 const returnChildCollectionAndCache = () =>{

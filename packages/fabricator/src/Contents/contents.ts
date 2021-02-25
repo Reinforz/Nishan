@@ -7,11 +7,11 @@ import { CreateData, TBlockCreateInput } from "..";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
 
 /**
- * 1. Iterate through each of the content
-  * 1. Populates the block map, using the id and the optional name
-  * 2. Add the block to the cache
-  * 3. Add the block create operation to the stack
- * 2. If it contains nested contents, follow step 1
+ * * Iterate through each of the content
+  * * Populates the block map, using the id and the optional name
+  * * Add the block to the cache
+  * * Add the block create operation to the stack
+ * * If it contains nested contents, follow step 1
  * @param contents The content create input
  * @param parent_id Root parent id
  * @param parent_table Root parent table

@@ -1,6 +1,6 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
-import { populateViewFormat } from '../../../../../libs/CreateData/Views/utils';
+import { populateViewFormat } from '../../../../src/Views/utils';
 
 const schema: Schema = {
 	title: {

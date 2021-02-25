@@ -3,10 +3,10 @@ import { TBlock } from '@nishans/types';
 import { FabricatorProps } from '../..';
 
 /**
- * 1. Push the block create operation to the stack
- * 2. Add the block data to the cache
- * 3. Create the corresponding class for the block
- * 4. Populates the passed block map, using the id and the name(optional) of the block 
+ * * Push the block create operation to the stack
+ * * Add the block data to the cache
+ * * Create the corresponding class for the block
+ * * Populates the passed block map, using the id and the name(optional) of the block 
  * @param block_map Block map to populate
  * @param data block data used to extract id and type from
  * @param props Nishan props passed to generated object

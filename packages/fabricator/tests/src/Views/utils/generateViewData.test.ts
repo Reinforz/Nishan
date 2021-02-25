@@ -1,8 +1,8 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
-import { generateViewData } from '../../../../../libs/CreateData/Views/utils';
-import { o } from '../../../../utils';
+import { o } from '../../../../../core/tests/utils';
+import { generateViewData } from '../../../../src/Views/utils';
 
 describe('generateViewData', () => {
 	const id = v4(),
@@ -24,7 +24,8 @@ describe('generateViewData', () => {
 				stack,
 				cache,
 				space_id: 'space_id',
-				shard_id: 123
+				shard_id: 123,
+				token: 'token'
 			},
 			'parent_id'
 		);

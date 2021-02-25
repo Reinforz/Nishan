@@ -1,8 +1,8 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { CreateData, CreateMaps } from '../../../libs';
-import { TViewCreateInput } from '../../../src';
-import { default_nishan_arg, o } from '../../utils';
+import { default_nishan_arg, o } from '../../../core/tests/utils';
+import { CreateData } from '../../src';
+import { TViewCreateInput } from '../../types';
 
 afterEach(() => {
 	jest.restoreAllMocks();

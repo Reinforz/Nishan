@@ -113,7 +113,8 @@ describe('Output correctly', () => {
 				cache,
 				...default_nishan_arg,
 				logger
-			}
+			},
+			'parent_id'
 		);
 
 		// expect(view_ids).toStrictEqual([ id ]);
@@ -126,14 +127,19 @@ describe('Output correctly', () => {
 describe('throws error', () => {
 	it(`empty input values`, () => {
 		expect(() =>
-			CreateData.views(default_collection, [], {
-				...default_nishan_arg,
-				stack: [],
-				cache: NotionCacheObject.createDefaultCache(),
-				logger: () => {
-					return;
-				}
-			})
+			CreateData.views(
+				default_collection,
+				[],
+				{
+					...default_nishan_arg,
+					stack: [],
+					cache: NotionCacheObject.createDefaultCache(),
+					logger: () => {
+						return;
+					}
+				},
+				'parent_id'
+			)
 		).toThrow(`input views array cannot be empty`);
 	});
 });

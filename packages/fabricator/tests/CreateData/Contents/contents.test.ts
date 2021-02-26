@@ -3,6 +3,7 @@ import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { last_edited_props, o } from '../../../../core/tests/utils';
 import { CreateData } from '../../../src';
+import { tsu } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -229,12 +230,7 @@ describe('type=collection_block', () => {
 						{
 							type: 'table',
 							name: 'Table',
-							schema_units: [
-								{
-									type: 'title',
-									name: 'Title'
-								}
-							]
+							schema_units: [ tsu ]
 						}
 					]
 				}

@@ -1,11 +1,8 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, IViewFilter, TView, TViewQuery2, ViewFormatProperties } from '@nishans/types';
 import { FabricatorProps, TViewCreateInput } from '../';
-import { getSchemaMapUnit, populateFilters, PopulateViewData } from "../../";
-import {
-  generateViewData,
-  populateQuery2SortAndAggregations
-} from './utils';
+import { getSchemaMapUnit, populateFilters, PopulateViewData } from '../../';
+import { generateViewData, populateQuery2SortAndAggregations } from './utils';
 
 /**
  * * Iterate through each of the view inputs
@@ -19,10 +16,11 @@ import {
  * @param props Nishan arg passed to the created view objects
  */
 export function views (
-	collection: Pick<ICollection, 'id' | 'schema' | 'parent_id'>,
+	collection: Pick<ICollection, 'id' | 'schema'>,
 	views: TViewCreateInput[],
 	props: FabricatorProps,
-  parent_id?:string
+	parent_id: string,
+	cb?: ((data: TView) => any)
 ) {
 	const schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 		views_data: TView[] = [];
@@ -49,9 +47,9 @@ export function views (
 		const input_filters = views[index].filters;
 		if (input_filters) populateFilters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 
-		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id ?? collection.parent_id);
-    views_data.push(view_data);
-
+		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id);
+		views_data.push(view_data);
+		cb && cb(view_data);
 		props.logger && props.logger('CREATE', 'collection_view', view_data.id);
 	}
 

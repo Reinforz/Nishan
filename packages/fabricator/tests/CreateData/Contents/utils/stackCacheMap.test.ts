@@ -8,19 +8,10 @@ describe('stackCacheMap', () => {
 		const cache = NotionCacheObject.createDefaultCache(),
 			stack: IOperation[] = [],
 			data = { id: 'data_id', type: 'page', data: 'data' } as any;
-		stackCacheMap<IPage>(
-			data,
-			{
-				cache,
-				logger: false,
-				shard_id: 123,
-				space_id: 'space_1',
-				stack,
-				token: 'token',
-				user_id: 'user_root_1'
-			},
-			'name'
-		);
+		stackCacheMap<IPage>(data, {
+			cache,
+			stack
+		});
 
 		expect(stack).toStrictEqual([ o.b.u('data_id', [], data) ]);
 		expect(cache.block.get('data_id')).toStrictEqual(data);

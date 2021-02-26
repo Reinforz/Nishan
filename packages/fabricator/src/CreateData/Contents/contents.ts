@@ -1,7 +1,7 @@
 import { NotionCacheObject } from "@nishans/cache";
 import { generateId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock } from "@nishans/types";
 import { FabricatorProps } from "packages/fabricator/types";
 import { CreateData, TBlockCreateInput } from "..";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
@@ -17,7 +17,7 @@ import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils
  * @param parent_table Root parent table
  * @param props Props passed to the created block objects
  */
-export async function contents(contents: TBlockCreateInput[], root_parent_id: string, root_parent_table: 'collection' | 'block' | 'space', props: FabricatorProps) {
+export async function contents(contents: TBlockCreateInput[], root_parent_id: string, root_parent_table: 'collection' | 'block' | 'space', props: FabricatorProps, cb?: ((data: TBlock)=>any)) {
   // const block_map = CreateMaps.block();
 
   // Metadata used for all blocks
@@ -79,17 +79,17 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         // Construct the collection first
-        const [collection_id, view_ids] = await CreateData.collection(content, block_id, props);
+        const [collection_id, views_data] = await CreateData.collection(content, block_id, props);
         // Construct the collection block object
         const data: ICollectionBlock = {
           ...common_data,
           ...metadata,
           collection_id,
-          view_ids,
+          view_ids: views_data.map(view_data=>view_data.id),
         };
         // If its a cvp, it can contain permissions
         if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(props.user_id, content.isPrivate)];
-        stackCacheMap<ICollectionViewPage>(data as any, props, content.name[0][0]);
+        stackCacheMap<ICollectionViewPage>(data as any, props, cb);
         // If it contain rows, iterate through all of them, by passing the collection as parent
         if (content.rows)
           await traverse(content.rows, collection_id, "collection")
@@ -100,7 +100,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         }
         
-        stackCacheMap<IFactory>(factory_data, props, content.properties.title[0][0]);
+        stackCacheMap<IFactory>(factory_data, props, cb);
         if (content.contents)
           await traverse(content.contents, block_id, "block");
       }
@@ -120,7 +120,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             ...metadata
           }
 
-        stackCacheMap<ICollectionView>(collection_view_data, props, collection.name[0][0]);
+        stackCacheMap<ICollectionView>(collection_view_data, props, cb);
       }
       else if (content.type === "page") {
         // Construct the default page object, with permissions data
@@ -132,7 +132,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         }
 
-        stackCacheMap<IPage>(page_data, props, content.properties.title[0][0]);
+        stackCacheMap<IPage>(page_data, props, cb);
         // Iterate through each of the contents of the page by passing the block as the parent
         if (content.contents)
           await traverse(content.contents, block_id, "block");
@@ -145,7 +145,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         };
 
-        stackCacheMap(column_list_data, props);
+        stackCacheMap(column_list_data, props, cb);
 
         // For each contents create a column
         for (let index = 0; index < contents.length; index++) {
@@ -161,7 +161,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             content: []
           };
 
-          stackCacheMap<IColumn>(column_data, props);
+          stackCacheMap<IColumn>(column_data, props, cb);
           // Push the column to the parent block
           props.stack.push(Operation.block.listAfter(block_id, ['content'], { after: '', id: column_id }));
           // Column list contains an array of column_ids
@@ -176,7 +176,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...common_data,
           ...metadata
         };
-        stackCacheMap<any>(block_data, props);
+        stackCacheMap<any>(block_data, props, cb);
       }
 
       // If the type is link_to_page use the referenced page_id as the content id else use the block id 

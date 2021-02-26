@@ -26,7 +26,9 @@ export function detectChildData (type: SupportedTDataType, data?: TBlock): [stri
 					'page',
 					'collection_view',
 					'collection_view_page',
-					'factory'
+					'factory',
+					'column_list',
+					'column'
 				]);
 			// Throw error if the data parameter was not passed, which is required when type = block
 		} else throw new Error(`type block requires second data argument`);

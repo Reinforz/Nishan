@@ -2,6 +2,7 @@ import { UnsupportedPropertyTypeError } from "@nishans/errors";
 import { ISchemaMap } from "@nishans/notion-formula";
 import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
 import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, getSchemaMapUnit, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../";
+import { checkDateSchemaUnit } from "./utils";
 
 export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
 export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
@@ -55,10 +56,8 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
     }
     case "calendar":{
       const schema_map_unit = getSchemaMapUnit(schema_map as any, view.calendar_by, ["calendar_by"]);
-      // calendar_by should reference a date property
-      if(!schema_map_unit.type.match(/^(last_edited_time|created_time|date|formula)$/) || (schema_map_unit.type === "formula" && schema_map_unit.formula.result_type !== "date"))
-        throw new UnsupportedPropertyTypeError(view.calendar_by, ["calendar_by"], schema_map_unit.type, ["last_edited_time", "created_time", "date", "formula"]);
-        
+      checkDateSchemaUnit(schema_map_unit, view.calendar_by, ["calendar_by"])
+
       const calendar_query2: ICalendarViewQuery2 = query2 as any;
       calendar_query2.sort = [];
       calendar_query2.calendar_by = schema_map_unit.schema_id;
@@ -70,9 +69,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
     }
     case "timeline":{
       const schema_map_unit = getSchemaMapUnit(schema_map as any, view.timeline_by, ["timeline_by"]);
-      // timeline_by should reference a date property
-      if(!schema_map_unit.type.match(/^(last_edited_time|created_time|date|formula)$/) || (schema_map_unit.type === "formula" && schema_map_unit.formula.result_type !== "date"))
-        throw new UnsupportedPropertyTypeError(view.timeline_by, ["timeline_by"], schema_map_unit.type, ["last_edited_time", "created_time", "date", "formula"]);
+      checkDateSchemaUnit(schema_map_unit, view.timeline_by, ["timeline_by"])
 
       const timeline_query2: ITimelineViewQuery2 = query2 as any;
       timeline_query2.aggregations = [];

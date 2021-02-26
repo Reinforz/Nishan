@@ -24,7 +24,7 @@ export type ISchemaAggregationMapValue = {
 } & TSchemaUnit;
 export type ISchemaAggregationMap = Map<string, ISchemaAggregationMapValue>;
 
-export type ISchemaSortsMapValue = { schema_id: string; sort: ViewSorts['direction'] } & TSchemaUnit;
+export type ISchemaSortsMapValue = { schema_id: string; sort: ViewSorts } & TSchemaUnit;
 export type ISchemaSortsMap = Map<string, ISchemaSortsMapValue>;
 
 export type ISchemaFiltersMapValue = {

@@ -42,5 +42,5 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	// Log the collection creation
 	props.logger && props.logger('CREATE', 'collection', collection_id);
 
-	return [ collection_id, views_data ] as const;
+	return [ collection_data, views_data ] as const;
 }

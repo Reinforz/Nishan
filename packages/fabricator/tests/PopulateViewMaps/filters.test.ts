@@ -1,33 +1,6 @@
 import { PopulateViewMaps } from '../../libs';
 import { schema, tsmu } from './utils';
 
-it(`Should throw error for using unknown property`, () => {
-	expect(() =>
-		PopulateViewMaps.filters(
-			{
-				query2: {
-					filter: {
-						operator: 'and',
-						filters: [
-							{
-								property: 'unknown',
-								filter: {
-									operator: 'string_starts_with',
-									value: {
-										type: 'exact',
-										value: '123'
-									}
-								}
-							}
-						]
-					}
-				}
-			} as any,
-			schema
-		)
-	).toThrow();
-});
-
 it(`Should create correct schema map`, () => {
 	const filter0_0 = {
 			property: 'title',

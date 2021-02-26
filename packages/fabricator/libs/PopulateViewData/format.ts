@@ -45,9 +45,6 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
       // if the schema doesn't contain any option based schema unit throw an error, as its required to form groups in board
       if(!select_schema_map_unit)
         throw new NonExistentSchemaUnitTypeError(["select", "multi_select"])
-      // If the length of the options of the options schema unit is zero, throw an error, since its required 
-      if(!(select_schema_map_unit as MultiSelectSchemaUnit).options.length)
-        throw new Error(`Property ${select_schema_map_unit.name} doesnot have any options`);
       
       // If there is a custom board_groups2 in the input,
       if(view.board_groups2){

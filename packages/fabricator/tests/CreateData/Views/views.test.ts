@@ -1,7 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { IOperation, Schema } from '@nishans/types';
+import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
-import { o } from '../../../../core/tests/utils';
 import { CreateData } from '../../../libs';
 import { tsu } from '../../utils';
 
@@ -13,7 +12,9 @@ const default_nishan_arg = {
 	token: 'token',
 	user_id: 'user_id',
 	space_id: 'space_id',
-	shard_id: 123
+	shard_id: 123,
+	stack: [],
+	cache: NotionCacheObject.createDefaultCache()
 };
 
 const default_collection = {
@@ -26,7 +27,6 @@ const default_collection = {
 
 describe('Output correctly', () => {
 	it(`Should work correctly`, () => {
-		// for covering other areas
 		CreateData.views(
 			default_collection,
 			[
@@ -36,18 +36,11 @@ describe('Output correctly', () => {
 					schema_units: [ tsu ]
 				}
 			],
-			{
-				stack: [],
-				cache: NotionCacheObject.createDefaultCache(),
-				...default_nishan_arg
-			},
-			'parent_id',
-			() => ({})
+			default_nishan_arg,
+			'parent_id'
 		);
 
 		const id = v4(),
-			stack: IOperation[] = [],
-			cache = NotionCacheObject.createDefaultCache(),
 			filter: any = {
 				operator: 'string_is',
 				value: {
@@ -55,7 +48,7 @@ describe('Output correctly', () => {
 					value: '123'
 				}
 			},
-			logger = jest.fn();
+			cb = jest.fn();
 
 		const expected_view_data = {
 			id,
@@ -93,7 +86,7 @@ describe('Output correctly', () => {
 			space_id: 'space_id'
 		};
 
-		CreateData.views(
+		const views_data = CreateData.views(
 			default_collection,
 			[
 				{
@@ -109,19 +102,13 @@ describe('Output correctly', () => {
 					]
 				}
 			],
-			{
-				stack,
-				cache,
-				...default_nishan_arg,
-				logger
-			},
-			'parent_id'
+			default_nishan_arg,
+			'parent_id',
+			cb
 		);
 
-		// expect(view_ids).toStrictEqual([ id ]);
-		// expect on returned view data
-		expect(stack).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);
-		expect(logger).toHaveBeenCalledWith('CREATE', 'collection_view', id);
+		expect(views_data).toStrictEqual([ expected_view_data ]);
+		expect(cb).toHaveBeenCalledWith(expect.objectContaining({ id }));
 	});
 });
 

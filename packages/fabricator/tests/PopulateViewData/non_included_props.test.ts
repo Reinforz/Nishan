@@ -1,52 +1,39 @@
 import { PopulateViewData } from '../../libs';
+import { nsu, tsu } from '../utils';
 
-describe('PopulateViewData.non_included_props', () => {
-	it(`type=table`, () => {
-		expect(
-			PopulateViewData.non_included_props(
-				'table',
-				{
-					title: {
-						type: 'title',
-						name: 'Title'
-					},
-					number: {
-						type: 'number',
-						name: 'Number'
-					}
-				},
-				[ 'number' ]
-			)
-		).toStrictEqual([
+it(`type=table`, () => {
+	expect(
+		PopulateViewData.non_included_props(
+			'table',
 			{
-				property: 'title',
-				visible: false,
-				width: 250
-			}
-		]);
-	});
+				title: tsu,
+				number: nsu
+			},
+			[ 'number' ]
+		)
+	).toStrictEqual([
+		{
+			property: 'title',
+			visible: false,
+			width: 250
+		}
+	]);
+});
 
-	it(`type=list`, () => {
-		expect(
-			PopulateViewData.non_included_props(
-				'list',
-				{
-					title: {
-						type: 'title',
-						name: 'Title'
-					},
-					number: {
-						type: 'number',
-						name: 'Number'
-					}
-				},
-				[ 'number' ]
-			)
-		).toStrictEqual([
+it(`type=list`, () => {
+	expect(
+		PopulateViewData.non_included_props(
+			'list',
 			{
-				property: 'title',
-				visible: false
-			}
-		]);
-	});
+				title: tsu,
+				number: nsu
+			},
+			[ 'number' ]
+		)
+	).toStrictEqual([
+		{
+			property: 'title',
+			visible: false
+		}
+	]);
 });

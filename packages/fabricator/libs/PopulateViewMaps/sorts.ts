@@ -1,6 +1,6 @@
-import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { Schema, TView } from "@nishans/types";
 import { InitializeView, ISchemaSortsMap } from "../";
+import { getSchemaUnit } from "../getSchemaUnit";
 
 /**
  * Populates and returns an sort map
@@ -12,15 +12,12 @@ export function sorts(data: TView, schema: Schema){
   // Go through each of the sorts and add it to the sort map
   sorts.forEach((sort, index) => {
     // get the referenced schema unit based on the property
-    const schema_unit = schema[sort.property];
-    // If the referenced property doesn't exist in the schema throw an error
-    if(!schema_unit)
-      throw new UnknownPropertyReferenceError(sort.property, ["query2", "sort", index.toString()])
+    const schema_unit = getSchemaUnit(schema, sort.property, ["query2", "sort", index.toString()]);
     // Set the sort map value using the schema unit name as key, and attaching the schema_id in the value
     sorts_map.set(schema_unit.name, {
       ...schema_unit,
       schema_id: sort.property,
-      sort: sort.direction
+      sort
     })
   });
 

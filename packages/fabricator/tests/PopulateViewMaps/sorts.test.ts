@@ -1,34 +1,16 @@
 import { PopulateViewMaps } from '../../libs';
 import { schema, tsmu } from './utils';
 
-it(`Should throw error when unknown property is referenced`, () => {
-	expect(() =>
-		PopulateViewMaps.sorts(
-			{
-				query2: {
-					sort: [
-						{
-							property: 'unknown',
-							direction: 'ascending'
-						}
-					]
-				}
-			} as any,
-			schema
-		)
-	).toThrow();
-});
+const sort = {
+	property: 'title',
+	direction: 'ascending'
+};
 
 it(`Should create correct schema map`, () => {
 	const [ sorts_map ] = PopulateViewMaps.sorts(
 		{
 			query2: {
-				sort: [
-					{
-						property: 'title',
-						direction: 'ascending'
-					}
-				]
+				sort: [ sort ]
 			}
 		} as any,
 		schema
@@ -39,7 +21,7 @@ it(`Should create correct schema map`, () => {
 			'Title',
 			{
 				...tsmu,
-				sort: 'ascending'
+				sort
 			}
 		]
 	]);

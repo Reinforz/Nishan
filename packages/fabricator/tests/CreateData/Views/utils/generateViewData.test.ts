@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
-import { o } from '../../../../../core/tests/utils';
+import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { generateViewData } from '../../../../libs/CreateData/Views/utils';
 
 const id = v4(),
@@ -9,7 +9,9 @@ const id = v4(),
 	cache: ICache = {
 		collection_view: new Map()
 	} as any;
+
 it(`Should work correctly`, () => {
+	const logger = jest.fn();
 	const view_data = generateViewData(
 		{
 			id,
@@ -18,16 +20,10 @@ it(`Should work correctly`, () => {
 			format: {} as any,
 			query2: {} as any
 		},
-		{
-			user_id: 'user_id',
-			stack,
-			cache,
-			space_id: 'space_id',
-			shard_id: 123,
-			token: 'token'
-		},
+		{ ...default_nishan_arg, stack, cache, logger },
 		'parent_id'
 	);
+
 	const expected_view_data = {
 		id,
 		version: 0,
@@ -40,12 +36,11 @@ it(`Should work correctly`, () => {
 		format: {},
 		query2: {},
 		shard_id: 123,
-		space_id: 'space_id'
+		space_id: 'space_1'
 	};
 
+	expect(logger).toHaveBeenCalledWith('CREATE', 'collection_view', id);
 	expect(view_data).toStrictEqual(expected_view_data);
-
 	expect(stack).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);
-
-	expect(Array.from(cache.collection_view.entries())).toStrictEqual([ [ id, expected_view_data ] ]);
+	expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
 });

@@ -1,34 +1,16 @@
 import { PopulateViewMaps } from '../../libs';
 import { schema, tsmu } from './utils';
 
-it(`Should throw an error if unknown property is referenced`, () => {
-	expect(() =>
-		PopulateViewMaps.aggregations(
-			{
-				query2: {
-					aggregations: [
-						{
-							property: 'unknown',
-							aggregator: 'count'
-						}
-					]
-				}
-			} as any,
-			schema
-		)
-	).toThrow();
-});
+const aggregation = {
+	property: 'title',
+	aggregator: 'count'
+};
 
 it(`Should create correct schema map`, () => {
 	const [ aggregations_map ] = PopulateViewMaps.aggregations(
 		{
 			query2: {
-				aggregations: [
-					{
-						property: 'title',
-						aggregator: 'count'
-					}
-				]
+				aggregations: [ aggregation ]
 			}
 		} as any,
 		schema
@@ -39,10 +21,7 @@ it(`Should create correct schema map`, () => {
 			'Title',
 			{
 				...tsmu,
-				aggregation: {
-					aggregator: 'count',
-					property: 'title'
-				}
+				aggregation
 			}
 		]
 	]);

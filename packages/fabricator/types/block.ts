@@ -40,7 +40,7 @@ export interface ICollectionBlockInput {
 	name: TTextFormat;
 	icon?: string;
 	cover?: string;
-	rows?: IPageCreateInput[];
+	rows: IPageCreateInput[];
 	collection_id?: string;
 }
 
@@ -115,7 +115,7 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IColumnListInput extends IInput {
 	type: 'column_list';
-	contents: TBlockInput[];
+	contents: Array<TBlockInput[]>;
 }
 
 export interface IPageCreateInput extends IInput {
@@ -123,7 +123,7 @@ export interface IPageCreateInput extends IInput {
 	properties: IPage['properties'];
 	format?: Partial<IPage['format']>;
 	isPrivate?: boolean;
-	contents?: TBlockInput[];
+	contents: TBlockInput[];
 	is_template?: boolean;
 }
 
@@ -245,7 +245,7 @@ export interface IFactoryInput extends IInput {
 	type: 'factory';
 	properties: IFactory['properties'];
 	format?: IFactory['format'];
-	contents?: TBlockInput[];
+	contents: TBlockInput[];
 }
 
 export interface IBreadcrumbInput extends IInput {

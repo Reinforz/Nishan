@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 describe('Work correctly', () => {
-	it(`CreateData.schema should work correctly (collection exists in cache)`, async () => {
+	it(`CreateData.schema should work correctly`, async () => {
 		const input_schema_units: TSchemaUnitInput[] = [
 			tsu,
 			{
@@ -27,27 +27,15 @@ describe('Work correctly', () => {
 			}
 		] as any;
 
-		const cache = NotionCacheObject.createDefaultCache(),
+		const cb = jest.fn(),
+			cache = NotionCacheObject.createDefaultCache(),
 			createSchemaUnitRollupMock = jest
 				.spyOn(CreateData.schema_unit, 'rollup')
 				.mockImplementationOnce(async () => input_schema_units[2] as any),
 			createSchemaUnitRelationMock = jest
 				.spyOn(CreateData.schema_unit, 'relation')
 				.mockImplementationOnce(async () => input_schema_units[3] as any);
-
-		const [ schema, schema_map ] = await CreateData.schema(
-			input_schema_units,
-			{
-				...default_nishan_arg,
-				parent_collection_id: 'parent_collection_id',
-				name: [ [ 'Parent' ] ],
-				cache,
-				current_schema: {}
-			},
-			() => ({})
-		);
-
-		const output_schema_units = [
+		const output_schema_values = [
 			tsu,
 			{
 				type: 'formula',
@@ -62,9 +50,23 @@ describe('Work correctly', () => {
 			input_schema_units[3]
 		];
 
+		const [ schema, schema_map ] = await CreateData.schema(
+			input_schema_units,
+			{
+				...default_nishan_arg,
+				parent_collection_id: 'parent_collection_id',
+				name: [ [ 'Parent' ] ],
+				cache,
+				current_schema: {}
+			},
+			cb
+		);
+
 		expect(createSchemaUnitRollupMock).toHaveBeenCalledTimes(1);
 		expect(createSchemaUnitRelationMock).toHaveBeenCalledTimes(1);
-		expect(output_schema_units).toStrictEqual(Object.values(schema));
+		expect(cb).toHaveBeenCalledTimes(4);
+		expect(cb.mock.calls[0][0]).toStrictEqual({ ...output_schema_values[0], schema_id: 'title' });
+		expect(Object.values(schema)).toStrictEqual(output_schema_values);
 		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title', 'Formula', 'Rollup', 'Relation' ]);
 	});
 });

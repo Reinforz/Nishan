@@ -9,28 +9,14 @@ import {
 	Schema
 } from '@nishans/types';
 import { PopulateViewData } from '../../libs';
+import { dsu, fsu, nsu, tsu, txsu } from '../utils';
 
 const schema: Schema = {
-	title: {
-		type: 'title',
-		name: 'Title'
-	},
-	number: {
-		type: 'number',
-		name: 'Number'
-	},
-	text: {
-		type: 'text',
-		name: 'Text'
-	},
-	file: {
-		type: 'file',
-		name: 'File'
-	},
-	date: {
-		type: 'date',
-		name: 'Date'
-	},
+	title: tsu,
+	number: nsu,
+	text: txsu,
+	file: fsu,
+	date: dsu,
 	select: {
 		type: 'select',
 		name: 'Select',
@@ -56,41 +42,33 @@ const schema: Schema = {
 const schema_map = generateSchemaMapFromCollectionSchema(schema);
 
 describe('Table view', () => {
-	describe('Output correctly', () => {
-		describe('Custom input', () => {
-			it(`Should output correctly for table view custom input`, () => {
-				const query2 = PopulateViewData.query2({
-					type: 'table'
-				}) as ITableViewQuery2;
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					sort: [],
-					aggregations: []
-				});
-			});
+	it(`Should output correctly for table view custom input`, () => {
+		const query2 = PopulateViewData.query2({
+			type: 'table'
+		}) as ITableViewQuery2;
+		expect(query2).toStrictEqual({
+			filter: {
+				operator: 'and',
+				filters: []
+			},
+			sort: [],
+			aggregations: []
 		});
 	});
 });
 
 describe('List view', () => {
-	describe('Output correctly', () => {
-		describe('Custom Input', () => {
-			it(`Should output correctly for list view custom input`, () => {
-				const query2 = PopulateViewData.query2({
-					type: 'list',
-					filter_operator: 'or'
-				}) as IListViewQuery2;
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'or',
-						filters: []
-					},
-					sort: []
-				});
-			});
+	it(`Should output correctly for list view custom input`, () => {
+		const query2 = PopulateViewData.query2({
+			type: 'list',
+			filter_operator: 'or'
+		}) as IListViewQuery2;
+		expect(query2).toStrictEqual({
+			filter: {
+				operator: 'or',
+				filters: []
+			},
+			sort: []
 		});
 	});
 });
@@ -121,19 +99,7 @@ describe('Board view', () => {
 	});
 
 	describe('Throw error', () => {
-		it(`Should throw error for using unknown property referenced in board view`, () => {
-			expect(() =>
-				PopulateViewData.query2(
-					{
-						type: 'board',
-						group_by: 'unknown'
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
-		it(`Should throw error if schema doesnot contain any select | multiselect`, () => {
+		it(`Should throw error if schema doesn't contain any select | multi-select`, () => {
 			expect(() =>
 				PopulateViewData.query2(
 					{
@@ -148,160 +114,58 @@ describe('Board view', () => {
 });
 
 describe('Calendar view', () => {
-	describe('Output correctly', () => {
-		describe('Custom input', () => {
-			it(`Should output correctly for calendar view(date property)`, () => {
-				const query2 = PopulateViewData.query2(
-					{
-						type: 'calendar',
-						calendar_by: 'Date'
-					},
-					schema_map
-				) as ICalendarViewQuery2;
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					sort: [],
-					calendar_by: 'date'
-				});
-			});
-
-			it(`Should output correctly for calendar view(formula.date property)`, () => {
-				const query2 = PopulateViewData.query2(
-					{
-						type: 'calendar',
-						calendar_by: 'Date Formula'
-					},
-					schema_map
-				) as ICalendarViewQuery2;
-
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					sort: [],
-					calendar_by: 'date_formula'
-				});
-			});
-		});
-	});
-
-	describe('Throw error', () => {
-		it(`Should throw error for unknown property reference`, () => {
-			expect(() =>
-				PopulateViewData.query2(
-					{
-						type: 'calendar',
-						calendar_by: 'unknown'
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
-		it(`Should throw error if property is of unsupported type`, () => {
-			expect(() =>
-				PopulateViewData.query2(
-					{
-						type: 'calendar',
-						calendar_by: 'Text'
-					},
-					schema_map
-				)
-			).toThrow();
+	it(`Should output correctly for calendar view(date property)`, () => {
+		const query2 = PopulateViewData.query2(
+			{
+				type: 'calendar',
+				calendar_by: 'Date'
+			},
+			schema_map
+		) as ICalendarViewQuery2;
+		expect(query2).toStrictEqual({
+			filter: {
+				operator: 'and',
+				filters: []
+			},
+			sort: [],
+			calendar_by: 'date'
 		});
 	});
 });
 
 describe('Gallery view', () => {
-	describe('Output correctly', () => {
-		describe('Custom input', () => {
-			it(`Should work for gallery view`, () => {
-				const query2 = PopulateViewData.query2({
-					type: 'gallery'
-				}) as IGalleryViewQuery2;
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					sort: []
-				});
-			});
+	it(`Should work for gallery view`, () => {
+		const query2 = PopulateViewData.query2({
+			type: 'gallery'
+		}) as IGalleryViewQuery2;
+		expect(query2).toStrictEqual({
+			filter: {
+				operator: 'and',
+				filters: []
+			},
+			sort: []
 		});
 	});
 });
 
 describe('Timeline', () => {
-	describe('Output correctly', () => {
-		describe('Custom input', () => {
-			it(`Should work for timeline view(Date property)`, () => {
-				const query2 = PopulateViewData.query2(
-					{
-						type: 'timeline',
-						timeline_by: 'Date'
-					},
-					schema_map
-				) as ITimelineViewQuery2;
+	it(`Should work for timeline view(Date property)`, () => {
+		const query2 = PopulateViewData.query2(
+			{
+				type: 'timeline',
+				timeline_by: 'Date'
+			},
+			schema_map
+		) as ITimelineViewQuery2;
 
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					timeline_by: 'date',
-					sort: [],
-					aggregations: []
-				});
-			});
-
-			it(`Should output correctly for calendar view(formula.date property)`, () => {
-				const query2 = PopulateViewData.query2(
-					{
-						type: 'timeline',
-						timeline_by: 'Date Formula'
-					},
-					schema_map
-				) as ITimelineViewQuery2;
-				expect(query2).toStrictEqual({
-					filter: {
-						operator: 'and',
-						filters: []
-					},
-					sort: [],
-					timeline_by: 'date_formula',
-					aggregations: []
-				});
-			});
-		});
-	});
-
-	describe('Throw error', () => {
-		it(`Should throw error for unknown property reference`, () => {
-			expect(() =>
-				PopulateViewData.query2(
-					{
-						type: 'timeline',
-						timeline_by: 'unknown'
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
-		it(`Should throw error if property is of unsupported type`, () => {
-			expect(() =>
-				PopulateViewData.query2(
-					{
-						type: 'timeline',
-						timeline_by: 'Text'
-					},
-					schema_map
-				)
-			).toThrow();
+		expect(query2).toStrictEqual({
+			filter: {
+				operator: 'and',
+				filters: []
+			},
+			timeline_by: 'date',
+			sort: [],
+			aggregations: []
 		});
 	});
 });

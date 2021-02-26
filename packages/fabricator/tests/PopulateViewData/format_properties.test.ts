@@ -1,5 +1,11 @@
 import { PopulateViewData } from '../../libs';
 
+const default_format_property = {
+	property: 'text',
+	visible: true,
+	width: 250
+};
+
 describe('view_type=table', () => {
 	it(`Should work with number input`, () => {
 		expect(PopulateViewData.format_properties('table', 'text', 150)).toStrictEqual({
@@ -26,19 +32,11 @@ describe('view_type=table', () => {
 	});
 
 	it(`Should work with [] input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text', [] as any)).toStrictEqual({
-			property: 'text',
-			visible: true,
-			width: 250
-		});
+		expect(PopulateViewData.format_properties('table', 'text', [] as any)).toStrictEqual(default_format_property);
 	});
 
 	it(`Should work with no input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text')).toStrictEqual({
-			property: 'text',
-			visible: true,
-			width: 250
-		});
+		expect(PopulateViewData.format_properties('table', 'text')).toStrictEqual(default_format_property);
 	});
 });
 

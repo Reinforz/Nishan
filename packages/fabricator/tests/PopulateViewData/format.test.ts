@@ -182,21 +182,6 @@ describe('Gallery view', () => {
 	});
 
 	describe('Throw error', () => {
-		it(`Should throw error for gallery view (unknown property referenced)`, () => {
-			expect(() =>
-				PopulateViewData.format(
-					{
-						type: 'gallery',
-						gallery_cover: {
-							property: 'unknown',
-							type: 'property'
-						}
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
 		it(`Should throw error for gallery view (property not of type file)`, () => {
 			expect(() =>
 				PopulateViewData.format(
@@ -375,33 +360,6 @@ describe('board view', () => {
 	});
 
 	describe('Throw error', () => {
-		it(`Should throw an error if custom groups2 property is referencing unknown property`, () => {
-			expect(() =>
-				PopulateViewData.format(
-					{
-						type: 'board',
-						board_cover: {
-							property: 'File',
-							type: 'property'
-						},
-						board_cover_aspect: 'cover',
-						board_cover_size: 'medium',
-						board_groups2: [
-							{
-								hidden: false,
-								property: 'unknown',
-								value: {
-									type: 'select',
-									value: '123'
-								}
-							}
-						]
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
 		it(`Should throw an error if custom groups2 property is referencing unsupported type property`, () => {
 			expect(() =>
 				PopulateViewData.format(
@@ -444,22 +402,7 @@ describe('board view', () => {
 			).toThrow();
 		});
 
-		it(`Should throw error for board view (unknown property referenced)`, () => {
-			expect(() =>
-				PopulateViewData.format(
-					{
-						type: 'board',
-						board_cover: {
-							property: 'file',
-							type: 'property'
-						}
-					},
-					schema_map
-				)
-			).toThrow();
-		});
-
-		it(`Should throw error for board view (schema doesnot contain any select or multiselect)`, () => {
+		it(`Should throw error for board view (schema doesn't contain any select or multi-select)`, () => {
 			const custom_schema = JSON.parse(JSON.stringify(schema));
 			delete custom_schema.select;
 			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
@@ -471,20 +414,6 @@ describe('board view', () => {
 					custom_schema_map
 				)
 			).toThrow();
-		});
-
-		it(`Should throw error for board view (select doesnt have any options)`, () => {
-			const custom_schema = JSON.parse(JSON.stringify(schema));
-			custom_schema.select.options.pop();
-			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
-			expect(() =>
-				PopulateViewData.format(
-					{
-						type: 'board'
-					},
-					custom_schema_map
-				)
-			).toThrow(`Property Select doesnot have any options`);
 		});
 	});
 });

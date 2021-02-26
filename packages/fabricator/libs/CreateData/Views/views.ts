@@ -50,7 +50,6 @@ export function views (
 		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id);
 		views_data.push(view_data);
 		cb && cb(view_data);
-		props.logger && props.logger('CREATE', 'collection_view', view_data.id);
 	}
 
 	return views_data;

@@ -1,38 +1,18 @@
 import { PopulateViewMaps } from '../../libs';
 import { schema, tsmu } from './utils';
 
-it(`Should throw an error if unknown property is referenced`, () => {
-	expect(() =>
-		PopulateViewMaps.properties(
-			{
-				type: 'table',
-				format: {
-					table_properties: [
-						{
-							width: 150,
-							visible: false,
-							property: 'unknown'
-						}
-					]
-				}
-			} as any,
-			schema
-		)
-	).toThrow();
-});
+const format_property = {
+	width: 150,
+	visible: false,
+	property: 'title'
+};
 
 it(`Should create correct schema map`, () => {
 	const [ format_map ] = PopulateViewMaps.properties(
 		{
 			type: 'table',
 			format: {
-				table_properties: [
-					{
-						width: 150,
-						visible: false,
-						property: 'title'
-					}
-				]
+				table_properties: [ format_property ]
 			}
 		} as any,
 		schema
@@ -43,11 +23,7 @@ it(`Should create correct schema map`, () => {
 			'Title',
 			{
 				...tsmu,
-				format: {
-					property: 'title',
-					width: 150,
-					visible: false
-				}
+				format: format_property
 			}
 		]
 	]);

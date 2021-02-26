@@ -37,7 +37,7 @@
     "@nishans/notion-formula": "^0.0.21",
     "@nishans/errors": "^0.0.21",
     "@nishans/cache": "^0.0.21",
-    "colors": "^1.4.0"
+    "@nishans/idz": "0.0.15"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.21"

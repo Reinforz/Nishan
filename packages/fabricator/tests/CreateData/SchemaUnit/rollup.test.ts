@@ -73,35 +73,6 @@ describe('Throw errors', () => {
 		).rejects.toThrow();
 	});
 
-	it(`Should throw for using unknown target_property`, async () => {
-		await expect(
-			CreateData.schema_unit.rollup(
-				{
-					collection_id: 'target_collection_id',
-					name: 'Rollup Column',
-					relation_property: 'Relation',
-					target_property: 'unknown'
-				},
-				schema_map,
-				{
-					cache: {
-						collection: new Map([
-							[
-								'target_collection_id',
-								{
-									schema: {
-										title: tsu
-									}
-								}
-							]
-						])
-					} as any,
-					token: 'token'
-				}
-			)
-		).rejects.toThrow();
-	});
-
 	it(`Should throw error if relation property is not relation type`, async () => {
 		await expect(
 			CreateData.schema_unit.rollup(

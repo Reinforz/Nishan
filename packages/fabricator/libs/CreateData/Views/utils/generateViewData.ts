@@ -13,7 +13,7 @@ import { FabricatorProps } from '../../';
  */
 export function generateViewData (
 	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
-	{ stack, cache, space_id, shard_id }: FabricatorProps,
+	{ stack, cache, space_id, shard_id, logger }: FabricatorProps,
 	parent_id: string
 ) {
 	// construct the view id, using a custom id
@@ -37,5 +37,6 @@ export function generateViewData (
 	stack.push(Operation.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))));
 	// Add the view to the cache
 	cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)));
+	logger && logger('CREATE', 'collection_view', view_data.id);
 	return view_data;
 }

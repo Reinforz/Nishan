@@ -1,6 +1,6 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IViewFilter } from '@nishans/types';
-import { populateFilters } from '../';
+import { populateFilters } from '../libs';
 const schema_map = generateSchemaMapFromCollectionSchema({
 	title: {
 		type: 'text',

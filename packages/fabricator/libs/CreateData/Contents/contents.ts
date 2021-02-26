@@ -2,8 +2,7 @@ import { NotionCacheObject } from "@nishans/cache";
 import { generateId } from "@nishans/idz";
 import { Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock } from "@nishans/types";
-import { FabricatorProps } from "packages/fabricator/types";
-import { CreateData, TBlockCreateInput } from "..";
+import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { appendChildToParent, populatePermissions, stackCacheMap } from "./utils";
 
 /**

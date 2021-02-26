@@ -2,7 +2,7 @@ import { ICache } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { o } from '../../../../../core/tests/utils';
-import { generateViewData } from '../../../../src/CreateData/Views/utils';
+import { generateViewData } from '../../../../libs/CreateData/Views/utils';
 
 const id = v4(),
 	stack: IOperation[] = [],

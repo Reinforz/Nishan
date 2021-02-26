@@ -2,7 +2,7 @@ import { ICache, NotionCacheObject } from "@nishans/cache";
 import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
 import { ICollection, IOperation } from "@nishans/types";
 import { o } from "../../../../core/tests/utils";
-import { CreateData } from "../../../src";
+import { CreateData } from "../../../libs";
 import { ParentCollectionData } from "../../../types";
 import { tsu } from "../../utils";
 

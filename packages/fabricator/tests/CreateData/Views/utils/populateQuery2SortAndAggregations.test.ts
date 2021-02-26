@@ -1,5 +1,5 @@
 import { ViewSorts } from '@nishans/types';
-import { populateQuery2SortAndAggregations } from '../../../../src/CreateData/Views/utils';
+import { populateQuery2SortAndAggregations } from '../../../../libs/CreateData/Views/utils';
 
 it(`Sort undefined, aggregation text`, () => {
 	const query2 = {

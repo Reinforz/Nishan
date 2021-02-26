@@ -1,4 +1,4 @@
-import { PopulateViewData } from '../../';
+import { PopulateViewData } from '../../libs';
 
 describe('PopulateViewData.non_included_props', () => {
 	it(`type=table`, () => {

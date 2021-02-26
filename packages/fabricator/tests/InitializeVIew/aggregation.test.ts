@@ -1,4 +1,4 @@
-import { InitializeView } from '../../';
+import { InitializeView } from '../../libs';
 
 it(`Should create query2 and return aggregations`, () => {
 	const view: any = {};

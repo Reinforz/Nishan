@@ -9,14 +9,14 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
   "license": "MIT",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
+  "main": "dist/libs/index.js",
+  "typings": "dist/libs/index.d.ts",
   "directories": {
-    "lib": "src",
+    "lib": "libs",
     "test": "tests"
   },
   "files": [
-    "dist/src",
+    "dist/libs",
     "dist/types"
   ],
   "repository": {

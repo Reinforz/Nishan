@@ -1,4 +1,4 @@
-import { PopulateViewData } from '../../';
+import { PopulateViewData } from '../../libs';
 
 describe('view_type=table', () => {
 	it(`Should work with number input`, () => {

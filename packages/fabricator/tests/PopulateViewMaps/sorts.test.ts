@@ -1,4 +1,4 @@
-import { PopulateViewMaps } from '../../';
+import { PopulateViewMaps } from '../../libs';
 import { schema, tsmu } from './utils';
 
 it(`Should throw error when unknown property is referenced`, () => {

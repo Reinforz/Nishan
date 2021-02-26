@@ -2,7 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { last_edited_props, o } from '../../../../core/tests/utils';
-import { CreateData } from '../../../src';
+import { CreateData } from '../../../libs';
 import { tsu } from '../../utils';
 
 afterEach(() => {
@@ -69,7 +69,8 @@ describe('type=page', () => {
 				stack,
 				token: 'token',
 				user_id
-			}
+			},
+			() => ({})
 		);
 
 		const header_snapshot = {

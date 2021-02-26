@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { default_nishan_arg } from '../../../core/tests/utils';
-import { CreateData } from '../../src';
+import { CreateData } from '../../libs';
 import { TSchemaUnitInput } from '../../types';
 import { tsu } from '../utils';
 
@@ -35,13 +35,17 @@ describe('Work correctly', () => {
 				.spyOn(CreateData.schema_unit, 'relation')
 				.mockImplementationOnce(async () => input_schema_units[3] as any);
 
-		const [ schema, schema_map ] = await CreateData.schema(input_schema_units, {
-			...default_nishan_arg,
-			parent_collection_id: 'parent_collection_id',
-			name: [ [ 'Parent' ] ],
-			cache,
-			current_schema: {}
-		});
+		const [ schema, schema_map ] = await CreateData.schema(
+			input_schema_units,
+			{
+				...default_nishan_arg,
+				parent_collection_id: 'parent_collection_id',
+				name: [ [ 'Parent' ] ],
+				cache,
+				current_schema: {}
+			},
+			() => ({})
+		);
 
 		const output_schema_units = [
 			tsu,

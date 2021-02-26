@@ -1,7 +1,7 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
-import { CreateData } from '../../src';
+import { CreateData } from '../../libs';
 import { TViewCreateInput } from '../../types';
 
 afterEach(() => {
@@ -44,7 +44,8 @@ it(`createCollection should work correctly`, async () => {
 			cache,
 			stack,
 			logger
-		}
+		},
+		() => ({})
 	);
 
 	const output_collection = {

@@ -2,7 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, Schema } from '@nishans/types';
 import { v4 } from 'uuid';
 import { o } from '../../../../core/tests/utils';
-import { CreateData } from '../../../src';
+import { CreateData } from '../../../libs';
 import { tsu } from '../../utils';
 
 afterEach(() => {
@@ -41,7 +41,8 @@ describe('Output correctly', () => {
 				cache: NotionCacheObject.createDefaultCache(),
 				...default_nishan_arg
 			},
-			'parent_id'
+			'parent_id',
+			() => ({})
 		);
 
 		const id = v4(),

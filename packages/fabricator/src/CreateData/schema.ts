@@ -3,7 +3,7 @@ import { createShortId } from "@nishans/idz";
 import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap } from "@nishans/notion-formula";
 import { Schema } from "@nishans/types";
 import { ParentCollectionData, TSchemaUnitInput } from ".";
-import { FabricatorProps } from "../types";
+import { FabricatorProps } from "../";
 import { CreateSchemaUnit } from "./SchemaUnit";
 /**
  * Generates a full schema from a passed input schema

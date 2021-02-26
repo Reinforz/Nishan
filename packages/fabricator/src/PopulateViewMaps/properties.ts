@@ -1,6 +1,6 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { Schema, TView, ViewFormatProperties } from "@nishans/types";
-import { ISchemaFormatMap } from "../../types";
+import { ISchemaFormatMap } from "../";
 
 /**
  * Populates and returns an format properties map

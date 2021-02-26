@@ -24,12 +24,3 @@ export interface FabricatorProps {
 	stack: IOperation[];
 	logger?: Logger;
 }
-
-export interface IViewList {
-	table: Array<[string, string]>;
-	list: Array<[string, string]>;
-	gallery: Array<[string, string]>;
-	board: Array<[string, string]>;
-	calendar: Array<[string, string]>;
-	timeline: Array<[string, string]>;
-}

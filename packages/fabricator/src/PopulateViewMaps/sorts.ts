@@ -1,7 +1,6 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { Schema, TView } from "@nishans/types";
-import { initializeViewSorts } from "..";
-import { ISchemaSortsMap } from "../../src";
+import { InitializeView, ISchemaSortsMap } from "../";
 
 /**
  * Populates and returns an sort map
@@ -9,7 +8,7 @@ import { ISchemaSortsMap } from "../../src";
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function sorts(data: TView, schema: Schema){
-  const sorts_map: ISchemaSortsMap = new Map(), sorts = initializeViewSorts(data);
+  const sorts_map: ISchemaSortsMap = new Map(), sorts = InitializeView.sort(data);
   // Go through each of the sorts and add it to the sort map
   sorts.forEach((sort, index) => {
     // get the referenced schema unit based on the property

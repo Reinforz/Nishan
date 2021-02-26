@@ -1,4 +1,34 @@
 import {
+	IAudioInput,
+	IBreadcrumbInput,
+	IBulletedListInput,
+	ICalloutInput,
+	ICodeInput,
+	ICodepenInput,
+	IColumnListInput,
+	IDividerInput,
+	IDriveInput,
+	IEmbedInput,
+	IEquationInput,
+	IFactoryInput,
+	IFigmaInput,
+	IFileInput,
+	IGistInput,
+	IHeaderInput,
+	IImageInput,
+	IMapsInput,
+	INumberedListInput,
+	IQuoteInput,
+	ISubHeaderInput,
+	ITextInput,
+	ITOCInput,
+	ITodoInput,
+	IToggleInput,
+	ITweetInput,
+	IVideoInput,
+	IWebBookmarkInput
+} from '@nishans/fabricator';
+import {
 	CheckboxSchemaUnit,
 	CreatedBySchemaUnit,
 	CreatedTimeSchemaUnit,
@@ -61,36 +91,6 @@ import {
 	TableView,
 	TimelineView
 } from '../src';
-import {
-	IAudioInput,
-	IBreadcrumbInput,
-	IBulletedListInput,
-	ICalloutInput,
-	ICodeInput,
-	ICodepenInput,
-	IColumnListInput,
-	IDividerInput,
-	IDriveInput,
-	IEmbedInput,
-	IEquationInput,
-	IFactoryInput,
-	IFigmaInput,
-	IFileInput,
-	IGistInput,
-	IHeaderInput,
-	IImageInput,
-	IMapsInput,
-	INumberedListInput,
-	IQuoteInput,
-	ISubHeaderInput,
-	ITextInput,
-	ITOCInput,
-	ITodoInput,
-	IToggleInput,
-	ITweetInput,
-	IVideoInput,
-	IWebBookmarkInput
-} from './block';
 
 export interface IPageMap {
 	collection_view_page: Map<string, CollectionViewPage>;

@@ -16,7 +16,8 @@
     "test": "tests"
   },
   "files": [
-    "dist/src"
+    "dist/src",
+    "dist/types"
   ],
   "repository": {
     "type": "git",

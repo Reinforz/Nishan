@@ -1,7 +1,6 @@
 import { ISchemaMap } from '@nishans/notion-formula';
 import { IViewFilter, TViewFilters } from '@nishans/types';
-import { getSchemaMapUnit } from '.';
-import { TViewFilterCreateInput } from '../types';
+import { getSchemaMapUnit, TViewFilterCreateInput } from '.';
 
 /**
  * Populate a filter with its children 

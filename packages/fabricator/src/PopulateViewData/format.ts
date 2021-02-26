@@ -1,7 +1,7 @@
 import { NonExistentSchemaUnitTypeError, UnsupportedPropertyTypeError } from "@nishans/errors";
 import { IBoardViewFormat, ICalendarViewFormat, IGalleryViewFormat, IListViewFormat, ITableViewFormat, ITimelineViewFormat, MultiSelectSchemaUnit, SelectSchemaUnit } from "@nishans/types";
-import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../../";
-import { getSchemaMapUnit } from "../../../libs";
+import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, getSchemaMapUnit, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../";
+
 export type TViewFormat = ITableViewFormat | ICalendarViewFormat | ITimelineViewFormat | IListViewFormat | IGalleryViewFormat | IBoardViewFormat;
 
 export function populateViewFormat(view: TableViewFormatCreateInput): ITableViewFormat;

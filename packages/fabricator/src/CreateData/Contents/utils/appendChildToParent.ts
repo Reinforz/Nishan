@@ -1,7 +1,7 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Operation } from '@nishans/operations';
 import { IOperation } from '@nishans/types';
-import { detectChildData } from '../../../libs';
+import { detectChildData } from '../../../';
 
 /**
  * 1. Fetches parent from notion's db if it doesn't exist in cache

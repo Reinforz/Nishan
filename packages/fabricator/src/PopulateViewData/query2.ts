@@ -1,8 +1,7 @@
 import { UnsupportedPropertyTypeError } from "@nishans/errors";
 import { ISchemaMap } from "@nishans/notion-formula";
 import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
-import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../..";
-import { getSchemaMapUnit } from "../../../libs";
+import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, getSchemaMapUnit, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../";
 
 export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
 export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;

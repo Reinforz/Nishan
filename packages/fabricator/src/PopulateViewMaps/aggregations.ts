@@ -1,7 +1,6 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { IBoardView, ITableView, ITimelineView, Schema } from "@nishans/types";
-import { initializeViewAggregations } from "../../libs";
-import { ISchemaAggregationMap } from "../../types";
+import { InitializeView, ISchemaAggregationMap } from "../";
 
 /**
  * Populates and returns an aggregation map
@@ -9,7 +8,7 @@ import { ISchemaAggregationMap } from "../../types";
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function aggregations(data: ITableView | IBoardView | ITimelineView, schema: Schema){
-  const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = initializeViewAggregations(data);
+  const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = InitializeView.aggregation(data);
   // Go through each of the aggregations and add it to the aggregation map
   aggregations.forEach((aggregation, index) => {
     // get the referenced schema unit based on the property

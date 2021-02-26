@@ -1,15 +1,10 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { ICollection, IViewFilter, TViewQuery2, ViewFormatProperties } from '@nishans/types';
-import { FabricatorProps } from 'packages/fabricator/types';
-import { TViewCreateInput } from '../';
-import { getSchemaMapUnit, populateFilters } from '../../libs';
+import { ICollection, IViewFilter, TView, TViewQuery2, ViewFormatProperties } from '@nishans/types';
+import { FabricatorProps, TViewCreateInput } from '../';
+import { getSchemaMapUnit, populateFilters, PopulateViewData } from "../../";
 import {
   generateViewData,
-  populateNonIncludedProperties,
-  populateQuery2SortAndAggregations,
-  populateViewFormat,
-  populateViewProperties,
-  populateViewQuery2
+  populateQuery2SortAndAggregations
 } from './utils';
 
 /**
@@ -30,31 +25,15 @@ export function views (
   parent_id?:string
 ) {
 	const schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
-		view_ids: string[] = [];
-	/* const {
-		TableView,
-		ListView,
-		GalleryView,
-		BoardView,
-		CalendarView,
-		TimelineView
-	} = require('../../../src/View/index');
-	const view_classes = {
-		table: TableView,
-		list: ListView,
-		gallery: GalleryView,
-		board: BoardView,
-		calendar: CalendarView,
-		timeline: TimelineView
-	}; */
+		views_data: TView[] = [];
 
 	if (views.length === 0) throw new Error(`input views array cannot be empty`);
 	for (let index = 0; index < views.length; index++) {
 		const view = views[index],
 			{ type, schema_units } = view,
 			included_units: string[] = [],
-			query2 = populateViewQuery2(view as any, schema_map) as TViewQuery2,
-			format = populateViewFormat(view as any, schema_map),
+			query2 = PopulateViewData.query2(view as any, schema_map) as TViewQuery2,
+			format = PopulateViewData.format(view as any, schema_map),
 			properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
 
 		schema_units.forEach((schema_unit) => {
@@ -62,22 +41,19 @@ export function views (
 				schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
 			included_units.push(schema_map_unit.schema_id);
 			populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2);
-			properties.push(populateViewProperties(type as any, schema_map_unit.schema_id, format));
+			properties.push(PopulateViewData.format_properties(type as any, schema_map_unit.schema_id, format));
 		});
 
-		properties.push(...populateNonIncludedProperties(type, collection.schema, included_units));
+		properties.push(...PopulateViewData.non_included_props(type, collection.schema, included_units));
 
 		const input_filters = views[index].filters;
 		if (input_filters) populateFilters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 
 		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id ?? collection.parent_id);
-		view_ids.push(view_data.id);
-		// const view_object = new view_classes[type]({ ...props, id: view_data.id });
-		// view_map[type].set(view_data.id, view_object);
-		// view_map[type].set(name, view_object);
+    views_data.push(view_data);
 
 		props.logger && props.logger('CREATE', 'collection_view', view_data.id);
 	}
 
-	return [ view_ids ] as [string[]];
+	return views_data;
 }

@@ -1,10 +1,12 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
+import { ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateData, CreateMaps, PopulateMap, transformToMultiple } from '../libs';
-import { FilterType, FilterTypes, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageMap, IPageUpdateInput, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
+import { CreateData } from 'packages/fabricator/dist/src';
+import { CreateMaps, PopulateMap, transformToMultiple } from '../libs';
+import { FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
@@ -89,7 +91,7 @@ export default class Space extends Data<ISpace> {
     return await CreateData.contents(contents, this.id, this.type as "space", this.getProps())
   }
 
-  async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & ICollection)>) {
+  async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & {collection: ICollection})>) {
     return await this.getRootPages(transformToMultiple(arg), false);
   }
 
@@ -113,7 +115,7 @@ export default class Space extends Data<ISpace> {
   /**
    * Update multiple root pages located in the space
    * @param arg Array of tuple, id and object to configure each root page
-   * @param multiple whether multiple rootpages should be deleted
+   * @param multiple whether multiple root pages should be deleted
    */
   async updateRootPages(args: UpdateTypes<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput>, multiple?: boolean) {
     return await this.updateIterate<TPage, IPageUpdateInput | ICollectionViewPageUpdateInput, IPageMap>(args, {

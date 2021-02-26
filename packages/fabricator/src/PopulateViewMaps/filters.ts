@@ -1,7 +1,6 @@
 import { UnknownPropertyReferenceError } from "@nishans/errors";
 import { IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
-import { initializeViewFilters } from "..";
-import { ISchemaFiltersMap } from "../../src";
+import { InitializeView, ISchemaFiltersMap } from "../";
 
 /**
  * Populates and returns a filter map
@@ -9,7 +8,7 @@ import { ISchemaFiltersMap } from "../../src";
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function filters(data: TView, schema: Schema){
-  const filters = initializeViewFilters(data),
+  const filters = InitializeView.filter(data),
     filters_map: ISchemaFiltersMap = new Map();
   
   function populateFilterMap(parent: IViewFilter, indexes: number[]){

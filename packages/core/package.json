@@ -4,7 +4,7 @@
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
-    "notion api",
+    "notion-api",
     "notion client"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",

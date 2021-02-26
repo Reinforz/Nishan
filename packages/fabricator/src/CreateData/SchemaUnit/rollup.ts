@@ -3,7 +3,7 @@ import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
 import { ParentCollectionData, TRollupSchemaUnitInput } from '..';
-import { getSchemaMapUnit } from '../../libs';
+import { getSchemaMapUnit } from '../../';
 
 /**
  * Generate rollup schema unit

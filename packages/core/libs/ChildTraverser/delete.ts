@@ -2,7 +2,7 @@ import { updateChildContainer } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { TData } from '@nishans/types';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
-import { deepMerge } from '../deepMerge';
+import { deepMerge } from '../utils';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**

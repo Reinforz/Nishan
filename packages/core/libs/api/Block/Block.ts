@@ -4,7 +4,8 @@ import { detectChildData, RepositionParams, TBlockInput } from '@nishans/fabrica
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
-import { CreateMaps, deepMerge, NishanArg, PopulateMap } from '../../';
+import { CreateMaps, NishanArg, PopulateMap } from '../../';
+import { deepMerge } from '../../utils';
 import Data from '../Data';
 
 /**

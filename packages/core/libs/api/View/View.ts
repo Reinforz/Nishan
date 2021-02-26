@@ -4,20 +4,13 @@ import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/noti
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
-  deepMerge, FilterType,
+  FilterType,
   FilterTypes,
-
-
-
-
   getSchemaMapUnit, NishanArg,
-
-
-
-
-  transformToMultiple, UpdateType,
+  UpdateType,
   UpdateTypes
 } from '../../';
+import { deepMerge, transformToMultiple } from "../../utils";
 import Data from '../Data';
 
 

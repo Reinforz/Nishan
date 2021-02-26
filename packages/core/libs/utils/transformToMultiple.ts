@@ -1,4 +1,4 @@
-import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '../types';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '../';
 
 /**
  * Transforms the parameter that is suitable to be used in a multiple=true Nishan method

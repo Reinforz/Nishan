@@ -4,17 +4,16 @@ import { Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import {
 	CreateMaps,
-	deepMerge,
 	FilterType,
 	FilterTypes,
 	ICollectionUpdateInput,
 	ISchemaUnitMap,
 	NishanArg,
 	TCollectionUpdateKeys,
-	transformToMultiple,
 	UpdateType,
 	UpdateTypes
 } from '../';
+import { deepMerge, transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';
 import SchemaUnit from './SchemaUnit';

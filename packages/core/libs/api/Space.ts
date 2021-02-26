@@ -4,7 +4,8 @@ import { error } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, transformToMultiple, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
+import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
+import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from "./SpaceView";
 

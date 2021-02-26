@@ -3,7 +3,8 @@ import { warn } from '@nishans/errors';
 import { Logger, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationsClass, Operation } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
-import { ChildTraverser, constructLogger, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
+import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
+import { constructLogger } from '../utils';
 
 /**
  * A class to update and control data specific stuffs

@@ -14,10 +14,10 @@ import {
 	NishanArg,
 	NotionPermissions,
 	PopulateMap,
-	transformToMultiple,
 	UpdateType,
 	UpdateTypes
 } from '../../';
+import { transformToMultiple } from '../../utils';
 import Block from './Block';
 
 /**

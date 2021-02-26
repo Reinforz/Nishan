@@ -8,11 +8,11 @@ import {
 	ISpaceViewUpdateInput,
 	NishanArg,
 	PopulateMap,
-	transformToMultiple,
 	TSpaceViewUpdateKeys,
 	UpdateType,
 	UpdateTypes
 } from '../';
+import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
 

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
@@ -36,17 +36,16 @@
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.20",
-    "@nishans/operations": "^0.0.20",
+    "@nishans/operations": "^0.0.21",
     "@nishans/cache": "^0.0.22",
-    "@nishans/notion-formula": "^0.0.19",
+    "@nishans/notion-formula": "^0.0.20",
     "@nishans/idz": "^0.0.15",
     "@nishans/errors": "^0.0.17",
     "@nishans/fabricator": "^0.0.17",
     "colors": "^1.4.0"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.21",
-    "@types/node": "^14.14.17",
-    "@types/uuid": "^8.3.0"
+    "@nishans/types": "^0.0.22",
+    "@types/node": "^14.14.17"
   }
 }

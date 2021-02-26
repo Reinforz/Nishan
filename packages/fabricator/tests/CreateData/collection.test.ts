@@ -20,7 +20,7 @@ it(`createCollection should work correctly`, async () => {
 	const cache: ICache = NotionCacheObject.createDefaultCache();
 	const stack: IOperation[] = [];
 
-	const createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(() => []),
+	const createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(async () => []),
 		logger = jest.fn();
 
 	const [ collection_data ] = await CreateData.collection(

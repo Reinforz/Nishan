@@ -4,7 +4,7 @@ import { ICollection, IOperation } from "@nishans/types";
 import { o } from "../../../../core/tests/utils";
 import { CreateData } from "../../../src";
 import { ParentCollectionData } from "../../../types";
-import { tsu } from "../utils";
+import { tsu } from "../../utils";
 
 const returnChildCollectionAndCache = () =>{
   const child_collection: ICollection = {

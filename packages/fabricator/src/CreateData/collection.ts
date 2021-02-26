@@ -34,7 +34,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	};
 
 	// Create the views of the collection
-	const [ view_ids ] = CreateData.views(collection_data, input.views, props);
+	const views_data = CreateData.views(collection_data, input.views, props);
 	// Push the collection create operation to stack
 	props.stack.push(Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))));
 	// Store the collection in cache
@@ -42,5 +42,5 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	// Log the collection creation
 	props.logger && props.logger('CREATE', 'collection', collection_id);
 
-	return [ collection_id, view_ids ] as [string, string[]];
+	return [ collection_id, views_data ] as const;
 }

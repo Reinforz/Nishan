@@ -1,7 +1,7 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, IPage } from '@nishans/types';
 import { o } from '../../../../../core/tests/utils';
-import { stackCacheMap } from '../../../../src/Contents/utils';
+import { stackCacheMap } from '../../../../src/CreateData/Contents/utils';
 
 describe('stackCacheMap', () => {
 	it(`name=string`, () => {

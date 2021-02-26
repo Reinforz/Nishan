@@ -1,8 +1,8 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Schema } from '@nishans/types';
-import { CreateData } from '../../../src';
-import { tsu } from '../utils';
+import { CreateData } from '../../../';
+import { tsu } from '../../utils';
 
 const schema: Schema = {
 	title: tsu,

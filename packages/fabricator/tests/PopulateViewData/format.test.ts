@@ -1,6 +1,6 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
-import { populateViewFormat } from '../../../../src/Views/utils';
+import { PopulateViewData } from '../../';
 
 const schema: Schema = {
 	title: {
@@ -51,7 +51,7 @@ describe('Table view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for table view`, () => {
-				const format = populateViewFormat({
+				const format = PopulateViewData.format({
 					type: 'table',
 					table_wrap: false
 				}) as ITableViewFormat;
@@ -65,7 +65,7 @@ describe('Table view', () => {
 
 		describe('Default input', () => {
 			it(`Should work for table view`, () => {
-				const format = populateViewFormat({
+				const format = PopulateViewData.format({
 					type: 'table'
 				}) as ITableViewFormat;
 
@@ -82,7 +82,7 @@ describe('List view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for list view`, () => {
-				const format = populateViewFormat({
+				const format = PopulateViewData.format({
 					type: 'list'
 				});
 
@@ -98,7 +98,7 @@ describe('Calendar view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for calendar view`, () => {
-				const format = populateViewFormat({
+				const format = PopulateViewData.format({
 					type: 'calendar'
 				});
 
@@ -114,7 +114,7 @@ describe('Gallery view', () => {
 	describe('output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for gallery_cover=property`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -139,7 +139,7 @@ describe('Gallery view', () => {
 			});
 
 			it(`Should work for gallery_cover=page_cover`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -164,7 +164,7 @@ describe('Gallery view', () => {
 
 		describe('Default input', () => {
 			it(`Should work for gallery view (default)`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'gallery'
 					},
@@ -184,7 +184,7 @@ describe('Gallery view', () => {
 	describe('Throw error', () => {
 		it(`Should throw error for gallery view (unknown property referenced)`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -199,7 +199,7 @@ describe('Gallery view', () => {
 
 		it(`Should throw error for gallery view (property not of type file)`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -218,7 +218,7 @@ describe('timeline view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for timeline view`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'timeline',
 						timeline_show_table: true,
@@ -243,7 +243,7 @@ describe('timeline view', () => {
 		});
 		describe('Default input', () => {
 			it(`Should work for timeline view (default)`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'timeline'
 					},
@@ -268,7 +268,7 @@ describe('board view', () => {
 	describe('Output Correct', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for custom input board_cover=property`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -313,7 +313,7 @@ describe('board view', () => {
 			});
 
 			it(`Should work for board_cover=page_cover`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -340,7 +340,7 @@ describe('board view', () => {
 
 		describe('Default input', () => {
 			it(`Should work with default input for gallery view`, () => {
-				const format = populateViewFormat(
+				const format = PopulateViewData.format(
 					{
 						type: 'board'
 					},
@@ -377,7 +377,7 @@ describe('board view', () => {
 	describe('Throw error', () => {
 		it(`Should throw an error if custom groups2 property is referencing unknown property`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -404,7 +404,7 @@ describe('board view', () => {
 
 		it(`Should throw an error if custom groups2 property is referencing unsupported type property`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -431,7 +431,7 @@ describe('board view', () => {
 
 		it(`Should throw error for board view (property not of type file)`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -446,7 +446,7 @@ describe('board view', () => {
 
 		it(`Should throw error for board view (unknown property referenced)`, () => {
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -464,7 +464,7 @@ describe('board view', () => {
 			delete custom_schema.select;
 			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board'
 					},
@@ -478,7 +478,7 @@ describe('board view', () => {
 			custom_schema.select.options.pop();
 			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
 			expect(() =>
-				populateViewFormat(
+				PopulateViewData.format(
 					{
 						type: 'board'
 					},

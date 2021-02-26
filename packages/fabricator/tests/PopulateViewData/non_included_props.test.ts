@@ -1,9 +1,9 @@
-import { populateNonIncludedProperties } from '../../../../src/Views/utils';
+import { PopulateViewData } from '../../';
 
-describe('populateNonIncludedProperties', () => {
+describe('PopulateViewData.non_included_props', () => {
 	it(`type=table`, () => {
 		expect(
-			populateNonIncludedProperties(
+			PopulateViewData.non_included_props(
 				'table',
 				{
 					title: {
@@ -28,7 +28,7 @@ describe('populateNonIncludedProperties', () => {
 
 	it(`type=list`, () => {
 		expect(
-			populateNonIncludedProperties(
+			PopulateViewData.non_included_props(
 				'list',
 				{
 					title: {

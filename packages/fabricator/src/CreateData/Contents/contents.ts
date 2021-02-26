@@ -109,12 +109,12 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           // fetch the referenced collection id
           collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', collection_id, {token: props.token, interval: 0}, props.cache),
           // Create the views separately, without creating the collection, as its only referencing one
-          [view_ids] = CreateData.views(collection, views, props, block_id),
+          views_data = CreateData.views(collection, views, props, block_id),
           collection_view_data: ICollectionView = {
             id: block_id,
             parent_id,
             parent_table: "block",
-            view_ids,
+            view_ids: views_data.map(view_data=>view_data.id),
             collection_id,
             type: 'collection_view',
             ...metadata

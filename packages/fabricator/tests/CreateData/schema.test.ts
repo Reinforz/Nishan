@@ -2,7 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { default_nishan_arg } from '../../../core/tests/utils';
 import { CreateData } from '../../src';
 import { TSchemaUnitInput } from '../../types';
-import { tsu } from './utils';
+import { tsu } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -35,7 +35,7 @@ describe('Work correctly', () => {
 				.spyOn(CreateData.schema_unit, 'relation')
 				.mockImplementationOnce(async () => input_schema_units[3] as any);
 
-		const [ schema, schema_map, schema_unit_map ] = await CreateData.schema(input_schema_units, {
+		const [ schema, schema_map ] = await CreateData.schema(input_schema_units, {
 			...default_nishan_arg,
 			parent_collection_id: 'parent_collection_id',
 			name: [ [ 'Parent' ] ],
@@ -62,7 +62,6 @@ describe('Work correctly', () => {
 		expect(createSchemaUnitRelationMock).toHaveBeenCalledTimes(1);
 		expect(output_schema_units).toStrictEqual(Object.values(schema));
 		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title', 'Formula', 'Rollup', 'Relation' ]);
-		expect(schema_unit_map.title.get('Title')).not.toBeUndefined();
 	});
 });
 

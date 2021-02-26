@@ -8,7 +8,7 @@ import {
 	ITimelineViewQuery2,
 	Schema
 } from '@nishans/types';
-import { populateViewQuery2 } from '../../../../src/Views/utils';
+import { PopulateViewData } from '../../';
 
 const schema: Schema = {
 	title: {
@@ -59,7 +59,7 @@ describe('Table view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for table view custom input`, () => {
-				const query2 = populateViewQuery2({
+				const query2 = PopulateViewData.query2({
 					type: 'table'
 				}) as ITableViewQuery2;
 				expect(query2).toStrictEqual({
@@ -79,7 +79,7 @@ describe('List view', () => {
 	describe('Output correctly', () => {
 		describe('Custom Input', () => {
 			it(`Should output correctly for list view custom input`, () => {
-				const query2 = populateViewQuery2({
+				const query2 = PopulateViewData.query2({
 					type: 'list',
 					filter_operator: 'or'
 				}) as IListViewQuery2;
@@ -99,7 +99,7 @@ describe('Board view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for Board view custom input`, () => {
-				const query2 = populateViewQuery2(
+				const query2 = PopulateViewData.query2(
 					{
 						type: 'board',
 						group_by: 'Select'
@@ -123,7 +123,7 @@ describe('Board view', () => {
 	describe('Throw error', () => {
 		it(`Should throw error for using unknown property referenced in board view`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'board',
 						group_by: 'unknown'
@@ -135,7 +135,7 @@ describe('Board view', () => {
 
 		it(`Should throw error if schema doesnot contain any select | multiselect`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'board',
 						group_by: 'Text'
@@ -151,7 +151,7 @@ describe('Calendar view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for calendar view(date property)`, () => {
-				const query2 = populateViewQuery2(
+				const query2 = PopulateViewData.query2(
 					{
 						type: 'calendar',
 						calendar_by: 'Date'
@@ -169,7 +169,7 @@ describe('Calendar view', () => {
 			});
 
 			it(`Should output correctly for calendar view(formula.date property)`, () => {
-				const query2 = populateViewQuery2(
+				const query2 = PopulateViewData.query2(
 					{
 						type: 'calendar',
 						calendar_by: 'Date Formula'
@@ -192,7 +192,7 @@ describe('Calendar view', () => {
 	describe('Throw error', () => {
 		it(`Should throw error for unknown property reference`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'calendar',
 						calendar_by: 'unknown'
@@ -204,7 +204,7 @@ describe('Calendar view', () => {
 
 		it(`Should throw error if property is of unsupported type`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'calendar',
 						calendar_by: 'Text'
@@ -220,7 +220,7 @@ describe('Gallery view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for gallery view`, () => {
-				const query2 = populateViewQuery2({
+				const query2 = PopulateViewData.query2({
 					type: 'gallery'
 				}) as IGalleryViewQuery2;
 				expect(query2).toStrictEqual({
@@ -239,7 +239,7 @@ describe('Timeline', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for timeline view(Date property)`, () => {
-				const query2 = populateViewQuery2(
+				const query2 = PopulateViewData.query2(
 					{
 						type: 'timeline',
 						timeline_by: 'Date'
@@ -259,7 +259,7 @@ describe('Timeline', () => {
 			});
 
 			it(`Should output correctly for calendar view(formula.date property)`, () => {
-				const query2 = populateViewQuery2(
+				const query2 = PopulateViewData.query2(
 					{
 						type: 'timeline',
 						timeline_by: 'Date Formula'
@@ -282,7 +282,7 @@ describe('Timeline', () => {
 	describe('Throw error', () => {
 		it(`Should throw error for unknown property reference`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'timeline',
 						timeline_by: 'unknown'
@@ -294,7 +294,7 @@ describe('Timeline', () => {
 
 		it(`Should throw error if property is of unsupported type`, () => {
 			expect(() =>
-				populateViewQuery2(
+				PopulateViewData.query2(
 					{
 						type: 'timeline',
 						timeline_by: 'Text'

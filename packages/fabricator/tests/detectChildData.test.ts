@@ -1,4 +1,4 @@
-import { detectChildData } from '../../libs';
+import { detectChildData } from '../';
 
 afterEach(() => {
 	jest.restoreAllMocks();

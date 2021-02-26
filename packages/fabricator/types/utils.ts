@@ -20,6 +20,7 @@ export interface FabricatorProps {
 	space_id: string;
 	token: string;
 	user_id: string;
+	interval?: number;
 	cache: ICache;
 	stack: IOperation[];
 	logger?: Logger;

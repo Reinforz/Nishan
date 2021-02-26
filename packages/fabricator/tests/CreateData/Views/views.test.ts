@@ -26,8 +26,8 @@ const default_collection = {
 };
 
 describe('Output correctly', () => {
-	it(`Should work correctly`, () => {
-		CreateData.views(
+	it(`Should work correctly`, async () => {
+		await CreateData.views(
 			default_collection,
 			[
 				{
@@ -86,7 +86,7 @@ describe('Output correctly', () => {
 			space_id: 'space_id'
 		};
 
-		const views_data = CreateData.views(
+		const views_data = await CreateData.views(
 			default_collection,
 			[
 				{
@@ -113,8 +113,8 @@ describe('Output correctly', () => {
 });
 
 describe('throws error', () => {
-	it(`empty input values`, () => {
-		expect(() =>
+	it(`empty input values`, async () => {
+		await expect(
 			CreateData.views(
 				default_collection,
 				[],
@@ -128,6 +128,6 @@ describe('throws error', () => {
 				},
 				'parent_id'
 			)
-		).toThrow(`input views array cannot be empty`);
+		).rejects.toThrow(`input views array cannot be empty`);
 	});
 });

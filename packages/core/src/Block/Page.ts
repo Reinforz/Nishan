@@ -1,17 +1,14 @@
-import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
-import { CreateData, CreateMaps, PopulateMap, transformToMultiple, updateChildContainer } from '../../libs';
-import { NotionPermissions } from '../../src';
 import {
-	FilterType,
-	FilterTypes,
-	IBlockMap,
+	CreateData,
 	IPageCreateInput,
-	NishanArg,
 	TBlockCreateInput,
 	TBlockInput,
-	UpdateType,
-	UpdateTypes
-} from '../../types';
+	updateChildContainer
+} from '@nishans/fabricator';
+import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { CreateMaps, PopulateMap, transformToMultiple } from '../../libs';
+import { NotionPermissions } from '../../src';
+import { FilterType, FilterTypes, IBlockMap, NishanArg, UpdateType, UpdateTypes } from '../../types';
 import Block from './Block';
 
 /**
@@ -44,13 +41,14 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-		updateChildContainer<typeof target_space_view>(
-			target_space_view,
+		updateChildContainer(
+			'space_view',
+			target_space_view.id,
 			favorite_status,
 			data.id,
-			'bookmarked_pages',
+			this.cache,
 			this.Operations.stack,
-			'space_view'
+			this.token
 		);
 	}
 
@@ -60,7 +58,12 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @returns Array of newly created block content objects
    */
 	async createBlocks (contents: TBlockCreateInput[]) {
-		return await CreateData.contents(contents, this.id, this.type as 'block', this.getProps());
+		const block_map = CreateMaps.block(),
+			props = this.getProps();
+		await CreateData.contents(contents, this.id, this.type as 'block', this.getProps(), async (block) => {
+			await PopulateMap.block(block, block_map, props);
+		});
+		return block_map;
 	}
 
 	async getBlock (arg?: FilterType<TBlock>) {

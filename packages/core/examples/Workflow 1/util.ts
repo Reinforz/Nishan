@@ -1,3 +1,4 @@
+import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '@nishans/fabricator';
 import {
 	NumberAddFunctionArray,
 	NumberIfFunctionArray,
@@ -5,7 +6,6 @@ import {
 	TNumberArrayArgument
 } from '@nishans/notion-formula';
 import { v4 as uuidv4 } from 'uuid';
-import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '../../src';
 import { phase, priority, status, subject } from './data';
 
 export const status_phase_combos = [

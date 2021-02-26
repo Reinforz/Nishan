@@ -1,8 +1,9 @@
 import { NotionCacheClass } from "@nishans/cache";
+import { Logger } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
 import { ChildTraverser, constructLogger, transformToMultiple } from "../libs";
-import { FilterType, FilterTypes, Logger, NishanArg } from "../types";
+import { FilterType, FilterTypes, NishanArg } from "../types";
 import Collection from "./Collection";
 import NotionData from "./Data";
 import NotionUser from "./NotionUser";

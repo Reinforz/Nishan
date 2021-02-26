@@ -1,5 +1,6 @@
+import { TBlockInput } from '@nishans/fabricator';
 import { v4 as uuidv4 } from 'uuid';
-import { CollectionViewPage, Page, TBlockInput } from '../../../src';
+import { CollectionViewPage, Page } from '../../../src';
 import { CommonMultiSelectSchema, goalViewItem } from '../util';
 
 const months = [
@@ -37,6 +38,7 @@ export default async function step4(target_page: Page) {
       format: {
         page_full_width: true
       },
+      contents: []
     }
   ]);
 
@@ -55,6 +57,7 @@ export default async function step4(target_page: Page) {
           format: {
             page_full_width: true
           },
+          contents: []
         },
       ]);
 

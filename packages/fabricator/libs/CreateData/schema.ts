@@ -44,7 +44,7 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
     }
     // Set the schema unit in the schema map
     schema_map.set(name,  {...schema[schema_id], schema_id});
-    cb && cb(schema_map.get(name) as ISchemaMapValue);
+    cb && await cb(schema_map.get(name) as ISchemaMapValue);
   }
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])

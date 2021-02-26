@@ -1,8 +1,7 @@
 import { ChildIndexOutofBoundError } from '@nishans/errors';
+import { detectChildData, Logger, RepositionParams } from '@nishans/fabricator/';
 import { Operation } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
-import { Logger, RepositionParams } from '../types';
-import { detectChildData } from './detectChildData';
 
 interface PositionChildrenParam {
 	logger?: Logger;

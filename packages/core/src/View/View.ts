@@ -1,20 +1,17 @@
 import { PreExistentValueError } from "@nishans/errors";
-import { ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, populateFilters, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, populateFilters, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
   deepMerge,
   getSchemaMapUnit,
-  initializeViewFilters,
-  PopulateViewMaps,
   transformToMultiple
 } from '../../libs';
 import {
   FilterType,
   FilterTypes,
   NishanArg,
-  RepositionParams,
   UpdateType,
   UpdateTypes
 } from '../../types';
@@ -82,7 +79,7 @@ class View<T extends TView> extends Data<T> {
 							property: schema_map_unit.schema_id,
 							direction: arg[1]
 						});
-				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort);
+				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort.direction);
 		}
 
 		this.updateLastEditedProps();
@@ -162,7 +159,7 @@ class View<T extends TView> extends Data<T> {
 	createFilters (args: TViewFilterCreateInput[]) {
 		const schema_map = generateSchemaMapFromCollectionSchema(this.getCollection().schema),
 			data = this.getCachedData(),
-			filters = initializeViewFilters(data).filters;
+			filters = InitializeView.filter(data).filters;
 		populateFilters(args, filters, schema_map);
 		this.updateLastEditedProps();
 		this.Operations.pushToStack(

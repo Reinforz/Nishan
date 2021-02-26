@@ -1,9 +1,10 @@
 import { NotionCacheClass } from '@nishans/cache';
 import { warn } from '@nishans/errors';
+import { Logger, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationsClass, Operation } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
 import { ChildTraverser, constructLogger, positionChildren } from "../libs";
-import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, Logger, NishanArg, RepositionParams, UpdateTypes } from '../types';
+import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, UpdateTypes } from '../types';
 
 /**
  * A class to update and control data specific stuffs

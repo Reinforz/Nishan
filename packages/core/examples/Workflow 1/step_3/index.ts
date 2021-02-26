@@ -1,5 +1,6 @@
+import { ILinkedDBInput, IPageCreateInput, TViewCreateInput } from '@nishans/fabricator';
 import { v4 as uuidv4 } from 'uuid';
-import { CollectionViewPage, ILinkedDBInput, IPageCreateInput, Page, TViewCreateInput } from '../../../src';
+import { CollectionViewPage, Page } from '../../../src';
 import { categories, ecosystems, subject } from '../data';
 import { CommonMultiSelectSchema, status_phase_combos } from '../util';
 
@@ -400,6 +401,7 @@ export default async function step3 (target_page: Page) {
   const { collection_view_page: created_collection_view_page } = await target_page.createBlocks([
     {
       type: 'collection_view_page',
+      rows: [],
       name: [['Web 3.0']],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f310.svg',
       schema: [

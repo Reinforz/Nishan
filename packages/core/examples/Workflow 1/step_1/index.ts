@@ -1,6 +1,7 @@
+import { TViewCreateInput, TViewSchemaUnitsCreateInput } from "@nishans/fabricator";
 import { CheckboxSchemaUnit } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
-import Nishan, { Page, TViewCreateInput, TViewSchemaUnitsCreateInput } from '../../../src';
+import Nishan, { Page } from '../../../src';
 import '../../env';
 import { difficulty, priority } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
@@ -36,7 +37,8 @@ export default async function step1(user_family_name: string, space_name: string
       },
       format:{
         page_full_width: true
-      }
+      },
+      contents: []
     }
   ]);
 
@@ -44,6 +46,7 @@ export default async function step1(user_family_name: string, space_name: string
 	await target_page?.createBlocks([
     {
       type: 'collection_view_page',
+      rows: [],
       name: [ [ 'Articles' ] ],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4d4.svg',
       schema: [
@@ -142,6 +145,7 @@ export default async function step1(user_family_name: string, space_name: string
     },
     {
       type: 'collection_view_page',
+      rows: [],
       name: [ [ 'Todo' ] ],
       icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/2611-fe0f.svg',
       schema: [
@@ -278,6 +282,7 @@ export default async function step1(user_family_name: string, space_name: string
       type: 'collection_view_page',
       name: [ [ 'Daily' ] ],
       icon: "https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/270a-1f3fc.svg",
+      rows: [],
       schema: [
         {
           type: 'title',

@@ -1,18 +1,15 @@
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
+import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
+import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
-import { CreateData, CreateMaps, deepMerge, transformToMultiple } from '../libs';
+import { CreateMaps, deepMerge, transformToMultiple } from '../libs';
 import {
 	FilterType,
 	FilterTypes,
 	ICollectionUpdateInput,
-	IPageCreateInput,
-	IPageUpdateInput,
-	ISchemaMapValue,
 	ISchemaUnitMap,
 	NishanArg,
 	TCollectionUpdateKeys,
-	TSchemaUnitInput,
 	UpdateType,
 	UpdateTypes
 } from '../types';
@@ -207,13 +204,27 @@ class Collection extends Data<ICollection> {
    * @returns An array of SchemaUnit objects representing the columns
    */
 	async createSchemaUnits (args: TSchemaUnitInput[]) {
-		const data = this.getCachedData();
-		const [ , , schema_unit_map ] = await CreateData.schema(args, {
-			...this.getProps(),
-			name: data.name,
-			parent_collection_id: data.id,
-			current_schema: data.schema
-		});
+		const data = this.getCachedData(),
+			schema_unit_map = CreateMaps.schema_unit(),
+			props = this.getProps();
+		await CreateData.schema(
+			args,
+			{
+				...this.getProps(),
+				name: data.name,
+				parent_collection_id: data.id,
+				current_schema: data.schema
+			},
+			(schema_unit) => {
+				const schema_unit_obj = new SchemaUnit({
+					id: data.id,
+					...props,
+					schema_id: schema_unit.schema_id
+				});
+				schema_unit_map[schema_unit.type].set(schema_unit.schema_id, schema_unit_obj);
+				schema_unit_map[schema_unit.type].set(schema_unit.name, schema_unit_obj);
+			}
+		);
 		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
 		this.updateLastEditedProps();
 		return schema_unit_map;

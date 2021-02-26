@@ -1,9 +1,10 @@
 import { Mutations } from '@nishans/endpoints';
 import { UnsupportedBlockTypeError } from '@nishans/errors';
+import { CreateData } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
-import { CreateData, CreateMaps, transformToMultiple } from '../libs';
+import { CreateMaps, transformToMultiple } from '../libs';
 import { CollectionViewPage, Page } from '../src';
 import { FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';

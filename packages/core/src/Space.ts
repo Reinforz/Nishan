@@ -1,10 +1,9 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations, Queries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
-import { ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
+import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateData } from 'packages/fabricator/dist/src';
 import { CreateMaps, PopulateMap, transformToMultiple } from '../libs';
 import { FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../types';
 import Data from './Data';
@@ -88,7 +87,11 @@ export default class Space extends Data<ISpace> {
   }
 
   async createRootPages(contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
-    return await CreateData.contents(contents, this.id, this.type as "space", this.getProps())
+    const block_map = CreateMaps.block(), props = this.getProps();
+    await CreateData.contents(contents, this.id, this.type as "space", this.getProps(), async (block)=>{
+      await PopulateMap.block(block, block_map, props);
+    });
+    return block_map;
   }
 
   async getRootPage(arg?: FilterType<IPage | (ICollectionViewPage & {collection: ICollection})>) {

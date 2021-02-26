@@ -1,6 +1,6 @@
+import { updateChildContainer } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { TData } from '@nishans/types';
-import { updateChildContainer } from '../../libs/updateChildContainer';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
 import { deepMerge } from '../deepMerge';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
@@ -30,7 +30,8 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			stack,
 			cache,
 			parent_type,
-			child_ids
+			child_ids,
+			token
 		} = options,
 		// get the data from the cache
 		parent_data = cache[parent_type].get(parent_id) as T;
@@ -52,7 +53,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
 
 			if (typeof child_path === 'string')
-				updateChildContainer(parent_data, false, child_id, child_path, stack, parent_type);
+				updateChildContainer(parent_type, parent_id, false, child_id, cache, stack, token);
 		}
 	};
 

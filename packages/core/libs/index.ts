@@ -7,4 +7,3 @@ export * from './getSchemaMapUnit';
 export * from './PopulateMap';
 export * from './positionChildren';
 export * from './transformToMultiple';
-export * from './updateChildContainer';

@@ -89,9 +89,9 @@ export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
 
-export type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id'> &
+export type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id' | 'token'> &
 	IterateAndUpdateOptions<T, C> &
 	IterateChildrenOptions<T, C>;
-export type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id'> &
+export type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id' | 'token'> &
 	IterateAndDeleteOptions<T, C> &
 	IterateChildrenOptions<T, C>;

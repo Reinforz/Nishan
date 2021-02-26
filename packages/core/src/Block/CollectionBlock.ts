@@ -1,17 +1,9 @@
 import { NotionCacheObject } from '@nishans/cache';
+import { CreateData, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
-import { CreateData, CreateMaps, transformToMultiple } from '../../libs';
-import {
-	FilterType,
-	FilterTypes,
-	IViewMap,
-	NishanArg,
-	TCollectionBlockInput,
-	TViewCreateInput,
-	UpdateType,
-	UpdateTypes
-} from '../../types';
+import { CreateMaps, transformToMultiple } from '../../libs';
+import { FilterType, FilterTypes, IViewMap, NishanArg, UpdateType, UpdateTypes } from '../../types';
 import Collection from '../Collection';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
 import Block from './Block';
@@ -26,7 +18,7 @@ const view_class = {
 };
 
 /**
- * A class to represent collectionblock type in Notion
+ * A class to represent collection block type in Notion
  * @noInheritDoc
  */
 class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBlockInput> {
@@ -47,13 +39,25 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 		});
 	}
 
-	createViews (params: TViewCreateInput[]) {
+	async createViews (params: TViewCreateInput[]) {
 		const data = this.getCachedData(),
-			[ view_ids, view_map ] = CreateData.views(
+			view_map = CreateMaps.view(),
+			props = this.getProps(),
+			views_data = await CreateData.views(
 				this.cache.collection.get(data.collection_id) as ICollection,
 				params,
-				this.getProps()
+				this.getProps(),
+				data.id,
+				(view) => {
+					const view_obj = new view_class[view.type]({
+						id: view.id,
+						...props
+					}) as any;
+					view_map[view.type].set(view.id, view_obj);
+					view_map[view.type].set(view.name, view_obj);
+				}
 			);
+		const view_ids = views_data.map((view_data) => view_data.id);
 		this.Operations.pushToStack(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();
@@ -62,7 +66,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 
 	/**
    * Get all the views associated with the collection block
-   * @returns An array of view objects of the collectionblock
+   * @returns An array of view objects of the collection block
    */
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
 		return await this.getIterate<TView, IViewMap>(

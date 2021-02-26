@@ -15,7 +15,7 @@ import { generateViewData, populateQuery2SortAndAggregations } from './utils';
  * @param views Array of collection view inputs
  * @param props Nishan arg passed to the created view objects
  */
-export function views (
+export async function views (
 	collection: Pick<ICollection, 'id' | 'schema'>,
 	views: TViewCreateInput[],
 	props: FabricatorProps,
@@ -49,7 +49,7 @@ export function views (
 
 		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id);
 		views_data.push(view_data);
-		cb && cb(view_data);
+		cb && (await cb(view_data));
 	}
 
 	return views_data;

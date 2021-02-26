@@ -1,10 +1,11 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
+import { detectChildData, RepositionParams, TBlockInput } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
-import { CreateMaps, deepMerge, detectChildData, PopulateMap } from '../../libs';
-import { NishanArg, RepositionParams, TBlockInput } from '../../types';
+import { CreateMaps, deepMerge, PopulateMap } from '../../libs';
+import { NishanArg } from '../../types';
 import Data from '../Data';
 
 /**

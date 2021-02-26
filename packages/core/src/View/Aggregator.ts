@@ -1,19 +1,16 @@
 import { PreExistentValueError } from '@nishans/errors';
+import {
+	ISchemaAggregationMap,
+	ISchemaAggregationMapValue,
+	PopulateViewMaps,
+	TAggregationsCreateInput,
+	TAggregationsUpdateInput
+} from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { getSchemaMapUnit, PopulateViewMaps, transformToMultiple } from '../../libs';
-import {
-	FilterType,
-	FilterTypes,
-	ISchemaAggregationMap,
-	ISchemaAggregationMapValue,
-	NishanArg,
-	TAggregationsCreateInput,
-	TAggregationsUpdateInput,
-	UpdateType,
-	UpdateTypes
-} from '../../types';
+import { getSchemaMapUnit, transformToMultiple } from '../../libs';
+import { FilterType, FilterTypes, NishanArg, UpdateType, UpdateTypes } from '../../types';
 import View from './View';
 
 export function detectAggregationErrors (

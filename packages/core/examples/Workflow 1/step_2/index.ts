@@ -1,6 +1,7 @@
+import { TFormulaSchemaUnitInput, TSchemaUnitInput, TViewCreateInput } from '@nishans/fabricator';
 import { DateViewFiltersValue, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
-import { Page, TFormulaSchemaUnitInput, TSchemaUnitInput, TViewCreateInput } from '../../../src';
+import { Page } from '../../../src';
 import { purpose, source, status, subject } from '../data';
 import { adders, CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem } from '../util';
 
@@ -176,6 +177,7 @@ export default async function step2 (target_page: Page) {
 				type: 'collection_view_page',
 				name: [ [ 'Reading List' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4da.svg',
+				rows: [],
 				views: [
 					{
 						type: 'gallery',
@@ -258,6 +260,7 @@ export default async function step2 (target_page: Page) {
 			{
 				type: 'collection_view_page',
 				name: [ [ 'Course List' ] ],
+				rows: [],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f4dd.svg',
 				views: [
 					{
@@ -348,6 +351,7 @@ export default async function step2 (target_page: Page) {
 				name: [ [ 'Goals' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f44a-1f3fc.svg',
 				collection_id: goals_collection_id,
+				rows: [],
 				views: [
 					{
 						type: 'table',
@@ -463,6 +467,7 @@ export default async function step2 (target_page: Page) {
 				name: [ [ 'Tasks' ] ],
 				icon: 'https://notion-emojis.s3-us-west-2.amazonaws.com/v0/svg-twitter/1f446-1f3fc.svg',
 				collection_id: tasks_collection_id,
+				rows: [],
 				schema: [
 					{
 						type: 'title',

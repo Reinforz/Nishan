@@ -12,7 +12,7 @@ import { FabricatorProps } from '../..';
  * @param props Nishan props passed to generated object
  * @param name Name of the block, used to create a key for the block map
  */
-export function stackCacheMap<T extends TBlock> (
+export async function stackCacheMap<T extends TBlock> (
 	data: T,
 	props: Pick<FabricatorProps, 'cache' | 'stack'>,
 	cb?: ((data: TBlock) => any)
@@ -20,5 +20,5 @@ export function stackCacheMap<T extends TBlock> (
 	const { id } = data;
 	props.stack.push(Operation.block.update(id, [], JSON.parse(JSON.stringify(data))));
 	props.cache.block.set(id, JSON.parse(JSON.stringify(data)));
-	cb && cb(data);
+	cb && (await cb(data));
 }

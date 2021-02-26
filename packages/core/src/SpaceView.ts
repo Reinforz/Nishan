@@ -1,12 +1,12 @@
+import { RepositionParams, updateChildContainer } from '@nishans/fabricator';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import { CreateMaps, PopulateMap, transformToMultiple, updateChildContainer } from '../libs';
+import { CreateMaps, PopulateMap, transformToMultiple } from '../libs';
 import {
 	FilterType,
 	FilterTypes,
 	IPageMap,
 	ISpaceViewUpdateInput,
 	NishanArg,
-	RepositionParams,
 	TSpaceViewUpdateKeys,
 	UpdateType,
 	UpdateTypes
@@ -108,13 +108,14 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
-				updateChildContainer<typeof data>(
-					data,
+				updateChildContainer(
+					'space_view',
+					data.id,
 					updated_favorite_status,
 					id,
-					'bookmarked_pages',
+					this.cache,
 					this.Operations.stack,
-					'space_view'
+					this.token
 				);
 				await PopulateMap.page(page, page_map, this.getProps());
 			}

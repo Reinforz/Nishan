@@ -46,17 +46,17 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'callout':
 			// All these data types belongs to the block type
 			// dynamically loading the Block class
-			const Block = require('../src/Block/Block').default;
+			const Block = require('./api/Block/Block').default;
 			return new Block(obj);
 		case 'page':
-			const Page = require('../src/Block/Page').default;
+			const Page = require('./api/Block/Page').default;
 			return new Page(obj);
 		case 'collection_view':
 		case 'linked_db':
-			const CollectionView = require('../src/Block/CollectionView').default;
+			const CollectionView = require('./api/Block/CollectionView').default;
 			return new CollectionView(obj);
 		case 'collection_view_page':
-			const CollectionViewPage = require('../src/Block/CollectionViewPage').default;
+			const CollectionViewPage = require('./api/Block/CollectionViewPage').default;
 			return new CollectionViewPage(obj);
 		default:
 			// Throws an error if an unsupported data type is passed

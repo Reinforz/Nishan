@@ -59,6 +59,11 @@ jobs:
           name: "@nishans/idz"
       - uses: codecov/codecov-action@v1
         with:
+          files: ./packages/fabricator/coverage/lcov.info
+          flags: fabricator
+          name: "@nishans/fabricator"
+      - uses: codecov/codecov-action@v1
+        with:
           files: ./packages/errors/coverage/lcov.info
           flags: errors
           name: "@nishans/errors"

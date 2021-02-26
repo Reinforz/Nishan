@@ -11,7 +11,7 @@ import { constructLogger } from '../utils';
  * @noInheritDoc
  */
 
-export default class Data<T extends TData> extends NotionCacheClass {
+export default class NotionData<T extends TData> extends NotionCacheClass {
   id: string;
   type: TDataType;
   #init_cache = false;

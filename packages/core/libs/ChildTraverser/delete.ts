@@ -49,11 +49,12 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
 			deepMerge(child_data, updated_data);
+
 			// Push the updated block data to the stack
 			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
 
 			if (typeof child_path === 'string')
-				updateChildContainer(parent_type, parent_id, false, child_id, cache, stack, token);
+				await updateChildContainer(parent_type, parent_id, false, child_id, cache, stack, token);
 		}
 	};
 

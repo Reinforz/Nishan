@@ -30,6 +30,9 @@
       "path": "./packages/notion-formula/tsconfig.json"
     },
     {
+      "path": "./packages/fabricator/tsconfig.json"
+    },
+    {
       "path": "./packages/core/tsconfig.json"
     },
     {

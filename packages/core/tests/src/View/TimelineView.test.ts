@@ -1,4 +1,4 @@
-import { TimelineView } from '../../../src';
+import { TimelineView } from '../../../';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

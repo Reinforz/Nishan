@@ -9,8 +9,15 @@ import {
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { getSchemaMapUnit, transformToMultiple } from '../../libs';
-import { FilterType, FilterTypes, NishanArg, UpdateType, UpdateTypes } from '../../types';
+import {
+	FilterType,
+	FilterTypes,
+	getSchemaMapUnit,
+	NishanArg,
+	transformToMultiple,
+	UpdateType,
+	UpdateTypes
+} from '../../';
 import View from './View';
 
 export function detectAggregationErrors (

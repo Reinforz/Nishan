@@ -1,7 +1,7 @@
 import { TFormulaSchemaUnitInput, TSchemaUnitInput, TViewCreateInput } from '@nishans/fabricator';
 import { DateViewFiltersValue, RelationSchemaUnit, RollupSchemaUnit } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
-import { Page } from '../../../src';
+import { Page } from '../../../libs';
 import { purpose, source, status, subject } from '../data';
 import { adders, CommonMultiSelectSchema, counterFormula, curriculumInfoSchemaUnits, goalViewItem } from '../util';
 

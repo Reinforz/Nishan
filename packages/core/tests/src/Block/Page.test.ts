@@ -1,7 +1,7 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
+import { Page } from '../../../';
 import { CreateData } from '../../../libs';
-import { Page } from '../../../src';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

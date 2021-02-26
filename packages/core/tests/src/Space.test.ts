@@ -3,8 +3,8 @@ import { Mutations, Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import colors from "colors";
 import { v4 } from 'uuid';
-import { NotionData, Space, TSpaceUpdateKeys } from '../../src';
-import { createSpaceIterateArguments } from '../../src/Space';
+import { NotionData, Space, TSpaceUpdateKeys } from '../../';
+import { createSpaceIterateArguments } from '../..//Space';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {

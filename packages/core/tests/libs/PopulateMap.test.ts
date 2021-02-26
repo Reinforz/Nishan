@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
+import { Block } from '../../';
 import { PopulateMap } from '../../libs';
-import { Block } from '../../src';
 import { IBlockMap, IPageMap } from '../../types';
 
 afterEach(() => {

@@ -1,5 +1,5 @@
 import { Queries } from '@nishans/endpoints';
-import Nishan from '../../src';
+import Nishan from '../../';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {

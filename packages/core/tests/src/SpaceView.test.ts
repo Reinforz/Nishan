@@ -1,6 +1,6 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { NotionData, SpaceView } from '../../src';
+import { NotionData, SpaceView } from '../../';
 import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 

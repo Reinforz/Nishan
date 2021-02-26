@@ -1,6 +1,13 @@
 import { ISpaceView, IUserRoot } from '@nishans/types';
-import { transformToMultiple } from '../libs';
-import { FilterType, FilterTypes, ISpaceViewUpdateInput, NishanArg, UpdateType, UpdateTypes } from '../types';
+import {
+	FilterType,
+	FilterTypes,
+	ISpaceViewUpdateInput,
+	NishanArg,
+	transformToMultiple,
+	UpdateType,
+	UpdateTypes
+} from '../';
 import Data from './Data';
 import SpaceView from './SpaceView';
 

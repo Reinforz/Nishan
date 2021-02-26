@@ -1,5 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { CollectionView } from '../../../src';
+import { CollectionView } from '../../../';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

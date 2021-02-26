@@ -1,9 +1,9 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { ISchemaMap } from '@nishans/notion-formula';
 import { IOperation } from '@nishans/types';
-import { View } from '../../../src';
-import Data from '../../../src/Data';
-import { setPropertyFromName } from '../../../src/View/View';
+import { View } from '../../../';
+import Data from '../../..//Data';
+import { setPropertyFromName } from '../../..//View/View';
 import { o } from '../../utils';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 import { last_edited_props } from '../../utils/lastEditedProps';

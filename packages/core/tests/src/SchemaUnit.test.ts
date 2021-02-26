@@ -1,6 +1,6 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { SchemaUnit } from '../../src';
+import { SchemaUnit } from '../../';
 import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 

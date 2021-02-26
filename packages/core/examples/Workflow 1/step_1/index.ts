@@ -1,7 +1,7 @@
 import { TViewCreateInput, TViewSchemaUnitsCreateInput } from "@nishans/fabricator";
 import { CheckboxSchemaUnit } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
-import Nishan, { Page } from '../../../src';
+import { Nishan, Page } from '../../../libs';
 import '../../env';
 import { difficulty, priority } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';

@@ -1,7 +1,7 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { ViewAggregator } from '../../../src';
-import { detectAggregationErrors } from '../../../src/View/Aggregator';
+import { ViewAggregator } from '../../../';
+import { detectAggregationErrors } from '../../..//View/Aggregator';
 import { default_nishan_arg, o } from '../../utils/';
 
 afterEach(() => {

@@ -6,9 +6,18 @@ import {
 	updateChildContainer
 } from '@nishans/fabricator';
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
-import { CreateMaps, PopulateMap, transformToMultiple } from '../../libs';
-import { NotionPermissions } from '../../src';
-import { FilterType, FilterTypes, IBlockMap, NishanArg, UpdateType, UpdateTypes } from '../../types';
+import {
+	CreateMaps,
+	FilterType,
+	FilterTypes,
+	IBlockMap,
+	NishanArg,
+	NotionPermissions,
+	PopulateMap,
+	transformToMultiple,
+	UpdateType,
+	UpdateTypes
+} from '../../';
 import Block from './Block';
 
 /**
@@ -60,7 +69,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	async createBlocks (contents: TBlockCreateInput[]) {
 		const block_map = CreateMaps.block(),
 			props = this.getProps();
-		await CreateData.contents(contents, this.id, this.type as 'block', this.getProps(), async (block) => {
+		await CreateData.contents(contents, this.id, this.type as 'block', props, async (block) => {
 			await PopulateMap.block(block, block_map, props);
 		});
 		return block_map;

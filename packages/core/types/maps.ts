@@ -90,7 +90,7 @@ import {
 	SchemaUnit,
 	TableView,
 	TimelineView
-} from '../src';
+} from '../libs';
 
 export interface IPageMap {
 	collection_view_page: Map<string, CollectionViewPage>;

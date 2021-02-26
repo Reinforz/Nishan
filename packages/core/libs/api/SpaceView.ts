@@ -1,16 +1,18 @@
 import { RepositionParams, updateChildContainer } from '@nishans/fabricator';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import { CreateMaps, PopulateMap, transformToMultiple } from '../libs';
 import {
+	CreateMaps,
 	FilterType,
 	FilterTypes,
 	IPageMap,
 	ISpaceViewUpdateInput,
 	NishanArg,
+	PopulateMap,
+	transformToMultiple,
 	TSpaceViewUpdateKeys,
 	UpdateType,
 	UpdateTypes
-} from '../types';
+} from '../';
 import Data from './Data';
 import Space from './Space';
 

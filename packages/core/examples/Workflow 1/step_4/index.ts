@@ -1,6 +1,6 @@
 import { TBlockInput } from '@nishans/fabricator';
 import { v4 as uuidv4 } from 'uuid';
-import { CollectionViewPage, Page } from '../../../src';
+import { CollectionViewPage, Page } from '../../../libs';
 import { CommonMultiSelectSchema, goalViewItem } from '../util';
 
 const months = [

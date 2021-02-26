@@ -2,8 +2,7 @@ import { NotionCacheClass } from "@nishans/cache";
 import { Logger } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
-import { ChildTraverser, constructLogger, transformToMultiple } from "../libs";
-import { FilterType, FilterTypes, NishanArg } from "../types";
+import { ChildTraverser, constructLogger, FilterType, FilterTypes, NishanArg, transformToMultiple } from "../";
 import Collection from "./Collection";
 import NotionData from "./Data";
 import NotionUser from "./NotionUser";
@@ -78,11 +77,10 @@ class Nishan extends NotionCacheClass {
   }
 }
 
-export default Nishan;
-export * from "../types";
 export * from "./Block";
 export * from "./View";
 export {
+  Nishan,
   Collection,
   NotionUser,
   UserSettings,

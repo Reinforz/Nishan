@@ -1,10 +1,9 @@
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
-import { NotionPermissions } from '../../src';
-import { NishanArg } from '../../types';
+import { NishanArg, NotionPermissions } from '../../';
 import CollectionBlock from './CollectionBlock';
 
 /**
- * A class to represent collectionviewpage of Notion
+ * A class to represent collection view page of Notion
  * @noInheritDoc
  */
 class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {

@@ -4,18 +4,22 @@ import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/noti
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
-  deepMerge,
-  getSchemaMapUnit,
-  transformToMultiple
-} from '../../libs';
-import {
-  FilterType,
+  deepMerge, FilterType,
   FilterTypes,
-  NishanArg,
-  UpdateType,
+
+
+
+
+  getSchemaMapUnit, NishanArg,
+
+
+
+
+  transformToMultiple, UpdateType,
   UpdateTypes
-} from '../../types';
+} from '../../';
 import Data from '../Data';
+
 
 /**
  * A class to represent view of Notion

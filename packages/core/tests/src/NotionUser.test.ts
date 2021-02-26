@@ -2,7 +2,7 @@ import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Mutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
-import { CollectionViewPage, NotionData, NotionUser, Page } from '../../src';
+import { CollectionViewPage, NotionData, NotionUser, Page } from '../../';
 import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';

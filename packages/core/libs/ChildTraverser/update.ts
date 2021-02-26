@@ -1,7 +1,7 @@
 import { Operation } from '@nishans/operations';
 import { TData } from '@nishans/types';
 import { deepMerge } from '..';
-import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../../src';
+import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**

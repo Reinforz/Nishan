@@ -1,4 +1,4 @@
-import { GalleryView } from '../../../src';
+import { GalleryView } from '../../../';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

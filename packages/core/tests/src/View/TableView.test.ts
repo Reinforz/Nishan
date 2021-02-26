@@ -1,4 +1,4 @@
-import { TableView } from '../../../src';
+import { TableView } from '../../../';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

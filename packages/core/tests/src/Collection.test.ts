@@ -1,6 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { IOperation, Schema } from '@nishans/types';
-import { CreateData, CreateMaps } from '../../libs';
 import {
 	Collection,
 	ICollectionUpdateInput,
@@ -8,7 +7,8 @@ import {
 	NotionData,
 	TCollectionUpdateKeys,
 	TSchemaUnitInput
-} from '../../src';
+} from '../../';
+import { CreateData, CreateMaps } from '../../libs';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';
 import { o } from '../utils/operations';

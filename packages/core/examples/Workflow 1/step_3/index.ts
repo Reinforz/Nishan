@@ -1,6 +1,6 @@
 import { ILinkedDBInput, IPageCreateInput, TViewCreateInput } from '@nishans/fabricator';
 import { v4 as uuidv4 } from 'uuid';
-import { CollectionViewPage, Page } from '../../../src';
+import { CollectionViewPage, Page } from '../../../libs';
 import { categories, ecosystems, subject } from '../data';
 import { CommonMultiSelectSchema, status_phase_combos } from '../util';
 

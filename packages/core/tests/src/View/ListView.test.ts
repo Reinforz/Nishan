@@ -1,4 +1,4 @@
-import { ListView } from '../../../src';
+import { ListView } from '../../../';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';
 
 afterEach(() => {

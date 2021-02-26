@@ -1,7 +1,6 @@
 import { TData } from '@nishans/types';
-import { FilterTypes, IterateAndGetChildrenOptions } from '../../src';
-import { getChildIds } from './utils';
-import { iterateChildren } from './utils/iterateChildren';
+import { FilterTypes, IterateAndGetChildrenOptions } from '../';
+import { getChildIds, iterateChildren } from './utils';
 
 /**
  * Iterates over the children of a parent and retrieves it

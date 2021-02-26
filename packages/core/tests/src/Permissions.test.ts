@@ -1,7 +1,7 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
 import { Queries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionPermissions } from '../../src';
+import { NotionPermissions } from '../../';
 import { o } from '../utils';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 import { last_edited_props } from '../utils/lastEditedProps';

@@ -1,8 +1,8 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { TBlockType } from '@nishans/types';
 import { v4 } from 'uuid';
+import { NishanArg } from '../../';
 import { createBlockClass } from '../../libs';
-import { NishanArg } from '../../src';
 
 const arg: NishanArg = {
 	token: 'token',

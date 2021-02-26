@@ -1,7 +1,7 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
+import { CollectionBlock } from "../../../";
 import { CreateData } from '../../../libs';
-import { CollectionBlock } from "../../../src";
 import { TViewCreateInput } from '../../../types';
 import { o } from '../../utils';
 import { default_nishan_arg } from '../../utils/defaultNishanArg';

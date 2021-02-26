@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { IOperation } from '@nishans/types';
-import { NotionData, UserSettings } from '../../src';
+import { NotionData, UserSettings } from '../../';
 import { default_nishan_arg } from '../utils/defaultNishanArg';
 
 afterEach(() => {

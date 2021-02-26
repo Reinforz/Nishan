@@ -1,7 +1,7 @@
 import { createShortId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
-import { NishanArg } from '../types';
+import { NishanArg } from '../';
 import Data from './Data';
 
 /**

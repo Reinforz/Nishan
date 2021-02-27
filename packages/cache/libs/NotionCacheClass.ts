@@ -1,6 +1,6 @@
 import { NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap, TDataType } from '@nishans/types';
-import { NotionCacheObject } from '../src';
+import { NotionCacheObject } from './';
 import { CtorArgs, ICache } from './types';
 
 export class NotionCacheClass {

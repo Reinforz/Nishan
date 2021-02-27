@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.shared.json",
   "include": [
-    "./src/index.ts",
+    "./libs/index.ts",
     "./experiment"
   ],
   "compilerOptions": {

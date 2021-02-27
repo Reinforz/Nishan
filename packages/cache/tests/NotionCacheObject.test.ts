@@ -1,6 +1,6 @@
 import { Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap } from '@nishans/types';
-import { ICache, NotionCacheObject } from '../../src';
+import { ICache, NotionCacheObject } from '../libs';
 
 const notion_request_configs = {
 	token: 'token',
@@ -11,8 +11,8 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`NotionCacheObject.createDefaultCache`, ()=>{
-  expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy()
+it(`NotionCacheObject.createDefaultCache`, () => {
+	expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy();
 });
 
 describe('fetchDataOrReturnCached', () => {
@@ -283,7 +283,11 @@ it(`updateCacheManually`, async () => {
 	const constructSyncRecordsParamsMock = jest
 		.spyOn(NotionCacheObject, 'constructSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
-	await NotionCacheObject.updateCacheManually(update_cache_manually_args, notion_request_configs, NotionCacheObject.createDefaultCache());
+	await NotionCacheObject.updateCacheManually(
+		update_cache_manually_args,
+		notion_request_configs,
+		NotionCacheObject.createDefaultCache()
+	);
 	expect(constructSyncRecordsParamsMock.mock.calls[0][0]).toBe(update_cache_manually_args);
 	expect(constructSyncRecordsParamsMock.mock.calls[0][1]).toBe(notion_request_configs);
 });
@@ -420,7 +424,10 @@ describe('initializeCacheForSpecificData', () => {
 				space_views: [ 'space_view_1' ],
 				id: 'user_root_1'
 			},
-			cache: ICache = { ...NotionCacheObject.createDefaultCache(), user_root: new Map([ [ 'user_root_1', user_root_1 ] ]) };
+			cache: ICache = {
+				...NotionCacheObject.createDefaultCache(),
+				user_root: new Map([ [ 'user_root_1', user_root_1 ] ])
+			};
 
 		const updateCacheManuallyMock = jest
 			.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -436,7 +443,10 @@ describe('initializeCacheForSpecificData', () => {
 					id: 'user_root_1',
 					bookmarked_pages: [ 'block_1' ]
 				},
-				cache: ICache = { ...NotionCacheObject.createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+				cache: ICache = {
+					...NotionCacheObject.createDefaultCache(),
+					space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
+				};
 
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')
@@ -455,7 +465,10 @@ describe('initializeCacheForSpecificData', () => {
 			const space_view_1: any = {
 					id: 'user_root_1'
 				},
-				cache: ICache = { ...NotionCacheObject.createDefaultCache(), space_view: new Map([ [ 'space_view_1', space_view_1 ] ]) };
+				cache: ICache = {
+					...NotionCacheObject.createDefaultCache(),
+					space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
+				};
 
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')

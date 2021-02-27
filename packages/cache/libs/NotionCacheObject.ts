@@ -10,7 +10,7 @@ import {
 	TData,
 	TDataType
 } from '@nishans/types';
-import { ICache } from '../src';
+import { ICache } from './';
 
 export const NotionCacheObject = {
 	createDefaultCache () {

@@ -1,5 +1,5 @@
 import { UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { NotionCacheClass, NotionCacheObject } from '../../src';
+import { NotionCacheClass, NotionCacheObject } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -74,7 +74,7 @@ export default class NotionPermissions extends Data<TPage> {
 
 	/**
    * Share page to users with specific permissions
-   * @param args array of userid and role of user to share pages to
+   * @param args array of user id and role of user to share pages to
    */
 	async addUserPermissions (args: [UserIdentifier, TUserPermissionRole][]) {
 		await this.updateUserPermissions(args);

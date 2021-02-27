@@ -1,6 +1,6 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationsPlugin } from '../../../src';
-import { NotionOperationsPluginOptions } from '../../../src/Plugins/Options';
+import { NotionOperationsPlugin } from '../../libs';
+import { NotionOperationsPluginOptions } from '../../libs/Plugins/Options';
 
 afterEach(() => {
 	jest.restoreAllMocks();

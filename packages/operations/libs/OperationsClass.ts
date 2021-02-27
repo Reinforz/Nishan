@@ -1,4 +1,4 @@
-import { Mutations, NotionRequest } from '@nishans/endpoints';
+import { NotionMutations, NotionRequest } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFunction } from './types';
 
@@ -92,7 +92,7 @@ export class NotionOperationsClass {
       // get the operations list after processing it with the list of plugins 
       created_transaction.transactions[0].operations = this.applyPluginsToOperationsStack();
       // Execute the operations, by sending a request to notion's server
-			await Mutations.saveTransactions(created_transaction, {
+			await NotionMutations.saveTransactions(created_transaction, {
 				token: this.token,
 				interval: 0,
         user_id: this.user_id

@@ -1,6 +1,6 @@
-import { Mutations } from '@nishans/endpoints';
+import { NotionMutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionOperationsClass, NotionOperationsPlugin } from '../../src';
+import { NotionOperationsClass, NotionOperationsPlugin } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -58,7 +58,9 @@ describe('executeOperation', () => {
 	});
 
 	it(`executes operations`, async () => {
-		const saveTransactionsMock = jest.spyOn(Mutations, 'saveTransactions').mockImplementationOnce(async () => ({}));
+		const saveTransactionsMock = jest
+			.spyOn(NotionMutations, 'saveTransactions')
+			.mockImplementationOnce(async () => ({}));
 		const stack: IOperation[] = [ operation ];
 		const operations_class = new NotionOperationsClass({
 			...returnDefaultOperationsClassArgs(),

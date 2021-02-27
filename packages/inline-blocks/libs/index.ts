@@ -1,2 +1,4 @@
-export * from './HighlightColor';
-export * from './StyleFormatter';
+export * from './extractInlineBlockContent';
+export * from './NotionInlineBlock';
+export * from './TextHighlightColor';
+export * from './TextStyleFormatter';

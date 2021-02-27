@@ -3,7 +3,7 @@ import { InlineDate, TTextFormat } from '@nishans/types';
 /**
  * A class to construct notion inline blocks with provided methods
  */
-class NotionInlineBlock {
+export class NotionInlineBlock {
 	content: TTextFormat;
 
 	constructor (content?: string | TTextFormat) {
@@ -22,8 +22,8 @@ class NotionInlineBlock {
    * @param text The text content to be added to the current content property
    */
 	text (text: string) {
-		const { StyleFormatter } = require('../libs/StyleFormatter');
-		return new StyleFormatter(this.content.concat([ [ text, [] ] ]));
+		const { TextStyleFormatter } = require('./');
+		return new TextStyleFormatter(this.content.concat([ [ text, [] ] ]));
 	}
 
 	/**
@@ -58,5 +58,3 @@ class NotionInlineBlock {
 		return new NotionInlineBlock(this.content.concat([ [ '⁍', [ [ 'e', equation ] ] ] ]));
 	}
 }
-
-export default NotionInlineBlock;

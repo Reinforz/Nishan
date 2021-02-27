@@ -1,4 +1,4 @@
-import { NotionInlineBlock } from '../../src';
+import { NotionInlineBlock } from '../libs';
 
 describe('NotionInlineBlock ctor', () => {
 	it('string arg', () => {

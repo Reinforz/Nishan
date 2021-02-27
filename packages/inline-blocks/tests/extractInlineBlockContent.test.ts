@@ -1,4 +1,4 @@
-import { extractInlineBlockContent } from '../../src';
+import { extractInlineBlockContent } from '../libs';
 
 it(`Works correctly`, () => {
 	expect(

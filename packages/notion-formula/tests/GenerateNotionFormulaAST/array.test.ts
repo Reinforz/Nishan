@@ -1,4 +1,4 @@
-import { GenerateNotionFormulaAST } from '../../../src';
+import { GenerateNotionFormulaAST } from '../../libs';
 import { abs, cn, pn, sn, test_schema_map } from '../utils';
 
 describe('Function formula array representation parsing success', () => {

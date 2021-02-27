@@ -1,11 +1,11 @@
-import { Queries } from '@nishans/endpoints';
+import { NotionQueries } from '@nishans/endpoints';
 import { idToUuid, uuidToId } from '@nishans/idz';
-import { generateSchemaMap } from '../../src';
+import { generateSchemaMap } from '../libs';
 import { dsmu, dsu, tsmu, tsu } from './utils';
 
 it('generateSchemaMap', async () => {
 	const id = idToUuid(uuidToId('4b4bb21df68b4113b342830687a5337a'));
-	const syncRecordValuesMock = jest.spyOn(Queries, 'syncRecordValues');
+	const syncRecordValuesMock = jest.spyOn(NotionQueries, 'syncRecordValues');
 	syncRecordValuesMock.mockImplementationOnce(async () => {
 		return {
 			recordMap: {

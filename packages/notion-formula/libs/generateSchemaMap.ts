@@ -1,4 +1,4 @@
-import { Queries } from '@nishans/endpoints';
+import { NotionQueries } from '@nishans/endpoints';
 import { idToUuid, uuidToId } from '@nishans/idz';
 import { Schema, TCollectionBlock } from '@nishans/types';
 import { ISchemaMap } from '../types';
@@ -28,7 +28,7 @@ export function generateSchemaMapFromCollectionSchema (schema: Schema) {
  */
 export async function generateSchemaMap (token: string, cb_id: string) {
 	const id = idToUuid(uuidToId(cb_id)),
-		{ recordMap: { block } } = await Queries.syncRecordValues(
+		{ recordMap: { block } } = await NotionQueries.syncRecordValues(
 			{
 				requests: [
 					{
@@ -44,7 +44,7 @@ export async function generateSchemaMap (token: string, cb_id: string) {
 			}
 		),
 		{ collection_id } = block[id].value as TCollectionBlock,
-		{ recordMap: { collection } } = await Queries.syncRecordValues(
+		{ recordMap: { collection } } = await NotionQueries.syncRecordValues(
 			{
 				requests: [
 					{

@@ -1,6 +1,6 @@
 import { TFunctionName } from '@nishans/types';
 import { GenerateNotionFormulaAST } from '.';
-import { ISchemaMap, NotionFunctionFormulaInfoMap } from '../../src';
+import { ISchemaMap, NotionFunctionFormulaInfoMap } from '../';
 
 /**
  * Generate notion client compatible formula ast from string 

@@ -1,4 +1,4 @@
-import { GenerateNotionFormulaAST } from '../../../src';
+import { GenerateNotionFormulaAST } from '../../libs';
 import { abs, cn, ct, pn, sc, sn, test_schema_map } from '../utils';
 
 describe('Zero arity function parsing', () => {

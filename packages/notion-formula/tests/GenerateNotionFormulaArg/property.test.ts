@@ -1,4 +1,4 @@
-import { GenerateNotionFormulaArg } from '../../../src';
+import { GenerateNotionFormulaArg } from '../../libs';
 import { pt, test_schema_map } from '../utils';
 
 it('Should output correctly for correct text property reference', () => {

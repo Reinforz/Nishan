@@ -1,4 +1,4 @@
-import { GenerateNotionFormulaArg } from '../../../src';
+import { GenerateNotionFormulaArg } from '../../libs';
 import { cn, ct, sc, sn } from '../utils';
 
 describe('Checking symbol type formula part', () => {

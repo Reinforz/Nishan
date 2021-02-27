@@ -1,4 +1,4 @@
-import { getResultTypeFromSchemaType } from '../../../../src/GenerateNotionFormulaAST/utils';
+import { getResultTypeFromSchemaType } from '../../../libs/GenerateNotionFormulaAST/utils';
 
 describe('Return result type from schema type', () => {
 	it(`Should return correct result_type for checkbox`, () => {

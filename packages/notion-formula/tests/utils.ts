@@ -1,4 +1,4 @@
-import { ISchemaMap } from '../../src';
+import { ISchemaMap } from '../libs';
 
 // Title schema unit
 export const tsu: any = {

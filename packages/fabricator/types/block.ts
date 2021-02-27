@@ -28,7 +28,9 @@ import {
 	ITweet,
 	IVideo,
 	IWebBookmark,
+	PageFormat,
 	TBlockType,
+	TPropertyVisibility,
 	TTextFormat
 } from '@nishans/types';
 import { TSchemaUnitInput, TViewCreateInput } from '.';
@@ -36,12 +38,13 @@ import { TSchemaUnitInput, TViewCreateInput } from '.';
 export interface ICollectionBlockInput {
 	id?: string;
 	views: TViewCreateInput[];
-	schema: TSchemaUnitInput[];
+	schema: (TSchemaUnitInput & { property_visibility?: TPropertyVisibility })[];
 	name: TTextFormat;
 	icon?: string;
 	cover?: string;
 	rows: IPageCreateInput[];
 	collection_id?: string;
+	page_section_visibility?: PageFormat['page_section_visibility'];
 }
 
 export interface ICollectionViewInput extends ICollectionBlockInput {

@@ -14,11 +14,14 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection
-	const [ schema ] = await CreateData.schema(input.schema, {
+	const [ schema, ,format ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,
 		name: input.name,
 		...props
 	});
+
+  format.page_section_visibility = input.page_section_visibility ?? {backlinks: 'section_show', comments: "section_show"};
+  
 	// construct the collection to store it in cache and in op stack
 	const collection_data: ICollection = {
 		id: collection_id,
@@ -30,7 +33,8 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		alive: true,
 		name: input.name,
 		migrated: false,
-		version: 0
+		version: 0,
+    format
 	};
 
 	// Create the views of the collection

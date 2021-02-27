@@ -385,6 +385,13 @@ export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock | 
 
 export type TParentType = IPage | ISpace | ICollectionViewPage;
 
+export type TPropertyVisibility = 'show' | 'hide_if_empty' | 'hide';
+
+export type CollectionFormatPropertyVisibility = {
+	property: string;
+	visibility: 'show' | 'hide_if_empty' | 'hide';
+};
+
 export interface ICollection extends Node, ParentProps {
 	description?: TTextFormat;
 	icon?: string;
@@ -394,12 +401,9 @@ export interface ICollection extends Node, ParentProps {
 	schema: Schema;
 	template_pages?: string[];
 	format?: {
-		property_visibility?: {
-			property: string;
-			visibility: 'show' | 'hide_if_empty' | 'hide';
-		}[];
+		property_visibility?: CollectionFormatPropertyVisibility[];
 		page_section_visibility?: PageFormat['page_section_visibility'];
-    collection_page_properties?: ViewFormatProperties[]
+		collection_page_properties?: ViewFormatProperties[];
 	};
 }
 

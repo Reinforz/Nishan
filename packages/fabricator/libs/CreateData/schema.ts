@@ -1,8 +1,8 @@
 import { NonExistentSchemaUnitTypeError, SchemaDuplicatePropertyNameError } from "@nishans/errors";
 import { createShortId } from "@nishans/idz";
-import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMap, ISchemaMapValue } from "@nishans/notion-formula";
-import { Schema } from "@nishans/types";
-import { ParentCollectionData, TSchemaUnitInput } from ".";
+import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMapValue } from "@nishans/notion-formula";
+import { CollectionFormatPropertyVisibility, ICollection, Schema } from "@nishans/types";
+import { ICollectionBlockInput, ParentCollectionData } from ".";
 import { FabricatorProps } from "../";
 import { CreateSchemaUnit } from "./SchemaUnit";
 /**
@@ -11,14 +11,14 @@ import { CreateSchemaUnit } from "./SchemaUnit";
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function schema(input_schema_units: TSchemaUnitInput[], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & FabricatorProps, cb?: ((data: ISchemaMapValue)=>any)){
+export async function schema(input_schema_units: ICollectionBlockInput["schema"], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & FabricatorProps, cb?: ((data: ISchemaMapValue)=>any)){
   // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
+  const format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
   // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
-      {type, name} = input_schema_unit,
+      {type, name, property_visibility} = input_schema_unit,
       // Generate the schema id for the specific schema unit
       // If its title keep it as title, else generate a random 5 character short id
       schema_id = type === "title" ? "title" : createShortId();
@@ -27,7 +27,7 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
     // If it exists throw an error since duplicate schema_unit name is not allowed 
     if(schema_map_unit)
       throw new SchemaDuplicatePropertyNameError(name);
-
+    (format.property_visibility as CollectionFormatPropertyVisibility[]).push({property: schema_id, visibility: property_visibility ?? "show"})
     // For specific schema unit type, the corresponding schema unit has to be generated using specific functions 
     switch(input_schema_unit.type){
       case "formula":
@@ -49,5 +49,5 @@ export async function schema(input_schema_units: TSchemaUnitInput[], options: Om
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])
     throw new NonExistentSchemaUnitTypeError(["title"])
-  return [schema, schema_map] as [Schema, ISchemaMap];
+  return [schema, schema_map, format] as const;
 }

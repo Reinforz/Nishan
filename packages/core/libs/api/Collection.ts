@@ -1,3 +1,4 @@
+import { error } from '@nishans/errors';
 import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
@@ -323,6 +324,7 @@ class Collection extends Data<ICollection> {
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id }) => {
+				if (schema_id === 'title') error(`Title schema unit cannot be deleted`);
 				delete data.schema[schema_id];
 			}
 		);

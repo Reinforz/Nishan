@@ -519,51 +519,87 @@ it(`updateSchemaUnit`, async () => {
 	);
 });
 
-it(`deleteSchemaUnit`, async () => {
-	const current_schema: Schema = {
-		title: {
-			type: 'title',
-			name: 'Title'
-		},
-		checkbox: {
-			type: 'checkbox',
-			name: 'Checkbox'
-		}
-	};
-	const collection_1 = {
+describe('deleteSchemaUnit', () => {
+	it(`Work correctly`, async () => {
+		const current_schema: Schema = {
+			title: {
+				type: 'title',
+				name: 'Title'
+			},
+			checkbox: {
+				type: 'checkbox',
+				name: 'Checkbox'
+			}
+		};
+		const collection_1 = {
+				id: 'collection_1',
+				name: [ [ 'Collection' ] ],
+				schema: current_schema
+			},
+			block_1 = { id: 'block_1' } as any,
+			cache = {
+				...NotionCacheObject.createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ]),
+				collection: new Map([ [ 'collection_1', collection_1 ] ])
+			} as any,
+			stack: IOperation[] = [];
+
+		const collection = new Collection({
+			...default_nishan_arg,
+			cache,
 			id: 'collection_1',
-			name: [ [ 'Collection' ] ],
-			schema: current_schema
-		},
-		block_1 = { id: 'block_1' } as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
+			stack
+		});
 
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1',
-		stack
-	});
+		await collection.deleteSchemaUnit('Checkbox');
 
-	await collection.deleteSchemaUnit('Checkbox');
-
-	expect(current_schema).toStrictEqual({
-		title: {
-			type: 'title',
-			name: 'Title'
-		}
-	});
-	expect(stack[0]).toEqual(
-		o.c.u('collection_1', [ 'schema' ], {
+		expect(current_schema).toStrictEqual({
 			title: {
 				type: 'title',
 				name: 'Title'
 			}
-		})
-	);
+		});
+		expect(stack[0]).toEqual(
+			o.c.u('collection_1', [ 'schema' ], {
+				title: {
+					type: 'title',
+					name: 'Title'
+				}
+			})
+		);
+	});
+
+	it.only(`throws error when deleting title`, async () => {
+		const current_schema: Schema = {
+			title: {
+				type: 'title',
+				name: 'Title'
+			},
+			checkbox: {
+				type: 'checkbox',
+				name: 'Checkbox'
+			}
+		};
+		const collection_1 = {
+				id: 'collection_1',
+				name: [ [ 'Collection' ] ],
+				schema: current_schema
+			},
+			block_1 = { id: 'block_1' } as any,
+			cache = {
+				...NotionCacheObject.createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ]),
+				collection: new Map([ [ 'collection_1', collection_1 ] ])
+			} as any,
+			stack: IOperation[] = [];
+
+		const collection = new Collection({
+			...default_nishan_arg,
+			cache,
+			id: 'collection_1',
+			stack
+		});
+
+		await expect(() => collection.deleteSchemaUnit('Title')).rejects.toThrow();
+	});
 });

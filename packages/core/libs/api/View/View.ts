@@ -13,7 +13,6 @@ import {
 import { deepMerge, transformToMultiple } from "../../utils";
 import Data from '../Data';
 
-
 /**
  * A class to represent view of Notion
  * @noInheritDoc

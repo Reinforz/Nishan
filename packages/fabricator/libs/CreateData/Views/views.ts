@@ -42,8 +42,6 @@ export async function views (
 			properties.push(PopulateViewData.format_properties(type as any, schema_map_unit.schema_id, format));
 		});
 
-		properties.push(...PopulateViewData.non_included_props(type, collection.schema, included_units));
-
 		const input_filters = views[index].filters;
 		if (input_filters) populateFilters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 

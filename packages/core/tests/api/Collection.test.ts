@@ -569,7 +569,7 @@ describe('deleteSchemaUnit', () => {
 		);
 	});
 
-	it.only(`throws error when deleting title`, async () => {
+	it(`throws error when deleting title`, async () => {
 		const current_schema: Schema = {
 			title: {
 				type: 'title',

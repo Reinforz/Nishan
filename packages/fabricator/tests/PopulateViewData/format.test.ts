@@ -1,28 +1,14 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
 import { PopulateViewData } from '../../libs';
+import { dsu, fsu, nsu, tsu, txsu } from '../utils';
 
 const schema: Schema = {
-	title: {
-		type: 'title',
-		name: 'Title'
-	},
-	number: {
-		type: 'number',
-		name: 'Number'
-	},
-	text: {
-		type: 'text',
-		name: 'Text'
-	},
-	file: {
-		type: 'file',
-		name: 'File'
-	},
-	date: {
-		type: 'date',
-		name: 'Date'
-	},
+	title: tsu,
+	number: nsu,
+	text: txsu,
+	file: fsu,
+	date: dsu,
 	select: {
 		type: 'select',
 		name: 'Select',
@@ -53,12 +39,20 @@ describe('Table view', () => {
 			it(`Should work for table view`, () => {
 				const format = PopulateViewData.format({
 					type: 'table',
-					table_wrap: false
+					table_wrap: false,
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
+					}
 				}) as ITableViewFormat;
 
 				expect(format).toStrictEqual({
 					table_properties: [],
-					table_wrap: false
+					table_wrap: false,
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
+					}
 				});
 			});
 		});
@@ -71,7 +65,10 @@ describe('Table view', () => {
 
 				expect(format).toStrictEqual({
 					table_properties: [],
-					table_wrap: false
+					table_wrap: false,
+					inline_collection_first_load_limit: {
+						type: 'load_all'
+					}
 				});
 			});
 		});
@@ -83,11 +80,34 @@ describe('List view', () => {
 		describe('Custom input', () => {
 			it(`Should work for list view`, () => {
 				const format = PopulateViewData.format({
+					type: 'list',
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
+					}
+				});
+
+				expect(format).toStrictEqual({
+					list_properties: [],
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
+					}
+				});
+			});
+		});
+
+		describe('Default input', () => {
+			it(`Should work for list view`, () => {
+				const format = PopulateViewData.format({
 					type: 'list'
 				});
 
 				expect(format).toStrictEqual({
-					list_properties: []
+					list_properties: [],
+					inline_collection_first_load_limit: {
+						type: 'load_all'
+					}
 				});
 			});
 		});
@@ -122,7 +142,11 @@ describe('Gallery view', () => {
 							type: 'property'
 						},
 						gallery_cover_aspect: 'cover',
-						gallery_cover_size: 'medium'
+						gallery_cover_size: 'medium',
+						inline_collection_first_load_limit: {
+							limit: 25,
+							type: 'load_limit'
+						}
 					},
 					schema_map
 				) as IGalleryViewFormat;
@@ -134,7 +158,11 @@ describe('Gallery view', () => {
 					},
 					gallery_properties: [],
 					gallery_cover_aspect: 'cover',
-					gallery_cover_size: 'medium'
+					gallery_cover_size: 'medium',
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
+					}
 				});
 			});
 
@@ -157,7 +185,10 @@ describe('Gallery view', () => {
 					},
 					gallery_properties: [],
 					gallery_cover_aspect: 'cover',
-					gallery_cover_size: 'medium'
+					gallery_cover_size: 'medium',
+					inline_collection_first_load_limit: {
+						type: 'load_all'
+					}
 				});
 			});
 		});
@@ -175,7 +206,10 @@ describe('Gallery view', () => {
 					gallery_cover: { type: 'page_cover' },
 					gallery_properties: [],
 					gallery_cover_aspect: 'contain',
-					gallery_cover_size: 'large'
+					gallery_cover_size: 'large',
+					inline_collection_first_load_limit: {
+						type: 'load_all'
+					}
 				});
 			});
 		});
@@ -210,6 +244,10 @@ describe('timeline view', () => {
 						timeline_preference: {
 							centerTimestamp: 2,
 							zoomLevel: 'month'
+						},
+						inline_collection_first_load_limit: {
+							limit: 25,
+							type: 'load_limit'
 						}
 					},
 					schema_map
@@ -222,6 +260,10 @@ describe('timeline view', () => {
 					timeline_preference: {
 						centerTimestamp: 2,
 						zoomLevel: 'month'
+					},
+					inline_collection_first_load_limit: {
+						limit: 25,
+						type: 'load_limit'
 					}
 				});
 			});
@@ -242,6 +284,9 @@ describe('timeline view', () => {
 					timeline_preference: {
 						centerTimestamp: 1,
 						zoomLevel: 'month'
+					},
+					inline_collection_first_load_limit: {
+						type: 'load_all'
 					}
 				});
 			});

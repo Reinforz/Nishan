@@ -371,9 +371,9 @@ it(`deleteRow`, async () => {
 		stack
 	});
 
-	const getRowPageIdsMock = jest.spyOn(Collection.prototype, 'getRowPageIds').mockImplementationOnce(async () => {
-		return [ 'block_1' ];
-	});
+	const getRowPageIdsMock = jest
+		.spyOn(Collection.prototype, 'getRowPageIds')
+		.mockImplementationOnce(async () => [ 'block_1' ]);
 
 	jest.spyOn(NotionData.prototype, 'initializeCacheForThisData').mockImplementationOnce(async () => {});
 

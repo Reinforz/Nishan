@@ -46,22 +46,10 @@ export interface IterateOptions<T, C> {
 
 export interface IterateAndGetOptions<T, C> extends IterateOptions<T, C> {}
 
-export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> &
-	(
-		| {
-				/**
- * Whether or not the user will manually handle all the NotionMutations
- */
-				manual: true;
-				/**
- * The key of the parent which contains the child ids
- */
-				child_path?: keyof T;
-			}
-		| {
-				manual?: false;
-				child_path: keyof T;
-			});
+export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> & {
+	manual?: boolean;
+	child_path?: keyof T;
+};
 
 export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
 	/**

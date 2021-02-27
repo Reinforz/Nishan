@@ -185,17 +185,9 @@ class Collection extends Data<ICollection> {
 				child_ids: await this.getRowPageIds(),
 				child_type: 'block',
 				multiple,
-				container: [],
-				manual: true
+				container: []
 			},
-			(child_id) => this.cache.block.get(child_id) as IPage,
-			(child_id, child_data) => {
-				child_data.alive = false;
-				this.updateLastEditedProps(child_data);
-				this.Operations.pushToStack(
-					Operation.block.update(child_id, [], { alive: false, ...this.getLastEditedProps() })
-				);
-			}
+			(child_id) => this.cache.block.get(child_id) as IPage
 		);
 	}
 
@@ -329,9 +321,7 @@ class Collection extends Data<ICollection> {
 				container: [],
 				initialize_cache: false
 			},
-			(name) => {
-				return schema_map.get(name);
-			},
+			(name) => schema_map.get(name),
 			(_, { schema_id }) => {
 				delete data.schema[schema_id];
 			}

@@ -1,9 +1,9 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { ISchemaMap } from '@nishans/notion-formula';
 import { IOperation } from '@nishans/types';
+import { tsu } from '../../../../fabricator/tests/utils';
 import { NotionData, View } from '../../../libs';
-import { setPropertyFromName } from '../../../libs/api/View/View';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
+import { createCollection, tas, txas } from './utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -12,10 +12,7 @@ afterEach(() => {
 it('getCollection', () => {
 	const collection_1 = {
 			schema: {
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
+				title: tsu
 			}
 		} as any,
 		collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
@@ -121,10 +118,7 @@ describe('createSorts', () => {
 		const collection_1: any = {
 				id: 'collection_1',
 				schema: {
-					title: {
-						name: 'Title',
-						property: 'title'
-					}
+					title: tsu
 				}
 			},
 			collection_view_1 = {
@@ -148,33 +142,16 @@ describe('createSorts', () => {
 			id: 'collection_view_1',
 			stack
 		});
-		const sort = [
-			{
-				direction: 'ascending',
-				property: 'title'
-			}
-		];
+		const sort = [ tas ];
 
 		view.createSorts([ [ 'Title', 'ascending' ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort) ]);
+		expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`pos=number`, () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -203,10 +180,7 @@ describe('createSorts', () => {
 		});
 
 		const sort = [
-			{
-				direction: 'ascending',
-				property: 'text'
-			},
+			txas,
 			{
 				direction: 'descending',
 				property: 'title'
@@ -216,23 +190,11 @@ describe('createSorts', () => {
 		view.createSorts([ [ 'Text', 'ascending', 0 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort) ]);
+		expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`throws error when property already has a sort `, () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -260,59 +222,16 @@ describe('createSorts', () => {
 
 		expect(() => view.createSorts([ [ 'Title', 'ascending', 0 ] ])).toThrow();
 	});
-
-	it(`throws error when property doesnot exist in the schema_map `, () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					}
-				}
-			},
-			collection_view_1 = {
-				parent_id: 'block_1',
-				id: 'collection_view_1'
-			} as any,
-			cache: ICache = {
-				...NotionCacheObject.createDefaultCache(),
-				block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } as any ] ]),
-				collection: new Map([ [ 'collection_1', collection_1 ] ]),
-				collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
-			};
-
-		const view = new View({
-			...default_nishan_arg,
-			cache,
-			id: 'collection_view_1'
-		});
-
-		expect(() => view.createSorts([ [ 'Text', 'ascending', 0 ] ])).toThrow();
-	});
 });
 
 describe('updateSort', () => {
 	it(`pos=undefined`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
 				query2: {
-					sort: [
-						{
-							property: 'title',
-							direction: 'ascending'
-						}
-					]
+					sort: [ tas ]
 				}
 			} as any,
 			cache: ICache = {
@@ -340,37 +259,16 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', 'descending' ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 
 	it(`pos=number`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
 				query2: {
-					sort: [
-						{
-							property: 'title',
-							direction: 'ascending'
-						},
-						{
-							property: 'text',
-							direction: 'ascending'
-						}
-					]
+					sort: [ tas, txas ]
 				}
 			} as any,
 			cache: ICache = {
@@ -388,51 +286,21 @@ describe('updateSort', () => {
 			stack
 		});
 
-		const sort = [
-			{
-				direction: 'ascending',
-				property: 'text'
-			},
-			{
-				property: 'title',
-				direction: 'ascending'
-			}
-		];
+		const sort = [ txas, tas ];
 
 		await view.updateSort([ 'Title', 1 ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 
 	it(`pos=[direction,number]`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
 				query2: {
-					sort: [
-						{
-							property: 'title',
-							direction: 'ascending'
-						},
-						{
-							property: 'text',
-							direction: 'ascending'
-						}
-					]
+					sort: [ tas, txas ]
 				}
 			} as any,
 			cache: ICache = {
@@ -451,10 +319,7 @@ describe('updateSort', () => {
 		});
 
 		const sort = [
-			{
-				direction: 'ascending',
-				property: 'text'
-			},
+			txas,
 			{
 				property: 'title',
 				direction: 'descending'
@@ -464,30 +329,17 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', [ 'descending', 1 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort));
 	});
 });
 
 it(`deleteSort`, async () => {
-	const collection_1: any = {
-			id: 'collection_1',
-			schema: {
-				title: {
-					name: 'Title',
-					type: 'title'
-				}
-			}
-		},
+	const collection_1 = createCollection(),
 		collection_view_1 = {
 			parent_id: 'block_1',
 			id: 'collection_view_1',
 			query2: {
-				sort: [
-					{
-						property: 'title',
-						direction: 'ascending'
-					}
-				]
+				sort: [ tas ]
 			}
 		} as any,
 		cache: ICache = {
@@ -510,24 +362,12 @@ it(`deleteSort`, async () => {
 	await view.deleteSort('Title');
 
 	expect(collection_view_1.query2.sort).toStrictEqual(sort);
-	expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'sort' ], sort));
+	expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort));
 });
 
 describe('updateFormatProperty', () => {
 	it(`format, width and position all given`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -577,7 +417,7 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'table', position: 1, visible: false, width: 125 } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 
 	it(`format, width and position none given`, async () => {
@@ -594,19 +434,7 @@ describe('updateFormatProperty', () => {
 			}
 		];
 
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -633,7 +461,7 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'table' } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 
 	it(`type!=table,format, width and position none given`, async () => {
@@ -650,19 +478,7 @@ describe('updateFormatProperty', () => {
 			}
 		];
 
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -689,25 +505,13 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'list' } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'format', 'table_properties' ], table_properties));
+		expect(stack[0]).toStrictEqual(o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties));
 	});
 });
 
 describe('createFilters', () => {
 	it(`format, width and position all given`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -766,19 +570,7 @@ describe('createFilters', () => {
 
 describe('updateFilters', () => {
 	it(`separate property and same position`, async () => {
-		const collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+		const collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -857,19 +649,7 @@ describe('updateFilters', () => {
 					}
 				}
 			},
-			collection_1: any = {
-				id: 'collection_1',
-				schema: {
-					title: {
-						name: 'Title',
-						type: 'title'
-					},
-					text: {
-						name: 'Text',
-						type: 'text'
-					}
-				}
-			},
+			collection_1 = createCollection(),
 			collection_view_1 = {
 				parent_id: 'block_1',
 				id: 'collection_view_1',
@@ -951,19 +731,7 @@ it(`deleteFilter`, async () => {
 				}
 			}
 		},
-		collection_1: any = {
-			id: 'collection_1',
-			schema: {
-				title: {
-					name: 'Title',
-					type: 'title'
-				},
-				text: {
-					name: 'Text',
-					type: 'text'
-				}
-			}
-		},
+		collection_1 = createCollection(),
 		collection_view_1 = {
 			parent_id: 'block_1',
 			id: 'collection_view_1',
@@ -999,19 +767,4 @@ it(`deleteFilter`, async () => {
 
 	expect(collection_view_1.query2.filter).toStrictEqual(filters);
 	expect(stack[0]).toStrictEqual(o.cv.u('collection_view_1', [ 'query2', 'filter' ], filters));
-});
-
-describe('setPropertyFromName', () => {
-	it(`should change property value`, () => {
-		const data = { property: 'Name' };
-		const schema_map: ISchemaMap = new Map([ [ 'Title', { schema_id: 'title' } as any ] ]);
-		setPropertyFromName('Title', schema_map, data);
-		expect(data.property).toBe('title');
-	});
-
-	it(`Should throw an error if unknown property is referenced`, () => {
-		const data = { property: 'Name' };
-		const schema_map: ISchemaMap = new Map([ [ 'Title', { schema_id: 'title' } as any ] ]);
-		expect(() => setPropertyFromName('Name', schema_map, data)).toThrow();
-	});
 });

@@ -1,6 +1,6 @@
 import { PreExistentValueError } from "@nishans/errors";
 import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, populateFilters, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
-import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
@@ -18,10 +18,6 @@ import Data from '../Data';
  * A class to represent view of Notion
  * @noInheritDoc
  */
-
-export function setPropertyFromName(name: string, schema_map: ISchemaMap, data: {property: string}){
-  data.property = getSchemaMapUnit(schema_map, name, ['name']).schema_id;
-}
 
 class View<T extends TView> extends Data<T> {
 	constructor (arg: NishanArg) {
@@ -190,7 +186,7 @@ class View<T extends TView> extends Data<T> {
 					{ filter: updated_filter, position, name } = updated_data;
           
         if(name)
-          setPropertyFromName(name, schema_map, child_filter)
+          child_filter.property = getSchemaMapUnit(schema_map, name, ['name']).schema_id;
 
 				deepMerge(child_filter.filter, updated_filter);
 

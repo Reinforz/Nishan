@@ -1,6 +1,6 @@
 {
   "name": "@nishans/fabricator",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "A package to generate notion blocks using a simple api",
   "keywords": [
     "notion",
@@ -37,12 +37,12 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/notion-formula": "^0.0.20",
-    "@nishans/errors": "^0.0.18",
-    "@nishans/cache": "^0.0.23",
+    "@nishans/notion-formula": "^0.0.21",
+    "@nishans/errors": "^0.0.19",
+    "@nishans/cache": "^0.0.24",
     "@nishans/idz": "0.0.15"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.22"
+    "@nishans/types": "^0.0.23"
   }
 }

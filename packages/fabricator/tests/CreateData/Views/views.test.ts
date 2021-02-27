@@ -67,7 +67,10 @@ describe('Output correctly', () => {
 						width: 250
 					}
 				],
-				table_wrap: false
+				table_wrap: false,
+				inline_collection_first_load_limit: {
+					type: 'load_all'
+				}
 			},
 			query2: {
 				aggregations: [],

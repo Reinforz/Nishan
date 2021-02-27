@@ -1,4 +1,4 @@
-import { createShortId } from '../../src';
+import { createShortId } from '../libs';
 
 it(`Should create short id with default length`, () => {
 	const short_id = createShortId();

@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { generateId, uuidToId } from '../../src';
+import { generateId, uuidToId } from '../libs';
 
 it(`Should generate random id when none provided`, () => {
 	expect(generateId()).toBeTruthy();

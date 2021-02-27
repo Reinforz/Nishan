@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { UnsupportedPropertyTypeError } from '../../src/';
+import { UnsupportedPropertyTypeError } from '../libs';
 
 it(`UnsupportedPropertyTypeError`, () => {
 	expect(new UnsupportedPropertyTypeError('Name', [ 'arg', 'name' ], 'text', [ 'checkbox', 'number' ]).message).toBe(

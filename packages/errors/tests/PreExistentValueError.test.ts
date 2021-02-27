@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { PreExistentValueError } from '../../src';
+import { PreExistentValueError } from '../libs';
 
 it(`PreExistentValueError`, () => {
 	expect(new PreExistentValueError('value_type', 'value_for', 'value_current').message).toBe(

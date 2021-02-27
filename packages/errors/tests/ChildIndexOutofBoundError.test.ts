@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { ChildIndexOutofBoundError } from '../../src';
+import { ChildIndexOutofBoundError } from '../libs';
 
 it(`ChildIndexOutofBoundError`, () => {
 	expect(new ChildIndexOutofBoundError(3, 2, 'data').message).toBe(

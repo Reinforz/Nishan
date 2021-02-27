@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { UnsupportedDataTypeError } from '../../src/';
+import { UnsupportedDataTypeError } from '../libs';
 
 it(`UnsupportedDataTypeError`, () => {
 	expect(new UnsupportedDataTypeError('notion_user', [ 'block', 'collection' ]).message).toBe(

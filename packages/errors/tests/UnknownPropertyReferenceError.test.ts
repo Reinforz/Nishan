@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { UnknownPropertyReferenceError } from '../../src/';
+import { UnknownPropertyReferenceError } from '../libs';
 
 it(`UnknownPropertyReferenceError`, () => {
 	expect(new UnknownPropertyReferenceError('Name', [ 'arg', 'name' ]).message).toBe(

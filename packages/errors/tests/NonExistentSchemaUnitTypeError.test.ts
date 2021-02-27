@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { NonExistentSchemaUnitTypeError } from '../../src/NonExistentSchemaUnitTypeError';
+import { NonExistentSchemaUnitTypeError } from '../libs';
 
 it(`NonExistentSchemaUnitTypeError`, () => {
 	expect(new NonExistentSchemaUnitTypeError([ 'checkbox', 'title' ]).message).toBe(

@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { SchemaDuplicatePropertyNameError } from '../../src';
+import { SchemaDuplicatePropertyNameError } from '../libs';
 
 it(`SchemaDuplicatePropertyNameError`, () => {
 	expect(new SchemaDuplicatePropertyNameError('Name').message).toBe(

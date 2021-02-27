@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { UnsupportedBlockTypeError } from '../../src/';
+import { UnsupportedBlockTypeError } from '../libs';
 
 it(`UnsupportedBlockTypeError`, () => {
 	expect(new UnsupportedBlockTypeError('notion_user', [ 'to_do', 'header' ]).message).toBe(

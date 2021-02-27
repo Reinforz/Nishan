@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { error, warn } from '../../src';
+import { error, warn } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -17,10 +17,6 @@ describe('warn', () => {
 
 describe('error', () => {
 	it(`Should log with correct format`, () => {
-		const consoleLogMock = jest.spyOn(console, 'log');
-		const message = error('123');
-		expect(message).toBe('123');
-		expect(consoleLogMock).toHaveBeenCalledWith(colors.red.bold('123'));
-		expect(consoleLogMock).toHaveBeenCalledTimes(1);
+		expect(() => error('123')).toThrow(colors.red.bold('123'));
 	});
 });

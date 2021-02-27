@@ -26,6 +26,11 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
     case "table":
       const table_format = format as ITableViewFormat;
       table_format.table_wrap = Boolean(view.table_wrap);
+      table_format.inline_collection_first_load_limit = view.inline_collection_first_load_limit ?? {type: 'load_all'};
+      break;
+    case "list":
+      const list_format = format as IListViewFormat;
+      list_format.inline_collection_first_load_limit = view.inline_collection_first_load_limit ?? {type: 'load_all'};
       break;
     case "board":
       const board_format = format as IBoardViewFormat;
@@ -94,6 +99,7 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
       else gallery_format.gallery_cover = view.gallery_cover ?? { type: "page_cover" };
       gallery_format.gallery_cover_aspect = view.gallery_cover_aspect ?? "contain";
       gallery_format.gallery_cover_size = view.gallery_cover_size ?? "large";
+      gallery_format.inline_collection_first_load_limit = view.inline_collection_first_load_limit ?? {type: 'load_all'};
       break;
     case "timeline":
       // Set custom or default values to timeline format
@@ -101,6 +107,7 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
       timeline_format.timeline_preference = view.timeline_preference ?? { centerTimestamp: 1, zoomLevel: "month" };
       timeline_format.timeline_show_table = view.timeline_show_table ?? true;
       timeline_format.timeline_table_properties = [];
+      timeline_format.inline_collection_first_load_limit = view.inline_collection_first_load_limit ?? {type: 'load_all'};
       break;
   }
 

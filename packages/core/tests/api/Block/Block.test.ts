@@ -1,5 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { Mutations } from '@nishans/endpoints';
+import { NotionMutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../libs';
@@ -149,8 +149,8 @@ describe('duplicate', () => {
 		});
 
 		const PopulateMapBlockMock = jest.spyOn(PopulateMap, 'block').mockImplementation(async () => undefined);
-		const MutationsEnqueueTaskMock = jest
-			.spyOn(Mutations, 'enqueueTask')
+		const NotionMutationsEnqueueTaskMock = jest
+			.spyOn(NotionMutations, 'enqueueTask')
 			.mockImplementation(async () => undefined as any);
 		const cached_data = {
 			id: expect.any(String),
@@ -165,7 +165,7 @@ describe('duplicate', () => {
 
 		expect(PopulateMapBlockMock).toHaveBeenCalledTimes(1);
 		expect(stack).toEqual([ o.b.u(expect.any(String), [], expect.objectContaining(cached_data)) ]);
-		expect(MutationsEnqueueTaskMock).toHaveBeenCalledWith(
+		expect(NotionMutationsEnqueueTaskMock).toHaveBeenCalledWith(
 			{
 				task: {
 					eventName: 'duplicateBlock',

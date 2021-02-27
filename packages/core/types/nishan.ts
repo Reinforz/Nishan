@@ -50,7 +50,7 @@ export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> &
 	(
 		| {
 				/**
- * Whether or not the user will manually handle all the mutations
+ * Whether or not the user will manually handle all the NotionMutations
  */
 				manual: true;
 				/**
@@ -65,7 +65,7 @@ export type IterateAndDeleteOptions<T, C> = IterateOptions<T, C> &
 
 export type IterateAndUpdateOptions<T, C> = IterateOptions<T, C> & {
 	/**
-   * Whether or not the user will manually handle all the mutations
+   * Whether or not the user will manually handle all the NotionMutations
    */
 	manual?: boolean;
 };

@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { Mutations } from '@nishans/endpoints';
+import { NotionMutations } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../libs';
@@ -26,7 +26,7 @@ describe('NotionUser', () => {
       stack,
     });
 
-    const createSpace_spy = jest.spyOn(Mutations, 'createSpace').mockImplementationOnce(async () => {
+    const createSpace_spy = jest.spyOn(NotionMutations, 'createSpace').mockImplementationOnce(async () => {
       return { spaceId } as any;
     });
 
@@ -228,7 +228,7 @@ describe('NotionUser', () => {
         stack,
       });
 
-      const enqueuetask_spy = jest.spyOn(Mutations, 'enqueueTask').mockImplementationOnce(async () => {
+      const enqueuetask_spy = jest.spyOn(NotionMutations, 'enqueueTask').mockImplementationOnce(async () => {
         return {} as any;
       });
 

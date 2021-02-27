@@ -1,4 +1,4 @@
-import { NotionRequestConfigs, Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import {
 	ICollection,
 	ISpace,
@@ -73,7 +73,7 @@ export const NotionCacheObject = {
 
 		// fetch and save notion data to cache
 		if (sync_record_values.length) {
-			const { recordMap } = await Queries.syncRecordValues({ requests: sync_record_values }, configs);
+			const { recordMap } = await NotionQueries.syncRecordValues({ requests: sync_record_values }, configs);
 			NotionCacheObject.saveToCache(recordMap, cache);
 		}
 	},
@@ -82,7 +82,7 @@ export const NotionCacheObject = {
  * Initialize the cache by sending a post request to the `getSpaces` endpoint 
  */
 	initializeNotionCache: async function (configs: NotionRequestConfigs, cache: ICache) {
-		const data = await Queries.getSpaces(configs);
+		const data = await NotionQueries.getSpaces(configs);
 		// Contains a set of external notion user that has access to the space
 		const external_notion_users: Set<string> = new Set();
 
@@ -104,7 +104,7 @@ export const NotionCacheObject = {
 		// If the number of external_notion_users in not zero continue
 		if (external_notion_users.size !== 0) {
 			// Send a api request to syncRecordValues endpoint to fetch the external notion users
-			const { recordMap } = await Queries.syncRecordValues(
+			const { recordMap } = await NotionQueries.syncRecordValues(
 				{
 					requests: Array.from(external_notion_users.values()).map((external_notion_user) => ({
 						table: 'notion_user',
@@ -154,7 +154,7 @@ export const NotionCacheObject = {
 			const data = cache[type].get(id) as ICollection;
 			if (data.template_pages) data.template_pages.forEach((id) => container.push([ id, 'block' ]));
 			// Fetching the row_pages of collection
-			const { recordMap } = await Queries.queryCollection(
+			const { recordMap } = await NotionQueries.queryCollection(
 				{
 					collectionId: id,
 					collectionViewId: '',
@@ -277,7 +277,7 @@ export const NotionCacheObject = {
 			// If data doesn't exist in the cache, log a warning
 			console.log(`${table}:${id} doesn't exist in the cache`);
 			// Fetch the data from notion's db
-			const { recordMap } = await Queries.syncRecordValues(
+			const { recordMap } = await NotionQueries.syncRecordValues(
 				{
 					requests: [
 						{

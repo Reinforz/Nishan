@@ -1,5 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { Mutations } from '@nishans/endpoints';
+import { NotionMutations } from '@nishans/endpoints';
 import { detectChildData, RepositionParams, TBlockInput } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
@@ -50,7 +50,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					})
 				);
 				// ! How to save to local cache, needs to poll the notion's server to see if the duplicated block has been created
-				await Mutations.enqueueTask(
+				await NotionMutations.enqueueTask(
 					{
 						task: {
 							eventName: 'duplicateBlock',

@@ -1,4 +1,4 @@
-import { Queries, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap } from '@nishans/types';
 import { ICache, NotionCacheObject } from '../libs';
 
@@ -34,7 +34,7 @@ describe('fetchDataOrReturnCached', () => {
 			cache: ICache = {
 				block: new Map()
 			} as any;
-		const syncRecordValuesMock = jest.spyOn(Queries, 'syncRecordValues');
+		const syncRecordValuesMock = jest.spyOn(NotionQueries, 'syncRecordValues');
 		syncRecordValuesMock.mockImplementationOnce(async () => {
 			return {
 				recordMap: {
@@ -104,7 +104,7 @@ describe('constructSyncRecordsParams', () => {
 			} as any;
 
 		const syncRecordValuesMock = jest
-				.spyOn(Queries, 'syncRecordValues')
+				.spyOn(NotionQueries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
@@ -134,7 +134,7 @@ describe('constructSyncRecordsParams', () => {
 			} as any;
 
 		const syncRecordValuesMock = jest
-				.spyOn(Queries, 'syncRecordValues')
+				.spyOn(NotionQueries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
@@ -224,9 +224,11 @@ describe(`initializeNotionCache`, () => {
 				}
 			}
 		} as any;
-		const getSpacesMock = jest.spyOn(Queries, 'getSpaces').mockImplementationOnce(async () => get_spaces_response),
+		const getSpacesMock = jest
+				.spyOn(NotionQueries, 'getSpaces')
+				.mockImplementationOnce(async () => get_spaces_response),
 			syncRecordValuesMock = jest
-				.spyOn(Queries, 'syncRecordValues')
+				.spyOn(NotionQueries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
@@ -263,9 +265,11 @@ describe(`initializeNotionCache`, () => {
 			}
 		} as any;
 
-		const getSpacesMock = jest.spyOn(Queries, 'getSpaces').mockImplementationOnce(async () => get_spaces_response),
+		const getSpacesMock = jest
+				.spyOn(NotionQueries, 'getSpaces')
+				.mockImplementationOnce(async () => get_spaces_response),
 			syncRecordValuesMock = jest
-				.spyOn(Queries, 'syncRecordValues')
+				.spyOn(NotionQueries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
@@ -504,7 +508,7 @@ describe('initializeCacheForSpecificData', () => {
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')
 				.mockImplementationOnce(async () => undefined);
-			const queryCollectionMock = jest.spyOn(Queries, 'queryCollection').mockImplementationOnce(async () => {
+			const queryCollectionMock = jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => {
 				return query_collection_response;
 			});
 
@@ -546,7 +550,7 @@ describe('initializeCacheForSpecificData', () => {
 			const updateCacheManuallyMock = jest
 				.spyOn(NotionCacheObject, 'updateCacheManually')
 				.mockImplementationOnce(async () => undefined);
-			const queryCollectionMock = jest.spyOn(Queries, 'queryCollection').mockImplementationOnce(async () => {
+			const queryCollectionMock = jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => {
 				return query_collection_response;
 			});
 

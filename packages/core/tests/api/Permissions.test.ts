@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { Queries } from '@nishans/endpoints';
+import { NotionQueries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionPermissions } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
@@ -66,7 +66,7 @@ it('updateUserPermission', async () => {
 describe('getNotionUserIdFromEmail', () => {
 	it(`email is passed, notion_user exists`, async () => {
 		const notion_user_2 = { id: 'notion_user_2' };
-		const queriesFindUserMock = jest.spyOn(Queries, 'findUser').mockImplementationOnce(async () => {
+		const NotionQueriesFindUserMock = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(async () => {
 			return { value: { value: notion_user_2 } as any };
 		});
 
@@ -75,8 +75,8 @@ describe('getNotionUserIdFromEmail', () => {
 		const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({ email: 'devorein00@gmail.com' });
 
 		expect(notion_user_id).toBe('notion_user_2');
-		expect(queriesFindUserMock).toHaveBeenCalledTimes(1);
-		expect(queriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
+		expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
+		expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
 	});
 
 	it(`id is passed`, async () => {
@@ -87,7 +87,7 @@ describe('getNotionUserIdFromEmail', () => {
 	});
 
 	it(`email is passed, notion_user doesnot exist`, async () => {
-		const queriesFindUserMock = jest.spyOn(Queries, 'findUser').mockImplementationOnce(async () => {
+		const NotionQueriesFindUserMock = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(async () => {
 			return {};
 		});
 
@@ -97,8 +97,8 @@ describe('getNotionUserIdFromEmail', () => {
 			`User does not have a notion account`
 		);
 
-		expect(queriesFindUserMock).toHaveBeenCalledTimes(1);
-		expect(queriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
+		expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
+		expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
 	});
 });
 

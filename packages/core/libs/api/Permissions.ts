@@ -1,4 +1,4 @@
-import { Queries } from '@nishans/endpoints';
+import { NotionQueries } from '@nishans/endpoints';
 import { Operation } from '@nishans/operations';
 import {
 	IPermission,
@@ -29,7 +29,7 @@ export default class NotionPermissions extends Data<TPage> {
 	async getNotionUserIdFromEmail ({ email, id }: UserIdentifier) {
 		let user_id = id;
 		if (email) {
-			const { value } = await Queries.findUser({ email }, { token: this.token, interval: 0 });
+			const { value } = await NotionQueries.findUser({ email }, { token: this.token, interval: 0 });
 			if (!value) throw new Error(`User does not have a notion account`);
 			else user_id = value.value.id;
 		}

@@ -1,7 +1,6 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { Mutations, Queries } from '@nishans/endpoints';
+import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import colors from "colors";
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
 import { createSpaceIterateArguments } from '../../libs/api/Space';
@@ -114,7 +113,7 @@ it(`delete`, async () => {
 		logger: logger_spy
 	});
 
-	const enqueueTaskMock = jest.spyOn(Mutations, 'enqueueTask').mockImplementationOnce(() => {
+	const enqueueTaskMock = jest.spyOn(NotionMutations, 'enqueueTask').mockImplementationOnce(() => {
 		return {} as any;
 	});
 
@@ -280,7 +279,7 @@ it(`addMembers`, async()=>{
 		stack,
 	});
 
-  const findUser = jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
+  const findUser = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(()=>{
     return {
       value: {
         value: {
@@ -307,26 +306,13 @@ it(`addMembers`, async()=>{
     }
   ]);
 
-  jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
-    return {
-      value: {}
-    } as any;
-  });
-
-  const console_log_spy = jest.spyOn(console, 'log');
-
-	await space.addMembers([['user_root_2@gmail.com', 'editor']]);
-
-  expect(console_log_spy).toHaveBeenCalledTimes(1);
-  expect(console_log_spy).toHaveBeenCalledWith(colors.red.bold(`User does not have a notion account`));
-
-  jest.spyOn(Queries, 'findUser').mockImplementationOnce(()=>{
+  findUser.mockImplementationOnce(()=>{
     return {
     } as any;
   });
 
-	await space.addMembers([['user_root_2@gmail.com', 'editor']]);
 
+	await expect(()=>space.addMembers([['user_root_2@gmail.com', 'editor']])).rejects.toThrow();
 });
 
 it(`removeUsers`, async()=>{
@@ -348,7 +334,7 @@ it(`removeUsers`, async()=>{
 		stack,
 	});
 
-  const removeUsersFromSpaceMock = jest.spyOn(Mutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
+  const removeUsersFromSpaceMock = jest.spyOn(NotionMutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
     return {} as any;
   })
 

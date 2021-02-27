@@ -1,4 +1,4 @@
-import { Mutations } from '@nishans/endpoints';
+import { NotionMutations } from '@nishans/endpoints';
 import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { CreateData } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
@@ -81,7 +81,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id } = await Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
 
       spaces.push(new Space({
         id: space_id,
@@ -209,7 +209,7 @@ class NotionUser extends Data<INotionUser> {
       manual: true,
       container: []
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
-      await Mutations.enqueueTask({
+      await NotionMutations.enqueueTask({
         task: {
           eventName: "deleteSpace",
           request: {

@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { Mutations, Queries } from '@nishans/endpoints';
+import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
 import { Operation } from '@nishans/operations';
@@ -71,7 +71,7 @@ export default class Space extends Data<ISpace> {
    * Delete the current workspace
    */
   async delete() {
-    await Mutations.enqueueTask({
+    await NotionMutations.enqueueTask({
       task: {
         eventName: 'deleteSpace',
         request:
@@ -161,7 +161,7 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [], data = this.getCachedData()
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value } = await Queries.findUser({email}, this.getConfigs());
+      const [email, role] = infos[i], { value } = await NotionQueries.findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
@@ -183,7 +183,7 @@ export default class Space extends Data<ISpace> {
    */
   async removeUsers(userIds: string[]) {
     const data = this.getCachedData();
-    await Mutations.removeUsersFromSpace({
+    await NotionMutations.removeUsersFromSpace({
       removePagePermissions: true,
       revokeUserTokens: false,
       spaceId: data.id,

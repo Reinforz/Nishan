@@ -102,7 +102,7 @@ it(`createAggregation`, () => {
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
 
-	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
+	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
 });
 
 it(`updateAggregations`, async () => {
@@ -158,7 +158,7 @@ it(`updateAggregations`, async () => {
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
 
-	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
+	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
 });
 
 it(`deleteAggregation`, async () => {
@@ -202,5 +202,5 @@ it(`deleteAggregation`, async () => {
 	const aggregations: any[] = [];
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
-	expect(stack).toStrictEqual([ o.cv.u('collection_view_1', [ 'query2', 'aggregations' ], { aggregations }) ]);
+	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
 });

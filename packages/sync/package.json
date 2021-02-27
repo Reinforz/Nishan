@@ -1,6 +1,6 @@
 {
   "name": "@nishans/sync",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "A package to keep local notion data in sync with remote one by storing and restoring it.",
   "keywords": [
     "notion",
@@ -38,7 +38,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.21",
+    "@nishans/types": "0.0.22",
     "@types/js-yaml": "^4.0.0",
     "@types/mongodb": "^3.6.3",
     "@types/node": "^14.14.17",

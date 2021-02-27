@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cache",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A cache specially designed to retrieve and store notion data in memory",
   "keywords": [
     "notion",
@@ -34,9 +34,9 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcache"
   },
   "dependencies": {
-    "@nishans/endpoints": "0.0.20"
+    "@nishans/endpoints": "0.0.21"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.21"
+    "@nishans/types": "0.0.22"
   }
 }

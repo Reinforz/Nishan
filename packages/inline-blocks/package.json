@@ -1,6 +1,6 @@
 {
   "name": "@nishans/inline-blocks",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Package providing an easy to use api to generate contents for notion inline blocks",
   "keywords": [
     "notion",
@@ -35,6 +35,6 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.20"
+    "@nishans/types": "0.0.22"
   }
 }

@@ -26,8 +26,8 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	const collection_data: ICollection = {
 		id: collection_id,
 		schema,
-		cover: input.cover,
-		icon: input.icon,
+		cover: input.cover ?? '',
+		icon: input.icon ?? '',
 		parent_id,
 		parent_table: 'block',
 		alive: true,

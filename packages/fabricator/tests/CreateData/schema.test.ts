@@ -9,9 +9,8 @@ afterEach(() => {
 });
 
 describe('Work correctly', () => {
-	it(`CreateData.schema should work correctly`, async () => {
+	it(`CreateData.schema should work correctly (custom input)`, async () => {
 		const input_schema_units: TSchemaUnitInput[] = [
-			tsu,
 			{
 				type: 'formula',
 				name: 'Formula',
@@ -23,7 +22,8 @@ describe('Work correctly', () => {
 			},
 			{
 				type: 'relation',
-				name: 'Relation'
+				name: 'Relation',
+				property_visibility: 'hide'
 			}
 		] as any;
 
@@ -50,24 +50,50 @@ describe('Work correctly', () => {
 			input_schema_units[3]
 		];
 
-		const [ schema, schema_map ] = await CreateData.schema(
+		const [ schema, schema_map, collection_format ] = await CreateData.schema(
 			input_schema_units,
 			{
 				...default_nishan_arg,
 				parent_collection_id: 'parent_collection_id',
 				name: [ [ 'Parent' ] ],
 				cache,
-				current_schema: {}
+				current_schema: {
+					title: tsu
+				}
 			},
 			cb
 		);
 
 		expect(createSchemaUnitRollupMock).toHaveBeenCalledTimes(1);
 		expect(createSchemaUnitRelationMock).toHaveBeenCalledTimes(1);
-		expect(cb).toHaveBeenCalledTimes(4);
-		expect(cb.mock.calls[0][0]).toStrictEqual({ ...output_schema_values[0], schema_id: 'title' });
+		expect(cb).toHaveBeenCalledTimes(3);
+		expect(cb.mock.calls[0][0]).toStrictEqual(expect.objectContaining(output_schema_values[1]));
 		expect(Object.values(schema)).toStrictEqual(output_schema_values);
 		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title', 'Formula', 'Rollup', 'Relation' ]);
+		expect(collection_format).toStrictEqual({
+			property_visibility: [
+				{
+					property: expect.any(String),
+					visibility: 'hide'
+				}
+			]
+		});
+	});
+
+	it(`CreateData.schema should work correctly (default input)`, async () => {
+		const cache = NotionCacheObject.createDefaultCache();
+		const [ schema, schema_map, collection_format ] = await CreateData.schema([ tsu ], {
+			...default_nishan_arg,
+			parent_collection_id: 'parent_collection_id',
+			name: [ [ 'Parent' ] ],
+			cache
+		});
+
+		expect(Object.values(schema)).toStrictEqual([ tsu ]);
+		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title' ]);
+		expect(collection_format).toStrictEqual({
+			property_visibility: []
+		});
 	});
 });
 

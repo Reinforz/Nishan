@@ -14,7 +14,7 @@ import { CreateSchemaUnit } from "./SchemaUnit";
 export async function schema(input_schema_units: ICollectionBlockInput["schema"], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema} & FabricatorProps, cb?: ((data: ISchemaMapValue)=>any)){
   // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
+  const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
   // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
@@ -27,7 +27,7 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
     // If it exists throw an error since duplicate schema_unit name is not allowed 
     if(schema_map_unit)
       throw new SchemaDuplicatePropertyNameError(name);
-    (format.property_visibility as CollectionFormatPropertyVisibility[]).push({property: schema_id, visibility: property_visibility ?? "show"})
+    if(property_visibility) (collection_format.property_visibility as CollectionFormatPropertyVisibility[]).push({property: schema_id, visibility: property_visibility})
     // For specific schema unit type, the corresponding schema unit has to be generated using specific functions 
     switch(input_schema_unit.type){
       case "formula":
@@ -49,5 +49,5 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])
     throw new NonExistentSchemaUnitTypeError(["title"])
-  return [schema, schema_map, format] as const;
+  return [schema, schema_map, collection_format] as const;
 }

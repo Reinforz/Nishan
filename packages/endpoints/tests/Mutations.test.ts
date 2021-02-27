@@ -1,4 +1,4 @@
-import { Mutations, NotionRequest } from '../../src';
+import { NotionMutations, NotionRequest } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -23,14 +23,14 @@ const request_data = {
 	'initializePageTemplate',
 	'initializeGoogleDriveBlock',
 	'loginWithEmail'
-] as (keyof typeof Mutations)[]).forEach((method) => {
+] as (keyof typeof NotionMutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {
 			token: 'token',
 			interval: 0
 		};
 		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await Mutations[method](request_data as any, configs);
+		const response = await NotionMutations[method](request_data as any, configs);
 
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);

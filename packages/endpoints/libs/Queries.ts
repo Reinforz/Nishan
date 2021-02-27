@@ -1,8 +1,7 @@
 import { NotionEndpoints } from '@nishans/types';
-import { NotionRequestConfigs } from '.';
-import { NotionRequest } from '../utils';
+import { NotionRequest, NotionRequestConfigs } from '.';
 
-const Queries = {
+export const NotionQueries = {
 	async ping (configs?: Partial<NotionRequestConfigs>) {
 		return await NotionRequest.send<Record<string, never>>('ping', {}, configs);
 	},
@@ -202,5 +201,3 @@ const Queries = {
 		return await NotionRequest.send<NotionEndpoints['getTasks']['response']>('getTasks', params, configs);
 	}
 };
-
-export default Queries;

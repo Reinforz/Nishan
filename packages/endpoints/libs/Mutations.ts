@@ -1,8 +1,7 @@
 import { NotionEndpoints } from '@nishans/types';
-import { NotionRequestConfigs } from '.';
-import { NotionRequest } from '../utils';
+import { NotionRequest, NotionRequestConfigs } from '.';
 
-const Mutations = {
+export const NotionMutations = {
 	async setPageNotificationsAsRead (
 		params: NotionEndpoints['setPageNotificationsAsRead']['payload'],
 		configs: NotionRequestConfigs
@@ -84,5 +83,3 @@ const Mutations = {
 		return await NotionRequest.send<NotionEndpoints['loginWithEmail']['response']>('loginWithEmail', params, configs);
 	}
 };
-
-export default Mutations;

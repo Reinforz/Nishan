@@ -1,5 +1,4 @@
-import Queries from '../../src/Queries';
-import { NotionRequest } from '../../utils';
+import { NotionQueries, NotionRequest } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -36,10 +35,10 @@ const configs = {
 	'search',
 	'getClientExperiments',
 	'checkEmailType'
-] as (keyof typeof Queries)[]).forEach((method) => {
+] as (keyof typeof NotionQueries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await Queries[method](request_data as any, configs);
+		const response = await NotionQueries[method](request_data as any, configs);
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);
 	});
@@ -54,10 +53,10 @@ const configs = {
 	'isUserDomainJoinable',
 	'isEmailEducation',
 	'ping'
-] as (keyof typeof Queries)[]).forEach((method) => {
+] as (keyof typeof NotionQueries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await Queries[method](configs as any);
+		const response = await NotionQueries[method](configs as any);
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, {}, configs);
 		expect(response_data).toStrictEqual(response);
 	});

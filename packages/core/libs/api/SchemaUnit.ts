@@ -2,14 +2,14 @@ import { createShortId } from '@nishans/idz';
 import { Operation } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { NishanArg } from '../';
-import Data from './Data';
+import NotionData from './Data';
 
 /**
  * A class to represent a column schema of a collection
  * @noInheritDoc
  */
 
-export default class SchemaUnit<T extends TSchemaUnit> extends Data<ICollection> {
+export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<ICollection> {
 	schema_id: string;
 
 	constructor (arg: NishanArg & { schema_id: string }) {

@@ -81,7 +81,7 @@ class View<T extends TView> extends Data<T> {
 
 		this.updateLastEditedProps();
 		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
+			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
 
@@ -123,7 +123,7 @@ class View<T extends TView> extends Data<T> {
 		);
 
 		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
+			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
 
@@ -149,7 +149,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, [ 'query2', 'sort' ], sorts)
+			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
 		);
 	}
 
@@ -268,7 +268,6 @@ class View<T extends TView> extends Data<T> {
 					format_properties.splice(target_format_property_index, 1);
 					format_properties.splice(position, 0, target_format_property);
 				}
-
 				target_format_property.visible = visible ?? target_format_property.visible;
         if(updated_data.type === "table")
 				  (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
@@ -276,7 +275,7 @@ class View<T extends TView> extends Data<T> {
 		);
     
 		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, [`format`, `${data.type}_properties`], format_properties)
+			Operation.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)
 		);
 	}
 }

@@ -8,8 +8,10 @@ import {
 	NotionEndpoints,
 	RecordMap,
 	TBlock,
+	TCollectionBlock,
 	TData,
-	TDataType
+	TDataType,
+	TView
 } from '@nishans/types';
 import { ICache } from './';
 
@@ -128,7 +130,8 @@ export const NotionCacheObject = {
 		configs: NotionRequestConfigs,
 		cache: ICache
 	) {
-		const container: UpdateCacheManuallyParam = [];
+		const container: UpdateCacheManuallyParam = [],
+			extra_container: UpdateCacheManuallyParam = [];
 		if (type === 'block') {
 			const data = cache[type].get(id) as TBlock;
 			// If the type is block and page, fetch its content
@@ -168,6 +171,9 @@ export const NotionCacheObject = {
 			);
 			NotionCacheObject.saveToCache(recordMap, cache);
 			container.push([ data.parent_id, 'block' ]);
+		} else if (type === 'collection_view') {
+			const data = cache[type].get(id) as TView;
+			container.push([ data.parent_id, 'block' ]);
 		} else if (type === 'space_view') {
 			// If the type is space_view, fetch its bookmarked_pages
 			const data = cache[type].get(id) as ISpaceView;
@@ -182,19 +188,23 @@ export const NotionCacheObject = {
 		if (type === 'block') {
 			const data = cache[type].get(id) as TBlock;
 			if (data.type === 'page') {
-				const sync_records: UpdateCacheManuallyParam = [];
 				for (let index = 0; index < data.content.length; index++) {
 					const content_id = data.content[index],
 						content = cache.block.get(content_id);
 					// Only if the content is of type cvp or cv, fetch its collection and views
 					if (content && (content.type === 'collection_view_page' || content.type === 'collection_view')) {
-						sync_records.push([ content.collection_id, 'collection' ]);
-						content.view_ids.map((view_id) => sync_records.push([ view_id, 'collection_view' ]));
+						extra_container.push([ content.collection_id, 'collection' ]);
+						content.view_ids.map((view_id) => extra_container.push([ view_id, 'collection_view' ]));
 					}
 				}
-				await NotionCacheObject.updateCacheIfNotPresent(sync_records, configs, cache);
 			}
+		} else if (type === 'collection_view') {
+			const data = cache[type].get(id) as TView,
+				parent = cache.block.get(data.parent_id) as TCollectionBlock;
+			extra_container.push([ parent.collection_id, 'collection' ]);
 		}
+
+		await NotionCacheObject.updateCacheIfNotPresent(extra_container, configs, cache);
 	},
 
 	/**

@@ -305,6 +305,38 @@ it(`updateCacheIfNotPresent method`, async () => {
 });
 
 describe('initializeCacheForSpecificData', () => {
+	it(`type=collection_view`, async () => {
+		const block_1: any = {
+				id: 'block_1',
+				collection_id: 'collection_1'
+			},
+			collection_view_1 = {
+				id: 'collection_view_1',
+				parent_id: 'block_1'
+			};
+
+		const cache = {
+			...NotionCacheObject.createDefaultCache(),
+			block: new Map([ [ 'block_1', block_1 ] ]),
+			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+		} as any;
+
+		const updateCacheIfNotPresentMock = jest.spyOn(NotionCacheObject, 'updateCacheIfNotPresent');
+
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
+
+		await NotionCacheObject.initializeCacheForSpecificData(
+			'collection_view_1',
+			'collection_view',
+			notion_request_configs,
+			cache
+		);
+		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([ [ 'collection_1', 'collection' ] ]);
+	});
+
 	it(`type=block.page`, async () => {
 		const block_1: any = {
 				content: [ 'block_2', 'block_3', 'block_4' ],

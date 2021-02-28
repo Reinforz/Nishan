@@ -8,8 +8,6 @@ export type Logger = false | ((method: TMethodType, subject: TDataType, id: stri
 export interface ParentCollectionData {
 	parent_collection_id: string;
 	name: TTextFormat;
-	token: string;
-	logger?: Logger;
 	cache: ICache;
 	parent_relation_schema_unit_id: string;
 }

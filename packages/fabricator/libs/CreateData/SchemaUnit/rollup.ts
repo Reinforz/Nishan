@@ -2,7 +2,8 @@ import { NotionCacheObject } from '@nishans/cache';
 import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
-import { ParentCollectionData, TRollupSchemaUnitInput } from '..';
+import { FabricatorProps } from 'packages/fabricator/types';
+import { TRollupSchemaUnitInput } from '..';
 import { getSchemaMapUnit } from '../../';
 
 /**
@@ -15,7 +16,7 @@ import { getSchemaMapUnit } from '../../';
 export async function rollup (
 	{ aggregation, name, collection_id, relation_property, target_property }: Omit<TRollupSchemaUnitInput, 'type'>,
 	schema_map: ISchemaMap,
-	request_config: Pick<ParentCollectionData, 'token' | 'logger' | 'cache'>
+	request_config: Pick<FabricatorProps, 'token' | 'logger' | 'cache'>
 ) {
 	// Get the related schema unit from the passed schema map
 	const relation_schema_unit = getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);

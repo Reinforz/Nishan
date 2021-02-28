@@ -158,7 +158,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           };
           
           await stackCacheMap<IColumn>(column_data, props, cb);
-          updateChildContainer('block', block_id, true, column_id, props.cache, props.stack, props.token)
+          updateChildContainer('block', block_id, true, column_id, props)
           await traverse(contents[index], column_id, "block")
         }
       }
@@ -176,7 +176,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       // if the parent table is either a block, or a space, or a collection and page is a template, push to child append operation to the stack
       if(parent_table === "block" || parent_table==="space" || (parent_table === "collection" && (content as any).is_template))
-        await updateChildContainer(parent_table, parent_id, true, content_id, props.cache, props.stack, props.token);
+        await updateChildContainer(parent_table, parent_id, true, content_id, props);
 
       props.logger && props.logger("CREATE","block", content_id)
     }

@@ -37,7 +37,7 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
         schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, options);
         break;
       case "relation":
-        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id});
+        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id}, options);
         break;
       default:
         schema[schema_id] = input_schema_unit;

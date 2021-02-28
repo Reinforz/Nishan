@@ -1,4 +1,4 @@
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { TBlock } from '@nishans/types';
 import { FabricatorProps } from '../..';
 
@@ -14,11 +14,16 @@ import { FabricatorProps } from '../..';
  */
 export async function stackCacheMap<T extends TBlock> (
 	data: T,
-	props: Pick<FabricatorProps, 'cache' | 'stack'>,
+	{ cache, shard_id, token, space_id, user_id }: FabricatorProps,
 	cb?: ((data: TBlock) => any)
 ) {
 	const { id } = data;
-	props.stack.push(Operation.block.update(id, [], JSON.parse(JSON.stringify(data))));
-	props.cache.block.set(id, JSON.parse(JSON.stringify(data)));
+	await NotionOperationsObject.executeOperations(
+		[ Operation.block.update(id, [], JSON.parse(JSON.stringify(data))) ],
+		[],
+		{ token, interval: 0, user_id },
+		{ shard_id, space_id }
+	);
+	cache.block.set(id, JSON.parse(JSON.stringify(data)));
 	cb && (await cb(data));
 }

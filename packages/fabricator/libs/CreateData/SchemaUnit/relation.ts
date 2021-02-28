@@ -1,7 +1,8 @@
 import { NotionCacheObject } from "@nishans/cache";
 import { createShortId } from "@nishans/idz";
-import { Operation } from "@nishans/operations";
+import { NotionOperationsObject, Operation } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
+import { FabricatorProps } from "packages/fabricator/types";
 import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
 
 /**
@@ -10,8 +11,8 @@ import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
  * @param collection_data An object containing info used to make request, push to op stack and save to cache
  * @return The newly generated relation schema unit
  */
-export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData): Promise<RelationSchemaUnit>{
-  const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name, token, logger, cache, stack} = collection_data, child_relation_schema_unit_id = createShortId();
+export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData, { logger, token, space_id, shard_id, user_id}: FabricatorProps): Promise<RelationSchemaUnit>{
+  const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name, cache} = collection_data, child_relation_schema_unit_id = createShortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
   const child_collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, {
@@ -49,11 +50,18 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
   child_collection.schema[child_relation_schema_unit_id] = child_collection_relation_schema_unit;
   // If custom schema unit name is provided, an push an operation to the stack, that will change the name of the schema unit
   if(relation_schema_unit_name){
-    stack.push(Operation.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
+    await NotionOperationsObject.executeOperations([Operation.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
       ...child_collection_relation_schema_unit,
       // Using the new name provided
       name: [[relation_schema_unit_name]],
-    }));
+    })], [], {
+      token,
+      interval: 0,
+      user_id
+    }, {
+      space_id,
+      shard_id
+    });
     // Log since a new operation is taking place
     logger && logger("UPDATE", "collection", child_collection_id)
   }

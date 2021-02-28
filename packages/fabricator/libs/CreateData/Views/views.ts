@@ -51,7 +51,7 @@ export async function views (
 		if (input_filters)
 			PopulateViewData.query2.filters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 
-		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id);
+		const view_data = await generateViewData({ ...view, format, query2 }, props, parent_id);
 		views_data.push(view_data);
 		cb && (await cb(view_data));
 	}

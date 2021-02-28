@@ -65,7 +65,11 @@ export const NotionCacheObject = {
    * @param configs The notion request configs
    * @param cache The cache to store result
    */
-	constructSyncRecordsParams: async (args: UpdateCacheManuallyParam, configs: NotionRequestConfigs, cache: ICache) => {
+	constructAndSyncRecordsParams: async (
+		args: UpdateCacheManuallyParam,
+		configs: NotionRequestConfigs,
+		cache: ICache
+	) => {
 		const sync_record_values: NotionEndpoints['syncRecordValues']['payload']['requests'][0][] = [];
 		// Iterate through the passed array argument and construct sync_record argument
 		args.forEach((arg) => {
@@ -105,18 +109,11 @@ export const NotionCacheObject = {
 		// If the number of external_notion_users in not zero continue
 		if (external_notion_users.size !== 0) {
 			// Send a api request to syncRecordValues endpoint to fetch the external notion users
-			const { recordMap } = await NotionQueries.syncRecordValues(
-				{
-					requests: Array.from(external_notion_users.values()).map((external_notion_user) => ({
-						table: 'notion_user',
-						id: external_notion_user,
-						version: -1
-					}))
-				},
-				configs
+			await NotionCacheObject.constructAndSyncRecordsParams(
+				Array.from(external_notion_users.values()).map((id) => [ id, 'notion_user' ]),
+				configs,
+				cache
 			);
-			// Save the fetched external notion user to cache
-			NotionCacheObject.saveToCache(recordMap, cache);
 		}
 	},
 
@@ -175,9 +172,7 @@ export const NotionCacheObject = {
 		} else error(`${type} data is not supported`);
 
 		// Filters data that doesn't exist in the cache
-		const non_cached = NotionCacheObject.returnNonCachedData(container, cache);
-
-		if (non_cached.length) await NotionCacheObject.updateCacheManually(non_cached, configs, cache);
+		await NotionCacheObject.updateCacheIfNotPresent(container, configs, cache);
 
 		// If the block is a page, for all the collection block **contents**, fetch the collection attached with it as well
 		if (type === 'block') {
@@ -193,11 +188,7 @@ export const NotionCacheObject = {
 						content.view_ids.map((view_id) => sync_records.push([ view_id, 'collection_view' ]));
 					}
 				}
-				await NotionCacheObject.updateCacheManually(
-					NotionCacheObject.returnNonCachedData(sync_records, cache),
-					configs,
-					cache
-				);
+				await NotionCacheObject.updateCacheIfNotPresent(sync_records, configs, cache);
 			}
 		}
 	},
@@ -207,7 +198,7 @@ export const NotionCacheObject = {
  * @param args The array of id and data_type tuple to fetch and store
  */
 	updateCacheManually: async function (args: UpdateCacheManuallyParam, configs: NotionRequestConfigs, cache: ICache) {
-		await NotionCacheObject.constructSyncRecordsParams(args, configs, cache);
+		await NotionCacheObject.constructAndSyncRecordsParams(args, configs, cache);
 	},
 
 	/**
@@ -219,7 +210,7 @@ export const NotionCacheObject = {
 		configs: NotionRequestConfigs,
 		cache: ICache
 	) {
-		await NotionCacheObject.constructSyncRecordsParams(
+		await NotionCacheObject.constructAndSyncRecordsParams(
 			args.filter((arg) => !cache[arg[1]].get(arg[0])),
 			configs,
 			cache

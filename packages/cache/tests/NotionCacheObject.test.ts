@@ -12,6 +12,9 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+const createUpdateCacheIfNotPresentMock = () =>
+	jest.spyOn(NotionCacheObject, 'updateCacheIfNotPresent').mockImplementationOnce(async () => undefined);
+
 it(`NotionCacheObject.createDefaultCache`, () => {
 	expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy();
 });
@@ -96,7 +99,7 @@ it('saveToCache', () => {
 	expect(cache.block.get('block_3')).toBeUndefined();
 });
 
-describe('constructSyncRecordsParams', () => {
+describe('constructAndSyncRecordsParams', () => {
 	it(`sync_record_values is not empty`, async () => {
 		const cache = NotionCacheObject.createDefaultCache(),
 			sync_record_values_response = {
@@ -110,7 +113,7 @@ describe('constructSyncRecordsParams', () => {
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
-		await NotionCacheObject.constructSyncRecordsParams([ [ '123', 'block' ] ], notion_request_configs, cache);
+		await NotionCacheObject.constructAndSyncRecordsParams([ [ '123', 'block' ] ], notion_request_configs, cache);
 
 		expect(syncRecordValuesMock).toHaveBeenCalledWith(
 			{
@@ -140,7 +143,7 @@ describe('constructSyncRecordsParams', () => {
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
 
-		await NotionCacheObject.constructSyncRecordsParams([], notion_request_configs, cache);
+		await NotionCacheObject.constructAndSyncRecordsParams([], notion_request_configs, cache);
 
 		expect(syncRecordValuesMock).not.toHaveBeenCalled();
 		expect(saveToCacheMock).not.toHaveBeenCalled();
@@ -226,32 +229,18 @@ describe(`initializeNotionCache`, () => {
 				}
 			}
 		} as any;
+
 		const getSpacesMock = jest
 				.spyOn(NotionQueries, 'getSpaces')
 				.mockImplementationOnce(async () => get_spaces_response),
-			syncRecordValuesMock = jest
-				.spyOn(NotionQueries, 'syncRecordValues')
-				.mockImplementationOnce(async () => sync_record_values_response),
-			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
+			constructAndSyncRecordsParamsMock = jest
+				.spyOn(NotionCacheObject, 'constructAndSyncRecordsParams')
+				.mockImplementationOnce(async () => sync_record_values_response);
 
 		await NotionCacheObject.initializeNotionCache(notion_request_configs, cache);
 
 		expect(getSpacesMock.mock.calls[0][0]).toBe(notion_request_configs);
-		expect(saveToCacheMock).toHaveBeenCalledTimes(2);
-		expect(saveToCacheMock.mock.calls[0][0]).toBe(get_spaces_response.space_1);
-		expect(saveToCacheMock.mock.calls[1][0]).toBe(sync_record_values_response.recordMap);
-		expect(syncRecordValuesMock).toHaveBeenCalledWith(
-			{
-				requests: [
-					{
-						table: 'notion_user',
-						id: 'user_root_2',
-						version: -1
-					}
-				]
-			},
-			notion_request_configs
-		);
+		expect(constructAndSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual([ [ 'user_root_2', 'notion_user' ] ]);
 	});
 
 	it(`Fetches external notion_user data,external user = 0`, async () => {
@@ -270,24 +259,21 @@ describe(`initializeNotionCache`, () => {
 		const getSpacesMock = jest
 				.spyOn(NotionQueries, 'getSpaces')
 				.mockImplementationOnce(async () => get_spaces_response),
-			syncRecordValuesMock = jest
-				.spyOn(NotionQueries, 'syncRecordValues')
-				.mockImplementationOnce(async () => sync_record_values_response),
-			saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
+			constructAndSyncRecordsParamsMock = jest
+				.spyOn(NotionCacheObject, 'constructAndSyncRecordsParams')
+				.mockImplementationOnce(async () => sync_record_values_response);
 
 		await NotionCacheObject.initializeNotionCache(notion_request_configs, cache);
 
 		expect(getSpacesMock.mock.calls[0][0]).toBe(notion_request_configs);
-		expect(saveToCacheMock).toHaveBeenCalledTimes(1);
-		expect(saveToCacheMock.mock.calls[0][0]).toBe(get_spaces_response.space_1);
-		expect(syncRecordValuesMock).not.toHaveBeenCalled();
+		expect(constructAndSyncRecordsParamsMock).not.toHaveBeenCalled();
 	});
 });
 
 it(`updateCacheManually`, async () => {
 	const update_cache_manually_args: UpdateCacheManuallyParam = [ [ 'collection_1', 'collection' ] ];
 	const constructSyncRecordsParamsMock = jest
-		.spyOn(NotionCacheObject, 'constructSyncRecordsParams')
+		.spyOn(NotionCacheObject, 'constructAndSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
 	await NotionCacheObject.updateCacheManually(
 		update_cache_manually_args,
@@ -305,7 +291,7 @@ it(`updateCacheIfNotPresent method`, async () => {
 	};
 
 	const syncRecordValuesMock = jest
-		.spyOn(NotionCacheObject, 'constructSyncRecordsParams')
+		.spyOn(NotionCacheObject, 'constructAndSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
 
 	await NotionCacheObject.updateCacheIfNotPresent(
@@ -347,31 +333,29 @@ describe('initializeCacheForSpecificData', () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		};
 
-		const updateCacheManuallyMock = jest.spyOn(NotionCacheObject, 'updateCacheManually');
+		const updateCacheIfNotPresentMock = jest.spyOn(NotionCacheObject, 'updateCacheIfNotPresent');
 
-		updateCacheManuallyMock.mockImplementationOnce(async () => {
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => {
 			cache.block.set('block_2', block_2);
 			cache.block.set('block_3', block_3);
 			cache.block.set('block_4', block_4);
 		});
 
-		updateCacheManuallyMock.mockImplementationOnce(async () => undefined);
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
 
 		await NotionCacheObject.initializeCacheForSpecificData('block_1', 'block', notion_request_configs, cache);
-		expect(updateCacheManuallyMock).toHaveBeenCalledTimes(2);
-		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([
+		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_2', 'block' ],
 			[ 'block_3', 'block' ],
 			[ 'block_4', 'block' ]
 		]);
-		expect(updateCacheManuallyMock.mock.calls[0][1]).toBe(notion_request_configs);
-		expect(updateCacheManuallyMock.mock.calls[1][0]).toStrictEqual([
+		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([
 			[ 'collection_1', 'collection' ],
 			[ 'collection_view_1', 'collection_view' ],
 			[ 'collection_2', 'collection' ],
 			[ 'collection_view_2', 'collection_view' ]
 		]);
-		expect(updateCacheManuallyMock.mock.calls[1][1]).toBe(notion_request_configs);
 	});
 
 	it(`type=collection_view_page`, async () => {
@@ -386,13 +370,11 @@ describe('initializeCacheForSpecificData', () => {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
-		const updateCacheManuallyMock = jest
-			.spyOn(NotionCacheObject, 'updateCacheManually')
-			.mockImplementationOnce(async () => undefined);
+		const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 
 		await NotionCacheObject.initializeCacheForSpecificData('block_1', 'block', notion_request_configs, cache);
 
-		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'collection_view_1', 'collection_view' ],
 			[ 'collection_1', 'collection' ]
 		]);
@@ -413,12 +395,12 @@ describe('initializeCacheForSpecificData', () => {
 			},
 			cache: ICache = { ...NotionCacheObject.createDefaultCache(), space: new Map([ [ 'space_1', space_1 ] ]) };
 
-		const updateCacheManuallyMock = jest
-			.spyOn(NotionCacheObject, 'updateCacheManually')
+		const updateCacheIfNotPresentMock = jest
+			.spyOn(NotionCacheObject, 'updateCacheIfNotPresent')
 			.mockImplementationOnce(async () => undefined);
 
 		await NotionCacheObject.initializeCacheForSpecificData('space_1', 'space', notion_request_configs, cache);
-		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_1', 'block' ],
 			[ 'user_root_1', 'notion_user' ],
 			[ 'user_root_2', 'notion_user' ]
@@ -435,62 +417,72 @@ describe('initializeCacheForSpecificData', () => {
 				user_root: new Map([ [ 'user_root_1', user_root_1 ] ])
 			};
 
-		const updateCacheManuallyMock = jest
-			.spyOn(NotionCacheObject, 'updateCacheManually')
+		const updateCacheIfNotPresentMock = jest
+			.spyOn(NotionCacheObject, 'updateCacheIfNotPresent')
 			.mockImplementationOnce(async () => undefined);
 
 		await NotionCacheObject.initializeCacheForSpecificData('user_root_1', 'user_root', notion_request_configs, cache);
-		expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'space_view_1', 'space_view' ] ]);
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'space_view_1', 'space_view' ] ]);
 	});
 
 	describe('space_view', () => {
+		const createCache = (space_view_1: any) => {
+			return {
+				...NotionCacheObject.createDefaultCache(),
+				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
+			} as ICache;
+		};
+
 		it(`bookmarked_pages=[id]`, async () => {
 			const space_view_1: any = {
 					id: 'user_root_1',
 					bookmarked_pages: [ 'block_1' ]
 				},
-				cache: ICache = {
-					...NotionCacheObject.createDefaultCache(),
-					space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
-				};
-
-			const updateCacheManuallyMock = jest
-				.spyOn(NotionCacheObject, 'updateCacheManually')
-				.mockImplementationOnce(async () => undefined);
-
+				cache = createCache(space_view_1);
+			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 			await NotionCacheObject.initializeCacheForSpecificData(
 				'space_view_1',
 				'space_view',
 				notion_request_configs,
 				cache
 			);
-			expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
 		});
 
 		it(`bookmarked_pages=undefined`, async () => {
 			const space_view_1: any = {
 					id: 'user_root_1'
 				},
-				cache: ICache = {
-					...NotionCacheObject.createDefaultCache(),
-					space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
-				};
-
-			const updateCacheManuallyMock = jest
-				.spyOn(NotionCacheObject, 'updateCacheManually')
-				.mockImplementationOnce(async () => undefined);
-
+				cache = createCache(space_view_1);
+			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 			await NotionCacheObject.initializeCacheForSpecificData(
 				'space_view_1',
 				'space_view',
 				notion_request_configs,
 				cache
 			);
-			expect(updateCacheManuallyMock).not.toHaveBeenCalled();
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([]);
 		});
 	});
 
 	describe('collection', () => {
+		const query_collection_payload = {
+				collectionId: 'collection_1',
+				collectionViewId: '',
+				query: {},
+				loader: {
+					type: 'table',
+					loadContentCover: true
+				}
+			},
+			query_collection_response = {
+				recordMap: {
+					something: 'something'
+				}
+			} as any,
+			createQueryCollectionMock = () =>
+				jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => query_collection_response);
+
 		it(`template_pages=[]`, async () => {
 			const collection_1 = {
 					id: 'collection_1',
@@ -499,20 +491,11 @@ describe('initializeCacheForSpecificData', () => {
 				cache = {
 					...NotionCacheObject.createDefaultCache(),
 					collection: new Map([ [ 'collection_1', collection_1 ] ])
-				},
-				query_collection_response = {
-					recordMap: {
-						something: 'something'
-					}
-				} as any;
+				};
 
 			const saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
-			const updateCacheManuallyMock = jest
-				.spyOn(NotionCacheObject, 'updateCacheManually')
-				.mockImplementationOnce(async () => undefined);
-			const queryCollectionMock = jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => {
-				return query_collection_response;
-			});
+			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
+			const queryCollectionMock = createQueryCollectionMock();
 
 			await NotionCacheObject.initializeCacheForSpecificData(
 				'collection_1',
@@ -521,17 +504,9 @@ describe('initializeCacheForSpecificData', () => {
 				cache
 			);
 
-			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual({
-				collectionId: 'collection_1',
-				collectionViewId: '',
-				query: {},
-				loader: {
-					type: 'table',
-					loadContentCover: true
-				}
-			});
+			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
 			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
-			expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
 		});
 
 		it(`template_pages=undefined`, async () => {
@@ -541,20 +516,11 @@ describe('initializeCacheForSpecificData', () => {
 				cache = {
 					...NotionCacheObject.createDefaultCache(),
 					collection: new Map([ [ 'collection_1', collection_1 ] ])
-				},
-				query_collection_response = {
-					recordMap: {
-						something: 'something'
-					}
-				} as any;
+				};
 
 			const saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
-			const updateCacheManuallyMock = jest
-				.spyOn(NotionCacheObject, 'updateCacheManually')
-				.mockImplementationOnce(async () => undefined);
-			const queryCollectionMock = jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => {
-				return query_collection_response;
-			});
+			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
+			const queryCollectionMock = createQueryCollectionMock();
 
 			await NotionCacheObject.initializeCacheForSpecificData(
 				'collection_1',
@@ -563,17 +529,9 @@ describe('initializeCacheForSpecificData', () => {
 				cache
 			);
 
-			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual({
-				collectionId: 'collection_1',
-				collectionViewId: '',
-				query: {},
-				loader: {
-					type: 'table',
-					loadContentCover: true
-				}
-			});
+			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
 			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
-			expect(updateCacheManuallyMock).not.toHaveBeenCalled();
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([]);
 		});
 	});
 

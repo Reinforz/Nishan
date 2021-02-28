@@ -1,5 +1,5 @@
-import { NotionMutations, NotionRequest } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from './OperationsObject';
 import { NotionOperationPluginFunction } from './types';
 
 export class NotionOperationsClass {
@@ -25,49 +25,20 @@ export class NotionOperationsClass {
    * Applies all the plugins in the class to all the operations in the stack
    */
   applyPluginsToOperationsStack(operations: IOperation[]){
-    // Skip the plugin processing process if its empty
-    if(this.#plugins.length !== 0 ){
-      // This array stores the operations that will be stored in the operations stack after plugin processing
-      const updated_operations: IOperation[] = [];
-      // Iterate through all the operations and run it through each of the plugins
-      for (let index = 0; index < operations.length; index++) {
-        const operation = operations[index];
-        let updated_operation: false | IOperation = operation;
-        // Iterating through each of the plugin to process the operation
-        for (let index = 0; index < this.#plugins.length; index++) {
-          const plugin = this.#plugins[index];
-            updated_operation = plugin(updated_operation);
-          // If the plugin returns a false value break the plugin processing loop
-          if(updated_operation === false)
-            break;
-        }
-        // If the process operation is not false, push it to the stack
-        if(updated_operation !== false)
-          updated_operations.push(updated_operation)
-      }
-      return updated_operations;
-    }else
-      return operations;
+    return NotionOperationsObject.applyPluginsToOperationsStack(operations, this.#plugins);
   }
 
   /**
    * Execute the operations present in the operations stack
    */
 	async executeOperations (operations: IOperation[]) {
-    // If the stack is empty print a msg to the console
-		if (operations.length === 0) console.log(`The operation stack is empty`);
-		else {
-      // Create a transaction using the space_id, shard_id and the list of operations
-      const created_transaction = NotionRequest.createTransaction(this.shard_id, this.space_id, operations);
-      // get the operations list after processing it with the list of plugins 
-      created_transaction.transactions[0].operations = this.applyPluginsToOperationsStack(operations);
-      // Execute the operations, by sending a request to notion's server
-			await NotionMutations.saveTransactions(created_transaction, {
-				token: this.token,
-				interval: 0,
-        user_id: this.user_id
-			});
-      while (operations.length !== 0) operations.pop();
-		}
+    await NotionOperationsObject.executeOperations(operations, this.#plugins, {
+      token: this.token,
+      user_id: this.user_id,
+      interval: 0
+    }, {
+      shard_id: this.shard_id,
+      space_id: this.space_id,
+    });
 	}
 }

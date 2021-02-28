@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { IOperation, TDataType, TTextFormat } from '@nishans/types';
+import { TDataType, TTextFormat } from '@nishans/types';
 
 export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
 
@@ -10,7 +10,6 @@ export interface ParentCollectionData {
 	name: TTextFormat;
 	token: string;
 	logger?: Logger;
-	stack: IOperation[];
 	cache: ICache;
 	parent_relation_schema_unit_id: string;
 }
@@ -22,6 +21,5 @@ export interface FabricatorProps {
 	user_id: string;
 	interval?: number;
 	cache: ICache;
-	stack: IOperation[];
 	logger?: Logger;
 }

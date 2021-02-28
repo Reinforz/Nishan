@@ -256,9 +256,9 @@ describe('NotionUser', () => {
     it('Work correctly for type=page & cvp', async () => {
       const block_1_id = v4(),
         block_2_id = v4(),
-        block_1 = { id: block_1_id, type: 'page', properties: { title: [['Block One']] } } as any,
+        block_1 = { id: block_1_id, type: 'page', parent_table: 'space', parent_id: 'space_1', properties: { title: [['Block One']] } } as any,
         block_2 = {
-          id: block_2_id,
+          id: block_2_id,parent_table: 'space', parent_id: 'space_1',
           type: 'collection_view_page',
           collection_id: 'collection_1',
           view_ids: ['collection_view_1']
@@ -269,6 +269,7 @@ describe('NotionUser', () => {
           [block_1_id, block_1],
           [block_2_id, block_2]
         ]),
+        space: new Map([['space_1', {id: 'space_1'} as any]]),
         collection: new Map([
           ['collection_1', { id: 'collection_1', type: 'collection', name: [['Collection One']] } as any]
         ]),

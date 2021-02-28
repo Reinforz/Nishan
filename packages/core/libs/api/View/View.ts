@@ -1,5 +1,5 @@
 import { PreExistentValueError } from "@nishans/errors";
-import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, populateFilters, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
@@ -152,7 +152,7 @@ class View<T extends TView> extends Data<T> {
 		const schema_map = generateSchemaMapFromCollectionSchema(this.getCollection().schema),
 			data = this.getCachedData(),
 			filters = InitializeView.filter(data).filters;
-		populateFilters(args, filters, schema_map);
+    PopulateViewData.query2.filters(args, filters, schema_map);
 		this.updateLastEditedProps();
 		this.Operations.pushToStack(
 			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)

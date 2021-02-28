@@ -59,7 +59,7 @@ it(`getBlock`, async () => {
 		cache = {
   		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ], parent_table: 'space', parent_id: 'space_1' } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
 			space: new Map([ [ 'space_1', space_1 ] ]),
@@ -81,7 +81,7 @@ it(`updateBlock`, async () => {
 		cache = {
   		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ], parent_table: 'space', parent_id: 'space_1' } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
 			space: new Map([ [ 'space_1', space_1 ] ]),
@@ -96,14 +96,14 @@ it(`updateBlock`, async () => {
 	expect(block_map.header.get('block_2')?.getCachedData().alive).toBe(false);
 });
 
-it(`updateBlock`, async () => {
+it(`deleteBlock`, async () => {
 	const space_1 = {
 			id: 'space_1'
 		},
 		cache = {
   		...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ] } ],
+				[ 'block_1', { id: 'block_1', type: 'page', content: [ 'block_2' ], parent_table: 'space', parent_id: 'space_1' } ],
 				[ 'block_2', { id: 'block_2', type: 'header' } ]
 			]),
 			space: new Map([ [ 'space_1', space_1 ] ]),

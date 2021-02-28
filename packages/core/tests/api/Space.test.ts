@@ -182,6 +182,7 @@ it(`getRootPage`, async () => {
 					{
 						id: 'space_1',
 						pages: [ 'block_1' ],
+            created_by_id: 'user_root_1',
 						permissions: [
 							{
 								role: 'editor',
@@ -217,8 +218,9 @@ it(`getRootPage`, async () => {
 it(`updateRootPage`, async()=>{
 	const cache: ICache = {
 			...NotionCacheObject.createDefaultCache(),
+			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
-			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [] } as any ] ]),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
 		stack: IOperation[] = [];
 
@@ -245,8 +247,9 @@ it(`updateRootPage`, async()=>{
 it(`deleteRootPage`, async()=>{
 	const cache: ICache = {
 			...NotionCacheObject.createDefaultCache(),
+			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
-			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [] } as any ] ]),
+			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
 		stack: IOperation[] = [];
 

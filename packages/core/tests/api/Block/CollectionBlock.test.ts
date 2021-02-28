@@ -74,10 +74,11 @@ it(`getViews`, async () => {
 		cache = {
       ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
+				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ], parent_table: 'space', parent_id: 'space_1' } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
+      space: new Map([['space_1', {id: 'space_1'}]])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -99,10 +100,11 @@ it(`updateView`, async () => {
 		cache = {
       ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
+				[ 'block_1', { id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ], parent_table: 'space', parent_id: 'space_1'  } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
+      space: new Map([['space_1', {id: 'space_1'}]])
 		} as any,
 		stack: IOperation[] = [];
 
@@ -124,10 +126,11 @@ it(`deleteView`, async () => {
 		cache = {
       ...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { type: 'collection_view_page', id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ] } ]
+				[ 'block_1', { type: 'collection_view_page', id: 'block_1', collection_id: 'collection_1', view_ids: [ 'collection_view_1' ], parent_table: 'space', parent_id: 'space_1'  } ]
 			]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ]),
+      space: new Map([['space_1', {id: 'space_1'}]])
 		} as any,
 		stack: IOperation[] = [];
 

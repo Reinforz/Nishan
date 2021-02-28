@@ -119,11 +119,21 @@ it(`getBookmarkedPage`, async () => {
 			block: new Map([
 				[
 					'block_1',
-					{ id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1', view_ids: [] } as any
+					{
+						id: 'block_1',
+						type: 'collection_view_page',
+						collection_id: 'collection_1',
+						view_ids: [],
+						parent_table: 'space',
+						parent_id: 'space_1'
+					} as any
 				]
 			]),
-			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ] } as any ] ]),
-			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] } as any ] ])
+			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ], parent_id: 'block_1' } as any ] ]),
+			space_view: new Map([
+				[ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' } as any ]
+			]),
+			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -142,14 +152,33 @@ it(`getBookmarkedPage`, async () => {
 });
 
 it(`updateBookmarkedPages`, async () => {
-	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
+	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' },
 		cache: ICache = {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([
-				[ 'block_1', { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } } as any ],
-				[ 'block_2', { type: 'page', id: 'block_2', properties: { title: [ [ 'Block Two' ] ] } } as any ]
+				[
+					'block_1',
+					{
+						type: 'page',
+						id: 'block_1',
+						properties: { title: [ [ 'Block One' ] ] },
+						parent_table: 'space',
+						parent_id: 'space_1'
+					} as any
+				],
+				[
+					'block_2',
+					{
+						type: 'page',
+						id: 'block_2',
+						properties: { title: [ [ 'Block Two' ] ] },
+						parent_table: 'space',
+						parent_id: 'space_1'
+					} as any
+				]
 			]),
-			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ])
+			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
+			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 		},
 		stack: IOperation[] = [];
 
@@ -169,7 +198,8 @@ it(`updateBookmarkedPages`, async () => {
 
 	expect(space_view_1).toStrictEqual({
 		bookmarked_pages: [ 'block_1', 'block_2' ],
-		id: 'space_view_1'
+		id: 'space_view_1',
+		space_id: 'space_1'
 	});
 
 	expect(stack).toStrictEqual([

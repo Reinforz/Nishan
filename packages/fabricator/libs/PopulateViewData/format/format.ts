@@ -87,9 +87,6 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
     case "gallery":
       const gallery_format = format as IGalleryViewFormat;
       if (view.gallery_cover?.type === "property") {
-        // Validates whether the custom gallery_cover referenced property
-        // exists in the schema
-        // is of type file 
         const schema_map_unit = getSchemaMapUnit(schema_map as any, view.gallery_cover.property, ["gallery_cover.property"]);
         if(schema_map_unit.type !== "file")
           throw new UnsupportedPropertyTypeError(view.gallery_cover.property, ["gallery_cover.property"], schema_map_unit.type, ["file"])

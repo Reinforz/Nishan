@@ -4,7 +4,8 @@ export type TNotionApiErrorName =
 	| 'UserValidationError'
 	| 'UnauthorizedError'
 	| 'UserRateLimitResponse'
-	| 'ValidationError';
+	| 'ValidationError'
+	| 'PostgresNullConstraintError';
 export interface INotionApiError {
 	errorId: string;
 	name: TNotionApiErrorName;
@@ -53,5 +54,23 @@ export interface NotionApiValidationError extends INotionApiError {
 		untried: string[];
 	};
 }
+export interface NotionApiInvalidInputError extends INotionApiError {
+	message: 'Invalid input.';
+	name: 'ValidationError';
+}
 
-// {errorId: "ca711485-1ebe-4d17-8fcf-30ac9baa5603", name: "ValidationError", message: "Invalid input."}
+export interface NotionApiPostgresNullConstraintError extends INotionApiError {
+	name: 'PostgresNullConstraintError';
+	message: 'Unsaved transactions.';
+	clientData: {
+		type: 'unsaved_transactions';
+		errors: [
+			{
+				id: string;
+				name: 'PostgresNullConstraintError';
+				retryable: boolean;
+			}
+		];
+		untried: [];
+	};
+}

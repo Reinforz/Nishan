@@ -1,6 +1,7 @@
 import { NotionCacheObject } from "@nishans/cache";
+import { NotionMutations } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, IWebBookmark, TBlock, WebBookmarkProps } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
@@ -43,27 +44,28 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         type: content.type,
       } as any;
       if((content as any).properties)
-        common_data.properties = (content as any).properties
+        common_data.properties = (content as any).properties;
       if((content as any).format)
-        common_data.format = (content as any).format
-      /* if (content.type.match(/gist|codepen|tweet|maps|figma/)) {
-        content.format = (await this.getGenericEmbedBlockData({
+        common_data.format = (content as any).format;
+
+      /* if (content.type.match(/^(gist|codepen|tweet|maps|figma|video|audio|image)$/)) {
+        common_data.format = (await NotionQueries.getGenericEmbedBlockData({
           pageWidth: 500,
-          source: (content.properties as any).source[0][0] as string,
+          source: (content as any).properties.source[0][0] as string,
           type: content.type as TGenericEmbedBlockType
-        })).format;
+        }, props)).format;
       }; */
 
-      /* if (type === "bookmark") {
-        bookmarks.push({
+      if (content.type === "bookmark") {
+        await NotionMutations.setBookmarkMetadata({
           blockId: block_id,
-          url: (properties as WebBookmarkProps).link[0][0]
-        })
-        await this.setBookmarkMetadata({
-          blockId: block_id,
-          url: (properties as WebBookmarkProps).link[0][0]
-        });
-      } */
+          url: (content.properties as WebBookmarkProps).link[0][0]
+        }, {...props, interval: 0});
+        await NotionCacheObject.updateCacheManually([[block_id, "block"]], {...props, interval: 0}, props.cache);
+        const bookmark_data = props.cache.block.get(block_id) as IWebBookmark;
+        common_data.properties = bookmark_data.properties;
+        common_data.format = bookmark_data.format;
+      }
 
       /* else if (type === "drive") {
         const {

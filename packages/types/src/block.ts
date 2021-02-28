@@ -81,7 +81,7 @@ export interface WebBookmarkFormat {
 
 export interface WebBookmarkProps {
 	link: string[][];
-	description: TTextFormat;
+	description?: TTextFormat;
 	title: TTextFormat;
 	caption?: string[][];
 }

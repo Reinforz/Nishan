@@ -1,21 +1,21 @@
 import { NonExistentSchemaUnitTypeError, UnsupportedPropertyTypeError } from "@nishans/errors";
 import { IBoardViewFormat, ICalendarViewFormat, IGalleryViewFormat, IListViewFormat, ITableViewFormat, ITimelineViewFormat, MultiSelectSchemaUnit, SelectSchemaUnit } from "@nishans/types";
-import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, getSchemaMapUnit, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../";
+import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, getSchemaMapUnit, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../../";
 
 export type TViewFormat = ITableViewFormat | ICalendarViewFormat | ITimelineViewFormat | IListViewFormat | IGalleryViewFormat | IBoardViewFormat;
 
-export function populateViewFormat(view: TableViewFormatCreateInput): ITableViewFormat;
-export function populateViewFormat(view: ListViewFormatCreateInput): IListViewFormat;
-export function populateViewFormat(view: CalendarViewFormatCreateInput): ICalendarViewFormat;
-export function populateViewFormat(view: GalleryViewFormatCreateInput, schema_map: ISchemaMap): IGalleryViewFormat;
-export function populateViewFormat(view: TimelineViewFormatCreateInput, schema_map: ISchemaMap): ITimelineViewFormat;
-export function populateViewFormat(view: BoardViewFormatCreateInput, schema_map: ISchemaMap): IBoardViewFormat;
 /**
  * Populate the format of a view data
  * @param view input view data
  * @param schema_map schema map used to resolve references to properties
  * @returns Populate view format object 
  */
+export function populateViewFormat(view: TableViewFormatCreateInput): ITableViewFormat;
+export function populateViewFormat(view: ListViewFormatCreateInput): IListViewFormat;
+export function populateViewFormat(view: CalendarViewFormatCreateInput): ICalendarViewFormat;
+export function populateViewFormat(view: GalleryViewFormatCreateInput, schema_map: ISchemaMap): IGalleryViewFormat;
+export function populateViewFormat(view: TimelineViewFormatCreateInput, schema_map: ISchemaMap): ITimelineViewFormat;
+export function populateViewFormat(view: BoardViewFormatCreateInput, schema_map: ISchemaMap): IBoardViewFormat;
 export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: ISchemaMap){
   // Create the format object, which must contain an array that contains all the information related to properties 
   const format: TViewFormat = {

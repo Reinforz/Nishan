@@ -1,6 +1,6 @@
 import { ISchemaMap } from '@nishans/notion-formula';
 import { IViewFilter, TViewFilters } from '@nishans/types';
-import { getSchemaMapUnit, TViewFilterCreateInput } from '.';
+import { getSchemaMapUnit, TViewFilterCreateInput } from '../../';
 
 /**
  * Populate a filter with its children 
@@ -8,7 +8,7 @@ import { getSchemaMapUnit, TViewFilterCreateInput } from '.';
  * @param parent_filter Parent filter where the nested filter will be added
  * @param schema_map The schema map used to resolve property reference
  */
-export function populateFilters (
+export function populateViewQuery2Filters (
 	filters: TViewFilterCreateInput[],
 	parent_filter: IViewFilter['filters'],
 	schema_map: ISchemaMap

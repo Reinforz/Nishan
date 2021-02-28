@@ -151,10 +151,12 @@ export type TViewCreateInput =
 	| CalendarViewCreateInput
 	| TimelineViewCreateInput;
 
-type IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> = {
+export type SortCreateInput = undefined | TSortValue | [TSortValue, number];
+
+export type IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> = {
 	name: string;
 	type: SUT;
-	sort?: TSortValue | [TSortValue, number];
+	sort?: SortCreateInput;
 	aggregation?: IViewAggregationsAggregators[SUT];
 } & (
 	| {

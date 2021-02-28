@@ -1,5 +1,5 @@
 import { ITableViewFormat, TViewType, ViewFormatProperties } from "@nishans/types";
-import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from "../";
+import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from "../..";
 
 /**
  * * Returns a view format property based on the passed view_type
@@ -7,9 +7,9 @@ import { ISchemaMapValue, TViewSchemaUnitsCreateInput } from "../";
  * @param schema_id schema_id of the property referenced
  * @param format Format input for the property
  */
-export function populateViewProperties(view_type: "table", schema_id: ISchemaMapValue["schema_id"], format?: TViewSchemaUnitsCreateInput["format"]): ITableViewFormat["table_properties"][0]
-export function populateViewProperties(view_type: Exclude<TViewType, "table">, schema_id: ISchemaMapValue["schema_id"], format?: boolean): ViewFormatProperties
-export function populateViewProperties(view_type: TViewType, schema_id: ISchemaMapValue["schema_id"], format?: TViewSchemaUnitsCreateInput["format"]){
+export function populateViewFormatProperties(view_type: "table", schema_id: ISchemaMapValue["schema_id"], format?: TViewSchemaUnitsCreateInput["format"]): ITableViewFormat["table_properties"][0]
+export function populateViewFormatProperties(view_type: Exclude<TViewType, "table">, schema_id: ISchemaMapValue["schema_id"], format?: boolean): ViewFormatProperties
+export function populateViewFormatProperties(view_type: TViewType, schema_id: ISchemaMapValue["schema_id"], format?: TViewSchemaUnitsCreateInput["format"]){
   // Create the default property object
   if(view_type === "table"){
     const property: ITableViewFormat["table_properties"][0] = {

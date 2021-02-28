@@ -1,8 +1,8 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, IViewFilter, TView, TViewQuery2, ViewFormatProperties } from '@nishans/types';
 import { FabricatorProps, TViewCreateInput } from '../';
-import { getSchemaMapUnit, populateFilters, PopulateViewData } from '../../';
-import { generateViewData, populateQuery2SortAndAggregations } from './utils';
+import { getSchemaMapUnit, PopulateViewData } from '../../';
+import { generateViewData } from './utils';
 
 /**
  * * Iterate through each of the view inputs
@@ -30,20 +30,26 @@ export async function views (
 		const view = views[index],
 			{ type, schema_units } = view,
 			included_units: string[] = [],
-			query2 = PopulateViewData.query2(view as any, schema_map) as TViewQuery2,
-			format = PopulateViewData.format(view as any, schema_map),
+			query2 = PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
+			format = PopulateViewData.format.format(view as any, schema_map),
 			properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
 
 		schema_units.forEach((schema_unit) => {
 			const { format, name } = schema_unit,
 				schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
 			included_units.push(schema_map_unit.schema_id);
-			populateQuery2SortAndAggregations(schema_unit, schema_map_unit, query2);
-			properties.push(PopulateViewData.format_properties(type as any, schema_map_unit.schema_id, format));
+			PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, query2.sort);
+			PopulateViewData.query2.aggregation(
+				schema_unit.aggregation as any,
+				schema_map_unit.schema_id,
+				(query2 as any).aggregations
+			);
+			properties.push(PopulateViewData.format.properties(type as any, schema_map_unit.schema_id, format));
 		});
 
 		const input_filters = views[index].filters;
-		if (input_filters) populateFilters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
+		if (input_filters)
+			PopulateViewData.query2.filters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
 
 		const view_data = generateViewData({ ...view, format, query2 }, props, parent_id);
 		views_data.push(view_data);

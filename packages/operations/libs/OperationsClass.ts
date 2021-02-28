@@ -53,7 +53,7 @@ export class NotionOperationsClass {
   /**
    * Execute the operations present in the operations stack
    */
-	async executeOperation (operations: IOperation[]) {
+	async executeOperations (operations: IOperation[]) {
     // If the stack is empty print a msg to the console
 		if (operations.length === 0) console.log(`The operation stack is empty`);
 		else {
@@ -67,6 +67,7 @@ export class NotionOperationsClass {
 				interval: 0,
         user_id: this.user_id
 			});
+      while (operations.length !== 0) operations.pop();
 		}
 	}
 }

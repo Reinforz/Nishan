@@ -20,40 +20,16 @@ const returnDefaultOperationsClassArgs = () => {
 	return {
 		shard_id: 123,
 		space_id: 'space_1',
-		stack: [],
 		token: 'token',
 		user_id: '123'
 	};
 };
 
-it(`emptyStack`, () => {
-	const operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
-	operations_class.emptyStack();
-	expect(operations_class.stack).toStrictEqual([]);
-});
-
-describe('pushToStack', () => {
-	let operations_class: NotionOperationsClass = null as any;
-	beforeEach(() => {
-		operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
-	});
-
-	it(`single op`, () => {
-		operations_class.pushToStack(operation);
-		expect(operations_class.stack).toStrictEqual([ operation ]);
-	});
-
-	it(`array of ops`, () => {
-		operations_class.pushToStack([ operation ]);
-		expect(operations_class.stack).toStrictEqual([ operation ]);
-	});
-});
-
-describe('executeOperation', () => {
+describe('executeOperations', () => {
 	it(`print to console if the stack is empty`, async () => {
 		const consoleLogMock = jest.spyOn(console, 'log');
 		const operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
-		await operations_class.executeOperation();
+		await operations_class.executeOperations([]);
 		expect(consoleLogMock).toHaveBeenCalledWith(`The operation stack is empty`);
 	});
 
@@ -62,12 +38,9 @@ describe('executeOperation', () => {
 			.spyOn(NotionMutations, 'saveTransactions')
 			.mockImplementationOnce(async () => ({}));
 		const stack: IOperation[] = [ operation ];
-		const operations_class = new NotionOperationsClass({
-			...returnDefaultOperationsClassArgs(),
-			stack
-		});
+		const operations_class = new NotionOperationsClass(returnDefaultOperationsClassArgs());
 
-		await operations_class.executeOperation();
+		await operations_class.executeOperations(stack);
 		expect(saveTransactionsMock).toHaveBeenCalledWith(
 			{
 				requestId: expect.any(String),
@@ -88,20 +61,6 @@ describe('executeOperation', () => {
 		);
 		expect(stack).toHaveLength(0);
 	});
-});
-
-it(`printStack`, async () => {
-	const stack: IOperation[] = [ operation ];
-	const consoleLogMock = jest.spyOn(console, 'log');
-	const jsonStringifyMock = jest.spyOn(JSON, 'stringify').mockImplementationOnce(() => 'mocked value');
-	const operations_class = new NotionOperationsClass({
-		...returnDefaultOperationsClassArgs(),
-		stack
-	});
-	operations_class.printStack();
-	expect(jsonStringifyMock).toHaveBeenCalledWith(stack, null, 2);
-	expect(consoleLogMock).toHaveBeenCalledTimes(1);
-	expect(consoleLogMock).toHaveBeenCalledWith('mocked value');
 });
 
 it(`getPlugins`, () => {
@@ -147,14 +106,13 @@ it(`applyPluginsToOperationsStack`, () => {
 
 	const operations = new NotionOperationsClass({
 		...returnDefaultOperationsClassArgs(),
-		stack,
 		notion_operation_plugins: [
 			NotionOperationsPlugin.removeLastEditedProps(),
 			NotionOperationsPlugin.removeEmptyOperations()
 		]
 	});
 
-	const updated_operations = operations.applyPluginsToOperationsStack();
+	const updated_operations = operations.applyPluginsToOperationsStack(stack);
 
 	expect(updated_operations).toStrictEqual([
 		{

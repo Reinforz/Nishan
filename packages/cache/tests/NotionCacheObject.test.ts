@@ -1,5 +1,6 @@
 import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { RecordMap } from '@nishans/types';
+import colors from 'colors';
 import { ICache, NotionCacheObject } from '../libs';
 
 const notion_request_configs = {
@@ -60,6 +61,7 @@ describe('fetchDataOrReturnCached', () => {
 			},
 			notion_request_configs
 		);
+		expect(cache.block.get('block_1')).toStrictEqual(block_1);
 	});
 });
 
@@ -585,7 +587,7 @@ describe('initializeCacheForSpecificData', () => {
 				notion_request_configs,
 				cache
 			)
-		).rejects.toThrow(`unknown data is not supported`);
+		).rejects.toThrow(colors.red.bold(`unknown data is not supported`));
 	});
 });
 
@@ -596,7 +598,7 @@ describe('validateCache', () => {
 				...NotionCacheObject.createDefaultCache(),
 				block: true
 			} as any)
-		).toThrow(`block is not an instance of Map`);
+		).toThrow(colors.red.bold(`block is not an instance of Map`));
 	});
 
 	it(`Should fail if cache_item is not passed`, () => {
@@ -610,7 +612,7 @@ describe('validateCache', () => {
 				space_view: new Map(),
 				user_root: new Map()
 			} as any)
-		).toThrow(`user_settings must be present in Cache argument`);
+		).toThrow(colors.red.bold(`user_settings must be present in Cache argument`));
 	});
 
 	it(`Should fail if an unknown cache_item is passed`, () => {
@@ -619,7 +621,7 @@ describe('validateCache', () => {
 				...NotionCacheObject.createDefaultCache(),
 				unknown: new Map()
 			} as any)
-		).toThrow(`Unknown key unknown passed`);
+		).toThrow(colors.red.bold(`Unknown key unknown passed`));
 	});
 
 	it(`Should return cache if no error is thrown`, () => {

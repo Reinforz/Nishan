@@ -1,4 +1,5 @@
 import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { error } from '@nishans/errors';
 import {
 	ICollection,
 	ISpace,
@@ -171,7 +172,7 @@ export const NotionCacheObject = {
 			// If the type is space_view, fetch its bookmarked_pages
 			const data = cache[type].get(id) as ISpaceView;
 			if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
-		} else throw new Error(`${type} data is not supported`);
+		} else error(`${type} data is not supported`);
 
 		// Filters data that doesn't exist in the cache
 		const non_cached = NotionCacheObject.returnNonCachedData(container, cache);
@@ -244,16 +245,16 @@ export const NotionCacheObject = {
 		// Throw error if the required items are not present in the cache
 		const passed_cache_keys = Object.keys(cache);
 		cache_keys.forEach((cache_key) => {
-			if (!passed_cache_keys.includes(cache_key)) throw new Error(`${cache_key} must be present in Cache argument`);
+			if (!passed_cache_keys.includes(cache_key)) error(`${cache_key} must be present in Cache argument`);
 		});
 
 		passed_cache_keys.forEach((cache_key) => {
 			// Throw error if an unknown key is used in the cache
 			const cache_item = cache_key as keyof ICache;
-			if (!cache_keys.includes(cache_item)) throw new Error(`Unknown key ${cache_key} passed`);
+			if (!cache_keys.includes(cache_item)) error(`Unknown key ${cache_key} passed`);
 			const is_map = cache[cache_item] instanceof Map;
 			// Throw error if the stored value is not an instance of a Map
-			if (!is_map) throw new Error(`${cache_item} is not an instance of Map`);
+			if (!is_map) error(`${cache_item} is not an instance of Map`);
 		});
 		return cache;
 	},
@@ -289,8 +290,10 @@ export const NotionCacheObject = {
 				},
 				configs
 			);
+			const { value } = recordMap[table][id];
+			cache[table].set(id, value as any);
 			// return the fetched data
-			return recordMap[table][id].value as D;
+			return value as D;
 		}
 		return data as D;
 	}

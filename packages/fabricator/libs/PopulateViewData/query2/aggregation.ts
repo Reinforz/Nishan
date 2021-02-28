@@ -1,5 +1,4 @@
-import { ViewAggregations } from '@nishans/types';
-import { TAggregationsCreateInput } from '../../CreateData';
+import { TViewAggregationsAggregators, ViewAggregations } from '@nishans/types';
 
 /**
  * Populates query2 sort and aggregations using the passed input schema
@@ -8,7 +7,7 @@ import { TAggregationsCreateInput } from '../../CreateData';
  * @param query2 Query2 to insert the aggregations and sorts to
  */
 export function populateViewQuery2Aggregation (
-	aggregation_input: undefined | TAggregationsCreateInput,
+	aggregation_input: undefined | TViewAggregationsAggregators,
 	schema_id: string,
 	aggregations?: ViewAggregations[]
 ) {

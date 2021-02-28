@@ -1,4 +1,4 @@
-import { PopulateViewData } from '../../libs';
+import { PopulateViewData } from '../../../libs';
 
 const default_format_property = {
 	property: 'text',
@@ -8,7 +8,7 @@ const default_format_property = {
 
 describe('view_type=table', () => {
 	it(`Should work with number input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text', 150)).toStrictEqual({
+		expect(PopulateViewData.format.properties('table', 'text', 150)).toStrictEqual({
 			property: 'text',
 			visible: true,
 			width: 150
@@ -16,7 +16,7 @@ describe('view_type=table', () => {
 	});
 
 	it(`Should work with boolean input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text', false)).toStrictEqual({
+		expect(PopulateViewData.format.properties('table', 'text', false)).toStrictEqual({
 			property: 'text',
 			visible: false,
 			width: 250
@@ -24,7 +24,7 @@ describe('view_type=table', () => {
 	});
 
 	it(`Should work with [boolean, number] input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text', [ false, 120 ])).toStrictEqual({
+		expect(PopulateViewData.format.properties('table', 'text', [ false, 120 ])).toStrictEqual({
 			property: 'text',
 			visible: false,
 			width: 120
@@ -32,17 +32,17 @@ describe('view_type=table', () => {
 	});
 
 	it(`Should work with [] input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text', [] as any)).toStrictEqual(default_format_property);
+		expect(PopulateViewData.format.properties('table', 'text', [] as any)).toStrictEqual(default_format_property);
 	});
 
 	it(`Should work with no input`, () => {
-		expect(PopulateViewData.format_properties('table', 'text')).toStrictEqual(default_format_property);
+		expect(PopulateViewData.format.properties('table', 'text')).toStrictEqual(default_format_property);
 	});
 });
 
 describe('view_type!=table', () => {
 	it(`Should work with number input`, () => {
-		expect(PopulateViewData.format_properties('list', 'text', false)).toStrictEqual({
+		expect(PopulateViewData.format.properties('list', 'text', false)).toStrictEqual({
 			property: 'text',
 			visible: false
 		});

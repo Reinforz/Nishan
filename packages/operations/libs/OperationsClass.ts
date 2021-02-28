@@ -3,18 +3,16 @@ import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFunction } from './types';
 
 export class NotionOperationsClass {
-	#stack: IOperation[] = [];
   #plugins: NotionOperationPluginFunction[];
 	space_id: string;
 	shard_id: number;
 	token: string;
 	user_id: string;
 
-	constructor (args: { user_id: string, token: string; space_id: string; shard_id: number; stack: IOperation[], notion_operation_plugins?: NotionOperationPluginFunction[] }) {
+	constructor (args: { user_id: string, token: string; space_id: string; shard_id: number; notion_operation_plugins?: NotionOperationPluginFunction[] }) {
 		this.space_id = args.space_id;
 		this.shard_id = args.shard_id;
 		this.token = args.token;
-		this.#stack = args.stack;
     this.#plugins = args.notion_operation_plugins ?? [];
     this.user_id = args.user_id;
 	}
@@ -24,30 +22,16 @@ export class NotionOperationsClass {
   }
 
   /**
-   * Empty the operation stack, useful after all the operations has been executed
-   */
-	emptyStack () {
-		while (this.#stack.length !== 0) this.#stack.pop();
-	}
-
-  /**
-   * A simple utility method to print the current stack by pretty formatting it in console
-   */
-	printStack () {
-		console.log(JSON.stringify(this.#stack, null, 2));
-	}
-
-  /**
    * Applies all the plugins in the class to all the operations in the stack
    */
-  applyPluginsToOperationsStack(){
+  applyPluginsToOperationsStack(operations: IOperation[]){
     // Skip the plugin processing process if its empty
     if(this.#plugins.length !== 0 ){
       // This array stores the operations that will be stored in the operations stack after plugin processing
       const updated_operations: IOperation[] = [];
       // Iterate through all the operations and run it through each of the plugins
-      for (let index = 0; index < this.#stack.length; index++) {
-        const operation = this.#stack[index];
+      for (let index = 0; index < operations.length; index++) {
+        const operation = operations[index];
         let updated_operation: false | IOperation = operation;
         // Iterating through each of the plugin to process the operation
         for (let index = 0; index < this.#plugins.length; index++) {
@@ -63,42 +47,26 @@ export class NotionOperationsClass {
       }
       return updated_operations;
     }else
-      return this.#stack
-  }
-
-  /**
-   * Pushes a list of operations to the operations stack
-   * @param operations A list of operations to push to the end of the operations tack
-   */
-  pushToStack(operations: IOperation | IOperation[]){
-    if(Array.isArray(operations)) this.#stack.push(...operations)
-    else this.#stack.push(operations);
-  }
-
-  /** Get the private stack property which contains all the operations */
-  get stack(){
-    return this.#stack;
+      return operations;
   }
 
   /**
    * Execute the operations present in the operations stack
    */
-	async executeOperation () {
+	async executeOperation (operations: IOperation[]) {
     // If the stack is empty print a msg to the console
-		if (this.#stack.length === 0) console.log(`The operation stack is empty`);
+		if (operations.length === 0) console.log(`The operation stack is empty`);
 		else {
       // Create a transaction using the space_id, shard_id and the list of operations
-      const created_transaction = NotionRequest.createTransaction(this.shard_id, this.space_id, this.#stack);
+      const created_transaction = NotionRequest.createTransaction(this.shard_id, this.space_id, operations);
       // get the operations list after processing it with the list of plugins 
-      created_transaction.transactions[0].operations = this.applyPluginsToOperationsStack();
+      created_transaction.transactions[0].operations = this.applyPluginsToOperationsStack(operations);
       // Execute the operations, by sending a request to notion's server
 			await NotionMutations.saveTransactions(created_transaction, {
 				token: this.token,
 				interval: 0,
         user_id: this.user_id
 			});
-      // Empty the operations stack since its been executed
-			this.emptyStack();
 		}
 	}
 }

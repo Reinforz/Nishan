@@ -1,7 +1,6 @@
 import { NotionCacheObject } from "@nishans/cache";
-import { NotionMutations } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, IWebBookmark, TBlock, WebBookmarkProps } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
@@ -56,7 +55,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         }, props)).format;
       }; */
 
-      if (content.type === "bookmark") {
+      /* if (content.type === "bookmark") {
         await NotionMutations.setBookmarkMetadata({
           blockId: block_id,
           url: (content.properties as WebBookmarkProps).link[0][0]
@@ -65,7 +64,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         const bookmark_data = props.cache.block.get(block_id) as IWebBookmark;
         common_data.properties = bookmark_data.properties;
         common_data.format = bookmark_data.format;
-      }
+      } */
 
       /* else if (type === "drive") {
         const {

@@ -24,6 +24,7 @@ export const NotionOperationsObject = {
 			return updated_operations;
 		} else return operations;
 	},
+
 	async executeOperations (
 		operations: IOperation[],
 		plugins: NotionOperationPluginFunction[],

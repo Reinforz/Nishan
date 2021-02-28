@@ -138,11 +138,13 @@ export const NotionCacheObject = {
 				data.view_ids.map((view_id) => container.push([ view_id, 'collection_view' ]));
 				container.push([ data.collection_id, 'collection' ]);
 			}
+			container.push([ data.parent_id, data.parent_table ]);
 		} else if (type === 'space') {
 			// If the type is space, fetch its pages and notion_user
 			const data = cache[type].get(id) as ISpace;
 			data.pages.forEach((id) => container.push([ id, 'block' ]));
 			data.permissions.forEach((permission) => container.push([ permission.user_id, 'notion_user' ]));
+			container.push([ data.created_by_id, 'user_root' ]);
 		} else if (type === 'user_root') {
 			// If the type is user_root, fetch its space_view
 			const data = cache[type].get(id) as IUserRoot;
@@ -165,10 +167,12 @@ export const NotionCacheObject = {
 				configs
 			);
 			NotionCacheObject.saveToCache(recordMap, cache);
+			container.push([ data.parent_id, 'block' ]);
 		} else if (type === 'space_view') {
 			// If the type is space_view, fetch its bookmarked_pages
 			const data = cache[type].get(id) as ISpaceView;
 			if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
+			container.push([ data.space_id, 'space' ]);
 		} else error(`${type} data is not supported`);
 
 		// Filters data that doesn't exist in the cache

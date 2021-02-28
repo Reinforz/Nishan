@@ -309,7 +309,9 @@ describe('initializeCacheForSpecificData', () => {
 		const block_1: any = {
 				content: [ 'block_2', 'block_3', 'block_4' ],
 				id: 'block_1',
-				type: 'page'
+				type: 'page',
+				parent_table: 'space',
+				parent_id: 'space_1'
 			},
 			block_2: any = {
 				id: 'block_2',
@@ -348,7 +350,8 @@ describe('initializeCacheForSpecificData', () => {
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_2', 'block' ],
 			[ 'block_3', 'block' ],
-			[ 'block_4', 'block' ]
+			[ 'block_4', 'block' ],
+			[ 'space_1', 'space' ]
 		]);
 		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([
 			[ 'collection_1', 'collection' ],
@@ -363,7 +366,9 @@ describe('initializeCacheForSpecificData', () => {
 				id: 'block_1',
 				type: 'collection_view_page',
 				collection_id: 'collection_1',
-				view_ids: [ 'collection_view_1' ]
+				view_ids: [ 'collection_view_1' ],
+				parent_table: 'space',
+				parent_id: 'space_1'
 			},
 			cache = {
 				...NotionCacheObject.createDefaultCache(),
@@ -376,18 +381,20 @@ describe('initializeCacheForSpecificData', () => {
 
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'collection_view_1', 'collection_view' ],
-			[ 'collection_1', 'collection' ]
+			[ 'collection_1', 'collection' ],
+			[ 'space_1', 'space' ]
 		]);
 	});
 
 	it(`Should work for type space`, async () => {
 		const space_1: any = {
+				created_by_id: 'user_root_1',
 				permissions: [
 					{
-						user_id: 'user_root_1'
+						user_id: 'notion_user_1'
 					},
 					{
-						user_id: 'user_root_2'
+						user_id: 'notion_user_2'
 					}
 				],
 				id: 'space_1',
@@ -402,8 +409,9 @@ describe('initializeCacheForSpecificData', () => {
 		await NotionCacheObject.initializeCacheForSpecificData('space_1', 'space', notion_request_configs, cache);
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_1', 'block' ],
-			[ 'user_root_1', 'notion_user' ],
-			[ 'user_root_2', 'notion_user' ]
+			[ 'notion_user_1', 'notion_user' ],
+			[ 'notion_user_2', 'notion_user' ],
+			[ 'user_root_1', 'user_root' ]
 		]);
 	});
 
@@ -436,7 +444,8 @@ describe('initializeCacheForSpecificData', () => {
 		it(`bookmarked_pages=[id]`, async () => {
 			const space_view_1: any = {
 					id: 'user_root_1',
-					bookmarked_pages: [ 'block_1' ]
+					bookmarked_pages: [ 'block_1' ],
+					space_id: 'space_1'
 				},
 				cache = createCache(space_view_1);
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
@@ -446,12 +455,16 @@ describe('initializeCacheForSpecificData', () => {
 				notion_request_configs,
 				cache
 			);
-			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+				[ 'block_1', 'block' ],
+				[ 'space_1', 'space' ]
+			]);
 		});
 
 		it(`bookmarked_pages=undefined`, async () => {
 			const space_view_1: any = {
-					id: 'user_root_1'
+					id: 'user_root_1',
+					space_id: 'space_1'
 				},
 				cache = createCache(space_view_1);
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
@@ -461,7 +474,7 @@ describe('initializeCacheForSpecificData', () => {
 				notion_request_configs,
 				cache
 			);
-			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([]);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'space_1', 'space' ] ]);
 		});
 	});
 
@@ -486,7 +499,37 @@ describe('initializeCacheForSpecificData', () => {
 		it(`template_pages=[]`, async () => {
 			const collection_1 = {
 					id: 'collection_1',
-					template_pages: [ 'block_1' ]
+					template_pages: [ 'block_2' ],
+					parent_id: 'block_1'
+				} as any,
+				cache = {
+					...NotionCacheObject.createDefaultCache(),
+					collection: new Map([ [ 'collection_1', collection_1 ] ])
+				};
+
+			const saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
+			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
+			const queryCollectionMock = createQueryCollectionMock();
+
+			await NotionCacheObject.initializeCacheForSpecificData(
+				'collection_1',
+				'collection',
+				notion_request_configs,
+				cache
+			);
+
+			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
+			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+				[ 'block_2', 'block' ],
+				[ 'block_1', 'block' ]
+			]);
+		});
+
+		it(`template_pages=undefined`, async () => {
+			const collection_1 = {
+					id: 'collection_1',
+					parent_id: 'block_1'
 				} as any,
 				cache = {
 					...NotionCacheObject.createDefaultCache(),
@@ -507,31 +550,6 @@ describe('initializeCacheForSpecificData', () => {
 			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
 			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
 			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
-		});
-
-		it(`template_pages=undefined`, async () => {
-			const collection_1 = {
-					id: 'collection_1'
-				} as any,
-				cache = {
-					...NotionCacheObject.createDefaultCache(),
-					collection: new Map([ [ 'collection_1', collection_1 ] ])
-				};
-
-			const saveToCacheMock = jest.spyOn(NotionCacheObject, 'saveToCache').mockImplementationOnce(() => undefined);
-			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
-			const queryCollectionMock = createQueryCollectionMock();
-
-			await NotionCacheObject.initializeCacheForSpecificData(
-				'collection_1',
-				'collection',
-				notion_request_configs,
-				cache
-			);
-
-			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
-			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
-			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([]);
 		});
 	});
 

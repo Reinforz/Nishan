@@ -1,11 +1,18 @@
 import { ICache } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
 import { o } from '../../core/tests/utils';
 import { updateChildContainer } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
+
+const default_fabricator_props = {
+	token: 'token',
+	user_id: 'user_1',
+	shard_id: 123,
+	space_id: 'space_1'
+};
 
 describe('updateChildContainer', () => {
 	it(`keep=true,bookmarked_pages doesn't include id`, async () => {
@@ -16,11 +23,16 @@ describe('updateChildContainer', () => {
 			cache: ICache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
-		const stack: IOperation[] = [];
+		const executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', cache, stack, 'token');
+		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+			cache,
+			...default_fabricator_props
+		});
 
-		expect(stack).toStrictEqual([
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
 				id: 'block_1'
 			})
@@ -37,10 +49,13 @@ describe('updateChildContainer', () => {
 			cache: ICache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
-		const stack: IOperation[] = [];
-		await updateChildContainer('space_view', 'space_view_1', false, 'block_1', cache, stack, 'token');
+		const executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
-		expect(stack).toStrictEqual([
+		await updateChildContainer('space_view', 'space_view_1', false, 'block_1', { cache, ...default_fabricator_props });
+
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.sv.lr('space_view_1', [ 'bookmarked_pages' ], {
 				id: 'block_1'
 			})
@@ -57,11 +72,13 @@ describe('updateChildContainer', () => {
 			cache: ICache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
-		const stack: IOperation[] = [];
+		const executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', cache, stack, 'token');
+		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });
 
-		expect(stack).toStrictEqual([]);
+		expect(executeOperationsMock).not.toHaveBeenCalled();
 	});
 
 	it(`keep=true,container doesn't exist`, async () => {
@@ -71,11 +88,13 @@ describe('updateChildContainer', () => {
 			cache: ICache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
-		const stack: IOperation[] = [];
+		const executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', cache, stack, 'token');
+		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });
 
-		expect(stack).toStrictEqual([
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
 				id: 'block_1'
 			})

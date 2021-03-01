@@ -1,7 +1,8 @@
 import { ICache, NotionCacheObject } from "@nishans/cache";
 import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
-import { ICollection, IOperation } from "@nishans/types";
-import { o } from "../../../../core/tests/utils";
+import { NotionOperationsObject } from "@nishans/operations";
+import { ICollection } from "@nishans/types";
+import { default_nishan_arg, o } from "../../../../core/tests/utils";
 import { CreateData } from "../../../libs";
 import { ParentCollectionData } from "../../../types";
 import { tsu } from "../../utils";
@@ -18,19 +19,13 @@ const returnChildCollectionAndCache = () =>{
     ...NotionCacheObject.createDefaultCache(),
     collection: new Map([ [ 'child_collection_id', child_collection ] ])
   } as ICache;
-  const stack: IOperation[] = [];
   const parent_collection_data: ParentCollectionData = {
     cache,
     parent_collection_id: 'parent_collection_id',
     parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
     name: [ [ 'Parent Collection' ] ],
-    stack,
-    token: 'token',
-    logger: () => {
-      return
-    }
   }
-  return [child_collection, stack, parent_collection_data] as const;
+  return [child_collection, parent_collection_data] as const;
 }
 
 const getChildRelationSchemaUnitId = (child_collection: ICollection, name: string) => generateSchemaMapFromCollectionSchema(child_collection.schema).get(name)?.schema_id as string;
@@ -49,10 +44,15 @@ const common_child_collection_relation_schema_unit = {
 };
 
 it(`Should work correctly (default child_collection_relation_schema_unit name)`, async () => {
-  const  [child_collection, stack, parent_collection_data] = returnChildCollectionAndCache();
+  const  [child_collection, parent_collection_data] = returnChildCollectionAndCache();
+  const executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
+      
   const relation_schema_unit = await CreateData.schema_unit.relation(
     relation_arg,
-    parent_collection_data
+    parent_collection_data,
+    default_nishan_arg
   );
 
   const child_relation_schema_unit_id = getChildRelationSchemaUnitId(child_collection, "Related to Parent Collection (Parent Relation Column)");
@@ -66,19 +66,22 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
     property: child_relation_schema_unit_id,
     ...common_parent_collection_relation_schema_unit
   })
-
-  expect(stack.length).toBe(0)
+  expect(executeOperationsMock).not.toHaveBeenCalled();
 });
 
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
-  const [child_collection, stack, parent_collection_data] = returnChildCollectionAndCache();
+  const [child_collection, parent_collection_data] = returnChildCollectionAndCache();
+  const executeOperationsMock = jest
+  .spyOn(NotionOperationsObject, 'executeOperations')
+  .mockImplementationOnce(async () => undefined);
 
   const relation_schema_unit = await CreateData.schema_unit.relation(
     {
       ...relation_arg,
       relation_schema_unit_name: "Child Column"
     },
-    parent_collection_data
+    parent_collection_data,
+    default_nishan_arg
   );
 
   const child_relation_schema_unit_id = getChildRelationSchemaUnitId(child_collection, "Child Column");
@@ -93,7 +96,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
     ...common_parent_collection_relation_schema_unit
   });
 
-  expect(stack).toStrictEqual([o.c.u("child_collection_id", ["schema", child_relation_schema_unit_id], {
+  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([o.c.u("child_collection_id", ["schema", child_relation_schema_unit_id], {
     name: [["Child Column"]],
     ...common_child_collection_relation_schema_unit
   })]);

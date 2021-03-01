@@ -2,8 +2,7 @@ import { NotionCacheObject } from '@nishans/cache';
 import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
-import { FabricatorProps } from 'packages/fabricator/types';
-import { TRollupSchemaUnitInput } from '..';
+import { FabricatorProps, TRollupSchemaUnitInput } from '..';
 import { getSchemaMapUnit } from '../../';
 
 /**

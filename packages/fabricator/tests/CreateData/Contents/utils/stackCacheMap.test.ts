@@ -1,23 +1,27 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { IOperation, IPage } from '@nishans/types';
-import { o } from '../../../../../core/tests/utils';
+import { NotionOperationsObject } from '@nishans/operations';
+import { IPage } from '@nishans/types';
+import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { stackCacheMap } from '../../../../libs/CreateData/Contents/utils';
 
-it(`name=string`, () => {
+it(`name=string`, async () => {
 	const cache = NotionCacheObject.createDefaultCache(),
-		stack: IOperation[] = [],
 		data = { id: 'data_id', type: 'page', data: 'data' } as any,
 		cb = jest.fn();
-	stackCacheMap<IPage>(
+	const executeOperationsMock = jest
+		.spyOn(NotionOperationsObject, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
+
+	await stackCacheMap<IPage>(
 		data,
 		{
-			cache,
-			stack
+			...default_nishan_arg,
+			cache
 		},
 		cb
 	);
 
-	expect(stack).toStrictEqual([ o.b.u('data_id', [], data) ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ o.b.u('data_id', [], data) ]);
 	expect(cache.block.get('data_id')).toStrictEqual(data);
 	expect(cb).toHaveBeenCalledWith(data);
 });

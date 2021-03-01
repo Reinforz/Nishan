@@ -1,4 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
+import { NotionOperationsObject } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CreateData } from '../../../libs';
@@ -13,7 +14,6 @@ const default_nishan_arg = {
 	user_id: 'user_id',
 	space_id: 'space_id',
 	shard_id: 123,
-	stack: [],
 	cache: NotionCacheObject.createDefaultCache()
 };
 
@@ -27,19 +27,6 @@ const default_collection = {
 
 describe('Output correctly', () => {
 	it(`Should work correctly`, async () => {
-		await CreateData.views(
-			default_collection,
-			[
-				{
-					type: 'table',
-					name: 'Table',
-					schema_units: [ tsu ]
-				}
-			],
-			default_nishan_arg,
-			'parent_id'
-		);
-
 		const id = v4(),
 			filter: any = {
 				operator: 'string_is',
@@ -48,7 +35,10 @@ describe('Output correctly', () => {
 					value: '123'
 				}
 			},
-			cb = jest.fn();
+			cb = jest.fn(),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementationOnce(async () => undefined);
 
 		const expected_view_data = {
 			id,
@@ -109,7 +99,7 @@ describe('Output correctly', () => {
 			'parent_id',
 			cb
 		);
-
+		expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 		expect(views_data).toStrictEqual([ expected_view_data ]);
 		expect(cb).toHaveBeenCalledWith(expect.objectContaining({ id }));
 	});
@@ -123,11 +113,7 @@ describe('throws error', () => {
 				[],
 				{
 					...default_nishan_arg,
-					stack: [],
-					cache: NotionCacheObject.createDefaultCache(),
-					logger: () => {
-						return;
-					}
+					cache: NotionCacheObject.createDefaultCache()
 				},
 				'parent_id'
 			)

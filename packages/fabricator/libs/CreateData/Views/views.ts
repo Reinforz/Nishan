@@ -1,7 +1,8 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, IViewFilter, TView, TViewQuery2, ViewFormatProperties } from '@nishans/types';
-import { FabricatorProps, TViewCreateInput } from '../';
+import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
 import { getSchemaMapUnit, PopulateViewData } from '../../';
+import { setDefault } from '../../setDefault';
 import { generateViewData } from './utils';
 
 /**
@@ -27,8 +28,12 @@ export async function views (
 
 	if (views.length === 0) throw new Error(`input views array cannot be empty`);
 	for (let index = 0; index < views.length; index++) {
-		const view = views[index],
-			{ type, schema_units } = view,
+		const view = views[index];
+		setDefault(view, {
+			filters: []
+		});
+
+		const { type, schema_units, filters } = view,
 			included_units: string[] = [],
 			query2 = PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
 			format = PopulateViewData.format.format(view as any, schema_map),
@@ -47,9 +52,11 @@ export async function views (
 			properties.push(PopulateViewData.format.properties(type as any, schema_map_unit.schema_id, format));
 		});
 
-		const input_filters = views[index].filters;
-		if (input_filters)
-			PopulateViewData.query2.filters(input_filters, (query2.filter as IViewFilter).filters, schema_map);
+		PopulateViewData.query2.filters(
+			filters as TViewFilterCreateInput[],
+			(query2.filter as IViewFilter).filters,
+			schema_map
+		);
 
 		const view_data = await generateViewData({ ...view, format, query2 }, props, parent_id);
 		views_data.push(view_data);

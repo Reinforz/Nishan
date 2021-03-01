@@ -1,6 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
+import { setDefault } from '../setDefault';
 import { CreateData, FabricatorProps, ICollectionBlockInput } from './';
 
 /**
@@ -19,20 +20,21 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		name: input.name,
 		...props
 	});
-  
-  /* deepMerge(input, {
-    cover: '',
-    icon: ''
-  }); */
 
-  format.page_section_visibility = input.page_section_visibility ?? {backlinks: 'section_show', comments: "section_show"};
+  setDefault(input, {
+    cover: '',
+    icon: '',
+    page_section_visibility: {backlinks: 'section_show', comments: "section_show"}
+  });
   
+  format.page_section_visibility = input.page_section_visibility;
+
 	// construct the collection to store it in cache and in op stack
 	const collection_data: ICollection = {
 		id: collection_id,
 		schema,
-		cover: input.cover ?? '',
-		icon: input.icon ?? '',
+		cover: input.cover,
+		icon: input.icon,
 		parent_id,
 		parent_table: 'block',
 		alive: true,

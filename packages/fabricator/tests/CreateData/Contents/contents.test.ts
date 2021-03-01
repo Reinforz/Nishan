@@ -1,13 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
-import {
-	ICollectionView,
-	ICollectionViewPage,
-	IColumn,
-	IColumnList,
-	IFactory,
-	IOperation,
-	ITodo
-} from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
+import { ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
 import { default_nishan_arg, last_edited_props, o } from '../../../../core/tests/utils';
 import { CreateData } from '../../../libs';
@@ -60,7 +53,9 @@ describe('type=page', () => {
 				...NotionCacheObject.createDefaultCache(),
 				space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 			},
-			stack: IOperation[] = [];
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		const logger_spy = jest.fn();
 
@@ -90,8 +85,7 @@ describe('type=page', () => {
 			{
 				...default_nishan_arg,
 				cache,
-				logger: logger_spy,
-				stack
+				logger: logger_spy
 			},
 			() => ({})
 		);
@@ -110,24 +104,34 @@ describe('type=page', () => {
 		expect(logger_spy).toHaveBeenCalledTimes(2);
 		expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', header_id);
 		expect(logger_spy).toHaveBeenNthCalledWith(2, 'CREATE', 'block', page_id);
-
-		expect(stack).toEqual([
+		expect(executeOperationsMock).toHaveBeenCalledTimes(4);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.b.u(page_id, [], {
 				id: page_id,
 				...common_page_snapshot,
 				format: {
 					block_color: 'blue'
 				}
-			}),
-			o.b.u(header_id, [], header_snapshot),
-			o.b.la(page_id, [ 'content' ], { id: header_id }),
-			o.s.la(space_id, [ 'pages' ], { id: page_id })
+			})
 		]);
-
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.u(header_id, [], header_snapshot) ]);
+		expect(executeOperationsMock.mock.calls[2][0]).toEqual([ o.b.la(page_id, [ 'content' ], { id: header_id }) ]);
+		expect(executeOperationsMock.mock.calls[3][0]).toEqual([ o.s.la(space_id, [ 'pages' ], { id: page_id }) ]);
 		expect(cache.space.get(space_id)).toStrictEqual({
 			id: 'space_1',
 			pages: [ page_id ]
 		});
+		expect(cache.block.get(page_id)).toStrictEqual(
+			expect.objectContaining({
+				id: page_id,
+				content: [ header_id ]
+			})
+		);
+		expect(cache.block.get(header_id)).toStrictEqual(
+			expect.objectContaining({
+				id: header_id
+			})
+		);
 	});
 
 	it(`is_template=true,contents=[],parent=collection`, async () => {
@@ -137,7 +141,9 @@ describe('type=page', () => {
 				...NotionCacheObject.createDefaultCache(),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			},
-			stack: IOperation[] = [];
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		const logger_spy = jest.fn();
 
@@ -157,25 +163,25 @@ describe('type=page', () => {
 			{
 				...default_nishan_arg,
 				cache,
-				logger: logger_spy,
-				stack
+				logger: logger_spy
 			}
 		);
 
 		expect(logger_spy).toHaveBeenCalledTimes(1);
 		expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', page_id);
-
-		expect(stack).toEqual([
+		expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.b.u(page_id, [], {
 				...common_page_snapshot,
 				id: page_id,
 				is_template: true,
 				parent_id: 'collection_1',
 				parent_table: 'collection'
-			}),
+			})
+		]);
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
 			o.c.la('collection_1', [ 'template_pages' ], { id: page_id })
 		]);
-
 		expect(cache.collection.get('collection_1')).toStrictEqual({
 			id: 'collection_1',
 			template_pages: [ page_id ]
@@ -189,13 +195,15 @@ describe('type=collection_block', () => {
 				...NotionCacheObject.createDefaultCache(),
 				space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 			},
-			stack: IOperation[] = [],
 			cvp_id = v4();
 
 		const logger_spy = jest.fn();
 		const createDataCollectionMock = jest
-			.spyOn(CreateData, 'collection')
-			.mockImplementationOnce(async () => [ { id: 'collection_1' }, [ { id: 'view_1' } ] ] as any);
+				.spyOn(CreateData, 'collection')
+				.mockImplementationOnce(async () => [ { id: 'collection_1' }, [ { id: 'view_1' } ] ] as any),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		await CreateData.contents(
 			[
@@ -219,16 +227,11 @@ describe('type=collection_block', () => {
 			{
 				...default_nishan_arg,
 				cache,
-				logger: logger_spy,
-				stack
+				logger: logger_spy
 			}
 		);
 
 		const collection_view_page = cache.block.get(cvp_id) as ICollectionViewPage;
-
-		expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
-		expect(logger_spy).toHaveBeenCalledWith('CREATE', 'block', collection_view_page.id);
-
 		const collection_view_page_snapshot = {
 			id: cvp_id,
 			type: 'collection_view_page',
@@ -245,11 +248,15 @@ describe('type=collection_block', () => {
 			],
 			...metadata
 		};
+
+		expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+		expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
+		expect(logger_spy).toHaveBeenCalledWith('CREATE', 'block', collection_view_page.id);
 		expect(collection_view_page).toEqual(collection_view_page_snapshot);
-		expect(stack).toEqual([
-			o.b.u(expect.any(String), [], collection_view_page_snapshot),
-			o.s.la('space_1', [ 'pages' ], { id: cvp_id })
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+			o.b.u(expect.any(String), [], collection_view_page_snapshot)
 		]);
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.s.la('space_1', [ 'pages' ], { id: cvp_id }) ]);
 	});
 
 	it(`type=collection_view,rows=[{}]`, async () => {
@@ -257,14 +264,16 @@ describe('type=collection_block', () => {
 				...NotionCacheObject.createDefaultCache(),
 				block: new Map([ [ 'block_1', { type: 'page', id: 'block_1' } as any ] ])
 			},
-			stack: IOperation[] = [],
 			row_one_id = v4(),
 			cv_id = v4();
 
 		const logger_spy = jest.fn();
 		const createDataCollectionMock = jest
-			.spyOn(CreateData, 'collection')
-			.mockImplementationOnce(async () => [ { id: 'collection_1' }, [ { id: 'view_1' } ] ] as any);
+				.spyOn(CreateData, 'collection')
+				.mockImplementationOnce(async () => [ { id: 'collection_1' }, [ { id: 'view_1' } ] ] as any),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		await CreateData.contents(
 			[
@@ -297,8 +306,7 @@ describe('type=collection_block', () => {
 			{
 				...default_nishan_arg,
 				cache,
-				logger: logger_spy,
-				stack
+				logger: logger_spy
 			}
 		);
 
@@ -323,9 +331,9 @@ describe('type=collection_block', () => {
 
 		expect(cache.block.get(collection_view.id)).toBeTruthy();
 		expect(cache.block.get(row_one_id)).toBeTruthy();
-
-		expect(stack).toEqual([
-			o.b.u(cv_id, [], collection_view_snapshot),
+		expect(executeOperationsMock).toHaveBeenCalledTimes(3);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([ o.b.u(cv_id, [], collection_view_snapshot) ]);
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
 			o.b.u(row_one_id, [], {
 				content: [],
 				permissions: [
@@ -343,9 +351,9 @@ describe('type=collection_block', () => {
 					title: [ [ 'Row one' ] ]
 				},
 				...metadata
-			}),
-			o.b.la('block_1', [ 'content' ], { id: cv_id })
+			})
 		]);
+		expect(executeOperationsMock.mock.calls[2][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: cv_id }) ]);
 	});
 });
 
@@ -354,7 +362,9 @@ it(`type=link_to_page`, async () => {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 	await CreateData.contents(
 		[
@@ -367,12 +377,11 @@ it(`type=link_to_page`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			stack
+			cache
 		}
 	);
-
-	expect(stack).toEqual([
+	expect(executeOperationsMock).toBeCalledTimes(1);
+	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.la('block_1', [ 'content' ], {
 			id: 'page_to_link'
 		})
@@ -387,7 +396,10 @@ it(`type=column_list`, async () => {
 		cl_id = v4(),
 		c1_id = v4(),
 		c2_id = v4(),
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
+
 	await CreateData.contents(
 		[
 			{
@@ -421,8 +433,7 @@ it(`type=column_list`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			stack
+			cache
 		}
 	);
 	const column_list_data = cache.block.get(cl_id) as IColumnList;
@@ -430,16 +441,6 @@ it(`type=column_list`, async () => {
 	const column_2_data = cache.block.get(column_list_data.content[1]) as IColumn;
 	const block_1_data = cache.block.get(column_1_data.content[0]) as ITodo;
 	const block_2_data = cache.block.get(column_2_data.content[0]) as ITodo;
-
-	expect(column_list_data).toStrictEqual({
-		...metadata,
-		id: cl_id,
-		parent_table: 'block',
-		parent_id: 'block_1',
-		type: 'column_list',
-		content: [ expect.any(String), expect.any(String) ]
-	});
-
 	const common_column_data = {
 			id: expect.any(String),
 			parent_id: cl_id,
@@ -457,6 +458,14 @@ it(`type=column_list`, async () => {
 			parent_table: 'block'
 		};
 
+	expect(column_list_data).toStrictEqual({
+		...metadata,
+		id: cl_id,
+		parent_table: 'block',
+		parent_id: 'block_1',
+		type: 'column_list',
+		content: [ expect.any(String), expect.any(String) ]
+	});
 	expect(column_1_data).toStrictEqual(common_column_data);
 	expect(column_2_data).toStrictEqual(common_column_data);
 	expect(block_1_data).toStrictEqual({
@@ -477,22 +486,35 @@ it(`type=column_list`, async () => {
 			checked: [ [ 'No' ] ]
 		}
 	});
-
-	expect(stack).toStrictEqual([
-		o.b.u(cl_id, [], expect.objectContaining({ id: column_list_data.id })),
-
-		o.b.u(column_1_data.id, [], expect.objectContaining({ id: column_1_data.id })),
-		o.b.u(block_1_data.id, [], expect.objectContaining({ id: block_1_data.id })),
-		o.b.la(cl_id, [ 'content' ], { id: column_1_data.id }),
-		o.b.la(column_1_data.id, [ 'content' ], { id: block_1_data.id }),
-
-		o.b.u(column_2_data.id, [], expect.objectContaining({ id: column_2_data.id })),
-		o.b.u(block_2_data.id, [], expect.objectContaining({ id: block_2_data.id })),
-		o.b.la(cl_id, [ 'content' ], { id: column_2_data.id }),
-		o.b.la(column_2_data.id, [ 'content' ], { id: block_2_data.id }),
-
-		o.b.la('block_1', [ 'content' ], { id: cl_id })
+	expect(executeOperationsMock).toHaveBeenCalledTimes(10);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.u(cl_id, [], expect.objectContaining({ id: column_list_data.id }))
 	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+		o.b.u(column_1_data.id, [], expect.objectContaining({ id: column_1_data.id }))
+	]);
+	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([
+		o.b.u(block_1_data.id, [], expect.objectContaining({ id: block_1_data.id }))
+	]);
+	expect(executeOperationsMock.mock.calls[3][0]).toStrictEqual([
+		o.b.la(cl_id, [ 'content' ], { id: column_1_data.id })
+	]);
+	expect(executeOperationsMock.mock.calls[4][0]).toStrictEqual([
+		o.b.la(column_1_data.id, [ 'content' ], { id: block_1_data.id })
+	]);
+	expect(executeOperationsMock.mock.calls[5][0]).toStrictEqual([
+		o.b.u(column_2_data.id, [], expect.objectContaining({ id: column_2_data.id }))
+	]);
+	expect(executeOperationsMock.mock.calls[6][0]).toStrictEqual([
+		o.b.u(block_2_data.id, [], expect.objectContaining({ id: block_2_data.id }))
+	]);
+	expect(executeOperationsMock.mock.calls[7][0]).toStrictEqual([
+		o.b.la(cl_id, [ 'content' ], { id: column_2_data.id })
+	]);
+	expect(executeOperationsMock.mock.calls[8][0]).toStrictEqual([
+		o.b.la(column_2_data.id, [ 'content' ], { id: block_2_data.id })
+	]);
+	expect(executeOperationsMock.mock.calls[9][0]).toStrictEqual([ o.b.la('block_1', [ 'content' ], { id: cl_id }) ]);
 });
 
 it(`type=factory`, async () => {
@@ -502,7 +524,10 @@ it(`type=factory`, async () => {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
+
 	await CreateData.contents(
 		[
 			{
@@ -527,13 +552,13 @@ it(`type=factory`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			stack
+			cache
 		}
 	);
 
 	const factory_data = cache.block.get(fid) as IFactory,
 		block_data = cache.block.get(c1_id) as ITodo;
+
 	expect(factory_data).toStrictEqual({
 		content: [ c1_id ],
 		id: fid,
@@ -545,7 +570,6 @@ it(`type=factory`, async () => {
 		},
 		...metadata
 	});
-
 	expect(block_data).toStrictEqual({
 		id: c1_id,
 		parent_table: 'block',
@@ -557,11 +581,17 @@ it(`type=factory`, async () => {
 		},
 		...metadata
 	});
-
-	expect(stack).toStrictEqual([
-		o.b.u(fid, [], expect.objectContaining({ id: fid })),
-		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id })),
-		o.b.la(fid, [ 'content' ], expect.objectContaining({ id: c1_id })),
+	expect(executeOperationsMock).toHaveBeenCalledTimes(4);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.u(fid, [], expect.objectContaining({ id: fid }))
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id }))
+	]);
+	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([
+		o.b.la(fid, [ 'content' ], expect.objectContaining({ id: c1_id }))
+	]);
+	expect(executeOperationsMock.mock.calls[3][0]).toStrictEqual([
 		o.b.la('block_1', [ 'content' ], expect.objectContaining({ id: fid }))
 	]);
 });
@@ -584,7 +614,9 @@ it(`type=linked_db`, async () => {
 				]
 			])
 		},
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 	const createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(() => [ { id: 'view_1' } ] as any);
 
@@ -607,12 +639,11 @@ it(`type=linked_db`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			stack
+			cache
 		}
 	);
 	const collection_view_data = cache.block.get(cv_id) as ICollectionView;
-
+	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
 	expect(createDataViewsMock).toHaveBeenCalledTimes(1);
 	expect(collection_view_data).toStrictEqual({
 		...metadata,
@@ -623,8 +654,10 @@ it(`type=linked_db`, async () => {
 		collection_id: 'collection_1',
 		type: 'collection_view'
 	});
-	expect(stack).toStrictEqual([
-		o.b.u(cv_id, [], expect.objectContaining({ id: cv_id })),
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.u(cv_id, [], expect.objectContaining({ id: cv_id }))
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
 		o.b.la('block_1', [ 'content' ], expect.objectContaining({ id: cv_id }))
 	]);
 });

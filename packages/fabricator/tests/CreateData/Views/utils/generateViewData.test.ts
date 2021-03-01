@@ -1,18 +1,21 @@
 import { ICache } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { generateViewData } from '../../../../libs/CreateData/Views/utils';
 
 const id = v4(),
-	stack: IOperation[] = [],
 	cache: ICache = {
 		collection_view: new Map()
 	} as any;
 
-it(`Should work correctly`, () => {
-	const logger = jest.fn();
-	const view_data = generateViewData(
+it(`Should work correctly`, async () => {
+	const logger = jest.fn(),
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
+
+	const view_data = await generateViewData(
 		{
 			id,
 			name: 'Table',
@@ -20,7 +23,7 @@ it(`Should work correctly`, () => {
 			format: {} as any,
 			query2: {} as any
 		},
-		{ ...default_nishan_arg, stack, cache, logger },
+		{ ...default_nishan_arg, cache, logger },
 		'parent_id'
 	);
 
@@ -41,6 +44,6 @@ it(`Should work correctly`, () => {
 
 	expect(logger).toHaveBeenCalledWith('CREATE', 'collection_view', id);
 	expect(view_data).toStrictEqual(expected_view_data);
-	expect(stack).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);
 	expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);
 });

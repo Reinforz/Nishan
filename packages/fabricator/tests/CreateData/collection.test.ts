@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { CreateData } from '../../libs';
 import { tsu } from '../utils';
@@ -13,12 +13,14 @@ it(`should work correctly`, async () => {
 		schema = {
 			title: tsu
 		};
-	const stack: IOperation[] = [];
 
 	const createDataSchemaMock = jest
 			.spyOn(CreateData, 'schema')
 			.mockImplementationOnce(async () => [ schema, undefined as any, {} ]),
 		createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(async () => []),
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined),
 		logger = jest.fn();
 
 	const [ collection_data ] = await CreateData.collection(
@@ -67,9 +69,9 @@ it(`should work correctly`, async () => {
 		}
 	};
 
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ o.c.u(collection_data.id, [], output_collection) ]);
 	expect(createDataViewsMock).toHaveBeenCalledTimes(1);
 	expect(createDataSchemaMock).toHaveBeenCalledTimes(1);
 	expect(logger).toHaveBeenCalledWith('CREATE', 'collection', collection_data.id);
-	expect(stack).toStrictEqual([ o.c.u(collection_data.id, [], output_collection) ]);
 	expect(cache.collection.get(collection_data.id)).toStrictEqual(output_collection);
 });

@@ -1,4 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
+import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { NotionOperationsObject } from '@nishans/operations';
 import { ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
@@ -660,4 +661,124 @@ it(`type=linked_db`, async () => {
 	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
 		o.b.la('block_1', [ 'content' ], expect.objectContaining({ id: cv_id }))
 	]);
+});
+
+it(`type=bookmark`, async () => {
+	const block_id = v4();
+	const cache = {
+			...NotionCacheObject.createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
+		},
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined),
+		setBookmarkMetadataMock = jest
+			.spyOn(NotionMutations, 'setBookmarkMetadata')
+			.mockImplementation(async () => undefined as any),
+		updateCacheManuallyMock = jest
+			.spyOn(NotionCacheObject, 'updateCacheManually')
+			.mockImplementation(async () => undefined);
+
+	const logger_spy = jest.fn();
+
+	await CreateData.contents(
+		[
+			{
+				type: 'bookmark',
+				properties: { link: [ [ 'https://google.com' ] ], title: [ [ 'Page' ] ] },
+				id: block_id
+			}
+		],
+		'block_1',
+		'block',
+		{
+			...default_nishan_arg,
+			cache,
+			logger: logger_spy
+		}
+	);
+
+	expect(logger_spy).toHaveBeenCalledTimes(1);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', block_id);
+	expect(setBookmarkMetadataMock).toHaveBeenCalledTimes(1);
+	expect(setBookmarkMetadataMock.mock.calls[0][0]).toStrictEqual({
+		blockId: block_id,
+		url: 'https://google.com'
+	});
+	expect(updateCacheManuallyMock).toHaveBeenCalledTimes(1);
+	expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ block_id, 'block' ] ]);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+		o.b.u(
+			block_id,
+			[],
+			expect.objectContaining({
+				id: block_id,
+				type: 'bookmark'
+			})
+		)
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
+});
+
+it(`type=codepen`, async () => {
+	const block_id = v4();
+	const cache = {
+			...NotionCacheObject.createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
+		},
+		getGenericEmbedBlockDataMock = jest.spyOn(NotionQueries, 'getGenericEmbedBlockData').mockImplementation(
+			async () =>
+				({
+					format: {
+						display_source: 500
+					}
+				} as any)
+		),
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
+
+	const logger_spy = jest.fn();
+
+	await CreateData.contents(
+		[
+			{
+				type: 'codepen',
+				properties: { source: [ [ 'https://google.com' ] ] },
+				id: block_id
+			}
+		],
+		'block_1',
+		'block',
+		{
+			...default_nishan_arg,
+			cache,
+			logger: logger_spy
+		}
+	);
+
+	expect(logger_spy).toHaveBeenCalledTimes(1);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', block_id);
+	expect(getGenericEmbedBlockDataMock).toHaveBeenCalledTimes(1);
+	expect(getGenericEmbedBlockDataMock.mock.calls[0][0]).toStrictEqual({
+		pageWidth: 500,
+		source: 'https://google.com',
+		type: 'codepen'
+	});
+	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+		o.b.u(
+			block_id,
+			[],
+			expect.objectContaining({
+				id: block_id,
+				type: 'codepen',
+				format: {
+					display_source: 500
+				}
+			})
+		)
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
 });

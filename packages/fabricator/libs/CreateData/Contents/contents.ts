@@ -144,7 +144,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           updateChildContainer('block', block_id, true, column_id, props)
           await traverse(contents[index], column_id, "block")
         }
-      } else if (content.type.match(/^(codepen|tweet|maps|figma|video|audio|image)$/)) {
+      } else if (content.type.match(/^(embed|gist|abstract|invision|framer|whimsical|miro|pdf|loom|codepen|typeform|tweet|maps|figma|video|audio|image)$/)) {
         const response = (await NotionQueries.getGenericEmbedBlockData({
           pageWidth: 500,
           source: (content as any).properties.source[0][0] as string,

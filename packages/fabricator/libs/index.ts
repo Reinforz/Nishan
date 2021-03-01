@@ -1,4 +1,5 @@
 export * from './CreateData';
+export * from './deepMerge';
 export * from './detectChildData';
 export * from './getSchemaMapUnit';
 export * from './getSchemaUnit';

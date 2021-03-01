@@ -31,7 +31,7 @@ export interface SpaceShardProps {
 
 export interface IBlock extends SpaceShardProps, Node, ParentProps, CreateProps, LastEditedProps {}
 
-export type TGenericEmbedBlockType = 'figma' | 'tweet' | 'codepen' | 'gist' | 'maps';
+export type TGenericEmbedBlockType = 'figma' | 'tweet' | 'codepen' | 'gist' | 'maps' | 'embed';
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType =
 	| 'page'
@@ -47,7 +47,7 @@ export type TBasicBlockType =
 	| 'divider'
 	| 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
-export type TEmbedsBlockType = 'embed' | 'drive' | TGenericEmbedBlockType;
+export type TEmbedsBlockType = 'drive' | TGenericEmbedBlockType;
 export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
 export type TColumnBlockType = 'column_list' | 'column';
 export type TBlockType =
@@ -92,7 +92,7 @@ export interface CodeFormat {
 
 export interface CodeProps {
 	title: TTextFormat;
-	language: TCodeLanguage;
+	language: [[TCodeLanguage]];
 }
 
 export interface FileProps {

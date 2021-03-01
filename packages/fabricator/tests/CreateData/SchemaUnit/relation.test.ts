@@ -81,7 +81,10 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
       relation_schema_unit_name: "Child Column"
     },
     parent_collection_data,
-    default_nishan_arg
+    {
+      ...default_nishan_arg,
+      logger: ()=>undefined
+    }
   );
 
   const child_relation_schema_unit_id = getChildRelationSchemaUnitId(child_collection, "Child Column");

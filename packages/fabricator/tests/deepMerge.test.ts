@@ -1,4 +1,4 @@
-import { deepMerge } from '../../libs/utils';
+import { deepMerge } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -1,7 +1,9 @@
 import { NotionCacheObject } from "@nishans/cache";
+import { NotionMutations, NotionQueries } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TGenericEmbedBlockType, WebBookmarkProps } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
+import { deepMerge } from "../..";
 import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
 
@@ -46,25 +48,6 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         common_data.properties = (content as any).properties;
       if((content as any).format)
         common_data.format = (content as any).format;
-
-      /* if (content.type.match(/^(gist|codepen|tweet|maps|figma|video|audio|image)$/)) {
-        common_data.format = (await NotionQueries.getGenericEmbedBlockData({
-          pageWidth: 500,
-          source: (content as any).properties.source[0][0] as string,
-          type: content.type as TGenericEmbedBlockType
-        }, props)).format;
-      }; */
-
-      /* if (content.type === "bookmark") {
-        await NotionMutations.setBookmarkMetadata({
-          blockId: block_id,
-          url: (content.properties as WebBookmarkProps).link[0][0]
-        }, {...props, interval: 0});
-        await NotionCacheObject.updateCacheManually([[block_id, "block"]], {...props, interval: 0}, props.cache);
-        const bookmark_data = props.cache.block.get(block_id) as IWebBookmark;
-        common_data.properties = bookmark_data.properties;
-        common_data.format = bookmark_data.format;
-      } */
 
       /* else if (type === "drive") {
         const {
@@ -161,6 +144,21 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           updateChildContainer('block', block_id, true, column_id, props)
           await traverse(contents[index], column_id, "block")
         }
+      }else if (content.type.match(/^(gist|codepen|tweet|maps|figma|video|audio|image)$/)) {
+        const response = (await NotionQueries.getGenericEmbedBlockData({
+          pageWidth: 500,
+          source: (content as any).properties.source[0][0] as string,
+          type: content.type as TGenericEmbedBlockType
+        }, props));
+        
+        deepMerge(common_data, response);
+        
+        const block_data: any = {
+          ...common_data,
+          ...metadata
+        };
+
+        await stackCacheMap<any>(block_data, props, cb);
       }
       // Block is a non parent type
       else if (content.type !== "link_to_page") {
@@ -169,6 +167,14 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         };
         await stackCacheMap<any>(block_data, props, cb);
+      }
+
+      if (content.type === "bookmark") {
+        await NotionMutations.setBookmarkMetadata({
+          blockId: block_id,
+          url: (content.properties as WebBookmarkProps).link[0][0]
+        }, {...props, interval: 0});
+        await NotionCacheObject.updateCacheManually([[block_id, "block"]], {...props, interval: 0}, props.cache);
       }
 
       // If the type is link_to_page use the referenced page_id as the content id else use the block id 

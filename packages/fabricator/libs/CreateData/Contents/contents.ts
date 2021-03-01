@@ -1,7 +1,7 @@
 import { NotionCacheObject } from "@nishans/cache";
 import { NotionMutations, NotionQueries } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TGenericEmbedBlockType, WebBookmarkProps } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, WebBookmarkProps } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { deepMerge } from "../..";
 import { updateChildContainer } from "../../updateChildContainer";
@@ -144,11 +144,11 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           updateChildContainer('block', block_id, true, column_id, props)
           await traverse(contents[index], column_id, "block")
         }
-      }else if (content.type.match(/^(gist|codepen|tweet|maps|figma|video|audio|image)$/)) {
+      } else if (content.type.match(/^(codepen|tweet|maps|figma|video|audio|image)$/)) {
         const response = (await NotionQueries.getGenericEmbedBlockData({
           pageWidth: 500,
           source: (content as any).properties.source[0][0] as string,
-          type: content.type as TGenericEmbedBlockType
+          type: content.type as any
         }, props));
         
         deepMerge(common_data, response);

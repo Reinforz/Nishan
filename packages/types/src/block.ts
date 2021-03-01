@@ -31,7 +31,6 @@ export interface SpaceShardProps {
 
 export interface IBlock extends SpaceShardProps, Node, ParentProps, CreateProps, LastEditedProps {}
 
-export type TGenericEmbedBlockType = 'figma' | 'tweet' | 'codepen' | 'gist' | 'maps' | 'embed';
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType =
 	| 'page'
@@ -47,11 +46,26 @@ export type TBasicBlockType =
 	| 'divider'
 	| 'callout';
 export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
-export type TEmbedsBlockType = 'drive' | TGenericEmbedBlockType;
+export type TEmbedBlockType =
+	| 'drive'
+	| 'figma'
+	| 'tweet'
+	| 'codepen'
+	| 'gist'
+	| 'maps'
+	| 'embed'
+	| 'abstract'
+	| 'invision'
+	| 'framer'
+	| 'whimsical'
+	| 'miro'
+	| 'pdf'
+	| 'loom'
+	| 'typeform';
 export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
 export type TColumnBlockType = 'column_list' | 'column';
 export type TBlockType =
-	| TEmbedsBlockType
+	| TEmbedBlockType
 	| TMediaBlockType
 	| TBasicBlockType
 	| TAdvancedBlockType
@@ -315,15 +329,49 @@ export interface IFactory extends IBlock {
 export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;
 
 // Embeds Type
-export interface IGist extends IBlock {
+export interface IEmbedBlock extends IBlock {
+	properties: MediaProps;
+	format?: MediaFormat;
+	type: TEmbedBlockType;
+}
+export interface IEmbed extends IEmbedBlock {
+	type: 'embed';
+}
+export interface ICodepen extends IEmbedBlock {
+	type: 'codepen';
+}
+export interface IMaps extends IEmbedBlock {
+	type: 'maps';
+}
+export interface IFigma extends IEmbedBlock {
+	type: 'figma';
+}
+export interface IGist extends IEmbedBlock {
 	type: 'gist';
-	properties: {
-		source: string[][];
-	};
-	format?: {
-		block_color?: TFormatBlockColor;
-		display_source: null;
-	};
+}
+export interface IAbstract extends IEmbedBlock {
+	type: 'abstract';
+}
+export interface IInvision extends IEmbedBlock {
+	type: 'invision';
+}
+export interface IFramer extends IEmbedBlock {
+	type: 'framer';
+}
+export interface IWhimsical extends IEmbedBlock {
+	type: 'whimsical';
+}
+export interface IMiro extends IEmbedBlock {
+	type: 'miro';
+}
+export interface IPdf extends IEmbedBlock {
+	type: 'pdf';
+}
+export interface ILoom extends IEmbedBlock {
+	type: 'loom';
+}
+export interface ITypeform extends IEmbedBlock {
+	type: 'typeform';
 }
 export interface IDrive extends IBlock {
 	type: 'drive';
@@ -351,32 +399,6 @@ export interface ITweet extends IBlock {
 		source: string[][];
 	};
 	format?: Record<string, unknown>;
-}
-export interface IEmbed extends IBlock {
-	properties: MediaProps;
-	format?: MediaFormat;
-	type: 'embed';
-}
-export interface ICodepen extends IBlock {
-	type: 'codepen';
-	properties: {
-		source: string[][];
-	};
-	format?: MediaFormat;
-}
-export interface IMaps extends IBlock {
-	type: 'maps';
-	properties: {
-		source: string[][];
-	};
-	format?: MediaFormat;
-}
-export interface IFigma extends IBlock {
-	type: 'figma';
-	properties: {
-		source: string[][];
-	};
-	format?: MediaFormat;
 }
 
 export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;

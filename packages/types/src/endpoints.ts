@@ -10,7 +10,6 @@ import {
 	RecordMap,
 	SpaceData,
 	SubscribedSubscriptionData,
-	TGenericEmbedBlockType,
 	TOperationTable,
 	TPermissionRole,
 	TPlanType,
@@ -22,6 +21,7 @@ import {
 	ViewAggregations,
 	ViewSorts
 } from './';
+import { TEmbedBlockType } from './block';
 
 interface NotionEndpoint<P, R> {
 	payload: P;
@@ -198,14 +198,14 @@ export interface NotionEndpoints {
 		{
 			pageWidth: number;
 			source: string;
-			type: TGenericEmbedBlockType;
+			type: TEmbedBlockType;
 		},
 		{
 			format: MediaFormat;
 			properties: {
 				source: string[][];
 			};
-			type: TGenericEmbedBlockType;
+			type: TEmbedBlockType;
 		}
 	>;
 

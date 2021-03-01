@@ -104,7 +104,6 @@ export type TViewFormatCreateInput =
 
 export interface IViewCreateInput extends IViewQuery2CreateInput {
 	id?: string;
-	schema_units: TViewSchemaUnitsCreateInput[];
 	position?: RepositionParams;
 	filters?: TViewFilterCreateInput[];
 	name: string;
@@ -112,14 +111,17 @@ export interface IViewCreateInput extends IViewQuery2CreateInput {
 
 export interface TableViewCreateInput extends IViewCreateInput, TableViewQuery2CreateInput, TableViewFormatCreateInput {
 	type: 'table';
+	schema_units: TViewSchemaUnitsCommonCreateInput<boolean | number | [boolean, number]>[];
 }
 
 export interface ListViewCreateInput extends IViewCreateInput, ListViewQuery2CreateInput, ListViewFormatCreateInput {
 	type: 'list';
+	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
 }
 
 export interface BoardViewCreateInput extends IViewCreateInput, BoardViewQuery2CreateInput, BoardViewFormatCreateInput {
 	type: 'board';
+	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
 }
 
 export interface GalleryViewCreateInput
@@ -127,6 +129,7 @@ export interface GalleryViewCreateInput
 		GalleryViewQuery2CreateInput,
 		GalleryViewFormatCreateInput {
 	type: 'gallery';
+	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
 }
 
 export interface CalendarViewCreateInput
@@ -134,6 +137,7 @@ export interface CalendarViewCreateInput
 		CalendarViewQuery2CreateInput,
 		CalendarViewFormatCreateInput {
 	type: 'calendar';
+	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
 }
 
 export interface TimelineViewCreateInput
@@ -141,6 +145,10 @@ export interface TimelineViewCreateInput
 		TimelineViewQuery2CreateInput,
 		TimelineViewFormatCreateInput {
 	type: 'timeline';
+	schema_units: TViewSchemaUnitsCommonCreateInput<{
+		table: boolean | number | [boolean, number];
+		timeline: boolean;
+	}>[];
 }
 
 export type TViewCreateInput =
@@ -153,36 +161,31 @@ export type TViewCreateInput =
 
 export type SortCreateInput = undefined | TSortValue | [TSortValue, number];
 
-export type IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType> = {
+export type IViewSchemaUnitsCommonCreateInput<SUT extends TSchemaUnitType, F extends any> = {
 	name: string;
 	type: SUT;
 	sort?: SortCreateInput;
 	aggregation?: IViewAggregationsAggregators[SUT];
-} & (
-	| {
-			format?: boolean | number | [boolean, number];
-		}
-	| {
-			format?: boolean;
-		});
+	format?: F;
+};
 
-export type TViewSchemaUnitsCreateInput =
-	| IViewSchemaUnitsCreateInput<'text'>
-	| IViewSchemaUnitsCreateInput<'title'>
-	| IViewSchemaUnitsCreateInput<'number'>
-	| IViewSchemaUnitsCreateInput<'select'>
-	| IViewSchemaUnitsCreateInput<'multi_select'>
-	| IViewSchemaUnitsCreateInput<'date'>
-	| IViewSchemaUnitsCreateInput<'person'>
-	| IViewSchemaUnitsCreateInput<'file'>
-	| IViewSchemaUnitsCreateInput<'checkbox'>
-	| IViewSchemaUnitsCreateInput<'url'>
-	| IViewSchemaUnitsCreateInput<'email'>
-	| IViewSchemaUnitsCreateInput<'phone_number'>
-	| IViewSchemaUnitsCreateInput<'formula'>
-	| IViewSchemaUnitsCreateInput<'relation'>
-	| IViewSchemaUnitsCreateInput<'rollup'>
-	| IViewSchemaUnitsCreateInput<'created_time'>
-	| IViewSchemaUnitsCreateInput<'created_by'>
-	| IViewSchemaUnitsCreateInput<'last_edited_time'>
-	| IViewSchemaUnitsCreateInput<'last_edited_by'>;
+export type TViewSchemaUnitsCommonCreateInput<F extends any> =
+	| IViewSchemaUnitsCommonCreateInput<'text', F>
+	| IViewSchemaUnitsCommonCreateInput<'title', F>
+	| IViewSchemaUnitsCommonCreateInput<'number', F>
+	| IViewSchemaUnitsCommonCreateInput<'select', F>
+	| IViewSchemaUnitsCommonCreateInput<'multi_select', F>
+	| IViewSchemaUnitsCommonCreateInput<'date', F>
+	| IViewSchemaUnitsCommonCreateInput<'person', F>
+	| IViewSchemaUnitsCommonCreateInput<'file', F>
+	| IViewSchemaUnitsCommonCreateInput<'checkbox', F>
+	| IViewSchemaUnitsCommonCreateInput<'url', F>
+	| IViewSchemaUnitsCommonCreateInput<'email', F>
+	| IViewSchemaUnitsCommonCreateInput<'phone_number', F>
+	| IViewSchemaUnitsCommonCreateInput<'formula', F>
+	| IViewSchemaUnitsCommonCreateInput<'relation', F>
+	| IViewSchemaUnitsCommonCreateInput<'rollup', F>
+	| IViewSchemaUnitsCommonCreateInput<'created_time', F>
+	| IViewSchemaUnitsCommonCreateInput<'created_by', F>
+	| IViewSchemaUnitsCommonCreateInput<'last_edited_time', F>
+	| IViewSchemaUnitsCommonCreateInput<'last_edited_by', F>;

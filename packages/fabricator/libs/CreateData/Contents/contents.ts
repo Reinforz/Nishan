@@ -11,7 +11,7 @@ import { populatePermissions, stackCacheMap } from "./utils";
  * * Iterate through each of the content
   * * Populates the block map, using the id and the optional name
   * * Add the block to the cache
-  * * Add the block create operation to the stack
+  * * Execute the operation
  * * If it contains nested contents, follow step 1
  * @param contents The content create input
  * @param parent_id Root parent id

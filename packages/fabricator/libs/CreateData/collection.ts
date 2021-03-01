@@ -19,6 +19,11 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		name: input.name,
 		...props
 	});
+  
+  /* deepMerge(input, {
+    cover: '',
+    icon: ''
+  }); */
 
   format.page_section_visibility = input.page_section_visibility ?? {backlinks: 'section_show', comments: "section_show"};
   

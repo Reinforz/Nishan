@@ -1,5 +1,5 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { ICollection, IViewFilter, TView, TViewQuery2, ViewFormatProperties } from '@nishans/types';
+import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
 import { getSchemaMapUnit, PopulateViewData } from '../../';
 import { setDefault } from '../../setDefault';
@@ -33,32 +33,36 @@ export async function views (
 			filters: []
 		});
 
-		const { type, schema_units, filters } = view,
+		const { schema_units, filters } = view,
 			included_units: string[] = [],
-			query2 = PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
-			format = PopulateViewData.format.format(view as any, schema_map),
-			properties: ViewFormatProperties[] = (format as any)[`${view.type}_properties`];
+			view_query2 = PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
+			view_format = PopulateViewData.format.format(view as any, schema_map);
 
-		schema_units.forEach((schema_unit) => {
+		schema_units.forEach((schema_unit: any) => {
 			const { format, name } = schema_unit,
 				schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
 			included_units.push(schema_map_unit.schema_id);
-			PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, query2.sort);
+			PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, view_query2.sort);
 			PopulateViewData.query2.aggregation(
 				schema_unit.aggregation as any,
 				schema_map_unit.schema_id,
-				(query2 as any).aggregations
+				(view_query2 as any).aggregations
 			);
-			properties.push(PopulateViewData.format.properties(type as any, schema_map_unit.schema_id, format));
+			PopulateViewData.format.properties(
+				view.type as any,
+				schema_map_unit.schema_id,
+				view_format as any,
+				format as any
+			);
 		});
 
 		PopulateViewData.query2.filters(
 			filters as TViewFilterCreateInput[],
-			(query2.filter as IViewFilter).filters,
+			(view_query2.filter as IViewFilter).filters,
 			schema_map
 		);
 
-		const view_data = await generateViewData({ ...view, format, query2 }, props, parent_id);
+		const view_data = await generateViewData({ ...view, format: view_format, query2: view_query2 }, props, parent_id);
 		views_data.push(view_data);
 		cb && (await cb(view_data));
 	}

@@ -24,9 +24,9 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
   setDefault(input, {
     cover: '',
     icon: '',
-    page_section_visibility: {backlinks: 'section_show', comments: "section_show"}
+    page_section_visibility: { backlinks: 'section_show', comments: "section_show" }
   });
-  
+
   format.page_section_visibility = input.page_section_visibility;
 
 	// construct the collection to store it in cache and in op stack
@@ -43,15 +43,13 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		version: 0,
     format
 	};
-
-	// Create the views of the collection
-	const views_data = await CreateData.views(collection_data, input.views, props, parent_id, cb);
 	// Push the collection create operation to stack
   await NotionOperationsObject.executeOperations([Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], [], props, {
     shard_id: props.shard_id,
     space_id: props.space_id
   });
-
+  // Create the views of the collection
+	const views_data = await CreateData.views(collection_data, input.views, props, parent_id, cb);
 	// Store the collection in cache
 	props.cache.collection.set(collection_id, JSON.parse(JSON.stringify(collection_data)));
 	// Log the collection creation

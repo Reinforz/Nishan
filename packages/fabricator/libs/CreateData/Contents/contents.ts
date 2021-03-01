@@ -1,6 +1,7 @@
 import { NotionCacheObject } from "@nishans/cache";
 import { NotionMutations, NotionQueries } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
+import { NotionOperationsObject, Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, WebBookmarkProps } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { deepMerge } from "../..";
@@ -62,19 +63,20 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         // Construct the collection first
-        const [collection_data, views_data] = await CreateData.collection(content, block_id, props);
+        const collection_id = generateId(content.collection_id);
         // Construct the collection block object
         const data: ICollectionBlock = {
           ...common_data,
           ...metadata,
-          collection_id: collection_data.id,
-          view_ids: views_data.map(view_data=>view_data.id),
+          collection_id: collection_id,
+          view_ids: [],
         };
-        // If its a cvp, it can contain permissions
-        if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(props.user_id, content.isPrivate)];
         await stackCacheMap<ICollectionViewPage>(data as any, props, cb);
+        const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], [], props, props)
+        if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(props.user_id, content.isPrivate)];
         // If it contain rows, iterate through all of them, by passing the collection as parent
-        await traverse(content.rows, collection_data.id, "collection")
+        await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {
         const factory_data: IFactory = {
           content: [],

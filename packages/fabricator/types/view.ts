@@ -109,19 +109,40 @@ export interface IViewCreateInput extends IViewQuery2CreateInput {
 	name: string;
 }
 
+export type TimelineSchemaUnitFormatCreateInput =
+	| undefined
+	| {
+			table?: boolean | number | [boolean, number];
+			timeline?: boolean;
+		};
+
+export type ListSchemaUnitFormatCreateInput = undefined | boolean;
+export type GallerySchemaUnitFormatCreateInput = undefined | boolean;
+export type BoardSchemaUnitFormatCreateInput = undefined | boolean;
+export type CalendarSchemaUnitFormatCreateInput = undefined | boolean;
+export type TableSchemaUnitFormatCreateInput = undefined | boolean | number | [boolean, number];
+
+export type TViewSchemaUnitFormatCreateInput =
+	| TableSchemaUnitFormatCreateInput
+	| ListSchemaUnitFormatCreateInput
+	| BoardSchemaUnitFormatCreateInput
+	| GallerySchemaUnitFormatCreateInput
+	| CalendarSchemaUnitFormatCreateInput
+	| TimelineSchemaUnitFormatCreateInput;
+
 export interface TableViewCreateInput extends IViewCreateInput, TableViewQuery2CreateInput, TableViewFormatCreateInput {
 	type: 'table';
-	schema_units: TViewSchemaUnitsCommonCreateInput<boolean | number | [boolean, number]>[];
+	schema_units: TViewSchemaUnitsCreateInput<TableSchemaUnitFormatCreateInput>[];
 }
 
 export interface ListViewCreateInput extends IViewCreateInput, ListViewQuery2CreateInput, ListViewFormatCreateInput {
 	type: 'list';
-	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
+	schema_units: TViewSchemaUnitsCreateInput<ListSchemaUnitFormatCreateInput>[];
 }
 
 export interface BoardViewCreateInput extends IViewCreateInput, BoardViewQuery2CreateInput, BoardViewFormatCreateInput {
 	type: 'board';
-	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
+	schema_units: TViewSchemaUnitsCreateInput<BoardSchemaUnitFormatCreateInput>[];
 }
 
 export interface GalleryViewCreateInput
@@ -129,7 +150,7 @@ export interface GalleryViewCreateInput
 		GalleryViewQuery2CreateInput,
 		GalleryViewFormatCreateInput {
 	type: 'gallery';
-	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
+	schema_units: TViewSchemaUnitsCreateInput<GallerySchemaUnitFormatCreateInput>[];
 }
 
 export interface CalendarViewCreateInput
@@ -137,7 +158,7 @@ export interface CalendarViewCreateInput
 		CalendarViewQuery2CreateInput,
 		CalendarViewFormatCreateInput {
 	type: 'calendar';
-	schema_units: TViewSchemaUnitsCommonCreateInput<boolean>[];
+	schema_units: TViewSchemaUnitsCreateInput<CalendarSchemaUnitFormatCreateInput>[];
 }
 
 export interface TimelineViewCreateInput
@@ -145,10 +166,7 @@ export interface TimelineViewCreateInput
 		TimelineViewQuery2CreateInput,
 		TimelineViewFormatCreateInput {
 	type: 'timeline';
-	schema_units: TViewSchemaUnitsCommonCreateInput<{
-		table: boolean | number | [boolean, number];
-		timeline: boolean;
-	}>[];
+	schema_units: TViewSchemaUnitsCreateInput<TimelineSchemaUnitFormatCreateInput>[];
 }
 
 export type TViewCreateInput =
@@ -161,7 +179,7 @@ export type TViewCreateInput =
 
 export type SortCreateInput = undefined | TSortValue | [TSortValue, number];
 
-export type IViewSchemaUnitsCommonCreateInput<SUT extends TSchemaUnitType, F extends any> = {
+export type IViewSchemaUnitsCreateInput<SUT extends TSchemaUnitType, F extends TViewSchemaUnitFormatCreateInput> = {
 	name: string;
 	type: SUT;
 	sort?: SortCreateInput;
@@ -169,23 +187,23 @@ export type IViewSchemaUnitsCommonCreateInput<SUT extends TSchemaUnitType, F ext
 	format?: F;
 };
 
-export type TViewSchemaUnitsCommonCreateInput<F extends any> =
-	| IViewSchemaUnitsCommonCreateInput<'text', F>
-	| IViewSchemaUnitsCommonCreateInput<'title', F>
-	| IViewSchemaUnitsCommonCreateInput<'number', F>
-	| IViewSchemaUnitsCommonCreateInput<'select', F>
-	| IViewSchemaUnitsCommonCreateInput<'multi_select', F>
-	| IViewSchemaUnitsCommonCreateInput<'date', F>
-	| IViewSchemaUnitsCommonCreateInput<'person', F>
-	| IViewSchemaUnitsCommonCreateInput<'file', F>
-	| IViewSchemaUnitsCommonCreateInput<'checkbox', F>
-	| IViewSchemaUnitsCommonCreateInput<'url', F>
-	| IViewSchemaUnitsCommonCreateInput<'email', F>
-	| IViewSchemaUnitsCommonCreateInput<'phone_number', F>
-	| IViewSchemaUnitsCommonCreateInput<'formula', F>
-	| IViewSchemaUnitsCommonCreateInput<'relation', F>
-	| IViewSchemaUnitsCommonCreateInput<'rollup', F>
-	| IViewSchemaUnitsCommonCreateInput<'created_time', F>
-	| IViewSchemaUnitsCommonCreateInput<'created_by', F>
-	| IViewSchemaUnitsCommonCreateInput<'last_edited_time', F>
-	| IViewSchemaUnitsCommonCreateInput<'last_edited_by', F>;
+export type TViewSchemaUnitsCreateInput<F extends TViewSchemaUnitFormatCreateInput> =
+	| IViewSchemaUnitsCreateInput<'text', F>
+	| IViewSchemaUnitsCreateInput<'title', F>
+	| IViewSchemaUnitsCreateInput<'number', F>
+	| IViewSchemaUnitsCreateInput<'select', F>
+	| IViewSchemaUnitsCreateInput<'multi_select', F>
+	| IViewSchemaUnitsCreateInput<'date', F>
+	| IViewSchemaUnitsCreateInput<'person', F>
+	| IViewSchemaUnitsCreateInput<'file', F>
+	| IViewSchemaUnitsCreateInput<'checkbox', F>
+	| IViewSchemaUnitsCreateInput<'url', F>
+	| IViewSchemaUnitsCreateInput<'email', F>
+	| IViewSchemaUnitsCreateInput<'phone_number', F>
+	| IViewSchemaUnitsCreateInput<'formula', F>
+	| IViewSchemaUnitsCreateInput<'relation', F>
+	| IViewSchemaUnitsCreateInput<'rollup', F>
+	| IViewSchemaUnitsCreateInput<'created_time', F>
+	| IViewSchemaUnitsCreateInput<'created_by', F>
+	| IViewSchemaUnitsCreateInput<'last_edited_time', F>
+	| IViewSchemaUnitsCreateInput<'last_edited_by', F>;

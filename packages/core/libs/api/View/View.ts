@@ -1,7 +1,7 @@
 import { PreExistentValueError } from "@nishans/errors";
-import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { deepMerge, InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import {
   FilterType,
@@ -10,7 +10,7 @@ import {
   UpdateType,
   UpdateTypes
 } from '../../';
-import { deepMerge, transformToMultiple } from "../../utils";
+import { transformToMultiple } from "../../utils";
 import Data from '../Data';
 
 /**
@@ -42,16 +42,14 @@ class View<T extends TView> extends Data<T> {
    * @param options Options to update the view
    */
 
-	update (updated_data: TViewUpdateInput) {
+	async update (updated_data: TViewUpdateInput) {
 		const view_data = this.getCachedData();
 		deepMerge(view_data, updated_data);
-		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, [], { ...updated_data, ...this.getLastEditedProps() })
-		);
 		this.updateLastEditedProps();
+    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, [], { ...updated_data, ...this.getLastEditedProps() })], this.getProps())
 	}
 
-	createSorts (args: TSortCreateInput[]) {
+	async createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
@@ -75,9 +73,7 @@ class View<T extends TView> extends Data<T> {
 		}
 
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
 	async updateSort (arg: UpdateType<ISchemaSortsMapValue, TSortUpdateInput>) {
@@ -117,9 +113,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
 	async deleteSort (arg: FilterType<ISchemaSortsMapValue>) {
@@ -143,20 +137,16 @@ class View<T extends TView> extends Data<T> {
 				sorts.splice(sorts.findIndex((data) => data.property === sort.schema_id), 1);
 			}
 		);
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
-	createFilters (args: TViewFilterCreateInput[]) {
+	async createFilters (args: TViewFilterCreateInput[]) {
 		const schema_map = generateSchemaMapFromCollectionSchema(this.getCollection().schema),
 			data = this.getCachedData(),
 			filters = InitializeView.filter(data).filters;
     PopulateViewData.query2.filters(args, filters, schema_map);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async updateFilter (arg: UpdateType<ISchemaFiltersMapValue, TViewFilterUpdateInput>) {
@@ -195,10 +185,7 @@ class View<T extends TView> extends Data<T> {
 				}
 			}
 		);
-    
-		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async deleteFilter (arg: FilterType<ISchemaFiltersMapValue>) {
@@ -225,10 +212,8 @@ class View<T extends TView> extends Data<T> {
         parent_filter.filters.splice(parent_filter.filters.findIndex((filter) => filter === child_filter),1);
 			}
 		);
-    
-		this.Operations.pushToStack(
-			Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)
-		);
+
+    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>) {
@@ -268,10 +253,7 @@ class View<T extends TView> extends Data<T> {
 				  (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
 			}
 		);
-    
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)
-		);
+    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)], this.getProps())
 	}
 }
 

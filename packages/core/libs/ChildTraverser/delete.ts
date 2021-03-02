@@ -1,8 +1,7 @@
-import { updateChildContainer } from '@nishans/fabricator';
-import { Operation } from '@nishans/operations';
-import { TData } from '@nishans/types';
+import { deepMerge, updateChildContainer } from '@nishans/fabricator';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { IOperation, TData } from '@nishans/types';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
-import { deepMerge } from '../utils';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**
@@ -27,14 +26,13 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			parent_id,
 			child_type,
 			logger,
-			stack,
 			cache,
 			parent_type,
-			child_ids,
-			token
+			child_ids
 		} = options,
 		// get the data from the cache
-		parent_data = cache[parent_type].get(parent_id) as T;
+		parent_data = cache[parent_type].get(parent_id) as T,
+		operations: IOperation[] = [];
 
 	const updateData = async (child_id: string, child_data: TD) => {
 		cb && (await cb(child_id, child_data, container));
@@ -51,10 +49,9 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			deepMerge(child_data, updated_data);
 
 			// Push the updated block data to the stack
-			stack.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
+			operations.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
 
-			if (typeof child_path === 'string')
-				await updateChildContainer(parent_type, parent_id, false, child_id, cache, stack, token);
+			if (typeof child_path === 'string') await updateChildContainer(parent_type, parent_id, false, child_id, options);
 		}
 	};
 
@@ -68,7 +65,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
 	if (parent_type.match(/^(block|space)$/))
-		stack.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
-
+		operations.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
+	await NotionOperationsObject.executeOperations(operations, options);
 	return container;
 };

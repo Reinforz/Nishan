@@ -7,7 +7,7 @@ import {
 	TAggregationsUpdateInput
 } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
 import { FilterType, FilterTypes, getSchemaMapUnit, NishanArg, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
@@ -34,11 +34,11 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		super({ ...arg });
 	}
 
-	createAggregation (arg: TAggregationsCreateInput) {
-		this.createAggregations([ arg ]);
+	async createAggregation (arg: TAggregationsCreateInput) {
+		await this.createAggregations([ arg ]);
 	}
 
-	createAggregations (args: TAggregationsCreateInput[]) {
+	async createAggregations (args: TAggregationsCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
@@ -52,8 +52,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			});
 		}
 
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations)
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+			this.getProps()
 		);
 	}
 
@@ -85,8 +86,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations)
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+			this.getProps()
 		);
 	}
 
@@ -116,8 +118,9 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		this.Operations.pushToStack(
-			Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations)
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+			this.getProps()
 		);
 	}
 }

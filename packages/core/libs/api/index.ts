@@ -1,9 +1,9 @@
 import { NotionCacheClass } from "@nishans/cache";
-import { Logger } from "@nishans/fabricator";
+import { constructLogger, Logger } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
 import { ChildTraverser, FilterType, FilterTypes, NishanArg } from "../";
-import { constructLogger, transformToMultiple } from "../utils";
+import { transformToMultiple } from "../utils";
 import Collection from "./Collection";
 import NotionData from "./Data";
 import NotionUser from "./NotionUser";
@@ -73,7 +73,7 @@ class Nishan extends NotionCacheClass {
       child_type: 'notion_user',
       container: [],
       parent_id: '',
-      parent_type: 'notion_user'
+      parent_type: 'notion_user',
     }, (id, _, container)=>container.push(new NotionUser({ ...common_props, user_id: id, id, space_id: "0", shard_id: 0 })));
   }
 }

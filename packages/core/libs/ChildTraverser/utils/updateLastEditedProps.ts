@@ -1,4 +1,4 @@
-import { deepMerge } from '../../utils';
+import { deepMerge } from '@nishans/fabricator';
 
 export function updateLastEditedProps (block: any, user_id: string) {
 	const last_edited_props = {

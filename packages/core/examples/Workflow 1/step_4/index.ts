@@ -378,7 +378,6 @@ export default async function step4(target_page: Page) {
             })
           }])
           console.log(`Done with ${month_name}, ${year}`)
-          await year_page.Operations.executeOperation();
         };
       }
     }

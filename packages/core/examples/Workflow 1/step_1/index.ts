@@ -1,4 +1,4 @@
-import { TViewCreateInput, TViewSchemaUnitsCreateInput } from "@nishans/fabricator";
+import { TableViewCreateInput, TViewCreateInput } from "@nishans/fabricator";
 import { CheckboxSchemaUnit } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
 import { Nishan, Page } from '../../../libs';
@@ -332,7 +332,7 @@ export default async function step1(user_family_name: string, space_name: string
               name: "Percentage Checked",
               format: 100
             },
-            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
+            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TableViewCreateInput['schema_units'][0]))
           ]
         },
         {
@@ -354,7 +354,7 @@ export default async function step1(user_family_name: string, space_name: string
               name: "Percentage Checked",
               format: 100
             },
-            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
+            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TableViewCreateInput['schema_units'][0]))
           ],
           filters: [
             {
@@ -383,7 +383,7 @@ export default async function step1(user_family_name: string, space_name: string
               name: "Percentage Checked",
               format: 100
             },
-            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
+            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TableViewCreateInput['schema_units'][0]))
           ],
           filters: [
             {
@@ -413,7 +413,7 @@ export default async function step1(user_family_name: string, space_name: string
               name: "Percentage Checked",
               format: 100
             },
-            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TViewSchemaUnitsCreateInput))
+            ...daily_sites.map((name) => ({ type: 'checkbox', name, format: 100 } as TableViewCreateInput['schema_units'][0]))
           ],
           filters: [
             {
@@ -427,6 +427,5 @@ export default async function step1(user_family_name: string, space_name: string
     }
   ]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-  await target_page?.Operations.executeOperation();
   return target_page as Page;
 };

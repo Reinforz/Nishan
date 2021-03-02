@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { CreateData, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IViewMap, NishanArg, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
@@ -58,7 +58,10 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				}
 			);
 		const view_ids = views_data.map((view_data) => view_data.id);
-		this.Operations.pushToStack(Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }));
+		await NotionOperationsObject.executeOperations(
+			[ Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }) ],
+			this.getProps()
+		);
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
 		this.updateLastEditedProps();
 		return view_map;

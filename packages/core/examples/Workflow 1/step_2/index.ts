@@ -107,7 +107,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 			{
 				type: 'title',
 				name: 'Task',
-				format: 300,
+				format: false,
 				aggregation: 'count'
 			},
 			{
@@ -115,7 +115,7 @@ const tasksBoardViews = (name: string): TViewCreateInput => {
 				name: 'On',
 				sort: 'descending'
 			},
-			...CommonMultiSelectSchema
+			...(CommonMultiSelectSchema as any)
 		]
 	};
 };
@@ -201,23 +201,23 @@ export default async function step2 (target_page: Page) {
 							{
 								type: 'multi_select',
 								name: 'Subject',
-								format: 200,
+								format: true,
 								aggregation: 'unique'
 							},
 							{
 								type: 'select',
 								name: 'Priority',
-								format: 100
+								format: true
 							},
 							{
 								type: 'select',
 								name: 'Status',
-								format: 100
+								format: true
 							},
 							{
 								type: 'select',
 								name: 'Phase',
-								format: 100
+								format: true
 							},
 							{
 								type: 'formula',
@@ -285,23 +285,23 @@ export default async function step2 (target_page: Page) {
 							{
 								type: 'multi_select',
 								name: 'Subject',
-								format: 200,
+								format: true,
 								aggregation: 'unique'
 							},
 							{
 								type: 'select',
 								name: 'Priority',
-								format: 100
+								format: true
 							},
 							{
 								type: 'select',
 								name: 'Status',
-								format: 100
+								format: true
 							},
 							{
 								type: 'select',
 								name: 'Phase',
-								format: 100
+								format: true
 							},
 							{
 								type: 'formula',
@@ -636,7 +636,6 @@ export default async function step2 (target_page: Page) {
 					}
 				]);
 				// fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-				await target_page.Operations.executeOperation();
 			}
 		}
 	}

@@ -1,19 +1,8 @@
-import { ICache } from '@nishans/cache';
-import { Logger } from '@nishans/fabricator';
-import { NotionOperationPluginFunction } from '@nishans/operations';
-import { IOperation, TDataType } from '@nishans/types';
+import { FabricatorProps, Logger } from '@nishans/fabricator';
+import { TDataType } from '@nishans/types';
 import { Predicate } from './utils';
-export interface NishanArg {
-	token: string;
-	interval?: number;
-	user_id: string;
-	shard_id: number;
-	space_id: string;
-	cache: ICache;
+export interface NishanArg extends FabricatorProps {
 	id: string;
-	logger?: Logger;
-	stack: IOperation[];
-	notion_operation_plugins?: NotionOperationPluginFunction[];
 }
 
 export type FilterTypes<T> = undefined | string[] | Predicate<T>;
@@ -76,10 +65,9 @@ export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick
 	logger?: Logger;
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
-
-export type IterateAndUpdateChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id' | 'token'> &
+export type IterateAndUpdateChildrenOptions<T, C> = Omit<NishanArg, 'id'> &
 	IterateAndUpdateOptions<T, C> &
 	IterateChildrenOptions<T, C>;
-export type IterateAndDeleteChildrenOptions<T, C> = Pick<NishanArg, 'stack' | 'user_id' | 'token'> &
+export type IterateAndDeleteChildrenOptions<T, C> = Omit<NishanArg, 'id'> &
 	IterateAndDeleteOptions<T, C> &
 	IterateChildrenOptions<T, C>;

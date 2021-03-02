@@ -1,4 +1,4 @@
-import { TSchemaUnitInput, TViewSchemaUnitsCreateInput } from '@nishans/fabricator';
+import { TableViewCreateInput, TSchemaUnitInput } from '@nishans/fabricator';
 import {
 	NumberAddFunctionArray,
 	NumberIfFunctionArray,
@@ -137,28 +137,28 @@ export const curriculumInfoSchemaUnits: TSchemaUnitInput[] = [
 	}
 ];
 
-export const CommonMultiSelectSchema: TViewSchemaUnitsCreateInput[] = [
+export const CommonMultiSelectSchema: TableViewCreateInput['schema_units'] = [
 	{
 		type: 'multi_select',
 		name: 'Subject',
-		format: 200,
+		format: true,
 		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Purpose',
-		format: 200,
+		format: true,
 		aggregation: 'unique'
 	},
 	{
 		type: 'multi_select',
 		name: 'Source',
-		format: 200,
+		format: true,
 		aggregation: 'unique'
 	}
 ];
 
-export const goalViewItem = (index: number): TViewSchemaUnitsCreateInput[] => {
+export const goalViewItem = (index: number): TableViewCreateInput['schema_units'] => {
 	return [
 		{
 			type: 'relation',

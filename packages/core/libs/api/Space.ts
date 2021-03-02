@@ -2,7 +2,7 @@ import { ICache, NotionCacheObject } from '@nishans/cache';
 import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
@@ -166,7 +166,10 @@ export default class Space extends Data<ISpace> {
       else{
         const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
-        this.Operations.pushToStack(Operation.space.setPermissionItem(this.id, ["permissions"], permission_data));
+        await NotionOperationsObject.executeOperations(
+          [ Operation.space.setPermissionItem(this.id, ["permissions"], permission_data) ],
+          this.getProps()
+        );
         data.permissions.push(permission_data)
         notion_users.push(notion_user)
         this.logger && this.logger("UPDATE", "space", this.id)

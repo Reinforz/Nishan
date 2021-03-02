@@ -1,7 +1,7 @@
 import { error } from '@nishans/errors';
-import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
+import { CreateData, deepMerge, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from '@nishans/notion-formula';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import {
 	CreateMaps,
@@ -14,7 +14,7 @@ import {
 	UpdateType,
 	UpdateTypes
 } from '../';
-import { deepMerge, transformToMultiple } from '../utils';
+import { transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';
 import SchemaUnit from './SchemaUnit';
@@ -204,11 +204,11 @@ class Collection extends Data<ICollection> {
 		await CreateData.schema(
 			args,
 			{
-				...this.getProps(),
 				name: data.name,
 				parent_collection_id: data.id,
 				current_schema: data.schema
 			},
+			this.getProps(),
 			(schema_unit) => {
 				const schema_unit_obj = new SchemaUnit({
 					id: data.id,
@@ -219,7 +219,10 @@ class Collection extends Data<ICollection> {
 				schema_unit_map[schema_unit.type].set(schema_unit.name, schema_unit_obj);
 			}
 		);
-		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+			this.getProps()
+		);
 		this.updateLastEditedProps();
 		return schema_unit_map;
 	}
@@ -291,7 +294,10 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+			this.getProps()
+		);
 		return results;
 	}
 
@@ -329,7 +335,10 @@ class Collection extends Data<ICollection> {
 			}
 		);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation.collection.update(this.id, [ 'schema' ], data.schema));
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+			this.getProps()
+		);
 	}
 }
 

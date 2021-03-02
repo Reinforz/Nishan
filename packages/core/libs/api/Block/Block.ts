@@ -1,11 +1,10 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
-import { detectChildData, RepositionParams, TBlockInput } from '@nishans/fabricator';
+import { deepMerge, detectChildData, RepositionParams, TBlockInput } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { CreateMaps, NishanArg, PopulateMap } from '../../';
-import { deepMerge } from '../../utils';
 import Data from '../Data';
 
 /**
@@ -40,15 +39,19 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		for (let index = 0; index < ids.length; index++) {
 			const block_id = ids[index];
 			if (block.type === 'collection_view' || block.type === 'collection_view_page') {
-				this.Operations.pushToStack(
-					Operation.block.update(block_id, [], {
-						id: block_id,
-						type: 'copy_indicator',
-						parent_id: block.parent_id,
-						parent_table: 'block',
-						alive: true
-					})
+				await NotionOperationsObject.executeOperations(
+					[
+						Operation.block.update(block_id, [], {
+							id: block_id,
+							type: 'copy_indicator',
+							parent_id: block.parent_id,
+							parent_table: 'block',
+							alive: true
+						})
+					],
+					this.getProps()
 				);
+
 				// ! How to save to local cache, needs to poll the notion's server to see if the duplicated block has been created
 				await NotionMutations.enqueueTask(
 					{
@@ -69,7 +72,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					id: block_id,
 					copied_from: block.id
 				};
-				this.Operations.pushToStack(Operation.block.update(block_id, [], JSON.parse(JSON.stringify(duplicated_block))));
+				await NotionOperationsObject.executeOperations(
+					[ Operation.block.update(block_id, [], JSON.parse(JSON.stringify(duplicated_block))) ],
+					this.getProps()
+				);
 				this.cache.block.set(block_id, JSON.parse(JSON.stringify(duplicated_block)));
 			}
 			this.logger && this.logger('CREATE', 'block', block_id);
@@ -82,19 +88,20 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Update a block's properties and format
    * @param args Block update format and properties options
    */
-	update (args: Partial<A>) {
+	async update (args: Partial<A>) {
 		const data = this.getCachedData() as any;
 		this.logger && this.logger('UPDATE', 'block', data.id);
 		deepMerge(data, args);
-
-		this.Operations.pushToStack(
-			Operation.block.update(this.id, [], {
-				properties: data.properties,
-				format: data.format,
-				...this.getLastEditedProps()
-			})
+		await NotionOperationsObject.executeOperations(
+			[
+				Operation.block.update(this.id, [], {
+					properties: data.properties,
+					format: data.format,
+					...this.getLastEditedProps()
+				})
+			],
+			this.getProps()
 		);
-
 		this.updateLastEditedProps();
 	}
 
@@ -102,17 +109,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * Convert the current block to a different basic block
    * @param type `TBasicBlockType` basic block types
    */
-	convertTo (type: TBasicBlockType) {
+	async convertTo (type: TBasicBlockType) {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		this.Operations.pushToStack(Operation.block.update(this.id, [], { type }));
+		await NotionOperationsObject.executeOperations([ Operation.block.update(this.id, [], { type }) ], this.getProps());
 	}
 
 	/**
    * Delete the current block
    */
-	delete () {
+	async delete () {
 		const data = this.getCachedData(),
 			parent_data = this.getCachedParentData();
 		const [ child_path ] = detectChildData(data.parent_table as any, data as any);
@@ -123,14 +130,17 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		this.updateLastEditedProps(parent_data);
 		this.logger && this.logger('UPDATE', 'block', data.id);
 		this.logger && this.logger('UPDATE', data.parent_table, parent_data.id);
-		this.Operations.pushToStack([
-			Operation.block.update(this.id, [], {
-				alive: false,
-				...this.getLastEditedProps()
-			}),
-			Operation[data.parent_table].listRemove(data.parent_id, [ child_path ], { id: data.id }),
-			Operation[data.parent_table].update(data.parent_id, [], this.getLastEditedProps())
-		]);
+		await NotionOperationsObject.executeOperations(
+			[
+				Operation.block.update(this.id, [], {
+					alive: false,
+					...this.getLastEditedProps()
+				}),
+				Operation[data.parent_table].listRemove(data.parent_id, [ child_path ], { id: data.id }),
+				Operation[data.parent_table].update(data.parent_id, [], this.getLastEditedProps())
+			],
+			this.getProps()
+		);
 	}
 
 	/**
@@ -156,18 +166,21 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		this.logger && this.logger('UPDATE', 'block', parent_data.id);
 		this.logger && this.logger('UPDATE', 'block', new_parent_data.id);
 
-		this.Operations.pushToStack([
-			Operation.block.update(this.id, [], {
-				...this.getLastEditedProps(),
-				parent_id: new_parent_id,
-				parent_table: 'block',
-				alive: true
-			}),
-			Operation.block.listRemove(parent_data.id, [ 'content' ], { id: data.id }),
-			Operation.block.listAfter(new_parent_id, [ 'content' ], { after: '', id: data.id }),
-			Operation.block.update(parent_data.id, [], this.getLastEditedProps()),
-			Operation.block.update(new_parent_id, [], this.getLastEditedProps())
-		]);
+		await NotionOperationsObject.executeOperations(
+			[
+				Operation.block.update(this.id, [], {
+					...this.getLastEditedProps(),
+					parent_id: new_parent_id,
+					parent_table: 'block',
+					alive: true
+				}),
+				Operation.block.listRemove(parent_data.id, [ 'content' ], { id: data.id }),
+				Operation.block.listAfter(new_parent_id, [ 'content' ], { after: '', id: data.id }),
+				Operation.block.update(parent_data.id, [], this.getLastEditedProps()),
+				Operation.block.update(new_parent_id, [], this.getLastEditedProps())
+			],
+			this.getProps()
+		);
 	}
 }
 

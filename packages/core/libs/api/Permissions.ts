@@ -1,5 +1,6 @@
 import { NotionQueries } from '@nishans/endpoints';
-import { Operation } from '@nishans/operations';
+import { deepMerge } from '@nishans/fabricator';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import {
 	IPermission,
 	IPublicPermission,
@@ -13,7 +14,6 @@ import {
 	TUserPermissionRole
 } from '@nishans/types';
 import { NishanArg } from '../';
-import { deepMerge } from '../utils';
 import Data from './Data';
 
 interface UserIdentifier {
@@ -36,27 +36,28 @@ export default class NotionPermissions extends Data<TPage> {
 		return user_id as string;
 	}
 
-	updatePermissionsArray (
+	async updatePermissionsArray (
 		permission_type: 'public_permission' | 'space_permission',
 		options: { role: TPermissionRole } & Partial<IPublicPermissionOptions>
-	): void;
-	updatePermissionsArray (
+	): Promise<void>;
+	async updatePermissionsArray (
 		permission_type: 'user_permission',
 		options: { role: TPermissionRole },
 		user_id: string
-	): void;
-	updatePermissionsArray (
+	): Promise<void>;
+	async updatePermissionsArray (
 		permission_type: IPermission['type'],
 		options: { role: TPermissionRole } & Partial<IPublicPermissionOptions>,
 		user_id?: string
-	): void {
+	): Promise<void> {
 		let permission_data: IPermission = {} as any;
-		if (permission_type === 'public_permission' || permission_type === 'space_permission') {
+		if (permission_type === 'public_permission' || permission_type === 'space_permission')
 			permission_data = { ...options, type: permission_type } as IPublicPermission;
-		} else {
-			permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
-		}
-		this.Operations.pushToStack(Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data));
+		else permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
+		await NotionOperationsObject.executeOperations(
+			[ Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data) ],
+			this.getProps()
+		);
 		const { permissions } = this.getCachedData();
 		const permission_index = permissions.findIndex((permission) => {
 			if (permission_type === 'public_permission' || permission_type === 'space_permission')
@@ -101,7 +102,10 @@ export default class NotionPermissions extends Data<TPage> {
 		}
 		this.logger && this.logger('UPDATE', 'block', this.id);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+		await NotionOperationsObject.executeOperations(
+			[ Operation[this.type].update(this.id, [], this.getLastEditedProps()) ],
+			this.getProps()
+		);
 	}
 
 	/**
@@ -120,19 +124,25 @@ export default class NotionPermissions extends Data<TPage> {
 		await this.updateUserPermissions(ids.map((id) => [ id, 'none' ]));
 	}
 
-	updateNonUserSpecificPermission (
+	async updateNonUserSpecificPermission (
 		permission_type: 'public_permission',
 		options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>
-	): void;
-	updateNonUserSpecificPermission (permission_type: 'space_permission', options: { role: TSpacePermissionRole }): void;
-	updateNonUserSpecificPermission (
+	): Promise<void>;
+	async updateNonUserSpecificPermission (
+		permission_type: 'space_permission',
+		options: { role: TSpacePermissionRole }
+	): Promise<void>;
+	async updateNonUserSpecificPermission (
 		permission_type: 'public_permission' | 'space_permission',
 		options: { role: TPublicPermissionRole | TSpacePermissionRole } & Partial<IPublicPermissionOptions>
-	): void {
+	): Promise<void> {
 		this.updatePermissionsArray(permission_type, options as IPublicPermission);
 		this.logger && this.logger('UPDATE', 'block', this.id);
 		this.updateLastEditedProps();
-		this.Operations.pushToStack(Operation[this.type].update(this.id, [], this.getLastEditedProps()));
+		await NotionOperationsObject.executeOperations(
+			[ Operation[this.type].update(this.id, [], this.getLastEditedProps()) ],
+			this.getProps()
+		);
 	}
 
 	addPublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {

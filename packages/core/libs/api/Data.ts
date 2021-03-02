@@ -1,10 +1,9 @@
 import { NotionCacheClass } from '@nishans/cache';
 import { warn } from '@nishans/errors';
-import { Logger, RepositionParams } from '@nishans/fabricator';
-import { NotionOperationsClass, Operation } from '@nishans/operations';
+import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nishans/fabricator';
+import { NotionOperationPluginFunction, NotionOperationsObject, Operation } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
 import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
-import { constructLogger } from '../utils';
 
 /**
  * A class to update and control data specific stuffs
@@ -17,7 +16,9 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
   #init_cache = false;
   protected logger: Logger;
   user_id: string;
-  Operations: NotionOperationsClass;
+  notion_operation_plugins: NotionOperationPluginFunction[];
+  shard_id: number;
+  space_id: string
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -26,7 +27,9 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     this.#init_cache = false;
     this.logger = constructLogger(arg.logger);
     this.user_id = arg.user_id;
-    this.Operations = new NotionOperationsClass(arg)
+    this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
+    this.shard_id = arg.shard_id;
+    this.space_id = arg.space_id;
   }
 
   protected getLastEditedProps() {
@@ -63,11 +66,11 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     this.cache[this.type].delete(this.id);
   }
 
-  protected addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
-    this.Operations.pushToStack(positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type }))
+  protected async addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
+    await NotionOperationsObject.executeOperations([positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type })], this.getProps())
   }
 
-  updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
+  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
     const parent_data = this.getCachedData(), data = arg;
 
     Object.entries(arg).forEach(([key, value])=>{
@@ -77,10 +80,8 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
         delete (data as any)[key]
     })
 
-    this.logger && this.logger("UPDATE", this.type as any, this.id)
-    this.Operations.pushToStack(
-      Operation[this.type].update(this.id, [], data)
-    );
+    this.logger && this.logger("UPDATE", this.type as any, this.id);
+    await NotionOperationsObject.executeOperations([Operation[this.type].update(this.id, [], data)], this.getProps())
   }
 
   async initializeCacheForThisData() {
@@ -125,12 +126,11 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
       token: this.token,
       interval: this.interval,
       user_id: this.user_id,
-      shard_id: this.Operations.shard_id,
-      space_id: this.Operations.space_id,
+      shard_id: this.shard_id,
+      space_id: this.space_id,
       cache: this.cache,
       logger: this.logger,
-      stack: this.Operations.stack,
-      notion_operation_plugins: this.Operations.getPlugins()
-    } as Omit<NishanArg, "id">
+      notion_operation_plugins: this.notion_operation_plugins
+    } as FabricatorProps
   }
 }

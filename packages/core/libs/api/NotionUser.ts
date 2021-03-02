@@ -2,7 +2,7 @@ import { NotionMutations } from '@nishans/endpoints';
 import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { CreateData } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
 import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
@@ -103,7 +103,7 @@ class NotionUser extends Data<INotionUser> {
         pages: [],
         permissions: [],
         plan_type: "personal",
-        shard_id: this.Operations.shard_id,
+        shard_id: this.shard_id,
         icon,
       } as any;
       
@@ -133,13 +133,11 @@ class NotionUser extends Data<INotionUser> {
       const user_root = this.cache.user_root.get(this.user_id) as IUserRoot;
       user_root.space_views.push(space_view_id);
 
-      this.Operations.pushToStack(
-        [
-          Operation.space.update(space_id, [], space_op_data),
-          Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
-          Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
-        ],
-      );
+      await NotionOperationsObject.executeOperations([
+        Operation.space.update(space_id, [], space_op_data),
+        Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
+        Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
+      ], this.getProps());
 
       this.logger && this.logger(`CREATE`, 'space', space_id);
       this.logger && this.logger(`CREATE`, 'space_view', space_view_id);

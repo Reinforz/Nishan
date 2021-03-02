@@ -50,15 +50,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-		updateChildContainer(
-			'space_view',
-			target_space_view.id,
-			favorite_status,
-			data.id,
-			this.cache,
-			this.Operations.stack,
-			this.token
-		);
+		await updateChildContainer('space_view', target_space_view.id, favorite_status, data.id, this.getProps());
 	}
 
 	/**

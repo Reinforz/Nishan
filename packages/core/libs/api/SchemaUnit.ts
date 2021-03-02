@@ -1,5 +1,5 @@
 import { createShortId } from '@nishans/idz';
-import { Operation } from '@nishans/operations';
+import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { NishanArg } from '../';
 import NotionData from './Data';
@@ -17,35 +17,38 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 		this.schema_id = arg.schema_id;
 	}
 
-	update (arg: T) {
+	async update (arg: T) {
 		const data = this.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		this.Operations.pushToStack(
-			Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+		await NotionOperationsObject.executeOperations(
+			[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+			this.getProps()
 		);
 		this.logger && this.logger('UPDATE', 'collection', this.id);
 	}
 
-	delete () {
+	async delete () {
 		const data = this.getCachedData();
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			delete data.schema[this.schema_id];
-			this.Operations.pushToStack(
-				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+			await NotionOperationsObject.executeOperations(
+				[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+				this.getProps()
 			);
 			this.logger && this.logger('DELETE', 'collection', this.id);
 		}
 	}
 
-	duplicate () {
+	async duplicate () {
 		const data = this.getCachedData(),
 			id = createShortId();
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			data.schema[id] = data.schema[this.schema_id];
-			this.Operations.pushToStack(
-				Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) })
+			await NotionOperationsObject.executeOperations(
+				[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+				this.getProps()
 			);
 			this.logger && this.logger('UPDATE', 'collection', id);
 		}

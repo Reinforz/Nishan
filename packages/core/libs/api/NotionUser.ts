@@ -233,7 +233,6 @@ class NotionUser extends Data<INotionUser> {
       } else if (page.type === "collection_view_page"){
         await this.initializeCacheForSpecificData(id, 'block');
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
-        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
         page_map.collection_view_page.set(page.id, cvp_obj);

@@ -92,7 +92,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       else if (content.type === "linked_db") {
         const { collection_id, views } = content, view_ids: string[] = [],
           // fetch the referenced collection id
-          collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', collection_id, {token: props.token, interval: 0}, props.cache),
+          collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', collection_id, props, props.cache),
           // Create the views separately, without creating the collection, as its only referencing one
           collection_view_data: ICollectionView = {
             ...common_data,
@@ -179,8 +179,8 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         await NotionMutations.setBookmarkMetadata({
           blockId: block_id,
           url: (content.properties as WebBookmarkProps).link[0][0]
-        }, {...props, interval: 0});
-        await NotionCacheObject.updateCacheManually([[block_id, "block"]], {...props, interval: 0}, props.cache);
+        }, props);
+        await NotionCacheObject.updateCacheManually([[block_id, "block"]], props, props.cache);
       }
 
       // If the type is link_to_page use the referenced page_id as the content id else use the block id 

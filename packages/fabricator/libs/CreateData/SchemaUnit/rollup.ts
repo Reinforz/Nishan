@@ -15,7 +15,7 @@ import { getSchemaMapUnit } from '../../';
 export async function rollup (
 	{ aggregation, name, collection_id, relation_property, target_property }: Omit<TRollupSchemaUnitInput, 'type'>,
 	schema_map: ISchemaMap,
-	request_config: Pick<FabricatorProps, 'token' | 'logger' | 'cache'>
+	props: Pick<FabricatorProps, 'token' | 'logger' | 'cache' | 'interval' | 'user_id'>
 ) {
 	// Get the related schema unit from the passed schema map
 	const relation_schema_unit = getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);
@@ -25,17 +25,16 @@ export async function rollup (
 			'relation'
 		]);
 	// Get the info required for making the request and store in cache
-	const { cache, token, logger } = request_config;
 	// Get the target collection from the passed cache
 	const target_collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>(
 		'collection',
 		collection_id,
-		{ token, interval: 0 },
-		cache
+		props,
+		props.cache
 	);
 
 	// Log the collection read operation
-	logger && logger('READ', 'collection', collection_id);
+	props.logger && props.logger('READ', 'collection', collection_id);
 
 	const target_collection_schema_unit_map = getSchemaMapUnit(
 		generateSchemaMapFromCollectionSchema(target_collection.schema),

@@ -11,7 +11,7 @@ export type NotionOperationPluginFactory<T extends CommonPluginOptions = CommonP
 export type NotionOperationPluginFunction = (operation: IOperation) => false | IOperation;
 
 export type NotionOperationOptions = NotionRequestConfigs & {
-	notion_operation_plugins: NotionOperationPluginFunction[];
+	notion_operation_plugins?: NotionOperationPluginFunction[];
 	shard_id: number;
 	space_id: string;
 };

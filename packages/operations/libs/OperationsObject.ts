@@ -34,7 +34,7 @@ export const NotionOperationsObject = {
 			// get the operations list after processing it with the list of plugins
 			created_transaction.transactions[0].operations = NotionOperationsObject.applyPluginsToOperationsStack(
 				operations,
-				options.notion_operation_plugins
+				options.notion_operation_plugins ?? []
 			);
 			// Execute the operations, by sending a request to notion's server
 			await NotionMutations.saveTransactions(created_transaction, options);

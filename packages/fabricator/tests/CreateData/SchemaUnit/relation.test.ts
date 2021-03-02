@@ -20,12 +20,11 @@ const returnChildCollectionAndCache = () =>{
     collection: new Map([ [ 'child_collection_id', child_collection ] ])
   } as ICache;
   const parent_collection_data: ParentCollectionData = {
-    cache,
     parent_collection_id: 'parent_collection_id',
     parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',
     name: [ [ 'Parent Collection' ] ],
   }
-  return [child_collection, parent_collection_data] as const;
+  return [child_collection, cache, parent_collection_data] as const;
 }
 
 const getChildRelationSchemaUnitId = (child_collection: ICollection, name: string) => generateSchemaMapFromCollectionSchema(child_collection.schema).get(name)?.schema_id as string;
@@ -44,7 +43,7 @@ const common_child_collection_relation_schema_unit = {
 };
 
 it(`Should work correctly (default child_collection_relation_schema_unit name)`, async () => {
-  const  [child_collection, parent_collection_data] = returnChildCollectionAndCache();
+  const  [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
   const executeOperationsMock = jest
 			.spyOn(NotionOperationsObject, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
@@ -52,7 +51,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
   const relation_schema_unit = await CreateData.schema_unit.relation(
     relation_arg,
     parent_collection_data,
-    default_nishan_arg
+    {...default_nishan_arg, cache}
   );
 
   const child_relation_schema_unit_id = getChildRelationSchemaUnitId(child_collection, "Related to Parent Collection (Parent Relation Column)");
@@ -70,7 +69,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
 });
 
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
-  const [child_collection, parent_collection_data] = returnChildCollectionAndCache();
+  const [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
   const executeOperationsMock = jest
   .spyOn(NotionOperationsObject, 'executeOperations')
   .mockImplementationOnce(async () => undefined);
@@ -83,6 +82,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
     parent_collection_data,
     {
       ...default_nishan_arg,
+      cache,
       logger: ()=>undefined
     }
   );

@@ -19,6 +19,5 @@ export async function stackCacheMap<T extends TBlock> (data: T, props: Fabricato
 		props
 	);
 	props.cache.block.set(id, data);
-	props.logger && props.logger('CREATE', 'block', id);
 	cb && (await cb(data));
 }

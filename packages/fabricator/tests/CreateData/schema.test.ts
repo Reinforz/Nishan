@@ -53,13 +53,15 @@ describe('Work correctly', () => {
 		const [ schema, schema_map, collection_format ] = await CreateData.schema(
 			input_schema_units,
 			{
-				...default_nishan_arg,
 				parent_collection_id: 'parent_collection_id',
 				name: [ [ 'Parent' ] ],
-				cache,
 				current_schema: {
 					title: tsu
 				}
+			},
+			{
+				...default_nishan_arg,
+				cache
 			},
 			cb
 		);
@@ -82,12 +84,18 @@ describe('Work correctly', () => {
 
 	it(`CreateData.schema should work correctly (default input)`, async () => {
 		const cache = NotionCacheObject.createDefaultCache();
-		const [ schema, schema_map, collection_format ] = await CreateData.schema([ tsu ], {
-			...default_nishan_arg,
-			parent_collection_id: 'parent_collection_id',
-			name: [ [ 'Parent' ] ],
-			cache
-		});
+		const [ schema, schema_map, collection_format ] = await CreateData.schema(
+			[ tsu ],
+			{
+				...default_nishan_arg,
+				parent_collection_id: 'parent_collection_id',
+				name: [ [ 'Parent' ] ]
+			},
+			{
+				...default_nishan_arg,
+				cache
+			}
+		);
 
 		expect(Object.values(schema)).toStrictEqual([ tsu ]);
 		expect(Array.from(schema_map.keys())).toStrictEqual([ 'Title' ]);
@@ -100,11 +108,14 @@ describe('Work correctly', () => {
 describe('Throws error', () => {
 	it(`Should throw error for duplicate property name`, () => {
 		expect(() =>
-			CreateData.schema([ tsu, tsu ], {
-				...default_nishan_arg,
-				parent_collection_id: 'parent_collection_id',
-				name: [ [ 'Parent' ] ]
-			})
+			CreateData.schema(
+				[ tsu, tsu ],
+				{
+					parent_collection_id: 'parent_collection_id',
+					name: [ [ 'Parent' ] ]
+				},
+				default_nishan_arg
+			)
 		).rejects.toThrow();
 	});
 
@@ -118,10 +129,10 @@ describe('Throws error', () => {
 					}
 				],
 				{
-					...default_nishan_arg,
 					parent_collection_id: 'parent_collection_id',
 					name: [ [ 'Parent' ] ]
-				}
+				},
+				default_nishan_arg
 			)
 		).rejects.toThrow();
 	});

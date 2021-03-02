@@ -15,4 +15,5 @@ export interface ParentCollectionData {
 export interface FabricatorProps extends NotionOperationOptions {
 	cache: ICache;
 	logger?: Logger;
+	user_id: string;
 }

@@ -12,18 +12,13 @@ import { FabricatorProps } from '../..';
  * @param props Nishan props passed to generated object
  * @param name Name of the block, used to create a key for the block map
  */
-export async function stackCacheMap<T extends TBlock> (
-	data: T,
-	{ cache, shard_id, token, space_id, user_id }: FabricatorProps,
-	cb?: ((data: TBlock) => any)
-) {
+export async function stackCacheMap<T extends TBlock> (data: T, props: FabricatorProps, cb?: ((data: TBlock) => any)) {
 	const { id } = data;
 	await NotionOperationsObject.executeOperations(
 		[ Operation.block.update(id, [], JSON.parse(JSON.stringify(data))) ],
-		[],
-		{ token, interval: 0, user_id },
-		{ shard_id, space_id }
+		props
 	);
-	cache.block.set(id, data);
+	props.cache.block.set(id, data);
+	props.logger && props.logger('CREATE', 'block', id);
 	cb && (await cb(data));
 }

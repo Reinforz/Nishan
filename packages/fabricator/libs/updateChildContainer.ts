@@ -18,14 +18,9 @@ export async function updateChildContainer (
 	parent_id: string,
 	keep: boolean,
 	child_id: string,
-	{ token, cache, user_id, space_id, shard_id, interval, notion_operation_plugins }: FabricatorProps
+	props: FabricatorProps
 ) {
-	const parent_data = await NotionCacheObject.fetchDataOrReturnCached(
-		parent_table,
-		parent_id,
-		{ token, interval, user_id },
-		cache
-	);
+	const parent_data = await NotionCacheObject.fetchDataOrReturnCached(parent_table, parent_id, props, props.cache);
 	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
@@ -42,16 +37,7 @@ export async function updateChildContainer (
 					id: child_id
 				})
 			],
-			[],
-			{
-				token,
-				user_id,
-				interval: 0
-			},
-			{
-				space_id,
-				shard_id
-			}
+			props
 		);
 	} else if (keep && !container.includes(child_id)) {
 		// If the child container doesn't contains the child and it should be kept
@@ -64,16 +50,7 @@ export async function updateChildContainer (
 					id: child_id
 				})
 			],
-			notion_operation_plugins,
-			{
-				token,
-				user_id,
-				interval: 0
-			},
-			{
-				space_id,
-				shard_id
-			}
+			props
 		);
 	}
 }

@@ -44,14 +44,11 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	};
 
 	// Push the collection create operation to stack
-  await NotionOperationsObject.executeOperations([Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], [], props, {
-    shard_id: props.shard_id,
-    space_id: props.space_id
-  });
+  await NotionOperationsObject.executeOperations([Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], props);
   // Create the views of the collection
 	const views_data = await CreateData.views(collection_data, input.views, props, parent_id, cb);
 	// Store the collection in cache
-	props.cache.collection.set(collection_id, JSON.parse(JSON.stringify(collection_data)));
+	props.cache.collection.set(collection_id, collection_data);
 	// Log the collection creation
 	props.logger && props.logger('CREATE', 'collection', collection_id);
 

@@ -13,7 +13,7 @@ import { FabricatorProps } from '../../';
  */
 export async function generateViewData (
 	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
-	{ token, cache, space_id, shard_id, logger, user_id }: FabricatorProps,
+	props: FabricatorProps,
 	parent_id: string
 ) {
 	// construct the view id, using a custom id
@@ -30,25 +30,16 @@ export async function generateViewData (
 		alive: true,
 		format,
 		query2,
-		shard_id,
-		space_id
+		shard_id: props.shard_id,
+		space_id: props.space_id
 	} as TView;
 	// Push the collection_view creation operation to the stack
 	await NotionOperationsObject.executeOperations(
 		[ Operation.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))) ],
-		[],
-		{
-			token,
-			interval: 0,
-			user_id
-		},
-		{
-			space_id,
-			shard_id
-		}
+		props
 	);
 	// Add the view to the cache
-	cache.collection_view.set(view_id, JSON.parse(JSON.stringify(view_data)));
-	logger && logger('CREATE', 'collection_view', view_data.id);
+	props.cache.collection_view.set(view_id, view_data);
+	props.logger && props.logger('CREATE', 'collection_view', view_data.id);
 	return view_data;
 }

@@ -76,7 +76,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         
         const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
         const view_ids = views_data.map(view_data=>view_data.id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], view_ids) ], [], props, props);
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], view_ids) ], props);
         (props.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
         await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {
@@ -103,7 +103,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           };
         await stackCacheMap<ICollectionView>(collection_view_data, props, cb);
         const views_data = await CreateData.views(collection, views, props, block_id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], [], props, props);
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], props);
         views_data.forEach(({id})=>view_ids.push(id))
       }
       else if (content.type === "page") {
@@ -149,7 +149,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         }
         await NotionOperationsObject.executeOperations([
           Operation.block.set(block_id, ['content'], column_ids)
-        ], [], props, props) 
+        ], props) 
       } else if (content.type.match(/^(embed|gist|abstract|invision|framer|whimsical|miro|pdf|loom|codepen|typeform|tweet|maps|figma|video|audio|image)$/)) {
         const response = (await NotionQueries.getGenericEmbedBlockData({
           pageWidth: 500,

@@ -1,6 +1,6 @@
 import { TDataType } from '@nishans/types';
 import colors from 'colors';
-import { Logger, TMethodType } from '../';
+import { Logger, TMethodType } from '../types';
 
 /**
  * Constructs the logger to be used in all of Nishan's class

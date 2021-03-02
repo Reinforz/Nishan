@@ -276,7 +276,7 @@ describe('NotionUser', () => {
         collection_view: new Map([['collection_view_1', { id: 'collection_view_1' } as any]]),
       },
         stack: IOperation[] = [];
-  
+
       const notion_user = new NotionUser({
         cache,
         id: 'user_root_1',
@@ -287,15 +287,15 @@ describe('NotionUser', () => {
         token: 'token',
         user_id: 'user_root_1'
       });
-  
+
       const initializeCacheForSpecificDataMock = jest
         .spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
         .mockImplementationOnce(() => {
           return {} as any;
         });
-  
+
       const page_map = await notion_user.getPagesById([block_1_id, block_2_id]);
-      expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
+      expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(3);
       expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(1, block_1_id, 'block');
       expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(2, block_2_id, 'block');
       expect((page_map.page.get(block_1_id) as Page).getCachedData()).toStrictEqual(block_1);
@@ -313,7 +313,7 @@ describe('NotionUser', () => {
           [block_1_id, block_1]
         ]),
       };
-  
+
       const notion_user = new NotionUser({
         cache,
         id: 'user_root_1',
@@ -324,7 +324,7 @@ describe('NotionUser', () => {
         token: 'token',
         user_id: 'user_root_1'
       });
-  
+
       await expect(notion_user.getPagesById([block_1_id])).rejects.toThrow();
     });
   })

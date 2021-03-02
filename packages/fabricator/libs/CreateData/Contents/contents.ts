@@ -76,7 +76,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         
         const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
         const view_ids = views_data.map(view_data=>view_data.id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'],view_ids) ], [], props, props);
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], view_ids) ], [], props, props);
         (props.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
         await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {

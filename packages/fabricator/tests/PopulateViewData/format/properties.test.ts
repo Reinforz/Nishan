@@ -71,7 +71,7 @@ describe('view_type=list', () => {
 });
 
 describe('view_type=timeline', () => {
-	it(`Should work with number input`, () => {
+	it(`Should work with separate format for table and timeline input`, () => {
 		const timeline_table_properties: ViewFormatProperties[] = [],
 			timeline_properties: ViewFormatProperties[] = [];
 		PopulateViewData.format.properties('timeline', 'text', { timeline_table_properties, timeline_properties } as any, {
@@ -89,6 +89,25 @@ describe('view_type=timeline', () => {
 			{
 				property: 'text',
 				visible: false
+			}
+		]);
+	});
+
+	it(`Should work with undefined input`, () => {
+		const timeline_table_properties: ViewFormatProperties[] = [],
+			timeline_properties: ViewFormatProperties[] = [];
+		PopulateViewData.format.properties('timeline', 'text', { timeline_table_properties, timeline_properties } as any);
+		expect(timeline_table_properties).toStrictEqual([
+			{
+				width: 250,
+				property: 'text',
+				visible: true
+			}
+		]);
+		expect(timeline_properties).toStrictEqual([
+			{
+				property: 'text',
+				visible: true
 			}
 		]);
 	});

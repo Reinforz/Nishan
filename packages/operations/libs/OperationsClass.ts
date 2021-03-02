@@ -32,12 +32,12 @@ export class NotionOperationsClass {
    * Execute the operations present in the operations stack
    */
 	async executeOperations (operations: IOperation[]) {
-    await NotionOperationsObject.executeOperations(operations, this.#plugins, {
+    await NotionOperationsObject.executeOperations(operations, {
+      notion_operation_plugins: this.#plugins,
       token: this.token,
       user_id: this.user_id,
-      interval: 0
-    }, {
       shard_id: this.shard_id,
+      interval: 0,
       space_id: this.space_id,
     });
 	}

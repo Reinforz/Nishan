@@ -18,8 +18,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	const [ schema, ,format ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,
 		name: input.name,
-		...props
-	});
+	}, props);
 
   setDefault(input, {
     cover: '',
@@ -43,6 +42,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		version: 0,
     format
 	};
+
 	// Push the collection create operation to stack
   await NotionOperationsObject.executeOperations([Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], [], props, {
     shard_id: props.shard_id,

@@ -40,6 +40,9 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 		parent_id: space_id,
 		parent_table: 'space',
 		alive: true,
+		format: {
+			block_color: 'blue'
+		},
 		permissions: [
 			{
 				type: 'user_permission',
@@ -63,6 +66,9 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			{
 				type: 'page',
 				properties: { title: [ [ 'Page' ] ] },
+				format: {
+					block_color: 'blue'
+				},
 				isPrivate: true,
 				is_template: true,
 				id: page_id,
@@ -99,7 +105,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 	});
 });
 
-it(`type=collection_view`, async () => {
+it(`type=collection_view_page`, async () => {
 	const collection_id = v4(),
 		cache = {
 			...NotionCacheObject.createDefaultCache(),
@@ -121,7 +127,7 @@ it(`type=collection_view`, async () => {
 			{
 				collection_id,
 				id: cv_id,
-				type: 'collection_view',
+				type: 'collection_view_page',
 				name: [ [ 'Collection Name' ] ],
 				schema: [ tsu ],
 				views: [
@@ -154,17 +160,24 @@ it(`type=collection_view`, async () => {
 
 	const collection_view = cache.block.get(cv_id) as ICollectionView;
 
-	const collection_view_snapshot = {
+	const collection_view_page_snapshot = {
 		id: cv_id,
-		type: 'collection_view',
+		type: 'collection_view_page',
 		collection_id,
+		permissions: [
+			{
+				type: 'space_permission',
+				role: 'editor',
+				user_id
+			}
+		],
 		view_ids: [ 'view_1' ],
 		parent_id: 'block_1',
 		parent_table: 'block',
 		...metadata
 	};
 
-	expect(collection_view).toEqual(collection_view_snapshot);
+	expect(collection_view).toEqual(collection_view_page_snapshot);
 	expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenCalledTimes(2);
 	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', row_one_id);
@@ -173,7 +186,7 @@ it(`type=collection_view`, async () => {
 	expect(cache.block.get(row_one_id)).toBeTruthy();
 	expect(executeOperationsMock).toHaveBeenCalledTimes(4);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
-		o.b.u(cv_id, [], { ...collection_view_snapshot, view_ids: [] })
+		o.b.u(cv_id, [], { ...collection_view_page_snapshot, view_ids: [] })
 	]);
 	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.s(cv_id, [ 'view_ids' ], [ 'view_1' ]) ]);
 	expect(executeOperationsMock.mock.calls[2][0]).toEqual([

@@ -50,15 +50,13 @@ it(`executeOperations`, () => {
 	operations_class.executeOperations([ operation ]);
 	expect(executeOperationsMock).toHaveBeenCalledWith(
 		[ operation ],
-		[],
 		{
 			token: 'token',
 			user_id: '123',
-			interval: 0
+			interval: 0,
+      notion_operation_plugins: [],
+      shard_id: 123,
+      space_id: 'space_1'
 		},
-		{
-			shard_id: 123,
-			space_id: 'space_1'
-		}
 	);
 });

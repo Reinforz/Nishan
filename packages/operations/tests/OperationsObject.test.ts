@@ -12,10 +12,17 @@ const operation: IOperation = {
 	path: []
 };
 
+const common_execute_operations_options = {
+	notion_operation_plugins: [],
+	token: 'token',
+	shard_id: 123,
+	space_id: 'space_1'
+};
+
 describe('executeOperations', () => {
 	it(`print to console if the stack is empty`, async () => {
 		const consoleLogMock = jest.spyOn(console, 'log');
-		await NotionOperationsObject.executeOperations([], [], { token: 'token' }, { shard_id: 123, space_id: 'space_1' });
+		await NotionOperationsObject.executeOperations([], common_execute_operations_options);
 		expect(consoleLogMock).toHaveBeenCalledWith(`The operation stack is empty`);
 	});
 
@@ -24,29 +31,19 @@ describe('executeOperations', () => {
 			.spyOn(NotionMutations, 'saveTransactions')
 			.mockImplementationOnce(async () => ({}));
 		const stack: IOperation[] = [ operation ];
-		await NotionOperationsObject.executeOperations(
-			stack,
-			[],
-			{ token: 'token' },
-			{ shard_id: 123, space_id: 'space_1' }
-		);
+		await NotionOperationsObject.executeOperations(stack, common_execute_operations_options);
 
-		expect(saveTransactionsMock).toHaveBeenCalledWith(
-			{
-				requestId: expect.any(String),
-				transactions: [
-					{
-						id: expect.any(String),
-						shardId: 123,
-						spaceId: 'space_1',
-						operations: stack
-					}
-				]
-			},
-			{
-				token: 'token'
-			}
-		);
+		expect(saveTransactionsMock.mock.calls[0][0]).toStrictEqual({
+			requestId: expect.any(String),
+			transactions: [
+				{
+					id: expect.any(String),
+					shardId: 123,
+					spaceId: 'space_1',
+					operations: stack
+				}
+			]
+		});
 		expect(stack).toHaveLength(0);
 	});
 });

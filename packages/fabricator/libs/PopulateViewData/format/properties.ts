@@ -16,7 +16,7 @@ import {
   TableSchemaUnitFormatCreateInput,
   TimelineSchemaUnitFormatCreateInput,
   TViewSchemaUnitFormatCreateInput
-} from '../../../';
+} from '../../';
 import { setDefault } from '../../setDefault';
 import { populateTableViewFormatProperties } from './utils';
 
@@ -37,7 +37,7 @@ export function populateViewFormatProperties (
 	view_type: Exclude<TViewType, 'table' | 'timeline'>,
 	schema_id: string,
 	view_format: IListViewFormat | IBoardViewFormat | IGalleryViewFormat | ICalendarViewFormat,
-	view_format_input:
+	view_format_input?:
 		| ListSchemaUnitFormatCreateInput
 		| GallerySchemaUnitFormatCreateInput
 		| BoardSchemaUnitFormatCreateInput
@@ -47,13 +47,13 @@ export function populateViewFormatProperties (
 	view_type: 'timeline',
 	schema_id: string,
 	view_format: ITimelineViewFormat,
-	view_format_input: TimelineSchemaUnitFormatCreateInput
+	view_format_input?: TimelineSchemaUnitFormatCreateInput
 ): void;
 export function populateViewFormatProperties (
 	view_type: TViewType,
 	schema_id: string,
 	view_format: TView['format'],
-	view_format_input: TViewSchemaUnitFormatCreateInput
+	view_format_input?: TViewSchemaUnitFormatCreateInput
 ) {
 	// Create the default property object
 	if (view_type === 'table')
@@ -70,7 +70,7 @@ export function populateViewFormatProperties (
 		);
 		(view_format as ITimelineViewFormat).timeline_properties.push({
 			property: schema_id,
-			visible: (view_format_input as any).timeline ?? true
+			visible: (view_format_input as any).timeline
 		});
 	} else
     (view_format as any)[`${view_type}_properties`].push({

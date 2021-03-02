@@ -18,12 +18,12 @@ export async function updateChildContainer (
 	parent_id: string,
 	keep: boolean,
 	child_id: string,
-	{ token, cache, user_id, space_id, shard_id }: FabricatorProps
+	{ token, cache, user_id, space_id, shard_id, interval, notion_operation_plugins }: FabricatorProps
 ) {
 	const parent_data = await NotionCacheObject.fetchDataOrReturnCached(
 		parent_table,
 		parent_id,
-		{ token, interval: 0 },
+		{ token, interval, user_id },
 		cache
 	);
 	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
@@ -64,7 +64,7 @@ export async function updateChildContainer (
 					id: child_id
 				})
 			],
-			[],
+			notion_operation_plugins,
 			{
 				token,
 				user_id,

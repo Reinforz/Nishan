@@ -1,3 +1,4 @@
+export * from '../types';
 export * from './CreateData';
 export * from './deepMerge';
 export * from './detectChildData';

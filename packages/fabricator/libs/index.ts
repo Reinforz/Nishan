@@ -1,4 +1,5 @@
 export * from '../types';
+export * from './constructLogger';
 export * from './CreateData';
 export * from './deepMerge';
 export * from './detectChildData';

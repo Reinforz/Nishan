@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { NotionOperationPluginFunction } from '@nishans/operations';
+import { NotionOperationOptions } from '@nishans/operations';
 import { TDataType, TTextFormat } from '@nishans/types';
 
 export type TMethodType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
@@ -11,13 +11,8 @@ export interface ParentCollectionData {
 	name: TTextFormat;
 	parent_relation_schema_unit_id: string;
 }
-export interface FabricatorProps {
-	shard_id: number;
-	space_id: string;
-	token: string;
-	user_id: string;
-	interval?: number;
+
+export interface FabricatorProps extends NotionOperationOptions {
 	cache: ICache;
 	logger?: Logger;
-	notion_operation_plugins: NotionOperationPluginFunction[];
 }

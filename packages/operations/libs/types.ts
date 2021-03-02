@@ -1,3 +1,4 @@
+import { NotionRequestConfigs } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 
 export interface CommonPluginOptions {
@@ -8,3 +9,9 @@ export type NotionOperationPluginFactory<T extends CommonPluginOptions = CommonP
 	options?: T
 ) => NotionOperationPluginFunction;
 export type NotionOperationPluginFunction = (operation: IOperation) => false | IOperation;
+
+export type NotionOperationOptions = NotionRequestConfigs & {
+	notion_operation_plugins: NotionOperationPluginFunction[];
+	shard_id: number;
+	space_id: string;
+};

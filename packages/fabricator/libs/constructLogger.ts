@@ -1,13 +1,12 @@
-import { TMethodType } from '@nishans/fabricator';
 import { TDataType } from '@nishans/types';
 import colors from 'colors';
-import { NishanArg } from '../';
+import { Logger, TMethodType } from '../';
 
 /**
  * Constructs the logger to be used in all of Nishan's class
  * @param logger The passed logger
  */
-export function constructLogger (logger?: NishanArg['logger']) {
+export function constructLogger (logger?: Logger) {
 	// If the passed arg is false, keep it false
 	return logger === false
 		? false

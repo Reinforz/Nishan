@@ -1,6 +1,6 @@
-import { NotionMutations, NotionRequest, NotionRequestConfigs } from '@nishans/endpoints';
+import { NotionMutations, NotionRequest } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
-import { NotionOperationPluginFunction } from '.';
+import { NotionOperationOptions, NotionOperationPluginFunction } from '.';
 
 export const NotionOperationsObject = {
 	applyPluginsToOperationsStack (operations: IOperation[], plugins: NotionOperationPluginFunction[]) {
@@ -25,14 +25,7 @@ export const NotionOperationsObject = {
 		} else return operations;
 	},
 
-	async executeOperations (
-		operations: IOperation[],
-		options: NotionRequestConfigs & {
-			notion_operation_plugins: NotionOperationPluginFunction[];
-			shard_id: number;
-			space_id: string;
-		}
-	) {
+	async executeOperations (operations: IOperation[], options: NotionOperationOptions) {
 		// If the stack is empty print a msg to the console
 		if (operations.length === 0) console.log(`The operation stack is empty`);
 		else {

@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { constructLogger } from '../../libs/utils';
+import { constructLogger } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

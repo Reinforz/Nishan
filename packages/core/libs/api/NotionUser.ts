@@ -66,7 +66,7 @@ class NotionUser extends Data<INotionUser> {
     return (await this.createSpaces([opt]))[0];
   };
 
-  // ? FEAT:1:H Take root pages to create as parameter 
+  // ? FEAT:1:H Take root pages to create as parameter
   async createSpaces(opts: ISpaceCreateInput[]) {
     const metadata = {
       created_by_id: this.user_id,
@@ -106,7 +106,7 @@ class NotionUser extends Data<INotionUser> {
         shard_id: this.Operations.shard_id,
         icon,
       } as any;
-      
+
       const space_view_data: ISpaceView = {
         created_getting_started: false,
         created_onboarding_templates: false,
@@ -196,7 +196,7 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id), (id, _,__,spaces)=>spaces.push(new Space({ ...this.getProps(), id })))
   }
 
-  // FIX:1:H How will deleting a space manipulate the internal cache 
+  // FIX:1:H How will deleting a space manipulate the internal cache
   async deleteSpace(arg: FilterType<ISpace>) {
     (await this.deleteSpaces(transformToMultiple(arg), false));
   }
@@ -226,11 +226,13 @@ class NotionUser extends Data<INotionUser> {
     for (let index = 0; index < ids.length; index++) {
       const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;
       if (page.type === "page") {
-        const page_obj = new Page({ ...this.getProps(), id: page.id })
+        const page_obj = new Page({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
         page_map.page.set(page.id, page_obj)
         page_map.page.set(page.properties.title[0][0], page_obj);
         await this.initializeCacheForSpecificData(page.id, "block");
       } else if (page.type === "collection_view_page"){
+        await this.initializeCacheForSpecificData(id, 'block');
+        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);

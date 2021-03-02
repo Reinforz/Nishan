@@ -94,7 +94,8 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 				'toggle',
 				'quote',
 				'divider',
-				'callout'
+				'callout',
+				'embed'
 			]);
 	}
 }

@@ -118,7 +118,10 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 export interface IColumnListInput extends IInput {
 	type: 'column_list';
-	contents: Array<TBlockInput[]>;
+	contents: {
+		id?: string;
+		contents: TBlockInput[];
+	}[];
 }
 
 export interface IPageCreateInput extends IInput {

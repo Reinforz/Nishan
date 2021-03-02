@@ -2,7 +2,7 @@ import { NotionCacheObject } from "@nishans/cache";
 import { NotionMutations, NotionQueries } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
 import { NotionOperationsObject, Operation } from "@nishans/operations";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, WebBookmarkProps } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
 import { deepMerge } from "../..";
 import { updateChildContainer } from "../../updateChildContainer";
@@ -75,8 +75,9 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         await stackCacheMap<ICollectionViewPage>(data as any, props, cb);
         
         const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], [], props, props)
-        // If it contain rows, iterate through all of them, by passing the collection as parent
+        const view_ids = views_data.map(view_data=>view_data.id);
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'],view_ids) ], [], props, props);
+        (props.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
         await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {
         const factory_data: IFactory = {
@@ -89,38 +90,39 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "linked_db") {
-        const { collection_id, views } = content,
+        const { collection_id, views } = content, view_ids: string[] = [],
           // fetch the referenced collection id
           collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>('collection', collection_id, {token: props.token, interval: 0}, props.cache),
           // Create the views separately, without creating the collection, as its only referencing one
           collection_view_data: ICollectionView = {
             ...common_data,
             ...metadata,
-            view_ids: [],
+            view_ids,
             collection_id,
             type: 'collection_view'
           };
         await stackCacheMap<ICollectionView>(collection_view_data, props, cb);
         const views_data = await CreateData.views(collection, views, props, block_id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], [], props, props)
+        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], [], props, props);
+        views_data.forEach(({id})=>view_ids.push(id))
       }
       else if (content.type === "page") {
         // Construct the default page object, with permissions data
         const page_data: IPage = {
+          ...common_data,
+          ...metadata,
           content: [],
           is_template: (content as any).is_template && parent_table === "collection",
           permissions: [populatePermissions(props.user_id, content.isPrivate)],
-          ...common_data,
-          ...metadata
         }
 
         await stackCacheMap<IPage>(page_data, props, cb);
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "column_list") {
-        const { contents } = content, content_ids = contents.map(()=>generateId());
+        const { contents } = content, column_ids: string[] = [];
         const column_list_data: IColumnList = {
-          content: content_ids,
+          content: column_ids,
           ...common_data,
           ...metadata
         };
@@ -129,7 +131,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
 
         // For each contents create a column
         for (let index = 0; index < contents.length; index++) {
-          const column_id = generateId(), column_data: IColumn = {
+          const column_id = generateId(contents[index].id), column_data: IColumn = {
             id: column_id,
             parent_id: block_id,
             parent_table: "block",
@@ -142,8 +144,12 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           };
           
           await stackCacheMap<IColumn>(column_data, props, cb);
-          await traverse(contents[index], column_id, "block");
+          await traverse(contents[index].contents, column_id, "block");
+          column_ids.push(column_id);
         }
+        await NotionOperationsObject.executeOperations([
+          Operation.block.set(block_id, ['content'], column_ids)
+        ], [], props, props) 
       } else if (content.type.match(/^(embed|gist|abstract|invision|framer|whimsical|miro|pdf|loom|codepen|typeform|tweet|maps|figma|video|audio|image)$/)) {
         const response = (await NotionQueries.getGenericEmbedBlockData({
           pageWidth: 500,

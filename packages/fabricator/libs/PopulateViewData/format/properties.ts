@@ -11,16 +11,15 @@ import {
 import {
   BoardSchemaUnitFormatCreateInput,
   CalendarSchemaUnitFormatCreateInput,
-  GallerySchemaUnitFormatCreateInput
-} from 'packages/fabricator/types';
-import {
+  GallerySchemaUnitFormatCreateInput,
   ListSchemaUnitFormatCreateInput,
   TableSchemaUnitFormatCreateInput,
   TimelineSchemaUnitFormatCreateInput,
   TViewSchemaUnitFormatCreateInput
-} from '../..';
+} from '../../../';
 import { setDefault } from '../../setDefault';
 import { populateTableViewFormatProperties } from './utils';
+
 
 /**
  * * Returns a view view_format_input property based on the passed view_type
@@ -32,7 +31,7 @@ export function populateViewFormatProperties (
 	view_type: 'table',
 	schema_id: string,
 	view_format: ITableViewFormat,
-	view_format_input: TableSchemaUnitFormatCreateInput
+	view_format_input?: TableSchemaUnitFormatCreateInput
 ): void;
 export function populateViewFormatProperties (
 	view_type: Exclude<TViewType, 'table' | 'timeline'>,

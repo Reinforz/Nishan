@@ -24,6 +24,6 @@ export async function stackCacheMap<T extends TBlock> (
 		{ token, interval: 0, user_id },
 		{ shard_id, space_id }
 	);
-	cache.block.set(id, JSON.parse(JSON.stringify(data)));
+	cache.block.set(id, data);
 	cb && (await cb(data));
 }

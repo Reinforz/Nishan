@@ -1,5 +1,5 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { CreateData, TViewCreateInput } from '@nishans/fabricator';
+import { TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from "uuid";
 import { tsu } from "../../../../fabricator/tests/utils";
@@ -56,18 +56,17 @@ it(`createViews`, async () => {
 			]
 		}
 	];
-  const createViewsDataMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(async()=>([{id: view_id}] as any))
 	
-  await collection_block.createViews(createViews_params);
+  const view_map = await collection_block.createViews(createViews_params);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual(
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual(
 		[
       o.b.s('block_1', ['view_ids'], [ 'collection_view_1', view_id ]),
       o.b.u('block_1', [], last_edited_props)
     ]
   );
   expect(block_1.view_ids).toStrictEqual(['collection_view_1', view_id]);
-  expect(createViewsDataMock).toHaveBeenCalledTimes(1);
+  expect(view_map.table.get("Table")).toStrictEqual(expect.objectContaining({id: view_id}))
 });
 
 it(`getViews`, async () => {

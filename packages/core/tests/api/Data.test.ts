@@ -289,7 +289,7 @@ it(`getIterate`, async () => {
 			return {} as any;
 		});
 
-	const ChildTraverserGetMock = jest.spyOn(ChildTraverser, 'get').mockImplementationOnce(() => {
+	const ChildTraverserGetMock = jest.spyOn(ChildTraverser, 'get').mockImplementation(() => {
 		return {} as any;
 	});
 

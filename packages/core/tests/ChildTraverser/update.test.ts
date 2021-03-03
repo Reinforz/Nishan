@@ -1,5 +1,6 @@
 import { ICache } from '@nishans/cache';
-import { ICollection, IOperation, IPage, TBlock } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
+import { ICollection, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
 import { o } from '../utils';
 import { c1id, c1uo, c2id, c2uo, c3id, cd, constructCache, p1id, p1uo, uc1d, uc2d, up1d, update_props } from './utils';
@@ -10,7 +11,9 @@ afterEach(() => {
 
 it(`manual=false`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
 
 	const logger_spy = jest.fn(),
@@ -23,7 +26,6 @@ it(`manual=false`, async () => {
 			container: [],
 			cache,
 			child_ids,
-			stack,
 			logger: logger_spy,
 			...update_props
 		},
@@ -52,12 +54,14 @@ it(`manual=false`, async () => {
 	]);
 	expect(cache.block.get(p1id)).toStrictEqual(up1d);
 	expect(updated_data).toStrictEqual([ uc1d, uc2d ]);
-	expect(stack).toStrictEqual([ c1uo, c2uo, p1uo ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ c1uo, c2uo, p1uo ]);
 });
 
 it(`manual=false,parent_type&child_type!=block`, async () => {
 	const child_ids = [ c1id ],
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 	const cache = {
 		collection: new Map([
 			[
@@ -78,7 +82,6 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 			container: [],
 			cache,
 			child_ids,
-			stack,
 			...update_props,
 			child_type: 'collection',
 			parent_type: 'collection'
@@ -89,7 +92,7 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 		id: p1id,
 		content: child_ids
 	});
-	expect(stack).toStrictEqual([
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.c.u(c1id, [], {
 			data: c1id
 		})
@@ -98,7 +101,9 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 
 it(`manual=true`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
 
 	const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
@@ -108,7 +113,6 @@ it(`manual=true`, async () => {
 			container: [],
 			cache,
 			child_ids: 'content',
-			stack,
 			manual: true,
 			...update_props
 		},
@@ -131,5 +135,5 @@ it(`manual=true`, async () => {
 		}
 	]);
 
-	expect(stack).toStrictEqual([ p1uo ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ p1uo ]);
 });

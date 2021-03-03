@@ -1,6 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
-import { deepMerge, detectChildData, RepositionParams, TBlockInput } from '@nishans/fabricator';
+import { deepMerge, RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
@@ -16,13 +16,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		super({ ...arg, type: 'block' });
 	}
 
-	getCachedParentData (): TData {
+	async getCachedParentData () {
 		const data = this.getCachedData();
-		return this.cache[data.parent_table].get(data.parent_id) as TData;
+		return (await this.fetchDataOrReturnCached(data.parent_table, data.parent_id)) as TData;
 	}
 
-	reposition (arg: RepositionParams) {
-		this.addToChildArray('block', this.getCachedParentData(), arg);
+	async reposition (arg: RepositionParams) {
+		await this.addToChildArray('block', await this.getCachedParentData(), arg);
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					this.getProps()
 				);
 
-				// ! How to save to local cache, needs to poll the notion's server to see if the duplicated block has been created
+				// ! How to save to local cache, need to poll the notion's server to see if the duplicated block has been created
 				await NotionMutations.enqueueTask(
 					{
 						task: {
@@ -97,12 +97,11 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				Operation.block.update(this.id, [], {
 					properties: data.properties,
 					format: data.format,
-					...this.getLastEditedProps()
+					...this.updateLastEditedProps()
 				})
 			],
 			this.getProps()
 		);
-		this.updateLastEditedProps();
 	}
 
 	/**
@@ -113,7 +112,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		await NotionOperationsObject.executeOperations([ Operation.block.update(this.id, [], { type }) ], this.getProps());
+		await NotionOperationsObject.executeOperations(
+			[
+				Operation.block.update(this.id, [ 'type' ], type),
+				Operation.block.update(this.id, [], this.updateLastEditedProps())
+			],
+			this.getProps()
+		);
 	}
 
 	/**
@@ -121,23 +126,21 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
 	async delete () {
 		const data = this.getCachedData(),
-			parent_data = this.getCachedParentData();
-		const [ child_path ] = detectChildData(data.parent_table as any, data as any);
+			parent_data = await this.getCachedParentData();
 
-		(parent_data as any)[child_path] = (parent_data as any)[child_path].filter((id: string) => id !== data.id);
+		await updateChildContainer(data.parent_table, data.parent_id, false, this.id, this.getProps());
+
 		data.alive = false;
-		this.updateLastEditedProps(data);
-		this.updateLastEditedProps(parent_data);
-		this.logger && this.logger('UPDATE', 'block', data.id);
+		this.logger && this.logger('DELETE', 'block', data.id);
 		this.logger && this.logger('UPDATE', data.parent_table, parent_data.id);
+
 		await NotionOperationsObject.executeOperations(
 			[
 				Operation.block.update(this.id, [], {
 					alive: false,
-					...this.getLastEditedProps()
+					...this.updateLastEditedProps(data)
 				}),
-				Operation[data.parent_table].listRemove(data.parent_id, [ child_path ], { id: data.id }),
-				Operation[data.parent_table].update(data.parent_id, [], this.getLastEditedProps())
+				Operation[data.parent_table].update(data.parent_id, [], this.updateLastEditedProps())
 			],
 			this.getProps()
 		);
@@ -151,12 +154,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		await NotionCacheObject.fetchDataOrReturnCached('block', new_parent_id, this.getConfigs(), this.cache);
 
 		const data = this.getCachedData(),
-			parent_data = this.cache.block.get(data.parent_id) as IPage,
+			parent_data = (await NotionCacheObject.fetchDataOrReturnCached(
+				'block',
+				data.parent_id,
+				this.getConfigs(),
+				this.cache
+			)) as IPage,
 			new_parent_data = this.cache.block.get(new_parent_id) as IPage;
-
-		this.updateLastEditedProps();
-		this.updateLastEditedProps(parent_data);
-		this.updateLastEditedProps(new_parent_data);
 
 		data.parent_id = new_parent_id;
 		parent_data.content = parent_data.content.filter((id) => id !== data.id);
@@ -176,8 +180,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				}),
 				Operation.block.listRemove(parent_data.id, [ 'content' ], { id: data.id }),
 				Operation.block.listAfter(new_parent_id, [ 'content' ], { after: '', id: data.id }),
-				Operation.block.update(parent_data.id, [], this.getLastEditedProps()),
-				Operation.block.update(new_parent_id, [], this.getLastEditedProps())
+				Operation.block.update(parent_data.id, [], this.updateLastEditedProps(parent_data)),
+				Operation.block.update(new_parent_id, [], this.updateLastEditedProps(new_parent_data))
 			],
 			this.getProps()
 		);

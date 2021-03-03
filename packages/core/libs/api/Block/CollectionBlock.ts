@@ -59,11 +59,13 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 			);
 		const view_ids = views_data.map((view_data) => view_data.id);
 		await NotionOperationsObject.executeOperations(
-			[ Operation.block.update(data.id, [], { view_ids: [ ...data.view_ids, ...view_ids ] }) ],
+			[
+				Operation.block.set(data.id, [ 'view_ids' ], [ ...data.view_ids, ...view_ids ]),
+				Operation.block.update(data.id, [], this.updateLastEditedProps())
+			],
 			this.getProps()
 		);
 		data.view_ids = [ ...data.view_ids, ...view_ids ];
-		this.updateLastEditedProps();
 		return view_map;
 	}
 

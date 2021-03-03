@@ -1,8 +1,12 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { CreateData, IPageCreateInput, TSchemaUnitInput } from '@nishans/fabricator';
-import { IOperation, Schema } from '@nishans/types';
+import { CreateData, getSchemaMapUnit, IPageCreateInput } from '@nishans/fabricator';
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
+import { NotionOperationsObject } from '@nishans/operations';
+import { Schema } from '@nishans/types';
+import { v4 } from 'uuid';
+import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
 import { Collection, ICollectionUpdateInput, NotionData, TCollectionUpdateKeys } from '../../libs';
-import { default_nishan_arg, last_edited_props, o } from '../utils';
+import { default_nishan_arg, o } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -82,13 +86,13 @@ it(`update`, async () => {
 
 	const updateCacheLocallyMock = jest
 		.spyOn(NotionData.prototype, 'updateCacheLocally')
-		.mockImplementationOnce(() => {});
+		.mockImplementationOnce(async () => undefined);
 
 	const collection_update_args: ICollectionUpdateInput = {
 		description: [ [ 'New Description' ] ]
 	};
 
-	collection.update(collection_update_args);
+	await collection.update(collection_update_args);
 
 	expect(updateCacheLocallyMock).toHaveBeenCalledWith(collection_update_args, TCollectionUpdateKeys);
 });
@@ -111,9 +115,7 @@ it(`createTemplates`, async () => {
 		id: 'collection_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => {
-		return undefined;
-	});
+	const createContentsDataMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => undefined);
 
 	const create_templates_params: IPageCreateInput[] = [
 		{
@@ -127,479 +129,314 @@ it(`createTemplates`, async () => {
 
 	await collection.createTemplates(create_templates_params);
 
-	expect(updateCacheLocallyMock.mock.calls[0][0]).toStrictEqual(create_templates_params);
-	expect(updateCacheLocallyMock.mock.calls[0][1]).toStrictEqual('collection_1');
-	expect(updateCacheLocallyMock.mock.calls[0][2]).toStrictEqual('collection');
+	expect(createContentsDataMock.mock.calls[0][0]).toStrictEqual(create_templates_params);
+	expect(createContentsDataMock.mock.calls[0][1]).toStrictEqual('collection_1');
+	expect(createContentsDataMock.mock.calls[0][2]).toStrictEqual('collection');
 });
 
-it(`getTemplates`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const getIterateMock = jest
-		.spyOn(NotionData.prototype, 'getIterate' as any)
-		.mockImplementationOnce(async (a, b, c: any, d: any) => {
-			c();
-			d('block1', undefined, []);
-			return [];
-		});
-
-	await collection.getTemplate('block_1');
-
-	expect(getIterateMock.mock.calls[0][0]).toStrictEqual([ 'block_1' ]);
-	expect(getIterateMock.mock.calls[0][1]).toStrictEqual({
-		child_ids: 'template_pages',
-		multiple: false,
-		child_type: 'block',
-		container: []
-	});
-});
-
-it(`updateTemplates`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const updateIterateMock = jest
-		.spyOn(NotionData.prototype, 'updateIterate' as any)
-		.mockImplementationOnce(async (a, b, c: any, d: any) => {
-			c();
-			d('block1', undefined, undefined, []);
-			return [];
-		});
-
-	const update_template_args = [ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ] as any;
-
-	await collection.updateTemplate(update_template_args);
-
-	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([ update_template_args ]);
-	expect(updateIterateMock.mock.calls[0][1]).toStrictEqual({
-		child_ids: 'template_pages',
-		multiple: false,
-		child_type: 'block',
-		container: []
-	});
-});
-
-it(`deleteTemplates`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const deleteIterateMock = jest
-		.spyOn(NotionData.prototype, 'deleteIterate' as any)
-		.mockImplementationOnce(async (a, b, c: any) => {
-			c();
-		});
-
-	await collection.deleteTemplate('block_1');
-
-	expect(deleteIterateMock.mock.calls[0][0]).toStrictEqual([ 'block_1' ]);
-	expect(deleteIterateMock.mock.calls[0][1]).toStrictEqual({
-		child_ids: 'template_pages',
-		multiple: false,
-		child_type: 'block',
-		child_path: 'template_pages',
-		container: []
-	});
-});
-
-it(`createRows`, async () => {
-	const collection_1 = {
-			id: 'collection_1',
-			parent_id: 'block_1'
-		},
-		block_1 = { id: 'block_1', type: 'page' },
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const updateCacheLocallyMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => {});
-
-	const create_row_params: IPageCreateInput[] = [
-		{
-			type: 'page',
-			properties: {
-				title: [ [ 'Page' ] ]
-			},
-			contents: []
-		}
-	];
-
-	await collection.createRows(create_row_params);
-
-	expect(updateCacheLocallyMock.mock.calls[0][0]).toStrictEqual(create_row_params);
-	expect(updateCacheLocallyMock.mock.calls[0][1]).toStrictEqual('collection_1');
-	expect(updateCacheLocallyMock.mock.calls[0][2]).toStrictEqual('collection');
-});
-
-it(`getRow`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const getIterateMock = jest
-		.spyOn(NotionData.prototype, 'getIterate' as any)
-		.mockImplementationOnce(async (a, b, c: any, d: any) => {
-			c();
-			d('block1', undefined, []);
-			return [];
-		});
-
-	const getRowPageIdsMock = jest.spyOn(Collection.prototype, 'getRowPageIds').mockImplementationOnce(async () => {
-		return [ 'block_1' ];
-	});
-
-	await collection.getRow('block_1');
-
-	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-	expect(getIterateMock.mock.calls[0][0]).toStrictEqual([ 'block_1' ]);
-	expect(getIterateMock.mock.calls[0][1]).toStrictEqual({
-		child_ids: [ 'block_1' ],
-		multiple: false,
-		child_type: 'block',
-		container: []
-	});
-});
-
-it(`updateRow`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const updateIterateMock = jest
-		.spyOn(NotionData.prototype, 'updateIterate' as any)
-		.mockImplementationOnce(async (a, b, c: any, d: any) => {
-			c();
-			d('block1', undefined, undefined, []);
-			return [];
-		});
-
-	const getRowPageIdsMock = jest.spyOn(Collection.prototype, 'getRowPageIds').mockImplementationOnce(async () => {
-		return [ 'block_1' ];
-	});
-
-	const updaterow_args = [ 'block_1', { properties: { name: [ [ 'New Name' ] ] } } ] as any;
-
-	await collection.updateRow(updaterow_args);
-
-	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-	expect(updateIterateMock.mock.calls[0][0]).toStrictEqual([ updaterow_args ]);
-	expect(updateIterateMock.mock.calls[0][1]).toStrictEqual({
-		child_ids: [ 'block_1' ],
-		multiple: false,
-		child_type: 'block',
-		container: []
-	});
-});
-
-it(`deleteRow`, async () => {
-	const collection_1 = {
-			id: 'collection_1'
-		},
-		block_1 = { id: 'block_1' } as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1',
-		stack
-	});
-
-	const getRowPageIdsMock = jest
-		.spyOn(Collection.prototype, 'getRowPageIds')
-		.mockImplementationOnce(async () => [ 'block_1' ]);
-
-	jest.spyOn(NotionData.prototype, 'initializeCacheForThisData').mockImplementationOnce(async () => {});
-
-	await collection.deleteRow('block_1');
-
-	expect(getRowPageIdsMock).toHaveBeenCalledTimes(1);
-	expect(stack[0]).toStrictEqual(
-		o.b.u('block_1', [], {
-			alive: false,
-			...last_edited_props
-		})
-	);
-
-	expect(block_1.alive).toBe(false);
-});
-
-it(`createSchemaUnits`, async () => {
-	const current_schema: Schema = {
-		title: {
-			type: 'title',
-			name: 'Title'
-		}
-	};
-	const collection_1 = {
-			id: 'collection_1',
-			name: [ [ 'Collection' ] ],
-			schema: current_schema
-		},
-		block_1 = { id: 'block_1' } as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1',
-		stack
-	});
-
-	const createSchemaUnitsArgs: TSchemaUnitInput[] = [
-		{
-			type: 'checkbox',
-			name: 'Checkbox'
-		}
-	];
-
-	await collection.createSchemaUnits(createSchemaUnitsArgs);
-
-	expect(stack[0]).toEqual(
-		o.c.u(
-			'collection_1',
-			[ 'schema' ],
-			expect.objectContaining({
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
-			})
-		)
-	);
-});
-
-it(`getSchemaUnit`, async () => {
-	const current_schema: Schema = {
-		title: {
-			type: 'title',
-			name: 'Title'
-		}
-	};
-	const collection_1 = {
-			id: 'collection_1',
-			name: [ [ 'Collection' ] ],
-			schema: current_schema
-		},
-		block_1 = { id: 'block_1' } as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1',
-		stack
-	});
-
-	const schema_unit_map = await collection.getSchemaUnit('Title');
-	expect(schema_unit_map.title.get('Title')).not.toBeUndefined();
-	expect(schema_unit_map.title.get('title')).not.toBeUndefined();
-});
-
-it(`updateSchemaUnit`, async () => {
-	const current_schema: Schema = {
-		title: {
-			type: 'title',
-			name: 'Title'
-		}
-	};
-	const collection_1 = {
-			id: 'collection_1',
-			name: [ [ 'Collection' ] ],
-			schema: current_schema
-		},
-		block_1 = { id: 'block_1' } as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1',
-		stack
-	});
-
-	const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { type: 'checkbox', name: 'Checkbox' } ]);
-
-	expect(schema_unit_map.checkbox.get('Checkbox')).not.toBeUndefined();
-	expect(schema_unit_map.checkbox.get('title')).not.toBeUndefined();
-	expect(current_schema).toStrictEqual({
-		title: {
-			type: 'checkbox',
-			name: 'Checkbox'
-		}
-	});
-	expect(stack[0]).toEqual(
-		o.c.u('collection_1', [ 'schema' ], {
-			title: {
-				type: 'checkbox',
-				name: 'Checkbox'
-			}
-		})
-	);
-});
-
-describe('deleteSchemaUnit', () => {
-	it(`Work correctly`, async () => {
-		const current_schema: Schema = {
-			title: {
-				type: 'title',
-				name: 'Title'
-			},
-			checkbox: {
-				type: 'checkbox',
-				name: 'Checkbox'
-			}
-		};
+describe('template pages', () => {
+	const templateCrudSetup = () => {
 		const collection_1 = {
 				id: 'collection_1',
-				name: [ [ 'Collection' ] ],
-				schema: current_schema
+				template_pages: [ 'block_1' ]
 			},
-			block_1 = { id: 'block_1' } as any,
 			cache = {
 				...NotionCacheObject.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ]),
+				block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
-			stack: IOperation[] = [];
+			initializeCacheForSpecificDataMock = jest
+				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.mockImplementationOnce(async () => undefined),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		const collection = new Collection({
 			...default_nishan_arg,
 			cache,
-			id: 'collection_1',
-			stack
+			id: 'collection_1'
 		});
+		return { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
+	};
 
-		await collection.deleteSchemaUnit('Checkbox');
-
-		expect(current_schema).toStrictEqual({
-			title: {
-				type: 'title',
-				name: 'Title'
-			}
-		});
-		expect(stack[0]).toEqual(
-			o.c.u('collection_1', [ 'schema' ], {
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
+	it(`getTemplates`, async () => {
+		const { collection, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		const page_obj = await collection.getTemplate('block_1');
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(page_obj.getCachedData()).toStrictEqual(
+			expect.objectContaining({
+				id: 'block_1'
 			})
 		);
 	});
 
-	it(`throws error when deleting title`, async () => {
-		const current_schema: Schema = {
-			title: {
-				type: 'title',
-				name: 'Title'
-			},
-			checkbox: {
-				type: 'checkbox',
-				name: 'Checkbox'
-			}
-		};
+	it(`updateTemplates`, async () => {
+		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		const pages = await collection.updateTemplate([ 'block_1', { alive: true } as any ]);
+
+		expect(initializeCacheForSpecificDataMock).toBeCalledWith('collection_1', 'collection');
+		expect(cache.block.get('block_1')).toStrictEqual(
+			expect.objectContaining({
+				alive: true
+			})
+		);
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+			o.b.u(
+				'block_1',
+				[],
+				expect.objectContaining({
+					alive: true
+				})
+			)
+		]);
+		expect(pages.getCachedData()).toStrictEqual(
+			expect.objectContaining({
+				alive: true
+			})
+		);
+	});
+
+	it(`deleteTemplates`, async () => {
+		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		await collection.deleteTemplate('block_1');
+
+		expect(initializeCacheForSpecificDataMock).toBeCalledWith('collection_1', 'collection');
+		expect(cache.block.get('block_1')).toStrictEqual(
+			expect.objectContaining({
+				alive: false
+			})
+		);
+		expect(cache.collection.get('collection_1')).toStrictEqual(
+			expect.objectContaining({
+				template_pages: []
+			})
+		);
+
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+			o.c.lr('collection_1', [ 'template_pages' ], { id: 'block_1' })
+		]);
+		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+			o.b.u(
+				'block_1',
+				[],
+				expect.objectContaining({
+					alive: false
+				})
+			)
+		]);
+	});
+});
+
+describe('rows', () => {
+	const rowCrudSetup = () => {
 		const collection_1 = {
-				id: 'collection_1',
-				name: [ [ 'Collection' ] ],
-				schema: current_schema
+				id: 'collection_1'
 			},
-			block_1 = { id: 'block_1' } as any,
 			cache = {
 				...NotionCacheObject.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ]),
+				block: new Map([
+					[ 'block_1', { id: 'block_1', parent_table: 'collection', parent_id: 'collection_1', type: 'page' } ]
+				]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
-			stack: IOperation[] = [];
+			initializeCacheForSpecificDataMock = jest
+				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.mockImplementationOnce(async () => undefined),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
 		const collection = new Collection({
 			...default_nishan_arg,
 			cache,
-			id: 'collection_1',
-			stack
+			id: 'collection_1'
+		});
+		return { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
+	};
+
+	it(`createRows`, async () => {
+		const { cache, collection, executeOperationsMock } = rowCrudSetup();
+		const block_id = v4();
+
+		await collection.createRows([
+			{
+				id: block_id,
+				type: 'page',
+				properties: {
+					title: [ [ 'Page' ] ]
+				},
+				contents: []
+			}
+		]);
+
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+			o.b.u(block_id, [], expect.objectContaining({ id: block_id }))
+		]);
+		expect(cache.block.get(block_id)).toStrictEqual(expect.objectContaining({ id: block_id }));
+	});
+
+	it(`getRow`, async () => {
+		const { collection, initializeCacheForSpecificDataMock } = rowCrudSetup();
+
+		const row = await collection.getRow('block_1');
+
+		expect(row.getCachedData()).toStrictEqual(expect.objectContaining({ id: 'block_1' }));
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+	});
+
+	it(`updateRow`, async () => {
+		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
+
+		const row_page = await collection.updateRow([ 'block_1', { alive: true } ] as any);
+
+		expect(cache.block.get('block_1')).toStrictEqual(
+			expect.objectContaining({
+				alive: true
+			})
+		);
+		expect(row_page.getCachedData()).toStrictEqual(
+			expect.objectContaining({
+				alive: true
+			})
+		);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+			o.b.u(
+				'block_1',
+				[],
+				expect.objectContaining({
+					alive: true
+				})
+			)
+		]);
+	});
+
+	it(`deleteRow`, async () => {
+		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
+
+		await collection.deleteRow('block_1');
+
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+			o.b.u(
+				'block_1',
+				[],
+				expect.objectContaining({
+					alive: false
+				})
+			)
+		]);
+		expect(cache.block.get('block_1')).toStrictEqual(
+			expect.objectContaining({
+				alive: false
+			})
+		);
+	});
+});
+
+describe('schema unit', () => {
+	const schemaUnitCrudSetup = () => {
+		const schema: Schema = {
+				title: {
+					type: 'title',
+					name: 'Title'
+				},
+				checkbox: csu
+			},
+			collection_1 = {
+				id: 'collection_1',
+				schema
+			},
+			cache = {
+				...NotionCacheObject.createDefaultCache(),
+				collection: new Map([ [ 'collection_1', collection_1 ] ])
+			} as any,
+			initializeCacheForSpecificDataMock = jest
+				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.mockImplementationOnce(async () => undefined),
+			executeOperationsMock = jest
+				.spyOn(NotionOperationsObject, 'executeOperations')
+				.mockImplementation(async () => undefined);
+
+		const collection = new Collection({
+			...default_nishan_arg,
+			cache,
+			id: 'collection_1'
+		});
+		return { cache, collection, schema, executeOperationsMock, initializeCacheForSpecificDataMock };
+	};
+
+	it(`createSchemaUnits`, async () => {
+		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+
+		await collection.createSchemaUnits([ txsu ]);
+		const { schema_id } = getSchemaMapUnit(generateSchemaMapFromCollectionSchema(schema), 'Text', []);
+
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+			o.c.u(
+				'collection_1',
+				[ 'schema' ],
+				expect.objectContaining({
+					[schema_id]: txsu
+				})
+			)
+		]);
+		expect(schema).toStrictEqual(
+			expect.objectContaining({
+				[schema_id]: txsu
+			})
+		);
+	});
+
+	it(`getSchemaUnit`, async () => {
+		const { collection } = schemaUnitCrudSetup();
+
+		const schema_unit_map = await collection.getSchemaUnit('Title');
+
+		expect(schema_unit_map.title.get('Title')).not.toBeUndefined();
+		expect(schema_unit_map.title.get('title')).not.toBeUndefined();
+	});
+
+	it(`updateSchemaUnit`, async () => {
+		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+		const new_schema = {
+			title: {
+				type: 'title',
+				name: 'title'
+			}
+		};
+
+		const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { name: 'title' } ]);
+
+		expect(schema_unit_map.title.get('Title')).toBeUndefined();
+		expect(schema_unit_map.title.get('title')).not.toBeUndefined();
+		expect(schema).toStrictEqual(expect.objectContaining(new_schema));
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+			o.c.u('collection_1', [ 'schema' ], expect.objectContaining(new_schema))
+		]);
+	});
+
+	describe('deleteSchemaUnit', () => {
+		it(`Work correctly`, async () => {
+			const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+
+			await collection.deleteSchemaUnit('Checkbox');
+
+			expect(schema.checkbox).toBeUndefined();
+			expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+				o.c.u('collection_1', [ 'schema' ], {
+					title: tsu
+				})
+			]);
 		});
 
-		await expect(() => collection.deleteSchemaUnit('Title')).rejects.toThrow();
+		it(`throws error when deleting title`, async () => {
+			const { collection } = schemaUnitCrudSetup();
+			await expect(() => collection.deleteSchemaUnit('Title')).rejects.toThrow();
+		});
 	});
 });

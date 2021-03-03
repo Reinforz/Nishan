@@ -29,16 +29,16 @@ class SpaceView extends Data<ISpaceView> {
 		return this.cache.user_root.get(this.user_id) as IUserRoot;
 	}
 
-	reposition (arg: RepositionParams) {
-		this.addToChildArray('user_root', this.getCachedParentData(), arg);
+	async reposition (arg: RepositionParams) {
+		await this.addToChildArray('user_root', this.getCachedParentData(), arg);
 	}
 
 	/**
    * Update the current space view
    * @param arg Options to update the spaceView
    */
-	update (arg: ISpaceViewUpdateInput) {
-		this.updateCacheLocally(arg, TSpaceViewUpdateKeys);
+	async update (arg: ISpaceViewUpdateInput) {
+		await this.updateCacheLocally(arg, TSpaceViewUpdateKeys);
 	}
 
 	/**

@@ -15,8 +15,8 @@ class UserSettings extends Data<IUserSettings> {
    * Update the current user settings
    * @param opt Options to update the User settings
    */
-	update (opt: IUserSettingsUpdateInput) {
-		this.updateCacheLocally(opt, TUserSettingsUpdateKeys);
+	async update (opt: IUserSettingsUpdateInput) {
+		await this.updateCacheLocally(opt, TUserSettingsUpdateKeys);
 	}
 }
 

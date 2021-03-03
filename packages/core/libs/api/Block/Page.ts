@@ -33,9 +33,9 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 		this.Permissions = new NotionPermissions(arg, arg.id, 'block');
 	}
 
-	getCachedParentData () {
+	async getCachedParentData () {
 		const data = this.getCachedData();
-		return this.cache[data.parent_table].get(data.parent_id) as ISpace | IPage;
+		return (await this.fetchDataOrReturnCached(data.parent_table, data.parent_id)) as ISpace | IPage;
 	}
 
 	/**

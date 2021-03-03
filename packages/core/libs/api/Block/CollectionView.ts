@@ -11,8 +11,9 @@ class CollectionView extends CollectionBlock<ICollectionView> {
 		super({ ...arg });
 	}
 
-	getCachedParentData () {
-		return this.cache.block.get(this.getCachedData().parent_id) as IPage;
+	async getCachedParentData () {
+		const data = this.getCachedData();
+		return (await this.fetchDataOrReturnCached('block', data.parent_id)) as IPage;
 	}
 }
 

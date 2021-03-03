@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
 import { UserRoot } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -9,17 +9,15 @@ afterEach(() => {
 
 it(`get space_views`, async () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
-			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
-			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ])
-		},
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ]),
+		space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ])
+	};
 
 	const user_root = new UserRoot({
 		...default_nishan_arg,
 		cache,
-		id: 'user_root_1',
-		stack
+		id: 'user_root_1'
 	});
 
 	const space_view = await user_root.getSpaceView('space_view_1');
@@ -32,13 +30,14 @@ it(`update space_views`, async () => {
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},
-		stack: IOperation[] = [];
+		executeOperations = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
 	const user_root = new UserRoot({
 		...default_nishan_arg,
 		cache,
-		id: 'user_root_1',
-		stack
+		id: 'user_root_1'
 	});
 
 	const space_view = await user_root.updateSpaceView([ 'space_view_1', { joined: false } ]);
@@ -47,7 +46,7 @@ it(`update space_views`, async () => {
 		joined: false
 	} as any);
 
-	expect(stack).toStrictEqual([
+	expect(executeOperations.mock.calls[0][0]).toStrictEqual([
 		o.sv.u('space_view_1', [], {
 			joined: false
 		})

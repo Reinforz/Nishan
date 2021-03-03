@@ -8,7 +8,6 @@ export const default_nishan_arg: NishanArg = {
 	interval: 0,
 	shard_id: 123,
 	space_id: 'space_1',
-	stack: [],
 	token: 'token',
 	user_id: 'user_root_1'
 };
@@ -54,7 +53,8 @@ export const o = {
 		s: Operation.space.set,
 		la: Operation.space.listAfter,
 		lb: Operation.space.listBefore,
-		lr: Operation.space.listRemove
+		lr: Operation.space.listRemove,
+		spi: Operation.space.setPermissionItem
 	},
 	cv: {
 		u: Operation.collection_view.update,

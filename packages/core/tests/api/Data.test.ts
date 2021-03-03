@@ -1,5 +1,6 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { IHeader, IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
+import { IHeader } from '@nishans/types';
 import colors from 'colors';
 import { ChildTraverser, NotionData } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
@@ -36,13 +37,14 @@ it(`updateLastEditedProps`, async () => {
 		type: 'block'
 	});
 
-	(block as any).updateLastEditedProps();
+	const updated_last_edited_props = (block as any).updateLastEditedProps();
+	(block as any).updateLastEditedProps(cache.block.get('block_2'));
+
 	expect(cache.block.get('block_1')).toStrictEqual({
 		id: 'block_1',
 		...last_edited_props
 	});
-
-	(block as any).updateLastEditedProps(cache.block.get('block_2'));
+	expect(updated_last_edited_props).toStrictEqual(last_edited_props);
 	expect(cache.block.get('block_2')).toStrictEqual({
 		id: 'block_2',
 		...last_edited_props
@@ -67,7 +69,7 @@ describe('getCachedData', () => {
 		});
 	});
 
-	it(`data doesnt exists`, async () => {
+	it(`data doesn't exists`, async () => {
 		const cache = {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
@@ -149,17 +151,20 @@ it(`addToChildArray`, async () => {
 				[ 'block_2', { id: 'block_2', type: 'page' } ]
 			])
 		} as any,
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 	const block = new NotionData({
 		...default_nishan_arg,
 		cache,
-		type: 'block',
-		stack
+		type: 'block'
 	});
 
-	(block as any).addToChildArray('block', { id: 'block_2', type: 'page' }, 0);
-	expect(stack.length).toBe(1);
+	await (block as any).addToChildArray('block', { id: 'block_2', type: 'page' }, 0);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.la('block_2', [ 'content' ], { after: '', id: 'block_1' })
+	]);
 });
 
 it(`updateCacheLocally`, async () => {
@@ -167,7 +172,9 @@ it(`updateCacheLocally`, async () => {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 	const logger = jest.fn();
 
@@ -175,7 +182,6 @@ it(`updateCacheLocally`, async () => {
 		...default_nishan_arg,
 		cache,
 		type: 'block',
-		stack,
 		logger
 	});
 
@@ -191,60 +197,78 @@ it(`updateCacheLocally`, async () => {
 	expect(logger).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
 
 	expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1', type: 'header', alive: false });
-	expect(stack).toStrictEqual([
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.b.u('block_1', [], {
 			alive: false
 		})
 	]);
 });
 
-it(`initializeCacheForThisData`, async () => {
-	const cache = {
+describe('initializeCacheForThisData', () => {
+	it(`type=block`, async () => {
+		const cache = {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
-		} as any,
-		stack: IOperation[] = [];
+		} as any;
 
-	const block = new NotionData<IHeader>({
-		...default_nishan_arg,
-		cache,
-		type: 'block',
-		stack
-	});
-	const initializeCacheForSpecificDataMock = jest
-		.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
-		.mockImplementation(() => {
-			return {} as any;
+		const block = new NotionData<IHeader>({
+			...default_nishan_arg,
+			cache,
+			type: 'block'
 		});
 
-	await block.initializeCacheForThisData();
+		const initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.mockImplementation(async () => undefined);
 
-	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
-	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+		await block.initializeCacheForThisData();
 
-	await block.initializeCacheForThisData();
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+	});
+
+	it(`type=notion_user`, async () => {
+		const cache = NotionCacheObject.createDefaultCache();
+
+		const block = new NotionData<IHeader>({
+			...default_nishan_arg,
+			cache,
+			type: 'notion_user',
+			id: 'notion_user_1'
+		});
+
+		const initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.mockImplementation(async () => undefined);
+
+		await block.initializeCacheForThisData();
+
+		expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
+	});
 });
 
 it(`getProps`, () => {
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
-		} as any,
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
+	} as any;
 
 	const block = new NotionData<IHeader>({
 		...default_nishan_arg,
 		cache,
-		type: 'block',
-		stack
+		type: 'block'
 	});
 
-	const props = block.getProps();
-	expect(props.token).toBe('token');
-	expect(props.interval).toBe(0);
-	expect(props.user_id).toBe('user_root_1');
-	expect(props.shard_id).toBe(123);
-	expect(props.space_id).toBe('space_1');
+	expect(block.getProps()).toStrictEqual(
+		expect.objectContaining({
+			token: 'token',
+			interval: 0,
+			user_id: 'user_root_1',
+			shard_id: 123,
+			space_id: 'space_1',
+			notion_operation_plugins: []
+		})
+	);
 });
 
 it(`getIterate`, async () => {

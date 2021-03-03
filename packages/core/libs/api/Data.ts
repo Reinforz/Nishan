@@ -4,6 +4,7 @@ import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nis
 import { NotionOperationPluginFunction, NotionOperationsObject, Operation } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
 import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
+import { updateLastEditedProps } from '../ChildTraverser/utils';
 
 /**
  * A class to update and control data specific stuffs
@@ -37,10 +38,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
   }
 
   protected updateLastEditedProps(data?:TData){
-    const target = data ?? this.getCachedData() as any;
-    target.last_edited_time = Date.now();
-    target.last_edited_by_table = "notion_user";
-    target.last_edited_by_id = this.user_id;
+    return updateLastEditedProps(data ?? this.getCachedData() as any, this.user_id)
   }
 
   /**

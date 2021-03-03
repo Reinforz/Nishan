@@ -6,7 +6,7 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`getCachedParentData`, () => {
+it(`getCachedParentData`, async () => {
 	const cache = {
 		...NotionCacheObject.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2', parent_id: 'block_1' } ] ])
@@ -18,8 +18,7 @@ it(`getCachedParentData`, () => {
 		id: 'block_2'
 	});
 
-	const parent_data = collection_view.getCachedParentData();
-	expect(parent_data).toStrictEqual({
+	expect(await collection_view.getCachedParentData()).toStrictEqual({
 		id: 'block_1'
 	});
 });

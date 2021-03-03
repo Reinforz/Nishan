@@ -40,7 +40,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 
 	async createAggregations (args: TAggregationsCreateInput[]) {
 		const data = this.getCachedData(),
-			collection = this.getCollection(),
+			collection = await this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 			[ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(this.getCachedData(), collection.schema);
 		for (let index = 0; index < args.length; index++) {
@@ -67,7 +67,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ aggregations_map ] = PopulateViewMaps.aggregations(this.getCachedData(), this.getCollection().schema);
+			[ aggregations_map ] = PopulateViewMaps.aggregations(this.getCachedData(), (await this.getCollection()).schema);
 
 		await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(
 			args,
@@ -98,10 +98,10 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 
 	async deleteAggregations (args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
 		const [ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(
-				this.getCachedData(),
-				this.getCollection().schema
-			),
-			data = this.getCachedData();
+			this.getCachedData(),
+			(await this.getCollection()).schema
+		);
+
 		await this.deleteIterate<ISchemaAggregationMapValue>(
 			args,
 			{
@@ -119,7 +119,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		);
 
 		await NotionOperationsObject.executeOperations(
-			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], aggregations) ],
 			this.getProps()
 		);
 	}

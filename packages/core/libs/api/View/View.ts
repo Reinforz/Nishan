@@ -17,24 +17,22 @@ import Data from '../Data';
  * A class to represent view of Notion
  * @noInheritDoc
  */
-
 class View<T extends TView> extends Data<T> {
 	constructor (arg: NishanArg) {
 		super({ ...arg, type: 'collection_view' });
 	}
 
-	getCollection = () => {
-		return this.cache.collection.get(
-			(this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock).collection_id
-		) as ICollection;
+	async getCollection(){
+    const data = this.getCachedData(), parent = await this.fetchDataOrReturnCached('block', data.parent_id) as TCollectionBlock;
+    return await this.fetchDataOrReturnCached('collection', parent.collection_id) as ICollection;
 	};
 
-	getCachedParentData () {
-		return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
+	async getCachedParentData () {
+		return await this.fetchDataOrReturnCached('block', this.getCachedData().parent_id) as TCollectionBlock;
 	}
 
-	reposition (arg: RepositionParams) {
-		this.addToChildArray('block', this.getCachedParentData(), arg);
+	async reposition (arg: RepositionParams) {
+		await this.addToChildArray('block', await this.getCachedParentData(), arg);
 	}
 
 	/**
@@ -45,13 +43,12 @@ class View<T extends TView> extends Data<T> {
 	async update (updated_data: TViewUpdateInput) {
 		const view_data = this.getCachedData();
 		deepMerge(view_data, updated_data);
-		this.updateLastEditedProps();
-    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, [], { ...updated_data, ...this.getLastEditedProps() })], this.getProps())
+    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, [], { ...updated_data })], this.getProps())
 	}
 
 	async createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
-			collection = this.getCollection(),
+			collection = await this.getCollection(),
 			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
 			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
@@ -71,8 +68,7 @@ class View<T extends TView> extends Data<T> {
 						});
 				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort.direction);
 		}
-
-		this.updateLastEditedProps();
+		
     await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
@@ -82,7 +78,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			collection = this.getCollection(),
+			collection = await this.getCollection(),
 			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
@@ -106,7 +102,7 @@ class View<T extends TView> extends Data<T> {
 					});
 				} else if (typeof update_input === 'string') sorts[index].direction = update_input;
 				else {
-					const sort = sorts[index];
+          const sort = sorts[index];
 					sorts.splice(index, 1);
 					sorts.splice(update_input, 0, sort);
 				}
@@ -121,7 +117,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
-		const [ sorts_map, sorts ] = PopulateViewMaps.sorts(this.getCachedData(), this.getCollection().schema);
+		const [ sorts_map, sorts ] = PopulateViewMaps.sorts(this.getCachedData(), (await this.getCollection()).schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -141,11 +137,11 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async createFilters (args: TViewFilterCreateInput[]) {
-		const schema_map = generateSchemaMapFromCollectionSchema(this.getCollection().schema),
+		const schema_map = generateSchemaMapFromCollectionSchema((await this.getCollection()).schema),
 			data = this.getCachedData(),
 			filters = InitializeView.filter(data).filters;
     PopulateViewData.query2.filters(args, filters, schema_map);
-		this.updateLastEditedProps();
+		
     await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
@@ -155,7 +151,7 @@ class View<T extends TView> extends Data<T> {
 
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(), 
-      {schema} = this.getCollection(), 
+      {schema} = await this.getCollection(), 
       schema_map = generateSchemaMapFromCollectionSchema(schema), 
       [ filters_map ] = PopulateViewMaps.filters(data, schema);
     
@@ -194,7 +190,7 @@ class View<T extends TView> extends Data<T> {
 
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
     const data = this.getCachedData(), 
-      {schema} = this.getCollection(), 
+      {schema} = await this.getCollection(), 
       [ filters_map ] = PopulateViewMaps.filters(data, schema);
 
 		await this.deleteIterate<ISchemaFiltersMapValue>(
@@ -225,7 +221,7 @@ class View<T extends TView> extends Data<T> {
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = PopulateViewMaps.properties(data, this.getCollection().schema);
+			[ format_properties_map, format_properties ] = PopulateViewMaps.properties(data, (await this.getCollection()).schema);
 		await this.updateIterate<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>(
 			args,
 			{
@@ -250,7 +246,7 @@ class View<T extends TView> extends Data<T> {
 				}
 				target_format_property.visible = visible ?? target_format_property.visible;
         if(updated_data.type === "table")
-				  (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
+          (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
 			}
 		);
     await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)], this.getProps())

@@ -1,6 +1,8 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
-import { ViewAggregator } from '../../../libs';
+import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
+import { NotionOperationsObject } from '@nishans/operations';
+import { tsu, txsu } from '../../../../fabricator/tests/utils';
+import { NotionData, ViewAggregator } from '../../../libs';
 import { detectAggregationErrors } from '../../../libs/api/View/Aggregator';
 import { default_nishan_arg, o } from '../../utils';
 
@@ -12,24 +14,10 @@ describe('detectAggregationErrors', () => {
 	it(`Aggregation already exists`, () => {
 		expect(() =>
 			detectAggregationErrors(
-				new Map([
-					[
-						'Title',
-						{
-							schema_id: 'title',
-							type: 'title',
-							name: 'Title'
-						}
-					],
-					[
-						'Text',
-						{
-							schema_id: 'text',
-							type: 'text',
-							name: 'Text'
-						}
-					]
-				]),
+				generateSchemaMapFromCollectionSchema({
+					title: tsu,
+					text: txsu
+				}),
 				{ type: 'text', name: 'Text' },
 				new Map([ [ 'Text', {} as any ] ]) as any
 			)
@@ -38,56 +26,72 @@ describe('detectAggregationErrors', () => {
 
 	it(`Works correctly`, () => {
 		detectAggregationErrors(
-			new Map([
-				[
-					'Title',
-					{
-						schema_id: 'title',
-						type: 'title',
-						name: 'Title'
-					}
-				],
-				[
-					'Text',
-					{
-						schema_id: 'text',
-						type: 'text',
-						name: 'Text'
-					}
-				]
-			]),
+			generateSchemaMapFromCollectionSchema({
+				title: tsu,
+				text: txsu
+			}),
 			{ type: 'text', name: 'Text' },
 			new Map()
 		);
 	});
 });
 
-it(`createAggregation`, () => {
+const aggregationCrudSetup = () => {
 	const collection_1 = {
 			schema: {
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
+				title: tsu,
+				text: txsu
 			}
 		} as any,
-		collection_view_1 = { parent_id: 'block_1', id: 'collection_view_1' } as any,
+		collection_view_1 = {
+			parent_id: 'block_1',
+			id: 'collection_view_1',
+			query2: {
+				aggregations: [
+					{
+						property: 'text',
+						aggregator: 'count'
+					}
+				]
+			}
+		} as any,
 		cache = {
 			...NotionCacheObject.createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
-		stack: IOperation[] = [];
+		initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.mockImplementationOnce(async () => undefined),
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 	const view_aggregator = new ViewAggregator({
 		...default_nishan_arg,
 		cache,
-		id: 'collection_view_1',
-		stack
+		id: 'collection_view_1'
 	});
+	return {
+		view_aggregator,
+		cache,
+		collection_view_1,
+		collection_1,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock
+	};
+};
 
-	view_aggregator.createAggregation({
+it(`createAggregation`, async () => {
+	const {
+		view_aggregator,
+		collection_view_1,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock
+	} = aggregationCrudSetup();
+
+	await view_aggregator.createAggregation({
 		type: 'title',
 		aggregator: 'count',
 		name: 'Title'
@@ -100,107 +104,54 @@ it(`createAggregation`, () => {
 		}
 	];
 
-	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
-
-	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
+	expect(collection_view_1.query2.aggregations).toStrictEqual(expect.arrayContaining(aggregations));
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining(aggregations))
+	]);
+	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 });
 
 it(`updateAggregations`, async () => {
-	const collection_1 = {
-			schema: {
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
-			}
-		} as any,
-		collection_view_1 = {
-			parent_id: 'block_1',
-			id: 'collection_view_1',
-			query2: {
-				aggregations: [
-					{
-						property: 'title',
-						aggregator: 'unknown'
-					}
-				]
-			}
-		} as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
-
-	const view_aggregator = new ViewAggregator({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_view_1',
-		stack
-	});
+	const {
+		view_aggregator,
+		collection_view_1,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock
+	} = aggregationCrudSetup();
 
 	await view_aggregator.updateAggregation([
-		'Title',
+		'Text',
 		{
-			type: 'title',
-			aggregator: 'count'
+			type: 'text',
+			aggregator: 'not_empty'
 		}
 	]);
 
-	const aggregations = [
-		{
-			property: 'title',
-			aggregator: 'count'
-		}
-	];
+	const aggregation = {
+		property: 'text',
+		aggregator: 'not_empty'
+	};
 
-	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
-
-	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
+	expect(collection_view_1.query2.aggregations[0]).toStrictEqual(aggregation);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining([ aggregation ]))
+	]);
+	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 });
 
 it(`deleteAggregation`, async () => {
-	const collection_1 = {
-			schema: {
-				title: {
-					type: 'title',
-					name: 'Title'
-				}
-			}
-		} as any,
-		collection_view_1 = {
-			parent_id: 'block_1',
-			id: 'collection_view_1',
-			query2: {
-				aggregations: [
-					{
-						property: 'title',
-						aggregator: 'unknown'
-					}
-				]
-			}
-		} as any,
-		cache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
-		} as any,
-		stack: IOperation[] = [];
+	const {
+		view_aggregator,
+		collection_view_1,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock
+	} = aggregationCrudSetup();
 
-	const view_aggregator = new ViewAggregator({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_view_1',
-		stack
-	});
+	await view_aggregator.deleteAggregation('Text');
 
-	await view_aggregator.deleteAggregation('Title');
-
-	const aggregations: any[] = [];
-
-	expect(collection_view_1.query2.aggregations).toStrictEqual(aggregations);
-	expect(stack).toStrictEqual([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], aggregations) ]);
+	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
+	expect(collection_view_1.query2.aggregations).toStrictEqual([]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], [])
+	]);
 });

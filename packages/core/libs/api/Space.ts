@@ -1,25 +1,23 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { NotionCacheObject } from '@nishans/cache';
 import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
-import { ICollection, ICollectionViewPage, INotionUser, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
+import { ICollection, ICollectionViewPage, INotionUser, IOperation, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-export async function createSpaceIterateArguments(block_id: string, cache: ICache, token: string): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
-  const data = cache.block.get(block_id) as IPage | (ICollectionViewPage & {collection: ICollection});
-  if(data){
-    if(data.type === "page")
-      return data;
-    else if(data.type === "collection_view_page"){
-      NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, {token, interval: 0}, cache);
-      return {
-        ...data,
-        collection: cache.collection.get(data.collection_id) as ICollection
-      }
+export async function createSpaceIterateArguments(block_id: string, props: Pick<NishanArg, 'cache' | 'token' | 'interval' | 'user_id'>): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
+  const data = await NotionCacheObject.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props, props.cache);
+  if(data.type === "page")
+    return data;
+  else if(data.type === "collection_view_page"){
+    await NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, props, props.cache);
+    return {
+      ...data,
+      collection: props.cache.collection.get(data.collection_id) as ICollection
     }
   }
 }
@@ -63,8 +61,8 @@ export default class Space extends Data<ISpace> {
    * Update the space settings
    * @param opt Properties of the space to update
    */
-  update(opt: ISpaceUpdateInput) {
-    this.updateCacheLocally(opt, TSpaceUpdateKeys);
+  async update(opt: ISpaceUpdateInput) {
+    await this.updateCacheLocally(opt, TSpaceUpdateKeys);
   }
 
   /**
@@ -99,11 +97,7 @@ export default class Space extends Data<ISpace> {
   }
 
   async getRootPages(args?: FilterTypes<IPage | (ICollectionViewPage & {collection: ICollection})>, multiple?: boolean) {
-    return await this.getIterate<IPage | (ICollectionViewPage & {collection: ICollection}), IPageMap>(args, { container: CreateMaps.page(), multiple, child_ids: "pages", child_type: "block" }, async (id) => {
-      return await createSpaceIterateArguments(id, this.cache, this.token);
-    }, async (_, page, page_map) => {
-      await PopulateMap.page(page, page_map, this.getProps());
-    });
+    return await this.getIterate<IPage | (ICollectionViewPage & {collection: ICollection}), IPageMap>(args, { container: CreateMaps.page(), multiple, child_ids: "pages", child_type: "block" }, async (id) => await createSpaceIterateArguments(id, this.getProps()), async (_, page, page_map) => await PopulateMap.page(page, page_map, this.getProps()));
   }
 
   /**
@@ -126,11 +120,9 @@ export default class Space extends Data<ISpace> {
       child_type: "block",
       multiple,
       container: CreateMaps.page()
-    }, async (id) => {
-      return await createSpaceIterateArguments(id, this.cache, this.token);
-    }, async (_, page, __, page_map) => {
-      await PopulateMap.page(page, page_map, this.getProps());
-    });
+    }, 
+      async (id) => await createSpaceIterateArguments(id, this.getProps()), 
+      async (_, page, __, page_map) => await PopulateMap.page(page, page_map, this.getProps()));
   }
 
   /**
@@ -153,33 +145,32 @@ export default class Space extends Data<ISpace> {
       child_path: "pages",
       child_type: "block",
       container: []
-    }, async (block_id) => {
-      return await createSpaceIterateArguments(block_id, this.cache, this.token);
-    })
+    }, 
+    async (block_id) => await createSpaceIterateArguments(block_id, this.getProps()))
   }
 
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
-    const notion_users: INotionUser[] = [], data = this.getCachedData()
+    const notion_users: INotionUser[] = [], data = this.getCachedData(), operations: IOperation[] = []
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], { value } = await NotionQueries.findUser({email}, this.getConfigs());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
-        await NotionOperationsObject.executeOperations(
-          [ Operation.space.setPermissionItem(this.id, ["permissions"], permission_data) ],
-          this.getProps()
-        );
+        operations.push(Operation.space.setPermissionItem(this.id, ["permissions"], permission_data));
         data.permissions.push(permission_data)
         notion_users.push(notion_user)
         this.logger && this.logger("UPDATE", "space", this.id)
       }
-    }
-    this.updateLastEditedProps();
+    };
+    await NotionOperationsObject.executeOperations(
+      [ ...operations, Operation.space.update(this.id, [], this.updateLastEditedProps()) ],
+      this.getProps()
+    )
     return notion_users;
   }
 
-  // ? FEAT:1:M Empty userids for all user, a predicate
+  // ? FEAT:1:M Empty user ids for all user, a predicate
   /**
    * Remove multiple users from the current space
    * @param userIds ids of the user to remove from the workspace
@@ -195,7 +186,10 @@ export default class Space extends Data<ISpace> {
       token: this.token,
       interval: this.interval
     });
-    data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id))
-    this.updateLastEditedProps();
+    data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id));
+    await NotionOperationsObject.executeOperations(
+      [ Operation.space.update(this.id, [], this.updateLastEditedProps()) ],
+      this.getProps()
+    )
   }
 }

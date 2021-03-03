@@ -57,7 +57,6 @@ class Nishan extends NotionCacheClass {
       cache: this.cache,
       interval: this.interval,
       logger: this.logger,
-      stack: [],
       notion_operation_plugins: this.notion_operation_plugins
     }
 

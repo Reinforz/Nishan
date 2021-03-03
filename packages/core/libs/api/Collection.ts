@@ -45,8 +45,8 @@ class Collection extends Data<ICollection> {
    * Update the collection
    * @param opt `CollectionUpdateParam`
    */
-	update (opt: ICollectionUpdateInput) {
-		this.updateCacheLocally(opt, TCollectionUpdateKeys);
+	async update (opt: ICollectionUpdateInput) {
+		await this.updateCacheLocally(opt, TCollectionUpdateKeys);
 	}
 
 	/**
@@ -223,7 +223,6 @@ class Collection extends Data<ICollection> {
 			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
 		);
-		this.updateLastEditedProps();
 		return schema_unit_map;
 	}
 
@@ -293,7 +292,6 @@ class Collection extends Data<ICollection> {
 				results[data.schema[schema_id].type].set(data.schema[schema_id].name, schema_obj);
 			}
 		);
-		this.updateLastEditedProps();
 		await NotionOperationsObject.executeOperations(
 			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
@@ -334,7 +332,6 @@ class Collection extends Data<ICollection> {
 				delete data.schema[schema_id];
 			}
 		);
-		this.updateLastEditedProps();
 		await NotionOperationsObject.executeOperations(
 			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()

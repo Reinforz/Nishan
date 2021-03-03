@@ -72,7 +72,8 @@ export const uc2d = ucd(c2id);
 export const up1d: any = {
 	id: p1id,
 	content: [ c1id, c2id, c3id ],
-	...last_edited_props
+	...last_edited_props,
+	type: 'page'
 };
 // data generator
 export const d: any = (id: string) => ({ id });
@@ -93,7 +94,8 @@ export const constructCache = (child_ids: string[]) => {
 				p1id,
 				{
 					id: p1id,
-					content: child_ids
+					content: child_ids,
+					type: 'page'
 				}
 			],
 			cd(c1id),

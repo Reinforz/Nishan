@@ -1,5 +1,5 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
-import { IOperation } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
 import { NotionData, SpaceView } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -9,74 +9,69 @@ afterEach(() => {
 
 it(`getCachedParentData`, () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
-			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
-			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
-		},
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
+		user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
+	};
 
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		id: 'space_view_1',
-		stack
+		id: 'space_view_1'
 	});
 
 	const parent_data = space_view.getCachedParentData();
 	expect(parent_data).toStrictEqual({ space_views: [ 'space_view_1' ] });
 });
 
-it(`reposition`, () => {
+it(`reposition`, async () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
-			space_view: new Map([
-				[
-					'space_view_1',
-					{
-						bookmarked_pages: [ 'block_1' ]
-					} as any
-				]
-			]),
-			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ])
-		},
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		space_view: new Map([
+			[
+				'space_view_1',
+				{
+					bookmarked_pages: [ 'block_1' ]
+				} as any
+			]
+		]),
+		user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ])
+	};
 
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		id: 'space_view_2',
-		stack
+		id: 'space_view_2'
 	});
-	const addToChildArrayMock = jest.spyOn(NotionData.prototype, 'addToChildArray' as any);
+	const addToChildArrayMock = jest
+		.spyOn(NotionData.prototype, 'addToChildArray' as any)
+		.mockImplementationOnce(async () => undefined);
 
-	space_view.reposition(0);
+	await space_view.reposition(0);
 	expect(addToChildArrayMock).toHaveBeenCalledTimes(1);
 	expect(addToChildArrayMock).toHaveBeenCalledWith(
 		'user_root',
 		{
 			id: 'user_root_1',
-			space_views: [ 'space_view_2', 'space_view_1' ]
+			space_views: [ 'space_view_1' ]
 		},
 		0
 	);
 });
 
-it(`update`, () => {
-	const cache = NotionCacheObject.createDefaultCache(),
-		stack: IOperation[] = [];
-
+it(`update`, async () => {
+	const cache = NotionCacheObject.createDefaultCache();
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		id: 'space_view_1',
-		stack
+		id: 'space_view_1'
 	});
 
-	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
-		return {} as any;
-	});
+	const updateCacheLocallyMock = jest
+		.spyOn(NotionData.prototype, 'updateCacheLocally')
+		.mockImplementationOnce(async () => undefined);
 
-	space_view.update({
+	await space_view.update({
 		joined: false
 	});
 
@@ -91,11 +86,10 @@ it(`update`, () => {
 
 it(`getSpace`, () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
-			space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', space_id: 'space_1' } as any ] ]),
-			space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
-		},
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', space_id: 'space_1' } as any ] ]),
+		space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
+	};
 
 	const logger_spy = jest.fn();
 
@@ -103,8 +97,7 @@ it(`getSpace`, () => {
 		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
-		id: 'space_view_1',
-		stack
+		id: 'space_view_1'
 	});
 
 	const space = space_view.getSpace();
@@ -115,27 +108,26 @@ it(`getSpace`, () => {
 
 it(`getBookmarkedPage`, async () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
-			block: new Map([
-				[
-					'block_1',
-					{
-						id: 'block_1',
-						type: 'collection_view_page',
-						collection_id: 'collection_1',
-						view_ids: [],
-						parent_table: 'space',
-						parent_id: 'space_1'
-					} as any
-				]
-			]),
-			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ], parent_id: 'block_1' } as any ] ]),
-			space_view: new Map([
-				[ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' } as any ]
-			]),
-			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
-		},
-		stack: IOperation[] = [];
+		...NotionCacheObject.createDefaultCache(),
+		block: new Map([
+			[
+				'block_1',
+				{
+					id: 'block_1',
+					type: 'collection_view_page',
+					collection_id: 'collection_1',
+					view_ids: [],
+					parent_table: 'space',
+					parent_id: 'space_1'
+				} as any
+			]
+		]),
+		collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ], parent_id: 'block_1' } as any ] ]),
+		space_view: new Map([
+			[ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' } as any ]
+		]),
+		space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
+	};
 
 	const logger_spy = jest.fn();
 
@@ -143,8 +135,7 @@ it(`getBookmarkedPage`, async () => {
 		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
-		id: 'space_view_1',
-		stack
+		id: 'space_view_1'
 	});
 
 	const page_map = await space_view.getBookmarkedPage('block_1');
@@ -180,7 +171,9 @@ it(`updateBookmarkedPages`, async () => {
 			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 		},
-		stack: IOperation[] = [];
+		executeOperationsMock = jest
+			.spyOn(NotionOperationsObject, 'executeOperations')
+			.mockImplementationOnce(async () => undefined);
 
 	const logger_spy = jest.fn();
 
@@ -188,8 +181,7 @@ it(`updateBookmarkedPages`, async () => {
 		...default_nishan_arg,
 		cache,
 		logger: logger_spy,
-		id: 'space_view_1',
-		stack
+		id: 'space_view_1'
 	});
 
 	const page_map = await space_view.updateBookmarkedPage([ 'block_2', true ]);
@@ -202,7 +194,7 @@ it(`updateBookmarkedPages`, async () => {
 		space_id: 'space_1'
 	});
 
-	expect(stack).toStrictEqual([
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
 			id: 'block_2'
 		})

@@ -1,5 +1,6 @@
 import { ICache } from '@nishans/cache';
-import { ICollection, IOperation, IPage, TBlock } from '@nishans/types';
+import { NotionOperationsObject } from '@nishans/operations';
+import { ICollection, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
 import { last_edited_props, o } from '../utils';
 import {
@@ -25,75 +26,80 @@ afterEach(() => {
 });
 
 it(`manual=false`, async () => {
-	const child_ids = [ c1id, c2id, c3id ],
-		stack: IOperation[] = [];
+	const child_ids = [ c1id, c2id, c3id ];
 	const cache = constructCache(child_ids);
+	const executeOperationsMock = jest
+		.spyOn(NotionOperationsObject, 'executeOperations')
+		.mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn(),
 		cb_spy = jest.fn();
 
-	try {
-		const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
-			[ c1id, c2id ],
-			(id) => cache.block.get(id),
-			{
-				...delete_props,
-				container: [],
-				cache,
-				stack,
-				logger: logger_spy
-			},
-			(id, data, container) => {
-				cb_spy(id, data);
-				container.push(data);
-			}
-		);
+	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
+		[ c1id, c2id ],
+		(id) => cache.block.get(id),
+		{
+			...delete_props,
+			container: [],
+			cache,
+			logger: logger_spy
+		},
+		(id, data, container) => {
+			cb_spy(id, data);
+			container.push(data);
+		}
+	);
 
-		expect(logger_spy.mock.calls).toEqual([ [ 'DELETE', 'block', c1id ], [ 'DELETE', 'block', c2id ] ]);
-		expect(cb_spy.mock.calls).toEqual([ [ c1id, dc1d ], [ c2id, dc2d ] ]);
-		expect(cache.block.get(p1id)).toStrictEqual({
-			id: p1id,
-			content: [ c3id ],
-			...last_edited_props
-		});
-		expect(deleted_data).toStrictEqual([ dc1d, dc2d ]);
-		expect(stack).toStrictEqual([ c1do, c1ro, c2do, c2ro, p1uo ]);
-	} catch (error) {
-		console.log(error);
-	}
+	expect(logger_spy.mock.calls).toEqual([ [ 'DELETE', 'block', c1id ], [ 'DELETE', 'block', c2id ] ]);
+	expect(cb_spy.mock.calls).toEqual([ [ c1id, dc1d ], [ c2id, dc2d ] ]);
+	expect(cache.block.get(p1id)).toStrictEqual({
+		id: p1id,
+		content: [ c3id ],
+		type: 'page',
+		...last_edited_props
+	});
+	expect(deleted_data).toStrictEqual([ dc1d, dc2d ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ c1ro ]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([ c2ro ]);
+	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([ c1do, c2do, p1uo ]);
 });
 
 it(`manual=true`, async () => {
-	const stack: IOperation[] = [];
 	const cache = constructCache([ c1id, c2id, c3id ]);
+	const executeOperationsMock = jest
+		.spyOn(NotionOperationsObject, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
 
 	await ChildTraverser.delete<IPage, TBlock>([ c1id, c2id ], (id) => cache.block.get(id), {
 		...delete_props,
 		container: [],
 		cache,
 		child_path: 'content',
-		stack,
 		manual: true
 	});
 
 	expect(cache.block.get(p1id)).toStrictEqual(up1d);
-	expect(stack).toStrictEqual([ p1uo ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ p1uo ]);
 });
 
-it(`child_path & parent_path != block, child_path=undefined`, async () => {
-	const stack: IOperation[] = [];
+it(`child_type & parent_type != block, child_path=undefined`, async () => {
 	const cache = {
 		collection: new Map([
 			[
 				p1id,
 				{
 					id: p1id,
-					content: [ c1id ]
+					content: [ c1id ],
+					type: 'page'
 				}
 			],
 			cd(c1id)
 		])
 	} as ICache;
+
+	const executeOperationsMock = jest
+		.spyOn(NotionOperationsObject, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
 
 	await ChildTraverser.delete<IPage, ICollection>([ c1id ], (id) => cache.collection.get(id), {
 		...delete_props,
@@ -101,15 +107,15 @@ it(`child_path & parent_path != block, child_path=undefined`, async () => {
 		cache,
 		parent_type: 'collection',
 		child_type: 'collection',
-		child_path: undefined,
-		stack
+		child_path: undefined
 	});
 
 	expect(cache.collection.get(p1id)).toStrictEqual({
 		id: p1id,
-		content: [ c1id ]
+		content: [ c1id ],
+		type: 'page'
 	});
-	expect(stack).toStrictEqual([
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.c.u(c1id, [], {
 			alive: false
 		})

@@ -2,6 +2,7 @@ import { NotionQueries } from '@nishans/endpoints';
 import { deepMerge } from '@nishans/fabricator';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import {
+	IOperation,
 	IPermission,
 	IPublicPermission,
 	IPublicPermissionOptions,
@@ -29,35 +30,33 @@ export default class NotionPermissions extends Data<TPage> {
 	async getNotionUserIdFromEmail ({ email, id }: UserIdentifier) {
 		let user_id = id;
 		if (email) {
-			const { value } = await NotionQueries.findUser({ email }, { token: this.token, interval: 0 });
+			const { value } = await NotionQueries.findUser({ email }, this.getConfigs());
 			if (!value) throw new Error(`User does not have a notion account`);
 			else user_id = value.value.id;
 		}
 		return user_id as string;
 	}
 
-	async updatePermissionsArray (
+	updatePermissionsArray (
 		permission_type: 'public_permission' | 'space_permission',
 		options: { role: TPermissionRole } & Partial<IPublicPermissionOptions>
-	): Promise<void>;
-	async updatePermissionsArray (
+	): IOperation;
+	updatePermissionsArray (
 		permission_type: 'user_permission',
 		options: { role: TPermissionRole },
 		user_id: string
-	): Promise<void>;
-	async updatePermissionsArray (
+	): IOperation;
+	updatePermissionsArray (
 		permission_type: IPermission['type'],
 		options: { role: TPermissionRole } & Partial<IPublicPermissionOptions>,
 		user_id?: string
-	): Promise<void> {
-		let permission_data: IPermission = {} as any;
+	): IOperation {
+		let permission_data: IPermission = {} as any,
+			operation: IOperation = undefined as any;
 		if (permission_type === 'public_permission' || permission_type === 'space_permission')
 			permission_data = { ...options, type: permission_type } as IPublicPermission;
 		else permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
-		await NotionOperationsObject.executeOperations(
-			[ Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data) ],
-			this.getProps()
-		);
+		operation = Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data);
 		const { permissions } = this.getCachedData();
 		const permission_index = permissions.findIndex((permission) => {
 			if (permission_type === 'public_permission' || permission_type === 'space_permission')
@@ -67,6 +66,7 @@ export default class NotionPermissions extends Data<TPage> {
 		if (options.role === 'none') permissions.splice(permission_index, 1);
 		else if (permissions[permission_index]) deepMerge(permissions[permission_index], options);
 		else permissions.push(permission_data);
+		return operation;
 	}
 
 	async addUserPermission (id: UserIdentifier, role: TUserPermissionRole) {
@@ -95,15 +95,15 @@ export default class NotionPermissions extends Data<TPage> {
    * @param args array of array [id of the user, role type for the user]
    */
 	async updateUserPermissions (args: [UserIdentifier, TUserPermissionRole][]) {
+		const operations: IOperation[] = [];
 		for (let index = 0; index < args.length; index++) {
 			const [ arg, role ] = args[index];
 			const user_id = await this.getNotionUserIdFromEmail(arg);
-			this.updatePermissionsArray('user_permission', { role }, user_id);
+			operations.push(this.updatePermissionsArray('user_permission', { role }, user_id));
 		}
 		this.logger && this.logger('UPDATE', 'block', this.id);
-		this.updateLastEditedProps();
 		await NotionOperationsObject.executeOperations(
-			[ Operation[this.type].update(this.id, [], this.getLastEditedProps()) ],
+			[ ...operations, Operation[this.type].update(this.id, [], this.updateLastEditedProps()) ],
 			this.getProps()
 		);
 	}
@@ -136,36 +136,37 @@ export default class NotionPermissions extends Data<TPage> {
 		permission_type: 'public_permission' | 'space_permission',
 		options: { role: TPublicPermissionRole | TSpacePermissionRole } & Partial<IPublicPermissionOptions>
 	): Promise<void> {
-		this.updatePermissionsArray(permission_type, options as IPublicPermission);
 		this.logger && this.logger('UPDATE', 'block', this.id);
-		this.updateLastEditedProps();
 		await NotionOperationsObject.executeOperations(
-			[ Operation[this.type].update(this.id, [], this.getLastEditedProps()) ],
+			[
+				this.updatePermissionsArray(permission_type, options as IPublicPermission),
+				Operation[this.type].update(this.id, [], this.updateLastEditedProps())
+			],
 			this.getProps()
 		);
 	}
 
-	addPublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {
-		this.updatePublicPermission({
+	async addPublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {
+		await this.updatePublicPermission({
 			allow_duplicate: true,
 			allow_search_engine_indexing: true,
 			...options
 		});
 	}
 
-	updatePublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {
-		this.updateNonUserSpecificPermission('public_permission', options);
+	async updatePublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {
+		await this.updateNonUserSpecificPermission('public_permission', options);
 	}
 
-	removePublicPermission () {
-		this.updatePublicPermission({ role: 'none' });
+	async removePublicPermission () {
+		await this.updatePublicPermission({ role: 'none' });
 	}
 
-	updateSpacePermission (role: TSpacePermissionRole) {
-		this.updateNonUserSpecificPermission('space_permission', { role });
+	async updateSpacePermission (role: TSpacePermissionRole) {
+		await this.updateNonUserSpecificPermission('space_permission', { role });
 	}
 
-	removeSpacePermission () {
-		this.updateSpacePermission('none');
+	async removeSpacePermission () {
+		await this.updateSpacePermission('none');
 	}
 }

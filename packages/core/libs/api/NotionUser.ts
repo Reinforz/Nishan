@@ -53,8 +53,8 @@ class NotionUser extends Data<INotionUser> {
    * @param opt `UpdatableNotionUserParam`
    */
 
-  update(opt: INotionUserUpdateInput) {
-    this.updateCacheLocally(opt, TNotionUserUpdateKeys);
+  async update(opt: INotionUserUpdateInput) {
+    await this.updateCacheLocally(opt, TNotionUserUpdateKeys);
   }
 
   /**
@@ -81,13 +81,13 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
-
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
       spaces.push(new Space({
         id: space_id,
-        ...this.getProps()
+        ...this.getProps(),
+        space_id,
+        shard_id: space[space_id].value.shard_id
       }));
-
       const space_op_data = {
         disable_public_access,
         disable_export,
@@ -103,7 +103,7 @@ class NotionUser extends Data<INotionUser> {
         pages: [],
         permissions: [],
         plan_type: "personal",
-        shard_id: this.shard_id,
+        shard_id: space[space_id].value.shard_id,
         icon,
       } as any;
       
@@ -146,7 +146,7 @@ class NotionUser extends Data<INotionUser> {
 
       await CreateData.contents(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };
-
+    
     return spaces;
   }
 
@@ -191,7 +191,7 @@ class NotionUser extends Data<INotionUser> {
       child_type: "space",
       multiple,
       container: []
-    }, (child_id) => this.cache.space.get(child_id), (id, _,__,spaces)=>spaces.push(new Space({ ...this.getProps(), id })))
+    }, (child_id) => this.cache.space.get(child_id), (id, {shard_id},__,spaces)=>spaces.push(new Space({ ...this.getProps(), id, shard_id, space_id: id })))
   }
 
   // FIX:1:H How will deleting a space manipulate the internal cache 
@@ -219,21 +219,22 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async getPagesById(ids: string[]) {
+    ids = ids.map(id=>idToUuid(uuidToId(id)));
     const page_map = CreateMaps.page();
     await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
     for (let index = 0; index < ids.length; index++) {
-      const id = idToUuid(uuidToId(ids[index])), page = this.cache.block.get(id) as TPage;
+      const id = ids[index], page = this.cache.block.get(id) as TPage;
       if (page.type === "page") {
-        const page_obj = new Page({ ...this.getProps(), id: page.id })
+        await this.initializeCacheForSpecificData(page.id, "block");
+        const page_obj = new Page({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id })
         page_map.page.set(page.id, page_obj)
         page_map.page.set(page.properties.title[0][0], page_obj);
-        await this.initializeCacheForSpecificData(page.id, "block");
       } else if (page.type === "collection_view_page"){
-        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id });
+        await this.initializeCacheForSpecificData(page.id, "block");
+        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
         page_map.collection_view_page.set(page.id, cvp_obj);
-        await this.initializeCacheForSpecificData(page.id, "block");
       }
       else
         throw new UnsupportedBlockTypeError((page as any).type,['page', 'collection_view_page'])

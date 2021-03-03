@@ -44,6 +44,7 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'quote':
 		case 'divider':
 		case 'callout':
+		case 'embed':
 			// All these data types belongs to the block type
 			// dynamically loading the Block class
 			const Block = require('./api/Block/Block').default;
@@ -93,7 +94,8 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 				'toggle',
 				'quote',
 				'divider',
-				'callout'
+				'callout',
+				'embed'
 			]);
 	}
 }

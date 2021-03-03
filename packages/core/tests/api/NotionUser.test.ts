@@ -269,13 +269,9 @@ describe('getPagesById', () => {
     };
 
     const notion_user = new NotionUser({
+      ...default_nishan_arg,
       cache,
       id: 'user_root_1',
-      interval: 0,
-      shard_id: 123,
-      space_id: 'space_1',
-      token: 'token',
-      user_id: 'user_root_1'
     });
 
     const initializeCacheForSpecificDataMock = jest
@@ -315,13 +311,9 @@ describe('getPagesById', () => {
     };
 
     const notion_user = new NotionUser({
+      ...default_nishan_arg,
       cache,
       id: 'user_root_1',
-      interval: 0,
-      shard_id: 123,
-      space_id: 'space_1',
-      token: 'token',
-      user_id: 'user_root_1'
     });
 
     await expect(notion_user.getPagesById([block_1_id])).rejects.toThrow();

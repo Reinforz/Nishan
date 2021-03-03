@@ -44,6 +44,7 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		case 'quote':
 		case 'divider':
 		case 'callout':
+		case 'embed':
 			// All these data types belongs to the block type
 			// dynamically loading the Block class
 			const Block = require('./api/Block/Block').default;
@@ -59,7 +60,7 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 			const CollectionViewPage = require('./api/Block/CollectionViewPage').default;
 			return new CollectionViewPage(obj);
 		default:
-			// Throws an error if an unsupported data type is passed
+			// Throws an error if an unsupported block type is passed
 			throw new UnsupportedBlockTypeError(type, [
 				'page',
 				'collection_view',
@@ -93,7 +94,8 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 				'toggle',
 				'quote',
 				'divider',
-				'callout'
+				'callout',
+				'embed'
 			]);
 	}
 }

@@ -66,7 +66,7 @@ class NotionUser extends Data<INotionUser> {
     return (await this.createSpaces([opt]))[0];
   };
 
-  // ? FEAT:1:H Take root pages to create as parameter 
+  // ? FEAT:1:H Take root pages to create as parameter
   async createSpaces(opts: ISpaceCreateInput[]) {
     const metadata = {
       created_by_id: this.user_id,
@@ -106,7 +106,7 @@ class NotionUser extends Data<INotionUser> {
         shard_id: space[space_id].value.shard_id,
         icon,
       } as any;
-      
+
       const space_view_data: ISpaceView = {
         created_getting_started: false,
         created_onboarding_templates: false,
@@ -194,7 +194,7 @@ class NotionUser extends Data<INotionUser> {
     }, (child_id) => this.cache.space.get(child_id), (id, {shard_id},__,spaces)=>spaces.push(new Space({ ...this.getProps(), id, shard_id, space_id: id })))
   }
 
-  // FIX:1:H How will deleting a space manipulate the internal cache 
+  // FIX:1:H How will deleting a space manipulate the internal cache
   async deleteSpace(arg: FilterType<ISpace>) {
     (await this.deleteSpaces(transformToMultiple(arg), false));
   }

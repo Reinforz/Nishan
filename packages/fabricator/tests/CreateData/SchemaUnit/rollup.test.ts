@@ -26,6 +26,7 @@ it(`Should work correctly for target_property=title`, async () => {
 			aggregation: 'average'
 		} as any;
 	const generated_rollup_schema = await CreateData.schema_unit.rollup(rollup_arg, schema_map, {
+		user_id: 'user_root_1',
 		cache: {
 			...NotionCacheObject.createDefaultCache(),
 			collection: new Map([
@@ -66,6 +67,7 @@ describe('Throw errors', () => {
 				},
 				schema_map,
 				{
+					user_id: 'user_root_1',
 					cache: NotionCacheObject.createDefaultCache(),
 					token: 'token'
 				}
@@ -84,6 +86,7 @@ describe('Throw errors', () => {
 				},
 				schema_map,
 				{
+					user_id: 'user_root_1',
 					cache: NotionCacheObject.createDefaultCache(),
 					token: 'token'
 				}

@@ -11,7 +11,6 @@ const arg: NishanArg = {
 	space_id: '123',
 	cache: NotionCacheObject.createDefaultCache(),
 	logger: false,
-	stack: [],
 	id: '123'
 };
 

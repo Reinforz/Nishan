@@ -89,7 +89,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     }
   }
 
-  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD> = () => true, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData()
     return await ChildTraverser.delete<T, TD, C>(args, transform, {
       parent_id: this.id,
@@ -109,7 +109,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     }, cb);
   }
 
-  protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined | Promise<RD | undefined>), cb?: (id: string, data: RD, container: C) => any) {
+  protected async getIterate<RD, C>(args: FilterTypes<RD> = () => true, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined | Promise<RD | undefined>), cb?: (id: string, data: RD, container: C) => any) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData();
     return await ChildTraverser.get<T, RD, C>(args, transform, {
       parent_id: this.id,

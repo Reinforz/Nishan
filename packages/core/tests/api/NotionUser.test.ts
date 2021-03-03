@@ -295,7 +295,7 @@ describe('NotionUser', () => {
         });
 
       const page_map = await notion_user.getPagesById([block_1_id, block_2_id]);
-      expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(3);
+      expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
       expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(1, block_1_id, 'block');
       expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(2, block_2_id, 'block');
       expect((page_map.page.get(block_1_id) as Page).getCachedData()).toStrictEqual(block_1);

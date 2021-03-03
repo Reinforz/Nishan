@@ -236,7 +236,6 @@ class NotionUser extends Data<INotionUser> {
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
         page_map.collection_view_page.set(page.id, cvp_obj);
-        await this.initializeCacheForSpecificData(page.id, "block");
       }
       else
         throw new UnsupportedBlockTypeError((page as any).type,['page', 'collection_view_page'])

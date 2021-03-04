@@ -11,6 +11,7 @@ export * from './operation';
 export * from './permissions';
 export * from './recordMap';
 export * from './schema';
+export * from './search';
 export * from './subscription';
 export * from './tasks';
 export * from './types';

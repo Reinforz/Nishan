@@ -15,6 +15,7 @@ import {
 	TPlanType,
 	Transaction,
 	TSchemaUnitType,
+	TSearchNotionEndpointPayload,
 	TViewAggregationsAggregators,
 	TViewType,
 	UnsubscribedSubscriptionData,
@@ -461,25 +462,7 @@ export interface NotionEndpoints {
 	>;
 
 	search: NotionEndpoint<
-		{
-			type: 'CollectionsInSpace';
-			query: string;
-			spaceId: string;
-			limit: number;
-			filters: {
-				isDeletedOnly: boolean;
-				excludeTemplates: boolean;
-				isNavigableOnly: boolean;
-				requireEditPermissions: boolean;
-				ancestors: string[];
-				createdBy: string[];
-				editedBy: string[];
-				lastEditedTime: Record<string, never>;
-				createdTime: Record<string, never>;
-			};
-			sort: 'Relevance';
-			source: 'relation_setup_menu';
-		},
+		TSearchNotionEndpointPayload,
 		{
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
 			results: {
@@ -557,3 +540,6 @@ export interface Token {
 	id: string;
 	accessToken: string;
 }
+
+// https://www.notion.so/api/v3/deleteBlocks
+// {"blockIds":["deb4c8b1-bf61-4c73-becc-0a8a7d08e64b"],"permanentlyDelete":true}

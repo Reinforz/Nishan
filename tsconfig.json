@@ -9,6 +9,9 @@
       "path": "./packages/types/tsconfig.json"
     },
     {
+      "path": "./packages/constants/tsconfig.json"
+    },
+    {
       "path": "./packages/idz/tsconfig.json"
     },
     {

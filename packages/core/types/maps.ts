@@ -130,6 +130,14 @@ export interface IViewMap {
 
 export interface IBlockMap {
 	embed: Map<string, Block<IEmbed, IEmbedInput>>;
+	abstract: Map<string, Block<IEmbed, IEmbedInput>>;
+	invision: Map<string, Block<IEmbed, IEmbedInput>>;
+	framer: Map<string, Block<IEmbed, IEmbedInput>>;
+	whimsical: Map<string, Block<IEmbed, IEmbedInput>>;
+	miro: Map<string, Block<IEmbed, IEmbedInput>>;
+	loom: Map<string, Block<IEmbed, IEmbedInput>>;
+	pdf: Map<string, Block<IEmbed, IEmbedInput>>;
+	typeform: Map<string, Block<IEmbed, IEmbedInput>>;
 	video: Map<string, Block<IVideo, IVideoInput>>;
 	audio: Map<string, Block<IAudio, IAudioInput>>;
 	image: Map<string, Block<IImage, IImageInput>>;

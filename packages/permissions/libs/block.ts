@@ -1,36 +1,75 @@
 import { NotionQueries } from '@nishans/endpoints';
-import { deepMerge } from '@nishans/fabricator';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import {
+	NotionOperationOptions,
+	NotionOperationPluginFunction,
+	NotionOperationsObject,
+	Operation
+} from '@nishans/operations';
 import {
 	IOperation,
 	IPermission,
 	IPublicPermission,
 	IPublicPermissionOptions,
 	IUserPermission,
-	TDataType,
+	TBlock,
 	TPage,
 	TPermissionRole,
 	TPublicPermissionRole,
 	TSpacePermissionRole,
 	TUserPermissionRole
 } from '@nishans/types';
-import { NishanArg } from '../';
-import Data from './Data';
 
 interface UserIdentifier {
 	id?: string;
 	email?: string;
 }
 
-export default class NotionPermissions extends Data<TPage> {
-	constructor (arg: NishanArg, id: string, type: TDataType) {
-		super({ ...arg, id, type });
+type NotionPermissionsCtorArg = NotionOperationOptions & { id: string; cache: { block: Map<string, TBlock> } };
+
+export class NotionBlockPermissions {
+	id: string;
+	token: string;
+	user_id: string;
+	interval?: number;
+	space_id: string;
+	shard_id: number;
+	notion_operation_plugins: NotionOperationPluginFunction[];
+	cache: { block: Map<string, TBlock> };
+
+	constructor (arg: NotionPermissionsCtorArg) {
+		this.id = arg.id;
+		this.token = arg.token;
+		this.user_id = arg.user_id;
+		this.interval = arg.interval;
+		this.notion_operation_plugins = arg.notion_operation_plugins;
+		this.shard_id = arg.shard_id;
+		this.space_id = arg.space_id;
+		this.cache = arg.cache;
+	}
+
+	getProps () {
+		return {
+			token: this.token,
+			interval: this.interval,
+			user_id: this.user_id,
+			shard_id: this.shard_id,
+			space_id: this.space_id,
+			cache: this.cache,
+			notion_operation_plugins: this.notion_operation_plugins
+		} as NotionPermissionsCtorArg;
 	}
 
 	async getNotionUserIdFromEmail ({ email, id }: UserIdentifier) {
 		let user_id = id;
 		if (email) {
-			const { value } = await NotionQueries.findUser({ email }, this.getConfigs());
+			const { value } = await NotionQueries.findUser(
+				{ email },
+				{
+					user_id: this.user_id,
+					interval: this.interval,
+					token: this.token
+				}
+			);
 			if (!value) throw new Error(`User does not have a notion account`);
 			else user_id = value.value.id;
 		}
@@ -57,7 +96,7 @@ export default class NotionPermissions extends Data<TPage> {
 			permission_data = { ...options, type: permission_type } as IPublicPermission;
 		else permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
 		operation = Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data);
-		const { permissions } = this.getCachedData();
+		const { permissions } = this.cache.block.get(this.id) as TPage;
 		const permission_index = permissions.findIndex((permission) => {
 			if (permission_type === 'public_permission' || permission_type === 'space_permission')
 				return permission.type === permission_type;
@@ -101,9 +140,10 @@ export default class NotionPermissions extends Data<TPage> {
 			const user_id = await this.getNotionUserIdFromEmail(arg);
 			operations.push(this.updatePermissionsArray('user_permission', { role }, user_id));
 		}
-		this.logger && this.logger('UPDATE', 'block', this.id);
+		const data = this.cache.block.get(this.id) as TPage;
+		data.last_edited_time = Date.now();
 		await NotionOperationsObject.executeOperations(
-			[ ...operations, Operation[this.type].update(this.id, [], this.updateLastEditedProps()) ],
+			[ ...operations, Operation.block.update(this.id, [], { last_edited_time: Date.now() }) ],
 			this.getProps()
 		);
 	}
@@ -136,11 +176,12 @@ export default class NotionPermissions extends Data<TPage> {
 		permission_type: 'public_permission' | 'space_permission',
 		options: { role: TPublicPermissionRole | TSpacePermissionRole } & Partial<IPublicPermissionOptions>
 	): Promise<void> {
-		this.logger && this.logger('UPDATE', 'block', this.id);
+		const data = this.cache.block.get(this.id) as TPage;
+		data.last_edited_time = Date.now();
 		await NotionOperationsObject.executeOperations(
 			[
 				this.updatePermissionsArray(permission_type, options as IPublicPermission),
-				Operation[this.type].update(this.id, [], this.updateLastEditedProps())
+				Operation.block.update(this.id, [], { last_edited_time: Date.now() })
 			],
 			this.getProps()
 		);

@@ -51,7 +51,8 @@ async function main () {
 		.option('verbose', {
 			alias: 'v',
 			type: 'boolean',
-			description: 'Run with verbose logging'
+			description: 'Run with verbose logging',
+			default: false
 		}).argv;
 
 	if (argv._[2] === 'page') await pageCommand(argv);

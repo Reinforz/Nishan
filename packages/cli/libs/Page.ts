@@ -5,7 +5,8 @@ export default async function pageCommand (argv: any){
 
   const nishan = new Nishan({
     token: process.env.NISHAN_TOKEN_V2 as string,
-    interval: parseInt(process.env.NISHAN_REQUEST_INTERVAL as string ?? '0') as number
+    interval: parseInt(process.env.NISHAN_REQUEST_INTERVAL as string ?? '0') as number,
+    logger: argv.verbose ?? false
   });
 
   const notion_user = await nishan.getNotionUser(process.env.NISHAN_NOTION_USER_ID);

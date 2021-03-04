@@ -19,16 +19,44 @@ function setIdentifierPositionArgs (yargs: yargs.Argv<Record<string, unknown>>){
 
 async function main () {
 	const argv: any = yargs(process.argv)
+    .command('page create [title]', 'CRUD Operations on a page', (yargs) => {
+      yargs.positional('create', {
+        describe: 'Create a root page',
+        alias: 'c'
+      }).required;
+
+      yargs.positional('title', {
+        describe: 'title of the page to create',
+        type: "string",
+        alias: "t"
+      }).required;
+    })
 		.command('page get [identifier]', 'CRUD Operations on a page', (yargs) => {
 			yargs.positional('get', {
 				describe: 'Get a page of a certain id',
+        alias: 'g'
 			}).required;
       
       setIdentifierPositionArgs(yargs);
 		})
+    .command('page update [identifier] [title]', 'CRUD Operations on a page', (yargs) => {
+			yargs.positional('update', {
+				describe: 'Update a page of a certain id',
+        alias: 'u'
+			}).required;
+      
+      setIdentifierPositionArgs(yargs);
+
+      yargs.positional('newTitle', {
+        describe: 'New title of the update page',
+        type: "string",
+        alias: "nt"
+      }).required;
+		})
     .command('page delete [identifier]', 'CRUD Operations on a page', (yargs) => {
 			yargs.positional('delete', {
 				describe: 'Delete a page of a certain id',
+        alias: 'd'
 			}).required;
 
       setIdentifierPositionArgs(yargs);
@@ -59,6 +87,25 @@ async function main () {
       const target_page = page.get(identifier);
       if(target_page)
         console.log(JSON.stringify(target_page.getCachedData(), null, 2));
+    } else if (method === "create"){
+      await space.createRootPages([
+        {
+          type: "page",
+          contents: [],
+          properties: {
+            title: [[argv.title]]
+          }
+        }
+      ])
+    } else if (method === "update"){
+      await space.updateRootPage((page)=>{
+        if(argv.id) return page.type === "page" && page.id === argv.id ? {type: "page", properties: {
+          title: [[argv.newTitle]]
+        }} : undefined;
+        else if(argv.title) return page.type === "page" && page.properties.title[0][0] === argv.title ? {type: "page", properties: {
+          title: [[argv.newTitle]]
+        }} : undefined;
+      })
     } else if (method === "delete"){
       await space.deleteRootPage((page)=>{
         if(argv.id) return page.type === "page" && page.id === argv.id;

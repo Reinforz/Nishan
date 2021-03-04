@@ -18,6 +18,7 @@ import {
 	TSpacePermissionRole,
 	TUserPermissionRole
 } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 
 interface UserIdentifier {
 	id?: string;
@@ -103,7 +104,7 @@ export class NotionBlockPermissions {
 			else return permission.type === permission_type && permission.user_id === user_id;
 		});
 		if (options.role === 'none') permissions.splice(permission_index, 1);
-		else if (permissions[permission_index]) deepMerge(permissions[permission_index], options);
+		else if (permissions[permission_index]) NotionUtils.deepMerge(permissions[permission_index], options);
 		else permissions.push(permission_data);
 		return operation;
 	}

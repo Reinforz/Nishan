@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@nishans/endpoints": "^0.0.23",
-    "@nishans/operations": "^0.0.23"
+    "@nishans/operations": "^0.0.23",
+    "@nishans/utils": "^0.0.15"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.24"

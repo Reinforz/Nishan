@@ -1,7 +1,8 @@
 import { UnsupportedPropertyTypeError } from "@nishans/errors";
 import { ISchemaMap } from "@nishans/notion-formula";
 import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
-import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, getSchemaMapUnit, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../../";
+import { NotionUtils } from "@nishans/utils";
+import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../../";
 import { checkDateSchemaUnit } from "../utils";
 
 export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
@@ -30,7 +31,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       return table_query2;
     }
     case "board":{
-      const schema_map_unit = getSchemaMapUnit(schema_map as any, view.group_by, ["group_by"]);
+      const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.group_by, ["group_by"]);
       // group_by should reference a select or multi select property
       if(schema_map_unit.type !== "select" && schema_map_unit.type !== "multi_select")
         throw new UnsupportedPropertyTypeError(schema_map_unit.name, ["group_by"], schema_map_unit.type, ["select", "multi_select"])
@@ -55,7 +56,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       return gallery_query2;
     }
     case "calendar":{
-      const schema_map_unit = getSchemaMapUnit(schema_map as any, view.calendar_by, ["calendar_by"]);
+      const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.calendar_by, ["calendar_by"]);
       checkDateSchemaUnit(schema_map_unit, view.calendar_by, ["calendar_by"])
 
       const calendar_query2: ICalendarViewQuery2 = query2 as any;
@@ -68,7 +69,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
       return calendar_query2;
     }
     case "timeline":{
-      const schema_map_unit = getSchemaMapUnit(schema_map as any, view.timeline_by, ["timeline_by"]);
+      const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.timeline_by, ["timeline_by"]);
       checkDateSchemaUnit(schema_map_unit, view.timeline_by, ["timeline_by"])
 
       const timeline_query2: ITimelineViewQuery2 = query2 as any;

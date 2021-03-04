@@ -2,8 +2,8 @@ import { NotionCacheObject } from '@nishans/cache';
 import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { FabricatorProps, TRollupSchemaUnitInput } from '..';
-import { getSchemaMapUnit } from '../../';
 
 /**
  * Generate rollup schema unit
@@ -18,7 +18,7 @@ export async function rollup (
 	props: Pick<FabricatorProps, 'token' | 'logger' | 'cache' | 'interval' | 'user_id'>
 ) {
 	// Get the related schema unit from the passed schema map
-	const relation_schema_unit = getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);
+	const relation_schema_unit = NotionUtils.getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);
 	// If the schema unit is not of type relation, throw an error as well since only relation schema units can be used in rollup schema unit
 	if (relation_schema_unit.type !== 'relation')
 		throw new UnsupportedPropertyTypeError(relation_property, [ 'relation_property' ], relation_schema_unit.type, [
@@ -36,7 +36,7 @@ export async function rollup (
 	// Log the collection read operation
 	props.logger && props.logger('READ', 'collection', collection_id);
 
-	const target_collection_schema_unit_map = getSchemaMapUnit(
+	const target_collection_schema_unit_map = NotionUtils.getSchemaMapUnit(
 		generateSchemaMapFromCollectionSchema(target_collection.schema),
 		target_property,
 		[ 'target_property' ]

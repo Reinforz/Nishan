@@ -1,6 +1,7 @@
 import { ISchemaMap } from '@nishans/notion-formula';
 import { IViewFilter, TViewFilters } from '@nishans/types';
-import { getSchemaMapUnit, TViewFilterCreateInput } from '../../';
+import { NotionUtils } from '@nishans/utils';
+import { TViewFilterCreateInput } from '../../';
 
 /**
  * Populate a filter with its children 
@@ -16,7 +17,7 @@ export function populateViewQuery2Filters (
 	function traverse (filter: TViewFilterCreateInput, parent_filter: IViewFilter['filters']) {
 		// get the necessary information from the passed filter input
 		const { name, position, filter: _filter, filter_operator = 'and', children } = filter;
-		const schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
+		const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, name, [ 'name' ]);
 		// Construct the nested filter object
 		const filter_value = {
 			property: schema_map_unit.schema_id,

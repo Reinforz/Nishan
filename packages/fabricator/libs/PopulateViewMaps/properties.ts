@@ -1,5 +1,6 @@
 import { Schema, TView, ViewFormatProperties } from "@nishans/types";
-import { getSchemaUnit, ISchemaFormatMap } from "../";
+import { NotionUtils } from "@nishans/utils";
+import { ISchemaFormatMap } from "../";
 
 /**
  * Populates and returns an format properties map
@@ -11,7 +12,7 @@ export function properties(data: TView, schema: Schema){
   // iterates through each of the format properties to populate the map
   format_properties.forEach((format_property, index) => {
     // get the referenced schema unit based on the property
-    const schema_unit = getSchemaUnit(schema, format_property.property, ["query2", "format", `${data.type}_properties`, index.toString()]);
+    const schema_unit = NotionUtils.getSchemaUnit(schema, format_property.property, ["query2", "format", `${data.type}_properties`, index.toString()]);
     // Set the aggregation map value using the schema unit name as key, and attaching the schema_id in the value 
     format_properties_map.set(schema_unit.name, {
       ...schema_unit,

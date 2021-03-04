@@ -3,8 +3,8 @@ import { NotionMutations, NotionQueries } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
 import { NotionOperationsObject, Operation } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
+import { NotionUtils } from "@nishans/utils";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
-import { deepMerge } from "../..";
 import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
 
@@ -157,7 +157,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           type: content.type as any
         }, props));
         
-        deepMerge(common_data, response);
+        NotionUtils.deepMerge(common_data, response);
         
         const block_data: any = {
           ...common_data,

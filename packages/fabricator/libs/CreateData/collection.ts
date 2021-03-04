@@ -1,7 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
-import { setDefault } from '../setDefault';
+import { NotionUtils } from '@nishans/utils';
 import { CreateData, FabricatorProps, ICollectionBlockInput } from './';
 
 /**
@@ -20,7 +20,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 		name: input.name,
 	}, props);
 
-  setDefault(input, {
+  NotionUtils.setDefault(input, {
     cover: '',
     icon: '',
     page_section_visibility: { backlinks: 'section_show', comments: "section_show" }

@@ -1,6 +1,6 @@
 import { IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
-import { getSchemaUnit, InitializeView, ISchemaFiltersMap } from "../";
-
+import { NotionUtils } from "@nishans/utils";
+import { InitializeView, ISchemaFiltersMap } from "../";
 /**
  * Populates and returns a filter map
  * @param data view data
@@ -18,7 +18,7 @@ export function filters(data: TView, schema: Schema){
       else {
         const target_filter = filter as TViewFilters, 
           // get the referenced schema unit based on the property
-          schema_unit = getSchemaUnit(schema, target_filter.property, ["query2", "filter", "filters", indexes.join(".")]);
+          schema_unit = NotionUtils.getSchemaUnit(schema, target_filter.property, ["query2", "filter", "filters", indexes.join(".")]);
           // Set the filter map value using the array of indexes name as key, and attaching the schema_id in the value, parent filter and the child filter for convenience 
           filters_map.set(indexes.concat(index).join("."), {
             ...schema_unit,

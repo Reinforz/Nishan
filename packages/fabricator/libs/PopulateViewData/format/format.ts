@@ -1,6 +1,7 @@
 import { NonExistentSchemaUnitTypeError, UnsupportedPropertyTypeError } from "@nishans/errors";
 import { IBoardViewFormat, ICalendarViewFormat, IGalleryViewFormat, IListViewFormat, ITableViewFormat, ITimelineViewFormat, MultiSelectSchemaUnit, SelectSchemaUnit } from "@nishans/types";
-import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, getSchemaMapUnit, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../../";
+import { NotionUtils } from "@nishans/utils";
+import { BoardViewFormatCreateInput, CalendarViewFormatCreateInput, GalleryViewFormatCreateInput, ISchemaMap, ListViewFormatCreateInput, TableViewFormatCreateInput, TimelineViewFormatCreateInput, TViewFormatCreateInput } from "../../";
 
 export type TViewFormat = ITableViewFormat | ICalendarViewFormat | ITimelineViewFormat | IListViewFormat | IGalleryViewFormat | IBoardViewFormat;
 
@@ -36,7 +37,7 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
       const board_format = format as IBoardViewFormat;
       // if the board_cover is of type property, that property needs to be resolved
       if (view.board_cover?.type === "property") {
-        const schema_map_unit = getSchemaMapUnit(schema_map as any, view.board_cover.property, ["board_cover", "property"]);
+        const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.board_cover.property, ["board_cover", "property"]);
         if(schema_map_unit.type !== "file")
           throw new UnsupportedPropertyTypeError(view.board_cover.property, ["board_cover", "property"], schema_map_unit.type, ["file"])
         board_format.board_cover = { property: schema_map_unit.schema_id, type: "property" }
@@ -56,7 +57,7 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
         // iterate through each of them
         for (let index = 0; index < view.board_groups2.length; index++) {
           const element = view.board_groups2[index];
-          const schema_map_unit = getSchemaMapUnit(schema_map as any, element.property, [`board_groups2.${index}.property`]);
+          const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, element.property, [`board_groups2.${index}.property`]);
           // validate whether property referenced is of type select or multi_select 
           if(schema_map_unit.type !== "select" && schema_map_unit.type !== "multi_select")
             throw new UnsupportedPropertyTypeError(element.property, [`board_groups2.${index}.property`], schema_map_unit.type, ["select", "multi_select"]);
@@ -87,7 +88,7 @@ export function populateViewFormat(view: TViewFormatCreateInput, schema_map?: IS
     case "gallery":
       const gallery_format = format as IGalleryViewFormat;
       if (view.gallery_cover?.type === "property") {
-        const schema_map_unit = getSchemaMapUnit(schema_map as any, view.gallery_cover.property, ["gallery_cover.property"]);
+        const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.gallery_cover.property, ["gallery_cover.property"]);
         if(schema_map_unit.type !== "file")
           throw new UnsupportedPropertyTypeError(view.gallery_cover.property, ["gallery_cover.property"], schema_map_unit.type, ["file"])
         gallery_format.gallery_cover = { property: schema_map_unit.schema_id, type: "property" };

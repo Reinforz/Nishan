@@ -1,6 +1,6 @@
 import { Schema, TView } from "@nishans/types";
+import { NotionUtils } from "@nishans/utils";
 import { InitializeView, ISchemaSortsMap } from "../";
-import { getSchemaUnit } from "../getSchemaUnit";
 
 /**
  * Populates and returns an sort map
@@ -12,7 +12,7 @@ export function sorts(data: TView, schema: Schema){
   // Go through each of the sorts and add it to the sort map
   sorts.forEach((sort, index) => {
     // get the referenced schema unit based on the property
-    const schema_unit = getSchemaUnit(schema, sort.property, ["query2", "sort", index.toString()]);
+    const schema_unit = NotionUtils.getSchemaUnit(schema, sort.property, ["query2", "sort", index.toString()]);
     // Set the sort map value using the schema unit name as key, and attaching the schema_id in the value
     sorts_map.set(schema_unit.name, {
       ...schema_unit,

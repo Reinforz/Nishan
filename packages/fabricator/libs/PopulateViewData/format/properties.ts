@@ -8,6 +8,7 @@ import {
   TView,
   TViewType
 } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import {
   BoardSchemaUnitFormatCreateInput,
   CalendarSchemaUnitFormatCreateInput,
@@ -17,7 +18,6 @@ import {
   TimelineSchemaUnitFormatCreateInput,
   TViewSchemaUnitFormatCreateInput
 } from '../../';
-import { setDefault } from '../../setDefault';
 import { populateTableViewFormatProperties } from './utils';
 
 
@@ -61,7 +61,7 @@ export function populateViewFormatProperties (
 			populateTableViewFormatProperties(view_format_input as TableSchemaUnitFormatCreateInput, schema_id)
 		);
 	else if (view_type === 'timeline') {
-    view_format_input = setDefault(view_format_input as ITimelineViewFormat ?? {}, {
+    view_format_input = NotionUtils.setDefault(view_format_input as ITimelineViewFormat ?? {}, {
       timeline: true,
       table: true,
     });

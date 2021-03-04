@@ -1,8 +1,8 @@
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
-import { getSchemaMapUnit, PopulateViewData } from '../../';
-import { setDefault } from '../../setDefault';
+import { PopulateViewData } from '../../';
 import { generateViewData } from './utils';
 
 /**
@@ -29,7 +29,7 @@ export async function views (
 	if (views.length === 0) throw new Error(`input views array cannot be empty`);
 	for (let index = 0; index < views.length; index++) {
 		const view = views[index];
-		setDefault(view, {
+		NotionUtils.setDefault(view, {
 			filters: []
 		});
 
@@ -40,7 +40,7 @@ export async function views (
 
 		schema_units.forEach((schema_unit: any) => {
 			const { format, name } = schema_unit,
-				schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
+				schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, name, [ 'name' ]);
 			included_units.push(schema_map_unit.schema_id);
 			PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, view_query2.sort);
 			PopulateViewData.query2.aggregation(

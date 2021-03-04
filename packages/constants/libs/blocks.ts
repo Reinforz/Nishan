@@ -2,9 +2,15 @@ import { TBlockType } from '@nishans/types';
 
 export const createBlockTypesArray = () => {
 	return [
-		'linked_db',
-		'collection_view_page',
 		'embed',
+		'abstract',
+		'invision',
+		'framer',
+		'whimsical',
+		'miro',
+		'loom',
+		'pdf',
+		'typeform',
 		'video',
 		'audio',
 		'image',
@@ -34,7 +40,8 @@ export const createBlockTypesArray = () => {
 		'divider',
 		'callout',
 		'collection_view',
-		'link_to_page',
+		'collection_view_page',
+		'linked_db',
 		'column_list',
 		'column'
 	] as TBlockType[];

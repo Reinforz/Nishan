@@ -1,7 +1,9 @@
+import { TSchemaUnitType } from '@nishans/types';
 import { NotionConstants } from '../libs';
 
 it('NotionConstants.schema_units', () => {
-	expect(NotionConstants.schema_unit_types()).toStrictEqual([
+	const schema_unit_types = NotionConstants.schema_unit_types();
+	const expected_schema_unit_types: TSchemaUnitType[] = [
 		'text',
 		'number',
 		'select',
@@ -21,5 +23,9 @@ it('NotionConstants.schema_units', () => {
 		'created_by',
 		'last_edited_time',
 		'last_edited_by'
-	]);
+	];
+	expect(schema_unit_types.length === expected_schema_unit_types.length).toBe(true);
+	expected_schema_unit_types.forEach((expected_schema_unit_type) =>
+		expect(schema_unit_types.includes(expected_schema_unit_type)).toBe(true)
+	);
 });

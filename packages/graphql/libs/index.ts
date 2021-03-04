@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
-import { IPage, ISpace, TDataType, TPage } from '@nishans/types';
+import { ICollectionViewPage, IPage, ISpace, TDataType, TPage } from '@nishans/types';
 import { ApolloServer, gql } from 'apollo-server';
 
 // The GraphQL schema
@@ -15,11 +15,19 @@ const typeDefs = gql`
 	}
 
 	type PageProperties {
-		title: [[String]]
+		title: String!
 	}
 
   type CollectionViewPage {
     id: String!
+    collection: Collection!
+		parent: Space!
+    type: String!
+  }
+
+  type Collection {
+    id: String!
+    name: String!
   }
 
 	type Page {
@@ -63,9 +71,21 @@ const resolvers = {
       await fetchNotionData(args.id, 'block', ctx)
 	},
 	Page: {
-		parent: async ({ parent_id }: IPage, _: any, ctx: NotionRequestConfigs) => 
-      await fetchNotionData(parent_id, 'space', ctx)
+		parent: async ({ parent_id, parent_table }: IPage, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(parent_id, parent_table, ctx),
+    properties: (parent: any) => ({
+        title: parent.properties.title[0][0]
+    })
 	},
+  Collection: {
+    name: (parent: any) => parent.name[0][0]
+  },
+  CollectionViewPage: {
+    collection: async ({collection_id}: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(collection_id, 'collection', ctx),
+    parent: async ({ parent_id, parent_table }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(parent_id, parent_table, ctx),
+  },
 	Space: {
 		pages: async ({ pages: page_ids }: ISpace, _: any, ctx: NotionRequestConfigs) => {
 			const { recordMap } = await NotionQueries.syncRecordValues(

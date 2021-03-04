@@ -4,10 +4,10 @@
   "description": "A bunch of small utility modules used across nishans ecosystem",
   "keywords": [
     "notion",
-    "notion-utils",
-    "notion-helpers",
-    "notion-shared",
-    "notion-common"
+    "notion utils",
+    "notion helpers",
+    "notion shared",
+    "notion common"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
@@ -36,9 +36,9 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.24"
+    "@nishans/types": "^0.0.25"
   },
   "dependencies": {
-    "@nishans/errors": "^0.0.20"
+    "@nishans/errors": "^0.0.21"
   }
 }

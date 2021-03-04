@@ -1,3 +1,4 @@
+import { NotionConstants } from '@nishans/constants';
 import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { TBlockType } from '@nishans/types';
 import { NishanArg } from '../types';
@@ -14,88 +15,17 @@ export function createBlockClass (type: TBlockType, id: string, props: Omit<Nish
 		...props
 	};
 
-	switch (type) {
-		case 'video':
-		case 'audio':
-		case 'image':
-		case 'bookmark':
-		case 'code':
-		case 'file':
-		case 'tweet':
-		case 'gist':
-		case 'codepen':
-		case 'maps':
-		case 'figma':
-		case 'drive':
-		case 'text':
-		case 'table_of_contents':
-		case 'column_list':
-		case 'column':
-		case 'equation':
-		case 'breadcrumb':
-		case 'factory':
-		case 'to_do':
-		case 'header':
-		case 'sub_header':
-		case 'sub_sub_header':
-		case 'bulleted_list':
-		case 'numbered_list':
-		case 'toggle':
-		case 'quote':
-		case 'divider':
-		case 'callout':
-		case 'embed':
-			// All these data types belongs to the block type
-			// dynamically loading the Block class
-			const Block = require('./api/Block/Block').default;
-			return new Block(obj);
-		case 'page':
-			const Page = require('./api/Block/Page').default;
-			return new Page(obj);
-		case 'collection_view':
-		case 'linked_db':
-			const CollectionView = require('./api/Block/CollectionView').default;
-			return new CollectionView(obj);
-		case 'collection_view_page':
-			const CollectionViewPage = require('./api/Block/CollectionViewPage').default;
-			return new CollectionViewPage(obj);
-		default:
-			// Throws an error if an unsupported block type is passed
-			throw new UnsupportedBlockTypeError(type, [
-				'page',
-				'collection_view',
-				'collection_view_page',
-				'linked_db',
-				'video',
-				'audio',
-				'image',
-				'bookmark',
-				'code',
-				'file',
-				'tweet',
-				'gist',
-				'codepen',
-				'maps',
-				'figma',
-				'drive',
-				'text',
-				'table_of_contents',
-				'column_list',
-				'column',
-				'equation',
-				'breadcrumb',
-				'factory',
-				'to_do',
-				'header',
-				'sub_header',
-				'sub_sub_header',
-				'bulleted_list',
-				'numbered_list',
-				'toggle',
-				'quote',
-				'divider',
-				'callout',
-				'embed'
-			]);
-	}
+	if (type === 'page') {
+		const Page = require('./api/Block/Page').default;
+		return new Page(obj);
+	} else if (type === 'collection_view' || type === 'linked_db') {
+		const CollectionView = require('./api/Block/CollectionView').default;
+		return new CollectionView(obj);
+	} else if (type === 'collection_view_page') {
+		const CollectionViewPage = require('./api/Block/CollectionViewPage').default;
+		return new CollectionViewPage(obj);
+	} else if (NotionConstants.block_types().includes(type)) {
+		const Block = require('./api/Block/Block').default;
+		return new Block(obj);
+	} else throw new UnsupportedBlockTypeError(type, NotionConstants.block_types());
 }

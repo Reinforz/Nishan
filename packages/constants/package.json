@@ -1,6 +1,6 @@
 {
   "name": "@nishans/constants",
-  "version": "0.0.0",
+  "version": "0.0.18",
   "description": "A small package for all notion specific constants",
   "keywords": [
     "notion",
@@ -30,5 +30,8 @@
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "devDependencies": {
+    "@nishans/types": "^0.0.24"
   }
 }

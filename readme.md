@@ -53,6 +53,7 @@ Legend:
 21. **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) (WIP): A logger built specifically for nishan ecosystem.
 22. **`@nishans/permissions`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/permissions) (WIP): A logger built specifically for nishan ecosystem.
 23. **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) [NPM](https://www.npmjs.com/package/@nishans/constants) [Docs](https://nishan-docs.netlify.app/docs/constants/): A small package for all notion specific constants.
+24. **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [NPM](https://www.npmjs.com/package/@nishans/utils) [Docs](https://nishan-docs.netlify.app/docs/utils): A bunch of small utility modules used across nishans ecosystem.
 
 ### Apps
 

@@ -1,8 +1,8 @@
-import { getSchemaUnit } from '../libs';
-import { tsu } from './utils';
+import { tsu } from '../../fabricator/tests/utils';
+import { NotionUtils } from '../libs';
 
 it(`returns schema unit`, () => {
-	const schema_unit = getSchemaUnit(
+	const schema_unit = NotionUtils.getSchemaUnit(
 		{
 			title: tsu
 		},
@@ -14,7 +14,7 @@ it(`returns schema unit`, () => {
 
 it(`Throw error for unknown property`, () => {
 	expect(() =>
-		getSchemaUnit(
+		NotionUtils.getSchemaUnit(
 			{
 				title: tsu
 			},

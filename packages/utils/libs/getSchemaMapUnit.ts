@@ -1,5 +1,5 @@
 import { UnknownPropertyReferenceError } from '@nishans/errors';
-import { ISchemaMap } from '@nishans/notion-formula';
+import { ISchemaMap } from './types';
 
 export const getSchemaMapUnit = (schema_map: ISchemaMap, key: string, path: string[]) => {
 	const schema_map_unit = schema_map.get(key);

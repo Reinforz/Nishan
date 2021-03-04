@@ -1,8 +1,8 @@
-import { setDefault } from '../libs';
+import { NotionUtils } from '../libs';
 
 it(`Should work correctly`, () => {
 	expect(
-		setDefault(
+		NotionUtils.setDefault(
 			{
 				info: {
 					name: 'Shaheer'
@@ -22,7 +22,7 @@ it(`Should work correctly`, () => {
 
 it(`Should work correctly if object key doesn't exist`, () => {
 	expect(
-		setDefault(
+		NotionUtils.setDefault(
 			{},
 			{
 				info: {

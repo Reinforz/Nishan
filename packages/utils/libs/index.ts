@@ -1,7 +1,13 @@
-'use strict';
+export * from './types';
 
-module.exports = utils;
+import { deepMerge } from './deepMerge';
+import { getSchemaMapUnit } from './getSchemaMapUnit';
+import { getSchemaUnit } from './getSchemaUnit';
+import { setDefault } from './setDefault';
 
-function utils() {
-    // TODO
-}
+export const NotionUtils = {
+	getSchemaMapUnit,
+	deepMerge,
+	getSchemaUnit,
+	setDefault
+};

@@ -30,6 +30,9 @@
       "path": "./packages/operations/tsconfig.json"
     },
     {
+      "path": "./packages/permissions/tsconfig.json"
+    },
+    {
       "path": "./packages/cache/tsconfig.json"
     },
     {

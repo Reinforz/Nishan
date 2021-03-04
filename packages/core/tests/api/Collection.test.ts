@@ -1,8 +1,9 @@
 import { NotionCacheObject } from '@nishans/cache';
-import { CreateData, getSchemaMapUnit, IPageCreateInput } from '@nishans/fabricator';
+import { CreateData, IPageCreateInput } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject } from '@nishans/operations';
 import { Schema } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
 import { Collection, ICollectionUpdateInput, NotionData, TCollectionUpdateKeys } from '../../libs';
@@ -374,7 +375,7 @@ describe('schema unit', () => {
 		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
 
 		await collection.createSchemaUnits([ txsu ]);
-		const { schema_id } = getSchemaMapUnit(generateSchemaMapFromCollectionSchema(schema), 'Text', []);
+		const { schema_id } = NotionUtils.getSchemaMapUnit(generateSchemaMapFromCollectionSchema(schema), 'Text', []);
 
 		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.c.u(

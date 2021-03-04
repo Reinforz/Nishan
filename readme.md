@@ -50,7 +50,8 @@ Legend:
 18. **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks) [Docs](https://nishan-docs.netlify.app/docs/inline-blocks/): Package providing an easy to use api to generate contents for notion inline blocks.
 19. **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz) [Docs](https://nishan-docs.netlify.app/docs/idz/): A small package to validate, generate and parse notion ids.
 20. **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator) [Docs](https://nishan-docs.netlify.app/docs/fabricator/): A package to generate notion blocks using a simple api.
-21. **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [NPM](https://www.npmjs.com/package/@nishans/logger) [Docs](https://nishan-docs.netlify.app/docs/logger/): A logger built specifically for nishan ecosystem.
+21. **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) (WIP): A logger built specifically for nishan ecosystem.
+22. **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) (WIP): A small package for all notion specific constants.
 
 ### Apps
 

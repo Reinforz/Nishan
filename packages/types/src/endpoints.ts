@@ -473,6 +473,13 @@ export interface NotionEndpoints {
 			total: number;
 		}
 	>;
+	deleteBlocks: NotionEndpoint<
+		{
+			blockIds: string[];
+			permanentlyDelete: boolean;
+		},
+		{ recordMap: Pick<RecordMap, 'block'> }
+	>;
 }
 
 export interface Cursor {
@@ -540,6 +547,3 @@ export interface Token {
 	id: string;
 	accessToken: string;
 }
-
-// https://www.notion.so/api/v3/deleteBlocks
-// {"blockIds":["deb4c8b1-bf61-4c73-becc-0a8a7d08e64b"],"permanentlyDelete":true}

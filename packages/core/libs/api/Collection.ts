@@ -1,8 +1,9 @@
 import { error } from '@nishans/errors';
-import { CreateData, deepMerge, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
+import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from '@nishans/notion-formula';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import {
 	CreateMaps,
 	FilterType,
@@ -286,7 +287,7 @@ class Collection extends Data<ICollection> {
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id }, updated_data, results) => {
-				data.schema[schema_id] = deepMerge(data.schema[schema_id], updated_data);
+				data.schema[schema_id] = NotionUtils.deepMerge(data.schema[schema_id], updated_data);
 				const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id });
 				results[data.schema[schema_id].type].set(schema_id, schema_obj);
 				results[data.schema[schema_id].type].set(data.schema[schema_id].name, schema_obj);

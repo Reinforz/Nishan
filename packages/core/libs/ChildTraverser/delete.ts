@@ -1,6 +1,7 @@
-import { deepMerge, updateChildContainer } from '@nishans/fabricator';
+import { updateChildContainer } from '@nishans/fabricator';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
@@ -46,7 +47,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			// Only attach last_edited_props if the child_type is block
 			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
-			deepMerge(child_data, updated_data);
+			NotionUtils.deepMerge(child_data, updated_data);
 
 			// Push the updated block data to the stack
 			operations.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));

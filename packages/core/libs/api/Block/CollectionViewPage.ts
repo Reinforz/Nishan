@@ -1,5 +1,6 @@
+import { NotionBlockPermissions } from '@nishans/permissions';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
-import { NishanArg, NotionPermissions } from '../../';
+import { NishanArg } from '../../';
 import CollectionBlock from './CollectionBlock';
 
 /**
@@ -7,10 +8,10 @@ import CollectionBlock from './CollectionBlock';
  * @noInheritDoc
  */
 class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
-	Permissions: NotionPermissions;
+	Permissions: NotionBlockPermissions;
 	constructor (arg: NishanArg) {
 		super({ ...arg });
-		this.Permissions = new NotionPermissions(arg, arg.id, 'block');
+		this.Permissions = new NotionBlockPermissions(arg);
 	}
 
 	async getCachedParentData () {

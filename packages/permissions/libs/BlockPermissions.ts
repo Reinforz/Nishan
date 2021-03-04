@@ -1,22 +1,22 @@
 import { NotionQueries } from '@nishans/endpoints';
 import {
-	NotionOperationOptions,
-	NotionOperationPluginFunction,
-	NotionOperationsObject,
-	Operation
+  NotionOperationOptions,
+  NotionOperationPluginFunction,
+  NotionOperationsObject,
+  Operation
 } from '@nishans/operations';
 import {
-	IOperation,
-	IPermission,
-	IPublicPermission,
-	IPublicPermissionOptions,
-	IUserPermission,
-	TBlock,
-	TPage,
-	TPermissionRole,
-	TPublicPermissionRole,
-	TSpacePermissionRole,
-	TUserPermissionRole
+  IOperation,
+  IPermission,
+  IPublicPermission,
+  IPublicPermissionOptions,
+  IUserPermission,
+  TBlock,
+  TPage,
+  TPermissionRole,
+  TPublicPermissionRole,
+  TSpacePermissionRole,
+  TUserPermissionRole
 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 
@@ -25,7 +25,7 @@ interface UserIdentifier {
 	email?: string;
 }
 
-type NotionPermissionsCtorArg = NotionOperationOptions & { id: string; cache: { block: Map<string, TBlock> } };
+type NotionPermissionsCtorArg = NotionOperationOptions & { user_id: string, id: string; cache: { block: Map<string, TBlock> } };
 
 export class NotionBlockPermissions {
 	id: string;
@@ -42,7 +42,7 @@ export class NotionBlockPermissions {
 		this.token = arg.token;
 		this.user_id = arg.user_id;
 		this.interval = arg.interval;
-		this.notion_operation_plugins = arg.notion_operation_plugins;
+		this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
 		this.shard_id = arg.shard_id;
 		this.space_id = arg.space_id;
 		this.cache = arg.cache;

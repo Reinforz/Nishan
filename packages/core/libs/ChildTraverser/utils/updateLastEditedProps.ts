@@ -1,4 +1,4 @@
-import { deepMerge } from '@nishans/fabricator';
+import { NotionUtils } from '@nishans/utils';
 
 export function updateLastEditedProps (block: any, user_id: string) {
 	const last_edited_props = {
@@ -6,6 +6,6 @@ export function updateLastEditedProps (block: any, user_id: string) {
 		last_edited_by_table: 'notion_user',
 		last_edited_by_id: user_id
 	};
-	deepMerge(block, last_edited_props);
+	NotionUtils.deepMerge(block, last_edited_props);
 	return last_edited_props;
 }

@@ -1,5 +1,5 @@
 import { PreExistentValueError } from "@nishans/errors";
-import { deepMerge, InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
@@ -43,7 +43,7 @@ class View<T extends TView> extends Data<T> {
 
 	async update (updated_data: TViewUpdateInput) {
 		const view_data = this.getCachedData();
-		deepMerge(view_data, updated_data);
+		NotionUtils.deepMerge(view_data, updated_data);
     await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, [], { ...updated_data })], this.getProps())
 	}
 
@@ -174,7 +174,7 @@ class View<T extends TView> extends Data<T> {
         if(name)
           child_filter.property = NotionUtils.getSchemaMapUnit(schema_map, name, ['name']).schema_id;
 
-				deepMerge(child_filter.filter, updated_filter);
+				NotionUtils.deepMerge(child_filter.filter, updated_filter);
 
 				if (position !== null && position !== undefined) {
 					filters.splice(filter_index, 1);

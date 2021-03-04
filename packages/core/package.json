@@ -44,6 +44,7 @@
     "@nishans/fabricator": "^0.0.19",
     "@nishans/constants": "0.0.15",
     "@nishans/utils": "0.0.15",
+    "@nishans/permissions": "0.0.15",
     "colors": "^1.4.0"
   },
   "devDependencies": {

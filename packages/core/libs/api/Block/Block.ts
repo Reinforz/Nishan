@@ -1,9 +1,10 @@
 import { NotionCacheObject } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
-import { deepMerge, RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
+import { RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, NishanArg, PopulateMap } from '../../';
 import Data from '../Data';
 
@@ -91,7 +92,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	async update (args: Partial<A>) {
 		const data = this.getCachedData() as any;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		deepMerge(data, args);
+		NotionUtils.deepMerge(data, args);
 		await NotionOperationsObject.executeOperations(
 			[
 				Operation.block.update(this.id, [], {

@@ -1,6 +1,6 @@
-import { deepMerge } from '@nishans/fabricator';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
@@ -45,7 +45,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 
 			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
-			deepMerge(child_data, updated_data);
+			NotionUtils.deepMerge(child_data, updated_data);
 			operations.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
 		}
 	};

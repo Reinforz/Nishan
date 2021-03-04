@@ -26,10 +26,18 @@
   "scripts": {
     "prepublishOnly": "npm run build && npm run build:nocomments",
     "prebuild": "npm run test",
+    "test": "npx jest --runInBand --config ../../jest.config.js",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
     "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
   },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "dependencies": {
+    "@nishans/endpoints": "^0.0.23",
+    "@nishans/operations": "^0.0.23"
+  },
+  "devDependencies": {
+    "@nishans/types": "^0.0.24"
   }
 }

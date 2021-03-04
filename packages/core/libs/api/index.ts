@@ -7,7 +7,6 @@ import { transformToMultiple } from "../utils";
 import Collection from "./Collection";
 import NotionData from "./Data";
 import NotionUser from "./NotionUser";
-import NotionPermissions from "./Permissions";
 import SchemaUnit from "./SchemaUnit";
 import Space from "./Space";
 import SpaceView from "./SpaceView";
@@ -90,7 +89,6 @@ export {
   SpaceView,
   Space,
   SchemaUnit,
-  NotionPermissions,
   NotionData
 };
 

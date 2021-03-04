@@ -9,7 +9,8 @@ import {
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { FilterType, FilterTypes, getSchemaMapUnit, NishanArg, UpdateType, UpdateTypes } from '../../';
+import { NotionUtils } from '@nishans/utils';
+import { FilterType, FilterTypes, NishanArg, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
 import View from './View';
 
@@ -19,7 +20,7 @@ export function detectAggregationErrors (
 	aggregations_map: ISchemaAggregationMap
 ) {
 	const { name } = input;
-	const schema_map_unit = getSchemaMapUnit(schema_map, name, [ 'name' ]);
+	const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, name, [ 'name' ]);
 	const current_aggregation = aggregations_map.get(name);
 	if (current_aggregation)
 		throw new PreExistentValueError('aggregation', name, current_aggregation.aggregation.aggregator);

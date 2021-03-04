@@ -3,10 +3,11 @@ import { deepMerge, InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValu
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
+import { NotionUtils } from "@nishans/utils";
 import {
   FilterType,
   FilterTypes,
-  getSchemaMapUnit, NishanArg,
+  NishanArg,
   UpdateType,
   UpdateTypes
 } from '../../';
@@ -53,7 +54,7 @@ class View<T extends TView> extends Data<T> {
 			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
-				schema_map_unit = getSchemaMapUnit(schema_map, arg[0],  [ `${index}` ]),
+				schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, arg[0],  [ `${index}` ]),
 				target_sort = sorts_map.get(arg[0]);
 				if (!target_sort) {
 					if (typeof arg[2] === 'number') {
@@ -171,7 +172,7 @@ class View<T extends TView> extends Data<T> {
 					{ filter: updated_filter, position, name } = updated_data;
           
         if(name)
-          child_filter.property = getSchemaMapUnit(schema_map, name, ['name']).schema_id;
+          child_filter.property = NotionUtils.getSchemaMapUnit(schema_map, name, ['name']).schema_id;
 
 				deepMerge(child_filter.filter, updated_filter);
 

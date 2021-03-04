@@ -18,6 +18,9 @@
       "path": "./packages/errors/tsconfig.json"
     },
     {
+      "path": "./packages/utils/tsconfig.json"
+    },
+    {
       "path": "./packages/inline-blocks/tsconfig.json"
     },
     {

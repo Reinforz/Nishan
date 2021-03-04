@@ -1,1 +1,1 @@
-export * from './block';
+export * from './BlockPermissions';

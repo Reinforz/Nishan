@@ -72,3 +72,8 @@ jobs:
           files: ./packages/constants/coverage/lcov.info
           flags: constants
           name: "@nishans/constants"
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./packages/utils/coverage/lcov.info
+          flags: utils
+          name: "@nishans/utils"

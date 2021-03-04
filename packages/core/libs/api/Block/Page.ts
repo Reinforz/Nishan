@@ -12,7 +12,6 @@ import {
 	FilterTypes,
 	IBlockMap,
 	NishanArg,
-	NotionPermissions,
 	PopulateMap,
 	UpdateType,
 	UpdateTypes

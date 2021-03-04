@@ -2532,6 +2532,21 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/core@0.0.21":
+  version "0.0.22"
+  dependencies:
+    "@nishans/cache" "^0.0.26"
+    "@nishans/constants" "0.0.16"
+    "@nishans/endpoints" "^0.0.24"
+    "@nishans/errors" "^0.0.21"
+    "@nishans/fabricator" "^0.0.20"
+    "@nishans/idz" "^0.0.15"
+    "@nishans/notion-formula" "^0.0.23"
+    "@nishans/operations" "^0.0.24"
+    "@nishans/permissions" "0.0.15"
+    "@nishans/utils" "0.0.15"
+    colors "^1.4.0"
+
 "@nishans/inline-blocks@0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.20.tgz#c51caccd444d156a0e5eb1936871c3bd9ea2a038"
@@ -2551,6 +2566,11 @@
   version "0.0.12"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.12.tgz#a5f3e4dd99c7d3f2c8cc048439eef24d1a9448b4"
   integrity sha512-sVde7qazhe6bx87Hv3quvj8jH/WXGk3+deMdHIvkx8WscFgItRZayFkG9BIixO+p6Fh2w0jGBMa4F0eNSRNPQw==
+
+"@nishans/types@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.24.tgz#3241fb53e0817bf05227c083bd151a0de9918a68"
+  integrity sha512-bb1Lb8jWGxwf7zG2+We6lVK7oVufpXnXc4pwnB07d3n/updPfDPcUCbP6KGCmixBbSM+5dw/nEOM6V/ul/pxCQ==
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -9518,6 +9538,11 @@ graphql-tools@^4.0.8:
     deprecated-decorator "^0.1.6"
     iterall "^1.1.3"
     uuid "^3.1.0"
+
+graphql-type-json@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
+  integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==
 
 graphql@^15.5.0:
   version "15.5.0"

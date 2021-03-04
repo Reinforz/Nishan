@@ -2,11 +2,16 @@ require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
 import { ICollectionViewPage, IPage, ISpace, TDataType, TPage } from '@nishans/types';
 import { ApolloServer, gql } from 'apollo-server';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 // The GraphQL schema
 const typeDefs = gql`
   
+  scalar JSONObject
+  
+  union TParent = Page | Space
   union TPage = Page | CollectionViewPage
+  union CollectionBlock = CollectionViewPage | CollectionView
 
 	type Space {
 		id: String!
@@ -14,28 +19,47 @@ const typeDefs = gql`
 		pages: [TPage!]
 	}
 
-	type PageProperties {
+  interface Block{
+    type: String!
+    id: String!
+    parent: TParent!
+    space: Space!
+  }
+
+  type CollectionViewPage implements Block {
+    id: String!
+    collection: Collection!
+		parent: TParent!
+    type: String!
+    space: Space!
+  }
+
+  type CollectionView implements Block {
+    id: String!
+    type: String!
+    collection: Collection!
+		parent: TParent!
+    space: Space!
+  }
+
+  type PageProperties {
 		title: String!
 	}
 
-  type CollectionViewPage {
-    id: String!
-    collection: Collection!
-		parent: Space!
-    type: String!
-  }
+	type Page implements Block {
+		properties: PageProperties!
+		id: String!
+		type: String!
+		parent: TParent!
+    space: Space!
+	}
 
   type Collection {
     id: String!
     name: String!
+    schema: JSONObject!
+    parent: CollectionBlock!
   }
-
-	type Page {
-		properties: PageProperties!
-		id: String!
-		type: String!
-		parent: Space!
-	}
 
 	type Query {
 		page(id: ID!): Page
@@ -64,6 +88,7 @@ async function fetchNotionData(id: string, table: TDataType, request_configs: No
 
 // A map of functions which return data for the schema.
 const resolvers = {
+  JSONObject: GraphQLJSONObject,
 	Query: {
     space: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
       await fetchNotionData(args.id, 'space', ctx),
@@ -75,16 +100,22 @@ const resolvers = {
       await fetchNotionData(parent_id, parent_table, ctx),
     properties: (parent: any) => ({
         title: parent.properties.title[0][0]
-    })
+    }),
+    space: async ({space_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(space_id, 'space', ctx),
 	},
   Collection: {
-    name: (parent: any) => parent.name[0][0]
+    name: (parent: any) => parent.name[0][0],
+    parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(parent_id, 'block', ctx),
   },
   CollectionViewPage: {
     collection: async ({collection_id}: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
       await fetchNotionData(collection_id, 'collection', ctx),
     parent: async ({ parent_id, parent_table }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
       await fetchNotionData(parent_id, parent_table, ctx),
+    space: async ({space_id}: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(space_id, 'space', ctx),
   },
 	Space: {
 		pages: async ({ pages: page_ids }: ISpace, _: any, ctx: NotionRequestConfigs) => {
@@ -114,6 +145,12 @@ const resolvers = {
     __resolveType: (obj: TPage) => {
       if(obj.type === "page") return "Page";
       else if(obj.type === "collection_view_page") return "CollectionViewPage";
+    }
+  },
+  TParent: {
+    __resolveType: (obj: ISpace | IPage) => {
+      if((obj as IPage).type === "page") return "Page";
+      else return "Space";
     }
   }
 };

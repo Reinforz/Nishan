@@ -1,15 +1,13 @@
 {
-  "name": "@nishans/cli",
-  "version": "0.0.12",
-  "description": "A package to interact with `@nishans/core` from the terminal",
+  "name": "@nishans/logger",
+  "version": "0.0.0",
+  "description": "A logger built specifically for nishan ecosystem",
   "keywords": [
     "notion",
-    "notion-cli",
-    "notion-terminal",
-    "cli"
+    "notion-logger"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/cli/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/logger/README.md",
   "license": "MIT",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
@@ -31,13 +29,9 @@
     "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
   },
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcli"
+    "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/core": "0.0.21",
-    "yargs": "^16.2.0"
-  },
-  "devDependencies": {
-    "@types/yargs": "^16.0.0"
+    "winston": "^3.3.3"
   }
 }

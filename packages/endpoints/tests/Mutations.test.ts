@@ -22,7 +22,8 @@ const request_data = {
 	'setBookmarkMetadata',
 	'initializePageTemplate',
 	'initializeGoogleDriveBlock',
-	'loginWithEmail'
+	'loginWithEmail',
+	'deleteBlocks'
 ] as (keyof typeof NotionMutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {

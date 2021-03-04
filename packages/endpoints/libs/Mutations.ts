@@ -81,5 +81,8 @@ export const NotionMutations = {
 	},
 	async loginWithEmail (params: NotionEndpoints['loginWithEmail']['payload'], configs: NotionRequestConfigs) {
 		return await NotionRequest.send<NotionEndpoints['loginWithEmail']['response']>('loginWithEmail', params, configs);
+	},
+	async deleteBlocks (params: NotionEndpoints['deleteBlocks']['payload'], configs: NotionRequestConfigs) {
+		return await NotionRequest.send<NotionEndpoints['deleteBlocks']['response']>('deleteBlocks', params, configs);
 	}
 };

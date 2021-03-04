@@ -24,11 +24,23 @@
     "type": "git",
     "url": "git+https://github.com/Nishan-Open-Source/Nishan.git"
   },
-  "scripts": {},
+  "scripts": {
+    "prepublishOnly": "npm run build && npm run build:nocomments",
+    "prebuild": "npm run test",
+    "build": "npx del-cli ./dist && tsc --sourceMap false",
+    "test": "npx jest --runInBand --config ../../jest.config.js",
+    "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
+  },
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fgraphql"
   },
   "dependencies": {
-    "@nishans/core": "0.0.21"
+    "@nishans/core": "0.0.21",
+    "@nishans/endpoints": "0.0.23",
+    "apollo-server": "^2.21.0",
+    "graphql": "^15.5.0"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.24"
   }
 }

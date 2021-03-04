@@ -1,0 +1,35 @@
+{
+  "name": "@nishans/permissions",
+  "version": "0.0.15",
+  "description": "A package to easily deal with notion permissions",
+  "keywords": [
+    "notion",
+    "notion-auth",
+    "notion-permissions"
+  ],
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/permissions/README.md",
+  "license": "MIT",
+  "main": "dist/libs/index.js",
+  "typings": "dist/libs/index.d.ts",
+  "directories": {
+    "lib": "libs",
+    "test": "tests"
+  },
+  "files": [
+    "dist/libs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build && npm run build:nocomments",
+    "prebuild": "npm run test",
+    "build": "npx del-cli ./dist && tsc --sourceMap false",
+    "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
+  },
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  }
+}

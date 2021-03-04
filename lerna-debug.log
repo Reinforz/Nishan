@@ -1,0 +1,21 @@
+0 silly argv {
+0 silly argv   _: [ 'create' ],
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': 'D:\\Creative\\Node\\node_modules\\lerna\\cli.js',
+0 silly argv   name: 'logger'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath D:\Workplace\WebDev\Projects\Portfolio\Library\Nishan
+3 error JSONError: Unexpected token "/" (0x2F) in JSON at position 850 while parsing near "...rceMap false\",\r\n    // \"test\": \"npx jest..." in packages\cli\package.json
+3 error
+3 error [0m [90m 29 |[39m     [32m"prebuild"[39m[33m:[39m [32m"npm run test"[39m[33m,[39m[0m
+3 error [0m [90m 30 |[39m     [32m"build"[39m[33m:[39m [32m"npx del-cli ./dist && tsc --sourceMap false"[39m[33m,[39m[0m
+3 error [0m[31m[1m>[22m[39m[90m 31 |[39m     [90m// "test": "npx jest --runInBand --config ../../jest.config.js",[39m[0m
+3 error [0m [90m    |[39m     [31m[1m^[22m[39m[0m
+3 error [0m [90m 32 |[39m     [32m"build:nocomments"[39m[33m:[39m [32m"tsc -p ./tsconfig.nocomments.json --sourceMap false"[39m[0m
+3 error [0m [90m 33 |[39m   }[33m,[39m[0m
+3 error [0m [90m 34 |[39m   [32m"bugs"[39m[33m:[39m {[0m
+3 error
+3 error     at module.exports (D:\Workplace\WebDev\Projects\Portfolio\Library\Nishan\node_modules\parse-json\index.js:29:21)
+3 error     at parse (D:\Workplace\WebDev\Projects\Portfolio\Library\Nishan\node_modules\load-json-file\index.js:15:9)
+3 error     at module.exports (D:\Workplace\WebDev\Projects\Portfolio\Library\Nishan\node_modules\load-json-file\index.js:18:47)

@@ -2477,15 +2477,6 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nishans/core@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.9.tgz#b1e3a64d13dee2d3abaa369eedf16cdd136c8cc7"
-  integrity sha512-5JPlzERLvZc0FirYI75bYu6NlDEF+At3JfOqSxf+47Py5eNr/MBVNWzeR9blIFtHhNqmWCYN9HOr/VIoeTJu9w==
-  dependencies:
-    axios "^0.21.1"
-    colors "^1.4.0"
-    uuid "^8.3.2"
-
 "@nishans/inline-blocks@0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.20.tgz#c51caccd444d156a0e5eb1936871c3bd9ea2a038"
@@ -3990,6 +3981,13 @@
   version "15.0.12"
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.12.tgz#6234ce3e3e3fa32c5db301a170f96a599c960d74"
   integrity sha512-f+fD/fQAo3BCbCDlrUpznF1A5Zp9rB0noS5vnoormHSIPFKL0Z2DcUJ3Gxp5ytH4uLRNxy7AwYUC9exZzqGMAw==
+  dependencies:
+    "@types/yargs-parser" "*"
+
+"@types/yargs@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-16.0.0.tgz#0e033b23452da5d61b6c44747612cb80ac528751"
+  integrity sha512-2nN6AGeMwe8+O6nO9ytQfbMQOJy65oi1yK2y/9oReR08DaXSGtMsrLyCM1ooKqfICpCx4oITaR4LkOmdzz41Ww==
   dependencies:
     "@types/yargs-parser" "*"
 
@@ -7324,7 +7322,7 @@ dotenv-webpack@^1.7.0:
   dependencies:
     dotenv-defaults "^1.0.2"
 
-dotenv@8.2.0, dotenv@^8.0.0:
+dotenv@8.2.0, dotenv@^8.0.0, dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==

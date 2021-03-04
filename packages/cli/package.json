@@ -11,15 +11,14 @@
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/cli/README.md",
   "license": "MIT",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
+  "main": "dist/libs/index.js",
+  "typings": "dist/libs/index.d.ts",
   "directories": {
-    "lib": "src",
+    "lib": "libs",
     "test": "tests"
   },
   "files": [
-    "dist/src",
-    "dist/utils"
+    "dist/libs"
   ],
   "repository": {
     "type": "git",
@@ -30,6 +29,11 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fcli"
   },
   "dependencies": {
-    "@nishans/core": "0.0.9"
+    "@nishans/core": "0.0.21",
+    "dotenv": "^8.2.0",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^16.0.0"
   }
 }

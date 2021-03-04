@@ -1,29 +1,12 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "dom",
-    ],
-    "baseUrl": "./",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES2015",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "watch": false,
-    "declaration": true,
-    "sourceMap": false,
-    "noUnusedLocals": false,
-    "incremental": false
-  },
+  "extends": "../../tsconfig.shared.json",
   "include": [
-    "./src/index.ts",
-    "experiment"
+    "./libs/index.ts",
+    "./experiment",
+    "./examples"
   ],
-  "exclude": [
-    "./node_modules",
-  ]
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
+  },
 }

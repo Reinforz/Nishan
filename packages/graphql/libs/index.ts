@@ -1,8 +1,9 @@
 require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
-import { ICollectionView, ICollectionViewPage, IPage, ISpace, TBlock, TCollectionBlock, TDataType, TPage } from '@nishans/types';
+import { ICollectionView, ICollectionViewPage, IPage, ISpace, TCollectionBlock, TDataType } from '@nishans/types';
 import { ApolloServer, gql } from 'apollo-server';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { getBlockResolveType } from './getBlockResolveType';
 
 // The GraphQL schema
 const typeDefs = gql`
@@ -165,7 +166,7 @@ const resolvers = {
 					})) as any
 				},
 				{
-					interval: 0,
+					interval: ctx.interval,
 					token: ctx.token,
 					user_id: ctx.user_id
 				}
@@ -183,10 +184,7 @@ const resolvers = {
       await fetchNotionData(created_by_id, 'notion_user', ctx)
 	},
   TPage: {
-    __resolveType: (obj: TPage) => {
-      if(obj.type === "page") return "Page";
-      else if(obj.type === "collection_view_page") return "CollectionViewPage";
-    }
+    __resolveType: getBlockResolveType
   },
   TParent: {
     __resolveType: (obj: ISpace | IPage) => {
@@ -195,24 +193,13 @@ const resolvers = {
     }
   },
   TCollectionBlock: {
-    __resolveType: (obj: TCollectionBlock) => {
-      if(obj.type === "collection_view") return "CollectionView";
-      else if(obj.type === "collection_view_page") return "CollectionViewPage";
-    }
+    __resolveType: getBlockResolveType
   },
   TBlock: {
-    __resolveType: (obj: TBlock) => {
-      if(obj.type === "collection_view") return "CollectionView";
-      else if(obj.type === "collection_view_page") return "CollectionViewPage";
-      else if(obj.type === "page") return "Page";
-    }
+    __resolveType: getBlockResolveType
   },
   Block: {
-    __resolveType: (obj: TBlock) => {
-      if(obj.type === "collection_view") return "CollectionView";
-      else if(obj.type === "collection_view_page") return "CollectionViewPage";
-      else if(obj.type === "page") return "Page";
-    }
+    __resolveType: getBlockResolveType
   }
 };
 
@@ -225,6 +212,8 @@ const server = new ApolloServer({
 		interval: process.env.NISHAN_NOTION_REQUEST_INTERVAL ?? 0,
 	})
 });
+
+export * from "./getBlockResolveType";
 
 server.listen().then(({ url }) => {
 	console.log(`🚀 Server ready at ${url}`);

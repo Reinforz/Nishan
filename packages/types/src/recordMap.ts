@@ -11,62 +11,23 @@ import {
 	TPlanType,
 	TView
 } from './';
+import { TData } from './types';
 
-export interface BlockData {
+interface Data<T extends TData> {
 	[key: string]: {
 		role: TPermissionRole;
-		value: TBlock;
+		value: T;
 	};
 }
 
-export interface SpaceData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: ISpace;
-	};
-}
-
-export interface SpaceViewData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: ISpaceView;
-	};
-}
-
-export interface CollectionData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: ICollection;
-	};
-}
-
-export interface ViewData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: TView;
-	};
-}
-
-export interface NotionUserData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: INotionUser;
-	};
-}
-
-export interface UserRootData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: IUserRoot;
-	};
-}
-
-export interface UserSettingsData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: IUserSettings;
-	};
-}
+export type BlockData = Data<TBlock>;
+export type SpaceData = Data<ISpace>;
+export type SpaceViewData = Data<ISpaceView>;
+export type CollectionData = Data<ICollection>;
+export type ViewData = Data<TView>;
+export type NotionUserData = Data<INotionUser>;
+export type UserRootData = Data<IUserRoot>;
+export type UserSettingsData = Data<IUserSettings>;
 
 export interface ISpace extends CreateProps, LastEditedProps {
 	beta_enabled: boolean;

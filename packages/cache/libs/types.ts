@@ -1,4 +1,5 @@
-import { TBlock, ICollection, TView, ISpace, INotionUser, ISpaceView, IUserRoot, IUserSettings } from '@nishans/types';
+import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TBlock, TView } from '@nishans/types';
+import { NotionRequestConfigs } from 'packages/endpoints/dist/libs';
 export interface ICache {
 	block: Map<string, TBlock>;
 	collection: Map<string, ICollection>;
@@ -9,18 +10,6 @@ export interface ICache {
 	user_root: Map<string, IUserRoot>;
 	user_settings: Map<string, IUserSettings>;
 }
-
-export interface CtorArgs {
-	token: string;
-	interval?: number;
-	user_id?: string;
-	shard_id: number;
-	space_id: string;
-	cache?: ICache;
-}
-
-export interface Configs {
-	token: string;
-	user_id?: string;
-	interval?: number;
+export interface NotionCacheConfigs extends NotionRequestConfigs {
+	cache: ICache;
 }

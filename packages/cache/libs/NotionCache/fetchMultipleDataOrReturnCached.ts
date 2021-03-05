@@ -1,24 +1,20 @@
-import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { NotionUtils } from '@nishans/utils';
-import { ICache, NotionCache } from '..';
+import { NotionCache } from '..';
+import { NotionCacheConfigs } from '../types';
 
 /**
    * Fetch multiple from notion's db if it doesn't exist in the cache
    * @param table The table of the data
    * @param id the id of the data
-   * @param configs Notion request configs
-   * @param cache Internal notion cache
+   * @param configs Notion cache configs
    */
-export async function fetchMultipleDataOrReturnCached (
-	params: UpdateCacheManuallyParam,
-	configs: NotionRequestConfigs,
-	cache: ICache
-) {
+export async function fetchMultipleDataOrReturnCached (params: UpdateCacheManuallyParam, configs: NotionCacheConfigs) {
 	const result = NotionUtils.createDefaultRecordMap();
 	const sync_record_values: UpdateCacheManuallyParam = [];
 	for (let index = 0; index < params.length; index++) {
 		const [ id, table ] = params[index];
-		const data = cache[table].get(id);
+		const data = configs.cache[table].get(id);
 		if (data) result[table].push(data as any);
 		else sync_record_values.push([ id, table ]);
 	}
@@ -32,7 +28,7 @@ export async function fetchMultipleDataOrReturnCached (
 			configs
 		);
 
-		NotionCache.saveToCache(recordMap, cache, (data_type, _, data) => {
+		NotionCache.saveToCache(recordMap, configs.cache, (data_type, _, data) => {
 			result[data_type].push(data as any);
 		});
 	}

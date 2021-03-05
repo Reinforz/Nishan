@@ -1,19 +1,16 @@
-import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
-import { ICache, NotionCache } from '..';
+import { NotionCache } from '..';
+import { NotionCacheConfigs } from '../types';
 
 /**
  * Initialize cache of specific type of data
  * @param id The id of the data
  * @param type The type of data
  */
-export async function initializeCacheForSpecificData (
-	id: string,
-	type: TDataType,
-	configs: NotionRequestConfigs,
-	cache: ICache
-) {
+export async function initializeCacheForSpecificData (id: string, type: TDataType, configs: NotionCacheConfigs) {
+	const { cache } = configs;
 	const container: UpdateCacheManuallyParam = [],
 		extra_container: UpdateCacheManuallyParam = [];
 	if (type === 'block') {
@@ -71,7 +68,7 @@ export async function initializeCacheForSpecificData (
 	} else error(`${type} data is not supported`);
 
 	// Filters data that doesn't exist in the cache
-	await NotionCache.updateCacheIfNotPresent(container, configs, cache);
+	await NotionCache.updateCacheIfNotPresent(container, configs);
 
 	// If the block is a page, for all the collection block **contents**, fetch the collection attached with it as well
 	if (type === 'block') {
@@ -93,5 +90,5 @@ export async function initializeCacheForSpecificData (
 		extra_container.push([ parent.collection_id, 'collection' ]);
 	}
 
-	await NotionCache.updateCacheIfNotPresent(extra_container, configs, cache);
+	await NotionCache.updateCacheIfNotPresent(extra_container, configs);
 }

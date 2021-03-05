@@ -1,5 +1,5 @@
-import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { ICache, NotionCache } from '..';
+import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionCache, NotionCacheConfigs } from '..';
 
 /**
  * Constructs and executes syncRecordValue params
@@ -7,15 +7,11 @@ import { ICache, NotionCache } from '..';
  * @param configs The notion request configs
  * @param cache The cache to store result
  */
-export async function constructAndSyncRecordsParams (
-	args: UpdateCacheManuallyParam,
-	configs: NotionRequestConfigs,
-	cache: ICache
-) {
+export async function constructAndSyncRecordsParams (args: UpdateCacheManuallyParam, configs: NotionCacheConfigs) {
 	const sync_record_values = NotionCache.constructSyncRecordsParams(args);
 	// fetch and save notion data to cache
 	if (sync_record_values.length) {
 		const { recordMap } = await NotionQueries.syncRecordValues({ requests: sync_record_values }, configs);
-		NotionCache.saveToCache(recordMap, cache);
+		NotionCache.saveToCache(recordMap, configs.cache);
 	}
 }

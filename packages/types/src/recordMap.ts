@@ -1,36 +1,16 @@
 import {
 	CreateProps,
-	IBoardView,
-	ICalendarView,
 	ICollection,
-	ICollectionView,
-	ICollectionViewPage,
-	IGalleryView,
-	IListView,
 	ISpacePermission,
-	ITableView,
 	IUserPermission,
 	LastEditedProps,
 	Node,
 	TBlock,
 	TLocale,
 	TPermissionRole,
-	TPlanType
+	TPlanType,
+	TView
 } from './';
-
-export interface CollectionViewData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: ICollectionView;
-	};
-}
-
-export interface CollectionViewPageData {
-	[key: string]: {
-		role: TPermissionRole;
-		value: ICollectionViewPage;
-	};
-}
 
 export interface BlockData {
 	[key: string]: {
@@ -63,7 +43,7 @@ export interface CollectionData {
 export interface ViewData {
 	[key: string]: {
 		role: TPermissionRole;
-		value: ITableView | IListView | IBoardView | ICalendarView | IGalleryView;
+		value: TView;
 	};
 }
 

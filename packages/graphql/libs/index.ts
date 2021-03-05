@@ -1,96 +1,11 @@
-require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
 import { ICollectionView, ICollectionViewPage, IPage, ISpace } from '@nishans/types';
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { collectionBlockResolvers } from './collectionBlockResolvers';
 import { fetchNotionData } from './fetchNotionData';
 import { getBlockResolveType } from './getBlockResolveType';
-
-// The GraphQL schema
-const typeDefs = gql`
-  
-  scalar JSONObject
-  
-  union TParent = Page | Space
-  union TPage = Page | CollectionViewPage
-  union TCollectionBlock = CollectionViewPage | CollectionView
-  union TBlock = CollectionViewPage | CollectionView | Page
-
-  interface Block{
-    type: String!
-    id: String!
-    parent: TParent!
-    space: Space!
-    last_edited_by: NotionUser!
-    created_by: NotionUser!
-  }
-
-  type NotionUser {
-    email: String!
-    family_name: String!
-    given_name: String!
-    id: String!
-    onboarding_completed: Boolean!
-    profile_photo: String!
-    version: Int!
-  }
-
-	type Space {
-		id: String!
-		name: String!
-		pages: [TPage!]
-    last_edited_by: NotionUser!
-    created_by: NotionUser!
-	}
-
-  type CollectionViewPage implements Block {
-    id: String!
-    collection: Collection!
-		parent: TParent!
-    type: String!
-    space: Space!
-    last_edited_by: NotionUser!
-    created_by: NotionUser!
-  }
-
-  type CollectionView implements Block {
-    id: String!
-    type: String!
-    collection: Collection!
-		parent: TParent!
-    space: Space!
-    last_edited_by: NotionUser!
-    created_by: NotionUser!
-  }
-
-  type PageProperties {
-		title: String!
-	}
-
-	type Page implements Block {
-		properties: PageProperties!
-		id: String!
-		type: String!
-		parent: TParent!
-    space: Space!
-    last_edited_by: NotionUser!
-    created_by: NotionUser!
-	}
-
-  type Collection {
-    id: String!
-    name: String!
-    schema: JSONObject!
-    parent: TCollectionBlock!
-  }
-
-	type Query {
-		page(id: ID!): Page
-		block(id: ID!): TBlock
-		space(id: ID!): Space
-	}
-`;
+import { NotionGraphqlServerTypedefs } from "./typedefs";
 
 // A map of functions which return data for the schema.
 const resolvers = {
@@ -172,7 +87,7 @@ const resolvers = {
 };
 
 const NotionGraphqlServer = new ApolloServer({
-	typeDefs,
+	typeDefs: NotionGraphqlServerTypedefs,
 	resolvers,
 	context: async () => ({
 		token: process.env.NISHAN_NOTION_TOKEN_V2,

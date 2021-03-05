@@ -1,4 +1,4 @@
-import { NotionCacheClass } from '@nishans/cache';
+import { ICache, NotionCacheClass } from '@nishans/cache';
 import { warn } from '@nishans/errors';
 import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationPluginFunction, NotionOperationsObject, Operation } from '@nishans/operations';
@@ -20,6 +20,9 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
   notion_operation_plugins: NotionOperationPluginFunction[];
   shard_id: number;
   space_id: string
+  interval: number;
+  token: string;
+  cache: ICache;
 
   constructor(arg: NishanArg & { type: TDataType }) {
     super(arg);
@@ -31,6 +34,12 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.shard_id = arg.shard_id;
     this.space_id = arg.space_id;
+		this.interval = arg.interval ?? 500;
+    // Validate the cache first if its passed, otherwise store a default one
+		this.cache = (arg.cache && NotionCacheObject.validateCache(arg.cache)) || NotionCacheObject.createDefaultCache();
+    if(!arg.token)
+      throw new Error(`Token not provided`);
+		this.token = arg.token;
   }
 
   protected getLastEditedProps() {

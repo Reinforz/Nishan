@@ -1,5 +1,5 @@
+import { NotionRequestConfigs } from '@nishans/endpoints';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TBlock, TView } from '@nishans/types';
-import { NotionRequestConfigs } from 'packages/endpoints/dist/libs';
 export interface ICache {
 	block: Map<string, TBlock>;
 	collection: Map<string, ICollection>;

@@ -31,7 +31,7 @@ describe('initializeCacheForSpecificData', () => {
 		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
 		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
 
-		await NotionCache.initializeCacheForSpecificData('collection_view_1', 'collection_view', { token: 'token' }, cache);
+		await NotionCache.initializeCacheForSpecificData('collection_view_1', 'collection_view', { token: 'token', cache });
 		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
 		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([ [ 'collection_1', 'collection' ] ]);
@@ -43,7 +43,9 @@ describe('initializeCacheForSpecificData', () => {
 				id: 'block_1',
 				type: 'page',
 				parent_table: 'space',
-				parent_id: 'space_1'
+				parent_id: 'space_1',
+				last_edited_by_id: 'notion_user_1',
+				created_by_id: 'notion_user_1'
 			},
 			block_2: any = {
 				id: 'block_2',
@@ -77,12 +79,13 @@ describe('initializeCacheForSpecificData', () => {
 
 		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
 
-		await NotionCache.initializeCacheForSpecificData('block_1', 'block', { token: 'token' }, cache);
+		await NotionCache.initializeCacheForSpecificData('block_1', 'block', { token: 'token', cache });
 		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_2', 'block' ],
 			[ 'block_3', 'block' ],
 			[ 'block_4', 'block' ],
+			[ 'notion_user_1', 'notion_user' ],
 			[ 'space_1', 'space' ]
 		]);
 		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([
@@ -100,7 +103,9 @@ describe('initializeCacheForSpecificData', () => {
 				collection_id: 'collection_1',
 				view_ids: [ 'collection_view_1' ],
 				parent_table: 'space',
-				parent_id: 'space_1'
+				parent_id: 'space_1',
+				last_edited_by_id: 'notion_user_1',
+				created_by_id: 'notion_user_1'
 			},
 			cache = {
 				...NotionCache.createDefaultCache(),
@@ -109,23 +114,27 @@ describe('initializeCacheForSpecificData', () => {
 
 		const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 
-		await NotionCache.initializeCacheForSpecificData('block_1', 'block', { token: 'token' }, cache);
+		await NotionCache.initializeCacheForSpecificData('block_1', 'block', { token: 'token', cache });
 
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'collection_view_1', 'collection_view' ],
 			[ 'collection_1', 'collection' ],
+			[ 'notion_user_1', 'notion_user' ],
 			[ 'space_1', 'space' ]
 		]);
 	});
 
 	it(`Should work for type space`, async () => {
 		const space_1: any = {
-				created_by_id: 'user_root_1',
+				created_by_id: 'notion_user_1',
+				last_edited_by_id: 'notion_user_1',
 				permissions: [
 					{
+						type: 'user_permission',
 						user_id: 'notion_user_1'
 					},
 					{
+						type: 'user_permission',
 						user_id: 'notion_user_2'
 					}
 				],
@@ -138,12 +147,11 @@ describe('initializeCacheForSpecificData', () => {
 			.spyOn(NotionCache, 'updateCacheIfNotPresent')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionCache.initializeCacheForSpecificData('space_1', 'space', { token: 'token' }, cache);
+		await NotionCache.initializeCacheForSpecificData('space_1', 'space', { token: 'token', cache });
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_1', 'block' ],
 			[ 'notion_user_1', 'notion_user' ],
-			[ 'notion_user_2', 'notion_user' ],
-			[ 'user_root_1', 'user_root' ]
+			[ 'notion_user_2', 'notion_user' ]
 		]);
 	});
 
@@ -161,7 +169,7 @@ describe('initializeCacheForSpecificData', () => {
 			.spyOn(NotionCache, 'updateCacheIfNotPresent')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionCache.initializeCacheForSpecificData('user_root_1', 'user_root', { token: 'token' }, cache);
+		await NotionCache.initializeCacheForSpecificData('user_root_1', 'user_root', { token: 'token', cache });
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'space_view_1', 'space_view' ] ]);
 	});
 
@@ -177,26 +185,32 @@ describe('initializeCacheForSpecificData', () => {
 			const space_view_1: any = {
 					id: 'user_root_1',
 					bookmarked_pages: [ 'block_1' ],
-					space_id: 'space_1'
+					space_id: 'space_1',
+					parent_id: 'user_root_1'
 				},
 				cache = createCache(space_view_1);
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
-			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', { token: 'token' }, cache);
+			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', { token: 'token', cache });
 			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 				[ 'block_1', 'block' ],
-				[ 'space_1', 'space' ]
+				[ 'space_1', 'space' ],
+				[ 'user_root_1', 'user_root' ]
 			]);
 		});
 
 		it(`bookmarked_pages=undefined`, async () => {
 			const space_view_1: any = {
 					id: 'user_root_1',
-					space_id: 'space_1'
+					space_id: 'space_1',
+					parent_id: 'user_root_1'
 				},
 				cache = createCache(space_view_1);
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
-			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', { token: 'token' }, cache);
-			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'space_1', 'space' ] ]);
+			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', { token: 'token', cache });
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+				[ 'space_1', 'space' ],
+				[ 'user_root_1', 'user_root' ]
+			]);
 		});
 	});
 
@@ -233,7 +247,7 @@ describe('initializeCacheForSpecificData', () => {
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 			const queryCollectionMock = createQueryCollectionMock();
 
-			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', { token: 'token' }, cache);
+			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', { token: 'token', cache });
 
 			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
 			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
@@ -257,7 +271,7 @@ describe('initializeCacheForSpecificData', () => {
 			const updateCacheIfNotPresentMock = createUpdateCacheIfNotPresentMock();
 			const queryCollectionMock = createQueryCollectionMock();
 
-			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', { token: 'token' }, cache);
+			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', { token: 'token', cache });
 
 			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
 			expect(saveToCacheMock.mock.calls[0][0]).toBe(query_collection_response.recordMap);
@@ -269,12 +283,10 @@ describe('initializeCacheForSpecificData', () => {
 		const cache = NotionCache.createDefaultCache();
 
 		expect(() =>
-			NotionCache.initializeCacheForSpecificData(
-				'a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c',
-				'unknown' as any,
-				{ token: 'token' },
-				cache
-			)
+			NotionCache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any, {
+				cache,
+				token: 'token'
+			})
 		).rejects.toThrow(colors.red.bold(`unknown data is not supported`));
 	});
 });

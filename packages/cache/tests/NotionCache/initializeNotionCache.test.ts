@@ -59,9 +59,9 @@ describe(`initializeNotionCache`, () => {
 				.spyOn(NotionCache, 'constructAndSyncRecordsParams')
 				.mockImplementationOnce(async () => sync_record_values_response);
 
-		await NotionCache.initializeNotionCache({ token: 'token' }, cache);
+		await NotionCache.initializeNotionCache({ token: 'token', cache });
 
-		expect(getSpacesMock.mock.calls[0][0]).toBe({ token: 'token' });
+		expect(getSpacesMock.mock.calls[0][0]).toStrictEqual(expect.objectContaining({ token: 'token' }));
 		expect(constructAndSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual([ [ 'user_root_2', 'notion_user' ] ]);
 	});
 
@@ -85,9 +85,9 @@ describe(`initializeNotionCache`, () => {
 				.spyOn(NotionCache, 'constructAndSyncRecordsParams')
 				.mockImplementationOnce(async () => sync_record_values_response);
 
-		await NotionCache.initializeNotionCache({ token: 'token' }, cache);
+		await NotionCache.initializeNotionCache({ token: 'token', cache });
 
-		expect(getSpacesMock.mock.calls[0][0]).toBe({ token: 'token' });
+		expect(getSpacesMock.mock.calls[0][0]).toStrictEqual(expect.objectContaining({ token: 'token' }));
 		expect(constructAndSyncRecordsParamsMock).not.toHaveBeenCalled();
 	});
 });

@@ -14,12 +14,11 @@ it(`updateCacheIfNotPresent method`, async () => {
 		.spyOn(NotionCache, 'constructAndSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
 
-	await NotionCache.updateCacheIfNotPresent(
-		[ [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ],
-		{ token: 'token' },
-		cache
-	);
+	await NotionCache.updateCacheIfNotPresent([ [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ], {
+		cache,
+		token: 'token'
+	});
 
 	expect(syncRecordValuesMock.mock.calls[0][0]).toStrictEqual([ [ 'block_2', 'block' ] ]);
-	expect(syncRecordValuesMock.mock.calls[0][1]).toBe({ token: 'token' });
+	expect(syncRecordValuesMock.mock.calls[0][1]).toStrictEqual(expect.objectContaining({ token: 'token' }));
 });

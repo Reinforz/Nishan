@@ -7,7 +7,7 @@ import { ISpace, TBlock } from "@nishans/types";
    */
 export function extractNotionUserIds(data: TBlock | ISpace){
   const notion_users: Set<string> = new Set();
-  (data as ISpace)?.permissions.forEach(
+  (data as ISpace).permissions?.forEach(
       (permission) => permission.type === 'user_permission' && notion_users.add(permission.user_id)
     );
   notion_users.add(data.last_edited_by_id);

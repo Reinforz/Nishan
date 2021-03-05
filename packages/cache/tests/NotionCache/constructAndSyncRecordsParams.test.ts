@@ -19,30 +19,28 @@ describe('constructAndSyncRecordsParams', () => {
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCache, 'saveToCache').mockImplementationOnce(() => undefined);
 
-		await NotionCache.constructAndSyncRecordsParams(
-			[ [ '123', 'block' ] ],
-			{
+		await NotionCache.constructAndSyncRecordsParams([ [ '123', 'block' ] ], {
+			token: 'token',
+			interval: 0,
+			cache
+		});
+
+		expect(syncRecordValuesMock.mock.calls[0][0]).toStrictEqual({
+			requests: [
+				{
+					table: 'block',
+					id: '123',
+					version: 0
+				}
+			]
+		});
+		expect(syncRecordValuesMock.mock.calls[0][1]).toStrictEqual(
+			expect.objectContaining({
 				token: 'token',
 				interval: 0
-			},
-			cache
+			})
 		);
 
-		expect(syncRecordValuesMock).toHaveBeenCalledWith(
-			{
-				requests: [
-					{
-						table: 'block',
-						id: '123',
-						version: 0
-					}
-				]
-			},
-			{
-				token: 'token',
-				interval: 0
-			}
-		);
 		expect(saveToCacheMock.mock.calls[0][0]).toStrictEqual(sync_record_values_response.recordMap);
 	});
 
@@ -59,14 +57,11 @@ describe('constructAndSyncRecordsParams', () => {
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCache, 'saveToCache').mockImplementationOnce(() => undefined);
 
-		await NotionCache.constructAndSyncRecordsParams(
-			[],
-			{
-				token: 'token',
-				interval: 0
-			},
-			cache
-		);
+		await NotionCache.constructAndSyncRecordsParams([], {
+			cache,
+			token: 'token',
+			interval: 0
+		});
 
 		expect(syncRecordValuesMock).not.toHaveBeenCalled();
 		expect(saveToCacheMock).not.toHaveBeenCalled();

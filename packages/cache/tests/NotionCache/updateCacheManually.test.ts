@@ -10,11 +10,10 @@ it(`updateCacheManually`, async () => {
 	const constructSyncRecordsParamsMock = jest
 		.spyOn(NotionCache, 'constructAndSyncRecordsParams')
 		.mockImplementationOnce(async () => undefined);
-	await NotionCache.updateCacheManually(
-		update_cache_manually_args,
-		{ token: 'token' },
-		NotionCache.createDefaultCache()
-	);
-	expect(constructSyncRecordsParamsMock.mock.calls[0][0]).toBe(update_cache_manually_args);
-	expect(constructSyncRecordsParamsMock.mock.calls[0][1]).toBe({ token: 'token' });
+	await NotionCache.updateCacheManually(update_cache_manually_args, {
+		cache: NotionCache.createDefaultCache(),
+		token: 'token'
+	});
+	expect(constructSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual(update_cache_manually_args);
+	expect(constructSyncRecordsParamsMock.mock.calls[0][1]).toStrictEqual(expect.objectContaining({ token: 'token' }));
 });

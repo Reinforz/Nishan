@@ -11,13 +11,9 @@ it(`data exists in cache`, async () => {
 		cache: ICache = {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
-	const data = await NotionCache.fetchDataOrReturnCached(
-		'block',
-		'block_1',
-		{
-			token: 'token'
-		},
-		cache
-	);
+	const data = await NotionCache.fetchDataOrReturnCached('block', 'block_1', {
+		cache,
+		token: 'token'
+	});
 	expect(data).toBe(block_1);
 });

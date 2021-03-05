@@ -1,4 +1,4 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from 'uuid';
@@ -45,7 +45,7 @@ describe('createSpaceIterateArguments', () => {
 
 it(`getSpaceView`, async () => {
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			space_view: new Map([
 				[ 'space_view_2', { alive: true, space_id: 'space_2', id: 'space_view_2' } as any ],
 				[ 'space_view_1', { alive: true, space_id: 'space_1', id: 'space_view_1' } as any ]
@@ -69,7 +69,7 @@ it(`getSpaceView`, async () => {
 });
 
 it(`update`, async () => {
-	const cache = NotionCacheObject.createDefaultCache();;
+	const cache = NotionCache.createDefaultCache();;
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -92,7 +92,7 @@ it(`update`, async () => {
 });
 
 it(`delete`, async () => {
-	const cache = NotionCacheObject.createDefaultCache();
+	const cache = NotionCache.createDefaultCache();
 	const logger_spy = jest.fn();
 
 	const space = new Space({
@@ -130,7 +130,7 @@ it(`delete`, async () => {
 it(`createRootPages`, async () => {
 	const block_id = v4();
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ]),
 		},
 		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
@@ -166,7 +166,7 @@ it(`createRootPages`, async () => {
 
 it(`getRootPage`, async () => {
 	const block_1: any = { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } }, cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', block_1 ],
 			]),
@@ -206,7 +206,7 @@ it(`getRootPage`, async () => {
 
 it(`updateRootPage`, async()=>{
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
@@ -239,7 +239,7 @@ it(`updateRootPage`, async()=>{
 
 it(`deleteRootPage`, async()=>{
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
@@ -262,7 +262,7 @@ it(`deleteRootPage`, async()=>{
 
 it(`addMembers`, async()=>{
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
         user_id: 'user_root_1'
@@ -316,7 +316,7 @@ it(`addMembers`, async()=>{
 
 it(`removeUsers`, async()=>{
 	const cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
         user_id: 'user_root_1'

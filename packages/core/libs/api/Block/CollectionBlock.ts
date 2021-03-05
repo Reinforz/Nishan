@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { CreateData, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
@@ -32,7 +32,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
    */
 	async getCollection () {
 		const data = this.getCachedData();
-		await NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, this.getConfigs(), this.cache);
+		await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, this.getConfigs(), this.cache);
 		return new Collection({
 			...this.getProps(),
 			id: data.collection_id

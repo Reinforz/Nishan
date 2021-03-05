@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { IHeader } from '@nishans/types';
 import colors from 'colors';
@@ -11,7 +11,7 @@ afterEach(() => {
 
 it(`getLastEditedProps`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 	} as any;
 
@@ -27,7 +27,7 @@ it(`getLastEditedProps`, async () => {
 
 it(`updateLastEditedProps`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
@@ -54,7 +54,7 @@ it(`updateLastEditedProps`, async () => {
 describe('getCachedData', () => {
 	it(`data exists`, async () => {
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
@@ -71,7 +71,7 @@ describe('getCachedData', () => {
 
 	it(`data doesn't exists`, async () => {
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
@@ -90,7 +90,7 @@ describe('getCachedData', () => {
 
 	it(`data is not alive`, async () => {
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 		} as any;
 
@@ -109,7 +109,7 @@ describe('getCachedData', () => {
 
 it(`updateCachedData`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
@@ -129,7 +129,7 @@ it(`updateCachedData`, async () => {
 
 it(`deleteCachedData`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
@@ -145,7 +145,7 @@ it(`deleteCachedData`, async () => {
 
 it(`addToChildArray`, async () => {
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', { id: 'block_1', type: 'header' } ],
 				[ 'block_2', { id: 'block_2', type: 'page' } ]
@@ -169,7 +169,7 @@ it(`addToChildArray`, async () => {
 
 it(`updateCacheLocally`, async () => {
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
 		executeOperationsMock = jest
@@ -207,7 +207,7 @@ it(`updateCacheLocally`, async () => {
 describe('initializeCacheForThisData', () => {
 	it(`type=block`, async () => {
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any;
 
@@ -228,7 +228,7 @@ describe('initializeCacheForThisData', () => {
 	});
 
 	it(`type=notion_user`, async () => {
-		const cache = NotionCacheObject.createDefaultCache();
+		const cache = NotionCache.createDefaultCache();
 
 		const block = new NotionData<IHeader>({
 			...default_nishan_arg,
@@ -249,7 +249,7 @@ describe('initializeCacheForThisData', () => {
 
 it(`getProps`, () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 	} as any;
 
@@ -273,7 +273,7 @@ it(`getProps`, () => {
 
 it(`getIterate`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
@@ -300,7 +300,7 @@ it(`getIterate`, async () => {
 
 it(`updateIterate`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
@@ -327,7 +327,7 @@ it(`updateIterate`, async () => {
 
 it(`deleteIterate`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 

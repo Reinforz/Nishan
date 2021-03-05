@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { NotionOperationsObject } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
@@ -52,7 +52,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 		]
 	};
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			collection: new Map([ [ collection_id, collection_1 ] ])
 		},
 		executeOperationsMock = jest
@@ -108,7 +108,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 it(`type=collection_view_page`, async () => {
 	const collection_id = v4(),
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { type: 'page', id: 'block_1' } as any ] ])
 		},
 		row_one_id = v4(),
@@ -214,7 +214,7 @@ it(`type=collection_view_page`, async () => {
 
 it(`type=link_to_page`, async () => {
 	const cache: any = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
 		executeOperationsMock = jest
@@ -245,7 +245,7 @@ it(`type=link_to_page`, async () => {
 
 it(`type=column_list`, async () => {
 	const cache: any = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
 		cl_id = v4(),
@@ -337,7 +337,7 @@ it(`type=factory`, async () => {
 	const fid = v4(),
 		c1_id = v4(),
 		cache: any = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
 		executeOperationsMock = jest
@@ -415,7 +415,7 @@ it(`type=factory`, async () => {
 it(`type=linked_db`, async () => {
 	const cv_id = v4(),
 		cache: any = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ]),
 			collection: new Map([
 				[
@@ -483,7 +483,7 @@ it(`type=linked_db`, async () => {
 it(`type=bookmark`, async () => {
 	const block_id = v4();
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
 		},
 		executeOperationsMock = jest
@@ -492,9 +492,7 @@ it(`type=bookmark`, async () => {
 		setBookmarkMetadataMock = jest
 			.spyOn(NotionMutations, 'setBookmarkMetadata')
 			.mockImplementation(async () => undefined as any),
-		updateCacheManuallyMock = jest
-			.spyOn(NotionCacheObject, 'updateCacheManually')
-			.mockImplementation(async () => undefined);
+		updateCacheManuallyMock = jest.spyOn(NotionCache, 'updateCacheManually').mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 
@@ -541,7 +539,7 @@ it(`type=bookmark`, async () => {
 it(`type=codepen`, async () => {
 	const block_id = v4();
 	const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
 		},
 		getGenericEmbedBlockDataMock = jest.spyOn(NotionQueries, 'getGenericEmbedBlockData').mockImplementation(

@@ -36,7 +36,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
     this.space_id = arg.space_id;
 		this.interval = arg.interval ?? 500;
     // Validate the cache first if its passed, otherwise store a default one
-		this.cache = (arg.cache && NotionCacheObject.validateCache(arg.cache)) || NotionCacheObject.createDefaultCache();
+		this.cache = (arg.cache && NotionCache.validateCache(arg.cache)) || NotionCache.createDefaultCache();
     if(!arg.token)
       throw new Error(`Token not provided`);
 		this.token = arg.token;

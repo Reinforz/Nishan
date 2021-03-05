@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Schema } from '@nishans/types';
 import { CreateData } from '../../../libs';
@@ -28,7 +28,7 @@ it(`Should work correctly for target_property=title`, async () => {
 	const generated_rollup_schema = await CreateData.schema_unit.rollup(rollup_arg, schema_map, {
 		user_id: 'user_root_1',
 		cache: {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			collection: new Map([
 				[
 					'target_collection_id',
@@ -68,7 +68,7 @@ describe('Throw errors', () => {
 				schema_map,
 				{
 					user_id: 'user_root_1',
-					cache: NotionCacheObject.createDefaultCache(),
+					cache: NotionCache.createDefaultCache(),
 					token: 'token'
 				}
 			)
@@ -87,7 +87,7 @@ describe('Throw errors', () => {
 				schema_map,
 				{
 					user_id: 'user_root_1',
-					cache: NotionCacheObject.createDefaultCache(),
+					cache: NotionCache.createDefaultCache(),
 					token: 'token'
 				}
 			)

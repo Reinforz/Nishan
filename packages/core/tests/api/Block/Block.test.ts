@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from 'uuid';
@@ -22,7 +22,7 @@ const construct = () => {
 		block_3: any = { parent_id: 'space_1', id: 'block_3', type: 'page', content: [ 'block_1', 'block_2' ] },
 		block_4: any = { parent_id: 'space_1', id: 'block_4', type: 'page', content: [] },
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ], [ 'block_4', block_4 ] ])
 		} as any,
 		executeOperationsMock = jest
@@ -41,7 +41,7 @@ const construct = () => {
 
 it('getCachedParentData', async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', parent_table: 'block', parent_id: 'block_2' } ],
 			[ 'block_2', { id: 'block_2' } ]
@@ -61,7 +61,7 @@ it('getCachedParentData', async () => {
 
 it('reposition', async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', parent_table: 'block', parent_id: 'block_2' } ],
 			[ 'block_2', { id: 'block_2' } ]

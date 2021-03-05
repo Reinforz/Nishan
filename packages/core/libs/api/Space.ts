@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionMutations, NotionQueries } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
@@ -10,11 +10,11 @@ import Data from './Data';
 import SpaceView from "./SpaceView";
 
 export async function createSpaceIterateArguments(block_id: string, props: Pick<NishanArg, 'cache' | 'token' | 'interval' | 'user_id'>): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
-  const data = await NotionCacheObject.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props, props.cache);
+  const data = await NotionCache.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props, props.cache);
   if(data.type === "page")
     return data;
   else if(data.type === "collection_view_page"){
-    await NotionCacheObject.fetchDataOrReturnCached('collection', data.collection_id, props, props.cache);
+    await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, props, props.cache);
     return {
       ...data,
       collection: props.cache.collection.get(data.collection_id) as ICollection

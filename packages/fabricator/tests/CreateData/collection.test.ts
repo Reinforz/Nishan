@@ -1,4 +1,4 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { CreateData } from '../../libs';
@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 it(`should work correctly`, async () => {
-	const cache: ICache = NotionCacheObject.createDefaultCache(),
+	const cache: ICache = NotionCache.createDefaultCache(),
 		schema = {
 			title: tsu
 		};

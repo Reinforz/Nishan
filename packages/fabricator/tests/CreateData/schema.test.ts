@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { default_nishan_arg } from '../../../core/tests/utils';
 import { CreateData } from '../../libs';
 import { TSchemaUnitInput } from '../../types';
@@ -28,7 +28,7 @@ describe('Work correctly', () => {
 		] as any;
 
 		const cb = jest.fn(),
-			cache = NotionCacheObject.createDefaultCache(),
+			cache = NotionCache.createDefaultCache(),
 			createSchemaUnitRollupMock = jest
 				.spyOn(CreateData.schema_unit, 'rollup')
 				.mockImplementationOnce(async () => input_schema_units[2] as any),
@@ -83,7 +83,7 @@ describe('Work correctly', () => {
 	});
 
 	it(`CreateData.schema should work correctly (default input)`, async () => {
-		const cache = NotionCacheObject.createDefaultCache();
+		const cache = NotionCache.createDefaultCache();
 		const [ schema, schema_map, collection_format ] = await CreateData.schema(
 			[ tsu ],
 			{

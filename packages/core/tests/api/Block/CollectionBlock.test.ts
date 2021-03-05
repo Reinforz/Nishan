@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from "uuid";
@@ -18,7 +18,7 @@ const construct = () =>{
     }
   }, block_1 = { id: 'block_1', collection_id: 'collection_1', type: 'collection_view_page', view_ids: ['collection_view_1'] } as any, collection_view_1 = { id: 'collection_view_1', type: 'table', name: "Table" } as any,
   cache = {
-    ...NotionCacheObject.createDefaultCache(),
+    ...NotionCache.createDefaultCache(),
     block: new Map([ [ 'block_1', block_1 ] ]),
     collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
     collection_view: new Map([['collection_view_1', collection_view_1]])

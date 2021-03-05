@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { CreateData, IPageCreateInput } from '@nishans/fabricator';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject } from '@nishans/operations';
@@ -15,7 +15,7 @@ afterEach(() => {
 
 it(`getRowPageIds`, async () => {
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', type: 'page', parent_table: 'collection', parent_id: 'collection_1' } ],
 			[ 'block_2', { id: 'block_2', type: 'page', parent_table: 'block', parent_id: 'block_1' } ]
@@ -52,7 +52,7 @@ it(`getCachedParentData`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -74,7 +74,7 @@ it(`update`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -105,7 +105,7 @@ it(`createTemplates`, async () => {
 		},
 		block_1 = { id: 'block_1', type: 'page' },
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
@@ -142,7 +142,7 @@ describe('template pages', () => {
 				template_pages: [ 'block_1' ]
 			},
 			cache = {
-				...NotionCacheObject.createDefaultCache(),
+				...NotionCache.createDefaultCache(),
 				block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
@@ -235,7 +235,7 @@ describe('rows', () => {
 				id: 'collection_1'
 			},
 			cache = {
-				...NotionCacheObject.createDefaultCache(),
+				...NotionCache.createDefaultCache(),
 				block: new Map([
 					[ 'block_1', { id: 'block_1', parent_table: 'collection', parent_id: 'collection_1', type: 'page' } ]
 				]),
@@ -353,7 +353,7 @@ describe('schema unit', () => {
 				schema
 			},
 			cache = {
-				...NotionCacheObject.createDefaultCache(),
+				...NotionCache.createDefaultCache(),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest

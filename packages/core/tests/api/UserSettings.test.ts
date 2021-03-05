@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionData, UserSettings } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
@@ -7,7 +7,7 @@ afterEach(() => {
 });
 
 it(`update`, () => {
-	const cache = NotionCacheObject.createDefaultCache();
+	const cache = NotionCache.createDefaultCache();
 
 	const user_settings = new UserSettings({
 		...default_nishan_arg,

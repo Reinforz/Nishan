@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { Block, IBlockMap, IPageMap, PopulateMap } from '../libs';
 
 afterEach(() => {
@@ -21,13 +21,13 @@ it(`PopulateMap.collection_block`, async () => {
 		block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 	const cache = {
-		...NotionCacheObject.createDefaultCache(),
+		...NotionCache.createDefaultCache(),
 		collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
 		block: new Map([ [ 'block_1', block_1 ] ])
 	} as any;
 
 	const initializeCacheForSpecificDataMock = jest
-		.spyOn(NotionCacheObject, 'initializeCacheForSpecificData')
+		.spyOn(NotionCache, 'initializeCacheForSpecificData')
 		.mockImplementationOnce(() => {
 			return undefined as any;
 		});
@@ -54,7 +54,7 @@ describe('PopulateMap.page', () => {
 			collection_view_page: new Map()
 		};
 
-		const cache = NotionCacheObject.createDefaultCache();
+		const cache = NotionCache.createDefaultCache();
 
 		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
 			cache,
@@ -73,12 +73,12 @@ describe('PopulateMap.page', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
-		jest.spyOn(NotionCacheObject, 'initializeCacheForSpecificData').mockImplementationOnce(() => {
+		jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(() => {
 			return undefined as any;
 		});
 
@@ -105,12 +105,12 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view_page', collection_id: 'collection_1' };
 
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			collection: new Map([ [ 'collection_1', { name: [ [ 'Collection' ] ], id: 'collection_1' } ] ]),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
-		jest.spyOn(NotionCacheObject, 'initializeCacheForSpecificData').mockImplementationOnce(() => {
+		jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(() => {
 			return undefined as any;
 		});
 
@@ -134,7 +134,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'header', properties: { title: [ [ 'Hello World' ] ] } };
 
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -154,7 +154,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'header' };
 
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
@@ -173,7 +173,7 @@ describe('PopulateMap.block', () => {
 			block_1: any = { id: 'block_1', type: 'collection_view' };
 
 		const cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 

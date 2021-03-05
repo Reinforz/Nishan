@@ -1,11 +1,11 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { IPage } from '@nishans/types';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { stackCacheMap } from '../../../../libs/CreateData/Contents/utils';
 
 it(`name=string`, async () => {
-	const cache = NotionCacheObject.createDefaultCache(),
+	const cache = NotionCache.createDefaultCache(),
 		data = { id: 'data_id', type: 'page', data: 'data' } as any,
 		cb = jest.fn();
 	const executeOperationsMock = jest

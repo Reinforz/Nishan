@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject } from '@nishans/operations';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
@@ -56,7 +56,7 @@ const aggregationCrudSetup = () => {
 			}
 		} as any,
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { collection_id: 'collection_1', id: 'block_1' } ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])

@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
@@ -14,7 +14,7 @@ const default_nishan_arg = {
 	user_id: 'user_id',
 	space_id: 'space_id',
 	shard_id: 123,
-	cache: NotionCacheObject.createDefaultCache()
+	cache: NotionCache.createDefaultCache()
 };
 
 const default_collection = {
@@ -113,7 +113,7 @@ describe('throws error', () => {
 				[],
 				{
 					...default_nishan_arg,
-					cache: NotionCacheObject.createDefaultCache()
+					cache: NotionCache.createDefaultCache()
 				},
 				'parent_id'
 			)

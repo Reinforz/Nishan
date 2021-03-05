@@ -1,4 +1,4 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { SchemaUnit } from '../../libs';
@@ -10,7 +10,7 @@ afterEach(() => {
 
 it(`update`, async () => {
   const cache: ICache = {
-    ...NotionCacheObject.createDefaultCache(),
+    ...NotionCache.createDefaultCache(),
     collection: new Map([
       [
         'collection_1',
@@ -57,7 +57,7 @@ it(`update`, async () => {
 describe('delete', () => {
   it(`type=text`, async () => {
     const cache: ICache = {
-      ...NotionCacheObject.createDefaultCache(),
+      ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -101,7 +101,7 @@ describe('delete', () => {
 
   it(`type=title`, async () => {
     const cache: ICache = {
-      ...NotionCacheObject.createDefaultCache(),
+      ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -132,7 +132,7 @@ describe('duplicate', () => {
         text: txsu
       }
     }, cache: ICache = {
-      ...NotionCacheObject.createDefaultCache(),
+      ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -169,7 +169,7 @@ describe('duplicate', () => {
         schema_id_1: tsu
       }
     }, cache: ICache = {
-      ...NotionCacheObject.createDefaultCache(),
+      ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
           'collection_1',
@@ -195,7 +195,7 @@ it(`getCachedChildData`, () => {
       schema_id_1: tsu
     }
   }, cache: ICache = {
-    ...NotionCacheObject.createDefaultCache(),
+    ...NotionCache.createDefaultCache(),
     collection: new Map([
       [
         'collection_1',

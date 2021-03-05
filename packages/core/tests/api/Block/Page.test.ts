@@ -1,4 +1,4 @@
-import { ICache, NotionCacheObject } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { NotionData, Page } from '../../../libs';
@@ -15,7 +15,7 @@ const construct = () => {
 		block_1 = { id: 'block_1', parent_table: 'space', parent_id: 'space_1', type: 'page', content: [ 'block_2' ] },
 		block_2 = { id: 'block_2', type: 'header', properties: { title: [ [ 'Header' ] ] } } as any,
 		cache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
 			space: new Map([ [ 'space_1', space_1 ] ])
 		} as any,
@@ -109,7 +109,7 @@ it(`deleteBlock`, async () => {
 it(`updateBookmarkedStatus`, async () => {
 	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: ICache = {
-			...NotionCacheObject.createDefaultCache(),
+			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page', space_id: 'space_1' } as any ] ]),
 			space_view: new Map([
 				[ 'space_view_2', { id: 'space_view_2', space_id: 'space_2' } ],

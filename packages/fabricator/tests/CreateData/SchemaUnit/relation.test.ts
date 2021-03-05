@@ -1,4 +1,4 @@
-import { ICache, NotionCacheObject } from "@nishans/cache";
+import { ICache, NotionCache } from "@nishans/cache";
 import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
 import { NotionOperationsObject } from "@nishans/operations";
 import { ICollection } from "@nishans/types";
@@ -16,7 +16,7 @@ const returnChildCollectionAndCache = () =>{
     name: [ [ 'Child Collection' ] ]
   } as any;
   const cache = {
-    ...NotionCacheObject.createDefaultCache(),
+    ...NotionCache.createDefaultCache(),
     collection: new Map([ [ 'child_collection_id', child_collection ] ])
   } as ICache;
   const parent_collection_data: ParentCollectionData = {

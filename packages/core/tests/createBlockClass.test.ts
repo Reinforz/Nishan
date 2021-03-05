@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionConstants } from '@nishans/constants';
 import { v4 } from 'uuid';
 import { createBlockClass, NishanArg } from '../libs';
@@ -9,7 +9,7 @@ const arg: NishanArg = {
 	user_id: '',
 	shard_id: 123,
 	space_id: '123',
-	cache: NotionCacheObject.createDefaultCache(),
+	cache: NotionCache.createDefaultCache(),
 	logger: false,
 	id: '123'
 };

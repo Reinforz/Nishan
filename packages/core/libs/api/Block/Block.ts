@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
 import { RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
@@ -152,10 +152,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param new_parent_id Id of the new parent page
    */
 	async transfer (new_parent_id: string) {
-		await NotionCacheObject.fetchDataOrReturnCached('block', new_parent_id, this.getConfigs(), this.cache);
+		await NotionCache.fetchDataOrReturnCached('block', new_parent_id, this.getConfigs(), this.cache);
 
 		const data = this.getCachedData(),
-			parent_data = (await NotionCacheObject.fetchDataOrReturnCached(
+			parent_data = (await NotionCache.fetchDataOrReturnCached(
 				'block',
 				data.parent_id,
 				this.getConfigs(),

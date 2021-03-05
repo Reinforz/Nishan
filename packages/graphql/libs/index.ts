@@ -171,7 +171,7 @@ const resolvers = {
   }
 };
 
-const server = new ApolloServer({
+const NotionGraphqlServer = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context: async () => ({
@@ -184,7 +184,4 @@ const server = new ApolloServer({
 export * from "./collectionBlockResolvers";
 export * from "./fetchNotionData";
 export * from "./getBlockResolveType";
-
-server.listen().then(({ url }) => {
-	console.log(`🚀 Server ready at ${url}`);
-});
+export default NotionGraphqlServer;

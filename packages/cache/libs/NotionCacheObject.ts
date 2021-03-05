@@ -1,18 +1,19 @@
 import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import {
-	ICollection,
-	ISpace,
-	ISpaceView,
-	IUserRoot,
-	NotionEndpoints,
-	RecordMap,
-	TBlock,
-	TCollectionBlock,
-	TData,
-	TDataType,
-	TView
+  ICollection,
+  ISpace,
+  ISpaceView,
+  IUserRoot,
+  NotionEndpoints,
+  RecordMap,
+  TBlock,
+  TCollectionBlock,
+  TData,
+  TDataType,
+  TView
 } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { ICache } from './';
 
 export const NotionCacheObject = {
@@ -32,7 +33,11 @@ export const NotionCacheObject = {
  * Save all the items of a recordMap in internal cache
  * @param recordMap The recordMap to save to cache
  */
-	saveToCache (recordMap: Partial<RecordMap>, cache: ICache) {
+	saveToCache (
+		recordMap: Partial<RecordMap>,
+		cache: ICache,
+		cb?: (key: TDataType, data_id: string, data: TData) => any
+	) {
 		// Loop through each of the cache keys
 		// Store all the values of that particular key thats present in the recordMap in the cache
 		([
@@ -48,6 +53,7 @@ export const NotionCacheObject = {
 			if (recordMap[key])
 				Object.entries(recordMap[key] as Record<any, any>).forEach(([ record_id, record_value ]) => {
 					cache[key].set(record_id, record_value.value);
+					cb && cb(key, record_id, record_value.value);
 				});
 		});
 	},
@@ -299,5 +305,43 @@ export const NotionCacheObject = {
 			return value as D;
 		}
 		return data as D;
+	},
+
+	/**
+   * Fetch multiple from notion's db if it doesn't exist in the cache
+   * @param table The table of the data
+   * @param id the id of the data
+   * @param configs Notion request configs
+   * @param cache Internal notion cache
+   */
+	fetchMultipleDataOrReturnCached: async(
+		params: UpdateCacheManuallyParam,
+		configs: NotionRequestConfigs,
+		cache: ICache
+	) => {
+		const result = NotionUtils.createDefaultRecordMap();
+		const sync_record_values: UpdateCacheManuallyParam = [];
+		for (let index = 0; index < params.length; index++) {
+			const [ id, table ] = params[index];
+			const data = cache[table].get(id);
+			if (data) result[table].push(data as any);
+			else sync_record_values.push([ id, table ]);
+		}
+
+		if (sync_record_values.length) {
+			// Fetch the data from notion's db
+			const { recordMap } = await NotionQueries.syncRecordValues(
+				{
+					requests: NotionCacheObject.constructSyncRecordsParams(sync_record_values)
+				},
+				configs
+			);
+
+			NotionCacheObject.saveToCache(recordMap, cache, (data_type, _, data) => {
+				result[data_type].push(data as any);
+			});
+		}
+
+		return result;
 	}
 };

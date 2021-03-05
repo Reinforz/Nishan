@@ -1,17 +1,17 @@
 import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import {
-  ICollection,
-  ISpace,
-  ISpaceView,
-  IUserRoot,
-  NotionEndpoints,
-  RecordMap,
-  TBlock,
-  TCollectionBlock,
-  TData,
-  TDataType,
-  TView
+	ICollection,
+	ISpace,
+	ISpaceView,
+	IUserRoot,
+	NotionEndpoints,
+	RecordMap,
+	TBlock,
+	TCollectionBlock,
+	TData,
+	TDataType,
+	TView
 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { ICache } from './';
@@ -287,24 +287,7 @@ export const NotionCacheObject = {
 		configs: NotionRequestConfigs,
 		cache: ICache
 	) => {
-		// Get the data from the cache first
-		const data = cache[table].get(id);
-		if (!data) {
-			// If data doesn't exist in the cache, log a warning
-			console.log(`${table}:${id} doesn't exist in the cache`);
-			// Fetch the data from notion's db
-			const { recordMap } = await NotionQueries.syncRecordValues(
-				{
-					requests: NotionCacheObject.constructSyncRecordsParams([ [ id, table ] ])
-				},
-				configs
-			);
-			const { value } = recordMap[table][id];
-			cache[table].set(id, value as any);
-			// return the fetched data
-			return value as D;
-		}
-		return data as D;
+		return (await NotionCacheObject.fetchMultipleDataOrReturnCached([ [ id, table ] ], configs, cache))[table][0] as D;
 	},
 
 	/**
@@ -314,7 +297,7 @@ export const NotionCacheObject = {
    * @param configs Notion request configs
    * @param cache Internal notion cache
    */
-	fetchMultipleDataOrReturnCached: async(
+	fetchMultipleDataOrReturnCached: async (
 		params: UpdateCacheManuallyParam,
 		configs: NotionRequestConfigs,
 		cache: ICache

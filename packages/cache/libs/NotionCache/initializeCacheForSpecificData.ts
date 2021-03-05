@@ -15,13 +15,27 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		extra_container: UpdateCacheManuallyParam = [];
 	if (type === 'block') {
 		const data = cache[type].get(id) as TBlock;
-		// If the type is block and page, fetch its content
-		if (data.type === 'page') data.content.forEach((id) => container.push([ id, 'block' ]));
-		// If the type is block and cvp or cv, fetch its views and collection
-		if (data.type === 'collection_view' || data.type === 'collection_view_page') {
-			data.view_ids.map((view_id) => container.push([ view_id, 'collection_view' ]));
-			container.push([ data.collection_id, 'collection' ]);
+		if (data.type.match(/^(page|collection_view_page|collection_view)$/)) {
+			const { recordMap } = await NotionQueries.loadPageChunk({
+				pageId: id,
+				limit: 100,
+				cursor: {
+					stack: [
+						[
+							{
+								table: 'block',
+								id: id,
+								index: 0
+							}
+						]
+					]
+				},
+				chunkNumber: 1,
+				verticalColumns: false
+			});
+			NotionCache.saveToCache(recordMap, cache);
 		}
+
 		NotionCache.extractNotionUserIds(data).forEach((notion_user_id) =>
 			container.push([ notion_user_id, 'notion_user' ])
 		);
@@ -70,21 +84,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	// Filters data that doesn't exist in the cache
 	await NotionCache.updateCacheIfNotPresent(container, configs);
 
-	// If the block is a page, for all the collection block **contents**, fetch the collection attached with it as well
-	if (type === 'block') {
-		const data = cache[type].get(id) as TBlock;
-		if (data.type === 'page') {
-			for (let index = 0; index < data.content.length; index++) {
-				const content_id = data.content[index],
-					content = cache.block.get(content_id);
-				// Only if the content is of type cvp or cv, fetch its collection and views
-				if (content && (content.type === 'collection_view_page' || content.type === 'collection_view')) {
-					extra_container.push([ content.collection_id, 'collection' ]);
-					content.view_ids.map((view_id) => extra_container.push([ view_id, 'collection_view' ]));
-				}
-			}
-		}
-	} else if (type === 'collection_view') {
+	if (type === 'collection_view') {
 		const data = cache[type].get(id) as TView,
 			parent = cache.block.get(data.parent_id) as TCollectionBlock;
 		extra_container.push([ parent.collection_id, 'collection' ]);

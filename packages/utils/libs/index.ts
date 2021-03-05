@@ -1,5 +1,6 @@
 export * from './types';
 
+import { createDefaultRecordMap } from './createDefaultRecordMap';
 import { deepMerge } from './deepMerge';
 import { extractInlineBlockContent } from './extractInlineBlockContent';
 import { getSchemaMapUnit } from './getSchemaMapUnit';
@@ -11,5 +12,6 @@ export const NotionUtils = {
 	deepMerge,
 	getSchemaUnit,
 	setDefault,
-	extractInlineBlockContent
+	extractInlineBlockContent,
+	createDefaultRecordMap
 };

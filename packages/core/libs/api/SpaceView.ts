@@ -17,7 +17,7 @@ import Data from './Data';
 import Space from './Space';
 
 /**
- * A class to represent spaceview of Notion
+ * A class to represent space view of Notion
  * @noInheritDoc
  */
 class SpaceView extends Data<ISpaceView> {

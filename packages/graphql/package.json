@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@nishans/core": "0.0.22",
+    "@nishans/utils": "0.0.15",
     "@nishans/endpoints": "0.0.24",
     "@nishans/cache": "0.0.26",
     "apollo-server": "^2.21.0",

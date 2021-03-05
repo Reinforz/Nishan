@@ -1,8 +1,8 @@
-import { extractInlineBlockContent } from '../libs';
+import { NotionUtils } from '../libs';
 
 it(`Works correctly`, () => {
 	expect(
-		extractInlineBlockContent([
+		NotionUtils.extractInlineBlockContent([
 			[ 'bold', [ [ 'b' ] ] ],
 			[ 'italic', [ [ 'i' ], [ 'b' ] ] ],
 			[ 'strikethrough', [ [ 's' ] ] ],

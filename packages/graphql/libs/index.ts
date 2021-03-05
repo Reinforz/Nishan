@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
-import { ICollectionView, ICollectionViewPage, IPage, ISpace, TCollectionBlock, TDataType, TPage } from '@nishans/types';
+import { ICollectionView, ICollectionViewPage, IPage, ISpace, TBlock, TCollectionBlock, TDataType, TPage } from '@nishans/types';
 import { ApolloServer, gql } from 'apollo-server';
 import { GraphQLJSONObject } from 'graphql-type-json';
 
@@ -12,6 +12,7 @@ const typeDefs = gql`
   union TParent = Page | Space
   union TPage = Page | CollectionViewPage
   union TCollectionBlock = CollectionViewPage | CollectionView
+  union TBlock = CollectionViewPage | CollectionView | Page
 
   interface Block{
     type: String!
@@ -83,6 +84,7 @@ const typeDefs = gql`
 
 	type Query {
 		page(id: ID!): Page
+		block(id: ID!): TBlock
 		space(id: ID!): Space
 	}
 `;
@@ -106,6 +108,21 @@ async function fetchNotionData(id: string, table: TDataType, request_configs: No
   return recordMap[table][id].value;
 }
 
+function collectionBlockResolvers<T extends TCollectionBlock> () {
+  return {
+    collection: async ({collection_id}: T, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(collection_id, 'collection', ctx),
+    parent: async ({ parent_id, parent_table }: T, _: any, ctx: NotionRequestConfigs) => 
+      await fetchNotionData(parent_id, parent_table, ctx),
+    space: async ({space_id}: T, _: any, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(space_id, 'space', ctx),
+    last_edited_by: async ({last_edited_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(last_edited_by_id, 'notion_user', ctx),
+    created_by: async ({created_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(created_by_id, 'notion_user', ctx)
+  }
+}
+
 // A map of functions which return data for the schema.
 const resolvers = {
   JSONObject: GraphQLJSONObject,
@@ -113,6 +130,8 @@ const resolvers = {
     space: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
       await fetchNotionData(args.id, 'space', ctx),
 		page: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
+      await fetchNotionData(args.id, 'block', ctx),
+    block: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
       await fetchNotionData(args.id, 'block', ctx)
 	},
 	Page: {
@@ -133,30 +152,8 @@ const resolvers = {
     parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
       await fetchNotionData(parent_id, 'block', ctx),
   },
-  CollectionView: {
-    collection: async ({collection_id}: ICollectionView, _: any, ctx: NotionRequestConfigs) => 
-      await fetchNotionData(collection_id, 'collection', ctx),
-    parent: async ({ parent_id, parent_table }: ICollectionView, _: any, ctx: NotionRequestConfigs) => 
-      await fetchNotionData(parent_id, parent_table, ctx),
-    space: async ({space_id}: ICollectionView, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(space_id, 'space', ctx),
-    last_edited_by: async ({last_edited_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(last_edited_by_id, 'notion_user', ctx),
-    created_by: async ({created_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(created_by_id, 'notion_user', ctx)
-  },
-  CollectionViewPage: {
-    collection: async ({collection_id}: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
-      await fetchNotionData(collection_id, 'collection', ctx),
-    parent: async ({ parent_id, parent_table }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) => 
-      await fetchNotionData(parent_id, parent_table, ctx),
-    space: async ({space_id}: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(space_id, 'space', ctx),
-    last_edited_by: async ({last_edited_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(last_edited_by_id, 'notion_user', ctx),
-    created_by: async ({created_by_id}: IPage, _: any, ctx: NotionRequestConfigs) =>
-      await fetchNotionData(created_by_id, 'notion_user', ctx)
-  },
+  CollectionView: collectionBlockResolvers<ICollectionView>(),
+  CollectionViewPage: collectionBlockResolvers<ICollectionViewPage>(),
 	Space: {
 		pages: async ({ pages: page_ids }: ISpace, _: any, ctx: NotionRequestConfigs) => {
 			const { recordMap } = await NotionQueries.syncRecordValues(
@@ -201,6 +198,20 @@ const resolvers = {
     __resolveType: (obj: TCollectionBlock) => {
       if(obj.type === "collection_view") return "CollectionView";
       else if(obj.type === "collection_view_page") return "CollectionViewPage";
+    }
+  },
+  TBlock: {
+    __resolveType: (obj: TBlock) => {
+      if(obj.type === "collection_view") return "CollectionView";
+      else if(obj.type === "collection_view_page") return "CollectionViewPage";
+      else if(obj.type === "page") return "Page";
+    }
+  },
+  Block: {
+    __resolveType: (obj: TBlock) => {
+      if(obj.type === "collection_view") return "CollectionView";
+      else if(obj.type === "collection_view_page") return "CollectionViewPage";
+      else if(obj.type === "page") return "Page";
     }
   }
 };

@@ -1,7 +1,7 @@
-import { NotionRequestConfigs } from '@nishans/endpoints';
+import { NotionCacheObject } from '@nishans/cache';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { fetchNotionData, getBlockResolveType } from '../..';
+import { getBlockResolveType } from '../..';
 import { collectionBlockResolver } from './collectionBlock';
 import { pageResolver } from './page';
 import { spaceResolver } from './space';
@@ -9,18 +9,18 @@ import { spaceResolver } from './space';
 export const NotionGraphqlServerResolvers = {
 	JSONObject: GraphQLJSONObject,
 	Query: {
-		space: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
-			await fetchNotionData(args.id, 'space', ctx),
-		page: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
-			await fetchNotionData(args.id, 'block', ctx),
-		block: async (_: any, args: { id: string }, ctx: NotionRequestConfigs) =>
-			await fetchNotionData(args.id, 'block', ctx)
+		space: async (_: any, args: { id: string }, ctx: any) =>
+			await NotionCacheObject.fetchDataOrReturnCached('space', args.id, ctx, ctx.cache),
+		page: async (_: any, args: { id: string }, ctx: any) =>
+			await NotionCacheObject.fetchDataOrReturnCached('block', args.id, ctx, ctx.cache),
+		block: async (_: any, args: { id: string }, ctx: any) =>
+			await NotionCacheObject.fetchDataOrReturnCached('block', args.id, ctx, ctx.cache)
 	},
 	Page: pageResolver,
 	Collection: {
 		name: (parent: any) => parent.name[0][0],
-		parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionRequestConfigs) =>
-			await fetchNotionData(parent_id, 'block', ctx)
+		parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: any) =>
+			await NotionCacheObject.fetchDataOrReturnCached('block', parent_id, ctx, ctx.cache)
 	},
 	CollectionView: collectionBlockResolver,
 	CollectionViewPage: collectionBlockResolver,

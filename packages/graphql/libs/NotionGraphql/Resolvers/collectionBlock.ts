@@ -1,10 +1,9 @@
-import { NotionRequestConfigs } from '@nishans/endpoints';
+import { NotionCacheObject } from '@nishans/cache';
 import { TCollectionBlock } from '@nishans/types';
-import { fetchNotionData } from '../../fetchNotionData';
 import { commonBlockResolvers } from './utils';
 
 export const collectionBlockResolver = {
-	collection: async ({ collection_id }: TCollectionBlock, _: any, ctx: NotionRequestConfigs) =>
-		await fetchNotionData(collection_id, 'collection', ctx),
+	collection: async ({ collection_id }: TCollectionBlock, _: any, ctx: any) =>
+		await NotionCacheObject.fetchDataOrReturnCached('collection', collection_id, ctx, ctx.cache),
 	...commonBlockResolvers
 };

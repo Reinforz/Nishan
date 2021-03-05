@@ -14,13 +14,12 @@
   </a>
 </p>
 
-# Nishan
+<div align="center"> <h1>Nishan</h1> </div>
+<div align="center"><b>An ecosystem of packages for notion written in typescript.</b></div>
 
-An ecosystem of packages for notion written in typescript.
+---
 
-This monorepo contains/will contain the following packages:-
-
-## Packages
+This monorepo contains/will contain the following packages and apps:-
 
 Legend:
 
@@ -29,6 +28,8 @@ Legend:
 3. NSY: Package development not started yet
 
 ---
+
+## Packages
 
 1. **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core/): Core package for nishan with all crud api
 2. **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [NPM](https://www.npmjs.com/package/@nishans/types) [Docs](https://nishan-docs.netlify.app/docs/types): Typescript typings for Notion only
@@ -55,7 +56,7 @@ Legend:
 23. **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) [NPM](https://www.npmjs.com/package/@nishans/constants) [Docs](https://nishan-docs.netlify.app/docs/constants/): A small package for all notion specific constants.
 24. **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [NPM](https://www.npmjs.com/package/@nishans/utils) [Docs](https://nishan-docs.netlify.app/docs/utils): A bunch of small utility modules used across nishans ecosystem.
 
-### Apps
+## Apps
 
 A few apps built using the above packages
 

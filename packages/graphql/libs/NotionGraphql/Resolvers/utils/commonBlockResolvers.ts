@@ -1,12 +1,11 @@
-import { NotionRequestConfigs } from '@nishans/endpoints';
+import { NotionCacheObject } from '@nishans/cache';
 import { TCollectionBlock } from '@nishans/types';
-import { fetchNotionData } from '../../../';
 import { notionUserResolvers } from './notionUserResolvers';
 
 export const commonBlockResolvers = {
-	parent: async ({ parent_id, parent_table }: TCollectionBlock, _: any, ctx: NotionRequestConfigs) =>
-		await fetchNotionData(parent_id, parent_table, ctx),
-	space: async ({ space_id }: TCollectionBlock, _: any, ctx: NotionRequestConfigs) =>
-		await fetchNotionData(space_id, 'space', ctx),
+	parent: async ({ parent_id, parent_table }: TCollectionBlock, _: any, ctx: any) =>
+		await NotionCacheObject.fetchDataOrReturnCached(parent_table, parent_id, ctx, ctx.cache),
+	space: async ({ space_id }: TCollectionBlock, _: any, ctx: any) =>
+		await NotionCacheObject.fetchDataOrReturnCached('space', space_id, ctx, ctx.cache),
 	...notionUserResolvers
 };

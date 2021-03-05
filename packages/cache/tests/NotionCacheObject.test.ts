@@ -99,6 +99,19 @@ it('saveToCache', () => {
 	expect(cache.block.get('block_3')).toBeUndefined();
 });
 
+describe('constructSyncRecordsParams', () => {
+	it(`should work correctly`, async () => {
+		const result = NotionCacheObject.constructSyncRecordsParams([ [ '123', 'block' ] ]);
+		expect(result).toStrictEqual([
+			{
+				table: 'block',
+				id: '123',
+				version: 0
+			}
+		]);
+	});
+});
+
 describe('constructAndSyncRecordsParams', () => {
 	it(`sync_record_values is not empty`, async () => {
 		const cache = NotionCacheObject.createDefaultCache(),

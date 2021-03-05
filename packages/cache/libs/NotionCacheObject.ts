@@ -61,6 +61,15 @@ export const NotionCacheObject = {
 		return update_cache_param.filter((info) => !Boolean(cache[info[1]].get(info[0])));
 	},
 
+	constructSyncRecordsParams (args: UpdateCacheManuallyParam) {
+		const sync_record_values: NotionEndpoints['syncRecordValues']['payload']['requests'][0][] = [];
+		// Iterate through the passed array argument and construct sync_record argument
+		args.forEach((arg) => {
+			sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
+		});
+		return sync_record_values;
+	},
+
 	/**
    * Constructs and executes syncRecordValue params
    * @param args Array of [id, TDataType] tuples
@@ -72,12 +81,7 @@ export const NotionCacheObject = {
 		configs: NotionRequestConfigs,
 		cache: ICache
 	) => {
-		const sync_record_values: NotionEndpoints['syncRecordValues']['payload']['requests'][0][] = [];
-		// Iterate through the passed array argument and construct sync_record argument
-		args.forEach((arg) => {
-			sync_record_values.push({ id: arg[0], table: arg[1], version: 0 });
-		});
-
+		const sync_record_values = NotionCacheObject.constructSyncRecordsParams(args);
 		// fetch and save notion data to cache
 		if (sync_record_values.length) {
 			const { recordMap } = await NotionQueries.syncRecordValues({ requests: sync_record_values }, configs);
@@ -285,13 +289,7 @@ export const NotionCacheObject = {
 			// Fetch the data from notion's db
 			const { recordMap } = await NotionQueries.syncRecordValues(
 				{
-					requests: [
-						{
-							id,
-							table,
-							version: 0
-						}
-					]
+					requests: NotionCacheObject.constructSyncRecordsParams([ [ id, table ] ])
 				},
 				configs
 			);

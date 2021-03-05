@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { UnsupportedPropertyTypeError } from '@nishans/errors';
 import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
@@ -26,12 +26,7 @@ export async function rollup (
 		]);
 	// Get the info required for making the request and store in cache
 	// Get the target collection from the passed cache
-	const target_collection = await NotionCacheObject.fetchDataOrReturnCached<ICollection>(
-		'collection',
-		collection_id,
-		props,
-		props.cache
-	);
+	const target_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', collection_id, props);
 
 	// Log the collection read operation
 	props.logger && props.logger('READ', 'collection', collection_id);

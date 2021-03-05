@@ -1,4 +1,4 @@
-import { NotionCacheObject } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionOperationsObject, Operation } from '@nishans/operations';
 import { TDataType } from '@nishans/types';
 import { detectChildData } from '.';
@@ -20,7 +20,7 @@ export async function updateChildContainer (
 	child_id: string,
 	props: FabricatorProps
 ) {
-	const parent_data = await NotionCacheObject.fetchDataOrReturnCached(parent_table, parent_id, props, props.cache);
+	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, props);
 	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];

@@ -19,6 +19,24 @@ it(`NotionCacheObject.createDefaultCache`, () => {
 	expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy();
 });
 
+describe('extractSpaceAndParentId', () => {
+	it(`parent_table=space`, () => {
+		expect(
+			NotionCacheObject.extractSpaceAndParentId({ parent_table: 'space', parent_id: 'space_1' } as any)
+		).toStrictEqual([ [ 'space_1', 'space' ] ]);
+	});
+
+	it(`parent_table=block`, () => {
+		expect(
+			NotionCacheObject.extractSpaceAndParentId({
+				parent_table: 'block',
+				parent_id: 'block_1',
+				space_id: 'space_1'
+			} as any)
+		).toStrictEqual([ [ 'block_1', 'block' ], [ 'space_1', 'space' ] ]);
+	});
+});
+
 describe('extractNotionUserIds', () => {
 	it(`Should work correctly`, () => {
 		const extracted_notion_user_ids = NotionCacheObject.extractNotionUserIds({

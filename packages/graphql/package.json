@@ -36,6 +36,7 @@
   "dependencies": {
     "@nishans/core": "0.0.22",
     "@nishans/endpoints": "0.0.24",
+    "@nishans/cache": "0.0.26",
     "apollo-server": "^2.21.0",
     "graphql": "^15.5.0",
     "graphql-type-json": "^0.3.2"

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/graphql",
-  "version": "0.0.0",
+  "version": "0.0.15",
   "description": "A graphql server for notion built using `@nishans/core`",
   "keywords": [
     "notion",

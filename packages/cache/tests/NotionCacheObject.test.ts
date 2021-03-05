@@ -19,6 +19,29 @@ it(`NotionCacheObject.createDefaultCache`, () => {
 	expect(NotionCacheObject.validateCache(NotionCacheObject.createDefaultCache())).toBeTruthy();
 });
 
+describe('extractNotionUserIds', () => {
+	it(`Should work correctly`, () => {
+		const extracted_notion_user_ids = NotionCacheObject.extractNotionUserIds({
+			last_edited_by_id: 'notion_user_1',
+			created_by_id: 'notion_user_2',
+			permissions: [
+				{
+					type: 'user_permission',
+					user_id: 'notion_user_3'
+				},
+				{
+					type: 'space_permission'
+				},
+				{
+					type: 'user_permission',
+					user_id: 'notion_user_1'
+				}
+			]
+		} as any);
+		expect(extracted_notion_user_ids).toStrictEqual([ 'notion_user_3', 'notion_user_1', 'notion_user_2' ]);
+	});
+});
+
 describe('fetchDataOrReturnCached', () => {
 	it(`data exists in cache`, async () => {
 		const block_1 = {

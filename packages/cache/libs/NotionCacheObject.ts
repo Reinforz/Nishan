@@ -1,17 +1,16 @@
 import { NotionQueries, NotionRequestConfigs, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import {
-	ICollection,
-	ISpace,
-	ISpaceView,
-	IUserRoot,
-	NotionEndpoints,
-	RecordMap,
-	TBlock,
-	TCollectionBlock,
-	TData,
-	TDataType,
-	TView
+  ICollection, ISpace,
+  ISpaceView,
+  IUserRoot,
+  NotionEndpoints,
+  RecordMap,
+  TBlock,
+  TCollectionBlock,
+  TData,
+  TDataType,
+  TView
 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { ICache } from './';
@@ -130,6 +129,32 @@ export const NotionCacheObject = {
 	},
 
 	/**
+   * Extracts and returns an array of notion user ids from the passed data
+   * @param data Data to extract notion user id from
+   * @returns Array of extracted notion user ids
+   */
+	extractNotionUserIds: (data: TBlock | ISpace) => {
+		const notion_users: Set<string> = new Set();
+    (data as ISpace)?.permissions.forEach(
+        (permission) => permission.type === 'user_permission' && notion_users.add(permission.user_id)
+      );
+		notion_users.add(data.last_edited_by_id);
+		notion_users.add(data.created_by_id);
+		return Array.from(notion_users);
+	},
+
+  extractSpaceAndParentId: (data: TBlock) => {
+    const sync_record_values: UpdateCacheManuallyParam = [];
+    if(data.parent_table === "space")
+      sync_record_values.push([data.parent_id, "space"]);
+    else{
+      sync_record_values.push([data.parent_id, "block"]);
+      sync_record_values.push([data.space_id, "space"])
+    }
+    return sync_record_values;
+  },
+
+	/**
  * Initialize cache of specific type of data
  * @param id The id of the data
  * @param type The type of data
@@ -145,19 +170,24 @@ export const NotionCacheObject = {
 		if (type === 'block') {
 			const data = cache[type].get(id) as TBlock;
 			// If the type is block and page, fetch its content
-			if (data.type === 'page') data.content.forEach((id) => container.push([ id, 'block' ]));
+			if (data.type === 'page')
+				data.content.forEach((id) => container.push([ id, 'block' ]));
 			// If the type is block and cvp or cv, fetch its views and collection
 			if (data.type === 'collection_view' || data.type === 'collection_view_page') {
 				data.view_ids.map((view_id) => container.push([ view_id, 'collection_view' ]));
 				container.push([ data.collection_id, 'collection' ]);
 			}
-			container.push([ data.parent_id, data.parent_table ]);
+      NotionCacheObject.extractNotionUserIds(data).forEach((notion_user_id) =>
+        container.push([ notion_user_id, 'notion_user' ])
+      );
+      NotionCacheObject.extractSpaceAndParentId(data).forEach(sync_record_value=>container.push(sync_record_value));
 		} else if (type === 'space') {
 			// If the type is space, fetch its pages and notion_user
 			const data = cache[type].get(id) as ISpace;
 			data.pages.forEach((id) => container.push([ id, 'block' ]));
-			data.permissions.forEach((permission) => container.push([ permission.user_id, 'notion_user' ]));
-			container.push([ data.created_by_id, 'user_root' ]);
+			NotionCacheObject.extractNotionUserIds(data).forEach((notion_user_id) =>
+				container.push([ notion_user_id, 'notion_user' ])
+			);
 		} else if (type === 'user_root') {
 			// If the type is user_root, fetch its space_view
 			const data = cache[type].get(id) as IUserRoot;
@@ -189,6 +219,7 @@ export const NotionCacheObject = {
 			const data = cache[type].get(id) as ISpaceView;
 			if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 			container.push([ data.space_id, 'space' ]);
+			container.push([ data.parent_id, 'user_root' ]);
 		} else error(`${type} data is not supported`);
 
 		// Filters data that doesn't exist in the cache

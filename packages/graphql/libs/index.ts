@@ -1,8 +1,9 @@
 require('dotenv').config({ path: '../../.env' });
 import { NotionQueries, NotionRequestConfigs } from '@nishans/endpoints';
-import { ICollectionView, ICollectionViewPage, IPage, ISpace, TCollectionBlock, TDataType } from '@nishans/types';
+import { ICollectionView, ICollectionViewPage, IPage, ISpace, TCollectionBlock } from '@nishans/types';
 import { ApolloServer, gql } from 'apollo-server';
 import { GraphQLJSONObject } from 'graphql-type-json';
+import { fetchNotionData } from './fetchNotionData';
 import { getBlockResolveType } from './getBlockResolveType';
 
 // The GraphQL schema
@@ -89,25 +90,6 @@ const typeDefs = gql`
 		space(id: ID!): Space
 	}
 `;
-
-async function fetchNotionData(id: string, table: TDataType, request_configs: NotionRequestConfigs){
-  const { recordMap } = await NotionQueries.syncRecordValues(
-    {
-      requests: [
-        {
-          id,
-          table: table,
-          version: 0
-        }
-      ]
-    },
-    {
-      interval: 0,
-      ...request_configs
-    }
-  );
-  return recordMap[table][id].value;
-}
 
 function collectionBlockResolvers<T extends TCollectionBlock> () {
   return {
@@ -213,6 +195,7 @@ const server = new ApolloServer({
 	})
 });
 
+export * from "./fetchNotionData";
 export * from "./getBlockResolveType";
 
 server.listen().then(({ url }) => {

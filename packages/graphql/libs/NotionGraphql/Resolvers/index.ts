@@ -1,7 +1,8 @@
 import { ICache, NotionCacheObject } from '@nishans/cache';
+import { NotionOperationOptions } from '@nishans/operations';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { NotionOperationOptions } from 'packages/operations/dist/libs';
 import { getBlockResolveType } from '../..';
 import { collectionBlockResolver } from './collectionBlock';
 import { pageResolver } from './page';
@@ -19,7 +20,7 @@ export const NotionGraphqlServerResolvers = {
 	},
 	Page: pageResolver,
 	Collection: {
-		name: (parent: any) => parent.name[0][0],
+		name: (parent: any) => NotionUtils.extractInlineBlockContent(parent.name[0][0]),
 		parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionOperationOptions & { cache: ICache }) =>
 			await NotionCacheObject.fetchDataOrReturnCached('block', parent_id, ctx, ctx.cache)
 	},

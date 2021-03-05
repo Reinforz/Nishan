@@ -1,8 +1,9 @@
+import { NotionUtils } from '@nishans/utils';
 import { commonBlockResolvers } from './utils';
 
 export const pageResolver = {
 	properties: (parent: any) => ({
-		title: parent.properties.title[0][0]
+		title: NotionUtils.extractInlineBlockContent(parent.properties.title[0][0])
 	}),
 	...commonBlockResolvers
 };

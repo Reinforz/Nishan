@@ -1,5 +1,5 @@
 import { ApolloServer } from 'apollo-server';
-import { NotionGraphqlServerResolvers } from "./resolvers";
+import { NotionGraphqlServerResolvers } from "./Resolvers";
 import { NotionGraphqlServerTypedefs } from "./typedefs";
 
 export const server = new ApolloServer({

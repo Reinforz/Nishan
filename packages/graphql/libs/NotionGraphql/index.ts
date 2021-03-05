@@ -1,4 +1,4 @@
-import { NotionGraphqlServerResolvers } from './resolvers';
+import { NotionGraphqlServerResolvers } from './Resolvers';
 import { server } from './server';
 import { NotionGraphqlServerTypedefs } from './typedefs';
 

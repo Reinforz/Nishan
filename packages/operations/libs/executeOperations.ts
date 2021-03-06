@@ -1,6 +1,6 @@
 import { NotionMutations, NotionRequest } from "@nishans/endpoints";
 import { IOperation } from "@nishans/types";
-import { NotionOperationOptions, NotionOperations } from ".";
+import { NotionOperationOptions, NotionOperations } from "./";
 
 export async function executeOperations (operations: IOperation[], options: NotionOperationOptions) {
   // If the stack is empty print a msg to the console

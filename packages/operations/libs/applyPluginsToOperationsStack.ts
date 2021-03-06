@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationPluginFunction } from '..';
+import { NotionOperationPluginFunction } from './';
 
 export function applyPluginsToOperationsStack (operations: IOperation[], plugins: NotionOperationPluginFunction[]) {
 	// Skip the plugin processing process if its empty

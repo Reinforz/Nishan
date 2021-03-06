@@ -1,8 +1,8 @@
-import { Operation } from '../libs';
+import { NotionOperations } from '../../libs';
 
 describe('Operation', () => {
 	it(`Should return correct operation`, () => {
-		expect(Operation.block.update('123', [ 'pages' ], {})).toStrictEqual({
+		expect(NotionOperations.Chunk.block.update('123', [ 'pages' ], {})).toStrictEqual({
 			pointer: {
 				table: 'block',
 				id: '123'

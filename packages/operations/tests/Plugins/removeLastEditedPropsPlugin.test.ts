@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationsPlugin } from '../../libs';
+import { NotionOperations } from '../../libs';
 import { NotionOperationsPluginOptions } from '../../libs/Plugins/Options';
 
 afterEach(() => {
@@ -28,7 +28,7 @@ it(`removeLastEditedPropsPlugin`, () => {
 		.mockImplementationOnce(() => operation);
 
 	expect(
-		NotionOperationsPlugin.removeLastEditedProps({
+		NotionOperations.Plugin.removeLastEditedProps({
 			skip: undefined
 		})(operation)
 	).toStrictEqual({ ...operation, args: { other_data: 'data' } });

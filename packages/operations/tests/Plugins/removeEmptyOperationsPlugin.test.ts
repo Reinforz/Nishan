@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationsPlugin } from '../../libs';
+import { NotionOperations } from '../../libs';
 import { NotionOperationsPluginOptions } from '../../libs/Plugins/Options';
 
 afterEach(() => {
@@ -24,7 +24,7 @@ describe('removeEmptyOperationsPlugin', () => {
 			.mockImplementationOnce(() => operation);
 
 		expect(
-			NotionOperationsPlugin.removeEmptyOperations({
+			NotionOperations.Plugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(false);
@@ -49,7 +49,7 @@ describe('removeEmptyOperationsPlugin', () => {
 			.mockImplementationOnce(() => operation);
 
 		expect(
-			NotionOperationsPlugin.removeEmptyOperations({
+			NotionOperations.Plugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(false);
@@ -76,7 +76,7 @@ describe('removeEmptyOperationsPlugin', () => {
 			.mockImplementationOnce(() => operation);
 
 		expect(
-			NotionOperationsPlugin.removeEmptyOperations({
+			NotionOperations.Plugin.removeEmptyOperations({
 				skip: undefined
 			})(operation)
 		).toStrictEqual(operation);

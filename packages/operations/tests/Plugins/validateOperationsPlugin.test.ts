@@ -1,5 +1,5 @@
 import { IOperation } from '@nishans/types';
-import { NotionOperationsPlugin } from '../../libs';
+import { NotionOperations } from '../../libs';
 import { NotionOperationsPluginOptions } from '../../libs/Plugins/Options';
 
 afterEach(() => {
@@ -23,7 +23,7 @@ describe('validateOperationsPlugin', () => {
 			.mockImplementationOnce(() => operation);
 
 		expect(() =>
-			NotionOperationsPlugin.validateOperations({
+			NotionOperations.Plugin.validateOperations({
 				skip: undefined
 			})(operation)
 		).toThrow(`Unsupported operation table blocks`);
@@ -46,7 +46,7 @@ describe('validateOperationsPlugin', () => {
 			.mockImplementationOnce(() => operation);
 
 		expect(() =>
-			NotionOperationsPlugin.validateOperations({
+			NotionOperations.Plugin.validateOperations({
 				skip: undefined
 			})(operation)
 		).toThrow(`Unsupported operation command updates`);
@@ -68,7 +68,7 @@ describe('validateOperationsPlugin', () => {
 			.spyOn(NotionOperationsPluginOptions, 'skip')
 			.mockImplementationOnce(() => operation);
 
-		expect(NotionOperationsPlugin.validateOperations()(operation)).toStrictEqual(operation);
+		expect(NotionOperations.Plugin.validateOperations()(operation)).toStrictEqual(operation);
 		expect(skipPluginOptionMock).toHaveBeenCalledWith(operation, undefined);
 	});
 });

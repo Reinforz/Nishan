@@ -1,6 +1,6 @@
 import { NotionEndpoints } from '@nishans/endpoints';
 import {
-  NotionOperationOptions,
+  INotionOperationOptions,
   NotionOperationPluginFunction,
   NotionOperations
 } from '@nishans/operations';
@@ -24,7 +24,7 @@ interface UserIdentifier {
 	email?: string;
 }
 
-type NotionPermissionsCtorArg = NotionOperationOptions & { user_id: string, id: string; cache: { block: Map<string, TBlock> } };
+type NotionPermissionsCtorArg = INotionOperationOptions & { user_id: string, id: string; cache: { block: Map<string, TBlock> } };
 
 export class NotionBlockPermissions {
 	id: string;

@@ -1,4 +1,4 @@
-import { NotionCache, NotionCacheConfigs } from '@nishans/cache';
+import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { idToUuid, uuidToId } from '@nishans/idz';
 import { ICollection, TCollectionBlock } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -9,7 +9,7 @@ import { NotionUtils } from '@nishans/utils';
  * @param cb_id Id of the collection block
  * @returns The generated schema_map from the remote collection schema
  */
-export async function generateSchemaMapFromRemoteSchema (cb_id: string, options: NotionCacheConfigs) {
+export async function generateSchemaMapFromRemoteSchema (cb_id: string, options: INotionCacheOptions) {
 	const id = idToUuid(uuidToId(cb_id));
 	await NotionCache.initializeCacheForSpecificData(id, 'block', options);
 	const collection_block = options.cache.block.get(id) as TCollectionBlock;

@@ -1,5 +1,5 @@
 import { INotionEndpoints } from '@nishans/types';
-import { NotionEndpoints, NotionRequestConfigs } from '..';
+import { NotionEndpoints, NotionRequestConfigs } from '../';
 
 export const NotionEndpointsMutations = {
 	async setPageNotificationsAsRead (

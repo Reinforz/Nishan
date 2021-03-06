@@ -1,4 +1,4 @@
-import { NotionMutations } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { IOperation } from '@nishans/types';
 import { NotionOperations } from '../libs';
 import { common_execute_operations_options, operation } from './utils';
@@ -12,7 +12,7 @@ describe('executeOperations', () => {
 
 	it(`executes operations`, async () => {
 		const saveTransactionsMock = jest
-			.spyOn(NotionMutations, 'saveTransactions')
+			.spyOn(NotionEndpoints.Mutations, 'saveTransactions')
 			.mockImplementationOnce(async () => ({}));
 		const stack: IOperation[] = [ operation ];
 		await NotionOperations.executeOperations(stack, common_execute_operations_options);

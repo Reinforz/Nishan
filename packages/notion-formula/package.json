@@ -37,7 +37,8 @@
   },
   "dependencies": {
     "@nishans/idz": "0.0.15",
-    "@nishans/endpoints": "0.0.24"
+    "@nishans/endpoints": "0.0.24",
+    "@nishans/utils": "0.0.15"
   },
   "devDependencies": {
     "@nishans/types": "0.0.25"

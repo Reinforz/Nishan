@@ -1,24 +1,7 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { idToUuid, uuidToId } from '@nishans/idz';
-import { Schema, TCollectionBlock } from '@nishans/types';
-import { ISchemaMap } from '../types';
-
-/**
- * Generates a schema_map from the passed schema
- * @param schema The collection schema used to generate the schema_map
- * @returns The generated schema map
- */
-export function generateSchemaMapFromCollectionSchema (schema: Schema) {
-	const schema_map: ISchemaMap = new Map();
-	// Map through each key of the passed schema and use its name property to act as a key to the map
-	Object.entries(schema).forEach(([ schema_id, value ]) => {
-		schema_map.set(value.name, {
-			schema_id,
-			...value
-		});
-	});
-	return schema_map;
-}
+import { TCollectionBlock } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 
 /**
  * Generates a schema_map from a remote collection schema
@@ -28,7 +11,7 @@ export function generateSchemaMapFromCollectionSchema (schema: Schema) {
  */
 export async function generateSchemaMap (token: string, cb_id: string) {
 	const id = idToUuid(uuidToId(cb_id)),
-		{ recordMap: { block } } = await NotionQueries.syncRecordValues(
+		{ recordMap: { block } } = await NotionEndpoints.Queries.syncRecordValues(
 			{
 				requests: [
 					{
@@ -44,7 +27,7 @@ export async function generateSchemaMap (token: string, cb_id: string) {
 			}
 		),
 		{ collection_id } = block[id].value as TCollectionBlock,
-		{ recordMap: { collection } } = await NotionQueries.syncRecordValues(
+		{ recordMap: { collection } } = await NotionEndpoints.Queries.syncRecordValues(
 			{
 				requests: [
 					{
@@ -61,5 +44,5 @@ export async function generateSchemaMap (token: string, cb_id: string) {
 		),
 		{ schema } = collection[collection_id].value;
 
-	return generateSchemaMapFromCollectionSchema(schema);
+	return NotionUtils.generateSchemaMap(schema);
 }

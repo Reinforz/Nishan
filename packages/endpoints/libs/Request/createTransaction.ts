@@ -1,4 +1,4 @@
-import { IOperation, NotionEndpoints } from '@nishans/types';
+import { INotionEndpoints, IOperation } from '@nishans/types';
 import { v4 } from 'uuid';
 
 /**
@@ -18,5 +18,5 @@ export function createTransaction (shardId: number, spaceId: string, operations:
 				operations
 			}
 		]
-	} as NotionEndpoints['saveTransaction']['payload'];
+	} as INotionEndpoints['saveTransaction']['payload'];
 }

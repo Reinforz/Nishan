@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { NotionRequest } from '.';
 import { NotionRequestConfigs } from '..';
+import { NotionEndpointsRequest } from './';
 
 const BASE_NOTION_URL = 'https://www.notion.so/api/v3';
 
@@ -16,7 +16,7 @@ export const sendRequest = <T>(endpoint: string, arg: any, configs?: Partial<Not
 	return new Promise((resolve, reject) => {
 		setTimeout(async () => {
 			try {
-				const headers = NotionRequest.constructHeaders(configs);
+				const headers = NotionEndpointsRequest.constructHeaders(configs);
 				const response = await axios.post<T>(`${BASE_NOTION_URL}/${endpoint}`, arg, headers);
 				resolve(response.data);
 			} catch (err) {

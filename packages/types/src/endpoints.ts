@@ -24,13 +24,13 @@ import {
 } from './';
 import { TEmbedBlockType } from './block';
 
-interface NotionEndpoint<P, R> {
+interface INotionEndpoint<P, R> {
 	payload: P;
 	response: R;
 }
-export interface NotionEndpoints {
-	enqueueTask: NotionEndpoint<EnqueueTaskParams, EnqueueTaskResult>;
-	checkEmailType: NotionEndpoint<
+export interface INotionEndpoints {
+	enqueueTask: INotionEndpoint<EnqueueTaskParams, EnqueueTaskResult>;
+	checkEmailType: INotionEndpoint<
 		{
 			allowAdminBypass: boolean;
 			email: string;
@@ -42,7 +42,7 @@ export interface NotionEndpoints {
 			mustReverify: boolean;
 		}
 	>;
-	loginWithEmail: NotionEndpoint<
+	loginWithEmail: INotionEndpoint<
 		{
 			email: string;
 			password: string;
@@ -52,7 +52,7 @@ export interface NotionEndpoints {
 			userId: string;
 		}
 	>;
-	getClientExperiments: NotionEndpoint<
+	getClientExperiments: INotionEndpoint<
 		{
 			deviceId: string;
 		},
@@ -68,7 +68,7 @@ export interface NotionEndpoints {
 			}[];
 		}
 	>;
-	setPageNotificationsAsRead: NotionEndpoint<
+	setPageNotificationsAsRead: INotionEndpoint<
 		{
 			navigableBlockId: string;
 			spaceId: string;
@@ -76,14 +76,14 @@ export interface NotionEndpoints {
 		},
 		Record<string, never>
 	>;
-	setSpaceNotificationsAsRead: NotionEndpoint<
+	setSpaceNotificationsAsRead: INotionEndpoint<
 		{
 			spaceId: string;
 			timestamp: number;
 		},
 		Record<string, never>
 	>;
-	getPageVisits: NotionEndpoint<
+	getPageVisits: INotionEndpoint<
 		{
 			blockId: string;
 			limit: number;
@@ -100,7 +100,7 @@ export interface NotionEndpoints {
 			pageVisits: IPageVisits[];
 		}
 	>;
-	getUserSharedPages: NotionEndpoint<
+	getUserSharedPages: INotionEndpoint<
 		{
 			includeDeleted?: boolean;
 		},
@@ -109,7 +109,7 @@ export interface NotionEndpoints {
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
 		}
 	>;
-	getPublicPageData: NotionEndpoint<
+	getPublicPageData: INotionEndpoint<
 		{
 			blockId?: string;
 			name?: 'page';
@@ -130,7 +130,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getPublicSpaceData: NotionEndpoint<
+	getPublicSpaceData: INotionEndpoint<
 		{
 			type: 'space-ids';
 			spaceIds: string[];
@@ -140,14 +140,14 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getSubscriptionData: NotionEndpoint<
+	getSubscriptionData: INotionEndpoint<
 		{
 			spaceId: string;
 		},
 		UnsubscribedSubscriptionData | SubscribedSubscriptionData
 	>;
 
-	removeUsersFromSpace: NotionEndpoint<
+	removeUsersFromSpace: INotionEndpoint<
 		{
 			removePagePermissions: boolean;
 			revokeUserTokens: boolean;
@@ -162,7 +162,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	initializePageTemplate: NotionEndpoint<
+	initializePageTemplate: INotionEndpoint<
 		{
 			recordMap: Record<string, unknown>;
 			sourceBlockId: string;
@@ -176,7 +176,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	loadBlockSubtree: NotionEndpoint<
+	loadBlockSubtree: INotionEndpoint<
 		{
 			blockId: string;
 			shallow: boolean;
@@ -188,14 +188,14 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getSpaces: NotionEndpoint<
+	getSpaces: INotionEndpoint<
 		Record<string, never>,
 		{
 			[k: string]: RecordMap;
 		}
 	>;
 
-	getGenericEmbedBlockData: NotionEndpoint<
+	getGenericEmbedBlockData: INotionEndpoint<
 		{
 			pageWidth: number;
 			source: string;
@@ -210,7 +210,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getUploadFileUrl: NotionEndpoint<
+	getUploadFileUrl: INotionEndpoint<
 		{
 			bucket: 'secure';
 			contentType: string;
@@ -223,7 +223,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	setBookmarkMetadata: NotionEndpoint<
+	setBookmarkMetadata: INotionEndpoint<
 		{
 			blockId: string;
 			url: string;
@@ -231,7 +231,7 @@ export interface NotionEndpoints {
 		Record<string, never>
 	>;
 
-	queryCollection: NotionEndpoint<
+	queryCollection: INotionEndpoint<
 		{
 			collectionId: string;
 			collectionViewId: string;
@@ -268,7 +268,7 @@ export interface NotionEndpoints {
 			recordMap: Pick<RecordMap, 'collection' | 'space' | 'collection_view' | 'block'>;
 		}
 	>;
-	getGoogleDriveAccounts: NotionEndpoint<
+	getGoogleDriveAccounts: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			accounts: {
@@ -278,7 +278,7 @@ export interface NotionEndpoints {
 			}[];
 		}
 	>;
-	initializeGoogleDriveBlock: NotionEndpoint<
+	initializeGoogleDriveBlock: INotionEndpoint<
 		{
 			blockId: string;
 			fileId: string;
@@ -294,7 +294,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getBacklinksForBlock: NotionEndpoint<
+	getBacklinksForBlock: INotionEndpoint<
 		{
 			blockId: string;
 		},
@@ -305,7 +305,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	syncRecordValues: NotionEndpoint<
+	syncRecordValues: INotionEndpoint<
 		{
 			requests: {
 				id: string;
@@ -318,7 +318,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	findUser: NotionEndpoint<
+	findUser: INotionEndpoint<
 		{
 			email: string;
 		},
@@ -330,7 +330,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	createSpace: NotionEndpoint<
+	createSpace: INotionEndpoint<
 		{
 			icon: string;
 			initialUseCases: string[];
@@ -345,14 +345,14 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	loadUserContent: NotionEndpoint<
+	loadUserContent: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			recordMap: Omit<RecordMap, 'collection_view'>;
 		}
 	>;
 
-	getUserSharePages: NotionEndpoint<
+	getUserSharePages: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			pages: { id: string; spaceId: string }[];
@@ -363,7 +363,7 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	inviteGuestsToSpace: NotionEndpoint<
+	inviteGuestsToSpace: INotionEndpoint<
 		{
 			blockId: string;
 			permissionItems: IPermission[];
@@ -372,7 +372,7 @@ export interface NotionEndpoints {
 		Record<string, unknown>
 	>;
 
-	loadPageChunk: NotionEndpoint<
+	loadPageChunk: INotionEndpoint<
 		{
 			chunkNumber: number;
 			cursor: Cursor;
@@ -386,14 +386,14 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getUserTasks: NotionEndpoint<
+	getUserTasks: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			taskIds: string[];
 		}
 	>;
 
-	saveTransaction: NotionEndpoint<
+	saveTransaction: INotionEndpoint<
 		{
 			requestId: string;
 			transactions: Transaction[];
@@ -401,7 +401,7 @@ export interface NotionEndpoints {
 		Record<string, unknown>
 	>;
 
-	getJoinableSpaces: NotionEndpoint<
+	getJoinableSpaces: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			results: {
@@ -413,21 +413,21 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	isUserDomainJoinable: NotionEndpoint<
+	isUserDomainJoinable: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			isJoinable: boolean;
 		}
 	>;
 
-	isEmailEducation: NotionEndpoint<
+	isEmailEducation: INotionEndpoint<
 		Record<string, unknown>,
 		{
 			isEligible: boolean;
 		}
 	>;
 
-	getUserNotifications: NotionEndpoint<
+	getUserNotifications: INotionEndpoint<
 		{
 			size: number;
 		},
@@ -447,21 +447,21 @@ export interface NotionEndpoints {
 		}
 	>;
 
-	getTasks: NotionEndpoint<
+	getTasks: INotionEndpoint<
 		{
 			taskIds: string[];
 		},
 		Record<string, unknown>
 	>;
-	recordPageVisit: NotionEndpoint<
+	recordPageVisit: INotionEndpoint<
 		{
 			blockId: string;
 			timestamp: number;
 		},
-		NotionEndpoints['getPageVisits']['response']
+		INotionEndpoints['getPageVisits']['response']
 	>;
 
-	search: NotionEndpoint<
+	search: INotionEndpoint<
 		TSearchNotionEndpointPayload,
 		{
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
@@ -473,7 +473,7 @@ export interface NotionEndpoints {
 			total: number;
 		}
 	>;
-	deleteBlocks: NotionEndpoint<
+	deleteBlocks: INotionEndpoint<
 		{
 			blockIds: string[];
 			permanentlyDelete: boolean;

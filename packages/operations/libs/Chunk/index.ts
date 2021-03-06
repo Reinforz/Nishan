@@ -9,9 +9,9 @@ export const NotionOperationsChunk: Record<
 /** 
  * Constructing the Operations object using the list of tables and commands
  */
-NotionConstants.data_types().forEach((table) => {
+NotionConstants.dataTypes().forEach((table) => {
 	NotionOperationsChunk[table] = {} as any;
-	NotionConstants.operation_commands().forEach((command) => {
+	NotionConstants.operationCommands().forEach((command) => {
 		NotionOperationsChunk[table][command] = (id: string, path: string[], args: Args): IOperation => {
 			return {
 				pointer: {

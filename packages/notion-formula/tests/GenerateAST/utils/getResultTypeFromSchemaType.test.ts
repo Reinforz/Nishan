@@ -33,6 +33,6 @@ describe('Return result type from schema type', () => {
 	});
 
 	it(`Should throw for unsupported result_type`, () => {
-		expect(() => getResultTypeFromSchemaType('boolean' as any)).toThrow(`Unsupported schema type boolean`);
+		expect(() => getResultTypeFromSchemaType('boolean' as any)).toThrow();
 	});
 });

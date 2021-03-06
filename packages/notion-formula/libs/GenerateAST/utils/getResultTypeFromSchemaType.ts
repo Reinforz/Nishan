@@ -1,6 +1,6 @@
+import { NotionConstants } from '@nishans/constants';
+import { NotionErrors } from '@nishans/errors';
 import { TFormulaResultType, TSchemaUnitType } from '@nishans/types';
-import { NotionConstants } from 'packages/constants/dist/libs';
-import { NotionErrors } from 'packages/errors/dist/libs';
 
 /**
  * Get the appropriate formula result_type from the passed schema_unit type

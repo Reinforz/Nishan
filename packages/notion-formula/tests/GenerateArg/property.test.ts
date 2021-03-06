@@ -24,7 +24,5 @@ it('Should output correctly for correct rollup property reference', () => {
 });
 
 it(`Should throw when unknown property is referenced`, () => {
-	expect(() => NotionFormula.GenerateArg.property({ property: 'unknown' }, test_schema_map)).toThrow(
-		`Property unknown does not exist on the given schema_map`
-	);
+	expect(() => NotionFormula.GenerateArg.property({ property: 'unknown' }, test_schema_map)).toThrow();
 });

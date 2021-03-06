@@ -1,5 +1,5 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { error } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
 import { NotionCache, NotionCacheConfigs } from './';
 
@@ -78,7 +78,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 		container.push([ data.space_id, 'space' ]);
 		container.push([ data.parent_id, 'user_root' ]);
-	} else error(`${type} data is not supported`);
+	} else NotionErrors.Log.error(`${type} data is not supported`);
 
 	// Filters data that doesn't exist in the cache
 	await NotionCache.updateCacheIfNotPresent(container, configs);

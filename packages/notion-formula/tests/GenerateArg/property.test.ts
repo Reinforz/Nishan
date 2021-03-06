@@ -1,8 +1,8 @@
-import { GenerateNotionFormulaArg } from '../../libs';
+import { NotionFormula } from '../../libs';
 import { pt, test_schema_map } from '../utils';
 
 it('Should output correctly for correct text property reference', () => {
-	expect(pt).toStrictEqual(GenerateNotionFormulaArg.property({ property: 'text' }, test_schema_map));
+	expect(pt).toStrictEqual(NotionFormula.GenerateArg.property({ property: 'text' }, test_schema_map));
 });
 
 it('Should output correctly for correct formula property reference', () => {
@@ -11,7 +11,7 @@ it('Should output correctly for correct formula property reference', () => {
 		id: 'formula',
 		name: 'formula',
 		result_type: 'number'
-	}).toStrictEqual(GenerateNotionFormulaArg.property({ property: 'formula' }, test_schema_map));
+	}).toStrictEqual(NotionFormula.GenerateArg.property({ property: 'formula' }, test_schema_map));
 });
 
 it('Should output correctly for correct rollup property reference', () => {
@@ -20,11 +20,11 @@ it('Should output correctly for correct rollup property reference', () => {
 		id: 'rollup',
 		name: 'Rollup',
 		result_type: 'number'
-	}).toStrictEqual(GenerateNotionFormulaArg.property({ property: 'Rollup' }, test_schema_map));
+	}).toStrictEqual(NotionFormula.GenerateArg.property({ property: 'Rollup' }, test_schema_map));
 });
 
 it(`Should throw when unknown property is referenced`, () => {
-	expect(() => GenerateNotionFormulaArg.property({ property: 'unknown' }, test_schema_map)).toThrow(
+	expect(() => NotionFormula.GenerateArg.property({ property: 'unknown' }, test_schema_map)).toThrow(
 		`Property unknown does not exist on the given schema_map`
 	);
 });

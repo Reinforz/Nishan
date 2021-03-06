@@ -1,4 +1,4 @@
-import { generateNotionFormulaAST } from '../../../libs/GenerateNotionFormulaAST/utils';
+import { generateNotionFormulaAST } from '../../../libs/GenerateAST/utils';
 import { abs, cn, test_schema_map } from '../../utils';
 
 it(`Should work for string representation`, () => {

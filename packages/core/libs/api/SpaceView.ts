@@ -4,9 +4,9 @@ import {
 	CreateMaps,
 	FilterType,
 	FilterTypes,
+	INotionCoreOptions,
 	IPageMap,
 	ISpaceViewUpdateInput,
-	NishanArg,
 	PopulateMap,
 	TSpaceViewUpdateKeys,
 	UpdateType,
@@ -21,7 +21,7 @@ import Space from './Space';
  * @noInheritDoc
  */
 class SpaceView extends Data<ISpaceView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space_view' });
 	}
 

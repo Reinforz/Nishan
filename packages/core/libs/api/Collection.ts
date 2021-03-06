@@ -9,8 +9,8 @@ import {
 	FilterType,
 	FilterTypes,
 	ICollectionUpdateInput,
+	INotionCoreOptions,
 	ISchemaUnitMap,
-	NishanArg,
 	TCollectionUpdateKeys,
 	UpdateType,
 	UpdateTypes
@@ -25,7 +25,7 @@ import SchemaUnit from './SchemaUnit';
  * @noInheritDoc
  */
 class Collection extends Data<ICollection> {
-	constructor (args: NishanArg) {
+	constructor (args: INotionCoreOptions) {
 		super({ ...args, type: 'collection' });
 	}
 

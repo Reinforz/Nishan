@@ -1,5 +1,5 @@
 import { IUserSettings } from '@nishans/types';
-import { IUserSettingsUpdateInput, NishanArg, TUserSettingsUpdateKeys } from '../';
+import { INotionCoreOptions, IUserSettingsUpdateInput, TUserSettingsUpdateKeys } from '../';
 import Data from './Data';
 
 /**
@@ -7,7 +7,7 @@ import Data from './Data';
  * @noInheritDoc
  */
 class UserSettings extends Data<IUserSettings> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'user_settings' });
 	}
 

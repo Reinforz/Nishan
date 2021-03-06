@@ -1,5 +1,5 @@
 import { ITimelineView } from '@nishans/types';
-import { NishanArg } from '../../';
+import { INotionCoreOptions } from '../../';
 import Aggregator from './Aggregator';
 
 /**
@@ -8,7 +8,7 @@ import Aggregator from './Aggregator';
  */
 
 class TimelineView extends Aggregator<ITimelineView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 }

@@ -120,10 +120,10 @@ it(`delete`, async () => {
 				}
 			}
 		},
-		{
+		expect.objectContaining({
 			token: 'token',
 			interval: 0
-		}
+		})
 	);
 });
 
@@ -351,10 +351,10 @@ it(`removeUsers`, async()=>{
     revokeUserTokens: false,
     spaceId: 'space_1',
     userIds: ['user_root_2']
-  }, {
+  }, expect.objectContaining({
     token: 'token',
     interval: 0
-  });
+  }));
   expect(cache.space.get('space_1')?.permissions).toStrictEqual([{
     user_id: 'user_root_1'
   }]);

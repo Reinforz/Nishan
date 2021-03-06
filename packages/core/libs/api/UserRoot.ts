@@ -1,11 +1,11 @@
 import { ISpaceView, IUserRoot } from '@nishans/types';
-import { FilterType, FilterTypes, ISpaceViewUpdateInput, NishanArg, UpdateType, UpdateTypes } from '../';
+import { FilterType, FilterTypes, INotionCoreOptions, ISpaceViewUpdateInput, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';
 
 class UserRoot extends Data<IUserRoot> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'user_root' });
 	}
 

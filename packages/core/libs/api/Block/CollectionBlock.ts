@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionFabricator, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
-import { CreateMaps, FilterType, FilterTypes, IViewMap, NishanArg, UpdateType, UpdateTypes } from '../../';
+import { CreateMaps, FilterType, FilterTypes, INotionCoreOptions, IViewMap, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
 import Collection from '../Collection';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
@@ -22,7 +22,7 @@ const view_class = {
  * @noInheritDoc
  */
 class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBlockInput> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 

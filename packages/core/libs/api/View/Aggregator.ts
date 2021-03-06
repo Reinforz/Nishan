@@ -9,7 +9,7 @@ import {
 import { NotionOperations } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
 import { ISchemaMap, NotionUtils } from '@nishans/utils';
-import { FilterType, FilterTypes, NishanArg, UpdateType, UpdateTypes } from '../../';
+import { FilterType, FilterTypes, INotionCoreOptions, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
 import View from './View';
 
@@ -30,7 +30,7 @@ export function detectAggregationErrors (
  * @noInheritDoc
  */
 class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View<T> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 

@@ -8,7 +8,7 @@ import {
 	FilterType,
 	FilterTypes,
 	IBlockMap,
-	NishanArg,
+	INotionCoreOptions,
 	PopulateMap,
 	UpdateType,
 	UpdateTypes
@@ -24,7 +24,7 @@ import Block from './Block';
 export default class Page extends Block<IPage, IPageCreateInput> {
 	Permissions: NotionBlockPermissions;
 
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super(arg);
 		this.Permissions = new NotionPermissions.block(arg);
 	}

@@ -1,15 +1,16 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
-import { NishanArg } from '../types';
+import { INotionCoreOptions } from '../types';
 
-export const default_nishan_arg: NishanArg = {
+export const default_nishan_arg: INotionCoreOptions = {
 	cache: NotionCache.createDefaultCache(),
 	id: 'block_1',
 	interval: 0,
 	shard_id: 123,
 	space_id: 'space_1',
 	token: 'token',
-	user_id: 'user_root_1'
+	user_id: 'user_root_1',
+	notion_operation_plugins: []
 };
 
 export const last_edited_props = {

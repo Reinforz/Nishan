@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { ICollectionView, IPage } from '@nishans/types';
-import { NishanArg } from '../../';
+import { INotionCoreOptions } from '../../';
 import CollectionBlock from './CollectionBlock';
 
 /**
@@ -8,7 +8,7 @@ import CollectionBlock from './CollectionBlock';
  * @noInheritDoc
  */
 class CollectionView extends CollectionBlock<ICollectionView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 

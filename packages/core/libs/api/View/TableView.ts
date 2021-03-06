@@ -1,5 +1,5 @@
 import { ITableView } from '@nishans/types';
-import { NishanArg } from '../../';
+import { INotionCoreOptions } from '../../';
 import Aggregator from './Aggregator';
 
 /**
@@ -7,7 +7,7 @@ import Aggregator from './Aggregator';
  * @noInheritDoc
  */
 class TableView extends Aggregator<ITableView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 }

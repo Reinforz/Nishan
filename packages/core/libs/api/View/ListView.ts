@@ -1,5 +1,5 @@
 import { IListView } from '@nishans/types';
-import { NishanArg } from '../../';
+import { INotionCoreOptions } from '../../';
 import View from './View';
 
 /**
@@ -7,7 +7,7 @@ import View from './View';
  * @noInheritDoc
  */
 class ListView extends View<IListView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 }

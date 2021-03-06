@@ -2,7 +2,7 @@ import { ICache, NotionCache } from "@nishans/cache";
 import { Logger, NotionFabricator } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
-import { ChildTraverser, FilterType, FilterTypes, NishanArg } from "../";
+import { ChildTraverser, FilterType, FilterTypes, INotionCoreOptions } from "../";
 import { transformToMultiple } from "../utils";
 import Collection from "./Collection";
 import NotionData from "./Data";
@@ -21,7 +21,7 @@ class Nishan {
   notion_operation_plugins: NotionOperationPluginFunction[];
   cache: ICache;
 
-  constructor(arg: Pick<NishanArg, "token" | "interval" | "logger" | "notion_operation_plugins">) {
+  constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"]}) {
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;
@@ -36,6 +36,7 @@ class Nishan {
         interval: this.interval,
         cache: this.cache,
         token: this.token,
+        user_id: ''
       });
       this.#init_cache = true;
     }

@@ -5,7 +5,7 @@ import { generateId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateMaps, NishanArg, PopulateMap } from '../../';
+import { CreateMaps, INotionCoreOptions, PopulateMap } from '../../';
 import Data from '../Data';
 
 /**
@@ -13,7 +13,7 @@ import Data from '../Data';
  * @noInheritDoc
  */
 class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'block' });
 	}
 

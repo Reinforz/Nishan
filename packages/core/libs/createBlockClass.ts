@@ -1,18 +1,18 @@
 import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
+import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { TBlockType } from '@nishans/types';
-import { NishanArg } from '../types';
 /**
  * Create class from passed data
  * @param type The type of data
  * @param id The id of data
- * @param props The props passed to the constructor
+ * @param options The options passed to the constructor
  */
-export function createBlockClass (type: TBlockType, id: string, props: Omit<NishanArg, 'id'>) {
+export function createBlockClass (type: TBlockType, id: string, options: INotionFabricatorOptions) {
 	// This will be passed to the constructor when creating the classes
 	const obj = {
 		id,
-		...props
+		...options
 	};
 
 	if (type === 'page') {

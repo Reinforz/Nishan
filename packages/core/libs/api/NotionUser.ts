@@ -5,7 +5,7 @@ import { NotionFabricator } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
-import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
+import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
@@ -17,7 +17,7 @@ import UserSettings from './UserSettings';
  * @noInheritDoc
  */
 class NotionUser extends Data<INotionUser> {
-  constructor(arg: NishanArg) {
+  constructor(arg: INotionCoreOptions) {
     super({ ...arg, type: "notion_user" });
   }
 

@@ -4,12 +4,12 @@ import { NotionErrors } from '@nishans/errors';
 import { ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput, NotionFabricator } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IOperation, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
-import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
+import { CreateMaps, FilterType, FilterTypes, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from "./SpaceView";
 
-export async function createSpaceIterateArguments(block_id: string, props: Pick<NishanArg, 'cache' | 'token' | 'interval' | 'user_id'>): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
+export async function createSpaceIterateArguments(block_id: string, props: Pick<INotionCoreOptions, 'cache' | 'token' | 'interval' | 'user_id'>): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
   const data = await NotionCache.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props);
   if(data.type === "page")
     return data;
@@ -29,7 +29,7 @@ export async function createSpaceIterateArguments(block_id: string, props: Pick<
 export default class Space extends Data<ISpace> {
   space_view?: ISpaceView;
 
-  constructor(arg: NishanArg) {
+  constructor(arg: INotionCoreOptions) {
     super({ ...arg, type: "space" });
   }
 
@@ -77,10 +77,7 @@ export default class Space extends Data<ISpace> {
           spaceId: this.id
         }
       }
-    }, {
-      token: this.token,
-      interval: this.interval
-    });
+    }, this.getProps());
     this.logger && this.logger("DELETE", "space", this.id);
   }
 
@@ -182,10 +179,7 @@ export default class Space extends Data<ISpace> {
       revokeUserTokens: false,
       spaceId: data.id,
       userIds
-    }, {
-      token: this.token,
-      interval: this.interval
-    });
+    }, this.getProps());
     data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id));
     await NotionOperations.executeOperations(
       [ NotionOperations.Chunk.space.update(this.id, [], this.updateLastEditedProps()) ],

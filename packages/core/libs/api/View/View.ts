@@ -7,7 +7,7 @@ import { NotionUtils } from "@nishans/utils";
 import {
   FilterType,
   FilterTypes,
-  NishanArg,
+  INotionCoreOptions,
   UpdateType,
   UpdateTypes
 } from '../../';
@@ -19,7 +19,7 @@ import Data from '../Data';
  * @noInheritDoc
  */
 class View<T extends TView> extends Data<T> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'collection_view' });
 	}
 

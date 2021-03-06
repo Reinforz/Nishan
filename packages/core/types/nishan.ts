@@ -1,7 +1,7 @@
-import { FabricatorProps, Logger } from '@nishans/fabricator';
+import { INotionFabricatorOptions, Logger } from '@nishans/fabricator';
 import { TDataType } from '@nishans/types';
 import { Predicate } from './utils';
-export interface NishanArg extends FabricatorProps {
+export interface INotionCoreOptions extends INotionFabricatorOptions {
 	id: string;
 }
 
@@ -59,15 +59,15 @@ export type IterateChildren<TD = any, RD = any> =
 			method: 'UPDATE';
 		};
 
-export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<NishanArg, 'cache'> {
+export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<INotionCoreOptions, 'cache'> {
 	parent_type: TDataType;
 	parent_id: string;
 	logger?: Logger;
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
-export type IterateAndUpdateChildrenOptions<T, C> = Omit<NishanArg, 'id'> &
+export type IterateAndUpdateChildrenOptions<T, C> = Omit<INotionCoreOptions, 'id'> &
 	IterateAndUpdateOptions<T, C> &
 	IterateChildrenOptions<T, C>;
-export type IterateAndDeleteChildrenOptions<T, C> = Omit<NishanArg, 'id'> &
+export type IterateAndDeleteChildrenOptions<T, C> = Omit<INotionCoreOptions, 'id'> &
 	IterateAndDeleteOptions<T, C> &
 	IterateChildrenOptions<T, C>;

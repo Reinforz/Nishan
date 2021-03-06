@@ -1,5 +1,5 @@
 import { ICalendarView } from '@nishans/types';
-import { NishanArg } from '../../';
+import { INotionCoreOptions } from '../../';
 import View from './View';
 
 /**
@@ -8,7 +8,7 @@ import View from './View';
  */
 
 class CalendarView extends View<ICalendarView> {
-	constructor (arg: NishanArg) {
+	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}
 }

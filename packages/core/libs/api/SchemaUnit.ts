@@ -2,7 +2,7 @@ import { NotionErrors } from '@nishans/errors';
 import { createShortId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
-import { NishanArg } from '../';
+import { INotionCoreOptions } from '../';
 import NotionData from './Data';
 
 /**
@@ -13,7 +13,7 @@ import NotionData from './Data';
 export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<ICollection> {
 	schema_id: string;
 
-	constructor (arg: NishanArg & { schema_id: string }) {
+	constructor (arg: INotionCoreOptions & { schema_id: string }) {
 		super({ ...arg, type: 'collection' });
 		this.schema_id = arg.schema_id;
 	}

@@ -1,9 +1,9 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
-import { FabricatorProps, Logger, NotionFabricator, RepositionParams } from '@nishans/fabricator';
+import { INotionFabricatorOptions, Logger, NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
-import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
+import { ChildTraverser, FilterTypes, INotionCoreOptions, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, positionChildren, UpdateTypes } from '../';
 import { updateLastEditedProps } from '../ChildTraverser/utils';
 
 /**
@@ -24,7 +24,7 @@ export default class NotionData<T extends TData> {
   token: string;
   cache: ICache;
 
-  constructor(arg: NishanArg & { type: TDataType }) {
+  constructor(arg: INotionCoreOptions & { type: TDataType }) {
     this.type = arg.type;
     this.id = arg.id;
     this.#init_cache = false;
@@ -137,6 +137,6 @@ export default class NotionData<T extends TData> {
       cache: this.cache,
       logger: this.logger,
       notion_operation_plugins: this.notion_operation_plugins
-    } as FabricatorProps
+    } as INotionFabricatorOptions
   }
 }

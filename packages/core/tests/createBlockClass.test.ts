@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionConstants } from '@nishans/constants';
 import { v4 } from 'uuid';
-import { createBlockClass, NishanArg } from '../libs';
+import { createBlockClass, INotionCoreOptions } from '../libs';
 
-const arg: NishanArg = {
+const arg: INotionCoreOptions = {
 	token: 'token',
 	interval: 0,
 	user_id: '',

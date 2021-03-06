@@ -1,7 +1,7 @@
 import { NotionCache } from "@nishans/cache";
-import { NotionMutations, NotionQueries } from "@nishans/endpoints";
+import { NotionEndpoints } from "@nishans/endpoints";
 import { generateId } from "@nishans/idz";
-import { NotionOperationsObject, Operation } from "@nishans/operations";
+import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
@@ -76,7 +76,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         
         const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
         const view_ids = views_data.map(view_data=>view_data.id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], view_ids) ], props);
+        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], view_ids) ], props);
         (props.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
         await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {
@@ -103,7 +103,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           };
         await stackCacheMap<ICollectionView>(collection_view_data, props, cb);
         const views_data = await CreateData.views(collection, views, props, block_id);
-        await NotionOperationsObject.executeOperations([Operation.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], props);
+        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], props);
         views_data.forEach(({id})=>view_ids.push(id))
       }
       else if (content.type === "page") {
@@ -147,11 +147,11 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           await traverse(contents[index].contents, column_id, "block");
           column_ids.push(column_id);
         }
-        await NotionOperationsObject.executeOperations([
-          Operation.block.set(block_id, ['content'], column_ids)
+        await NotionOperations.executeOperations([
+          NotionOperations.Chunk.block.set(block_id, ['content'], column_ids)
         ], props) 
       } else if (content.type.match(/^(embed|gist|abstract|invision|framer|whimsical|miro|pdf|loom|codepen|typeform|tweet|maps|figma|video|audio|image)$/)) {
-        const response = (await NotionQueries.getGenericEmbedBlockData({
+        const response = (await NotionEndpoints.Queries.getGenericEmbedBlockData({
           pageWidth: 500,
           source: (content as any).properties.source[0][0] as string,
           type: content.type as any
@@ -176,7 +176,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       }
 
       if (content.type === "bookmark") {
-        await NotionMutations.setBookmarkMetadata({
+        await NotionEndpoints.Mutations.setBookmarkMetadata({
           blockId: block_id,
           url: (content.properties as WebBookmarkProps).link[0][0]
         }, props);

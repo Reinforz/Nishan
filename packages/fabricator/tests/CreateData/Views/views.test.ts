@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CreateData } from '../../../libs';
@@ -37,7 +37,7 @@ describe('Output correctly', () => {
 			},
 			cb = jest.fn(),
 			executeOperationsMock = jest
-				.spyOn(NotionOperationsObject, 'executeOperations')
+				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementationOnce(async () => undefined);
 
 		const expected_view_data = {

@@ -1,4 +1,3 @@
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
@@ -23,7 +22,7 @@ export async function views (
 	parent_id: string,
 	cb?: ((data: TView) => any)
 ) {
-	const schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
+	const schema_map = NotionUtils.generateSchemaMap(collection.schema),
 		views_data: TView[] = [];
 
 	if (views.length === 0) throw new Error(`input views array cannot be empty`);

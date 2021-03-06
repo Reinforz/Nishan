@@ -1,6 +1,6 @@
 import { NotionCache } from "@nishans/cache";
 import { createShortId } from "@nishans/idz";
-import { NotionOperationsObject, Operation } from "@nishans/operations";
+import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
 import { FabricatorProps } from "packages/fabricator/types";
 import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
@@ -47,7 +47,7 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
   child_collection.schema[child_relation_schema_unit_id] = child_collection_relation_schema_unit;
   // If custom schema unit name is provided, an push an operation to the stack, that will change the name of the schema unit
   if(relation_schema_unit_name){
-    await NotionOperationsObject.executeOperations([Operation.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection.update(child_collection_id, ["schema", child_relation_schema_unit_id], {
       ...child_collection_relation_schema_unit,
       // Using the new name provided
       name: [[relation_schema_unit_name]],

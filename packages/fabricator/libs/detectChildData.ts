@@ -1,4 +1,4 @@
-import { UnsupportedBlockTypeError, UnsupportedDataTypeError } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { TBlock, TDataType } from '@nishans/types';
 
 type SupportedTDataType = Exclude<TDataType, 'collection_view' | 'notion_user' | 'user_settings'>;
@@ -22,7 +22,7 @@ export function detectChildData (type: SupportedTDataType, data?: TBlock): [stri
 				child_type = 'collection_view';
 			} else
 				// if data.type is not a parent type, throw an error as it doesn't contain any child
-				throw new UnsupportedBlockTypeError(data.type, [
+				throw new NotionErrors.unsupported_block_type(data.type, [
 					'page',
 					'collection_view',
 					'collection_view_page',
@@ -38,7 +38,8 @@ export function detectChildData (type: SupportedTDataType, data?: TBlock): [stri
 		child_type = 'space_view';
 	} else if (type === 'collection') child_path = 'template_pages';
 	else if (type === 'space_view') child_path = 'bookmarked_pages';
-	else throw new UnsupportedDataTypeError(type, [ 'block', 'space', 'user_root', 'collection', 'space_view' ]);
+	else
+		throw new NotionErrors.unsupported_data_type(type, [ 'block', 'space', 'user_root', 'collection', 'space_view' ]);
 
 	return [ child_path, child_type ];
 }

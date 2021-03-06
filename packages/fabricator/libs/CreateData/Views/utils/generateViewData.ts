@@ -1,5 +1,5 @@
 import { generateId } from '@nishans/idz';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { TView } from '@nishans/types';
 import { FabricatorProps } from '../../';
 
@@ -34,8 +34,8 @@ export async function generateViewData (
 		space_id: props.space_id
 	} as TView;
 	// Push the collection_view creation operation to the stack
-	await NotionOperationsObject.executeOperations(
-		[ Operation.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))) ],
+	await NotionOperations.executeOperations(
+		[ NotionOperations.Chunk.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))) ],
 		props
 	);
 	// Add the view to the cache

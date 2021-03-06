@@ -1,7 +1,7 @@
 import { ICache, NotionCache } from "@nishans/cache";
-import { generateSchemaMapFromCollectionSchema } from "@nishans/notion-formula";
-import { NotionOperationsObject } from "@nishans/operations";
+import { NotionOperations } from "@nishans/operations";
 import { ICollection } from "@nishans/types";
+import { NotionUtils } from "@nishans/utils";
 import { default_nishan_arg, o } from "../../../../core/tests/utils";
 import { CreateData } from "../../../libs";
 import { ParentCollectionData } from "../../../types";
@@ -27,7 +27,7 @@ const returnChildCollectionAndCache = () =>{
   return [child_collection, cache, parent_collection_data] as const;
 }
 
-const getChildRelationSchemaUnitId = (child_collection: ICollection, name: string) => generateSchemaMapFromCollectionSchema(child_collection.schema).get(name)?.schema_id as string;
+const getChildRelationSchemaUnitId = (child_collection: ICollection, name: string) => NotionUtils.generateSchemaMap(child_collection.schema).get(name)?.schema_id as string;
 
 const common_child_collection_relation_schema_unit = {
   type: "relation",
@@ -45,7 +45,7 @@ const common_child_collection_relation_schema_unit = {
 it(`Should work correctly (default child_collection_relation_schema_unit name)`, async () => {
   const  [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
   const executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
       
   const relation_schema_unit = await CreateData.schema_unit.relation(
@@ -71,7 +71,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
   const [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
   const executeOperationsMock = jest
-  .spyOn(NotionOperationsObject, 'executeOperations')
+  .spyOn(NotionOperations, 'executeOperations')
   .mockImplementationOnce(async () => undefined);
 
   const relation_schema_unit = await CreateData.schema_unit.relation(

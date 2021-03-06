@@ -1,5 +1,5 @@
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { PopulateViewData } from '../../../libs';
 import { dsu, fsu, nsu, tsu, txsu } from '../../utils';
 
@@ -31,7 +31,7 @@ const schema: Schema = {
 	}
 };
 
-const schema_map = generateSchemaMapFromCollectionSchema(schema);
+const schema_map = NotionUtils.generateSchemaMap(schema);
 
 describe('Table view', () => {
 	describe('Output correctly', () => {
@@ -450,7 +450,7 @@ describe('board view', () => {
 		it(`Should throw error for board view (schema doesn't contain any select or multi-select)`, () => {
 			const custom_schema = JSON.parse(JSON.stringify(schema));
 			delete custom_schema.select;
-			const custom_schema_map = generateSchemaMapFromCollectionSchema(custom_schema);
+			const custom_schema_map = NotionUtils.generateSchemaMap(custom_schema);
 			expect(() =>
 				PopulateViewData.format.format(
 					{

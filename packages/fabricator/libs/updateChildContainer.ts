@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { TDataType } from '@nishans/types';
 import { detectChildData } from '.';
 import { FabricatorProps } from '../types';
@@ -31,9 +31,9 @@ export async function updateChildContainer (
 	// 2. Push to corresponding operation to the passed stack
 	if (!keep && container.includes(child_id)) {
 		(parent_data as any)[child_path] = container.filter((page_id) => page_id !== child_id) as any;
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation[parent_table].listRemove(parent_data.id, [ child_path ], {
+				NotionOperations.Chunk[parent_table].listRemove(parent_data.id, [ child_path ], {
 					id: child_id
 				})
 			],
@@ -44,9 +44,9 @@ export async function updateChildContainer (
 		// 1. Add the child id to the child container
 		// 2. Push to corresponding operation to the passed stack
 		container.push(child_id);
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation[parent_table].listAfter(parent_data.id, [ child_path ], {
+				NotionOperations.Chunk[parent_table].listAfter(parent_data.id, [ child_path ], {
 					id: child_id
 				})
 			],

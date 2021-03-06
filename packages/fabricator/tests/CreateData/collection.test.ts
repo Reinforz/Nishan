@@ -1,5 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { CreateData } from '../../libs';
 import { tsu } from '../utils';
@@ -19,7 +19,7 @@ it(`should work correctly`, async () => {
 			.mockImplementationOnce(async () => [ schema, undefined as any, {} ]),
 		createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(async () => []),
 		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined),
 		logger = jest.fn();
 

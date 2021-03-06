@@ -1,4 +1,3 @@
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import {
 	IBoardViewQuery2,
 	ICalendarViewQuery2,
@@ -8,6 +7,7 @@ import {
 	ITimelineViewQuery2,
 	Schema
 } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { PopulateViewData } from '../../../libs';
 import { dsu, fsu, nsu, tsu, txsu } from '../../utils';
 
@@ -39,7 +39,7 @@ const schema: Schema = {
 	}
 };
 
-const schema_map = generateSchemaMapFromCollectionSchema(schema);
+const schema_map = NotionUtils.generateSchemaMap(schema);
 
 describe('Table view', () => {
 	it(`Should output correctly for table view custom input`, () => {

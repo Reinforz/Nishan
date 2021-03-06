@@ -1,8 +1,8 @@
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { IViewFilter } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { IViewFilterCreateInput, PopulateViewData } from '../../../libs';
 
-const schema_map = generateSchemaMapFromCollectionSchema({
+const schema_map = NotionUtils.generateSchemaMap({
 	title: {
 		type: 'text',
 		name: 'Title'

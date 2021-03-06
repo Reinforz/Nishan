@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionMutations, NotionQueries } from '@nishans/endpoints';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionOperations } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
 import { default_nishan_arg, last_edited_props, o } from '../../../../core/tests/utils';
@@ -55,9 +55,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			...NotionCache.createDefaultCache(),
 			collection: new Map([ [ collection_id, collection_1 ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 
@@ -118,9 +116,7 @@ it(`type=collection_view_page`, async () => {
 	const createDataCollectionMock = jest
 			.spyOn(CreateData, 'collection')
 			.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	await CreateData.contents(
 		[
@@ -217,9 +213,7 @@ it(`type=link_to_page`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	await CreateData.contents(
 		[
@@ -251,9 +245,7 @@ it(`type=column_list`, async () => {
 		cl_id = v4(),
 		c1_id = v4(),
 		c1_b1_id = v4(),
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	await CreateData.contents(
 		[
@@ -340,9 +332,7 @@ it(`type=factory`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	await CreateData.contents(
 		[
@@ -430,9 +420,7 @@ it(`type=linked_db`, async () => {
 				]
 			])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(() => [ { id: 'view_1' } ] as any);
 
@@ -486,11 +474,9 @@ it(`type=bookmark`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined),
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
 		setBookmarkMetadataMock = jest
-			.spyOn(NotionMutations, 'setBookmarkMetadata')
+			.spyOn(NotionEndpoints.Mutations, 'setBookmarkMetadata')
 			.mockImplementation(async () => undefined as any),
 		updateCacheManuallyMock = jest.spyOn(NotionCache, 'updateCacheManually').mockImplementation(async () => undefined);
 
@@ -542,7 +528,7 @@ it(`type=codepen`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
 		},
-		getGenericEmbedBlockDataMock = jest.spyOn(NotionQueries, 'getGenericEmbedBlockData').mockImplementation(
+		getGenericEmbedBlockDataMock = jest.spyOn(NotionEndpoints.Queries, 'getGenericEmbedBlockData').mockImplementation(
 			async () =>
 				({
 					format: {
@@ -550,9 +536,7 @@ it(`type=codepen`, async () => {
 					}
 				} as any)
 		),
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 

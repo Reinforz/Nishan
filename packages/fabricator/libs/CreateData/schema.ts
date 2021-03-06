@@ -1,7 +1,8 @@
-import { NonExistentSchemaUnitTypeError, SchemaDuplicatePropertyNameError } from "@nishans/errors";
+import { NotionErrors } from "@nishans/errors";
 import { createShortId } from "@nishans/idz";
-import { GenerateNotionFormulaAST, generateSchemaMapFromCollectionSchema, ISchemaMapValue } from "@nishans/notion-formula";
+import { ISchemaMapValue, NotionFormula } from "@nishans/notion-formula";
 import { CollectionFormatPropertyVisibility, ICollection, Schema } from "@nishans/types";
+import { NotionUtils } from "@nishans/utils";
 import { ICollectionBlockInput, ParentCollectionData } from ".";
 import { FabricatorProps } from "../";
 import { CreateSchemaUnit } from "./SchemaUnit";
@@ -14,7 +15,7 @@ import { CreateSchemaUnit } from "./SchemaUnit";
 export async function schema(input_schema_units: ICollectionBlockInput["schema"], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema}, props: FabricatorProps, cb?: ((data: ISchemaMapValue)=>any)){
   // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = generateSchemaMapFromCollectionSchema(schema);
+  const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = NotionUtils.generateSchemaMap(schema);
   // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
@@ -26,12 +27,12 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
     const schema_map_unit = schema_map.get(name);
     // If it exists throw an error since duplicate schema_unit name is not allowed 
     if(schema_map_unit)
-      throw new SchemaDuplicatePropertyNameError(name);
+      throw new NotionErrors.schema_duplicate_property_name(name);
     if(property_visibility) (collection_format.property_visibility as CollectionFormatPropertyVisibility[]).push({property: schema_id, visibility: property_visibility})
     // For specific schema unit type, the corresponding schema unit has to be generated using specific functions 
     switch(input_schema_unit.type){
       case "formula":
-        schema[schema_id] = {...input_schema_unit, formula: GenerateNotionFormulaAST[input_schema_unit.formula[1]](input_schema_unit.formula[0] as any, schema_map)};
+        schema[schema_id] = {...input_schema_unit, formula: NotionFormula.GenerateAST[input_schema_unit.formula[1]](input_schema_unit.formula[0] as any, schema_map)};
         break;
       case "rollup":
         schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, props);
@@ -48,6 +49,6 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
   }
   // If title doesn't exist in the schema throw an error
   if(!schema["title"])
-    throw new NonExistentSchemaUnitTypeError(["title"])
+    throw new NotionErrors.non_existent_schema_unit_type(["title"])
   return [schema, schema_map, collection_format] as const;
 }

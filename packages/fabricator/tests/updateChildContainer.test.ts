@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { o } from '../../core/tests/utils';
 import { updateChildContainer } from '../libs';
 
@@ -24,7 +24,7 @@ describe('updateChildContainer', () => {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
 		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
@@ -50,7 +50,7 @@ describe('updateChildContainer', () => {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
 		await updateChildContainer('space_view', 'space_view_1', false, 'block_1', { cache, ...default_fabricator_props });
@@ -73,7 +73,7 @@ describe('updateChildContainer', () => {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
 		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });
@@ -89,7 +89,7 @@ describe('updateChildContainer', () => {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
 		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });

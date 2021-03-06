@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { generateViewData } from '../../../../libs/CreateData/Views/utils';
@@ -12,7 +12,7 @@ const id = v4(),
 it(`Should work correctly`, async () => {
 	const logger = jest.fn(),
 		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
 	const view_data = await generateViewData(

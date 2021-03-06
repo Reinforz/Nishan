@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { Schema } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { CreateData } from '../../../libs';
 import { tsu } from '../../utils';
 
@@ -14,7 +14,7 @@ const schema: Schema = {
 	}
 };
 
-const schema_map = generateSchemaMapFromCollectionSchema(schema);
+const schema_map = NotionUtils.generateSchemaMap(schema);
 
 it(`Should work correctly for target_property=title`, async () => {
 	const logger = jest.fn(),

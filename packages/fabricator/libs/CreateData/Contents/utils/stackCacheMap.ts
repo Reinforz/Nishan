@@ -1,4 +1,4 @@
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { TBlock } from '@nishans/types';
 import { FabricatorProps } from '../..';
 
@@ -14,8 +14,8 @@ import { FabricatorProps } from '../..';
  */
 export async function stackCacheMap<T extends TBlock> (data: T, props: FabricatorProps, cb?: ((data: TBlock) => any)) {
 	const { id } = data;
-	await NotionOperationsObject.executeOperations(
-		[ Operation.block.update(id, [], JSON.parse(JSON.stringify(data))) ],
+	await NotionOperations.executeOperations(
+		[ NotionOperations.Chunk.block.update(id, [], JSON.parse(JSON.stringify(data))) ],
 		props
 	);
 	props.cache.block.set(id, data);

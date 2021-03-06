@@ -1,5 +1,5 @@
 import { generateId } from '@nishans/idz';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateData, FabricatorProps, ICollectionBlockInput } from './';
@@ -44,7 +44,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	};
 
 	// Push the collection create operation to stack
-  await NotionOperationsObject.executeOperations([Operation.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], props);
+  await NotionOperations.executeOperations([NotionOperations.Chunk.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], props);
   // Create the views of the collection
 	const views_data = await CreateData.views(collection_data, input.views, props, parent_id, cb);
 	// Store the collection in cache

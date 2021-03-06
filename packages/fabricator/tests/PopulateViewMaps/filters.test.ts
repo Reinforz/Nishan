@@ -1,4 +1,4 @@
-import { PopulateViewMaps } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { schema, tsmu } from './utils';
 
 it(`Should create correct schema map`, () => {
@@ -37,7 +37,7 @@ it(`Should create correct schema map`, () => {
 			filters: [ filter0_0, filter0_1 ]
 		};
 
-	const [ filters_map ] = PopulateViewMaps.filters(
+	const [ filters_map ] = NotionFabricator.PopulateViewMaps.filters(
 		{
 			query2: {
 				filter: {

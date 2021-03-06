@@ -1,18 +1,18 @@
 import colors from 'colors';
-import { constructLogger } from '../libs';
+import { NotionFabricator } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('constructLogger', () => {
+describe('NotionFabricator.constructLogger', () => {
 	it(`arg=false`, () => {
-		expect(constructLogger(false)).toBe(false);
+		expect(NotionFabricator.constructLogger(false)).toBe(false);
 	});
 
 	it(`arg=fn`, () => {
 		const logger_spy = jest.fn();
-		const logger = constructLogger(logger_spy);
+		const logger = NotionFabricator.constructLogger(logger_spy);
 		expect(typeof logger).toBe('function');
 		(logger as any)('READ', 'block', 'id');
 		expect(logger_spy).toHaveBeenCalledTimes(1);
@@ -21,7 +21,7 @@ describe('constructLogger', () => {
 
 	it(`arg=undefined`, () => {
 		const console_log_spy = jest.spyOn(console, 'log');
-		const logger = constructLogger();
+		const logger = NotionFabricator.constructLogger();
 		expect(typeof logger).toBe('function');
 		(logger as any)('READ', 'block', 'id');
 		expect(console_log_spy).toHaveBeenCalledTimes(1);

@@ -4,7 +4,7 @@ import { NotionOperations } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
 import { default_nishan_arg, last_edited_props, o } from '../../../../core/tests/utils';
-import { CreateData } from '../../../libs';
+import { NotionFabricator } from '../../../libs';
 import { tsu } from '../../utils';
 
 afterEach(() => {
@@ -59,7 +59,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 
 	const logger_spy = jest.fn();
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				type: 'page',
@@ -114,11 +114,11 @@ it(`type=collection_view_page`, async () => {
 
 	const logger_spy = jest.fn();
 	const createDataCollectionMock = jest
-			.spyOn(CreateData, 'collection')
+			.spyOn(NotionFabricator.CreateData, 'collection')
 			.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				collection_id,
@@ -215,7 +215,7 @@ it(`type=link_to_page`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				type: 'link_to_page',
@@ -247,7 +247,7 @@ it(`type=column_list`, async () => {
 		c1_b1_id = v4(),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				id: cl_id,
@@ -334,7 +334,7 @@ it(`type=factory`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				id: fid,
@@ -422,9 +422,11 @@ it(`type=linked_db`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(() => [ { id: 'view_1' } ] as any);
+	const createDataViewsMock = jest
+		.spyOn(NotionFabricator.CreateData, 'views')
+		.mockImplementationOnce(() => [ { id: 'view_1' } ] as any);
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				id: cv_id,
@@ -482,7 +484,7 @@ it(`type=bookmark`, async () => {
 
 	const logger_spy = jest.fn();
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				type: 'bookmark',
@@ -540,7 +542,7 @@ it(`type=codepen`, async () => {
 
 	const logger_spy = jest.fn();
 
-	await CreateData.contents(
+	await NotionFabricator.CreateData.contents(
 		[
 			{
 				type: 'codepen',

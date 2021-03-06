@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { TDataType } from '@nishans/types';
-import { detectChildData } from '.';
+import { NotionFabricator } from '.';
 import { FabricatorProps } from '../types';
 
 /**
@@ -21,7 +21,7 @@ export async function updateChildContainer (
 	props: FabricatorProps
 ) {
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, props);
-	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
+	const [ child_path ] = NotionFabricator.detectChildData(parent_table as any, parent_data as any);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
 	// Extract the child container from the parent using child_path

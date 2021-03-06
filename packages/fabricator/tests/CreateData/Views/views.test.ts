@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
-import { CreateData } from '../../../libs';
+import { NotionFabricator } from '../../../libs';
 import { tsu } from '../../utils';
 
 afterEach(() => {
@@ -79,7 +79,7 @@ describe('Output correctly', () => {
 			space_id: 'space_id'
 		};
 
-		const views_data = await CreateData.views(
+		const views_data = await NotionFabricator.CreateData.views(
 			default_collection,
 			[
 				{
@@ -108,7 +108,7 @@ describe('Output correctly', () => {
 describe('throws error', () => {
 	it(`empty input values`, async () => {
 		await expect(
-			CreateData.views(
+			NotionFabricator.CreateData.views(
 				default_collection,
 				[],
 				{

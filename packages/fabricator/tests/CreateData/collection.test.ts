@@ -1,7 +1,7 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
-import { CreateData } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { tsu } from '../utils';
 
 afterEach(() => {
@@ -15,15 +15,15 @@ it(`should work correctly`, async () => {
 		};
 
 	const createDataSchemaMock = jest
-			.spyOn(CreateData, 'schema')
+			.spyOn(NotionFabricator.CreateData, 'schema')
 			.mockImplementationOnce(async () => [ schema, undefined as any, {} ]),
-		createDataViewsMock = jest.spyOn(CreateData, 'views').mockImplementationOnce(async () => []),
+		createDataViewsMock = jest.spyOn(NotionFabricator.CreateData, 'views').mockImplementationOnce(async () => []),
 		executeOperationsMock = jest
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined),
 		logger = jest.fn();
 
-	const [ collection_data ] = await CreateData.collection(
+	const [ collection_data ] = await NotionFabricator.CreateData.collection(
 		{
 			name: [ [ 'Collection Name' ] ],
 			schema: [ tsu ],

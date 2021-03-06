@@ -1,4 +1,4 @@
-import { PopulateViewMaps } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { schema, tsmu } from './utils';
 
 const sort = {
@@ -7,7 +7,7 @@ const sort = {
 };
 
 it(`Should create correct schema map`, () => {
-	const [ sorts_map ] = PopulateViewMaps.sorts(
+	const [ sorts_map ] = NotionFabricator.PopulateViewMaps.sorts(
 		{
 			query2: {
 				sort: [ sort ]

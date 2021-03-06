@@ -3,7 +3,7 @@ import { NotionOperations } from "@nishans/operations";
 import { ICollection } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { default_nishan_arg, o } from "../../../../core/tests/utils";
-import { CreateData } from "../../../libs";
+import { NotionFabricator } from "../../../libs";
 import { ParentCollectionData } from "../../../types";
 import { tsu } from "../../utils";
 
@@ -48,7 +48,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
       
-  const relation_schema_unit = await CreateData.schema_unit.relation(
+  const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
     relation_arg,
     parent_collection_data,
     {...default_nishan_arg, cache}
@@ -74,7 +74,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
   .spyOn(NotionOperations, 'executeOperations')
   .mockImplementationOnce(async () => undefined);
 
-  const relation_schema_unit = await CreateData.schema_unit.relation(
+  const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
     {
       ...relation_arg,
       relation_schema_unit_name: "Child Column"

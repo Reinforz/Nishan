@@ -1,4 +1,4 @@
-import { PopulateViewMaps } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { schema, tsmu } from './utils';
 
 const format_property = {
@@ -8,7 +8,7 @@ const format_property = {
 };
 
 it(`Should create correct schema map`, () => {
-	const [ format_map ] = PopulateViewMaps.properties(
+	const [ format_map ] = NotionFabricator.PopulateViewMaps.properties(
 		{
 			type: 'table',
 			format: {

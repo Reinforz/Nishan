@@ -1,8 +1,8 @@
-import { InitializeView } from '../../libs';
+import { NotionFabricator } from '../../libs';
 
 it(`Should create query2 and return aggregations`, () => {
 	const view: any = {};
-	const aggregations = InitializeView.aggregation(view);
+	const aggregations = NotionFabricator.InitializeView.aggregation(view);
 	expect(aggregations).toStrictEqual([]);
 	expect(view).toStrictEqual({
 		query2: {
@@ -13,7 +13,7 @@ it(`Should create query2 and return aggregations`, () => {
 
 it(`Should create and return aggregations`, () => {
 	const view: any = { query2: { sort: [] } };
-	const aggregations = InitializeView.aggregation(view);
+	const aggregations = NotionFabricator.InitializeView.aggregation(view);
 	expect(aggregations).toStrictEqual([]);
 	expect(view).toStrictEqual({
 		query2: {

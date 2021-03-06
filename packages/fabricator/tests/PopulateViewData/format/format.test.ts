@@ -1,6 +1,6 @@
 import { IGalleryViewFormat, ITableViewFormat, Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { PopulateViewData } from '../../../libs';
+import { NotionFabricator } from '../../../libs';
 import { dsu, fsu, nsu, tsu, txsu } from '../../utils';
 
 const schema: Schema = {
@@ -37,7 +37,7 @@ describe('Table view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for table view`, () => {
-				const format = PopulateViewData.format.format({
+				const format = NotionFabricator.PopulateViewData.format.format({
 					type: 'table',
 					table_wrap: false,
 					inline_collection_first_load_limit: {
@@ -59,7 +59,7 @@ describe('Table view', () => {
 
 		describe('Default input', () => {
 			it(`Should work for table view`, () => {
-				const format = PopulateViewData.format.format({
+				const format = NotionFabricator.PopulateViewData.format.format({
 					type: 'table'
 				}) as ITableViewFormat;
 
@@ -79,7 +79,7 @@ describe('List view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for list view`, () => {
-				const format = PopulateViewData.format.format({
+				const format = NotionFabricator.PopulateViewData.format.format({
 					type: 'list',
 					inline_collection_first_load_limit: {
 						limit: 25,
@@ -99,7 +99,7 @@ describe('List view', () => {
 
 		describe('Default input', () => {
 			it(`Should work for list view`, () => {
-				const format = PopulateViewData.format.format({
+				const format = NotionFabricator.PopulateViewData.format.format({
 					type: 'list'
 				});
 
@@ -118,7 +118,7 @@ describe('Calendar view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for calendar view`, () => {
-				const format = PopulateViewData.format.format({
+				const format = NotionFabricator.PopulateViewData.format.format({
 					type: 'calendar'
 				});
 
@@ -134,7 +134,7 @@ describe('Gallery view', () => {
 	describe('output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for gallery_cover=property`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -167,7 +167,7 @@ describe('Gallery view', () => {
 			});
 
 			it(`Should work for gallery_cover=page_cover`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -195,7 +195,7 @@ describe('Gallery view', () => {
 
 		describe('Default input', () => {
 			it(`Should work for gallery view (default)`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'gallery'
 					},
@@ -218,7 +218,7 @@ describe('Gallery view', () => {
 	describe('Throw error', () => {
 		it(`Should throw error for gallery view (property not of type file)`, () => {
 			expect(() =>
-				PopulateViewData.format.format(
+				NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'gallery',
 						gallery_cover: {
@@ -237,7 +237,7 @@ describe('timeline view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should work for timeline view`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'timeline',
 						timeline_show_table: true,
@@ -270,7 +270,7 @@ describe('timeline view', () => {
 		});
 		describe('Default input', () => {
 			it(`Should work for timeline view (default)`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'timeline'
 					},
@@ -298,7 +298,7 @@ describe('board view', () => {
 	describe('Output Correct', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for custom input board_cover=property`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -343,7 +343,7 @@ describe('board view', () => {
 			});
 
 			it(`Should work for board_cover=page_cover`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -370,7 +370,7 @@ describe('board view', () => {
 
 		describe('Default input', () => {
 			it(`Should work with default input for gallery view`, () => {
-				const format = PopulateViewData.format.format(
+				const format = NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board'
 					},
@@ -407,7 +407,7 @@ describe('board view', () => {
 	describe('Throw error', () => {
 		it(`Should throw an error if custom groups2 property is referencing unsupported type property`, () => {
 			expect(() =>
-				PopulateViewData.format.format(
+				NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -434,7 +434,7 @@ describe('board view', () => {
 
 		it(`Should throw error for board view (property not of type file)`, () => {
 			expect(() =>
-				PopulateViewData.format.format(
+				NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board',
 						board_cover: {
@@ -452,7 +452,7 @@ describe('board view', () => {
 			delete custom_schema.select;
 			const custom_schema_map = NotionUtils.generateSchemaMap(custom_schema);
 			expect(() =>
-				PopulateViewData.format.format(
+				NotionFabricator.PopulateViewData.format.format(
 					{
 						type: 'board'
 					},

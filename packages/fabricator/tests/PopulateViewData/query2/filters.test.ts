@@ -1,6 +1,6 @@
 import { IViewFilter } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { IViewFilterCreateInput, PopulateViewData } from '../../../libs';
+import { IViewFilterCreateInput, NotionFabricator } from '../../../libs';
 
 const schema_map = NotionUtils.generateSchemaMap({
 	title: {
@@ -31,7 +31,7 @@ it(`Should populate non nested filter`, () => {
 		filters: []
 	};
 
-	PopulateViewData.query2.filters(
+	NotionFabricator.PopulateViewData.query2.filters(
 		[
 			{
 				filter,
@@ -59,7 +59,7 @@ it(`Should populate nested filter`, () => {
 		operator: 'and',
 		filters: []
 	};
-	PopulateViewData.query2.filters(
+	NotionFabricator.PopulateViewData.query2.filters(
 		[
 			{
 				filter,
@@ -110,7 +110,7 @@ it(`Should populate non nested filter when using position`, () => {
 		]
 	};
 
-	PopulateViewData.query2.filters(
+	NotionFabricator.PopulateViewData.query2.filters(
 		[
 			{
 				filter,
@@ -140,7 +140,7 @@ it(`Should populate non nested filter when using position`, () => {
 
 it(`Should throw an error if unknown property is referenced`, () => {
 	expect(() =>
-		PopulateViewData.query2.filters(
+		NotionFabricator.PopulateViewData.query2.filters(
 			[
 				{
 					filter,

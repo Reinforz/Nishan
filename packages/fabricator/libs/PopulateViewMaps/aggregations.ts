@@ -1,6 +1,6 @@
 import { IBoardView, ITableView, ITimelineView, Schema } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { InitializeView, ISchemaAggregationMap } from "../";
+import { ISchemaAggregationMap, NotionFabricator } from "../";
 
 /**
  * Populates and returns an aggregation map
@@ -8,7 +8,7 @@ import { InitializeView, ISchemaAggregationMap } from "../";
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function aggregations(data: ITableView | IBoardView | ITimelineView, schema: Schema){
-  const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = InitializeView.aggregation(data);
+  const aggregations_map: ISchemaAggregationMap = new Map(), aggregations = NotionFabricator.InitializeView.aggregation(data);
   // Go through each of the aggregations and add it to the aggregation map
   aggregations.forEach((aggregation, index) => {
     const schema_unit = NotionUtils.getSchemaUnit(schema, aggregation.property, ["query2", "aggregation", index.toString()] );

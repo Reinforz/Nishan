@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { o } from '../../core/tests/utils';
-import { updateChildContainer } from '../libs';
+import { NotionFabricator } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -14,7 +14,7 @@ const default_fabricator_props = {
 	space_id: 'space_1'
 };
 
-describe('updateChildContainer', () => {
+describe('NotionFabricator.updateChildContainer', () => {
 	it(`keep=true,bookmarked_pages doesn't include id`, async () => {
 		const space_view_1 = {
 				bookmarked_pages: [],
@@ -27,7 +27,7 @@ describe('updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
 			cache,
 			...default_fabricator_props
 		});
@@ -53,7 +53,10 @@ describe('updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', false, 'block_1', { cache, ...default_fabricator_props });
+		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', false, 'block_1', {
+			cache,
+			...default_fabricator_props
+		});
 
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.sv.lr('space_view_1', [ 'bookmarked_pages' ], {
@@ -76,7 +79,10 @@ describe('updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });
+		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+			cache,
+			...default_fabricator_props
+		});
 
 		expect(executeOperationsMock).not.toHaveBeenCalled();
 	});
@@ -92,7 +98,10 @@ describe('updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await updateChildContainer('space_view', 'space_view_1', true, 'block_1', { cache, ...default_fabricator_props });
+		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+			cache,
+			...default_fabricator_props
+		});
 
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.sv.la('space_view_1', [ 'bookmarked_pages' ], {

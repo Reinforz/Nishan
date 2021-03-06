@@ -1,13 +1,13 @@
 import { IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { InitializeView, ISchemaFiltersMap } from "../";
+import { ISchemaFiltersMap, NotionFabricator } from "../";
 /**
  * Populates and returns a filter map
  * @param data view data
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function filters(data: TView, schema: Schema){
-  const filters = InitializeView.filter(data),
+  const filters = NotionFabricator.InitializeView.filter(data),
     filters_map: ISchemaFiltersMap = new Map();
   
   function populateFilterMap(parent: IViewFilter, indexes: number[]){

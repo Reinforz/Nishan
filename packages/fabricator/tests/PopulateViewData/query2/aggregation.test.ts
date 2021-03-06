@@ -1,4 +1,4 @@
-import { PopulateViewData } from '../../../libs';
+import { NotionFabricator } from '../../../libs';
 
 it(`Sort undefined, aggregation text`, () => {
 	const query2 = {
@@ -6,7 +6,7 @@ it(`Sort undefined, aggregation text`, () => {
 		sort: []
 	};
 
-	PopulateViewData.query2.aggregation('count', 'text', query2.aggregations);
+	NotionFabricator.PopulateViewData.query2.aggregation('count', 'text', query2.aggregations);
 
 	expect(query2).toStrictEqual({
 		sort: [],
@@ -25,7 +25,7 @@ it(`aggregation text`, () => {
 		sort: []
 	};
 
-	PopulateViewData.query2.aggregation('count', 'text', query2.aggregations);
+	NotionFabricator.PopulateViewData.query2.aggregation('count', 'text', query2.aggregations);
 
 	expect(query2).toStrictEqual({
 		sort: [],

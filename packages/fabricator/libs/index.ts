@@ -1,8 +1,18 @@
 export * from '../types';
-export * from './constructLogger';
-export * from './CreateData';
-export * from './detectChildData';
-export * from './InitializeView';
-export * from './PopulateViewData';
-export * from './PopulateViewMaps';
-export * from './updateChildContainer';
+import { constructLogger } from './constructLogger';
+import { CreateData } from './CreateData';
+import { detectChildData } from './detectChildData';
+import { InitializeView } from './InitializeView';
+import { PopulateViewData } from './PopulateViewData';
+import { PopulateViewMaps } from './PopulateViewMaps';
+import { updateChildContainer } from './updateChildContainer';
+
+export const NotionFabricator = {
+	constructLogger,
+	detectChildData,
+	updateChildContainer,
+	PopulateViewMaps,
+	CreateData,
+	InitializeView,
+	PopulateViewData
+};

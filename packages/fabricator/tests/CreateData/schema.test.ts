@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { default_nishan_arg } from '../../../core/tests/utils';
-import { CreateData } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { TSchemaUnitInput } from '../../types';
 import { tsu } from '../utils';
 
@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 describe('Work correctly', () => {
-	it(`CreateData.schema should work correctly (custom input)`, async () => {
+	it(`NotionFabricator.CreateData.schema should work correctly (custom input)`, async () => {
 		const input_schema_units: TSchemaUnitInput[] = [
 			{
 				type: 'formula',
@@ -30,10 +30,10 @@ describe('Work correctly', () => {
 		const cb = jest.fn(),
 			cache = NotionCache.createDefaultCache(),
 			createSchemaUnitRollupMock = jest
-				.spyOn(CreateData.schema_unit, 'rollup')
+				.spyOn(NotionFabricator.CreateData.schema_unit, 'rollup')
 				.mockImplementationOnce(async () => input_schema_units[2] as any),
 			createSchemaUnitRelationMock = jest
-				.spyOn(CreateData.schema_unit, 'relation')
+				.spyOn(NotionFabricator.CreateData.schema_unit, 'relation')
 				.mockImplementationOnce(async () => input_schema_units[3] as any);
 		const output_schema_values = [
 			tsu,
@@ -50,7 +50,7 @@ describe('Work correctly', () => {
 			input_schema_units[3]
 		];
 
-		const [ schema, schema_map, collection_format ] = await CreateData.schema(
+		const [ schema, schema_map, collection_format ] = await NotionFabricator.CreateData.schema(
 			input_schema_units,
 			{
 				parent_collection_id: 'parent_collection_id',
@@ -82,9 +82,9 @@ describe('Work correctly', () => {
 		});
 	});
 
-	it(`CreateData.schema should work correctly (default input)`, async () => {
+	it(`NotionFabricator.CreateData.schema should work correctly (default input)`, async () => {
 		const cache = NotionCache.createDefaultCache();
-		const [ schema, schema_map, collection_format ] = await CreateData.schema(
+		const [ schema, schema_map, collection_format ] = await NotionFabricator.CreateData.schema(
 			[ tsu ],
 			{
 				...default_nishan_arg,
@@ -108,7 +108,7 @@ describe('Work correctly', () => {
 describe('Throws error', () => {
 	it(`Should throw error for duplicate property name`, () => {
 		expect(() =>
-			CreateData.schema(
+			NotionFabricator.CreateData.schema(
 				[ tsu, tsu ],
 				{
 					parent_collection_id: 'parent_collection_id',
@@ -121,7 +121,7 @@ describe('Throws error', () => {
 
 	it(`Should throw error if title type property not present in schema`, () => {
 		expect(() =>
-			CreateData.schema(
+			NotionFabricator.CreateData.schema(
 				[
 					{
 						type: 'number',

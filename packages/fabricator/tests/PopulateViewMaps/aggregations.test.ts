@@ -1,4 +1,4 @@
-import { PopulateViewMaps } from '../../libs';
+import { NotionFabricator } from '../../libs';
 import { schema, tsmu } from './utils';
 
 const aggregation = {
@@ -7,7 +7,7 @@ const aggregation = {
 };
 
 it(`Should create correct schema map`, () => {
-	const [ aggregations_map ] = PopulateViewMaps.aggregations(
+	const [ aggregations_map ] = NotionFabricator.PopulateViewMaps.aggregations(
 		{
 			query2: {
 				aggregations: [ aggregation ]

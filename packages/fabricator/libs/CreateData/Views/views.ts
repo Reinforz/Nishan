@@ -1,7 +1,7 @@
 import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
-import { PopulateViewData } from '../../';
+import { NotionFabricator } from '../../';
 import { generateViewData } from './utils';
 
 /**
@@ -34,20 +34,20 @@ export async function views (
 
 		const { schema_units, filters } = view,
 			included_units: string[] = [],
-			view_query2 = PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
-			view_format = PopulateViewData.format.format(view as any, schema_map);
+			view_query2 = NotionFabricator.PopulateViewData.query2.query2(view as any, schema_map) as TViewQuery2,
+			view_format = NotionFabricator.PopulateViewData.format.format(view as any, schema_map);
 
 		schema_units.forEach((schema_unit: any) => {
 			const { format, name } = schema_unit,
 				schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, name, [ 'name' ]);
 			included_units.push(schema_map_unit.schema_id);
-			PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, view_query2.sort);
-			PopulateViewData.query2.aggregation(
+			NotionFabricator.PopulateViewData.query2.sort(schema_unit.sort, schema_map_unit.schema_id, view_query2.sort);
+			NotionFabricator.PopulateViewData.query2.aggregation(
 				schema_unit.aggregation as any,
 				schema_map_unit.schema_id,
 				(view_query2 as any).aggregations
 			);
-			PopulateViewData.format.properties(
+			NotionFabricator.PopulateViewData.format.properties(
 				view.type as any,
 				schema_map_unit.schema_id,
 				view_format as any,
@@ -55,7 +55,7 @@ export async function views (
 			);
 		});
 
-		PopulateViewData.query2.filters(
+		NotionFabricator.PopulateViewData.query2.filters(
 			filters as TViewFilterCreateInput[],
 			(view_query2.filter as IViewFilter).filters,
 			schema_map

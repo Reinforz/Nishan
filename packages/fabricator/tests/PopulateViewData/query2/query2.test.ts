@@ -8,7 +8,7 @@ import {
 	Schema
 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { PopulateViewData } from '../../../libs';
+import { NotionFabricator } from '../../../libs';
 import { dsu, fsu, nsu, tsu, txsu } from '../../utils';
 
 const schema: Schema = {
@@ -43,7 +43,7 @@ const schema_map = NotionUtils.generateSchemaMap(schema);
 
 describe('Table view', () => {
 	it(`Should output correctly for table view custom input`, () => {
-		const query2 = PopulateViewData.query2.query2({
+		const query2 = NotionFabricator.PopulateViewData.query2.query2({
 			type: 'table'
 		}) as ITableViewQuery2;
 		expect(query2).toStrictEqual({
@@ -59,7 +59,7 @@ describe('Table view', () => {
 
 describe('List view', () => {
 	it(`Should output correctly for list view custom input`, () => {
-		const query2 = PopulateViewData.query2.query2({
+		const query2 = NotionFabricator.PopulateViewData.query2.query2({
 			type: 'list',
 			filter_operator: 'or'
 		}) as IListViewQuery2;
@@ -77,7 +77,7 @@ describe('Board view', () => {
 	describe('Output correctly', () => {
 		describe('Custom input', () => {
 			it(`Should output correctly for Board view custom input`, () => {
-				const query2 = PopulateViewData.query2.query2(
+				const query2 = NotionFabricator.PopulateViewData.query2.query2(
 					{
 						type: 'board',
 						group_by: 'Select'
@@ -101,7 +101,7 @@ describe('Board view', () => {
 	describe('Throw error', () => {
 		it(`Should throw error if schema doesn't contain any select | multi-select`, () => {
 			expect(() =>
-				PopulateViewData.query2.query2(
+				NotionFabricator.PopulateViewData.query2.query2(
 					{
 						type: 'board',
 						group_by: 'Text'
@@ -115,7 +115,7 @@ describe('Board view', () => {
 
 describe('Calendar view', () => {
 	it(`Should output correctly for calendar view(date property)`, () => {
-		const query2 = PopulateViewData.query2.query2(
+		const query2 = NotionFabricator.PopulateViewData.query2.query2(
 			{
 				type: 'calendar',
 				calendar_by: 'Date'
@@ -135,7 +135,7 @@ describe('Calendar view', () => {
 
 describe('Gallery view', () => {
 	it(`Should work for gallery view`, () => {
-		const query2 = PopulateViewData.query2.query2({
+		const query2 = NotionFabricator.PopulateViewData.query2.query2({
 			type: 'gallery'
 		}) as IGalleryViewQuery2;
 		expect(query2).toStrictEqual({
@@ -150,7 +150,7 @@ describe('Gallery view', () => {
 
 describe('Timeline', () => {
 	it(`Should work for timeline view(Date property)`, () => {
-		const query2 = PopulateViewData.query2.query2(
+		const query2 = NotionFabricator.PopulateViewData.query2.query2(
 			{
 				type: 'timeline',
 				timeline_by: 'Date'

@@ -5,7 +5,7 @@ import { INotionEndpointsOptions, NotionHeaders } from '..';
  * @param configs Notion specific data required to construct the header
  * @returns Notion specific header
  */
-export function constructNotionHeaders (configs?: INotionEndpointsOptions): NotionHeaders {
+export function constructNotionHeaders (configs?: Partial<INotionEndpointsOptions>): NotionHeaders {
 	const headers: NotionHeaders = {
 		headers: {}
 	} as any;

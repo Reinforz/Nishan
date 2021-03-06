@@ -2,7 +2,7 @@ import colors from 'colors';
 /**
  * Thrown when index out of bound error occurs on a parents child container
  */
-export class ChildIndexOutofBoundError extends Error {
+export class ChildIndexOutOfBound extends Error {
 	/**
    * @param child_index The index of the child id
    * @param child_container_length The length of the child container array

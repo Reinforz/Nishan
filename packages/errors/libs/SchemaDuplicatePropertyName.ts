@@ -3,7 +3,7 @@ import colors from 'colors';
 /**
  * Thrown when schema contains duplicate property name
  */
-export class SchemaDuplicatePropertyNameError extends Error {
+export class SchemaDuplicatePropertyName extends Error {
 	/**
    * @param property_name The name of the duplicate property
    */

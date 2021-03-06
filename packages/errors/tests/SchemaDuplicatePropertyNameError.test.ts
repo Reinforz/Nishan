@@ -1,8 +1,8 @@
 import colors from 'colors';
-import { SchemaDuplicatePropertyNameError } from '../libs';
+import { NotionErrors } from '../libs';
 
 it(`SchemaDuplicatePropertyNameError`, () => {
-	expect(new SchemaDuplicatePropertyNameError('Name').message).toBe(
+	expect(new NotionErrors.schema_duplicate_property_name('Name').message).toBe(
 		colors.bold.red(`Schema already contains property with name Name.`)
 	);
 });

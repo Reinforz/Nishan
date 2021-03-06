@@ -1,6 +1,8 @@
 import colors from 'colors';
-import { NonExistentDataError } from '../libs';
+import { NotionErrors } from '../libs';
 
 it(`NonExistentDataError`, () => {
-	expect(new NonExistentDataError('collection', '123').message).toBe(colors.bold.red(`collection:123 doesn't exist`));
+	expect(new NotionErrors.non_existent_data('collection', '123').message).toBe(
+		colors.bold.red(`collection:123 doesn't exist`)
+	);
 });

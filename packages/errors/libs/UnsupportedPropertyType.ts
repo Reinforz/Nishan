@@ -4,7 +4,7 @@ import colors from 'colors';
 /**
  * A notion specific error class, that is thrown when the property type doesn't match the supported types
  */
-export class UnsupportedPropertyTypeError extends Error {
+export class UnsupportedPropertyType extends Error {
 	/**
    * @param property The name of the property
    * @param path The path to the property

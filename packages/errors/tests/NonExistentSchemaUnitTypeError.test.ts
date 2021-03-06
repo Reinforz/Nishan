@@ -1,8 +1,8 @@
 import colors from 'colors';
-import { NonExistentSchemaUnitTypeError } from '../libs';
+import { NotionErrors } from '../libs';
 
 it(`NonExistentSchemaUnitTypeError`, () => {
-	expect(new NonExistentSchemaUnitTypeError([ 'checkbox', 'title' ]).message).toBe(
+	expect(new NotionErrors.non_existent_schema_unit_type([ 'checkbox', 'title' ]).message).toBe(
 		colors.bold.red(`Schema doesn't contain any property of type checkbox | title`)
 	);
 });

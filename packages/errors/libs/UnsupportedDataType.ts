@@ -4,7 +4,7 @@ import colors from 'colors';
 /**
  * A notion specific error class, that is thrown when the data type doesn't match the supported types
  */
-export class UnsupportedDataTypeError extends Error {
+export class UnsupportedDataType extends Error {
 	/**
    * @param given_data_type passed data type
    * @param supported_data_types The supported data type of the property

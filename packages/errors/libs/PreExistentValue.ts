@@ -3,7 +3,7 @@ import colors from 'colors';
 /**
  * Thrown when a new value is trying to be set when there is already a previous value
  */
-export class PreExistentValueError extends Error {
+export class PreExistentValue extends Error {
 	/**
    * @param value_type The type of the value
    * @param value_for For what does the duplicate value exists

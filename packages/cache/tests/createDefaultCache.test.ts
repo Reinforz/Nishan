@@ -1,4 +1,4 @@
-import { NotionCache } from '../../libs';
+import { NotionCache } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

@@ -1,5 +1,5 @@
 import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { NotionCache, NotionCacheConfigs } from '..';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
  * Constructs and executes syncRecordValue params

@@ -1,14 +1,13 @@
 import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { NotionUtils } from '@nishans/utils';
-import { NotionCache } from '..';
-import { NotionCacheConfigs } from '../types';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
-   * Fetch multiple from notion's db if it doesn't exist in the cache
-   * @param table The table of the data
-   * @param id the id of the data
-   * @param configs Notion cache configs
-   */
+ * Fetch multiple from notion's db if it doesn't exist in the cache
+ * @param table The table of the data
+ * @param id the id of the data
+ * @param configs Notion cache configs
+ */
 export async function fetchMultipleDataOrReturnCached (params: UpdateCacheManuallyParam, configs: NotionCacheConfigs) {
 	const result = NotionUtils.createDefaultRecordMap();
 	const sync_record_values: UpdateCacheManuallyParam = [];

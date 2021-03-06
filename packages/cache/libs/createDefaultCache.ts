@@ -1,4 +1,4 @@
-import { ICache } from '..';
+import { ICache } from './';
 
 export function createDefaultCache () {
 	return {

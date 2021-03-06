@@ -1,6 +1,5 @@
 import { UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { NotionCache } from '..';
-import { NotionCacheConfigs } from '../types';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
  * Fetches data from notions server and store within the cache

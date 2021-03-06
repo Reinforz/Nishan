@@ -1,5 +1,5 @@
 import { UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { ICache } from '..';
+import { ICache } from './';
 
 /**
  * Returns the id and data_type tuple passed that is not present in the cache

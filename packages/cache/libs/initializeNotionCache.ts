@@ -1,6 +1,5 @@
 import { NotionQueries } from '@nishans/endpoints';
-import { NotionCache } from '..';
-import { NotionCacheConfigs } from '../types';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
  * Initialize the cache by sending a post request to the `getSpaces` endpoint 

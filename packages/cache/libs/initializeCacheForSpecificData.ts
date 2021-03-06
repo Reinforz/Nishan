@@ -1,8 +1,7 @@
 import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
-import { NotionCache } from '..';
-import { NotionCacheConfigs } from '../types';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
  * Initialize cache of specific type of data

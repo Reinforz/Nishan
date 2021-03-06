@@ -1,6 +1,5 @@
 import { TData, TDataType } from '@nishans/types';
-import { NotionCache } from '..';
-import { NotionCacheConfigs } from '../types';
+import { NotionCache, NotionCacheConfigs } from './';
 
 /**
    * Fetch data from notion's db if it doesn't exist in the cache

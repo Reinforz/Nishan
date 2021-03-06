@@ -1,5 +1,5 @@
 import { error } from '@nishans/errors';
-import { ICache } from '..';
+import { ICache } from './';
 
 /**
    * Validates the passed cache 

@@ -1,6 +1,6 @@
 import { NotionQueries } from '@nishans/endpoints';
 import colors from 'colors';
-import { ICache, NotionCache } from '../../libs';
+import { ICache, NotionCache } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

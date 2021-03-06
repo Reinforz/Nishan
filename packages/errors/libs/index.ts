@@ -7,6 +7,7 @@ import { SchemaDuplicatePropertyName } from './SchemaDuplicatePropertyName';
 import { UnknownPropertyReference } from './UnknownPropertyReference';
 import { UnsupportedBlockType } from './UnsupportedBlockType';
 import { UnsupportedDataType } from './UnsupportedDataType';
+import { UnsupportedFunctionName } from './UnsupportedFunctionName';
 import { UnsupportedPropertyType } from './UnsupportedPropertyType';
 
 export const NotionErrors = {
@@ -19,5 +20,6 @@ export const NotionErrors = {
 	unsupported_block_type: UnsupportedBlockType,
 	unsupported_data_type: UnsupportedDataType,
 	unsupported_property_type: UnsupportedPropertyType,
+	unsupported_function_name: UnsupportedFunctionName,
 	Log: NotionErrorsLogs
 };

@@ -1,5 +1,6 @@
+import { NotionErrors } from '@nishans/errors';
 import { TFormulaResultType, TPropertyFormula } from '@nishans/types';
-import { ISchemaMap } from '..';
+import { ISchemaMap } from '../';
 import { getResultTypeFromSchemaType } from '../GenerateAST/utils';
 
 /**
@@ -33,5 +34,5 @@ export function generateNotionFormulaArgFromProperty (
 			name,
 			result_type
 		};
-	} else throw new Error(`Property ${schema_name} does not exist on the given schema_map`);
+	} else throw new NotionErrors.unknown_property_reference(schema_name, [ 'property' ]);
 }

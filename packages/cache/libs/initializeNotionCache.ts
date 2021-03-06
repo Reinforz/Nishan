@@ -1,11 +1,11 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionCache, NotionCacheConfigs } from './';
 
 /**
  * Initialize the cache by sending a post request to the `getSpaces` endpoint 
  */
 export async function initializeNotionCache (configs: NotionCacheConfigs) {
-	const data = await NotionQueries.getSpaces(configs);
+	const data = await NotionEndpoints.Queries.getSpaces(configs);
 	// Contains a set of external notion user that has access to the space
 	const external_notion_users: Set<string> = new Set();
 

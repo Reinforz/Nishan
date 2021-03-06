@@ -1,4 +1,4 @@
-import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { NotionUtils } from '@nishans/utils';
 import { NotionCache, NotionCacheConfigs } from './';
 
@@ -20,7 +20,7 @@ export async function fetchMultipleDataOrReturnCached (params: UpdateCacheManual
 
 	if (sync_record_values.length) {
 		// Fetch the data from notion's db
-		const { recordMap } = await NotionQueries.syncRecordValues(
+		const { recordMap } = await NotionEndpoints.Queries.syncRecordValues(
 			{
 				requests: NotionCache.constructSyncRecordsParams(sync_record_values)
 			},

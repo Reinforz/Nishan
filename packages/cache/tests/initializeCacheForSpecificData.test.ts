@@ -1,4 +1,4 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import colors from 'colors';
 import { ICache, NotionCache } from '../libs';
 
@@ -55,7 +55,7 @@ describe('initializeCacheForSpecificData', () => {
 		const updateCacheIfNotPresentMock = jest
 			.spyOn(NotionCache, 'updateCacheIfNotPresent')
 			.mockImplementationOnce(async () => undefined);
-		const loadPageChunkMock = jest.spyOn(NotionQueries, 'loadPageChunk').mockImplementationOnce(
+		const loadPageChunkMock = jest.spyOn(NotionEndpoints.Queries, 'loadPageChunk').mockImplementationOnce(
 			async () =>
 				({
 					recordMap: {
@@ -202,7 +202,9 @@ describe('initializeCacheForSpecificData', () => {
 				}
 			} as any,
 			createQueryCollectionMock = () =>
-				jest.spyOn(NotionQueries, 'queryCollection').mockImplementationOnce(async () => query_collection_response);
+				jest
+					.spyOn(NotionEndpoints.Queries, 'queryCollection')
+					.mockImplementationOnce(async () => query_collection_response);
 
 		it(`template_pages=[]`, async () => {
 			const collection_1 = {

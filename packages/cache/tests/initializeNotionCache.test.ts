@@ -1,4 +1,4 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -53,7 +53,7 @@ describe(`initializeNotionCache`, () => {
 		} as any;
 
 		const getSpacesMock = jest
-				.spyOn(NotionQueries, 'getSpaces')
+				.spyOn(NotionEndpoints.Queries, 'getSpaces')
 				.mockImplementationOnce(async () => get_spaces_response),
 			constructAndSyncRecordsParamsMock = jest
 				.spyOn(NotionCache, 'constructAndSyncRecordsParams')
@@ -79,7 +79,7 @@ describe(`initializeNotionCache`, () => {
 		} as any;
 
 		const getSpacesMock = jest
-				.spyOn(NotionQueries, 'getSpaces')
+				.spyOn(NotionEndpoints.Queries, 'getSpaces')
 				.mockImplementationOnce(async () => get_spaces_response),
 			constructAndSyncRecordsParamsMock = jest
 				.spyOn(NotionCache, 'constructAndSyncRecordsParams')

@@ -1,4 +1,4 @@
-import { NotionQueries, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { error } from '@nishans/errors';
 import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
 import { NotionCache, NotionCacheConfigs } from './';
@@ -15,7 +15,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	if (type === 'block') {
 		const data = cache[type].get(id) as TBlock;
 		if (data.type.match(/^(page|collection_view_page|collection_view)$/)) {
-			const { recordMap } = await NotionQueries.loadPageChunk({
+			const { recordMap } = await NotionEndpoints.Queries.loadPageChunk({
 				pageId: id,
 				limit: 100,
 				cursor: {
@@ -55,7 +55,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		const data = cache[type].get(id) as ICollection;
 		if (data.template_pages) data.template_pages.forEach((id) => container.push([ id, 'block' ]));
 		// Fetching the row_pages of collection
-		const { recordMap } = await NotionQueries.queryCollection(
+		const { recordMap } = await NotionEndpoints.Queries.queryCollection(
 			{
 				collectionId: id,
 				collectionViewId: '',

@@ -1,4 +1,4 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -15,7 +15,7 @@ describe('constructAndSyncRecordsParams', () => {
 			} as any;
 
 		const syncRecordValuesMock = jest
-				.spyOn(NotionQueries, 'syncRecordValues')
+				.spyOn(NotionEndpoints.Queries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCache, 'saveToCache').mockImplementationOnce(() => undefined);
 
@@ -53,7 +53,7 @@ describe('constructAndSyncRecordsParams', () => {
 			} as any;
 
 		const syncRecordValuesMock = jest
-				.spyOn(NotionQueries, 'syncRecordValues')
+				.spyOn(NotionEndpoints.Queries, 'syncRecordValues')
 				.mockImplementationOnce(async () => sync_record_values_response),
 			saveToCacheMock = jest.spyOn(NotionCache, 'saveToCache').mockImplementationOnce(() => undefined);
 

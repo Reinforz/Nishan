@@ -1,5 +1,5 @@
 import { TViewType } from '@nishans/types';
 
-export const createViewTypesArray = () => {
+export const createViewTypes = () => {
 	return [ 'board', 'gallery', 'list', 'timeline', 'table', 'calendar' ] as TViewType[];
 };

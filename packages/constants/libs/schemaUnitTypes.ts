@@ -1,6 +1,6 @@
 import { TSchemaUnitType } from '@nishans/types';
 
-export const createSchemaUnitTypesArray = () => {
+export const createSchemaUnitTypes = () => {
 	return [
 		'text',
 		'number',

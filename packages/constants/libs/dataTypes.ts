@@ -1,6 +1,6 @@
 import { TDataType } from '@nishans/types';
 
-export const createDataTypesArray = () => {
+export const createDataTypes = () => {
 	return [
 		'block',
 		'collection',

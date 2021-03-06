@@ -1,13 +1,15 @@
-import { createBlockTypesArray } from './blocks';
-import { createDataTypesArray } from './data';
-import { createOperationCommands } from './operation_commands';
-import { createSchemaUnitTypesArray } from './schema_units';
-import { createViewTypesArray } from './views';
+import { createBlockTypes } from './blockTypes';
+import { createDataTypes } from './dataTypes';
+import { createFunctionNames } from './functionNames';
+import { createOperationCommands } from './operationCommands';
+import { createSchemaUnitTypes } from './schemaUnitTypes';
+import { createViewTypes } from './viewTypes';
 
 export const NotionConstants = {
-	block_types: createBlockTypesArray,
-	view_types: createViewTypesArray,
-	schema_unit_types: createSchemaUnitTypesArray,
-	data_types: createDataTypesArray,
-	operation_commands: createOperationCommands
+	blockTypes: createBlockTypes,
+	viewTypes: createViewTypes,
+	schemaUnitTypes: createSchemaUnitTypes,
+	dataTypes: createDataTypes,
+	operationCommands: createOperationCommands,
+	functionNames: createFunctionNames
 };

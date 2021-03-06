@@ -1,7 +1,12 @@
 import { TBlockType } from '@nishans/types';
+import { NotionConstants } from '../libs';
 
-export const createBlockTypesArray = () => {
-	return [
+it('NotionConstants.blockTypes', () => {
+	const block_types = NotionConstants.blockTypes();
+	const block_types_map: Map<TBlockType, true> = new Map();
+	block_types.forEach((block_type) => block_types_map.set(block_type, true));
+
+	const expected_block_types: TBlockType[] = [
 		'embed',
 		'abstract',
 		'invision',
@@ -44,5 +49,7 @@ export const createBlockTypesArray = () => {
 		'linked_db',
 		'column_list',
 		'column'
-	] as TBlockType[];
-};
+	];
+	expect(block_types.length === expected_block_types.length).toBe(true);
+	expected_block_types.forEach((expected_block_type) => expect(block_types_map.get(expected_block_type)).toBe(true));
+});

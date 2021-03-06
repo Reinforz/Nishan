@@ -2,7 +2,10 @@ import { TSchemaUnitType } from '@nishans/types';
 import { NotionConstants } from '../libs';
 
 it('NotionConstants.schema_units', () => {
-	const schema_unit_types = NotionConstants.schema_unit_types();
+	const schema_unit_types = NotionConstants.schemaUnitTypes();
+	const schema_unit_types_map: Map<TSchemaUnitType, true> = new Map();
+	schema_unit_types.forEach((schema_unit_type) => schema_unit_types_map.set(schema_unit_type, true));
+
 	const expected_schema_unit_types: TSchemaUnitType[] = [
 		'text',
 		'number',
@@ -26,6 +29,6 @@ it('NotionConstants.schema_units', () => {
 	];
 	expect(schema_unit_types.length === expected_schema_unit_types.length).toBe(true);
 	expected_schema_unit_types.forEach((expected_schema_unit_type) =>
-		expect(schema_unit_types.includes(expected_schema_unit_type)).toBe(true)
+		expect(schema_unit_types_map.get(expected_schema_unit_type)).toBe(true)
 	);
 });

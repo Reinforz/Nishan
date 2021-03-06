@@ -13,6 +13,6 @@ export const createDefaultRecordMap = () => {
 		user_settings: IUserSettings[];
 	} = {} as any;
 
-	NotionConstants.data_types().map((data_type) => (recordMap[data_type] = []));
+	NotionConstants.dataTypes().map((data_type) => (recordMap[data_type] = []));
 	return recordMap;
 };

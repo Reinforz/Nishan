@@ -1,11 +1,11 @@
-import { NotionHeaders, NotionRequestConfigs } from '..';
+import { NotionEndpointsOptions, NotionHeaders } from '..';
 
 /**
  * Construct notion specific headers using the configs passed
  * @param configs Notion specific data required to construct the header
  * @returns Notion specific header
  */
-export function constructNotionHeaders (configs?: Partial<NotionRequestConfigs>): NotionHeaders {
+export function constructNotionHeaders (configs?: NotionEndpointsOptions): NotionHeaders {
 	const headers: NotionHeaders = {
 		headers: {}
 	} as any;

@@ -6,7 +6,8 @@ afterEach(() => {
 
 const configs = {
 		token: 'token',
-		interval: 0
+		interval: 0,
+		user_id: ''
 	},
 	request_data = {
 		req: 'request_data'

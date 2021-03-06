@@ -9,8 +9,8 @@ export interface NotionHeaders {
 	};
 }
 
-export interface NotionRequestConfigs {
+export interface NotionEndpointsOptions {
 	token: string;
-	user_id?: string;
+	user_id: string;
 	interval?: number;
 }

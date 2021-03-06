@@ -28,7 +28,8 @@ const request_data = {
 	it(method, async () => {
 		const configs = {
 			token: 'token',
-			interval: 0
+			interval: 0,
+			user_id: ''
 		};
 		const notionRequestSendMock = jest
 			.spyOn(NotionEndpoints.Request, 'send')

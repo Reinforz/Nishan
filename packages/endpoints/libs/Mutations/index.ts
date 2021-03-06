@@ -1,10 +1,10 @@
 import { INotionEndpoints } from '@nishans/types';
-import { NotionEndpoints, NotionRequestConfigs } from '../';
+import { NotionEndpoints, NotionEndpointsOptions } from '../';
 
 export const NotionEndpointsMutations = {
 	async setPageNotificationsAsRead (
 		params: INotionEndpoints['setPageNotificationsAsRead']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setPageNotificationsAsRead']['response']>(
 			'setPageNotificationsAsRead',
@@ -14,7 +14,7 @@ export const NotionEndpointsMutations = {
 	},
 	async setSpaceNotificationsAsRead (
 		params: INotionEndpoints['setSpaceNotificationsAsRead']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setSpaceNotificationsAsRead']['response']>(
 			'setSpaceNotificationsAsRead',
@@ -24,7 +24,7 @@ export const NotionEndpointsMutations = {
 	},
 	async removeUsersFromSpace (
 		params: INotionEndpoints['removeUsersFromSpace']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['removeUsersFromSpace']['response']>(
 			'removeUsersFromSpace',
@@ -34,7 +34,7 @@ export const NotionEndpointsMutations = {
 	},
 	async inviteGuestsToSpace (
 		params: INotionEndpoints['inviteGuestsToSpace']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['inviteGuestsToSpace']['response']>(
 			'inviteGuestsToSpace',
@@ -42,21 +42,21 @@ export const NotionEndpointsMutations = {
 			configs
 		);
 	},
-	async createSpace (params: INotionEndpoints['createSpace']['payload'], configs: NotionRequestConfigs) {
+	async createSpace (params: INotionEndpoints['createSpace']['payload'], configs: NotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['createSpace']['response']>(
 			'createSpace',
 			params,
 			configs
 		);
 	},
-	async saveTransactions (params: INotionEndpoints['saveTransaction']['payload'], configs: NotionRequestConfigs) {
+	async saveTransactions (params: INotionEndpoints['saveTransaction']['payload'], configs: NotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['saveTransaction']['response']>(
 			'saveTransactions',
 			params,
 			configs
 		);
 	},
-	async enqueueTask (params: INotionEndpoints['enqueueTask']['payload'], configs: NotionRequestConfigs) {
+	async enqueueTask (params: INotionEndpoints['enqueueTask']['payload'], configs: NotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['enqueueTask']['response']>(
 			'enqueueTask',
 			params,
@@ -65,7 +65,7 @@ export const NotionEndpointsMutations = {
 	},
 	async setBookmarkMetadata (
 		params: INotionEndpoints['setBookmarkMetadata']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setBookmarkMetadata']['response']>(
 			'setBookmarkMetadata',
@@ -75,7 +75,7 @@ export const NotionEndpointsMutations = {
 	},
 	async initializePageTemplate (
 		params: INotionEndpoints['initializePageTemplate']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['initializePageTemplate']['response']>(
 			'initializePageTemplate',
@@ -85,7 +85,7 @@ export const NotionEndpointsMutations = {
 	},
 	async initializeGoogleDriveBlock (
 		params: INotionEndpoints['initializeGoogleDriveBlock']['payload'],
-		configs: NotionRequestConfigs
+		configs: NotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['initializeGoogleDriveBlock']['response']>(
 			'initializeGoogleDriveBlock',
@@ -93,14 +93,14 @@ export const NotionEndpointsMutations = {
 			configs
 		);
 	},
-	async loginWithEmail (params: INotionEndpoints['loginWithEmail']['payload'], configs: NotionRequestConfigs) {
+	async loginWithEmail (params: INotionEndpoints['loginWithEmail']['payload'], configs: NotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['loginWithEmail']['response']>(
 			'loginWithEmail',
 			params,
 			configs
 		);
 	},
-	async deleteBlocks (params: INotionEndpoints['deleteBlocks']['payload'], configs: NotionRequestConfigs) {
+	async deleteBlocks (params: INotionEndpoints['deleteBlocks']['payload'], configs: NotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['deleteBlocks']['response']>(
 			'deleteBlocks',
 			params,

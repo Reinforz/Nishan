@@ -26,7 +26,7 @@ export const OPERATION_COMMANDS = [
 	'set'
 ] as TOperationCommand[];
 
-export const Operation: Record<
+export const NotionOperationsChunk: Record<
 	TDataType,
 	Record<TOperationCommand, ((id: string, path: string[], args: Args) => IOperation)>
 > = {} as any;
@@ -35,9 +35,9 @@ export const Operation: Record<
  * Constructing the Operations object using the list of tables and commands
  */
 OPERATION_TABLES.forEach((table) => {
-	Operation[table] = {} as any;
+	NotionOperationsChunk[table] = {} as any;
 	OPERATION_COMMANDS.forEach((command) => {
-		Operation[table][command] = (id: string, path: string[], args: Args): IOperation => {
+		NotionOperationsChunk[table][command] = (id: string, path: string[], args: Args): IOperation => {
 			return {
 				pointer: {
 					table,

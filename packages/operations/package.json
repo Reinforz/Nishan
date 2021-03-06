@@ -34,7 +34,8 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Foperations"
   },
   "dependencies": {
-    "@nishans/endpoints": "0.0.24"
+    "@nishans/endpoints": "0.0.24",
+    "@nishans/constants": "0.0.16"
   },
   "devDependencies": {
     "@nishans/types": "0.0.25"

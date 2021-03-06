@@ -1,6 +1,6 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionErrors } from "@nishans/errors";
-import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, NotionFabricator, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { NotionUtils } from "@nishans/utils";
@@ -51,7 +51,7 @@ class View<T extends TView> extends Data<T> {
 		const data = this.getCachedData(),
 			collection = await this.getCollection(),
 			schema_map = NotionUtils.generateSchemaMap(collection.schema),
-			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
+			[ sorts_map, sorts ] = NotionFabricator.PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
 				schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, arg[0],  [ `${index}` ]),
@@ -80,7 +80,7 @@ class View<T extends TView> extends Data<T> {
 	async updateSorts (args: UpdateTypes<ISchemaSortsMapValue, TSortUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(),
 			collection = await this.getCollection(),
-			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
+			[ sorts_map, sorts ] = NotionFabricator.PopulateViewMaps.sorts(data, collection.schema);
 		await this.updateIterate<ISchemaSortsMapValue, TSortUpdateInput>(
 			args,
 			{
@@ -118,7 +118,7 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async deleteSorts (args: FilterTypes<ISchemaSortsMapValue>, multiple?: boolean) {
-		const [ sorts_map, sorts ] = PopulateViewMaps.sorts(this.getCachedData(), (await this.getCollection()).schema);
+		const [ sorts_map, sorts ] = NotionFabricator.PopulateViewMaps.sorts(this.getCachedData(), (await this.getCollection()).schema);
 		await this.deleteIterate<ISchemaSortsMapValue>(
 			args,
 			{
@@ -140,8 +140,8 @@ class View<T extends TView> extends Data<T> {
 	async createFilters (args: TViewFilterCreateInput[]) {
 		const schema_map = NotionUtils.generateSchemaMap((await this.getCollection()).schema),
 			data = this.getCachedData(),
-			filters = InitializeView.filter(data).filters;
-    PopulateViewData.query2.filters(args, filters, schema_map);
+			filters = NotionFabricator.InitializeView.filter(data).filters;
+    NotionFabricator.PopulateViewData.query2.filters(args, filters, schema_map);
 		
     await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
@@ -154,7 +154,7 @@ class View<T extends TView> extends Data<T> {
 		const data = this.getCachedData(), 
       {schema} = await this.getCollection(), 
       schema_map = NotionUtils.generateSchemaMap(schema), 
-      [ filters_map ] = PopulateViewMaps.filters(data, schema);
+      [ filters_map ] = NotionFabricator.PopulateViewMaps.filters(data, schema);
     
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
 			args,
@@ -192,7 +192,7 @@ class View<T extends TView> extends Data<T> {
 	async deleteFilters (args: FilterTypes<ISchemaFiltersMapValue>, multiple?: boolean) {
     const data = this.getCachedData(), 
       {schema} = await this.getCollection(), 
-      [ filters_map ] = PopulateViewMaps.filters(data, schema);
+      [ filters_map ] = NotionFabricator.PopulateViewMaps.filters(data, schema);
 
 		await this.deleteIterate<ISchemaFiltersMapValue>(
 			args,
@@ -222,7 +222,7 @@ class View<T extends TView> extends Data<T> {
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ format_properties_map, format_properties ] = PopulateViewMaps.properties(data, (await this.getCollection()).schema);
+			[ format_properties_map, format_properties ] = NotionFabricator.PopulateViewMaps.properties(data, (await this.getCollection()).schema);
 		await this.updateIterate<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>(
 			args,
 			{

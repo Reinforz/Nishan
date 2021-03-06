@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
-import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
+import { ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput, NotionFabricator } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IOperation, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
@@ -86,7 +86,7 @@ export default class Space extends Data<ISpace> {
 
   async createRootPages(contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
     const block_map = CreateMaps.block(), props = this.getProps();
-    await CreateData.contents(contents, this.id, this.type as "space", this.getProps(), async (block)=>{
+    await NotionFabricator.CreateData.contents(contents, this.id, this.type as "space", this.getProps(), async (block)=>{
       await PopulateMap.block(block, block_map, props);
     });
     return block_map;

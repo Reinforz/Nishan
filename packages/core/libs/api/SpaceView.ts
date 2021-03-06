@@ -1,4 +1,4 @@
-import { RepositionParams, updateChildContainer } from '@nishans/fabricator';
+import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
 import {
 	CreateMaps,
@@ -110,7 +110,13 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
-				await updateChildContainer('space_view', data.id, updated_favorite_status, id, this.getProps());
+				await NotionFabricator.updateChildContainer(
+					'space_view',
+					data.id,
+					updated_favorite_status,
+					id,
+					this.getProps()
+				);
 				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);

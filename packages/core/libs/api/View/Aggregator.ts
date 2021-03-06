@@ -2,7 +2,7 @@ import { NotionErrors } from '@nishans/errors';
 import {
 	ISchemaAggregationMap,
 	ISchemaAggregationMapValue,
-	PopulateViewMaps,
+	NotionFabricator,
 	TAggregationsCreateInput,
 	TAggregationsUpdateInput
 } from '@nishans/fabricator';
@@ -42,7 +42,10 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		const data = this.getCachedData(),
 			collection = await this.getCollection(),
 			schema_map = NotionUtils.generateSchemaMap(collection.schema),
-			[ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(this.getCachedData(), collection.schema);
+			[ aggregations_map, aggregations ] = NotionFabricator.PopulateViewMaps.aggregations(
+				this.getCachedData(),
+				collection.schema
+			);
 		for (let index = 0; index < args.length; index++) {
 			const { aggregator } = args[index];
 			const schema_map_unit = detectAggregationErrors(schema_map, args[index], aggregations_map);
@@ -73,7 +76,10 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 		multiple?: boolean
 	) {
 		const data = this.getCachedData(),
-			[ aggregations_map ] = PopulateViewMaps.aggregations(this.getCachedData(), (await this.getCollection()).schema);
+			[ aggregations_map ] = NotionFabricator.PopulateViewMaps.aggregations(
+				this.getCachedData(),
+				(await this.getCollection()).schema
+			);
 
 		await this.updateIterate<ISchemaAggregationMapValue, TAggregationsUpdateInput>(
 			args,
@@ -109,7 +115,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	}
 
 	async deleteAggregations (args: FilterTypes<ISchemaAggregationMapValue>, multiple?: boolean) {
-		const [ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(
+		const [ aggregations_map, aggregations ] = NotionFabricator.PopulateViewMaps.aggregations(
 			this.getCachedData(),
 			(await this.getCollection()).schema
 		);

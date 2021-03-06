@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { CreateData, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
+import { NotionFabricator, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IViewMap, NishanArg, UpdateType, UpdateTypes } from '../../';
@@ -43,7 +43,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 		const data = this.getCachedData(),
 			view_map = CreateMaps.view(),
 			props = this.getProps(),
-			views_data = await CreateData.views(
+			views_data = await NotionFabricator.CreateData.views(
 				this.cache.collection.get(data.collection_id) as ICollection,
 				params,
 				this.getProps(),

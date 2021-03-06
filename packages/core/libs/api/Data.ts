@@ -1,6 +1,6 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
-import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nishans/fabricator';
+import { FabricatorProps, Logger, NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
 import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
@@ -28,7 +28,7 @@ export default class NotionData<T extends TData> {
     this.type = arg.type;
     this.id = arg.id;
     this.#init_cache = false;
-    this.logger = constructLogger(arg.logger);
+    this.logger = NotionFabricator.constructLogger(arg.logger);
     this.user_id = arg.user_id;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.shard_id = arg.shard_id;

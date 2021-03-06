@@ -1,11 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import {
-	CreateData,
-	IPageCreateInput,
-	TBlockCreateInput,
-	TBlockInput,
-	updateChildContainer
-} from '@nishans/fabricator';
+import { IPageCreateInput, NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
@@ -54,7 +48,13 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-		await updateChildContainer('space_view', target_space_view.id, favorite_status, data.id, this.getProps());
+		await NotionFabricator.updateChildContainer(
+			'space_view',
+			target_space_view.id,
+			favorite_status,
+			data.id,
+			this.getProps()
+		);
 	}
 
 	/**
@@ -65,7 +65,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	async createBlocks (contents: TBlockCreateInput[]) {
 		const block_map = CreateMaps.block(),
 			props = this.getProps();
-		await CreateData.contents(contents, this.id, this.type as 'block', props, async (block) => {
+		await NotionFabricator.CreateData.contents(contents, this.id, this.type as 'block', props, async (block) => {
 			await PopulateMap.block(block, block_map, props);
 		});
 		return block_map;

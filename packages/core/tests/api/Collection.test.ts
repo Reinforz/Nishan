@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { CreateData, IPageCreateInput } from '@nishans/fabricator';
+import { IPageCreateInput, NotionFabricator } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -115,7 +115,9 @@ it(`createTemplates`, async () => {
 		id: 'collection_1'
 	});
 
-	const createContentsDataMock = jest.spyOn(CreateData, 'contents').mockImplementationOnce(async () => undefined);
+	const createContentsDataMock = jest
+		.spyOn(NotionFabricator.CreateData, 'contents')
+		.mockImplementationOnce(async () => undefined);
 
 	const create_templates_params: IPageCreateInput[] = [
 		{

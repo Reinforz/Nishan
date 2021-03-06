@@ -1,4 +1,4 @@
-import { updateChildContainer } from '@nishans/fabricator';
+import { NotionFabricator } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -54,7 +54,8 @@ export const remove = async <T extends TData, TD, C = any[]>(
 				NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
 			);
 
-			if (typeof child_path === 'string') await updateChildContainer(parent_type, parent_id, false, child_id, options);
+			if (typeof child_path === 'string')
+				await NotionFabricator.updateChildContainer(parent_type, parent_id, false, child_id, options);
 		}
 	};
 

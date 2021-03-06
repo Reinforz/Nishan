@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
+import { NotionFabricator, RepositionParams, TBlockInput } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
@@ -129,7 +129,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData(),
 			parent_data = await this.getCachedParentData();
 
-		await updateChildContainer(data.parent_table, data.parent_id, false, this.id, this.getProps());
+		await NotionFabricator.updateChildContainer(data.parent_table, data.parent_id, false, this.id, this.getProps());
 
 		data.alive = false;
 		this.logger && this.logger('DELETE', 'block', data.id);

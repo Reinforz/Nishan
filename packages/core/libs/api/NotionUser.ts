@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
-import { CreateData } from '@nishans/fabricator';
+import { NotionFabricator } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
@@ -145,7 +145,7 @@ class NotionUser extends Data<INotionUser> {
       this.logger && this.logger(`UPDATE`, 'user_root', this.user_id);
       this.logger && this.logger(`UPDATE`, 'space', space_id);
 
-      await CreateData.contents(opt.contents, space_id, "space", {...this.getProps(), space_id})
+      await NotionFabricator.CreateData.contents(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };
     
     return spaces;

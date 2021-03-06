@@ -1,5 +1,5 @@
 import { NotionErrors } from '@nishans/errors';
-import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
+import { IPageCreateInput, IPageUpdateInput, NotionFabricator, TSchemaUnitInput } from '@nishans/fabricator';
 import {} from '@nishans/notion-formula';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
@@ -55,7 +55,7 @@ class Collection extends Data<ICollection> {
    * @param rows Array of Objects for configuring template options
    */
 	async createTemplates (rows: IPageCreateInput[]) {
-		return await CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
+		return await NotionFabricator.CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Collection extends Data<ICollection> {
    * @returns An array of newly created page objects
    */
 	async createRows (rows: IPageCreateInput[]) {
-		return await CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
+		return await NotionFabricator.CreateData.contents(rows, this.id, this.type as 'collection', this.getProps());
 	}
 
 	async getRow (arg?: FilterType<IPage>) {
@@ -202,7 +202,7 @@ class Collection extends Data<ICollection> {
 		const data = this.getCachedData(),
 			schema_unit_map = CreateMaps.schema_unit(),
 			props = this.getProps();
-		await CreateData.schema(
+		await NotionFabricator.CreateData.schema(
 			args,
 			{
 				name: data.name,

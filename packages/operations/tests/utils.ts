@@ -14,5 +14,6 @@ export const common_execute_operations_options = {
 	notion_operation_plugins: [],
 	token: 'token',
 	shard_id: 123,
-	space_id: 'space_1'
+	space_id: 'space_1',
+	user_id: 'user_root_1'
 };

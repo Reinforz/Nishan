@@ -38,34 +38,23 @@ export const NotionGraphqlServerTypedefs = gql`
 		created_by: NotionUser!
 	}
 
-  type View{
-    id: String!
-    name: String!
-  }
-
-  interface CollectionBlock implements Block {
-    id: String!
-		collection: Collection!
-		parent: TParent!
-		type: String!
-		space: Space!
-		last_edited_by: NotionUser!
-		created_by: NotionUser!
-    views: [View!]!
-  }
-
-	type CollectionViewPage implements CollectionBlock {
+	type View {
 		id: String!
-		collection: Collection!
-		parent: TParent!
-		type: String!
-		space: Space!
-		last_edited_by: NotionUser!
-		created_by: NotionUser!
-    views: [View!]!
+		name: String!
 	}
 
-	type CollectionView implements CollectionBlock {
+	type CollectionViewPage implements Block {
+		id: String!
+		collection: Collection!
+		parent: TParent!
+		type: String!
+		space: Space!
+		last_edited_by: NotionUser!
+		created_by: NotionUser!
+		views: [View!]!
+	}
+
+	type CollectionView implements Block {
 		id: String!
 		type: String!
 		collection: Collection!
@@ -73,7 +62,7 @@ export const NotionGraphqlServerTypedefs = gql`
 		space: Space!
 		last_edited_by: NotionUser!
 		created_by: NotionUser!
-    views: [View!]!
+		views: [View!]!
 	}
 
 	type PageProperties {

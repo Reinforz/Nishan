@@ -9,8 +9,8 @@ describe(`initializeNotionCache`, () => {
 	const get_spaces_response: any = {
 		space_1: {
 			user_root: {
-				user_root_1: {
-					value: { id: 'user_root_1' }
+				notion_user_1: {
+					value: { id: 'notion_user_1' }
 				}
 			},
 			space: {
@@ -18,10 +18,10 @@ describe(`initializeNotionCache`, () => {
 					value: {
 						permissions: [
 							{
-								user_id: 'user_root_1'
+								user_id: 'notion_user_1'
 							},
 							{
-								user_id: 'user_root_2'
+								user_id: 'notion_user_2'
 							}
 						]
 					}
@@ -45,8 +45,8 @@ describe(`initializeNotionCache`, () => {
 		const sync_record_values_response = {
 			recordMap: {
 				notion_user: {
-					user_root_2: {
-						value: { id: 'user_root_2' }
+					notion_user_2: {
+						value: { id: 'notion_user_2' }
 					}
 				}
 			}
@@ -62,7 +62,7 @@ describe(`initializeNotionCache`, () => {
 		await NotionCache.initializeNotionCache({ token: 'token', cache });
 
 		expect(getSpacesMock.mock.calls[0][0]).toStrictEqual(expect.objectContaining({ token: 'token' }));
-		expect(constructAndSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual([ [ 'user_root_2', 'notion_user' ] ]);
+		expect(constructAndSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual([ [ 'notion_user_2', 'notion_user' ] ]);
 	});
 
 	it(`Fetches external notion_user data,external user = 0`, async () => {
@@ -71,8 +71,8 @@ describe(`initializeNotionCache`, () => {
 		const sync_record_values_response = {
 			recordMap: {
 				notion_user: {
-					user_root_2: {
-						value: { id: 'user_root_2' }
+					notion_user_2: {
+						value: { id: 'notion_user_2' }
 					}
 				}
 			}

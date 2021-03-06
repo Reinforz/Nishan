@@ -155,7 +155,7 @@ describe('initializeCacheForSpecificData', () => {
 
 		it(`bookmarked_pages=[id]`, async () => {
 			const space_view_1: any = {
-					id: 'user_root_1',
+					id: 'space_view_1',
 					bookmarked_pages: [ 'block_1' ],
 					space_id: 'space_1',
 					parent_id: 'user_root_1'
@@ -172,7 +172,7 @@ describe('initializeCacheForSpecificData', () => {
 
 		it(`bookmarked_pages=undefined`, async () => {
 			const space_view_1: any = {
-					id: 'user_root_1',
+					id: 'space_view_1',
 					space_id: 'space_1',
 					parent_id: 'user_root_1'
 				},

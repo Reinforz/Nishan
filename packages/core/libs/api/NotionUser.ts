@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionMutations } from '@nishans/endpoints';
-import { UnsupportedBlockTypeError } from '@nishans/errors';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionErrors } from '@nishans/errors';
 import { CreateData } from '@nishans/fabricator';
 import { generateId, idToUuid, uuidToId } from '@nishans/idz';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
 import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, NishanArg, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
@@ -82,7 +82,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getProps());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionEndpoints.Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getProps());
       spaces.push(new Space({
         id: space_id,
         ...this.getProps(),
@@ -134,10 +134,10 @@ class NotionUser extends Data<INotionUser> {
       const user_root = this.cache.user_root.get(this.user_id) as IUserRoot;
       user_root.space_views.push(space_view_id);
 
-      await NotionOperationsObject.executeOperations([
-        Operation.space.update(space_id, [], space_op_data),
-        Operation.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
-        Operation.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
+      await NotionOperations.executeOperations([
+        NotionOperations.Chunk.space.update(space_id, [], space_op_data),
+        NotionOperations.Chunk.space_view.update(space_view_id, [], JSON.parse(JSON.stringify(space_view_data))),
+        NotionOperations.Chunk.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
       ], this.getProps());
 
       this.logger && this.logger(`CREATE`, 'space', space_id);
@@ -208,7 +208,7 @@ class NotionUser extends Data<INotionUser> {
       manual: true,
       container: []
     }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
-      await NotionMutations.enqueueTask({
+      await NotionEndpoints.Mutations.enqueueTask({
         task: {
           eventName: "deleteSpace",
           request: {
@@ -238,7 +238,7 @@ class NotionUser extends Data<INotionUser> {
         page_map.collection_view_page.set(page.id, cvp_obj);
       }
       else
-        throw new UnsupportedBlockTypeError((page as any).type,['page', 'collection_view_page'])
+        throw new NotionErrors.unsupported_block_type((page as any).type,['page', 'collection_view_page'])
     }
     return page_map;
   }

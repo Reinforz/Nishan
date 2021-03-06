@@ -1,8 +1,8 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionMutations } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { RepositionParams, TBlockInput, updateChildContainer } from '@nishans/fabricator';
 import { generateId } from '@nishans/idz';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, NishanArg, PopulateMap } from '../../';
@@ -40,9 +40,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		for (let index = 0; index < ids.length; index++) {
 			const block_id = ids[index];
 			if (block.type === 'collection_view' || block.type === 'collection_view_page') {
-				await NotionOperationsObject.executeOperations(
+				await NotionOperations.executeOperations(
 					[
-						Operation.block.update(block_id, [], {
+						NotionOperations.Chunk.block.update(block_id, [], {
 							id: block_id,
 							type: 'copy_indicator',
 							parent_id: block.parent_id,
@@ -54,7 +54,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				);
 
 				// ! How to save to local cache, need to poll the notion's server to see if the duplicated block has been created
-				await NotionMutations.enqueueTask(
+				await NotionEndpoints.Mutations.enqueueTask(
 					{
 						task: {
 							eventName: 'duplicateBlock',
@@ -73,8 +73,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					id: block_id,
 					copied_from: block.id
 				};
-				await NotionOperationsObject.executeOperations(
-					[ Operation.block.update(block_id, [], JSON.parse(JSON.stringify(duplicated_block))) ],
+				await NotionOperations.executeOperations(
+					[ NotionOperations.Chunk.block.update(block_id, [], JSON.parse(JSON.stringify(duplicated_block))) ],
 					this.getProps()
 				);
 				this.cache.block.set(block_id, JSON.parse(JSON.stringify(duplicated_block)));
@@ -93,9 +93,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		this.logger && this.logger('UPDATE', 'block', data.id);
 		NotionUtils.deepMerge(data, args);
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation.block.update(this.id, [], {
+				NotionOperations.Chunk.block.update(this.id, [], {
 					properties: data.properties,
 					format: data.format,
 					...this.updateLastEditedProps()
@@ -113,10 +113,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData() as any;
 		data.type = type;
 		this.logger && this.logger('UPDATE', 'block', data.id);
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation.block.update(this.id, [ 'type' ], type),
-				Operation.block.update(this.id, [], this.updateLastEditedProps())
+				NotionOperations.Chunk.block.update(this.id, [ 'type' ], type),
+				NotionOperations.Chunk.block.update(this.id, [], this.updateLastEditedProps())
 			],
 			this.getProps()
 		);
@@ -135,13 +135,13 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		this.logger && this.logger('DELETE', 'block', data.id);
 		this.logger && this.logger('UPDATE', data.parent_table, parent_data.id);
 
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation.block.update(this.id, [], {
+				NotionOperations.Chunk.block.update(this.id, [], {
 					alive: false,
 					...this.updateLastEditedProps(data)
 				}),
-				Operation[data.parent_table].update(data.parent_id, [], this.updateLastEditedProps())
+				NotionOperations.Chunk[data.parent_table].update(data.parent_id, [], this.updateLastEditedProps())
 			],
 			this.getProps()
 		);
@@ -166,18 +166,18 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		this.logger && this.logger('UPDATE', 'block', parent_data.id);
 		this.logger && this.logger('UPDATE', 'block', new_parent_data.id);
 
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
-				Operation.block.update(this.id, [], {
+				NotionOperations.Chunk.block.update(this.id, [], {
 					...this.getLastEditedProps(),
 					parent_id: new_parent_id,
 					parent_table: 'block',
 					alive: true
 				}),
-				Operation.block.listRemove(parent_data.id, [ 'content' ], { id: data.id }),
-				Operation.block.listAfter(new_parent_id, [ 'content' ], { after: '', id: data.id }),
-				Operation.block.update(parent_data.id, [], this.updateLastEditedProps(parent_data)),
-				Operation.block.update(new_parent_id, [], this.updateLastEditedProps(new_parent_data))
+				NotionOperations.Chunk.block.listRemove(parent_data.id, [ 'content' ], { id: data.id }),
+				NotionOperations.Chunk.block.listAfter(new_parent_id, [ 'content' ], { after: '', id: data.id }),
+				NotionOperations.Chunk.block.update(parent_data.id, [], this.updateLastEditedProps(parent_data)),
+				NotionOperations.Chunk.block.update(new_parent_id, [], this.updateLastEditedProps(new_parent_data))
 			],
 			this.getProps()
 		);

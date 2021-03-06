@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('createBlockClass', () => {
-	NotionConstants.block_types().forEach((block_type) => {
+	NotionConstants.blockTypes().forEach((block_type) => {
 		it(`Should create Block Class for ${block_type}`, () => {
 			expect(createBlockClass(block_type, v4(), arg).id).toBe('123');
 		});

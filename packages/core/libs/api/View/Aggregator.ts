@@ -1,4 +1,4 @@
-import { PreExistentValueError } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import {
 	ISchemaAggregationMap,
 	ISchemaAggregationMapValue,
@@ -6,10 +6,9 @@ import {
 	TAggregationsCreateInput,
 	TAggregationsUpdateInput
 } from '@nishans/fabricator';
-import { generateSchemaMapFromCollectionSchema, ISchemaMap } from '@nishans/notion-formula';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { NotionUtils } from '@nishans/utils';
+import { ISchemaMap, NotionUtils } from '@nishans/utils';
 import { FilterType, FilterTypes, NishanArg, UpdateType, UpdateTypes } from '../../';
 import { transformToMultiple } from '../../utils';
 import View from './View';
@@ -23,7 +22,7 @@ export function detectAggregationErrors (
 	const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map, name, [ 'name' ]);
 	const current_aggregation = aggregations_map.get(name);
 	if (current_aggregation)
-		throw new PreExistentValueError('aggregation', name, current_aggregation.aggregation.aggregator);
+		throw new NotionErrors.pre_existent_value('aggregation', name, current_aggregation.aggregation.aggregator);
 	return schema_map_unit;
 }
 /**
@@ -42,7 +41,7 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 	async createAggregations (args: TAggregationsCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = await this.getCollection(),
-			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
+			schema_map = NotionUtils.generateSchemaMap(collection.schema),
 			[ aggregations_map, aggregations ] = PopulateViewMaps.aggregations(this.getCachedData(), collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const { aggregator } = args[index];
@@ -53,8 +52,14 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			});
 		}
 
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+		await NotionOperations.executeOperations(
+			[
+				NotionOperations.Chunk.collection_view.set(
+					this.id,
+					[ 'query2', 'aggregations' ],
+					(data.query2 as any).aggregations
+				)
+			],
 			this.getProps()
 		);
 	}
@@ -87,8 +92,14 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], (data.query2 as any).aggregations) ],
+		await NotionOperations.executeOperations(
+			[
+				NotionOperations.Chunk.collection_view.set(
+					this.id,
+					[ 'query2', 'aggregations' ],
+					(data.query2 as any).aggregations
+				)
+			],
 			this.getProps()
 		);
 	}
@@ -119,8 +130,8 @@ class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View
 			}
 		);
 
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection_view.set(this.id, [ 'query2', 'aggregations' ], aggregations) ],
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.collection_view.set(this.id, [ 'query2', 'aggregations' ], aggregations) ],
 			this.getProps()
 		);
 	}

@@ -1,8 +1,8 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionMutations, NotionQueries } from '@nishans/endpoints';
-import { error } from '@nishans/errors';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionErrors } from '@nishans/errors';
 import { CreateData, ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput } from '@nishans/fabricator';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IOperation, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
 import { CreateMaps, FilterType, FilterTypes, IPageMap, ISpaceUpdateInput, NishanArg, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
@@ -69,7 +69,7 @@ export default class Space extends Data<ISpace> {
    * Delete the current workspace
    */
   async delete() {
-    await NotionMutations.enqueueTask({
+    await NotionEndpoints.Mutations.enqueueTask({
       task: {
         eventName: 'deleteSpace',
         request:
@@ -152,19 +152,19 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [], data = this.getCachedData(), operations: IOperation[] = []
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value } = await NotionQueries.findUser({email}, this.getProps());
-      if (!value?.value) error(`User does not have a notion account`);
+      const [email, role] = infos[i], { value } = await NotionEndpoints.Queries.findUser({email}, this.getProps());
+      if (!value?.value) NotionErrors.Log.error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;
-        operations.push(Operation.space.setPermissionItem(this.id, ["permissions"], permission_data));
+        operations.push(NotionOperations.Chunk.space.setPermissionItem(this.id, ["permissions"], permission_data));
         data.permissions.push(permission_data)
         notion_users.push(notion_user)
         this.logger && this.logger("UPDATE", "space", this.id)
       }
     };
-    await NotionOperationsObject.executeOperations(
-      [ ...operations, Operation.space.update(this.id, [], this.updateLastEditedProps()) ],
+    await NotionOperations.executeOperations(
+      [ ...operations, NotionOperations.Chunk.space.update(this.id, [], this.updateLastEditedProps()) ],
       this.getProps()
     )
     return notion_users;
@@ -177,7 +177,7 @@ export default class Space extends Data<ISpace> {
    */
   async removeUsers(userIds: string[]) {
     const data = this.getCachedData();
-    await NotionMutations.removeUsersFromSpace({
+    await NotionEndpoints.Mutations.removeUsersFromSpace({
       removePagePermissions: true,
       revokeUserTokens: false,
       spaceId: data.id,
@@ -187,8 +187,8 @@ export default class Space extends Data<ISpace> {
       interval: this.interval
     });
     data.permissions = data.permissions.filter(permission => !userIds.includes(permission.user_id));
-    await NotionOperationsObject.executeOperations(
-      [ Operation.space.update(this.id, [], this.updateLastEditedProps()) ],
+    await NotionOperations.executeOperations(
+      [ NotionOperations.Chunk.space.update(this.id, [], this.updateLastEditedProps()) ],
       this.getProps()
     )
   }

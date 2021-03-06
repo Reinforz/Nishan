@@ -1,6 +1,6 @@
-import { error } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { createShortId } from '@nishans/idz';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { NishanArg } from '../';
 import NotionData from './Data';
@@ -21,8 +21,8 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 	async update (arg: T) {
 		const data = this.getCachedData();
 		data.schema[this.schema_id] = { ...data.schema[this.schema_id], ...arg };
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 			this.getProps()
 		);
 		this.logger && this.logger('UPDATE', 'collection', this.id);
@@ -33,12 +33,12 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			delete data.schema[this.schema_id];
-			await NotionOperationsObject.executeOperations(
-				[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+			await NotionOperations.executeOperations(
+				[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 				this.getProps()
 			);
 			this.logger && this.logger('DELETE', 'collection', this.id);
-		} else error(`Title schema unit cannot be deleted`);
+		} else NotionErrors.Log.error(`Title schema unit cannot be deleted`);
 	}
 
 	async duplicate () {
@@ -47,12 +47,12 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			data.schema[id] = data.schema[this.schema_id];
-			await NotionOperationsObject.executeOperations(
-				[ Operation.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
+			await NotionOperations.executeOperations(
+				[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 				this.getProps()
 			);
 			this.logger && this.logger('UPDATE', 'collection', this.id);
-		} else error(`Title schema unit cannot be duplicated`);
+		} else NotionErrors.Log.error(`Title schema unit cannot be duplicated`);
 	}
 
 	getCachedChildData () {

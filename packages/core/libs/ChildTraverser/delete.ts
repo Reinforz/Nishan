@@ -1,5 +1,5 @@
 import { updateChildContainer } from '@nishans/fabricator';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
@@ -50,7 +50,9 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			NotionUtils.deepMerge(child_data, updated_data);
 
 			// Push the updated block data to the stack
-			operations.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
+			operations.push(
+				NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
+			);
 
 			if (typeof child_path === 'string') await updateChildContainer(parent_type, parent_id, false, child_id, options);
 		}
@@ -66,7 +68,9 @@ export const remove = async <T extends TData, TD, C = any[]>(
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
 	if (parent_type.match(/^(block|space)$/))
-		operations.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
-	await NotionOperationsObject.executeOperations(operations, options);
+		operations.push(
+			NotionOperations.Chunk[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id))
+		);
+	await NotionOperations.executeOperations(operations, options);
 	return container;
 };

@@ -1,5 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { NotionData, SpaceView } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -179,7 +179,7 @@ it(`updateBookmarkedPages`, async () => {
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 		},
 		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined),
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')

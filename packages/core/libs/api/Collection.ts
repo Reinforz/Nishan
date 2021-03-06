@@ -1,9 +1,9 @@
-import { error } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { CreateData, IPageCreateInput, IPageUpdateInput, TSchemaUnitInput } from '@nishans/fabricator';
-import { generateSchemaMapFromCollectionSchema, ISchemaMapValue } from '@nishans/notion-formula';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import {} from '@nishans/notion-formula';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
-import { NotionUtils } from '@nishans/utils';
+import { ISchemaMapValue, NotionUtils } from '@nishans/utils';
 import {
 	CreateMaps,
 	FilterType,
@@ -220,8 +220,8 @@ class Collection extends Data<ICollection> {
 				schema_unit_map[schema_unit.type].set(schema_unit.name, schema_unit_obj);
 			}
 		);
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
 		);
 		return schema_unit_map;
@@ -239,7 +239,7 @@ class Collection extends Data<ICollection> {
 	async getSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		// Since all the data is in the cache, no need to initialize cache
 		const data = this.getCachedData(),
-			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
+			schema_map = NotionUtils.generateSchemaMap(data.schema);
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
@@ -274,7 +274,7 @@ class Collection extends Data<ICollection> {
    */
 	async updateSchemaUnits (args: UpdateTypes<ISchemaMapValue, Partial<TSchemaUnit>>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
+			schema_map = NotionUtils.generateSchemaMap(data.schema);
 		const results = await this.updateIterate<ISchemaMapValue, Partial<TSchemaUnit>, ISchemaUnitMap>(
 			args,
 			{
@@ -293,8 +293,8 @@ class Collection extends Data<ICollection> {
 				results[data.schema[schema_id].type].set(data.schema[schema_id].name, schema_obj);
 			}
 		);
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
 		);
 		return results;
@@ -316,7 +316,7 @@ class Collection extends Data<ICollection> {
    */
 	async deleteSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		const data = this.getCachedData(),
-			schema_map = generateSchemaMapFromCollectionSchema(data.schema);
+			schema_map = NotionUtils.generateSchemaMap(data.schema);
 		await this.deleteIterate<ISchemaMapValue>(
 			args,
 			{
@@ -329,12 +329,12 @@ class Collection extends Data<ICollection> {
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id }) => {
-				if (schema_id === 'title') error(`Title schema unit cannot be deleted`);
+				if (schema_id === 'title') NotionErrors.Log.error(`Title schema unit cannot be deleted`);
 				delete data.schema[schema_id];
 			}
 		);
-		await NotionOperationsObject.executeOperations(
-			[ Operation.collection.update(this.id, [ 'schema' ], data.schema) ],
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
 		);
 	}

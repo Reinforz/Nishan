@@ -1,4 +1,4 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import { Nishan } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
@@ -16,7 +16,7 @@ describe('get', () => {
 			logger: logger_spy
 		});
 
-		jest.spyOn(NotionQueries, 'getSpaces').mockImplementationOnce(async () => {
+		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
 			return {
 				'1': {
 					space: {
@@ -59,7 +59,7 @@ describe('get', () => {
 			logger: logger_spy
 		});
 
-		jest.spyOn(NotionQueries, 'getSpaces').mockImplementationOnce(async () => {
+		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
 			return {
 				'1': {
 					space: {
@@ -102,7 +102,7 @@ describe('get', () => {
 			logger: logger_spy
 		});
 
-		jest.spyOn(NotionQueries, 'getSpaces').mockImplementationOnce(async () => {
+		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
 			return {
 				'1': {
 					space: {

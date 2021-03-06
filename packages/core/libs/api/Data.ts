@@ -1,7 +1,7 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { warn } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nishans/fabricator';
-import { NotionOperationPluginFunction, NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
 import { ChildTraverser, FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NishanArg, positionChildren, UpdateTypes } from '../';
 import { updateLastEditedProps } from '../ChildTraverser/utils';
@@ -55,9 +55,9 @@ export default class NotionData<T extends TData> {
   getCachedData() {
     const data = this.cache[this.type].get(this.id);
     if (!data)
-      warn(`${this.type}:${this.id} doesnot exist in the cache`);
+      NotionErrors.Log.warn(`${this.type}:${this.id} doesnot exist in the cache`);
     else if((data as any).alive === false)
-      warn(`${this.type}:${this.id} is not alive`);
+      NotionErrors.Log.warn(`${this.type}:${this.id} is not alive`);
     return data as T;
   }
 
@@ -73,7 +73,7 @@ export default class NotionData<T extends TData> {
   }
 
   protected async addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
-    await NotionOperationsObject.executeOperations([positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type })], this.getProps())
+    await NotionOperations.executeOperations([positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type })], this.getProps())
   }
 
   async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
@@ -87,7 +87,7 @@ export default class NotionData<T extends TData> {
     })
 
     this.logger && this.logger("UPDATE", this.type as any, this.id);
-    await NotionOperationsObject.executeOperations([Operation[this.type].update(this.id, [], data)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk[this.type].update(this.id, [], data)], this.getProps())
   }
 
   async initializeCacheForThisData() {

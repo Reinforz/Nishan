@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
+import { NotionUtils } from '@nishans/utils';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
 import { ViewAggregator } from '../../../libs';
 import { detectAggregationErrors } from '../../../libs/api/View/Aggregator';
@@ -14,7 +14,7 @@ describe('detectAggregationErrors', () => {
 	it(`Aggregation already exists`, () => {
 		expect(() =>
 			detectAggregationErrors(
-				generateSchemaMapFromCollectionSchema({
+				NotionUtils.generateSchemaMap({
 					title: tsu,
 					text: txsu
 				}),
@@ -26,7 +26,7 @@ describe('detectAggregationErrors', () => {
 
 	it(`Works correctly`, () => {
 		detectAggregationErrors(
-			generateSchemaMapFromCollectionSchema({
+			NotionUtils.generateSchemaMap({
 				title: tsu,
 				text: txsu
 			}),
@@ -64,9 +64,7 @@ const aggregationCrudSetup = () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined),
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const view_aggregator = new ViewAggregator({
 		...default_nishan_arg,

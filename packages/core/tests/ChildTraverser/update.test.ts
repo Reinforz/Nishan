@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
 import { o } from '../utils';
@@ -11,9 +11,7 @@ afterEach(() => {
 
 it(`manual=false`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
 
 	const logger_spy = jest.fn(),
@@ -59,9 +57,7 @@ it(`manual=false`, async () => {
 
 it(`manual=false,parent_type&child_type!=block`, async () => {
 	const child_ids = [ c1id ],
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const cache = {
 		collection: new Map([
 			[
@@ -101,9 +97,7 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 
 it(`manual=true`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
 
 	const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(

@@ -1,6 +1,6 @@
-import { ChildIndexOutofBoundError } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { detectChildData, Logger, RepositionParams } from '@nishans/fabricator/';
-import { Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
 
 interface PositionChildrenParam {
@@ -39,7 +39,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 			container.splice(position, 0, child_id);
 			// IF the container doesn't exist and position is not zero or if the pivot_id is undefined or null, which could be the case if the position is outta index, throw an error
 			if ((!contains_container && position !== 0) || pivot_id === undefined || pivot_id === null)
-				throw new ChildIndexOutofBoundError(position, container.length, child_path);
+				throw new NotionErrors.child_index_out_of_bound(position, container.length, child_path);
 			// If the container exists make where to be Before, reason is that, it should be occupying the index of the pivot_id
 			// else make if after, ie push to last since its the first and only element
 			where = contains_container ? 'Before' : 'After';
@@ -56,7 +56,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 			container.splice(pivot_index + (position.position === 'Before' ? 0 : 1), 0, child_id);
 		}
 		// Returns the appropriate operation for positioning the child, based on the where and the id
-		return (Operation[parent_type] as any)[`list${where}`](parent.id, [ child_path ], {
+		return (NotionOperations.Chunk[parent_type] as any)[`list${where}`](parent.id, [ child_path ], {
 			[where.toLowerCase()]: pivot_id,
 			id: child_id
 		}) as IOperation;
@@ -64,7 +64,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 		// If the passed position is undefined or null, its pushed to the last
 		container.push(child_id);
 		// Returns the appropriate operation for positioning the child
-		return Operation[parent_type].listAfter(parent.id, [ child_path ], {
+		return NotionOperations.Chunk[parent_type].listAfter(parent.id, [ child_path ], {
 			after: '',
 			id: child_id
 		}) as IOperation;

@@ -1,5 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { SchemaUnit } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
@@ -30,7 +30,7 @@ it(`update`, async () => {
     id: 'collection_1',
     schema_id: 'schema_id_1',
     logger
-  }), executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+  }), executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
   const update_arg: any = {
     type: 'text',
@@ -70,7 +70,7 @@ describe('delete', () => {
         ] as any
       ]),
     },
-      executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+      executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({
@@ -140,7 +140,7 @@ describe('duplicate', () => {
         ] as any
       ]),
     },
-      executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+      executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
     const logger = jest.fn();
     const schema_unit = new SchemaUnit({

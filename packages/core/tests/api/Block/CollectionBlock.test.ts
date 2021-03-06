@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { TViewCreateInput } from '@nishans/fabricator';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from "uuid";
 import { tsu } from "../../../../fabricator/tests/utils";
 import { CollectionBlock } from "../../../libs";
@@ -27,7 +27,7 @@ const construct = () =>{
     .spyOn(NotionCache, 'initializeCacheForSpecificData')
     .mockImplementationOnce(async () => undefined),
   executeOperationsMock = jest
-    .spyOn(NotionOperationsObject, 'executeOperations')
+    .spyOn(NotionOperations, 'executeOperations')
     .mockImplementation(async () => undefined);
   const collection_block = new CollectionBlock({
     ...default_nishan_arg,

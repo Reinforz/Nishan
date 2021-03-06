@@ -6,6 +6,6 @@ import { IViewMap } from '../../types';
  */
 export const view = () => {
 	const obj: IViewMap = {} as any;
-	NotionConstants.view_types().map((view_type) => (obj[view_type] = new Map()));
+	NotionConstants.viewTypes().map((view_type) => (obj[view_type] = new Map()));
 	return obj;
 };

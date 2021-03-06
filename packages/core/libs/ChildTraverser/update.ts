@@ -1,4 +1,4 @@
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../';
@@ -46,7 +46,9 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
-			operations.push(Operation[child_type].update(child_id, [], { ...updated_data, ...last_edited_props }));
+			operations.push(
+				NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
+			);
 		}
 	};
 
@@ -59,7 +61,9 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 	});
 
 	if (parent_type.match(/^(block|space)$/))
-		operations.push(Operation[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id)));
-	await NotionOperationsObject.executeOperations(operations, options);
+		operations.push(
+			NotionOperations.Chunk[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id))
+		);
+	await NotionOperations.executeOperations(operations, options);
 	return container as C;
 };

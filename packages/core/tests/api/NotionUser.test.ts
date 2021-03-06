@@ -1,6 +1,6 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionMutations } from '@nishans/endpoints';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 it('create space', async () => {
-  const logger_spy = jest.fn(), executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+  const logger_spy = jest.fn(), executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
   const spaceId = v4();
   const cache: ICache = {
@@ -24,7 +24,7 @@ it('create space', async () => {
     id: 'user_root_1',
   });
 
-  const createSpaceMock = jest.spyOn(NotionMutations, 'createSpace').mockImplementationOnce(async () => {
+  const createSpaceMock = jest.spyOn(NotionEndpoints.Mutations, 'createSpace').mockImplementationOnce(async () => {
     return { spaceId, recordMap: {space: {[spaceId]: {value: {
       shard_id: 123,
     }}}} } as any;
@@ -149,7 +149,7 @@ it(`update space`, async () => {
       ['space_2', { id: 'space_2', shard_id: 123, name: 'Space 2' }]
     ] as any),
   },
-    executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+    executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
   const notion_user = new NotionUser({
     ...default_nishan_arg,
@@ -221,7 +221,7 @@ it(`delete space`, async () => {
     id: 'user_root_1',
   });
 
-  const enqueueTaskMock = jest.spyOn(NotionMutations, 'enqueueTask').mockImplementationOnce(async () => {
+  const enqueueTaskMock = jest.spyOn(NotionEndpoints.Mutations, 'enqueueTask').mockImplementationOnce(async () => {
     return {} as any;
   });
 

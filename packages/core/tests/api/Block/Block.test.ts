@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionMutations } from '@nishans/endpoints';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
@@ -25,9 +25,7 @@ const construct = () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ], [ 'block_4', block_4 ] ])
 		} as any,
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 	const block = new Block({
@@ -139,7 +137,7 @@ describe('duplicate', () => {
 
 		const PopulateMapBlockMock = jest.spyOn(PopulateMap, 'block').mockImplementation(async () => undefined);
 		const NotionMutationsEnqueueTaskMock = jest
-			.spyOn(NotionMutations, 'enqueueTask')
+			.spyOn(NotionEndpoints.Mutations, 'enqueueTask')
 			.mockImplementation(async () => undefined as any);
 
 		const cached_data = {

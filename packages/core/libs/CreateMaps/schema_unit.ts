@@ -6,6 +6,6 @@ import { ISchemaUnitMap } from '../../types';
  */
 export function schema_unit () {
 	const obj: ISchemaUnitMap = {} as any;
-	NotionConstants.schema_unit_types().map((schema_unit_type) => (obj[schema_unit_type] = new Map()));
+	NotionConstants.schemaUnitTypes().map((schema_unit_type) => (obj[schema_unit_type] = new Map()));
 	return obj;
 }

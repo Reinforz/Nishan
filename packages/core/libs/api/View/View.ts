@@ -1,8 +1,7 @@
 import { NotionCache } from "@nishans/cache";
-import { PreExistentValueError } from "@nishans/errors";
+import { NotionErrors } from "@nishans/errors";
 import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { NotionOperationsObject, Operation } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { NotionUtils } from "@nishans/utils";
 import {
@@ -45,13 +44,13 @@ class View<T extends TView> extends Data<T> {
 	async update (updated_data: TViewUpdateInput) {
 		const view_data = this.getCachedData();
 		NotionUtils.deepMerge(view_data, updated_data);
-    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, [], { ...updated_data })], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, [], { ...updated_data })], this.getProps())
 	}
 
 	async createSorts (args: TSortCreateInput[]) {
 		const data = this.getCachedData(),
 			collection = await this.getCollection(),
-			schema_map = generateSchemaMapFromCollectionSchema(collection.schema),
+			schema_map = NotionUtils.generateSchemaMap(collection.schema),
 			[ sorts_map, sorts ] = PopulateViewMaps.sorts(data, collection.schema);
 		for (let index = 0; index < args.length; index++) {
 			const arg = args[index],
@@ -68,10 +67,10 @@ class View<T extends TView> extends Data<T> {
 							property: schema_map_unit.schema_id,
 							direction: arg[1]
 						});
-				} else throw new PreExistentValueError('sort', arg[0], target_sort.sort.direction);
+				} else throw new NotionErrors.pre_existent_value('sort', arg[0], target_sort.sort.direction);
 		}
 		
-    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
 	async updateSort (arg: UpdateType<ISchemaSortsMapValue, TSortUpdateInput>) {
@@ -111,7 +110,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 
-    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
 	async deleteSort (arg: FilterType<ISchemaSortsMapValue>) {
@@ -135,16 +134,16 @@ class View<T extends TView> extends Data<T> {
 				sorts.splice(sorts.findIndex((data) => data.property === sort.schema_id), 1);
 			}
 		);
-    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.set(this.id, [ 'query2', 'sort' ], sorts)], this.getProps())
 	}
 
 	async createFilters (args: TViewFilterCreateInput[]) {
-		const schema_map = generateSchemaMapFromCollectionSchema((await this.getCollection()).schema),
+		const schema_map = NotionUtils.generateSchemaMap((await this.getCollection()).schema),
 			data = this.getCachedData(),
 			filters = InitializeView.filter(data).filters;
     PopulateViewData.query2.filters(args, filters, schema_map);
 		
-    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async updateFilter (arg: UpdateType<ISchemaFiltersMapValue, TViewFilterUpdateInput>) {
@@ -154,7 +153,7 @@ class View<T extends TView> extends Data<T> {
 	async updateFilters (args: UpdateTypes<ISchemaFiltersMapValue, TViewFilterUpdateInput>, multiple?: boolean) {
 		const data = this.getCachedData(), 
       {schema} = await this.getCollection(), 
-      schema_map = generateSchemaMapFromCollectionSchema(schema), 
+      schema_map = NotionUtils.generateSchemaMap(schema), 
       [ filters_map ] = PopulateViewMaps.filters(data, schema);
     
 		await this.updateIterate<ISchemaFiltersMapValue, TViewFilterUpdateInput>(
@@ -183,7 +182,7 @@ class View<T extends TView> extends Data<T> {
 				}
 			}
 		);
-    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async deleteFilter (arg: FilterType<ISchemaFiltersMapValue>) {
@@ -211,7 +210,7 @@ class View<T extends TView> extends Data<T> {
 			}
 		);
 
-    await NotionOperationsObject.executeOperations([Operation.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())
 	}
 
 	async updateFormatProperty (arg: UpdateType<ISchemaFormatMapValue, SchemaFormatPropertiesUpdateInput>) {
@@ -251,7 +250,7 @@ class View<T extends TView> extends Data<T> {
           (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
 			}
 		);
-    await NotionOperationsObject.executeOperations([Operation.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)], this.getProps())
+    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)], this.getProps())
 	}
 }
 

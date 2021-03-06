@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { IHeader } from '@nishans/types';
 import colors from 'colors';
 import { ChildTraverser, NotionData } from '../../libs';
@@ -151,9 +151,7 @@ it(`addToChildArray`, async () => {
 				[ 'block_2', { id: 'block_2', type: 'page' } ]
 			])
 		} as any,
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const block = new NotionData({
 		...default_nishan_arg,
@@ -172,9 +170,7 @@ it(`updateCacheLocally`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 		} as any,
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const logger = jest.fn();
 

@@ -6,6 +6,6 @@ import { IBlockMap } from '../../types';
  */
 export function block () {
 	const obj: IBlockMap = {} as any;
-	NotionConstants.block_types().map((block_type) => (obj[block_type] = new Map()));
+	NotionConstants.blockTypes().map((block_type) => (obj[block_type] = new Map()));
 	return obj;
 }

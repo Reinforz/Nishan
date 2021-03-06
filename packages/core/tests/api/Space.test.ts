@@ -1,6 +1,6 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionMutations, NotionQueries } from '@nishans/endpoints';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
 import { createSpaceIterateArguments } from '../../libs/api/Space';
@@ -102,7 +102,7 @@ it(`delete`, async () => {
 		logger: logger_spy
 	});
 
-	const enqueueTaskMock = jest.spyOn(NotionMutations, 'enqueueTask').mockImplementationOnce(() => {
+	const enqueueTaskMock = jest.spyOn(NotionEndpoints.Mutations, 'enqueueTask').mockImplementationOnce(() => {
 		return {} as any;
 	});
 
@@ -133,7 +133,7 @@ it(`createRootPages`, async () => {
 			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -214,7 +214,7 @@ it(`updateRootPage`, async()=>{
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined),
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined),
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
 	const space = new Space({
@@ -249,7 +249,7 @@ it(`deleteRootPage`, async()=>{
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined),
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined),
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
 	const space = new Space({
@@ -276,7 +276,7 @@ it(`addMembers`, async()=>{
         user_id: 'user_root_1'
       } ] } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -284,7 +284,7 @@ it(`addMembers`, async()=>{
 		id: 'space_1',
 	});
 
-  const findUser = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(()=>{
+  const findUser = jest.spyOn(NotionEndpoints.Queries, 'findUser').mockImplementationOnce(()=>{
     return {
       value: {
         value: {
@@ -332,7 +332,7 @@ it(`removeUsers`, async()=>{
         user_id: 'user_root_2'
       } ] } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -340,7 +340,7 @@ it(`removeUsers`, async()=>{
 		id: 'space_1',
 	});
 
-  const removeUsersFromSpaceMock = jest.spyOn(NotionMutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
+  const removeUsersFromSpaceMock = jest.spyOn(NotionEndpoints.Mutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
     return {} as any;
   })
 

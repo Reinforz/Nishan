@@ -1,7 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { CreateData, IPageCreateInput } from '@nishans/fabricator';
-import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
@@ -150,7 +149,7 @@ describe('template pages', () => {
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
-				.spyOn(NotionOperationsObject, 'executeOperations')
+				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
 		const collection = new Collection({
@@ -245,7 +244,7 @@ describe('rows', () => {
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
-				.spyOn(NotionOperationsObject, 'executeOperations')
+				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
 		const collection = new Collection({
@@ -360,7 +359,7 @@ describe('schema unit', () => {
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
-				.spyOn(NotionOperationsObject, 'executeOperations')
+				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
 		const collection = new Collection({
@@ -375,7 +374,7 @@ describe('schema unit', () => {
 		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
 
 		await collection.createSchemaUnits([ txsu ]);
-		const { schema_id } = NotionUtils.getSchemaMapUnit(generateSchemaMapFromCollectionSchema(schema), 'Text', []);
+		const { schema_id } = NotionUtils.getSchemaMapUnit(NotionUtils.generateSchemaMap(schema), 'Text', []);
 
 		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.c.u(

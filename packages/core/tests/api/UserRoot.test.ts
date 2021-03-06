@@ -1,5 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { UserRoot } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -30,9 +30,7 @@ it(`update space_views`, async () => {
 			space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
 			user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 		},
-		executeOperations = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
+		executeOperations = jest.spyOn(NotionOperations, 'executeOperations').mockImplementationOnce(async () => undefined);
 
 	const user_root = new UserRoot({
 		...default_nishan_arg,

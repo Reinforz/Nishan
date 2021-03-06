@@ -6,7 +6,8 @@ import {
 	TBlockInput,
 	updateChildContainer
 } from '@nishans/fabricator';
-import { NotionBlockPermissions } from '@nishans/permissions';
+import { NotionPermissions } from '@nishans/permissions';
+import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import {
 	CreateMaps,
@@ -31,7 +32,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 
 	constructor (arg: NishanArg) {
 		super(arg);
-		this.Permissions = new NotionBlockPermissions(arg);
+		this.Permissions = new NotionPermissions.block(arg);
 	}
 
 	async getCachedParentData () {

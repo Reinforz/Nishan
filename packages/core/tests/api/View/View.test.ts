@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
 import { NotionData, View } from '../../../libs';
 import { default_nishan_arg, o } from '../../utils';
@@ -70,9 +70,7 @@ const construct = () => {
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const view = new View({
 		...default_nishan_arg,

@@ -1,4 +1,4 @@
-import { warn } from '@nishans/errors';
+import { NotionErrors } from '@nishans/errors';
 import { TDataType } from '@nishans/types';
 import { IterateChildren } from '../../../types';
 
@@ -36,9 +36,9 @@ export async function iterateChildren<TD, RD = any> (
 				matches = child_ids.includes(child_id);
 
 			// if the child_data returned from the transform cb is falsy, it doesn't exist in the cache
-			if (!child_data) warn(`${child_type}:${child_id} does not exist in the cache`);
+			if (!child_data) NotionErrors.Log.warn(`${child_type}:${child_id} does not exist in the cache`);
 			// If matches is false, the child id is not included in the child container of the parent
-			if (!matches) warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
+			if (!matches) NotionErrors.Log.warn(`${child_type}:${child_id} is not a child of ${parent_type}:${parent_id}`);
 
 			// Only if the child data exists and its included in the child container
 			if (child_data && matches) {
@@ -60,7 +60,7 @@ export async function iterateChildren<TD, RD = any> (
 				// get the child data using the transform cb passed, by passing it the child id
 				child_data = await transform(child_id);
 			// If child_data doesn't exist then show a warning
-			if (!child_data) warn(`${child_type}:${child_id} does not exist in the cache`);
+			if (!child_data) NotionErrors.Log.warn(`${child_type}:${child_id} does not exist in the cache`);
 			else {
 				if (args.method === 'UPDATE') {
 					// Get the new updated data by passing the current data and the index

@@ -1,5 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { Page } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
@@ -19,9 +19,7 @@ const construct = () => {
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
 			space: new Map([ [ 'space_1', space_1 ] ])
 		} as any,
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined),
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
@@ -116,9 +114,7 @@ it(`updateBookmarkedStatus`, async () => {
 				[ 'space_view_1', space_view_1 as any ]
 			])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementation(async () => undefined);
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 

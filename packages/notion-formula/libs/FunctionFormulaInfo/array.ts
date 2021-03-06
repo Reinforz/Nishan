@@ -1,35 +1,10 @@
-import { TFormulaResultType, TFunctionName, TOperator } from '@nishans/types';
-
-export type IFunctionFormulaSignature = {
-	arity?: TFormulaResultType[];
-	result_type: TFormulaResultType;
-	variadic?: TFormulaResultType;
-};
-export interface IFunctionFormulaInfo {
-	signatures: IFunctionFormulaSignature[];
-	function_name: TFunctionName;
-	description: string;
-	operator?: TOperator;
-}
-
-function generateFormulaInfo (
-	description: string,
-	function_name: TFunctionName,
-	signatures: [TFormulaResultType, TFormulaResultType[]][],
-	operator?: TOperator
-): IFunctionFormulaInfo {
-	return {
-		description,
-		operator,
-		function_name,
-		signatures: signatures.map(([ result_type, arity ]) => ({ arity, result_type }))
-	};
-}
+import { IFunctionFormulaInfo } from './types';
+import { generateFormulaInfo } from './utils';
 
 /**
  * An array that contains the result_type and the variations of arguments (number and types) supported by all the notion formulas
  */
-export const NotionFunctionFormulaInfoArray: IFunctionFormulaInfo[] = [
+export const generateNotionFunctionFormulaInfoArray = (): IFunctionFormulaInfo[] => [
 	generateFormulaInfo('Switches between two options based on another value.', 'if', [
 		[ 'number', [ 'checkbox', 'number', 'number' ] ],
 		[ 'text', [ 'checkbox', 'text', 'text' ] ],
@@ -323,10 +298,3 @@ export const NotionFunctionFormulaInfoArray: IFunctionFormulaInfo[] = [
 		[ 'number', [ 'date' ] ]
 	])
 ];
-
-export const NotionFunctionFormulaInfoMap: Map<TFunctionName, IFunctionFormulaInfo> = new Map(
-	NotionFunctionFormulaInfoArray.map((function_formula_info) => [
-		function_formula_info.function_name,
-		function_formula_info
-	])
-);

@@ -1,15 +1,13 @@
 import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
-import { GenerateNotionFormulaAST } from '..';
 import {
   FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput,
-  GenerateNotionFormulaArg,
-  IFunctionFormulaSignature,
   ISchemaMap,
-  NotionFunctionFormulaInfoMap,
   TFormulaArrayArgument,
   TFormulaObject,
   TFormulaObjectArgument
-} from '../../';
+} from '../..';
+import { NotionFormula } from '../../';
+import { IFunctionFormulaSignature } from '../../FunctionFormulaInfo/types';
 
 /**
  * Generates a notion formula fully compatible with the client, using either an easier array or object representation
@@ -37,7 +35,7 @@ export function generateNotionFormulaAST (
   representation: 'array' | 'object' | 'string',
 	schema_map?: ISchemaMap,
 ): TFormula {
-  
+  const notion_function_formula_info_map = NotionFormula.FunctionFormulaInfo.map();
   function traverseArguments (arg: TFormulaObjectArgument | TFormulaArrayArgument | undefined): TFormula {
     // Check whether an array based or object based function formula is used
 		const is_arg_array_function = Array.isArray(arg),
@@ -48,7 +46,7 @@ export function generateNotionFormulaAST (
 					? (arg as TFormulaObject).function
 					: (arg as any)[0],
 				input_args = is_arg_object_function ? (arg as TFormulaObject).args : (arg as any)[1];
-      const arg_container = [] as any, function_info = NotionFunctionFormulaInfoMap.get(function_name);
+      const arg_container = [] as any, function_info = notion_function_formula_info_map.get(function_name);
       // Throws error when an unsupported function is used
       if(!function_info)
         throw new Error(`Function ${function_name} is not supported`);
@@ -99,12 +97,12 @@ export function generateNotionFormulaAST (
       // If a schema_map is not provided but a property of the schema is referenced, throw an error, as the schema_map is required to deduce information for that specific property argument
 			if (!schema_map)
         throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`);
-      return GenerateNotionFormulaArg.property(arg as { property: string }, schema_map);
+      return NotionFormula.GenerateArg.property(arg as { property: string }, schema_map);
 		} else 
-      return GenerateNotionFormulaArg.literal(arg as any);
+      return NotionFormula.GenerateArg.literal(arg as any);
 	}
 
-	return (representation === "string" && typeof input_formula === "string") ? GenerateNotionFormulaAST.string(input_formula, schema_map) : traverseArguments(input_formula);
+	return (representation === "string" && typeof input_formula === "string") ? NotionFormula.GenerateAST.string(input_formula, schema_map) : traverseArguments(input_formula);
 }
 
 

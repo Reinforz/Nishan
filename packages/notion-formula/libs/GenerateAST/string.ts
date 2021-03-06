@@ -1,6 +1,5 @@
 import { TFunctionName } from '@nishans/types';
-import { GenerateNotionFormulaAST } from '.';
-import { ISchemaMap, NotionFunctionFormulaInfoMap } from '../';
+import { ISchemaMap, NotionFormula } from '..';
 
 /**
  * Generate notion client compatible formula ast from string 
@@ -13,6 +12,7 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
   const parents = [] as any;
   // Keep track of the current context, as "" can be part of a string constant or a property reference
   let context: 'function' | 'prop' = 'function';
+  const function_formula_info_map = NotionFormula.FunctionFormulaInfo.map();
   for (let index = 0; index < formula.length; index++) {
     const char = formula[index];
     // adds to the last_arg only if its not a bracket, comma
@@ -25,7 +25,7 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			number_constant_match = last_arg.match(/^(\d+)$/),
 			number_symbol_match = last_arg.match(/^(e|pi)$/),
 			checkbox_symbol_match = last_arg.match(/^(true|false)$/),
-			function_match = Boolean(NotionFunctionFormulaInfoMap.get(last_arg as TFunctionName));
+			function_match = Boolean(function_formula_info_map.get(last_arg as TFunctionName));
 
     // capturing the parent args container and parent function
 		const parent_args = parents[parents.length - 1]?.[1],
@@ -75,5 +75,5 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 		}
   }
   
-	return GenerateNotionFormulaAST.array(parents[0], schema_map);
+	return NotionFormula.GenerateAST.array(parents[0], schema_map);
 }

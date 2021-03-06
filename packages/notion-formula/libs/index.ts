@@ -1,5 +1,12 @@
 export * from '../types';
-export * from './GenerateNotionFormulaArg';
-export * from './GenerateNotionFormulaAST';
-export * from './generateSchemaMap';
-export * from './NotionFunctionFormulaInfo';
+import { FunctionFormulaInfo } from './FunctionFormulaInfo';
+import { GenerateArg } from './GenerateArg';
+import { GenerateAST } from './GenerateAST';
+import { generateSchemaMapFromRemoteSchema } from './generateSchemaMapFromRemoteSchema';
+
+export const NotionFormula = {
+	generateSchemaMapFromRemoteSchema,
+	GenerateAST,
+	GenerateArg,
+	FunctionFormulaInfo
+};

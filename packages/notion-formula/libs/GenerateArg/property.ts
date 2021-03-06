@@ -1,6 +1,6 @@
 import { TFormulaResultType, TPropertyFormula } from '@nishans/types';
-import { ISchemaMap } from '../';
-import { getResultTypeFromSchemaType } from '../GenerateNotionFormulaAST/utils';
+import { ISchemaMap } from '..';
+import { getResultTypeFromSchemaType } from '../GenerateAST/utils';
 
 /**
  * Generate function formula argument using information from the passed schema_map

@@ -1,6 +1,6 @@
-import { NotionEndpoints } from '@nishans/types';
+import { INotionEndpoints } from '@nishans/types';
 import axios from 'axios';
-import { NotionRequest } from '../../libs';
+import { NotionEndpoints } from '../../libs';
 import { notion_request_configs } from './utils';
 
 afterEach(() => {
@@ -23,11 +23,11 @@ describe('NotionRequest.send', () => {
 			};
 
 		const axiosPostMock = jest.spyOn(axios, 'post').mockImplementationOnce(async () => ({ data: response_data }));
-		const constructHeadersMock = jest.spyOn(NotionRequest, 'constructHeaders').mockImplementationOnce(() => {
+		const constructHeadersMock = jest.spyOn(NotionEndpoints.Request, 'constructHeaders').mockImplementationOnce(() => {
 			return headers;
 		});
 
-		const response = await NotionRequest.send<NotionEndpoints['syncRecordValues']['response']>(
+		const response = await NotionEndpoints.Request.send<INotionEndpoints['syncRecordValues']['response']>(
 			'syncRecordValues',
 			request_data,
 			notion_request_configs
@@ -51,12 +51,12 @@ describe('NotionRequest.send', () => {
 		const axiosPostMock = jest.spyOn(axios, 'post').mockImplementationOnce(async () => {
 			throw new Error('Error occurred');
 		});
-		const constructHeadersMock = jest.spyOn(NotionRequest, 'constructHeaders').mockImplementationOnce(() => {
+		const constructHeadersMock = jest.spyOn(NotionEndpoints.Request, 'constructHeaders').mockImplementationOnce(() => {
 			return headers;
 		});
 
 		await expect(
-			NotionRequest.send<NotionEndpoints['syncRecordValues']['response']>(
+			NotionEndpoints.Request.send<INotionEndpoints['syncRecordValues']['response']>(
 				'syncRecordValues',
 				request_data,
 				notion_request_configs

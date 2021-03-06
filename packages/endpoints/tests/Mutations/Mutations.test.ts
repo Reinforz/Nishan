@@ -1,4 +1,4 @@
-import { NotionMutations, NotionRequest } from '../libs';
+import { NotionEndpoints } from '../../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -24,14 +24,16 @@ const request_data = {
 	'initializeGoogleDriveBlock',
 	'loginWithEmail',
 	'deleteBlocks'
-] as (keyof typeof NotionMutations)[]).forEach((method) => {
+] as (keyof typeof NotionEndpoints.Mutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {
 			token: 'token',
 			interval: 0
 		};
-		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await NotionMutations[method](request_data as any, configs);
+		const notionRequestSendMock = jest
+			.spyOn(NotionEndpoints.Request, 'send')
+			.mockImplementationOnce(async () => response_data);
+		const response = await NotionEndpoints.Mutations[method](request_data as any, configs);
 
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);

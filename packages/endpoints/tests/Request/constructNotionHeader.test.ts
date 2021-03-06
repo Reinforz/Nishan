@@ -1,14 +1,14 @@
-import { NotionRequest } from '../../libs';
+import { NotionEndpoints } from '../../libs';
 import { notion_request_configs } from './utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('NotionRequest.constructHeaders', () => {
+describe('NotionEndpoints.Request.constructHeaders', () => {
 	it(`Should return token attached header`, () => {
 		expect(
-			NotionRequest.constructHeaders({
+			NotionEndpoints.Request.constructHeaders({
 				token: 'token'
 			})
 		).toStrictEqual({
@@ -20,7 +20,7 @@ describe('NotionRequest.constructHeaders', () => {
 
 	it(`Should return user_id attached header`, () => {
 		expect(
-			NotionRequest.constructHeaders({
+			NotionEndpoints.Request.constructHeaders({
 				user_id: '123'
 			})
 		).toStrictEqual({
@@ -32,7 +32,7 @@ describe('NotionRequest.constructHeaders', () => {
 	});
 
 	it(`Should return token+user_id attached header`, () => {
-		expect(NotionRequest.constructHeaders(notion_request_configs)).toStrictEqual({
+		expect(NotionEndpoints.Request.constructHeaders(notion_request_configs)).toStrictEqual({
 			headers: {
 				cookie: 'token_v2=token;notion_user_id=user_id;',
 				['x-notion-active-user-header']: 'user_id'
@@ -41,13 +41,13 @@ describe('NotionRequest.constructHeaders', () => {
 	});
 
 	it(`Should return empty header`, () => {
-		expect(NotionRequest.constructHeaders({})).toStrictEqual({
+		expect(NotionEndpoints.Request.constructHeaders({})).toStrictEqual({
 			headers: {}
 		});
 	});
 
 	it(`Should return empty header when nothing is passed`, () => {
-		expect(NotionRequest.constructHeaders()).toStrictEqual({
+		expect(NotionEndpoints.Request.constructHeaders()).toStrictEqual({
 			headers: {}
 		});
 	});

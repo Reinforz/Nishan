@@ -1,4 +1,4 @@
-import { NotionQueries, NotionRequest } from '../libs';
+import { NotionEndpoints } from '../../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -35,10 +35,12 @@ const configs = {
 	'search',
 	'getClientExperiments',
 	'checkEmailType'
-] as (keyof typeof NotionQueries)[]).forEach((method) => {
+] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
-		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await NotionQueries[method](request_data as any, configs);
+		const notionRequestSendMock = jest
+			.spyOn(NotionEndpoints.Request, 'send')
+			.mockImplementationOnce(async () => response_data);
+		const response = await NotionEndpoints.Queries[method](request_data as any, configs);
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, request_data, configs);
 		expect(response_data).toStrictEqual(response);
 	});
@@ -53,10 +55,12 @@ const configs = {
 	'isUserDomainJoinable',
 	'isEmailEducation',
 	'ping'
-] as (keyof typeof NotionQueries)[]).forEach((method) => {
+] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
-		const notionRequestSendMock = jest.spyOn(NotionRequest, 'send').mockImplementationOnce(async () => response_data);
-		const response = await NotionQueries[method](configs as any);
+		const notionRequestSendMock = jest
+			.spyOn(NotionEndpoints.Request, 'send')
+			.mockImplementationOnce(async () => response_data);
+		const response = await NotionEndpoints.Queries[method](configs as any);
 		expect(notionRequestSendMock).toHaveBeenCalledWith(method, {}, configs);
 		expect(response_data).toStrictEqual(response);
 	});

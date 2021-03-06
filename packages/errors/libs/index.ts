@@ -1,4 +1,6 @@
 import { ChildIndexOutOfBound } from './ChildIndexOutOfBound';
+import { FunctionArgumentLengthMismatch } from './FunctionArgumentLengthMismatch';
+import { FunctionArgumentTypeMismatch } from './FunctionArgumentTypeMismatch';
 import { NotionErrorsLogs } from './Log';
 import { NonExistentData } from './NonExistentData';
 import { NonExistentSchemaUnitType } from './NonExistentSchemaUnitType';
@@ -21,5 +23,7 @@ export const NotionErrors = {
 	unsupported_data_type: UnsupportedDataType,
 	unsupported_property_type: UnsupportedPropertyType,
 	unsupported_function_name: UnsupportedFunctionName,
+	function_argument_type_mismatch: FunctionArgumentTypeMismatch,
+	function_argument_length_mismatch: FunctionArgumentLengthMismatch,
 	Log: NotionErrorsLogs
 };

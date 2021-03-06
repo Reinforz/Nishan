@@ -1,4 +1,6 @@
 import { TFormulaResultType, TSchemaUnitType } from '@nishans/types';
+import { NotionConstants } from 'packages/constants/dist/libs';
+import { NotionErrors } from 'packages/errors/dist/libs';
 
 /**
  * Get the appropriate formula result_type from the passed schema_unit type
@@ -27,6 +29,6 @@ export function getResultTypeFromSchemaType (type: TSchemaUnitType): TFormulaRes
 		case 'number':
 			return 'number';
 		default:
-			throw new Error(`Unsupported schema type ${type}`);
+			throw new NotionErrors.unsupported_property_type(type, [], type, NotionConstants.schemaUnitTypes());
 	}
 }

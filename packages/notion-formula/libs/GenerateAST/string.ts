@@ -25,7 +25,7 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 			number_constant_match = last_arg.match(/^(\d+)$/),
 			number_symbol_match = last_arg.match(/^(e|pi)$/),
 			checkbox_symbol_match = last_arg.match(/^(true|false)$/),
-			function_match = Boolean(function_formula_info_map.get(last_arg as TFunctionName));
+			function_match = function_formula_info_map.get(last_arg as TFunctionName);
 
     // capturing the parent args container and parent function
 		const parent_args = parents[parents.length - 1]?.[1],
@@ -38,7 +38,7 @@ export function generateFormulaASTFromString (formula: string, schema_map?: ISch
 		} else if (function_match && char === '(') {
       // a nested function formula has been detected
       parents.push([ last_arg ]);
-      // only now function doesnt take in any arguments
+      // only now function doesn't take in any arguments
       if (last_arg !== 'now') parents[parents.length - 1].push([]);
       // reset last_arg
       last_arg = '';

@@ -1,3 +1,4 @@
+import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
 import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
 import {
@@ -50,12 +51,12 @@ export function generateNotionFormulaAST (
       const arg_container = [] as any, function_info = notion_function_formula_info_map.get(function_name);
       // Throws error when an unsupported function is used
       if(!function_info)
-        throw new Error(`Function ${function_name} is not supported`);
+        throw new NotionErrors.unsupported_function_name(function_name, NotionConstants.functionNames());
       else{
         // Checks if the length of the argument passed matches with any of the argument length of the signatures
         const is_argument_length_mismatch = !Boolean(function_info.signatures.find((signature)=>(signature.variadic || (signature.arity as any).length === (input_args?.length ?? 0))));
         if(is_argument_length_mismatch)
-          throw new Error(`Function ${function_name} takes ${Array.from(new Set(function_info.signatures.map((signature)=>(signature.arity as any).length))).join(',')} arguments, given ${input_args?.length ?? 0}`);
+          throw new NotionErrors.function_argument_length_mismatch(input_args?.length ?? 0, Array.from(new Set(function_info.signatures.map((signature)=>(signature.arity as any).length))), function_name);
         
         // constructing the actual function formula ast, without the args and return_type as those depends on the passed arguments
         const function_formula_arg: TFunctionFormula = {
@@ -80,7 +81,7 @@ export function generateNotionFormulaAST (
             matched_signature = signatures.find((signature)=>input_arities.every((input_arity, index)=>(signature.variadic || (signature.arity as any)[index]) === input_arity))
             if(!matched_signature)
               // Throw an error if the given signature doesn't match any of the allowed signatures
-              throw new Error(`Argument of type ${parsed_argument.result_type} can't be used as argument ${index + 1} for function ${function_name}`)
+              throw new NotionErrors.function_argument_type_mismatch(parsed_argument.result_type, index+1, function_name)
             else
               (function_formula_arg as any).args.push(parsed_argument)
           }

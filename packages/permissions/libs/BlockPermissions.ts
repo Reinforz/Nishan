@@ -1,9 +1,8 @@
-import { NotionQueries } from '@nishans/endpoints';
+import { NotionEndpoints } from '@nishans/endpoints';
 import {
   NotionOperationOptions,
   NotionOperationPluginFunction,
-  NotionOperationsObject,
-  Operation
+  NotionOperations
 } from '@nishans/operations';
 import {
   IOperation,
@@ -63,7 +62,7 @@ export class NotionBlockPermissions {
 	async getNotionUserIdFromEmail ({ email, id }: UserIdentifier) {
 		let user_id = id;
 		if (email) {
-			const { value } = await NotionQueries.findUser(
+			const { value } = await NotionEndpoints.Queries.findUser(
 				{ email },
 				{
 					user_id: this.user_id,
@@ -96,7 +95,7 @@ export class NotionBlockPermissions {
 		if (permission_type === 'public_permission' || permission_type === 'space_permission')
 			permission_data = { ...options, type: permission_type } as IPublicPermission;
 		else permission_data = { role: options.role, type: permission_type, user_id } as IUserPermission;
-		operation = Operation.block.setPermissionItem(this.id, [ 'permissions' ], permission_data);
+		operation = NotionOperations.Chunk.block.setPermissionItem(this.id, [ 'permissions' ], permission_data);
 		const { permissions } = this.cache.block.get(this.id) as TPage;
 		const permission_index = permissions.findIndex((permission) => {
 			if (permission_type === 'public_permission' || permission_type === 'space_permission')
@@ -143,8 +142,8 @@ export class NotionBlockPermissions {
 		}
 		const data = this.cache.block.get(this.id) as TPage;
 		data.last_edited_time = Date.now();
-		await NotionOperationsObject.executeOperations(
-			[ ...operations, Operation.block.update(this.id, [], { last_edited_time: Date.now() }) ],
+		await NotionOperations.executeOperations(
+			[ ...operations, NotionOperations.Chunk.block.update(this.id, [], { last_edited_time: Date.now() }) ],
 			this.getProps()
 		);
 	}
@@ -179,10 +178,10 @@ export class NotionBlockPermissions {
 	): Promise<void> {
 		const data = this.cache.block.get(this.id) as TPage;
 		data.last_edited_time = Date.now();
-		await NotionOperationsObject.executeOperations(
+		await NotionOperations.executeOperations(
 			[
 				this.updatePermissionsArray(permission_type, options as IPublicPermission),
-				Operation.block.update(this.id, [], { last_edited_time: Date.now() })
+				NotionOperations.Chunk.block.update(this.id, [], { last_edited_time: Date.now() })
 			],
 			this.getProps()
 		);

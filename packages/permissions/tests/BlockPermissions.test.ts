@@ -1,17 +1,17 @@
 import { ICache, NotionCache } from '@nishans/cache';
-import { NotionQueries } from '@nishans/endpoints';
-import { NotionOperationsObject } from '@nishans/operations';
+import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../core/tests/utils';
-import { NotionBlockPermissions } from '../libs';
+import { NotionPermissions } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
 it(`addUserPermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 	const updateUserPermissionsMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updateUserPermissions')
+		.spyOn(NotionPermissions.block.prototype, 'updateUserPermissions')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.addUserPermission({ email: 'devorein00@gmail.com' }, 'editor');
@@ -20,10 +20,10 @@ it(`addUserPermission`, async () => {
 });
 
 it(`removeUserPermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updateUserPermissionsMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updateUserPermissions')
+		.spyOn(NotionPermissions.block.prototype, 'updateUserPermissions')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.removeUserPermission({ email: 'devorein00@gmail.com' });
@@ -38,15 +38,15 @@ it('updateUserPermission', async () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
 		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-	const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+	const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 	const updateUserPermissionArgs = { email: 'devorein00@gmail.com' };
 
 	const getNotionUserIdFromEmailMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'getNotionUserIdFromEmail')
+		.spyOn(NotionPermissions.block.prototype, 'getNotionUserIdFromEmail')
 		.mockImplementationOnce(async () => 'notion_user_2');
 
 	await notion_permissions.updateUserPermission(updateUserPermissionArgs, 'editor');
@@ -61,11 +61,13 @@ it('updateUserPermission', async () => {
 describe('getNotionUserIdFromEmail', () => {
 	it(`email is passed, notion_user exists`, async () => {
 		const notion_user_2 = { id: 'notion_user_2' };
-		const NotionQueriesFindUserMock = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(async () => {
-			return { value: { value: notion_user_2 } as any };
-		});
+		const NotionQueriesFindUserMock = jest
+			.spyOn(NotionEndpoints.Queries, 'findUser')
+			.mockImplementationOnce(async () => {
+				return { value: { value: notion_user_2 } as any };
+			});
 
-		const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+		const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 		const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({ email: 'devorein00@gmail.com' });
 
@@ -75,18 +77,20 @@ describe('getNotionUserIdFromEmail', () => {
 	});
 
 	it(`id is passed`, async () => {
-		const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+		const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 		const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({ id: 'notion_user_2' });
 
 		expect(notion_user_id).toBe('notion_user_2');
 	});
 
 	it(`email is passed, notion_user doesn't exist`, async () => {
-		const NotionQueriesFindUserMock = jest.spyOn(NotionQueries, 'findUser').mockImplementationOnce(async () => {
-			return {};
-		});
+		const NotionQueriesFindUserMock = jest
+			.spyOn(NotionEndpoints.Queries, 'findUser')
+			.mockImplementationOnce(async () => {
+				return {};
+			});
 
-		const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+		const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 		await expect(notion_permissions.getNotionUserIdFromEmail({ email: 'devorein00@gmail.com' })).rejects.toThrow(
 			`User does not have a notion account`
@@ -114,7 +118,7 @@ describe('updatePermissionsArray', () => {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
-		const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+		const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 		const operation = notion_permissions.updatePermissionsArray('user_permission', { role: 'none' }, 'notion_user_1');
 
@@ -138,7 +142,7 @@ describe('updatePermissionsArray', () => {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
-		const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+		const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 		const operations = notion_permissions.updatePermissionsArray(
 			'user_permission',
@@ -169,7 +173,7 @@ describe('updatePermissionsArray', () => {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
-		const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+		const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 		const operation = notion_permissions.updatePermissionsArray('space_permission', { role: 'comment_only' });
 		const permission = {
@@ -196,7 +200,7 @@ describe('updatePermissionsArray', () => {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
 
-		const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+		const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 		const permission = {
 			type: 'user_permission',
@@ -215,10 +219,10 @@ describe('updatePermissionsArray', () => {
 });
 
 it(`addPublicPermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updatePublicPermissionMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updatePublicPermission')
+		.spyOn(NotionPermissions.block.prototype, 'updatePublicPermission')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.addPublicPermission({ role: 'read_and_write' });
@@ -239,10 +243,10 @@ it(`updateNonUserSpecificPermission`, () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
 		executeOperationsMock = jest
-			.spyOn(NotionOperationsObject, 'executeOperations')
+			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-	const notion_permissions = new NotionBlockPermissions({ ...default_nishan_arg, cache, id: 'block_1' });
+	const notion_permissions = new NotionPermissions.block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 	notion_permissions.updateNonUserSpecificPermission('public_permission', { role: 'read_and_write' });
 
@@ -253,10 +257,10 @@ it(`updateNonUserSpecificPermission`, () => {
 });
 
 it(`updatePublicPermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updateNonUserSpecificPermissionMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updateNonUserSpecificPermission')
+		.spyOn(NotionPermissions.block.prototype, 'updateNonUserSpecificPermission')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.updatePublicPermission({ role: 'comment_only' });
@@ -266,10 +270,10 @@ it(`updatePublicPermission`, async () => {
 });
 
 it(`removePublicPermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updatePublicPermissionMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updatePublicPermission')
+		.spyOn(NotionPermissions.block.prototype, 'updatePublicPermission')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.removePublicPermission();
@@ -279,10 +283,10 @@ it(`removePublicPermission`, async () => {
 });
 
 it(`updateSpacePermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updateNonUserSpecificPermissionMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updateNonUserSpecificPermission')
+		.spyOn(NotionPermissions.block.prototype, 'updateNonUserSpecificPermission')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.updateSpacePermission('comment_only');
@@ -292,10 +296,10 @@ it(`updateSpacePermission`, async () => {
 });
 
 it(`removeSpacePermission`, async () => {
-	const notion_permissions = new NotionBlockPermissions(default_nishan_arg);
+	const notion_permissions = new NotionPermissions.block(default_nishan_arg);
 
 	const updateSpacePermissionMock = jest
-		.spyOn(NotionBlockPermissions.prototype, 'updateSpacePermission')
+		.spyOn(NotionPermissions.block.prototype, 'updateSpacePermission')
 		.mockImplementationOnce(async () => undefined);
 
 	await notion_permissions.removeSpacePermission();

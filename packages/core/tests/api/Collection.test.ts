@@ -147,7 +147,7 @@ describe('template pages', () => {
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest
-				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
 				.spyOn(NotionOperationsObject, 'executeOperations')
@@ -164,7 +164,7 @@ describe('template pages', () => {
 	it(`getTemplates`, async () => {
 		const { collection, initializeCacheForSpecificDataMock } = templateCrudSetup();
 		const page_obj = await collection.getTemplate('block_1');
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(page_obj.getCachedData()).toStrictEqual(
 			expect.objectContaining({
 				id: 'block_1'
@@ -176,7 +176,7 @@ describe('template pages', () => {
 		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
 		const pages = await collection.updateTemplate([ 'block_1', { alive: true } as any ]);
 
-		expect(initializeCacheForSpecificDataMock).toBeCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(cache.block.get('block_1')).toStrictEqual(
 			expect.objectContaining({
 				alive: true
@@ -202,7 +202,7 @@ describe('template pages', () => {
 		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
 		await collection.deleteTemplate('block_1');
 
-		expect(initializeCacheForSpecificDataMock).toBeCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(cache.block.get('block_1')).toStrictEqual(
 			expect.objectContaining({
 				alive: false
@@ -242,7 +242,7 @@ describe('rows', () => {
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest
-				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
 				.spyOn(NotionOperationsObject, 'executeOperations')
@@ -284,7 +284,7 @@ describe('rows', () => {
 
 		expect(row.getCachedData()).toStrictEqual(expect.objectContaining({ id: 'block_1' }));
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 	});
 
 	it(`updateRow`, async () => {
@@ -303,7 +303,7 @@ describe('rows', () => {
 			})
 		);
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.b.u(
 				'block_1',
@@ -321,7 +321,7 @@ describe('rows', () => {
 		await collection.deleteRow('block_1');
 
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('collection_1', 'collection');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.b.u(
 				'block_1',
@@ -357,7 +357,7 @@ describe('schema unit', () => {
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest
-				.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+				.spyOn(NotionCache, 'initializeCacheForSpecificData')
 				.mockImplementationOnce(async () => undefined),
 			executeOperationsMock = jest
 				.spyOn(NotionOperationsObject, 'executeOperations')

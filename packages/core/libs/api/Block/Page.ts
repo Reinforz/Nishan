@@ -1,3 +1,4 @@
+import { NotionCache } from '@nishans/cache';
 import {
 	CreateData,
 	IPageCreateInput,
@@ -35,7 +36,9 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 
 	async getCachedParentData () {
 		const data = this.getCachedData();
-		return (await this.fetchDataOrReturnCached(data.parent_table, data.parent_id)) as ISpace | IPage;
+		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as
+			| ISpace
+			| IPage;
 	}
 
 	/**

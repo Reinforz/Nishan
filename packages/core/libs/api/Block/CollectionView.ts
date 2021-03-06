@@ -1,3 +1,4 @@
+import { NotionCache } from '@nishans/cache';
 import { ICollectionView, IPage } from '@nishans/types';
 import { NishanArg } from '../../';
 import CollectionBlock from './CollectionBlock';
@@ -13,7 +14,7 @@ class CollectionView extends CollectionBlock<ICollectionView> {
 
 	async getCachedParentData () {
 		const data = this.getCachedData();
-		return (await this.fetchDataOrReturnCached('block', data.parent_id)) as IPage;
+		return (await NotionCache.fetchDataOrReturnCached('block', data.parent_id, this.getProps())) as IPage;
 	}
 }
 

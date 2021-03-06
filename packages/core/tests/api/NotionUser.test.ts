@@ -91,11 +91,11 @@ it('create space', async () => {
   expect(createSpaceMock).toHaveBeenCalledTimes(1);
   expect(createSpaceMock).toHaveBeenCalledWith(
     { initialUseCases: [], name: 'Space One', planType: 'personal', icon: '' },
-    {
+    expect.objectContaining({
       interval: 0,
       user_id: 'user_root_1',
       token: 'token'
-    }
+    })
   );
 
   expect(space_views.length).toBe(1);
@@ -236,11 +236,11 @@ it(`delete space`, async () => {
         }
       }
     },
-    {
+    expect.objectContaining({
       interval: 0,
       token: 'token',
       user_id: 'user_root_1'
-    }
+    })
   );
 });
 
@@ -275,15 +275,15 @@ describe('getPagesById', () => {
     });
 
     const initializeCacheForSpecificDataMock = jest
-      .spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
-      .mockImplementationOnce(() => {
+      .spyOn(NotionCache, 'initializeCacheForSpecificData')
+      .mockImplementation(() => {
         return {} as any;
       });
 
     const page_map = await notion_user.getPagesById([block_1_id, block_2_id]);
     expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
-    expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(1, block_1_id, 'block');
-    expect(initializeCacheForSpecificDataMock).toHaveBeenNthCalledWith(2, block_2_id, 'block');
+    expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([block_1_id, 'block']);
+    expect(initializeCacheForSpecificDataMock.mock.calls[1].slice(0, 2)).toEqual([block_2_id, 'block']);
     
     expect((page_map.page.get(block_1_id) as Page).id).toStrictEqual(block_1_id);
     const page_obj = (page_map.page.get('Block One') as Page);

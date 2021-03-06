@@ -3,7 +3,7 @@ import { TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from "uuid";
 import { tsu } from "../../../../fabricator/tests/utils";
-import { CollectionBlock, NotionData } from "../../../libs";
+import { CollectionBlock } from "../../../libs";
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -24,7 +24,7 @@ const construct = () =>{
     collection_view: new Map([['collection_view_1', collection_view_1]])
   } as any,
   initializeCacheForSpecificDataMock = jest
-    .spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+    .spyOn(NotionCache, 'initializeCacheForSpecificData')
     .mockImplementationOnce(async () => undefined),
   executeOperationsMock = jest
     .spyOn(NotionOperationsObject, 'executeOperations')
@@ -75,7 +75,7 @@ it(`getViews`, async () => {
 	const view_map = await collection_block.getViews(()=>true);
 	expect(view_map.table.get("Table")?.id).toStrictEqual('collection_view_1');
 	expect(view_map.table.get('collection_view_1')?.id).toStrictEqual('collection_view_1');
-  expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith("block_1", 'block');
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 });
 
 it(`updateView`, async () => {
@@ -83,7 +83,7 @@ it(`updateView`, async () => {
 
 	const view_map = await collection_block.updateView(['collection_view_1', {type: "board"}]);
 
-  expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith("block_1", 'block');
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(view_map.table.get("Table")?.getCachedData()).toStrictEqual(expect.objectContaining({type: "board"}));
 	expect(view_map.table.get("collection_view_1")?.getCachedData()).toStrictEqual(expect.objectContaining({type: "board"}));
   expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
@@ -97,7 +97,7 @@ it(`deleteView`, async () => {
 
 	await collection_block.deleteView('collection_view_1');
 
-  expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith("block_1", 'block');
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(collection_view_1).toStrictEqual(expect.objectContaining({alive: false}));
   expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
     o.cv.u('collection_view_1', [], expect.objectContaining({alive: false})),

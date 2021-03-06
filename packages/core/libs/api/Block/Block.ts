@@ -19,7 +19,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 	async getCachedParentData () {
 		const data = this.getCachedData();
-		return (await this.fetchDataOrReturnCached(data.parent_table, data.parent_id)) as TData;
+		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as TData;
 	}
 
 	async reposition (arg: RepositionParams) {
@@ -65,7 +65,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 							}
 						}
 					},
-					this.getConfigs()
+					this.getProps()
 				);
 			} else {
 				const duplicated_block = {
@@ -152,15 +152,10 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    * @param new_parent_id Id of the new parent page
    */
 	async transfer (new_parent_id: string) {
-		await NotionCache.fetchDataOrReturnCached('block', new_parent_id, this.getConfigs(), this.cache);
+		await NotionCache.fetchDataOrReturnCached('block', new_parent_id, this.getProps());
 
 		const data = this.getCachedData(),
-			parent_data = (await NotionCache.fetchDataOrReturnCached(
-				'block',
-				data.parent_id,
-				this.getConfigs(),
-				this.cache
-			)) as IPage,
+			parent_data = (await NotionCache.fetchDataOrReturnCached('block', data.parent_id, this.getProps())) as IPage,
 			new_parent_data = this.cache.block.get(new_parent_id) as IPage;
 
 		data.parent_id = new_parent_id;

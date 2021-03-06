@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
 import { NotionOperationsObject } from '@nishans/operations';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
-import { NotionData, ViewAggregator } from '../../../libs';
+import { ViewAggregator } from '../../../libs';
 import { detectAggregationErrors } from '../../../libs/api/View/Aggregator';
 import { default_nishan_arg, o } from '../../utils';
 
@@ -62,7 +62,7 @@ const aggregationCrudSetup = () => {
 			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
 		} as any,
 		initializeCacheForSpecificDataMock = jest
-			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined),
 		executeOperationsMock = jest
 			.spyOn(NotionOperationsObject, 'executeOperations')

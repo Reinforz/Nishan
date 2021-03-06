@@ -10,11 +10,11 @@ import Data from './Data';
 import SpaceView from "./SpaceView";
 
 export async function createSpaceIterateArguments(block_id: string, props: Pick<NishanArg, 'cache' | 'token' | 'interval' | 'user_id'>): Promise<IPage | (ICollectionViewPage & {collection: ICollection}) | undefined>{
-  const data = await NotionCache.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props, props.cache);
+  const data = await NotionCache.fetchDataOrReturnCached<IPage | (ICollectionViewPage & {collection: ICollection})>('block', block_id, props);
   if(data.type === "page")
     return data;
   else if(data.type === "collection_view_page"){
-    await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, props, props.cache);
+    await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, props);
     return {
       ...data,
       collection: props.cache.collection.get(data.collection_id) as ICollection
@@ -152,7 +152,7 @@ export default class Space extends Data<ISpace> {
   async addMembers(infos: [string, TSpaceMemberPermissionRole][]) {
     const notion_users: INotionUser[] = [], data = this.getCachedData(), operations: IOperation[] = []
     for (let i = 0; i < infos.length; i++) {
-      const [email, role] = infos[i], { value } = await NotionQueries.findUser({email}, this.getConfigs());
+      const [email, role] = infos[i], { value } = await NotionQueries.findUser({email}, this.getProps());
       if (!value?.value) error(`User does not have a notion account`);
       else{
         const notion_user = value.value;

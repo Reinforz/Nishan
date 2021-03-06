@@ -189,7 +189,8 @@ it(`getRootPage`, async () => {
 				]
 			]),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
-		};
+		},
+    initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
 	const logger_spy = jest.fn();
 
@@ -201,7 +202,9 @@ it(`getRootPage`, async () => {
 	});
 
 	const page_map_1 = await space.getRootPage('block_1');
-	expect(page_map_1.page.get('Block One')?.getCachedData()).toStrictEqual(block_1);
+
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(['space_1', 'space']);
+  expect(page_map_1.page.get('Block One')?.getCachedData()).toStrictEqual(block_1);
 });
 
 it(`updateRootPage`, async()=>{
@@ -211,7 +214,8 @@ it(`updateRootPage`, async()=>{
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined),
+    initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -231,6 +235,7 @@ it(`updateRootPage`, async()=>{
 		}
 	]);
   
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(['space_1', 'space']);
 	expect(block_map.page.get('Page One')?.getCachedData()).toStrictEqual(expect.objectContaining({id: 'block_1', ...update_arg}));
 	expect(block_map.page.get('block_1')?.getCachedData()).toStrictEqual(expect.objectContaining({id: 'block_1', ...update_arg}));
 	expect(cache.block.get('block_1')).toStrictEqual(expect.objectContaining({id: 'block_1', ...update_arg}));
@@ -244,7 +249,8 @@ it(`deleteRootPage`, async()=>{
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined);
+		executeOperationsMock = jest.spyOn(NotionOperationsObject, 'executeOperations').mockImplementation(async()=>undefined),
+    initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
 	const space = new Space({
     ...default_nishan_arg,
@@ -253,6 +259,8 @@ it(`deleteRootPage`, async()=>{
 	});
 
 	await space.deleteRootPage('block_1');
+
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(['space_1', 'space']);
   expect(executeOperationsMock).toHaveBeenCalledTimes(2);
 	expect(cache.block.get('block_1')?.alive).toBe(false);
 	expect(cache.space.get('space_1')).toStrictEqual(expect.objectContaining({
@@ -287,13 +295,13 @@ it(`addMembers`, async()=>{
   })
 
 	const notion_users = await space.addMembers([['user_root_2@gmail.com', 'editor']]);
-
+  
   expect(findUser).toHaveBeenCalledTimes(1);
-  expect(findUser).toHaveBeenNthCalledWith(1, {email: 'user_root_2@gmail.com'}, {
+  expect(findUser).toHaveBeenNthCalledWith(1, {email: 'user_root_2@gmail.com'}, expect.objectContaining({
     interval: 0,
     token: 'token',
     user_id: 'user_root_1'
-  });
+  }));
   expect(cache.space.get('space_1')?.permissions).toStrictEqual([
     { user_id: 'user_root_1' },
     { role: 'editor', type: "user_permission", user_id: 'user_root_2' }

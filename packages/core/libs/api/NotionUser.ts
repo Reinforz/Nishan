@@ -1,3 +1,4 @@
+import { NotionCache } from '@nishans/cache';
 import { NotionMutations } from '@nishans/endpoints';
 import { UnsupportedBlockTypeError } from '@nishans/errors';
 import { CreateData } from '@nishans/fabricator';
@@ -81,7 +82,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getConfigs());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionMutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getProps());
       spaces.push(new Space({
         id: space_id,
         ...this.getProps(),
@@ -214,23 +215,23 @@ class NotionUser extends Data<INotionUser> {
             spaceId
           }
         }
-      }, this.getConfigs())
+      }, this.getProps())
     });
   }
 
   async getPagesById(ids: string[]) {
     ids = ids.map(id=>idToUuid(uuidToId(id)));
     const page_map = CreateMaps.page();
-    await this.updateCacheIfNotPresent(ids.map(id=>[id, 'block']));
+    await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), this.getProps());
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index], page = this.cache.block.get(id) as TPage;
       if (page.type === "page") {
-        await this.initializeCacheForSpecificData(page.id, "block");
+        await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
         const page_obj = new Page({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id })
         page_map.page.set(page.id, page_obj)
         page_map.page.set(page.properties.title[0][0], page_obj);
       } else if (page.type === "collection_view_page"){
-        await this.initializeCacheForSpecificData(page.id, "block");
+        await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);

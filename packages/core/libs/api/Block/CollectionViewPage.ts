@@ -1,3 +1,4 @@
+import { NotionCache } from '@nishans/cache';
 import { NotionBlockPermissions } from '@nishans/permissions';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { NishanArg } from '../../';
@@ -16,7 +17,9 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
 
 	async getCachedParentData () {
 		const data = this.getCachedData();
-		return (await this.fetchDataOrReturnCached(data.parent_table, data.parent_id)) as IPage | ISpace;
+		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as
+			| IPage
+			| ISpace;
 	}
 }
 

@@ -1,7 +1,7 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionOperationsObject } from '@nishans/operations';
 import { v4 } from 'uuid';
-import { NotionData, Page } from '../../../libs';
+import { Page } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -23,7 +23,7 @@ const construct = () => {
 			.spyOn(NotionOperationsObject, 'executeOperations')
 			.mockImplementation(async () => undefined),
 		initializeCacheForSpecificDataMock = jest
-			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
 
 	const page = new Page({
@@ -61,7 +61,7 @@ it(`getBlock`, async () => {
 
 	const block_map = await page.getBlock('block_2');
 
-	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_map.header.get('block_2')).not.toBeUndefined();
 	expect(block_map.header.get('Header')).not.toBeUndefined();
 });
@@ -71,7 +71,7 @@ it(`updateBlock`, async () => {
 
 	const block_map = await page.updateBlock([ 'block_2', { alive: false } as any ]);
 
-	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_map.header.get('block_2')).not.toBeUndefined();
 	expect(block_2.alive).toBe(false);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
@@ -91,7 +91,7 @@ it(`deleteBlock`, async () => {
 
 	await page.deleteBlock('block_2');
 
-	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_2.alive).toBe(false);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
 	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([

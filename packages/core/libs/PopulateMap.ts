@@ -18,7 +18,7 @@ async function populateCollectionBlockMap (
 ) {
 	const block_obj = createBlockClass(block.type, block.id, props);
 	// Initializes the cache for the passed data, so that collection and collection_views exists in the cache
-	await NotionCache.initializeCacheForSpecificData(block.id, 'block', props, props.cache);
+	await NotionCache.initializeCacheForSpecificData(block.id, 'block', props);
 	// Retrieve the collection from the cache
 	const collection = props.cache.collection.get(block.collection_id) as ICollection;
 	// Set the map corresponding to the block type to the block object passed using the collection name and the block id

@@ -114,20 +114,24 @@ it(`getBookmarkedPage`, async () => {
 				'block_1',
 				{
 					id: 'block_1',
-					type: 'collection_view_page',
-					collection_id: 'collection_1',
-					view_ids: [],
+					type: 'page',
 					parent_table: 'space',
-					parent_id: 'space_1'
+					parent_id: 'space_1',
+					properties: {
+						title: [ [ 'Page One' ] ]
+					}
 				} as any
 			]
 		]),
-		collection: new Map([ [ 'collection_1', { name: [ [ 'Collection One' ] ], parent_id: 'block_1' } as any ] ]),
 		space_view: new Map([
 			[ 'space_view_1', { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' } as any ]
 		]),
 		space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 	};
+
+	const initializeCacheForSpecificDataMock = jest
+		.spyOn(NotionCache, 'initializeCacheForSpecificData')
+		.mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 
@@ -139,7 +143,10 @@ it(`getBookmarkedPage`, async () => {
 	});
 
 	const page_map = await space_view.getBookmarkedPage('block_1');
-	expect(page_map.collection_view_page.get('Collection One')).not.toBeUndefined();
+
+	expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'space_view_1', 'space_view' ]);
+	expect(page_map.page.get('Page One')).not.toBeUndefined();
 });
 
 it(`updateBookmarkedPages`, async () => {
@@ -173,7 +180,10 @@ it(`updateBookmarkedPages`, async () => {
 		},
 		executeOperationsMock = jest
 			.spyOn(NotionOperationsObject, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
+			.mockImplementationOnce(async () => undefined),
+		initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
+			.mockImplementation(async () => undefined);
 
 	const logger_spy = jest.fn();
 
@@ -193,7 +203,7 @@ it(`updateBookmarkedPages`, async () => {
 		id: 'space_view_1',
 		space_id: 'space_1'
 	});
-
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'space_view_1', 'space_view' ]);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
 			id: 'block_2'

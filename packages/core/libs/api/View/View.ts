@@ -1,3 +1,4 @@
+import { NotionCache } from "@nishans/cache";
 import { PreExistentValueError } from "@nishans/errors";
 import { InitializeView, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, PopulateViewData, PopulateViewMaps, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
 import { generateSchemaMapFromCollectionSchema } from '@nishans/notion-formula';
@@ -24,12 +25,12 @@ class View<T extends TView> extends Data<T> {
 	}
 
 	async getCollection(){
-    const data = this.getCachedData(), parent = await this.fetchDataOrReturnCached('block', data.parent_id) as TCollectionBlock;
-    return await this.fetchDataOrReturnCached('collection', parent.collection_id) as ICollection;
+    const data = this.getCachedData(), parent = await NotionCache.fetchDataOrReturnCached('block', data.parent_id, this.getProps()) as TCollectionBlock;
+    return await NotionCache.fetchDataOrReturnCached('collection', parent.collection_id, this.getProps()) as ICollection;
 	};
 
 	async getCachedParentData () {
-		return await this.fetchDataOrReturnCached('block', this.getCachedData().parent_id) as TCollectionBlock;
+		return await NotionCache.fetchDataOrReturnCached('block', this.getCachedData().parent_id, this.getProps()) as TCollectionBlock;
 	}
 
 	async reposition (arg: RepositionParams) {

@@ -1,4 +1,4 @@
-import { ICache, NotionCacheClass } from '@nishans/cache';
+import { ICache, NotionCache } from '@nishans/cache';
 import { warn } from '@nishans/errors';
 import { constructLogger, FabricatorProps, Logger, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationPluginFunction, NotionOperationsObject, Operation } from '@nishans/operations';
@@ -11,7 +11,7 @@ import { updateLastEditedProps } from '../ChildTraverser/utils';
  * @noInheritDoc
  */
 
-export default class NotionData<T extends TData> extends NotionCacheClass {
+export default class NotionData<T extends TData> {
   id: string;
   type: TDataType;
   #init_cache = false;
@@ -25,7 +25,6 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
   cache: ICache;
 
   constructor(arg: NishanArg & { type: TDataType }) {
-    super(arg);
     this.type = arg.type;
     this.id = arg.id;
     this.#init_cache = false;
@@ -63,7 +62,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
   }
 
   async updateCachedData(){
-    await this.updateCacheManually([[this.id, this.type]])
+    await NotionCache.updateCacheManually([[this.id, this.type]], this.getProps())
   }
 
   /**
@@ -93,7 +92,7 @@ export default class NotionData<T extends TData> extends NotionCacheClass {
 
   async initializeCacheForThisData() {
     if (!this.#init_cache && this.type !== "notion_user") {
-      await this.initializeCacheForSpecificData(this.id, this.type)
+      await NotionCache.initializeCacheForSpecificData(this.id, this.type, this.getProps())
       this.#init_cache = true;
     }
   }

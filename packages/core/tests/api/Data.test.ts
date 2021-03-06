@@ -119,12 +119,12 @@ it(`updateCachedData`, async () => {
 		type: 'block'
 	});
 
-	const updateCacheManuallyMock = jest.spyOn(NotionData.prototype, 'updateCacheManually').mockImplementationOnce(() => {
+	const updateCacheManuallyMock = jest.spyOn(NotionCache, 'updateCacheManually').mockImplementationOnce(() => {
 		return {} as any;
 	});
 	await block.updateCachedData();
 	expect(updateCacheManuallyMock).toHaveBeenCalledTimes(1);
-	expect(updateCacheManuallyMock).toHaveBeenCalledWith([ [ 'block_1', 'block' ] ]);
+	expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
 });
 
 it(`deleteCachedData`, async () => {
@@ -218,13 +218,13 @@ describe('initializeCacheForThisData', () => {
 		});
 
 		const initializeCacheForSpecificDataMock = jest
-			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined);
 
 		await block.initializeCacheForThisData();
 
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledWith('block_1', 'block');
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	});
 
 	it(`type=notion_user`, async () => {
@@ -238,7 +238,7 @@ describe('initializeCacheForThisData', () => {
 		});
 
 		const initializeCacheForSpecificDataMock = jest
-			.spyOn(NotionData.prototype, 'initializeCacheForSpecificData')
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined);
 
 		await block.initializeCacheForThisData();

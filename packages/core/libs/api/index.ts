@@ -1,4 +1,4 @@
-import { NotionCacheClass } from "@nishans/cache";
+import { ICache, NotionCache } from "@nishans/cache";
 import { constructLogger, Logger } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
@@ -13,25 +13,30 @@ import SpaceView from "./SpaceView";
 import UserRoot from "./UserRoot";
 import UserSettings from "./UserSettings";
 
-class Nishan extends NotionCacheClass {
+class Nishan {
   token: string;
   interval: number;
   #init_cache: boolean;
   logger: Logger;
   notion_operation_plugins: NotionOperationPluginFunction[];
+  cache: ICache;
 
   constructor(arg: Pick<NishanArg, "token" | "interval" | "logger" | "notion_operation_plugins">) {
-    super(arg);
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;
     this.logger = constructLogger(arg.logger)
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
+    this.cache = NotionCache.createDefaultCache();
   }
 
   #initializeCache = async () => {
     if (!this.#init_cache) {
-      await this.initializeNotionCache();
+      await NotionCache.initializeNotionCache({
+        interval: this.interval,
+        cache: this.cache,
+        token: this.token,
+      });
       this.#init_cache = true;
     }
   }

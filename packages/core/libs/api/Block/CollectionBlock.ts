@@ -32,7 +32,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
    */
 	async getCollection () {
 		const data = this.getCachedData();
-		await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, this.getConfigs(), this.cache);
+		await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, this.getProps());
 		return new Collection({
 			...this.getProps(),
 			id: data.collection_id

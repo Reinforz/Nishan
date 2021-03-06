@@ -1,5 +1,4 @@
-import { ICache, NotionCache } from '@nishans/cache';
-import { NotionOperationOptions } from '@nishans/operations';
+import { NotionCache, NotionCacheConfigs } from '@nishans/cache';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { GraphQLJSONObject } from 'graphql-type-json';
@@ -11,18 +10,18 @@ import { spaceResolver } from './space';
 export const NotionGraphqlServerResolvers = {
 	JSONObject: GraphQLJSONObject,
 	Query: {
-		space: async (_: any, args: { id: string }, ctx: NotionOperationOptions & { cache: ICache }) =>
-			await NotionCache.fetchDataOrReturnCached('space', args.id, ctx, ctx.cache),
-		page: async (_: any, args: { id: string }, ctx: NotionOperationOptions & { cache: ICache }) =>
-			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx, ctx.cache),
-		block: async (_: any, args: { id: string }, ctx: NotionOperationOptions & { cache: ICache }) =>
-			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx, ctx.cache)
+		space: async (_: any, args: { id: string }, ctx: NotionCacheConfigs) =>
+			await NotionCache.fetchDataOrReturnCached('space', args.id, ctx),
+		page: async (_: any, args: { id: string }, ctx: NotionCacheConfigs) =>
+			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx),
+		block: async (_: any, args: { id: string }, ctx: NotionCacheConfigs) =>
+			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx)
 	},
 	Page: pageResolver,
 	Collection: {
 		name: (parent: any) => NotionUtils.extractInlineBlockContent(parent.name[0][0]),
-		parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionOperationOptions & { cache: ICache }) =>
-			await NotionCache.fetchDataOrReturnCached('block', parent_id, ctx, ctx.cache)
+		parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: NotionCacheConfigs) =>
+			await NotionCache.fetchDataOrReturnCached('block', parent_id, ctx)
 	},
 	CollectionView: collectionBlockResolver,
 	CollectionViewPage: collectionBlockResolver,

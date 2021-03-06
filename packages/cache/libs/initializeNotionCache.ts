@@ -1,11 +1,11 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionCache, NotionCacheConfigs } from './';
+import { INotionCacheOptions, NotionCache } from './';
 
 /**
  * Initialize the cache by sending a post request to the `getSpaces` endpoint 
  */
-export async function initializeNotionCache (configs: NotionCacheConfigs) {
-	const data = await NotionEndpoints.Queries.getSpaces(configs);
+export async function initializeNotionCache (options: INotionCacheOptions) {
+	const data = await NotionEndpoints.Queries.getSpaces(options);
 	// Contains a set of external notion user that has access to the space
 	const external_notion_users: Set<string> = new Set();
 
@@ -21,7 +21,7 @@ export async function initializeNotionCache (configs: NotionCacheConfigs) {
 					permission.user_id && permission.user_id !== user_root_id && external_notion_users.add(permission.user_id)
 			)
 		);
-		NotionCache.saveToCache(recordMap, configs.cache);
+		NotionCache.saveToCache(recordMap, options.cache);
 	});
 
 	// If the number of external_notion_users in not zero continue
@@ -29,7 +29,7 @@ export async function initializeNotionCache (configs: NotionCacheConfigs) {
 		// Send a api request to syncRecordValues endpoint to fetch the external notion users
 		await NotionCache.constructAndSyncRecordsParams(
 			Array.from(external_notion_users.values()).map((id) => [ id, 'notion_user' ]),
-			configs
+			options
 		);
 	}
 }

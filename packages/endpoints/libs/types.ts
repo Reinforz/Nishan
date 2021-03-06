@@ -9,7 +9,7 @@ export interface NotionHeaders {
 	};
 }
 
-export interface NotionEndpointsOptions {
+export interface INotionEndpointsOptions {
 	token: string;
 	user_id: string;
 	interval?: number;

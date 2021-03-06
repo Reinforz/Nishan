@@ -1,8 +1,8 @@
 import { NotionEndpoints } from "@nishans/endpoints";
 import { IOperation } from "@nishans/types";
-import { NotionOperationOptions, NotionOperations } from "./";
+import { INotionOperationOptions, NotionOperations } from "./";
 
-export async function executeOperations (operations: IOperation[], options: NotionOperationOptions) {
+export async function executeOperations (operations: IOperation[], options: INotionOperationOptions) {
   // If the stack is empty print a msg to the console
   if (operations.length === 0) console.log(`The operation stack is empty`);
   else {

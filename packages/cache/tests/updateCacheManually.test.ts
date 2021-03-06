@@ -12,7 +12,8 @@ it(`updateCacheManually`, async () => {
 		.mockImplementationOnce(async () => undefined);
 	await NotionCache.updateCacheManually(update_cache_manually_args, {
 		cache: NotionCache.createDefaultCache(),
-		token: 'token'
+		token: 'token',
+		user_id: 'user_root_1'
 	});
 	expect(constructSyncRecordsParamsMock.mock.calls[0][0]).toStrictEqual(update_cache_manually_args);
 	expect(constructSyncRecordsParamsMock.mock.calls[0][1]).toStrictEqual(expect.objectContaining({ token: 'token' }));

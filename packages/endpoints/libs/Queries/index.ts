@@ -1,221 +1,224 @@
 import { INotionEndpoints } from '@nishans/types';
-import { NotionEndpoints, NotionEndpointsOptions } from '../';
+import { INotionEndpointsOptions, NotionEndpoints } from '../';
 
 export const NotionEndpointsQueries = {
-	async ping (configs?: NotionEndpointsOptions) {
-		return await NotionEndpoints.Request.send<Record<string, never>>('ping', {}, configs);
+	async ping (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<Record<string, never>>('ping', {}, options);
 	},
 
-	async checkEmailType (params: INotionEndpoints['checkEmailType']['payload'], configs?: NotionEndpointsOptions) {
+	async checkEmailType (params: INotionEndpoints['checkEmailType']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['checkEmailType']['response']>(
 			'checkEmailType',
 			params,
-			configs
+			options
 		);
 	},
 
 	async getClientExperiments (
 		params: INotionEndpoints['getClientExperiments']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getClientExperiments']['response']>(
 			'getClientExperiments',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getPageVisits (params: INotionEndpoints['getPageVisits']['payload'], configs?: NotionEndpointsOptions) {
+	async getPageVisits (params: INotionEndpoints['getPageVisits']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getPageVisits']['response']>(
 			'getPageVisits',
 			params,
-			configs
+			options
 		);
 	},
 
 	async getUserSharedPages (
 		params: INotionEndpoints['getUserSharedPages']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getUserSharedPages']['response']>(
 			'getUserSharedPages',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getUserTasks (configs?: NotionEndpointsOptions) {
+	async getUserTasks (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getUserTasks']['response']>(
 			'getUserTasks',
 			{},
-			configs
+			options
 		);
 	},
 
-	async search (params: INotionEndpoints['search']['payload'], configs?: NotionEndpointsOptions) {
-		return await NotionEndpoints.Request.send<INotionEndpoints['search']['response']>('search', params, configs);
+	async search (params: INotionEndpoints['search']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['search']['response']>('search', params, options);
 	},
 
-	async getPublicPageData (params: INotionEndpoints['getPublicPageData']['payload'], configs?: NotionEndpointsOptions) {
+	async getPublicPageData (
+		params: INotionEndpoints['getPublicPageData']['payload'],
+		options?: INotionEndpointsOptions
+	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getPublicPageData']['response']>(
 			'getPublicPageData',
 			params,
-			configs
+			options
 		);
 	},
 
 	async getPublicSpaceData (
 		params: INotionEndpoints['getPublicSpaceData']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getPublicSpaceData']['response']>(
 			'getPublicSpaceData',
 			params,
-			configs
+			options
 		);
 	},
 
 	async getSubscriptionData (
 		params: INotionEndpoints['getSubscriptionData']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getSubscriptionData']['response']>(
 			'getSubscriptionData',
 			params,
-			configs
+			options
 		);
 	},
 
-	async loadBlockSubtree (params: INotionEndpoints['loadBlockSubtree']['payload'], configs?: NotionEndpointsOptions) {
+	async loadBlockSubtree (params: INotionEndpoints['loadBlockSubtree']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['loadBlockSubtree']['response']>(
 			'loadBlockSubtree',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getSpaces (configs?: NotionEndpointsOptions) {
-		return await NotionEndpoints.Request.send<INotionEndpoints['getSpaces']['response']>('getSpaces', {}, configs);
+	async getSpaces (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getSpaces']['response']>('getSpaces', {}, options);
 	},
 
 	async getGenericEmbedBlockData (
 		params: INotionEndpoints['getGenericEmbedBlockData']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getGenericEmbedBlockData']['response']>(
 			'getGenericEmbedBlockData',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getUploadFileUrl (params: INotionEndpoints['getUploadFileUrl']['payload'], configs?: NotionEndpointsOptions) {
+	async getUploadFileUrl (params: INotionEndpoints['getUploadFileUrl']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getUploadFileUrl']['response']>(
 			'getUploadFileUrl',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getGoogleDriveAccounts (configs?: NotionEndpointsOptions) {
+	async getGoogleDriveAccounts (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getGoogleDriveAccounts']['response']>(
 			'getGoogleDriveAccounts',
 			{},
-			configs
+			options
 		);
 	},
 
 	async getBacklinksForBlock (
 		params: INotionEndpoints['getBacklinksForBlock']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getBacklinksForBlock']['response']>(
 			'getBacklinksForBlock',
 			params,
-			configs
+			options
 		);
 	},
 
-	async findUser (params: INotionEndpoints['findUser']['payload'], configs?: NotionEndpointsOptions) {
-		return await NotionEndpoints.Request.send<INotionEndpoints['findUser']['response']>('findUser', params, configs);
+	async findUser (params: INotionEndpoints['findUser']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['findUser']['response']>('findUser', params, options);
 	},
 
-	async syncRecordValues (params: INotionEndpoints['syncRecordValues']['payload'], configs?: NotionEndpointsOptions) {
+	async syncRecordValues (params: INotionEndpoints['syncRecordValues']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['syncRecordValues']['response']>(
 			'syncRecordValues',
 			params,
-			configs
+			options
 		);
 	},
 
-	async queryCollection (params: INotionEndpoints['queryCollection']['payload'], configs?: NotionEndpointsOptions) {
+	async queryCollection (params: INotionEndpoints['queryCollection']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['queryCollection']['response']>(
 			'queryCollection',
 			params,
-			configs
+			options
 		);
 	},
 
-	async loadUserContent (configs?: NotionEndpointsOptions) {
+	async loadUserContent (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['loadUserContent']['response']>(
 			'loadUserContent',
 			{},
-			configs
+			options
 		);
 	},
 
-	async loadPageChunk (params: INotionEndpoints['loadPageChunk']['payload'], configs?: NotionEndpointsOptions) {
+	async loadPageChunk (params: INotionEndpoints['loadPageChunk']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['loadPageChunk']['response']>(
 			'loadPageChunk',
 			params,
-			configs
+			options
 		);
 	},
 
-	async recordPageVisit (params: INotionEndpoints['recordPageVisit']['payload'], configs?: NotionEndpointsOptions) {
+	async recordPageVisit (params: INotionEndpoints['recordPageVisit']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['recordPageVisit']['response']>(
 			'recordPageVisit',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getJoinableSpaces (configs?: NotionEndpointsOptions) {
+	async getJoinableSpaces (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getJoinableSpaces']['response']>(
 			'getJoinableSpaces',
 			{},
-			configs
+			options
 		);
 	},
 
-	async isUserDomainJoinable (configs?: NotionEndpointsOptions) {
+	async isUserDomainJoinable (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['isUserDomainJoinable']['response']>(
 			'isUserDomainJoinable',
 			{},
-			configs
+			options
 		);
 	},
 
-	async isEmailEducation (configs?: NotionEndpointsOptions) {
+	async isEmailEducation (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['isEmailEducation']['response']>(
 			'isEmailEducation',
 			{},
-			configs
+			options
 		);
 	},
 
 	async getUserNotifications (
 		params: INotionEndpoints['getUserNotifications']['payload'],
-		configs?: NotionEndpointsOptions
+		options?: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getUserNotifications']['response']>(
 			'getUserNotifications',
 			params,
-			configs
+			options
 		);
 	},
 
-	async getTasks (params: INotionEndpoints['getTasks']['payload'], configs?: NotionEndpointsOptions) {
-		return await NotionEndpoints.Request.send<INotionEndpoints['getTasks']['response']>('getTasks', params, configs);
+	async getTasks (params: INotionEndpoints['getTasks']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getTasks']['response']>('getTasks', params, options);
 	}
 };

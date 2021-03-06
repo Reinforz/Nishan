@@ -1,15 +1,15 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
 import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
-import { NotionCache, NotionCacheConfigs } from './';
+import { INotionCacheOptions, NotionCache } from './';
 
 /**
  * Initialize cache of specific type of data
  * @param id The id of the data
  * @param type The type of data
  */
-export async function initializeCacheForSpecificData (id: string, type: TDataType, configs: NotionCacheConfigs) {
-	const { cache } = configs;
+export async function initializeCacheForSpecificData (id: string, type: TDataType, options: INotionCacheOptions) {
+	const { cache } = options;
 	const container: UpdateCacheManuallyParam = [],
 		extra_container: UpdateCacheManuallyParam = [];
 	if (type === 'block') {
@@ -65,7 +65,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 					loadContentCover: true
 				}
 			},
-			configs
+			options
 		);
 		NotionCache.saveToCache(recordMap, cache);
 		container.push([ data.parent_id, 'block' ]);
@@ -81,7 +81,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	} else NotionErrors.Log.error(`${type} data is not supported`);
 
 	// Filters data that doesn't exist in the cache
-	await NotionCache.updateCacheIfNotPresent(container, configs);
+	await NotionCache.updateCacheIfNotPresent(container, options);
 
 	if (type === 'collection_view') {
 		const data = cache[type].get(id) as TView,
@@ -89,5 +89,5 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		extra_container.push([ parent.collection_id, 'collection' ]);
 	}
 
-	await NotionCache.updateCacheIfNotPresent(extra_container, configs);
+	await NotionCache.updateCacheIfNotPresent(extra_container, options);
 }

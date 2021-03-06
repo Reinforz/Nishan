@@ -16,7 +16,8 @@ it(`updateCacheIfNotPresent method`, async () => {
 
 	await NotionCache.updateCacheIfNotPresent([ [ 'block_2', 'block' ], [ 'collection_1', 'collection' ] ], {
 		cache,
-		token: 'token'
+		token: 'token',
+		user_id: 'user_root_1'
 	});
 
 	expect(syncRecordValuesMock.mock.calls[0][0]).toStrictEqual([ [ 'block_2', 'block' ] ]);

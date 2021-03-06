@@ -1,110 +1,110 @@
 import { INotionEndpoints } from '@nishans/types';
-import { NotionEndpoints, NotionEndpointsOptions } from '../';
+import { INotionEndpointsOptions, NotionEndpoints } from '../';
 
 export const NotionEndpointsMutations = {
 	async setPageNotificationsAsRead (
 		params: INotionEndpoints['setPageNotificationsAsRead']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setPageNotificationsAsRead']['response']>(
 			'setPageNotificationsAsRead',
 			params,
-			configs
+			options
 		);
 	},
 	async setSpaceNotificationsAsRead (
 		params: INotionEndpoints['setSpaceNotificationsAsRead']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setSpaceNotificationsAsRead']['response']>(
 			'setSpaceNotificationsAsRead',
 			params,
-			configs
+			options
 		);
 	},
 	async removeUsersFromSpace (
 		params: INotionEndpoints['removeUsersFromSpace']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['removeUsersFromSpace']['response']>(
 			'removeUsersFromSpace',
 			params,
-			configs
+			options
 		);
 	},
 	async inviteGuestsToSpace (
 		params: INotionEndpoints['inviteGuestsToSpace']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['inviteGuestsToSpace']['response']>(
 			'inviteGuestsToSpace',
 			params,
-			configs
+			options
 		);
 	},
-	async createSpace (params: INotionEndpoints['createSpace']['payload'], configs: NotionEndpointsOptions) {
+	async createSpace (params: INotionEndpoints['createSpace']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['createSpace']['response']>(
 			'createSpace',
 			params,
-			configs
+			options
 		);
 	},
-	async saveTransactions (params: INotionEndpoints['saveTransaction']['payload'], configs: NotionEndpointsOptions) {
+	async saveTransactions (params: INotionEndpoints['saveTransaction']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['saveTransaction']['response']>(
 			'saveTransactions',
 			params,
-			configs
+			options
 		);
 	},
-	async enqueueTask (params: INotionEndpoints['enqueueTask']['payload'], configs: NotionEndpointsOptions) {
+	async enqueueTask (params: INotionEndpoints['enqueueTask']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['enqueueTask']['response']>(
 			'enqueueTask',
 			params,
-			configs
+			options
 		);
 	},
 	async setBookmarkMetadata (
 		params: INotionEndpoints['setBookmarkMetadata']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['setBookmarkMetadata']['response']>(
 			'setBookmarkMetadata',
 			params,
-			configs
+			options
 		);
 	},
 	async initializePageTemplate (
 		params: INotionEndpoints['initializePageTemplate']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['initializePageTemplate']['response']>(
 			'initializePageTemplate',
 			params,
-			configs
+			options
 		);
 	},
 	async initializeGoogleDriveBlock (
 		params: INotionEndpoints['initializeGoogleDriveBlock']['payload'],
-		configs: NotionEndpointsOptions
+		options: INotionEndpointsOptions
 	) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['initializeGoogleDriveBlock']['response']>(
 			'initializeGoogleDriveBlock',
 			params,
-			configs
+			options
 		);
 	},
-	async loginWithEmail (params: INotionEndpoints['loginWithEmail']['payload'], configs: NotionEndpointsOptions) {
+	async loginWithEmail (params: INotionEndpoints['loginWithEmail']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['loginWithEmail']['response']>(
 			'loginWithEmail',
 			params,
-			configs
+			options
 		);
 	},
-	async deleteBlocks (params: INotionEndpoints['deleteBlocks']['payload'], configs: NotionEndpointsOptions) {
+	async deleteBlocks (params: INotionEndpoints['deleteBlocks']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['deleteBlocks']['response']>(
 			'deleteBlocks',
 			params,
-			configs
+			options
 		);
 	}
 };

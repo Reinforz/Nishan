@@ -13,7 +13,8 @@ it(`data exists in cache`, async () => {
 		} as any;
 	const data = await NotionCache.fetchDataOrReturnCached('block', 'block_1', {
 		cache,
-		token: 'token'
+		token: 'token',
+		user_id: 'user_root_1'
 	});
 	expect(data).toBe(block_1);
 });

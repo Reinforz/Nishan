@@ -1,4 +1,4 @@
-import { NotionRequestConfigs } from '@nishans/endpoints';
+import { INotionEndpointsOptions } from '@nishans/endpoints';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TBlock, TView } from '@nishans/types';
 export interface ICache {
 	block: Map<string, TBlock>;
@@ -10,6 +10,6 @@ export interface ICache {
 	user_root: Map<string, IUserRoot>;
 	user_settings: Map<string, IUserSettings>;
 }
-export interface NotionCacheConfigs extends NotionRequestConfigs {
+export interface INotionCacheOptions extends INotionEndpointsOptions {
 	cache: ICache;
 }

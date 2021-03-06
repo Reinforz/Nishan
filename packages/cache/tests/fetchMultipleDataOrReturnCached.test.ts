@@ -30,7 +30,7 @@ describe('fetchMultipleDataOrReturnCached', () => {
 		});
 		const result_record_map = await NotionCache.fetchMultipleDataOrReturnCached(
 			[ [ 'block_1', 'block' ], [ 'block_2', 'block' ] ],
-			{ cache, token: 'token' }
+			{ cache, token: 'token', user_id: 'user_root_1' }
 		);
 		expect(result_record_map.block[0]).toBe(block_1);
 		expect(result_record_map.block[1]).toBe(block_2);

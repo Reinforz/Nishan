@@ -22,7 +22,8 @@ describe('constructAndSyncRecordsParams', () => {
 		await NotionCache.constructAndSyncRecordsParams([ [ '123', 'block' ] ], {
 			token: 'token',
 			interval: 0,
-			cache
+			cache,
+			user_id: 'user_root_1'
 		});
 
 		expect(syncRecordValuesMock.mock.calls[0][0]).toStrictEqual({
@@ -60,7 +61,8 @@ describe('constructAndSyncRecordsParams', () => {
 		await NotionCache.constructAndSyncRecordsParams([], {
 			cache,
 			token: 'token',
-			interval: 0
+			interval: 0,
+			user_id: 'user_root_1'
 		});
 
 		expect(syncRecordValuesMock).not.toHaveBeenCalled();

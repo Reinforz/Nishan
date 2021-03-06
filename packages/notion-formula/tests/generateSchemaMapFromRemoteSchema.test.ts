@@ -11,6 +11,7 @@ it('generateSchemaMap', async () => {
 
 	const schema_map = await NotionFormula.generateSchemaMapFromRemoteSchema(id, {
 		token: 'token',
+		user_id: 'user_root_1',
 		cache: {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ id, { collection_id: 'collection_1' } as any ] ]),

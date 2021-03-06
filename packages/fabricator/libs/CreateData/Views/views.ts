@@ -1,6 +1,6 @@
 import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { FabricatorProps, TViewCreateInput, TViewFilterCreateInput } from '../';
+import { INotionFabricatorOptions, TViewCreateInput, TViewFilterCreateInput } from '../';
 import { NotionFabricator } from '../../';
 import { generateViewData } from './utils';
 
@@ -13,12 +13,12 @@ import { generateViewData } from './utils';
  * * Populate the view map using the id and the name of the view
  * @param collection The collection related to the collection view
  * @param views Array of collection view inputs
- * @param props Nishan arg passed to the created view objects
+ * @param options Nishan arg passed to the created view objects
  */
 export async function views (
 	collection: Pick<ICollection, 'id' | 'schema'>,
 	views: TViewCreateInput[],
-	props: FabricatorProps,
+	options: INotionFabricatorOptions,
 	parent_id: string,
 	cb?: ((data: TView) => any)
 ) {
@@ -61,7 +61,7 @@ export async function views (
 			schema_map
 		);
 
-		const view_data = await generateViewData({ ...view, format: view_format, query2: view_query2 }, props, parent_id);
+		const view_data = await generateViewData({ ...view, format: view_format, query2: view_query2 }, options, parent_id);
 		views_data.push(view_data);
 		cb && (await cb(view_data));
 	}

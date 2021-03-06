@@ -1,7 +1,7 @@
 import { generateId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { TView } from '@nishans/types';
-import { FabricatorProps } from '../../';
+import { INotionFabricatorOptions } from '../../';
 
 /**
  * Construct and return the view data using the passed info and stores it in cache and operation stack
@@ -13,7 +13,7 @@ import { FabricatorProps } from '../../';
  */
 export async function generateViewData (
 	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
-	props: FabricatorProps,
+	options: INotionFabricatorOptions,
 	parent_id: string
 ) {
 	// construct the view id, using a custom id
@@ -30,16 +30,16 @@ export async function generateViewData (
 		alive: true,
 		format,
 		query2,
-		shard_id: props.shard_id,
-		space_id: props.space_id
+		shard_id: options.shard_id,
+		space_id: options.space_id
 	} as TView;
 	// Push the collection_view creation operation to the stack
 	await NotionOperations.executeOperations(
 		[ NotionOperations.Chunk.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))) ],
-		props
+		options
 	);
 	// Add the view to the cache
-	props.cache.collection_view.set(view_id, view_data);
-	props.logger && props.logger('CREATE', 'collection_view', view_data.id);
+	options.cache.collection_view.set(view_id, view_data);
+	options.logger && options.logger('CREATE', 'collection_view', view_data.id);
 	return view_data;
 }

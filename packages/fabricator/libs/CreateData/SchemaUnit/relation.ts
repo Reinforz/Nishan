@@ -2,7 +2,7 @@ import { NotionCache } from "@nishans/cache";
 import { createShortId } from "@nishans/idz";
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
-import { FabricatorProps } from "packages/fabricator/types";
+import { INotionFabricatorOptions } from "packages/fabricator/types";
 import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
 
 /**
@@ -11,13 +11,13 @@ import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
  * @param collection_data An object containing info used to make request, push to op stack and save to cache
  * @return The newly generated relation schema unit
  */
-export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData, props: FabricatorProps): Promise<RelationSchemaUnit>{
+export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData, options: INotionFabricatorOptions): Promise<RelationSchemaUnit>{
   const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name} = collection_data, child_relation_schema_unit_id = createShortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
-  const child_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, props);
+  const child_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, options);
   // Log the event of reading the child collection
-  props.logger && props.logger("READ", "collection", child_collection_id);
+  options.logger && options.logger("READ", "collection", child_collection_id);
 
   // Construct the relation_schema_unit, its erroneous now, as it uses incorrect data passed from the input
   const relation_schema_unit: RelationSchemaUnit = {
@@ -51,9 +51,9 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
       ...child_collection_relation_schema_unit,
       // Using the new name provided
       name: [[relation_schema_unit_name]],
-    })], props);
+    })], options);
     // Log since a new operation is taking place
-    props.logger && props.logger("UPDATE", "collection", child_collection_id)
+    options.logger && options.logger("UPDATE", "collection", child_collection_id)
   }
   // Return the constructed parent collection relation schema unit
   return relation_schema_unit;

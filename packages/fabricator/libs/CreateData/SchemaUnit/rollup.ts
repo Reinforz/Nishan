@@ -3,7 +3,7 @@ import { NotionErrors } from '@nishans/errors';
 import { ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { FabricatorProps, TRollupSchemaUnitInput } from '..';
+import { INotionFabricatorOptions, TRollupSchemaUnitInput } from '..';
 
 /**
  * Generate rollup schema unit
@@ -15,7 +15,7 @@ import { FabricatorProps, TRollupSchemaUnitInput } from '..';
 export async function rollup (
 	{ aggregation, name, collection_id, relation_property, target_property }: Omit<TRollupSchemaUnitInput, 'type'>,
 	schema_map: ISchemaMap,
-	props: Pick<FabricatorProps, 'token' | 'logger' | 'cache' | 'interval' | 'user_id'>
+	options: Pick<INotionFabricatorOptions, 'token' | 'logger' | 'cache' | 'interval' | 'user_id'>
 ) {
 	// Get the related schema unit from the passed schema map
 	const relation_schema_unit = NotionUtils.getSchemaMapUnit(schema_map, relation_property, [ 'relation_property' ]);
@@ -29,10 +29,14 @@ export async function rollup (
 		);
 	// Get the info required for making the request and store in cache
 	// Get the target collection from the passed cache
-	const target_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', collection_id, props);
+	const target_collection = await NotionCache.fetchDataOrReturnCached<ICollection>(
+		'collection',
+		collection_id,
+		options
+	);
 
 	// Log the collection read operation
-	props.logger && props.logger('READ', 'collection', collection_id);
+	options.logger && options.logger('READ', 'collection', collection_id);
 
 	const target_collection_schema_unit_map = NotionUtils.getSchemaMapUnit(
 		NotionUtils.generateSchemaMap(target_collection.schema),

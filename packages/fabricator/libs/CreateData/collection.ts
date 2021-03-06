@@ -2,23 +2,23 @@ import { generateId } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateData, FabricatorProps, ICollectionBlockInput } from './';
+import { CreateData, ICollectionBlockInput, INotionFabricatorOptions } from './';
 
 /**
  * Creates a collection from the input
  * @param input collection input
  * @param parent_id parent id of the collection 
- * @param props Data used to store to cache, ops stack, send request to get data
+ * @param options Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function collection (input: ICollectionBlockInput, parent_id: string, props: FabricatorProps, cb?: ((data: TView)=>any)) {
+export async function collection (input: ICollectionBlockInput, parent_id: string, options: INotionFabricatorOptions, cb?: ((data: TView)=>any)) {
 	// Generate the collection id
 	const collection_id = generateId(input.collection_id);
 	// Generate the schema to store in the collection
 	const [ schema, ,format ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,
 		name: input.name,
-	}, props);
+	}, options);
 
   NotionUtils.setDefault(input, {
     cover: '',
@@ -44,13 +44,13 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	};
 
 	// Push the collection create operation to stack
-  await NotionOperations.executeOperations([NotionOperations.Chunk.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], props);
+  await NotionOperations.executeOperations([NotionOperations.Chunk.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], options);
   // Create the views of the collection
-	const views_data = await CreateData.views(collection_data, input.views, props, parent_id, cb);
+	const views_data = await CreateData.views(collection_data, input.views, options, parent_id, cb);
 	// Store the collection in cache
-	props.cache.collection.set(collection_id, collection_data);
+	options.cache.collection.set(collection_id, collection_data);
 	// Log the collection creation
-	props.logger && props.logger('CREATE', 'collection', collection_id);
+	options.logger && options.logger('CREATE', 'collection', collection_id);
 
 	return [ collection_data, views_data ] as const;
 }

@@ -4,7 +4,7 @@ import { ISchemaMapValue, NotionFormula } from "@nishans/notion-formula";
 import { CollectionFormatPropertyVisibility, ICollection, Schema } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { ICollectionBlockInput, ParentCollectionData } from ".";
-import { FabricatorProps } from "../";
+import { INotionFabricatorOptions } from "../";
 import { CreateSchemaUnit } from "./SchemaUnit";
 /**
  * Generates a full schema from a passed input schema
@@ -12,10 +12,10 @@ import { CreateSchemaUnit } from "./SchemaUnit";
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function schema(input_schema_units: ICollectionBlockInput["schema"], options: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema}, props: FabricatorProps, cb?: ((data: ISchemaMapValue)=>any)){
+export async function schema(input_schema_units: ICollectionBlockInput["schema"], data: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema}, options: INotionFabricatorOptions, cb?: ((data: ISchemaMapValue)=>any)){
   // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
-  const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = options.current_schema ?? {}, schema_map = NotionUtils.generateSchemaMap(schema);
+  const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = data.current_schema ?? {}, schema_map = NotionUtils.generateSchemaMap(schema);
   // Iterate through each input schema units
   for (let index = 0; index < input_schema_units.length; index++) {
     const input_schema_unit = input_schema_units[index], 
@@ -35,10 +35,10 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
         schema[schema_id] = {...input_schema_unit, formula: NotionFormula.GenerateAST[input_schema_unit.formula[1]](input_schema_unit.formula[0] as any, schema_map)};
         break;
       case "rollup":
-        schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, props);
+        schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, options);
         break;
       case "relation":
-        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...options, parent_relation_schema_unit_id: schema_id}, props);
+        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...data, parent_relation_schema_unit_id: schema_id}, options);
         break;
       default:
         schema[schema_id] = input_schema_unit;

@@ -4,7 +4,7 @@ import { generateId } from "@nishans/idz";
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { CreateData, FabricatorProps, TBlockCreateInput } from "..";
+import { CreateData, INotionFabricatorOptions, TBlockCreateInput } from "..";
 import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
 
@@ -17,19 +17,19 @@ import { populatePermissions, stackCacheMap } from "./utils";
  * @param contents The content create input
  * @param parent_id Root parent id
  * @param parent_table Root parent table
- * @param props Props passed to the created block objects
+ * @param options Props passed to the created block objects
  */
-export async function contents(contents: TBlockCreateInput[], root_parent_id: string, root_parent_table: 'collection' | 'block' | 'space', props: FabricatorProps, cb?: ((data: TBlock)=>any)) {
+export async function contents(contents: TBlockCreateInput[], root_parent_id: string, root_parent_table: 'collection' | 'block' | 'space', options: INotionFabricatorOptions, cb?: ((data: TBlock)=>any)) {
   // Metadata used for all blocks
   const metadata = {
     created_time: Date.now(),
-    created_by_id: props.user_id,
+    created_by_id: options.user_id,
     created_by_table: 'notion_user',
     last_edited_time: Date.now(), 
     last_edited_by_table: "notion_user", 
-    last_edited_by_id: props.user_id,
-    space_id: props.space_id,
-    shard_id: props.shard_id,
+    last_edited_by_id: options.user_id,
+    space_id: options.space_id,
+    shard_id: options.shard_id,
     version: 0,
     alive: true
   } as const;
@@ -71,13 +71,13 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           collection_id: collection_id,
           view_ids: [],
         };
-        if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(props.user_id, content.isPrivate)];
-        await stackCacheMap<ICollectionViewPage>(data as any, props, cb);
+        if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(options.user_id, content.isPrivate)];
+        await stackCacheMap<ICollectionViewPage>(data as any, options, cb);
         
-        const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, props);
+        const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, options);
         const view_ids = views_data.map(view_data=>view_data.id);
-        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], view_ids) ], props);
-        (props.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
+        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], view_ids) ], options);
+        (options.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
         await traverse(content.rows, collection_id, "collection");
       } else if (content.type === "factory") {
         const factory_data: IFactory = {
@@ -86,13 +86,13 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         }
         
-        await stackCacheMap<IFactory>(factory_data, props, cb);
+        await stackCacheMap<IFactory>(factory_data, options, cb);
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "linked_db") {
         const { collection_id, views } = content, view_ids: string[] = [],
           // fetch the referenced collection id
-          collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', collection_id, props),
+          collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', collection_id, options),
           // Create the views separately, without creating the collection, as its only referencing one
           collection_view_data: ICollectionView = {
             ...common_data,
@@ -101,9 +101,9 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             collection_id,
             type: 'collection_view'
           };
-        await stackCacheMap<ICollectionView>(collection_view_data, props, cb);
-        const views_data = await CreateData.views(collection, views, props, block_id);
-        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], props);
+        await stackCacheMap<ICollectionView>(collection_view_data, options, cb);
+        const views_data = await CreateData.views(collection, views, options, block_id);
+        await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], options);
         views_data.forEach(({id})=>view_ids.push(id))
       }
       else if (content.type === "page") {
@@ -113,10 +113,10 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata,
           content: [],
           is_template: (content as any).is_template && parent_table === "collection",
-          permissions: [populatePermissions(props.user_id, content.isPrivate)],
+          permissions: [populatePermissions(options.user_id, content.isPrivate)],
         }
 
-        await stackCacheMap<IPage>(page_data, props, cb);
+        await stackCacheMap<IPage>(page_data, options, cb);
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "column_list") {
@@ -127,7 +127,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         };
 
-        await stackCacheMap(column_list_data, props, cb);
+        await stackCacheMap(column_list_data, options, cb);
 
         // For each contents create a column
         for (let index = 0; index < contents.length; index++) {
@@ -143,19 +143,19 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             content: []
           };
           
-          await stackCacheMap<IColumn>(column_data, props, cb);
+          await stackCacheMap<IColumn>(column_data, options, cb);
           await traverse(contents[index].contents, column_id, "block");
           column_ids.push(column_id);
         }
         await NotionOperations.executeOperations([
           NotionOperations.Chunk.block.set(block_id, ['content'], column_ids)
-        ], props) 
+        ], options) 
       } else if (content.type.match(/^(embed|gist|abstract|invision|framer|whimsical|miro|pdf|loom|codepen|typeform|tweet|maps|figma|video|audio|image)$/)) {
         const response = (await NotionEndpoints.Queries.getGenericEmbedBlockData({
           pageWidth: 500,
           source: (content as any).properties.source[0][0] as string,
           type: content.type as any
-        }, props));
+        }, options));
         
         NotionUtils.deepMerge(common_data, response);
         
@@ -164,7 +164,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         };
 
-        await stackCacheMap<any>(block_data, props, cb);
+        await stackCacheMap<any>(block_data, options, cb);
       }
       // Block is a non parent type
       else if (content.type !== "link_to_page") {
@@ -172,15 +172,15 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...common_data,
           ...metadata
         };
-        await stackCacheMap<any>(block_data, props, cb);
+        await stackCacheMap<any>(block_data, options, cb);
       }
 
       if (content.type === "bookmark") {
         await NotionEndpoints.Mutations.setBookmarkMetadata({
           blockId: block_id,
           url: (content.properties as WebBookmarkProps).link[0][0]
-        }, props);
-        await NotionCache.updateCacheManually([[block_id, "block"]], props);
+        }, options);
+        await NotionCache.updateCacheManually([[block_id, "block"]], options);
       }
 
       // If the type is link_to_page use the referenced page_id as the content id else use the block id 
@@ -188,9 +188,9 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       // if the parent table is either a block, or a space, or a collection and page is a template, push to child append operation to the stack
       if(parent_table === "block" || parent_table==="space" || (parent_table === "collection" && (content as any).is_template))
-        await updateChildContainer(parent_table, parent_id, true, content_id, props);
+        await updateChildContainer(parent_table, parent_id, true, content_id, options);
 
-      props.logger && props.logger("CREATE","block", content_id)
+      options.logger && options.logger("CREATE","block", content_id)
     }
   }
 

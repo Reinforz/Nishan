@@ -3,11 +3,19 @@ import { IPage } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { NotionGraphqlCommonBlockResolvers } from './utils';
 
+let initialized_cache = false;
+
 export const NotionGraphqlPageResolver = {
-	contents: async (parent: IPage, _: any, ctx: INotionCacheOptions) =>
-		(await NotionCache.fetchMultipleDataOrReturnCached(parent.content.map((id) => [ id, 'block' ]), ctx)).block,
-	properties: (parent: IPage) => ({
-		title: NotionUtils.extractInlineBlockContent(parent.properties.title)
+	contents: async (page: IPage, _: any, ctx: INotionCacheOptions) => {
+		if (!initialized_cache) {
+			await NotionCache.initializeCacheForSpecificData(page.id, 'block', ctx);
+			initialized_cache = true;
+		}
+		const data = page.content.map((content_id) => ctx.cache.block.get(content_id)).filter((block) => block);
+		return data;
+	},
+	properties: (page: IPage) => ({
+		title: NotionUtils.extractInlineBlockContent(page.properties.title)
 	}),
 	...NotionGraphqlCommonBlockResolvers
 };

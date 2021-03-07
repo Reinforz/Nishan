@@ -15,23 +15,26 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	if (type === 'block') {
 		const data = cache[type].get(id) as TBlock;
 		if (data.type.match(/^(page|collection_view_page|collection_view)$/)) {
-			const { recordMap } = await NotionEndpoints.Queries.loadPageChunk({
-				pageId: id,
-				limit: 100,
-				cursor: {
-					stack: [
-						[
-							{
-								table: 'block',
-								id: id,
-								index: 0
-							}
+			const { recordMap } = await NotionEndpoints.Queries.loadPageChunk(
+				{
+					pageId: id,
+					limit: 100,
+					cursor: {
+						stack: [
+							[
+								{
+									table: 'block',
+									id: id,
+									index: 0
+								}
+							]
 						]
-					]
+					},
+					chunkNumber: 1,
+					verticalColumns: false
 				},
-				chunkNumber: 1,
-				verticalColumns: false
-			});
+				options
+			);
 			NotionCache.saveToCache(recordMap, cache);
 		}
 

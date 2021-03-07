@@ -87,6 +87,7 @@ export const NotionGraphqlTypedefs = gql`
 		name: String!
 		schema: JSONObject!
 		parent: TCollectionBlock!
+		templates: [Page!]!
 	}
 
 	type Query {

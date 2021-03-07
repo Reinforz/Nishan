@@ -2,8 +2,17 @@ import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { ICollection, ICollectionViewPage } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 
+let initialized_cache = false;
+
 export const NotionGraphqlCollectionResolver = {
 	name: (parent: ICollection) => NotionUtils.extractInlineBlockContent(parent.name),
 	parent: async ({ parent_id }: ICollectionViewPage, _: any, ctx: INotionCacheOptions) =>
-		await NotionCache.fetchDataOrReturnCached('block', parent_id, ctx)
+		await NotionCache.fetchDataOrReturnCached('block', parent_id, ctx),
+	templates: async ({ id, template_pages }: ICollection, _: any, ctx: INotionCacheOptions) => {
+		if (!initialized_cache) {
+			await NotionCache.initializeCacheForSpecificData(id, 'collection', ctx);
+			initialized_cache = true;
+		}
+		return template_pages ? template_pages.map((template_page) => ctx.cache.block.get(template_page)) : [];
+	}
 };

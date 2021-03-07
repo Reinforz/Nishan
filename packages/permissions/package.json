@@ -1,6 +1,6 @@
 {
   "name": "@nishans/permissions",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A package to easily deal with notion permissions",
   "keywords": [
     "notion",
@@ -37,11 +37,11 @@
     "url": "https://github.com/Devorein/Nishan/issues"
   },
   "dependencies": {
-    "@nishans/endpoints": "^0.0.24",
-    "@nishans/operations": "^0.0.24",
-    "@nishans/utils": "^0.0.15"
+    "@nishans/endpoints": "^0.0.25",
+    "@nishans/operations": "^0.0.25",
+    "@nishans/utils": "^0.0.16"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.25"
+    "@nishans/types": "^0.0.26"
   }
 }

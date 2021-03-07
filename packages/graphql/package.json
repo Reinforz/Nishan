@@ -17,6 +17,9 @@
     "lib": "libs",
     "test": "tests"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/libs"
   ],
@@ -26,7 +29,6 @@
   },
   "scripts": {
     "prepublishOnly": "npm run build && npm run build:nocomments",
-    "prebuild": "npm run test",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
     "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
   },
@@ -34,15 +36,15 @@
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fgraphql"
   },
   "dependencies": {
-    "@nishans/core": "0.0.22",
-    "@nishans/utils": "0.0.15",
-    "@nishans/endpoints": "0.0.24",
-    "@nishans/cache": "0.0.26",
+    "@nishans/core": "0.0.23",
+    "@nishans/utils": "0.0.16",
+    "@nishans/endpoints": "0.0.25",
+    "@nishans/cache": "0.0.27",
     "apollo-server": "^2.21.0",
     "graphql": "^15.5.0",
     "graphql-type-json": "^0.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.25"
+    "@nishans/types": "0.0.26"
   }
 }

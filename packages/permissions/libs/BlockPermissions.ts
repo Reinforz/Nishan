@@ -24,7 +24,7 @@ interface UserIdentifier {
 	email?: string;
 }
 
-type NotionPermissionsCtorArg = INotionOperationOptions & { user_id: string, id: string; cache: { block: Map<string, TBlock> } };
+type NotionPermissionsCtorArg = INotionOperationOptions & { id: string; cache: { block: Map<string, TBlock> } };
 
 export class NotionBlockPermissions {
 	id: string;

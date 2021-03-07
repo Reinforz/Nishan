@@ -77,6 +77,7 @@ export const NotionGraphqlServerTypedefs = gql`
 		space: Space!
 		last_edited_by: NotionUser!
 		created_by: NotionUser!
+		contents: [TBlock!]!
 	}
 
 	type Collection {

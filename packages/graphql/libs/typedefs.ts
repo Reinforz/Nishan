@@ -52,6 +52,7 @@ export const NotionGraphqlTypedefs = gql`
 		last_edited_by: NotionUser!
 		created_by: NotionUser!
 		views: [View!]!
+		rows: [Page!]!
 	}
 
 	type CollectionView implements Block {
@@ -63,6 +64,7 @@ export const NotionGraphqlTypedefs = gql`
 		last_edited_by: NotionUser!
 		created_by: NotionUser!
 		views: [View!]!
+		rows: [Page!]!
 	}
 
 	type PageProperties {

@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-export const NotionGraphqlServerTypedefs = gql`
+export const NotionGraphqlTypedefs = gql`
 	scalar JSONObject
 
 	union TParent = Page | Space

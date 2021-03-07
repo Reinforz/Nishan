@@ -1,9 +1,9 @@
 import { INotionCacheOptions } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { IPage, ISpace } from '@nishans/types';
-import { notionUserResolvers } from './utils';
+import { NotionGraphqlNotionUserResolvers } from './utils';
 
-export const spaceResolver = {
+export const NotionGraphqlSpaceResolver = {
 	pages: async ({ pages: page_ids }: ISpace, _: any, ctx: INotionCacheOptions) => {
 		const { recordMap } = await NotionEndpoints.Queries.syncRecordValues(
 			{
@@ -26,5 +26,5 @@ export const spaceResolver = {
 		}
 		return pages;
 	},
-	...notionUserResolvers
+	...NotionGraphqlNotionUserResolvers
 };

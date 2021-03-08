@@ -1,5 +1,5 @@
 import { TView } from '@nishans/types';
-import { TViewExtracted } from '../..';
+import { TViewExtracted } from '../';
 
 export const extractViewsData = (views_data: TView[] | TViewExtracted[]) => {
 	return (views_data as any).map((view_data: any) => {

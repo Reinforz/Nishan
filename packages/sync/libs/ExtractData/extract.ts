@@ -1,4 +1,4 @@
-import { LocalFileStructure } from '../..';
+import { LocalFileStructure } from '../';
 import { extractCollectionData } from './collection';
 import { extractPagesData } from './pages';
 import { DataShape } from './types';

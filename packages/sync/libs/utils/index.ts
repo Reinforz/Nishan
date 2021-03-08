@@ -1,4 +1,3 @@
-export * from './extractData';
 export * from './readFromFile';
 export * from './readFromMongodb';
 export * from './readFromNotion';

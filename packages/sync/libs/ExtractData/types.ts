@@ -1,5 +1,5 @@
 import { ICollection, IPage, TView } from '@nishans/types';
-import { CollectionExtracted, PageExtracted, TViewExtracted } from '../..';
+import { CollectionExtracted, PageExtracted, TViewExtracted } from '../';
 
 export interface DataShape {
 	collection: ICollection | CollectionExtracted;

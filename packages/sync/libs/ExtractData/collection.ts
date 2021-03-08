@@ -1,5 +1,5 @@
 import { ICollection } from '@nishans/types';
-import { CollectionExtracted } from '../..';
+import { CollectionExtracted } from '../';
 
 export const extractCollectionData = ({
 	description,

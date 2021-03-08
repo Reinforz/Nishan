@@ -4,7 +4,7 @@ import path from 'path';
 import { NotionSync } from '../';
 import { LocalFileStructure } from '../types';
 
-export async function storeInFile (filepath: string, result_data: LocalFileStructure) {
+export async function writeToFile (filepath: string, result_data: LocalFileStructure) {
 	const ext = path.extname(filepath);
 	if (ext === '.json')
 		await fs.promises.writeFile(

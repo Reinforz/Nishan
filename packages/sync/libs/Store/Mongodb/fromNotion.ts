@@ -1,5 +1,5 @@
 import { INotionCacheOptions } from '@nishans/cache';
-import { readFromNotion, storeInMongodb } from '../../utils';
+import { NotionSync } from '../../';
 
 /**
  * Stores data from notion collection block into local/remote mongodb instance
@@ -12,5 +12,5 @@ export async function storeInMongodbFromNotion (
 	database_id: string,
 	options: INotionCacheOptions
 ) {
-	await storeInMongodb(connection_uri, await readFromNotion(database_id, options));
+	await NotionSync.Write.toMongodb(connection_uri, await NotionSync.Read.fromNotion(database_id, options));
 }

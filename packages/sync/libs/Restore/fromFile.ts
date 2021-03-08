@@ -1,5 +1,5 @@
 import { INotionOperationOptions } from '@nishans/operations';
-import { readFromFile, storeInNotion } from '../utils';
+import { NotionSync } from '../';
 
 /**
  * Restore notion from data stored in local file
@@ -8,5 +8,5 @@ import { readFromFile, storeInNotion } from '../utils';
  * @param space_cb A callback to get the space where the restoration will take place
  */
 export async function notionSyncRestoreFromFile (filepath: string, options: INotionOperationOptions) {
-	await storeInNotion(await readFromFile(filepath), options);
+	await NotionSync.Write.toNotion(await NotionSync.Read.fromFile(filepath), options);
 }

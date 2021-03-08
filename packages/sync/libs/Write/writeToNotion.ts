@@ -3,7 +3,7 @@ import { IUserPermission } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
 import { LocalFileStructure } from '../types';
 
-export async function storeInNotion (result_data: LocalFileStructure, options: INotionOperationOptions) {
+export async function writeToNotion (result_data: LocalFileStructure, options: INotionOperationOptions) {
 	const metadata = {
 		alive: true,
 		created_time: Date.now(),

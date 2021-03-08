@@ -1,4 +1,4 @@
-import { readFromMongodb, storeInFile } from '../../utils';
+import { NotionSync } from '../../';
 
 /**
  * Stores data from remote/local mongodb instance into a local file
@@ -6,5 +6,5 @@ import { readFromMongodb, storeInFile } from '../../utils';
  * @param filepath full path of the output file
  */
 export async function storeInFileFromMongodb (connection_uri: string, filepath: string) {
-	await storeInFile(filepath, await readFromMongodb(connection_uri));
+	await NotionSync.Write.toFile(filepath, await NotionSync.Read.fromMongodb(connection_uri));
 }

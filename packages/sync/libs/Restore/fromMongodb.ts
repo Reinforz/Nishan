@@ -1,5 +1,5 @@
 import { INotionOperationOptions } from '@nishans/operations';
-import { readFromMongodb, storeInNotion } from '../utils';
+import { NotionSync } from '../';
 
 /**
  * Restore notion from data stored in local or remote mongodb instance
@@ -8,5 +8,5 @@ import { readFromMongodb, storeInNotion } from '../utils';
  * @param space_cb A callback to get the space where the restoration will take place
  */
 export async function notionSyncRestoreFromMongodb (connection_uri: string, options: INotionOperationOptions) {
-	await storeInNotion(await readFromMongodb(connection_uri), options);
+	await NotionSync.Write.toNotion(await NotionSync.Read.fromMongodb(connection_uri), options);
 }

@@ -2532,15 +2532,102 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/cache@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.26.tgz#0e999cc7bff518e3cb3d824243f8a8060dd8a7b2"
+  integrity sha512-t68mbu4BsDLd8EuMcJPQdnhCVOaapITN1OvoHuYikyvH4me3ZpVhshKGrKr1fum2PAC8uT5UGBhdea4LFL5oKA==
+  dependencies:
+    "@nishans/endpoints" "0.0.24"
+    "@nishans/errors" "0.0.21"
+
+"@nishans/constants@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.16.tgz#f46175ac0de64a2f1ff49e994d3119342fd45ab4"
+  integrity sha512-zkJg9LDBWULMFaoMCxpD0Wiu4eZ1z/qXhire4Mz3IaU3y24gt24E9ieTBOAGT65G0tzDAK5kkZNPR9RafL+Rdw==
+
+"@nishans/core@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.22.tgz#dc505c4810fc0417ba6538d97177304aaf693bb8"
+  integrity sha512-EdZYhOPtMuF4JG8M0JPh+8PZO1TVnJ34Su4bEM2953XT8Uj95GLJF8EcaVG1iiPnUFV79XMAnX6LEbv6Ze1a2Q==
+  dependencies:
+    "@nishans/cache" "^0.0.26"
+    "@nishans/constants" "0.0.16"
+    "@nishans/endpoints" "^0.0.24"
+    "@nishans/errors" "^0.0.21"
+    "@nishans/fabricator" "^0.0.20"
+    "@nishans/idz" "^0.0.15"
+    "@nishans/notion-formula" "^0.0.23"
+    "@nishans/operations" "^0.0.24"
+    "@nishans/permissions" "0.0.15"
+    "@nishans/utils" "0.0.15"
+    colors "^1.4.0"
+
+"@nishans/endpoints@0.0.24", "@nishans/endpoints@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.24.tgz#a4ce7a997dacecf51c031a12196713040b63415d"
+  integrity sha512-F/aH9Oz0Xn50RGpx+HyHkcAjODehi882wTTTQymA0Oosbsn3zZ/8Xesg2FBerjQ579sG9iG2U/A9S8D6V7NJJg==
+  dependencies:
+    axios "^0.21.1"
+    uuid "^8.3.2"
+
+"@nishans/errors@0.0.21", "@nishans/errors@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.21.tgz#a226a57c47f19b81f2f274971805caae88b50335"
+  integrity sha512-kXaKCsNCk9MXNbne0LuuJS0UZnlBOoYnfwfS2uUd3nzBgffBa+s6b4R2V2BOWTmwKYY0/+UY3YXRdeZJW3ZTcw==
+  dependencies:
+    colors "^1.4.0"
+
+"@nishans/fabricator@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@nishans/fabricator/-/fabricator-0.0.20.tgz#7d52d31fa67e8f43d352ba893f8a6732cc942b14"
+  integrity sha512-eTbcRxG7257L9Kh50i/+dQfWosq1feVQH+O8vEvecG6DxyKPiIiGU5jjiWHQ+OEmBqzrq0k8JboG8dDhVV6S6A==
+  dependencies:
+    "@nishans/cache" "^0.0.26"
+    "@nishans/endpoints" "^0.0.24"
+    "@nishans/errors" "^0.0.21"
+    "@nishans/idz" "0.0.15"
+    "@nishans/notion-formula" "^0.0.23"
+    "@nishans/operations" "^0.0.24"
+    "@nishans/utils" "0.0.15"
+
 "@nishans/inline-blocks@0.0.20":
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.20.tgz#c51caccd444d156a0e5eb1936871c3bd9ea2a038"
   integrity sha512-Umo8c2SR+7SLVucW7a/xsvxqSIyv3WJ4mxrhfLol10sO62qOI4h9SvZCazU0dtuAQiePAr8ZGUFR0/7BsMzqhw==
 
+"@nishans/notion-formula@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@nishans/notion-formula/-/notion-formula-0.0.23.tgz#4fd79319fda0e1482a48a38ecfd46eb41aed620d"
+  integrity sha512-eVPetQdtM7b8/ratDT8gaxjc/l590KFHxYZKQcWzJzf1UQsLt3uK0BKcltzVqjqLemc5+FN3h1REtwGv0i+WEQ==
+  dependencies:
+    "@nishans/endpoints" "0.0.24"
+    "@nishans/idz" "0.0.15"
+
+"@nishans/operations@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.24.tgz#499ebfd48450ddaaa71f1fa54d150a0fede6d24b"
+  integrity sha512-PGRjCfLvoTnet52WI6lyqkYji7DNUKMgZ7qOo6DTxAF/iGy/QZ1sTQV+Spu9fhcNR8FGK8dv5Wo/r561Mu69og==
+  dependencies:
+    "@nishans/endpoints" "0.0.24"
+
+"@nishans/permissions@0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@nishans/permissions/-/permissions-0.0.15.tgz#01521cf602492da6f7c5c40d4410aece6073ea74"
+  integrity sha512-vPd+GjEXged9qiGsFD+F6V9kN0qtRuZwOEzy+ZhKp+W4f28jAJW0r4NurCIt5aNkd70qqotXgOfIM3WWiz8KQw==
+  dependencies:
+    "@nishans/endpoints" "^0.0.24"
+    "@nishans/operations" "^0.0.24"
+    "@nishans/utils" "^0.0.15"
+
 "@nishans/types@0.0.22":
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.22.tgz#600cacb51fa57359d1865d9fc9b5df021f6fc39a"
   integrity sha512-WV14+fJwZTYLx8B6RcWD44kZkA20iVhdu2sGVHDkXO3EFMe78FUig+dvW3FjQ8j6InvroXo9kWUXHeuFEDmvpQ==
+
+"@nishans/types@0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.25.tgz#2bac956d3dd976c147433faa00a2b015b2e5588f"
+  integrity sha512-oouG/wN55ewbj5jNSpj9I2WNBk2sFVk7Hjxk9SEkVPFUYVM4TKOEoaUUJOH3QDZc50iroQ0PkftZABxa78bQuQ==
 
 "@nishans/types@^0.0.10":
   version "0.0.10"
@@ -2552,10 +2639,12 @@
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.12.tgz#a5f3e4dd99c7d3f2c8cc048439eef24d1a9448b4"
   integrity sha512-sVde7qazhe6bx87Hv3quvj8jH/WXGk3+deMdHIvkx8WscFgItRZayFkG9BIixO+p6Fh2w0jGBMa4F0eNSRNPQw==
 
-"@nishans/types@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.24.tgz#3241fb53e0817bf05227c083bd151a0de9918a68"
-  integrity sha512-bb1Lb8jWGxwf7zG2+We6lVK7oVufpXnXc4pwnB07d3n/updPfDPcUCbP6KGCmixBbSM+5dw/nEOM6V/ul/pxCQ==
+"@nishans/utils@0.0.15", "@nishans/utils@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.15.tgz#6a942e560c18f9b0cc737352b5b07370f2c30e0b"
+  integrity sha512-Y+qZ1oUy3acpmyNET7kbtR7maVfB47jJ8zL6qMz9PdvQsKPzTRzI+b78YHg8IhDFV0xG2VrnA8aycfab+9W4rg==
+  dependencies:
+    "@nishans/errors" "^0.0.21"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -4032,9 +4121,9 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@>= 8", "@types/node@^14.14.17", "@types/node@^14.14.22":
-  version "14.14.31"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.31.tgz#72286bd33d137aa0d152d47ec7c1762563d34055"
-  integrity sha512-vFHy/ezP5qI0rFgJ7aQnjDXwAMrG0KqqIH7tQG5PPv3BWBayOPIQNBjVc/P6hhdZfMx51REc6tfDNXHUio893g==
+  version "14.14.32"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.32.tgz#90c5c4a8d72bbbfe53033f122341343249183448"
+  integrity sha512-/Ctrftx/zp4m8JOujM5ZhwzlWLx22nbQJiVqz8/zE15gOeEW+uly3FSX4fGFpcfEvFzXcMCJwq9lGVWgyARXhg==
 
 "@types/node@^10.1.0":
   version "10.17.54"

@@ -2,6 +2,11 @@ import { MongoClient } from 'mongodb';
 import { NotionSync } from '../';
 import { CollectionExtracted, PageExtracted, TViewExtracted } from '../types';
 
+/**
+ * Reads and extracts data from a mongodb instance
+ * @param connection_uri Connection uri of the mongodb instance
+ * @returns Extracted notion data from the mongodb instance
+ */
 export async function readFromMongodb (connection_uri: string) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	try {

@@ -2,6 +2,11 @@ import { MongoClient } from 'mongodb';
 import { NotionSync } from '../';
 import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../types';
 
+/**
+ * Writes extracted notion data to a mongodb instance
+ * @param connection_uri Connection uri of the mongodb instance
+ * @param result_data Extracted notion data to write
+ */
 export async function writeToMongodb (connection_uri: string, result_data: LocalFileStructure) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	const { collection, views, row_pages, template_pages } = NotionSync.ExtractData.extract(result_data);

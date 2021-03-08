@@ -4,6 +4,11 @@ import path from 'path';
 import { NotionSync } from '../';
 import { LocalFileStructure } from '../types';
 
+/**
+ * Reads and extracts data from a local file
+ * @param file_path Path of the file to read from
+ * @returns Extracted data from the read file
+ */
 export async function readFromFile (file_path: string) {
 	const ext = path.extname(file_path);
 	let data: LocalFileStructure = {} as any;

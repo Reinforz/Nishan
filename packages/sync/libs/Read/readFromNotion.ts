@@ -2,6 +2,12 @@ import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { ICollection, ICollectionViewPage, IPage, TView } from '@nishans/types';
 import { NotionSync } from '../';
 
+/**
+ * Reads and extracts data from a remote notion database
+ * @param database_id Id of the notion database
+ * @param options Notion Cache options
+ * @returns Extracted data from the read data
+ */
 export async function readFromNotion (database_id: string, options: INotionCacheOptions) {
 	await NotionCache.initializeCacheForSpecificData(database_id, 'block', options);
 	const collection_block = options.cache.block.get(database_id) as ICollectionViewPage;

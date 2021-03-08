@@ -3,6 +3,11 @@ import { IUserPermission } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
 import { LocalFileStructure } from '../types';
 
+/**
+ * Writes extracted notion data to a remote notion block
+ * @param result_data Extracted notion data
+ * @param options Notion operations options
+ */
 export async function writeToNotion (result_data: LocalFileStructure, options: INotionOperationOptions) {
 	const metadata = {
 		alive: true,

@@ -4,7 +4,7 @@ import { NotionSync } from '../../';
 /**
  * Stores data from notion collection block into local/remote mongodb instance
  * @param connection_uri Mongodb connection uri
- * @param database_id Id of the notion collection block
+ * @param database_id Id of the notion database
  * @param options Notion Cache options
  */
 export async function storeInMongodbFromNotion (

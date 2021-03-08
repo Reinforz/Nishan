@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionGraphqlNotionUserResolvers } from '../../../libs/Resolvers/utils/notionUserResolvers';
+import { NotionGraphqlNotionUserResolvers } from '../../../libs/Resolvers/utils';
 
 ([ `last_edited_by`, 'created_by' ] as (keyof typeof NotionGraphqlNotionUserResolvers)[]).forEach((method) => {
 	it(method, async () => {

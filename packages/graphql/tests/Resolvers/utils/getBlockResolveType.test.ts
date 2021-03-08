@@ -1,4 +1,4 @@
-import { getBlockResolveType } from '../libs/getBlockResolveType';
+import { getBlockResolveType } from '../../../libs/Resolvers/utils';
 
 describe('getBlockResolveType', () => {
 	it(`type = page`, () => {
@@ -9,5 +9,8 @@ describe('getBlockResolveType', () => {
 	});
 	it(`type = collection_view`, () => {
 		expect(getBlockResolveType({ type: 'collection_view' } as any)).toStrictEqual('CollectionView');
+	});
+	it(`type = header`, () => {
+		expect(getBlockResolveType({ type: 'header' } as any)).toStrictEqual(undefined);
 	});
 });

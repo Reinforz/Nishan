@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionGraphqlCommonBlockResolvers } from '../../../libs/Resolvers/utils/commonBlockResolvers';
+import { NotionGraphqlCommonBlockResolvers } from '../../../libs/Resolvers/utils';
 
 it(`parent`, async () => {
 	const block_1: any = { parent_id: 'block_2', parent_table: 'block' },

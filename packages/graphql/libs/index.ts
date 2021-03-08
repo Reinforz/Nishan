@@ -1,4 +1,4 @@
-export * from './getBlockResolveType';
+export * from './Resolvers/utils/getBlockResolveType';
 export * from './types';
 
 import { NotionGraphqlResolvers } from './Resolvers';

@@ -1,22 +1,14 @@
-import { INotionCacheOptions, NotionCache } from '@nishans/cache';
-import { IPage, ISpace } from '@nishans/types';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { getBlockResolveType } from '../';
 import { NotionGraphqlCollectionResolver } from './collection';
 import { NotionGraphqlCollectionBlockResolver } from './collection_block';
 import { NotionGraphqlPageResolver } from './page';
+import { NotionGraphqlQueryResolvers } from './query';
 import { NotionGraphqlSpaceResolver } from './space';
+import { getBlockResolveType, getParentResolveType } from './utils';
 
 export const NotionGraphqlResolvers = {
 	JSONObject: GraphQLJSONObject,
-	Query: {
-		space: async (_: any, args: { id: string }, ctx: INotionCacheOptions) =>
-			await NotionCache.fetchDataOrReturnCached('space', args.id, ctx),
-		page: async (_: any, args: { id: string }, ctx: INotionCacheOptions) =>
-			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx),
-		block: async (_: any, args: { id: string }, ctx: INotionCacheOptions) =>
-			await NotionCache.fetchDataOrReturnCached('block', args.id, ctx)
-	},
+	Query: NotionGraphqlQueryResolvers,
 	Page: NotionGraphqlPageResolver,
 	Collection: NotionGraphqlCollectionResolver,
 	CollectionView: NotionGraphqlCollectionBlockResolver,
@@ -26,10 +18,7 @@ export const NotionGraphqlResolvers = {
 		__resolveType: getBlockResolveType
 	},
 	TParent: {
-		__resolveType: (obj: ISpace | IPage) => {
-			if ((obj as IPage).type === 'page') return 'Page';
-			else return 'Space';
-		}
+		__resolveType: getParentResolveType
 	},
 	TCollectionBlock: {
 		__resolveType: getBlockResolveType

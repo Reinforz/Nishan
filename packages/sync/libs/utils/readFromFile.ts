@@ -2,7 +2,7 @@ import fs from 'fs';
 import { load } from 'js-yaml';
 import path from 'path';
 import { LocalFileStructure } from '../types';
-import { extractData } from './extractData';
+import { ExtractData } from './extractData';
 
 export async function readFromFile (file_path: string) {
 	const ext = path.extname(file_path);
@@ -12,5 +12,5 @@ export async function readFromFile (file_path: string) {
 		data = load(await fs.promises.readFile(file_path, 'utf-8')) as LocalFileStructure;
 	else throw new Error('Unsupported output file extension. Use either json or yaml file when specifying the filepath');
 
-	return extractData(data as any);
+	return ExtractData.extract(data as any);
 }

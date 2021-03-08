@@ -1,6 +1,6 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { ICollection, ICollectionViewPage, IPage, TView } from '@nishans/types';
-import { extractData } from './extractData';
+import { ExtractData } from './extractData';
 
 export async function readFromNotion (database_id: string, options: INotionCacheOptions) {
 	await NotionCache.initializeCacheForSpecificData(database_id, 'block', options);
@@ -25,9 +25,7 @@ export async function readFromNotion (database_id: string, options: INotionCache
 
 	collection_block.view_ids.forEach((view_id) => views.push(options.cache.collection_view.get(view_id) as TView));
 
-	console.log({ views, template_pages, row_pages, collection_block, collection });
-
-	return extractData({
+	return ExtractData.extract({
 		collection,
 		views,
 		template_pages,

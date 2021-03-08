@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../types';
-import { extractData } from './extractData';
+import { ExtractData } from './extractData';
 
 export async function storeInMongodb (connection_uri: string, result_data: LocalFileStructure) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
-	const { collection, views, row_pages, template_pages } = extractData(result_data);
+	const { collection, views, row_pages, template_pages } = ExtractData.extract(result_data);
 	try {
 		await client.connect();
 		const db = client.db();

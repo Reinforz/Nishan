@@ -80,7 +80,7 @@ describe('initializeCacheForSpecificData', () => {
 			user_id: 'user_root_1'
 		});
 
-		expect(loadPageChunkMock).toHaveBeenCalledWith({
+		expect(loadPageChunkMock.mock.calls[0][0]).toStrictEqual({
 			pageId: 'block_1',
 			limit: 100,
 			cursor: {

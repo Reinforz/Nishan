@@ -77,3 +77,8 @@ jobs:
           files: ./packages/utils/coverage/lcov.info
           flags: utils
           name: "@nishans/utils"
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./packages/graphql/coverage/lcov.info
+          flags: graphql
+          name: "@nishans/graphql"

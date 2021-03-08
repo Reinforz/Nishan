@@ -35,7 +35,8 @@
     "js-yaml": "^4.0.0",
     "mongodb": "^3.6.3",
     "uuid": "^8.3.2",
-    "@nishans/fabricator": "0.0.21"
+    "@nishans/cache": "0.0.27",
+    "@nishans/operations": "0.0.25"
   },
   "devDependencies": {
     "@nishans/types": "0.0.22",

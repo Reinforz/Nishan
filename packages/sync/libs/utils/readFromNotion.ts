@@ -23,9 +23,9 @@ export async function readFromNotion (database_id: string, options: INotionCache
 		}
 	}
 
-	for (const [ , view ] of options.cache.collection_view) {
-		views.push(view);
-	}
+	collection_block.view_ids.forEach((view_id) => views.push(options.cache.collection_view.get(view_id) as TView));
+
+	console.log({ views, template_pages, row_pages, collection_block, collection });
 
 	return extractData({
 		collection,

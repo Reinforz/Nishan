@@ -13,7 +13,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	const container: UpdateCacheManuallyParam = [],
 		extra_container: UpdateCacheManuallyParam = [];
 	if (type === 'block') {
-		const data = cache[type].get(id) as TBlock;
+		const data = (await NotionCache.fetchDataOrReturnCached('block', id, options)) as TBlock;
 		if (data.type.match(/^(page|collection_view_page|collection_view)$/)) {
 			const { recordMap } = await NotionEndpoints.Queries.loadPageChunk(
 				{
@@ -44,18 +44,18 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		NotionCache.extractSpaceAndParentId(data).forEach((sync_record_value) => container.push(sync_record_value));
 	} else if (type === 'space') {
 		// If the type is space, fetch its pages and notion_user
-		const data = cache[type].get(id) as ISpace;
+		const data = (await NotionCache.fetchDataOrReturnCached('space', id, options)) as ISpace;
 		data.pages.forEach((id) => container.push([ id, 'block' ]));
 		NotionCache.extractNotionUserIds(data).forEach((notion_user_id) =>
 			container.push([ notion_user_id, 'notion_user' ])
 		);
 	} else if (type === 'user_root') {
 		// If the type is user_root, fetch its space_view
-		const data = cache[type].get(id) as IUserRoot;
+		const data = (await NotionCache.fetchDataOrReturnCached('user_root', id, options)) as IUserRoot;
 		data.space_views.map((space_view) => container.push([ space_view, 'space_view' ]));
 	} else if (type === 'collection') {
 		// If the type is collection, fetch its template_pages and all of its row_pages
-		const data = cache[type].get(id) as ICollection;
+		const data = (await NotionCache.fetchDataOrReturnCached('collection', id, options)) as ICollection;
 		if (data.template_pages) data.template_pages.forEach((id) => container.push([ id, 'block' ]));
 		// Fetching the row_pages of collection
 		const { recordMap } = await NotionEndpoints.Queries.queryCollection(
@@ -77,7 +77,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		container.push([ data.parent_id, 'block' ]);
 	} else if (type === 'space_view') {
 		// If the type is space_view, fetch its bookmarked_pages
-		const data = cache[type].get(id) as ISpaceView;
+		const data = (await NotionCache.fetchDataOrReturnCached('space_view', id, options)) as ISpaceView;
 		if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 		container.push([ data.space_id, 'space' ]);
 		container.push([ data.parent_id, 'user_root' ]);

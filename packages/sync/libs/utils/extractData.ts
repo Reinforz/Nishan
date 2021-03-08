@@ -1,5 +1,5 @@
-import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../src/types';
 import { ICollection, IPage, TView } from '@nishans/types';
+import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../types';
 
 export const extractCollectionData = ({
 	description,

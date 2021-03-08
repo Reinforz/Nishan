@@ -8,7 +8,7 @@ export async function readFromMongodb (connection_uri: string) {
 		await client.connect();
 		const db = client.db();
 		return extractData({
-			collection: (await db.collection<CollectionExtracted>('collection').find({}).toArray())[0],
+			collection: await db.collection<CollectionExtracted>('collection').findOne({}),
 			views: await db.collection<TViewExtracted>('views').find({}).toArray(),
 			row_pages: await db.collection<PageExtracted>('row_pages').find({}).toArray(),
 			template_pages: await db.collection<PageExtracted>('template_pages').find({}).toArray()

@@ -1,92 +1,37 @@
-import {
-  ICollection,
-  IPage,
-  NotionEndpoints,
-  TCollectionBlock,
-  TView
-} from '@nishans/types';
-import axios from 'axios';
-import { idToUuid } from '.';
+import { ICache, INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { ICollection, ICollectionViewPage, IPage, TView } from '@nishans/types';
 import { extractData } from './extractData';
 
-export async function readFromNotion (token: string, database_id: string) {
-	const headers = {
-		headers: {
-			cookie: `token_v2=${token};`
+export async function readFromNotion (database_id: string, options: INotionCacheOptions & { cache?: ICache }) {
+	options.cache = options.cache || NotionCache.createDefaultCache();
+	await NotionCache.initializeCacheForSpecificData(database_id, 'block', options);
+	const collection_block = options.cache.block.get(database_id) as ICollectionViewPage;
+
+	await NotionCache.initializeCacheForSpecificData(collection_block.collection_id, 'collection', options);
+	const collection = options.cache.collection.get(collection_block.collection_id) as ICollection;
+
+	const row_pages: IPage[] = [],
+		template_pages: IPage[] = [],
+		views: TView[] = [];
+	for (const [ , block ] of options.cache.block) {
+		if (
+			block.type === 'page' &&
+			block.parent_id === collection_block.collection_id &&
+			block.parent_table === 'collection'
+		) {
+			if (block.is_template) template_pages.push(block);
+			else row_pages.push(block);
 		}
-	};
-	database_id = idToUuid(database_id);
-	const { data } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
-		'https://www.notion.so/api/v3/syncRecordValues',
-		{
-			requests: [
-				{
-					id: database_id,
-					table: 'block',
-					version: 0
-				}
-			]
-		},
-		headers
-	);
-
-	const block_data = data.recordMap.block[database_id].value as TCollectionBlock;
-
-	const { collection_id, view_ids } = block_data;
-
-	const { data: { recordMap } } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
-		'https://www.notion.so/api/v3/syncRecordValues',
-		{
-			requests: [
-				{
-					id: collection_id,
-					table: 'collection',
-					version: 0
-				},
-				...view_ids.map((view_id) => ({ id: view_id, table: 'collection_view', version: 0 }))
-			]
-		},
-		headers
-	);
-	const collection = recordMap.collection[collection_id].value as ICollection;
-	const views = Object.values(recordMap.collection_view).map(({ value }) => value) as TView[];
-
-	const { data: { recordMap: { block } } } = await axios.post<NotionEndpoints["queryCollection"]["response"]>(
-		'https://www.notion.so/api/v3/queryCollection',
-		{
-			collectionId: collection_id,
-			collectionViewId: '',
-			query: {},
-			loader: {
-				type: 'table',
-				loadContentCover: true
-			}
-		},
-		headers
-	);
-
-	const row_pages = Object.values(block)
-		.filter(
-			({ value }) => value.type === 'page' && value.parent_table === 'collection' && value.parent_id === collection_id
-		)
-		.map(({ value }) => value) as IPage[];
-
-	const template_pages_data: IPage[] = [];
-
-	if (collection.template_pages) {
-		const { data: { recordMap: { block: template_blocks } } } = await axios.post<NotionEndpoints["syncRecordValues"]["response"]>(
-			'https://www.notion.so/api/v3/syncRecordValues',
-			{
-				requests: [ ...collection.template_pages.map((page_id) => ({ id: page_id, table: 'block', version: 0 })) ]
-			},
-			headers
-		);
-		Object.values(template_blocks).forEach(({ value }) => template_pages_data.push(value as IPage));
 	}
-  return extractData({
-    collection,
-    views,
-    template_pages: collection.template_pages ?? [] as any,
-    row_pages
-  })
+
+	for (const [ , view ] of options.cache.collection_view) {
+		views.push(view);
+	}
+
+	return extractData({
+		collection,
+		views,
+		template_pages,
+		row_pages
+	});
 }

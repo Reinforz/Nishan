@@ -11,8 +11,7 @@ export const NotionGraphqlPageResolver = {
 			await NotionCache.initializeCacheForSpecificData(page.id, 'block', ctx);
 			initialized_cache = true;
 		}
-		const data = page.content.map((content_id) => ctx.cache.block.get(content_id)).filter((block) => block);
-		return data;
+		return page.content.map((content_id) => ctx.cache.block.get(content_id)).filter((block) => block);
 	},
 	properties: (page: IPage) => ({
 		title: NotionUtils.extractInlineBlockContent(page.properties.title)

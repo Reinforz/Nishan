@@ -7,7 +7,10 @@ afterEach(() => {
 
 describe('pages', () => {
 	it(`initialize_cache=false`, async () => {
-		const cache = NotionCache.createDefaultCache();
+		const cache_initializer_tracker = {
+				space: new Map([ [ 'space_1', false ] ])
+			},
+			cache = NotionCache.createDefaultCache();
 		const block_1: any = { id: 'block_1' };
 		const initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
@@ -15,12 +18,14 @@ describe('pages', () => {
 				cache.block.set('block_1', block_1);
 			});
 
-		const data = await NotionGraphqlResolvers.Space.pages(
-			{ pages: [ 'block_1' ], id: 'space_1' } as any,
-			{},
-			{ cache, token: 'token', user_id: 'user_root_1' }
-		);
+		const data = await NotionGraphqlResolvers.Space.pages({ pages: [ 'block_1' ], id: 'space_1' } as any, {}, {
+			cache,
+			token: 'token',
+			user_id: 'user_root_1',
+			cache_initializer_tracker
+		} as any);
 
+		expect(cache_initializer_tracker.space.get('space_1')).toBe(true);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'space_1', 'space' ]);
 		expect(data).toStrictEqual([ block_1 ]);
 	});
@@ -35,11 +40,14 @@ describe('pages', () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
 
-		const data = await NotionGraphqlResolvers.Space.pages(
-			{ pages: [ 'block_1' ], id: 'space_1' } as any,
-			{},
-			{ cache, token: 'token', user_id: 'user_root_1' }
-		);
+		const data = await NotionGraphqlResolvers.Space.pages({ pages: [ 'block_1' ], id: 'space_1' } as any, {}, {
+			cache,
+			token: 'token',
+			user_id: 'user_root_1',
+			cache_initializer_tracker: {
+				space: new Map([ [ 'space_1', true ] ])
+			}
+		} as any);
 
 		expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 		expect(data).toStrictEqual([ block_1 ]);

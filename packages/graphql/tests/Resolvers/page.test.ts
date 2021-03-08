@@ -7,7 +7,10 @@ afterEach(() => {
 
 describe('content', () => {
 	it(`initialize_cache=false`, async () => {
-		const cache = NotionCache.createDefaultCache();
+		const cache_initializer_tracker = {
+				block: new Map([ [ 'block_1', false ] ])
+			},
+			cache = NotionCache.createDefaultCache();
 		const block_2: any = { id: 'block_2' };
 		const initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
@@ -15,12 +18,14 @@ describe('content', () => {
 				cache.block.set('block_2', block_2);
 			});
 
-		const data = await NotionGraphqlResolvers.Page.contents(
-			{ content: [ 'block_2' ], id: 'block_1' } as any,
-			{},
-			{ cache, token: 'token', user_id: 'user_root_1' }
-		);
+		const data = await NotionGraphqlResolvers.Page.contents({ content: [ 'block_2' ], id: 'block_1' } as any, {}, {
+			cache,
+			token: 'token',
+			user_id: 'user_root_1',
+			cache_initializer_tracker
+		} as any);
 
+		expect(cache_initializer_tracker.block.get('block_1')).toBe(true);
 		expect(data).toStrictEqual([ block_2 ]);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	});
@@ -35,11 +40,14 @@ describe('content', () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
 
-		const data = await NotionGraphqlResolvers.Page.contents(
-			{ content: [ 'block_2' ], id: 'block_1' } as any,
-			{},
-			{ cache, token: 'token', user_id: 'user_root_1' }
-		);
+		const data = await NotionGraphqlResolvers.Page.contents({ content: [ 'block_2' ], id: 'block_1' } as any, {}, {
+			cache,
+			token: 'token',
+			user_id: 'user_root_1',
+			cache_initializer_tracker: {
+				block: new Map([ [ 'block_1', true ] ])
+			}
+		} as any);
 
 		expect(data).toStrictEqual([ block_2 ]);
 		expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();

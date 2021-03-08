@@ -1,9 +1,8 @@
-import { ICache, INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { ICollection, ICollectionViewPage, IPage, TView } from '@nishans/types';
 import { extractData } from './extractData';
 
-export async function readFromNotion (database_id: string, options: INotionCacheOptions & { cache?: ICache }) {
-	options.cache = options.cache || NotionCache.createDefaultCache();
+export async function readFromNotion (database_id: string, options: INotionCacheOptions) {
 	await NotionCache.initializeCacheForSpecificData(database_id, 'block', options);
 	const collection_block = options.cache.block.get(database_id) as ICollectionViewPage;
 

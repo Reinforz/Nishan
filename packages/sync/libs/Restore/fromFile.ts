@@ -1,4 +1,4 @@
-import { ISpace } from '@nishans/types';
+import { INotionOperationOptions } from '@nishans/operations';
 import { readFromFile, storeInNotion } from '../utils';
 
 /**
@@ -7,6 +7,6 @@ import { readFromFile, storeInNotion } from '../utils';
  * @param filepath Absolute file path of the local file
  * @param space_cb A callback to get the space where the restoration will take place
  */
-export async function notionSyncRestoreFromFile (token: string, filepath: string, space_cb: (space: ISpace) => any) {
-	await storeInNotion(token, space_cb, await readFromFile(filepath));
+export async function notionSyncRestoreFromFile (filepath: string, options: INotionOperationOptions) {
+	await storeInNotion(await readFromFile(filepath), options);
 }

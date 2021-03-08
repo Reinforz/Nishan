@@ -1,3 +1,4 @@
+import { INotionCacheOptions } from '@nishans/cache';
 import { readFromNotion, storeInFile } from '../../utils';
 
 /**
@@ -6,6 +7,6 @@ import { readFromNotion, storeInFile } from '../../utils';
  * @param database_id Id of the notion collection block
  * @param filepath full path of the output file
  */
-export async function storeInFileFromNotion (token: string, database_id: string, filepath: string) {
-	await storeInFile(filepath, await readFromNotion(token, database_id));
+export async function storeInFileFromNotion (database_id: string, filepath: string, options: INotionCacheOptions) {
+	await storeInFile(filepath, await readFromNotion(database_id, options));
 }

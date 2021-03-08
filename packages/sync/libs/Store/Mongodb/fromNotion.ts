@@ -1,3 +1,4 @@
+import { INotionCacheOptions } from '@nishans/cache';
 import { readFromNotion, storeInMongodb } from '../../utils';
 
 /**
@@ -5,6 +6,10 @@ import { readFromNotion, storeInMongodb } from '../../utils';
  * @param token Notion token
  * @param database_id Id of the notion collection block
  */
-export async function storeInMongodbFromNotion (connection_uri: string, token: string, database_id: string) {
-	await storeInMongodb(connection_uri, await readFromNotion(token, database_id));
+export async function storeInMongodbFromNotion (
+	connection_uri: string,
+	database_id: string,
+	options: INotionCacheOptions
+) {
+	await storeInMongodb(connection_uri, await readFromNotion(database_id, options));
 }

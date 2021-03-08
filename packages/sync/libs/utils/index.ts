@@ -1,6 +1,4 @@
-export * from './createTransaction';
 export * from './extractData';
-export * from './idToUuid';
 export * from './readFromFile';
 export * from './readFromMongodb';
 export * from './readFromNotion';

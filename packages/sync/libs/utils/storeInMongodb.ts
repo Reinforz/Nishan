@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../src/types';
+import { CollectionExtracted, LocalFileStructure, PageExtracted, TViewExtracted } from '../types';
 import { extractData } from './extractData';
 
 export async function storeInMongodb (connection_uri: string, result_data: LocalFileStructure) {

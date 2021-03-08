@@ -1,6 +1,5 @@
 import { MongoClient } from 'mongodb';
-
-import { CollectionExtracted, PageExtracted, TViewExtracted } from '../src/types';
+import { CollectionExtracted, PageExtracted, TViewExtracted } from '../types';
 import { extractData } from './extractData';
 
 export async function readFromMongodb (connection_uri: string) {

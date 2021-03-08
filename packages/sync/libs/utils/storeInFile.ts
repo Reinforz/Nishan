@@ -1,8 +1,7 @@
 import fs from 'fs';
-import path from 'path';
 import { dump } from 'js-yaml';
-
-import { LocalFileStructure } from '../src/types';
+import path from 'path';
+import { LocalFileStructure } from '../types';
 import { extractData } from './extractData';
 
 export async function storeInFile (filepath: string, result_data: LocalFileStructure) {
@@ -11,5 +10,5 @@ export async function storeInFile (filepath: string, result_data: LocalFileStruc
 		await fs.promises.writeFile(filepath, JSON.stringify(extractData(result_data), null, 2), 'utf-8');
 	else if (ext === '.yaml' || ext === '.yml')
 		await fs.promises.writeFile(filepath, dump(extractData(result_data)), 'utf-8');
-	else throw new Error('Unsupported output file extension. Use either json or yaml file when speciying the filepath');
+	else throw new Error('Unsupported output file extension. Use either json or yaml file when specifying the filepath');
 }

@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionGraphqlCollectionBlockResolver } from '../../libs/Resolvers/collectionBlock';
+import { NotionGraphqlCollectionBlockResolver } from '../../libs/Resolvers/collection_block';
 
 afterEach(() => {
 	jest.restoreAllMocks();

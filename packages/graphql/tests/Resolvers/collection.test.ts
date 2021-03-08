@@ -41,10 +41,14 @@ describe('rows', () => {
 				parent_table: 'collection',
 				parent_id: 'collection_1',
 				is_template: false
+			},
+			block_2 = {
+				type: 'page',
+				parent_table: 'space'
 			};
 		const cache: any = {
 			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
+			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		};
 		const initializeCacheForSpecificDataMock = jest

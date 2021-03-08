@@ -45,3 +45,8 @@ describe('content', () => {
 		expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 	});
 });
+
+it(`properties`, () => {
+	const title = NotionGraphqlResolvers.Page.properties({ properties: { title: [ [ 'Hello World' ] ] } } as any);
+	expect(title).toStrictEqual({ title: 'Hello World' });
+});

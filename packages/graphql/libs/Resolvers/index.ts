@@ -3,7 +3,7 @@ import { IPage, ISpace } from '@nishans/types';
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { getBlockResolveType } from '../';
 import { NotionGraphqlCollectionResolver } from './collection';
-import { NotionGraphqlCollectionBlockResolver } from './collectionBlock';
+import { NotionGraphqlCollectionBlockResolver } from './collection_block';
 import { NotionGraphqlPageResolver } from './page';
 import { NotionGraphqlSpaceResolver } from './space';
 

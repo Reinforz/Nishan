@@ -8,6 +8,8 @@ it('NotionConstants.operationCommands', () => {
 
 	const expected_operation_commands: TOperationCommand[] = [
 		'setPermissionItem',
+		'keyedObjectListAfter',
+		'keyedObjectListUpdate',
 		'listRemove',
 		'listBefore',
 		'listAfter',

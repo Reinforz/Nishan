@@ -11,7 +11,6 @@ import {
 	SpaceData,
 	SubscribedSubscriptionData,
 	TData,
-	TOperationTable,
 	TPermissionRole,
 	TPlanType,
 	Transaction,
@@ -24,6 +23,7 @@ import {
 	ViewSorts
 } from './';
 import { TEmbedBlockType } from './block';
+import { TDataType } from './types';
 
 interface INotionEndpoint<P, R> {
 	payload: P;
@@ -317,7 +317,7 @@ export interface INotionEndpoints {
 		{
 			requests: {
 				id: string;
-				table: TOperationTable;
+				table: TDataType;
 				version: number;
 			}[];
 		},

@@ -9,17 +9,6 @@ export type TOperationCommand =
 	| 'listRemove'
 	| 'listBefore'
 	| 'setPermissionItem';
-export type TOperationTable =
-	| 'space'
-	| 'collection_view'
-	| 'collection'
-	| 'collection_view_page'
-	| 'page'
-	| 'block'
-	| 'space_view'
-	| 'notion_user'
-	| 'user_settings'
-	| 'user_root';
 
 export interface Transaction {
 	id: string;

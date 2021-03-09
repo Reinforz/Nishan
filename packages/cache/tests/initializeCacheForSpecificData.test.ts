@@ -41,67 +41,109 @@ describe('initializeCacheForSpecificData', () => {
 		expect(updateCacheIfNotPresentMock.mock.calls[1][0]).toStrictEqual([ [ 'collection_1', 'collection' ] ]);
 	});
 
-	it(`type=block`, async () => {
-		const block_1: any = {
-			id: 'block_1',
-			type: 'page',
-			parent_table: 'space',
-			parent_id: 'space_1',
-			last_edited_by_id: 'notion_user_1',
-			created_by_id: 'notion_user_1'
-		};
+	describe(`type=block`, () => {
+		it(`type=page`, async () => {
+			const block_1: any = {
+				id: 'block_1',
+				type: 'page',
+				parent_table: 'space',
+				parent_id: 'space_1',
+				last_edited_by_id: 'notion_user_1',
+				created_by_id: 'notion_user_1'
+			};
 
-		const cache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ])
-		};
+			const cache = {
+				...NotionCache.createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ])
+			};
 
-		const updateCacheIfNotPresentMock = jest
-			.spyOn(NotionCache, 'updateCacheIfNotPresent')
-			.mockImplementationOnce(async () => undefined);
-		const loadPageChunkMock = jest.spyOn(NotionEndpoints.Queries, 'loadPageChunk').mockImplementationOnce(
-			async () =>
-				({
-					recordMap: {
-						block: {
-							block_2: {
-								value: {
-									id: 'block_2'
+			const updateCacheIfNotPresentMock = jest
+				.spyOn(NotionCache, 'updateCacheIfNotPresent')
+				.mockImplementationOnce(async () => undefined);
+			const loadPageChunkMock = jest.spyOn(NotionEndpoints.Queries, 'loadPageChunk').mockImplementationOnce(
+				async () =>
+					({
+						recordMap: {
+							block: {
+								block_2: {
+									value: {
+										id: 'block_2'
+									}
 								}
 							}
+						},
+						cursor: {
+							stack: []
 						}
-					}
-				} as any)
-		);
+					} as any)
+			);
 
-		await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
-			token: 'token',
-			cache,
-			user_id: 'user_root_1'
-		});
+			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
+				token: 'token',
+				cache,
+				user_id: 'user_root_1'
+			});
 
-		expect(loadPageChunkMock.mock.calls[0][0]).toStrictEqual({
-			pageId: 'block_1',
-			limit: 100,
-			cursor: {
-				stack: [
-					[
-						{
-							table: 'block',
-							id: 'block_1',
-							index: 0
-						}
+			expect(loadPageChunkMock.mock.calls[0][0]).toStrictEqual({
+				pageId: 'block_1',
+				limit: 100,
+				cursor: {
+					stack: [
+						[
+							{
+								table: 'block',
+								id: 'block_1',
+								index: 0
+							}
+						]
 					]
-				]
-			},
-			chunkNumber: 1,
-			verticalColumns: false
+				},
+				chunkNumber: 1,
+				verticalColumns: false
+			});
+			expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+				[ 'notion_user_1', 'notion_user' ],
+				[ 'space_1', 'space' ]
+			]);
 		});
-		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
-		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
-			[ 'notion_user_1', 'notion_user' ],
-			[ 'space_1', 'space' ]
-		]);
+
+		it(`type=header`, async () => {
+			const block_1: any = {
+				id: 'block_1',
+				type: 'header',
+				parent_table: 'space',
+				parent_id: 'space_1',
+				last_edited_by_id: 'notion_user_1',
+				created_by_id: 'notion_user_1'
+			};
+
+			const cache = {
+				...NotionCache.createDefaultCache(),
+				block: new Map([ [ 'block_1', block_1 ] ])
+			};
+
+			const updateCacheIfNotPresentMock = jest
+				.spyOn(NotionCache, 'updateCacheIfNotPresent')
+				.mockImplementationOnce(async () => undefined);
+
+			const loadPageChunkMock = jest
+				.spyOn(NotionEndpoints.Queries, 'loadPageChunk')
+				.mockImplementationOnce(async () => ({} as any));
+
+			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
+				token: 'token',
+				cache,
+				user_id: 'user_root_1'
+			});
+
+			expect(loadPageChunkMock).not.toHaveBeenCalled();
+			expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+				[ 'notion_user_1', 'notion_user' ],
+				[ 'space_1', 'space' ]
+			]);
+		});
 	});
 
 	it(`Should work for type space`, async () => {

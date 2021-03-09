@@ -15,27 +15,33 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 	if (type === 'block') {
 		const data = (await NotionCache.fetchDataOrReturnCached('block', id, options)) as TBlock;
 		if (data.type.match(/^(page|collection_view_page|collection_view)$/)) {
-			const { recordMap } = await NotionEndpoints.Queries.loadPageChunk(
-				{
-					pageId: id,
-					limit: 100,
-					cursor: {
-						stack: [
-							[
-								{
-									table: 'block',
-									id: id,
-									index: 0
-								}
+			let has_more_chunk = true,
+				next_index = 0;
+			while (has_more_chunk) {
+				const { recordMap, cursor } = await NotionEndpoints.Queries.loadPageChunk(
+					{
+						pageId: id,
+						limit: 100,
+						cursor: {
+							stack: [
+								[
+									{
+										table: 'block',
+										id: id,
+										index: next_index
+									}
+								]
 							]
-						]
+						},
+						chunkNumber: 1,
+						verticalColumns: false
 					},
-					chunkNumber: 1,
-					verticalColumns: false
-				},
-				options
-			);
-			NotionCache.saveToCache(recordMap, cache);
+					options
+				);
+				NotionCache.saveToCache(recordMap, cache);
+				has_more_chunk = cursor.stack.length !== 0;
+				if (has_more_chunk) next_index = cursor.stack[0][0].index;
+			}
 		}
 
 		NotionCache.extractNotionUserIds(data).forEach((notion_user_id) =>

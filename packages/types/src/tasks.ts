@@ -1,29 +1,55 @@
 import { BlockData } from './recordMap';
 
 export type TExportType = 'markdown' | 'pdf' | 'html';
-export type TTaskType = 'deleteSpace' | 'exportBlock' | 'duplicateBlock' | 'exportSpace';
+export type TTaskType = 'deleteSpace' | 'exportBlock' | 'duplicateBlock' | 'exportSpace' | 'renameGroup';
 export type TaskState = 'in_progress' | 'success';
-export interface DuplicateBlockTaskParams {
+
+interface IEnqueueTaskPayload<T extends TTaskType, R> {
 	task: {
-		eventName: 'duplicateBlock';
-		request: {
-			sourceBlockId: string;
-			targetBlockId: string;
-			addCopyName: boolean;
-		};
+		eventName: T;
+		request: R;
 	};
 }
+
+export type RenameGroupTaskPayload = IEnqueueTaskPayload<
+	'renameGroup',
+	{
+		collectionId: string;
+		property: string;
+		oldValue: { type: 'multi_select' | 'select'; value: string };
+		newValue: { type: 'multi_select' | 'select'; value: string };
+	}
+>;
+
+export interface RenameGroupTaskResponse {
+	results: {
+		id: string;
+		eventName: 'renameGroup';
+		request: RenameGroupTaskPayload['task']['request'];
+		actor: ITaskActor;
+		state: 'success';
+	}[];
+}
+
+export type DuplicateBlockTaskPayload = IEnqueueTaskPayload<
+	'duplicateBlock',
+	{
+		sourceBlockId: string;
+		targetBlockId: string;
+		addCopyName: boolean;
+	}
+>;
 
 export interface ITaskActor {
 	table: 'notion_user';
 	id: string;
 }
 
-export interface DuplicateBlockTaskSuccessResult {
+export interface DuplicateBlockTaskSuccessResponse {
 	results: {
 		id: string;
 		eventName: 'duplicateBlock';
-		request: DuplicateBlockTaskParams['task']['request'];
+		request: DuplicateBlockTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'success';
 		status: {
@@ -34,17 +60,17 @@ export interface DuplicateBlockTaskSuccessResult {
 	}[];
 }
 
-export interface DuplicateBlockTaskInProgressResult {
+export interface DuplicateBlockTaskInProgressResponse {
 	results: {
 		id: string;
 		eventName: 'duplicateBlock';
-		request: DuplicateBlockTaskParams['task']['request'];
+		request: DuplicateBlockTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'in_progress';
 	}[];
 }
 
-export type TDuplicateBlockTaskResult = DuplicateBlockTaskInProgressResult | DuplicateBlockTaskSuccessResult;
+export type TDuplicateBlockTaskResponse = DuplicateBlockTaskInProgressResponse | DuplicateBlockTaskSuccessResponse;
 
 export interface ExportOptions {
 	exportType: TExportType;
@@ -52,59 +78,55 @@ export interface ExportOptions {
 	timeZone: string;
 }
 
-export interface ExportBlockTaskParams {
-	task: {
-		eventName: 'exportBlock';
-		request: {
-			blockId: string;
-			exportOptions: ExportOptions;
-			recursive: boolean;
-		};
-	};
-}
+export type ExportBlockTaskPayload = IEnqueueTaskPayload<
+	'exportBlock',
+	{
+		blockId: string;
+		exportOptions: ExportOptions;
+		recursive: boolean;
+	}
+>;
 
-export interface ExportBlockTaskInProgressResult {
+export interface ExportBlockTaskInProgressResponse {
 	results: {
 		id: string;
 		eventName: 'exportBlock';
-		request: ExportBlockTaskParams['task']['request'];
+		request: ExportBlockTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'in_progress';
 	}[];
 }
 
-export interface ExportTaskSuccessResultStatus {
+export interface ExportTaskSuccessResponseStatus {
 	exportURL: string;
 	type: 'complete';
 	pagesExported: number;
 }
-export interface ExportBlockTaskSuccessResult {
+export interface ExportBlockTaskSuccessResponse {
 	results: {
 		id: string;
 		eventName: 'exportBlock';
-		request: ExportBlockTaskParams['task']['request'];
+		request: ExportBlockTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'success';
-		status: ExportTaskSuccessResultStatus;
+		status: ExportTaskSuccessResponseStatus;
 	}[];
 }
 
-export type TExportBlockTaskResult = ExportBlockTaskSuccessResult | ExportBlockTaskInProgressResult;
-export interface ExportSpaceTaskParams {
-	task: {
-		eventName: 'exportSpace';
-		request: {
-			spaceId: string;
-			exportOptions: ExportOptions;
-		};
-	};
-}
+export type TExportBlockTaskResponse = ExportBlockTaskSuccessResponse | ExportBlockTaskInProgressResponse;
+export type ExportSpaceTaskPayload = IEnqueueTaskPayload<
+	'exportSpace',
+	{
+		spaceId: string;
+		exportOptions: ExportOptions;
+	}
+>;
 
-export interface ExportSpaceTaskInProgressResult {
+export interface ExportSpaceTaskInProgressResponse {
 	results: {
 		id: string;
 		eventName: 'exportSpace';
-		request: ExportSpaceTaskParams['task']['request'];
+		request: ExportSpaceTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'in_progress';
 		status: {
@@ -114,54 +136,57 @@ export interface ExportSpaceTaskInProgressResult {
 	}[];
 }
 
-export interface ExportSpaceTaskSuccessResult {
+export interface ExportSpaceTaskSuccessResponse {
 	results: {
 		id: string;
 		eventName: 'exportSpace';
-		request: ExportSpaceTaskParams['task']['request'];
+		request: ExportSpaceTaskPayload['task']['request'];
 		actor: ITaskActor;
 		state: 'success';
-		status: ExportTaskSuccessResultStatus;
+		status: ExportTaskSuccessResponseStatus;
 	}[];
 }
 
-export type TExportSpaceTaskResult = ExportSpaceTaskSuccessResult | ExportSpaceTaskInProgressResult;
+export type TExportSpaceTaskResponse = ExportSpaceTaskSuccessResponse | ExportSpaceTaskInProgressResponse;
 
-export interface DeleteSpaceTaskParams {
-	task: {
-		eventName: 'deleteSpace';
-		request: {
-			spaceId: string;
-		};
-	};
-}
+export type DeleteSpaceTaskPayload = IEnqueueTaskPayload<
+	'deleteSpace',
+	{
+		spaceId: string;
+	}
+>;
 
-export interface DeleteSpaceTaskInProgressResult {
+export interface DeleteSpaceTaskInProgressResponse {
 	actor: ITaskActor;
 	eventName: 'deleteSpace';
 	id: string;
-	request: DeleteSpaceTaskParams['task']['request'];
+	request: DeleteSpaceTaskPayload['task']['request'];
 	state: 'in_progress';
 }
 
-export interface DeleteSpaceTaskSuccessResult {
+export interface DeleteSpaceTaskSuccessResponse {
 	actor: ITaskActor;
 	eventName: 'deleteSpace';
 	id: string;
-	request: DeleteSpaceTaskParams['task']['request'];
+	request: DeleteSpaceTaskPayload['task']['request'];
 	state: 'success';
 }
 
-export type DeleteSpaceTaskResult = DeleteSpaceTaskSuccessResult | DeleteSpaceTaskInProgressResult;
+export type DeleteSpaceTaskResponse = DeleteSpaceTaskSuccessResponse | DeleteSpaceTaskInProgressResponse;
 
-export type EnqueueTaskParams = DuplicateBlockTaskParams | ExportBlockTaskParams | DeleteSpaceTaskParams;
+export type EnqueueTaskPayload =
+	| RenameGroupTaskPayload
+	| DuplicateBlockTaskPayload
+	| ExportBlockTaskPayload
+	| DeleteSpaceTaskPayload;
 
-export interface EnqueueTaskResult {
+export interface EnqueueTaskResponse {
 	taskId: string;
 }
 
-export type GetTasksResult =
-	| TDuplicateBlockTaskResult
-	| TExportBlockTaskResult
-	| TExportSpaceTaskResult
-	| DeleteSpaceTaskResult;
+export type GetTasksResponse =
+	| TDuplicateBlockTaskResponse
+	| TExportBlockTaskResponse
+	| TExportSpaceTaskResponse
+	| DeleteSpaceTaskResponse
+	| RenameGroupTaskResponse;

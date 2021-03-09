@@ -1,7 +1,7 @@
 import {
 	BlockData,
-	EnqueueTaskParams,
-	EnqueueTaskResult,
+	EnqueueTaskPayload,
+	EnqueueTaskResponse,
 	IDrive,
 	INotionUser,
 	IPermission,
@@ -37,7 +37,7 @@ export interface INotionEndpoints {
 			recordMapWithRoles: RecordMap;
 		}
 	>;
-	enqueueTask: INotionEndpoint<EnqueueTaskParams, EnqueueTaskResult>;
+	enqueueTask: INotionEndpoint<EnqueueTaskPayload, EnqueueTaskResponse>;
 	checkEmailType: INotionEndpoint<
 		{
 			allowAdminBypass: boolean;

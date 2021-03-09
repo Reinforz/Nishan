@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { dump } from 'js-yaml';
+import yaml from 'js-yaml';
 import path from 'path';
 import { NotionSync } from '../';
 import { LocalFileStructure } from '../types';
@@ -17,7 +17,10 @@ export async function writeToFile (filepath: string, result_data: LocalFileStruc
 			JSON.stringify(NotionSync.ExtractData.extract(result_data), null, 2),
 			'utf-8'
 		);
-	else if (ext === '.yaml' || ext === '.yml')
-		await fs.promises.writeFile(filepath, dump(NotionSync.ExtractData.extract(result_data)), 'utf-8');
-	else throw new Error('Unsupported output file extension. Use either json or yaml file when specifying the filepath');
+	else if (ext === '.yaml' || ext === '.yml') {
+		const extracted_data = NotionSync.ExtractData.extract(result_data);
+		const yaml_data = yaml.dump(extracted_data);
+		await fs.promises.writeFile(filepath, yaml_data, 'utf-8');
+	} else
+		throw new Error('Unsupported output file extension. Use either json or yaml file when specifying the filepath');
 }

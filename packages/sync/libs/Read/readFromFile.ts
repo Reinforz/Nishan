@@ -17,5 +17,5 @@ export async function readFromFile (file_path: string) {
 		data = load(await fs.promises.readFile(file_path, 'utf-8')) as LocalFileStructure;
 	else throw new Error('Unsupported output file extension. Use either json or yaml file when specifying the filepath');
 
-	return NotionSync.ExtractData.extract(data as any);
+	return NotionSync.ExtractData.extract(data);
 }

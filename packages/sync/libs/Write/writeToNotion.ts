@@ -10,17 +10,19 @@ import { LocalFileStructure } from '../types';
  */
 export async function writeToNotion (result_data: LocalFileStructure, options: INotionOperationOptions) {
 	const metadata = {
-		alive: true,
-		created_time: Date.now(),
-		created_by_id: options.user_id,
-		created_by_table: 'notion_user',
-		last_edited_time: Date.now(),
-		last_edited_by_table: 'notion_user',
-		last_edited_by_id: options.user_id,
-		space_id: options.space_id,
-		shard_id: options.shard_id,
-		version: 0
-	};
+			alive: true,
+			created_time: Date.now(),
+			space_id: options.space_id,
+			shard_id: options.shard_id,
+			version: 0
+		},
+		created_edited_props = {
+			created_by_id: options.user_id,
+			created_by_table: 'notion_user',
+			last_edited_time: Date.now(),
+			last_edited_by_table: 'notion_user',
+			last_edited_by_id: options.user_id
+		};
 
 	const editor_user_permission: IUserPermission = {
 		role: 'editor',
@@ -43,7 +45,8 @@ export async function writeToNotion (result_data: LocalFileStructure, options: I
 		parent_id: options.space_id,
 		parent_table: 'space',
 		permissions: [ editor_user_permission ],
-		...metadata
+		...metadata,
+		...created_edited_props
 	});
 
 	const row_pages_create_op = row_pages.map((row_page) => {
@@ -57,7 +60,8 @@ export async function writeToNotion (result_data: LocalFileStructure, options: I
 			properties: row_page.properties,
 			type: 'page',
 			permissions: [ editor_user_permission ],
-			...metadata
+			...metadata,
+			...created_edited_props
 		});
 	});
 
@@ -74,7 +78,8 @@ export async function writeToNotion (result_data: LocalFileStructure, options: I
 			type: 'page',
 			is_template: true,
 			permissions: [ editor_user_permission ],
-			...metadata
+			...metadata,
+			...created_edited_props
 		});
 	});
 

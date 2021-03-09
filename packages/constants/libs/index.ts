@@ -1,4 +1,6 @@
+import { createBgColorTypes } from './bgColorTypes';
 import { createBlockTypes } from './blockTypes';
+import { createColorTypes } from './colorTypes';
 import { createDataTypes } from './dataTypes';
 import { createFunctionNames } from './functionNames';
 import { createOperationCommands } from './operationCommands';
@@ -11,5 +13,7 @@ export const NotionConstants = {
 	schemaUnitTypes: createSchemaUnitTypes,
 	dataTypes: createDataTypes,
 	operationCommands: createOperationCommands,
-	functionNames: createFunctionNames
+	functionNames: createFunctionNames,
+	colorTypes: createColorTypes,
+	bgColorTypes: createBgColorTypes
 };

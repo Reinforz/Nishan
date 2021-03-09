@@ -28,6 +28,7 @@ const configs = {
 	'getBacklinksForBlock',
 	'findUser',
 	'syncRecordValues',
+	'getRecordValues',
 	'queryCollection',
 	'loadPageChunk',
 	'recordPageVisit',

@@ -151,6 +151,14 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getRecordValues (params: INotionEndpoints['getRecordValues']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getRecordValues']['response']>(
+			'getRecordValues',
+			params,
+			options
+		);
+	},
+
 	async queryCollection (params: INotionEndpoints['queryCollection']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['queryCollection']['response']>(
 			'queryCollection',

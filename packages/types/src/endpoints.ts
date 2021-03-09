@@ -10,6 +10,7 @@ import {
 	RecordMap,
 	SpaceData,
 	SubscribedSubscriptionData,
+	TData,
 	TOperationTable,
 	TPermissionRole,
 	TPlanType,
@@ -29,6 +30,13 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	getRecordValues: INotionEndpoint<
+		INotionEndpoints['syncRecordValues']['payload'],
+		{
+			results: TData[];
+			recordMapWithRoles: RecordMap;
+		}
+	>;
 	enqueueTask: INotionEndpoint<EnqueueTaskParams, EnqueueTaskResult>;
 	checkEmailType: INotionEndpoint<
 		{

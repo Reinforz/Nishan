@@ -220,6 +220,10 @@ export interface IColumnList extends Node, ParentProps, CreateProps, LastEditedP
 }
 
 export interface ICollectionBlock extends IBlock {
+	format: {
+		block_locked_by?: string;
+		block_locked?: boolean;
+	};
 	view_ids: string[];
 	collection_id: string;
 	type: 'collection_view' | 'collection_view_page';

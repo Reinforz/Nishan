@@ -70,8 +70,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 				collectionViewId: '',
 				query: {},
 				loader: {
-					type: 'table',
-					loadContentCover: true
+					type: 'table'
 				}
 			},
 			options

@@ -258,8 +258,7 @@ describe('initializeCacheForSpecificData', () => {
 				collectionViewId: '',
 				query: {},
 				loader: {
-					type: 'table',
-					loadContentCover: true
+					type: 'table'
 				}
 			},
 			query_collection_response = {

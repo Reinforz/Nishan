@@ -1,26 +1,26 @@
 import {
-	BlockData,
-	EnqueueTaskPayload,
-	EnqueueTaskResponse,
-	IDrive,
-	INotionUser,
-	IPermission,
-	IViewFilter,
-	MediaFormat,
-	RecordMap,
-	SpaceData,
-	SubscribedSubscriptionData,
-	TData,
-	TPermissionRole,
-	TPlanType,
-	Transaction,
-	TSchemaUnitType,
-	TSearchNotionEndpointPayload,
-	TViewAggregationsAggregators,
-	TViewType,
-	UnsubscribedSubscriptionData,
-	ViewAggregations,
-	ViewSorts
+  BlockData,
+  EnqueueTaskPayload,
+  EnqueueTaskResponse,
+  IDrive,
+  INotionUser,
+  IPermission,
+  IViewFilter,
+  MediaFormat,
+  RecordMap,
+  SpaceData,
+  SubscribedSubscriptionData,
+  TData,
+  TPermissionRole,
+  TPlanType,
+  Transaction,
+  TSchemaUnitType,
+  TSearchNotionEndpointPayload,
+  TViewAggregationsAggregators,
+  TViewType,
+  UnsubscribedSubscriptionData,
+  ViewAggregations,
+  ViewSorts
 } from './';
 import { TEmbedBlockType } from './block';
 import { TDataType } from './types';
@@ -30,6 +30,13 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+  getUserSharedPagesInSpace: INotionEndpoint<{
+    includeDeleted: boolean,
+    spaceId: string
+  }, {
+    pages: string[],
+    recordMap: Pick<RecordMap, "block" | "collection" | "space">
+  }>,
 	getRecordValues: INotionEndpoint<
 		INotionEndpoints['syncRecordValues']['payload'],
 		{
@@ -259,7 +266,7 @@ export interface INotionEndpoints {
 				limit?: number;
 				searchQuery?: string;
 				type: 'table';
-				loadContentCover: boolean;
+				loadContentCover?: boolean;
 				userTimeZone?: string;
 			};
 		},

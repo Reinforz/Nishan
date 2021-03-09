@@ -19,6 +19,7 @@ const configs = {
 ([
 	'getPageVisits',
 	'getUserSharedPages',
+	'getUserSharedPagesInSpace',
 	'getPublicPageData',
 	'getPublicSpaceData',
 	'getSubscriptionData',

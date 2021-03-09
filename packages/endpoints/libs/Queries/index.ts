@@ -44,6 +44,17 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getUserSharedPagesInSpace (
+		params: INotionEndpoints['getUserSharedPagesInSpace']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getUserSharedPagesInSpace']['response']>(
+			'getUserSharedPagesInSpace',
+			params,
+			options
+		);
+	},
+
 	async getUserTasks (options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getUserTasks']['response']>(
 			'getUserTasks',

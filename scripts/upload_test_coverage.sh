@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-curl -s https://codecov.io/bash > codecov.sh
+curl -s https://codecov.io/bash > "${GITHUB_WORKSPACE}/scripts/codecov.sh"
 chmod +x codecov.sh
 
 cd "${GITHUB_WORKSPACE}/packages";

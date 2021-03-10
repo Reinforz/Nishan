@@ -12,7 +12,6 @@ for dir in */
       then
         file="$PWD/$package/coverage/lcov.info"
         flag="${package/-/_}"
-        echo "$file $flag"
-        ../scripts/codecov.sh -f $file -F $flag 
+        "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh" -f $file -F $flag -v
       fi
   done

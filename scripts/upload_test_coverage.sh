@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-curl -s https://codecov.io/bash > "${GITHUB_WORKSPACE}/scripts/codecov.sh"
-chmod +x "${GITHUB_WORKSPACE}/scripts/codecov.sh"
+codecov_file="${GITHUB_WORKSPACE}/scripts/codecov.sh"
+
+curl -s https://codecov.io/bash > $codecov_file
+chmod +x $codecov_file
 
 cd "${GITHUB_WORKSPACE}/packages";
 
@@ -12,6 +14,6 @@ for dir in */
       then
         file="$PWD/$package/coverage/lcov.info"
         flag="${package/-/_}"
-        "${GITHUB_WORKSPACE}/scripts/codecov.sh" -f $file -F $flag -v -t $CODECOV_TOKEN
+        $codecov_file -f $file -F $flag -v -t $CODECOV_TOKEN
       fi
   done

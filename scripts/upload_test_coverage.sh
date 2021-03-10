@@ -3,7 +3,7 @@
 curl -s https://codecov.io/bash > codecov.sh
 chmod +x codecov.sh
 
-cd "../packages";
+cd "${GITHUB_WORKSPACE}/packages";
 
 for dir in */
   do
@@ -13,6 +13,6 @@ for dir in */
         file="$PWD/$package/coverage/lcov.info"
         flag="${package/-/_}"
         echo "$file $flag"
-        ../scripts/codecov.sh -f $file -F $flag
+        ../scripts/codecov.sh -f $file -F $flag 
       fi
   done

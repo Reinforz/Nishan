@@ -12,6 +12,6 @@ for dir in */
       then
         file="$PWD/$package/coverage/lcov.info"
         flag="${package/-/_}"
-        "${GITHUB_WORKSPACE}/scripts/codecov.sh" -f $file -F $flag -v
+        "${GITHUB_WORKSPACE}/scripts/codecov.sh" -f $file -F $flag -v -t $CODECOV_TOKEN
       fi
   done

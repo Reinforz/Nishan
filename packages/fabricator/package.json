@@ -7,7 +7,7 @@
     "notion-api"
   ],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/core/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/fabricator/README.md",
   "license": "MIT",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",

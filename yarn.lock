@@ -2619,16 +2619,6 @@
     "@nishans/operations" "^0.0.24"
     "@nishans/utils" "^0.0.15"
 
-"@nishans/types@0.0.22":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.22.tgz#600cacb51fa57359d1865d9fc9b5df021f6fc39a"
-  integrity sha512-WV14+fJwZTYLx8B6RcWD44kZkA20iVhdu2sGVHDkXO3EFMe78FUig+dvW3FjQ8j6InvroXo9kWUXHeuFEDmvpQ==
-
-"@nishans/types@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.25.tgz#2bac956d3dd976c147433faa00a2b015b2e5588f"
-  integrity sha512-oouG/wN55ewbj5jNSpj9I2WNBk2sFVk7Hjxk9SEkVPFUYVM4TKOEoaUUJOH3QDZc50iroQ0PkftZABxa78bQuQ==
-
 "@nishans/types@^0.0.10":
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.10.tgz#4e052e2159a8ad577b78d6ef6a2a43f739413f83"
@@ -3880,6 +3870,11 @@
   integrity sha512-fO3gf3DxU2Trcbr75O7obVndW/X5k8rJNZkLXlQWStTHhP71PkRqjwPIEI0yMnJdg9R9OasjU+Bsr+Hr1xy/0w==
   dependencies:
     "@types/express" "*"
+
+"@types/dedent@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/dedent/-/dedent-0.7.0.tgz#155f339ca404e6dd90b9ce46a3f78fd69ca9b050"
+  integrity sha512-EGlKlgMhnLt/cM4DbUSafFdrkeJoC9Mvnj0PUCU7tFmTjMjNRT957kXCx0wYm3JuEq4o4ZsS5vG+NlkM2DMd2A==
 
 "@types/eslint@^7.2.4":
   version "7.2.6"

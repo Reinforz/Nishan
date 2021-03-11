@@ -1,0 +1,66 @@
+[
+  {
+    "name": "cache",
+    "description": "A cache specially designed to retrieve and store notion data in memory"
+  },
+  {
+    "name": "cli",
+    "description": "A package to interact with `@nishans/core` from the terminal"
+  },
+  {
+    "name": "constants",
+    "description": "A small package for all notion specific constants"
+  },
+  {
+    "name": "core",
+    "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more"
+  },
+  {
+    "name": "endpoints",
+    "description": "A package to expose all notion endpoints for queries and mutations"
+  },
+  {
+    "name": "errors",
+    "description": "A small package containing various notion specific error classes"
+  },
+  {
+    "name": "fabricator",
+    "description": "A package to generate notion blocks using a simple api"
+  },
+  {
+    "name": "graphql",
+    "description": "A graphql server for notion built using `@nishans/core`"
+  },
+  {
+    "name": "idz",
+    "description": "A small package to validate, generate and parse notion ids"
+  },
+  {
+    "name": "inline-blocks",
+    "description": "Package providing an easy to use api to generate contents for notion inline blocks"
+  },
+  {
+    "name": "notion-formula",
+    "description": "A package to generate notion formula with ease"
+  },
+  {
+    "name": "operations",
+    "description": "A package to inspect, modify and store notion operations"
+  },
+  {
+    "name": "permissions",
+    "description": "A package to easily deal with notion permissions"
+  },
+  {
+    "name": "sync",
+    "description": "A package to keep local notion data in sync with remote one by storing and restoring it."
+  },
+  {
+    "name": "types",
+    "description": "Typescript type definitions for notion"
+  },
+  {
+    "name": "utils",
+    "description": "A bunch of small utility modules used across nishans ecosystem"
+  }
+]

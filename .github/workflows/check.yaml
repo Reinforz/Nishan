@@ -21,7 +21,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install
       - run: yarn test
-      - name: Uploading test coverage reports
-        run: |
-          chmod +x "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"
-          "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./packages/core/coverage/lcov.info,./packages/cache/coverage/lcov.info
+          flags: core,cache
+      # - name: Uploading test coverage reports
+      #   run: |
+      #     chmod +x "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"
+      #     "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"

@@ -1,4 +1,4 @@
-# `@nishans/core`
+# <pre>@nishans/core</pre>
 
 <p align="center">
   <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/core/logo.svg"/>
@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more.</b></p>
+<p align="center"><b>Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more</b></p>

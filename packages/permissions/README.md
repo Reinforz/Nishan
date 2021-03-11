@@ -1,4 +1,4 @@
-# `@nishans/permissions`
+# <pre>@nishans/permissions</pre>
 
 <p align="center">
   <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/permissions/logo.svg"/>
@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>A package to easily deal with notion permissions.</b></p>
+<p align="center"><b>A package to easily deal with notion permissions</b></p>

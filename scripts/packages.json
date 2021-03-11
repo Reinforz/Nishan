@@ -101,7 +101,7 @@
   },
   {
     "name": "sync",
-    "description": "A package to keep local notion data in sync with remote one by storing and restoring it.",
+    "description": "A package to keep local notion data in sync with remote one by storing and restoring it",
     "published": true
   },
   {

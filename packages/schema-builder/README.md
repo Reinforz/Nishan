@@ -1,11 +1,23 @@
-# `schema-builder`
+# <pre>@nishans/schema-builder</pre>
 
-> TODO: description
+<p align="center">
+  <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/schema-builder/logo.svg"/>
+</p>
 
-## Usage
+<p align="center">
+  <img src="https://img.shields.io/bundlephobia/minzip/@nishans/schema-builder?label=minzipped&style=flat&color=%23bb0a1e"/>
+  <img src="https://img.shields.io/npm/dw/@nishans/schema-builder?style=flat&color=orange"/>
+  <img src="https://img.shields.io/github/issues/devorein/nishan/@nishans/schema-builder?color=yellow"/>
+  <img src="https://img.shields.io/npm/v/@nishans/schema-builder?color=%2303C04A"/>
+  <img src="https://img.shields.io/codecov/c/github/devorein/Nishan?flag=schema_builder&color=blue"/>
+  <img src="https://img.shields.io/librariesio/release/npm/@nishans/schema-builder?color=%234B0082">
+</p>
 
-```
-const schemaBuilder = require('schema-builder');
+<p align="center">
+  | <a href="https://github.com/Devorein/Nishan/tree/master/packages/schema-builder">Github</a> |
+  <a href="https://nishan-docs.netlify.app/docs/schema-builder/">Docs</a> |
+  <a href="https://www.npmjs.com/package/@nishans/schema-builder">NPM</a> |
+  <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
+</p>
 
-// TODO: DEMONSTRATE API
-```
+<p align="center"><b>A package to create notion collection schema painlessly</b></p>

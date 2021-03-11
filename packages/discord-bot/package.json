@@ -1,7 +1,7 @@
 {
   "name": "@nishans/discord-bot",
   "version": "0.0.0",
-  "description": "A general purpose discord bot for working with `@nishans/core` from the text box",
+  "description": "A general purpose discord bot for working with `@nishans/core` from the discord chat textbox",
   "keywords": [
     "notion",
     "notion-discord",

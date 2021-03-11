@@ -33,7 +33,7 @@ export const createReadme = async (
       <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
     </p>
     
-    <p align="center">${package_description}<b></b></p>
+    <p align="center"><b>${package_description}</b></p>
     `,
 		'utf-8'
 	);

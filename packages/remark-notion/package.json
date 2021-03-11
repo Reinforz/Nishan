@@ -1,7 +1,7 @@
 {
   "name": "@nishans/remark-notion",
   "version": "0.0.1",
-  "description": "A remark plugin to support custom notion specific syntax for @nishans/markdown package",
+  "description": "A remark plugin to support custom notion specific syntax for `@nishans/markdown` package",
   "keywords": [
     "notion",
     "notion-remark",

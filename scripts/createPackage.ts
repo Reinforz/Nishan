@@ -1,6 +1,6 @@
-import dedent from 'dedent';
 import fs from 'fs';
 import path from 'path';
+import dedent from 'ts-dedent';
 import { createReadme } from './utils';
 
 async function main () {

@@ -39,7 +39,7 @@ Legend:
 * **`@nishans/endpoints`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) [NPM](https://www.npmjs.com/package/@nishans/endpoints) [Docs](https://nishan-docs.netlify.app/docs/endpoints): A package to expose all notion endpoints for queries and mutations
 * **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors/): A small package containing various notion specific error classes.
 * **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator) [Docs](https://nishan-docs.netlify.app/docs/fabricator/): A package to generate notion blocks using a simple api.
-* **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) (WIP): A graphql server and client UI to make working with nishan a breeze.
+* **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql) [Docs](https://nishan-docs.netlify.app/docs/graphql/): A graphql server and client UI to make working with nishan a breeze.
 * **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz) [Docs](https://nishan-docs.netlify.app/docs/idz/): A small package to validate, generate and parse notion ids.
 * **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks) [Docs](https://nishan-docs.netlify.app/docs/inline-blocks/): Package providing an easy to use api to generate contents for notion inline blocks.
 * **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) (WIP): A logger built specifically for nishan ecosystem.
@@ -58,7 +58,7 @@ Legend:
 
 ## Apps
 
-A few apps built using the above packages
+A few apps built/that will be built using the above packages
 
 1. [markdown-web](https://github.com/Devorein/Nishan/tree/master/apps/markdown-web) (NSY): A react powered web app to upload markdown content as notion pages using `@nishans/markdown`
 2. [markdown-desktop](https://github.com/Devorein/Nishan/tree/master/apps/markdown-desktop) (NSY): An electron powered desktop app to upload markdown content as notion pages using `@nishans/markdown`
@@ -66,7 +66,7 @@ A few apps built using the above packages
 4. [markdown-native](https://github.com/Devorein/Nishan/tree/master/apps/markdown-native) (NSY): A react native powered mobile app to upload markdown content as notion pages using `@nishans/markdown`
 5. [notion-formula-web](https://github.com/Devorein/Nishan/tree/master/apps/notion-formula-web) (NSY): A react powered web app to view the generated notion formula ast from array, object or string representation using `@nishans/notion-formula` package
 
-***NOTE***: The name of the package was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the package names, where its nishans.
+***NOTE***: The scope was originally named nishan, but unfortunately that name was already taken in npm. I'll use the term nishan everywhere except in case of the scope, where its nishans.
 
 ## Contributors
 

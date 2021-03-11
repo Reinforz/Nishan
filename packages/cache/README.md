@@ -1,4 +1,4 @@
-# `@nishans/cache`
+# <pre>@nishans/cache</pre>
 
 <p align="center">
   <img width="125" src="https://github.com/Devorein/Nishan/blob/master/docs/static/img/cache/logo.svg"/>
@@ -20,5 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>
-A cache specially designed to retrieve and store notion data in memory</b></p>
+<p align="center">A cache specially designed to retrieve and store notion data in memory<b></b></p>

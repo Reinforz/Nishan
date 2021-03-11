@@ -2,6 +2,8 @@ import path from 'path';
 import packages_data from './packages.json';
 
 async function main () {
+	const [ packages_name ] = process.argv.slice(2);
+  
 	const packages_dir = path.resolve(__dirname, '../../packages');
 
 	for (let index = 0; index < packages_data.length; index++) {

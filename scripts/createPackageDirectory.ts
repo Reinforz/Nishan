@@ -76,7 +76,7 @@ async function main () {
         "prebuild": "npm run test",
         "build": "npx del-cli ./dist && tsc --sourceMap false",
         "test": "npx jest --runInBand --config ../../jest.config.js",
-        "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
+        "build:nocomments": "tsc --sourceMap false --removeComments --declaration false"
       },
       "publishConfig": {
         "access": "public"

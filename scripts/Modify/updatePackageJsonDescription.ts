@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export async function updatePackageJson (package_json_path: string, description: string) {
+export async function updatePackageJsonDescription (package_json_path: string, description: string) {
 	const package_json_data = JSON.parse(await fs.promises.readFile(package_json_path, 'utf-8'));
 	if (package_json_data.description !== description) {
 		package_json_data.description = description;

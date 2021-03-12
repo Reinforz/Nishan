@@ -4,7 +4,7 @@ import path from 'path';
 import remark from 'remark';
 import { createReadme } from '../Create/createReadme';
 import packages_data from '../packages.json';
-import { updatePackageJson } from './updatePackageJson';
+import { updatePackageJsonDescription } from './updatePackageJsonDescription';
 
 async function main () {
 	const packages_dir = path.resolve(__dirname, '../../packages');
@@ -20,7 +20,7 @@ async function main () {
 			package_readme_path = path.join(package_dir, 'README.md'),
 			package_json_path = path.join(package_dir, 'package.json');
 		await createReadme(package_readme_path, package_data.name, package_data.description);
-		await updatePackageJson(package_json_path, package_data.description);
+		await updatePackageJsonDescription(package_json_path, package_data.description);
 		packages_readme_text += `* **\`@nishans/${package_data.name}\`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/${package_data.name})${package_data.published
 			? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name}) `
 			: ' '}[Docs](https://nishan-docs.netlify.app/docs/${package_data.name}): ${package_data.description}\n`;

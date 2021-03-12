@@ -25,6 +25,7 @@ This monorepo contains/will contain the following packages and apps:-
 
 *   **`@nishans/cache`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cache) [NPM](https://www.npmjs.com/package/@nishans/cache) [Docs](https://nishan-docs.netlify.app/docs/cache): A cache specially designed to retrieve and store notion data in memory
 *   **`@nishans/cli`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cli) [Docs](https://nishan-docs.netlify.app/docs/cli): A package to interact with `@nishans/core` from the terminal
+*   **`@nishans/cms`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cms) [Docs](https://nishan-docs.netlify.app/docs/cms): A cms for notion
 *   **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) [NPM](https://www.npmjs.com/package/@nishans/constants) [Docs](https://nishan-docs.netlify.app/docs/constants): A small package for all notion specific constants
 *   **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core): Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more
 *   **`@nishans/discord-bot`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) [Docs](https://nishan-docs.netlify.app/docs/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox

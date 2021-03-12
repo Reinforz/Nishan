@@ -10,6 +10,11 @@
     "published": false
   },
   {
+    "name": "cms",
+    "description": "A cms for notion",
+    "published": false
+  },
+  {
     "name": "constants",
     "description": "A small package for all notion specific constants",
     "published": true

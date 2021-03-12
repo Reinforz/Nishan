@@ -15,5 +15,3 @@ export function buildWithoutComments (package_name: string) {
 		}
 	});
 }
-
-buildWithoutComments('idz');

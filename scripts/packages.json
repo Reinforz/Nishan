@@ -35,6 +35,11 @@
     "published": true
   },
   {
+    "name": "export",
+    "description": "A small package to export notion page and database with ease",
+    "published": false
+  },
+  {
     "name": "fabricator",
     "description": "A package to generate notion blocks using a simple api",
     "published": true

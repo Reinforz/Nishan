@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>undefined</b></p>
+<p align="center"><b>A small package to export notion page and database with ease</b></p>

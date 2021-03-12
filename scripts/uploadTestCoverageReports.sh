@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-codecov_file="${GITHUB_WORKSPACE}/scripts/codecov.sh"
+CODECOV_SCRIPT="${GITHUB_WORKSPACE}/scripts/codecov.sh"
+FILES=""
 
-curl -s https://codecov.io/bash > $codecov_file
-chmod +x $codecov_file
+curl -s https://codecov.io/bash > $CODECOV_SCRIPT
+chmod +x $CODECOV_SCRIPT
 
 cd "${GITHUB_WORKSPACE}/packages";
 
@@ -12,8 +13,10 @@ for dir in */
     package="${dir/\//}"
     if [ -d "$package/coverage" ]
       then
-        file="$PWD/$package/coverage/lcov.info"
-        flag="${package/-/_}"
-        $codecov_file -f $file -F $flag -v -t $CODECOV_TOKEN
+        FILES="${FILES},$PWD/$package/coverage/lcov.info"
       fi
   done
+
+if [ ! -z "$a" ]
+
+$CODECOV_SCRIPT -f $FILES -v -t $CODECOV_TOKEN

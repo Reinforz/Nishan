@@ -31,8 +31,8 @@
     "pretest": "run-s build",
     "test": "lerna run test",
     "lint": "npx eslint . --color",
-    "update:metadata": "node ./scripts/dist/updatePackageMetadata",
-    "create": "node ./scripts/dist/createPackageDirectory",
+    "update:metadata": "node ./scripts/dist/Modify/updatePackageMetadata",
+    "create": "node ./scripts/dist/Create/createPackageDirectory",
     "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') < 0) throw new Error('this package requires yarn for development')\""
   },
   "optionalDependencies": {

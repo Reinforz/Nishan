@@ -12,9 +12,15 @@ for dir in */
   do
     package="${dir/\//}"
     if [ -d "$package/coverage" ]
+    then
+      $FILENAME="$PWD/$package/coverage/lcov.info"
+      if [ $FILES -eq "" ]
       then
-        FILES="${FILES},$PWD/$package/coverage/lcov.info"
+        FILES=$FILENAME
+      else
+        FILES="${FILES},$FILENAME"
       fi
+    fi
   done
 
 echo "Uploading $FILES"

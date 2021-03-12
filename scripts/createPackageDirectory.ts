@@ -17,7 +17,7 @@ async function main () {
 		package_lib_index_file_path = path.join(package_libs_dir_path, 'index.ts'),
 		package_readme_file_path = path.join(package_root_dir_path, 'readme.md'),
 		package_experiment_dir_path = path.join(package_root_dir_path, 'experiment'),
-		package_text_index_file_path = path.join(package_tests_dir_path, 'index.ts');
+		package_text_index_file_path = path.join(package_tests_dir_path, 'index.test.ts');
 
 	await fs.promises.mkdir(package_root_dir_path);
 	await fs.promises.mkdir(package_tests_dir_path);

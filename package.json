@@ -35,6 +35,9 @@
     "create": "node ./scripts/dist/createPackageDirectory",
     "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') < 0) throw new Error('this package requires yarn for development')\""
   },
+  "optionalDependencies": {
+    "husky": "5.1.3"
+  },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "license": "MIT"

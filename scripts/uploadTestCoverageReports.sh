@@ -17,6 +17,8 @@ for dir in */
       fi
   done
 
+echo "Uploading $FILES"
+
 if [ ! -z "$FILES" ]
 then
   $CODECOV_SCRIPT -f $FILES -v -t $CODECOV_TOKEN

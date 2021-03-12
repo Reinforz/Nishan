@@ -65,6 +65,9 @@ async function main () {
         "test": "npx jest --runInBand --config ../../jest.config.js",
         "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
       },
+      "publishConfig": {
+        "access": "public"
+      },
       "bugs": {
         "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2F${package_name}"
       },

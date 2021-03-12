@@ -23,5 +23,5 @@ jobs:
       - run: yarn test
       - name: Uploading test coverage reports
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"
-          "${GITHUB_WORKSPACE}/scripts/upload_test_coverage.sh"
+          chmod +x "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"
+          "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"

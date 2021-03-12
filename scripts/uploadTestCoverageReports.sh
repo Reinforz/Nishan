@@ -17,6 +17,7 @@ for dir in */
       fi
   done
 
-if [ ! -z "$a" ]
-
-$CODECOV_SCRIPT -f $FILES -v -t $CODECOV_TOKEN
+if [ ! -z "$FILES" ]
+then
+  $CODECOV_SCRIPT -f $FILES -v -t $CODECOV_TOKEN
+fi

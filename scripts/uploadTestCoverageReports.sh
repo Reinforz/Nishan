@@ -14,7 +14,7 @@ for dir in */
     if [ -d "$package/coverage" ]
     then
       $FILENAME="$PWD/$package/coverage/lcov.info"
-      if [ $FILES -eq "" ]
+      if [ -z $FILES ]
       then
         FILES=$FILENAME
       else

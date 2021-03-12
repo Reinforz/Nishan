@@ -1,7 +1,12 @@
 {
   "extends": "../tsconfig.shared.json",
   "include": [
-    "./**.ts"
+    "./**.ts",
+    "Build/buildWithoutComments.ts",
+    "Publish/getUpdatedPackages.ts",
+    "Publish/publishUpdatedPackages.ts",
+    "Modify/updatePackageMetadata.ts",
+    "Create/createPackageDirectory.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist",

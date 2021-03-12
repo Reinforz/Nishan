@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { trimDependencies } from './utils';
+import { trimDependencies } from './trimDependencies';
 
 export async function getUpdatedPackages () {
 	const packages_dir = path.resolve(__dirname, '../../packages'),

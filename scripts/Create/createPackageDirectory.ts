@@ -2,7 +2,7 @@ import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
 import dedent from 'ts-dedent';
-import { createReadme } from './utils';
+import { createReadme } from './createReadme';
 
 async function main () {
 	const [ package_name ] = process.argv.slice(2);

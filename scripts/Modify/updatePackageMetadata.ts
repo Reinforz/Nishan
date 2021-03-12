@@ -2,8 +2,9 @@ import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
 import remark from 'remark';
-import packages_data from './packages.json';
-import { createReadme, updatePackageJson } from './utils';
+import { createReadme } from '../Create/createReadme';
+import packages_data from '../packages.json';
+import { updatePackageJson } from './updatePackageJson';
 
 async function main () {
 	const packages_dir = path.resolve(__dirname, '../../packages');

@@ -1,3 +1,4 @@
+import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
 import dedent from 'ts-dedent';
@@ -6,19 +7,31 @@ import { createReadme } from './utils';
 async function main () {
 	const [ package_name ] = process.argv.slice(2);
 
-	const packages_dir = path.resolve(__dirname, '../../packages'),
-		package_root_dir = path.join(packages_dir, package_name),
-		package_tests_dir = path.join(package_root_dir, 'tests'),
-		package_libs_dir = path.join(package_root_dir, 'libs');
+	const packages_dir_path = path.resolve(__dirname, '../../packages'),
+		package_root_dir_path = path.join(packages_dir_path, package_name),
+		package_tests_dir_path = path.join(package_root_dir_path, 'tests'),
+		package_libs_dir_path = path.join(package_root_dir_path, 'libs');
 
-	const package_tsconfig_file_path = path.join(package_root_dir, 'tsconfig.json'),
-		package_packagejson_file_path = path.join(package_root_dir, 'package.json'),
-		package_lib_index_file_path = path.join(package_libs_dir, 'index.ts'),
-		package_readme_file_path = path.join(package_root_dir, 'readme.md');
+	const package_tsconfig_file_path = path.join(package_root_dir_path, 'tsconfig.json'),
+		package_packagejson_file_path = path.join(package_root_dir_path, 'package.json'),
+		package_lib_index_file_path = path.join(package_libs_dir_path, 'index.ts'),
+		package_readme_file_path = path.join(package_root_dir_path, 'readme.md'),
+		package_experiment_dir_path = path.join(package_root_dir_path, 'experiment'),
+		package_text_index_file_path = path.join(package_tests_dir_path, 'index.ts');
 
-	await fs.promises.mkdir(package_root_dir);
-	await fs.promises.mkdir(package_tests_dir);
-	await fs.promises.mkdir(package_libs_dir);
+	await fs.promises.mkdir(package_root_dir_path);
+	await fs.promises.mkdir(package_tests_dir_path);
+	await fs.promises.mkdir(package_libs_dir_path);
+	await fs.promises.mkdir(package_experiment_dir_path);
+
+	await fs.promises.writeFile(
+		package_text_index_file_path,
+		dedent`it('Should Work', () => {
+      expect(true).toBe(true);
+    });
+    `,
+		'utf-8'
+	);
 	await fs.promises.writeFile(
 		package_tsconfig_file_path,
 		dedent`{
@@ -80,6 +93,7 @@ async function main () {
 	);
 	await fs.promises.writeFile(package_lib_index_file_path, ``, 'utf-8');
 	createReadme(package_readme_file_path, package_name);
+	console.log(colors.green.bold(`Created package ${package_name}`));
 }
 
 main();

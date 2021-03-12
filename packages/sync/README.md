@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>A package to keep local notion data in sync with remote one by storing and restoring it.</b></p>
+<p align="center"><b>A package to keep local notion data in sync with remote one by storing and restoring it</b></p>

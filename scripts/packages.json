@@ -7,7 +7,7 @@
   {
     "name": "cli",
     "description": "A package to interact with `@nishans/core` from the terminal",
-    "published": true
+    "published": false
   },
   {
     "name": "constants",
@@ -77,7 +77,7 @@
   {
     "name": "orm",
     "description": "A package to use notion as a database by providing an easy to use orm api",
-    "published": true
+    "published": false
   },
   {
     "name": "permissions",
@@ -107,7 +107,7 @@
   {
     "name": "typegen",
     "description": "A package to automatically generate typescript definitions from a remote notion collection schema",
-    "published": true
+    "published": false
   },
   {
     "name": "types",

@@ -21,38 +21,30 @@
 
 This monorepo contains/will contain the following packages and apps:-
 
-Legend:
-
-1.  NPM: Packages released in npm
-2.  WIP: Packages under heavy construction
-3.  NSY: Package development not started yet
-
-***
-
 ## Packages
 
 *   **`@nishans/cache`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cache) [NPM](https://www.npmjs.com/package/@nishans/cache) [Docs](https://nishan-docs.netlify.app/docs/cache): A cache specially designed to retrieve and store notion data in memory
-*   **`@nishans/cli`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cli) [NPM](https://www.npmjs.com/package/@nishans/cli) [Docs](https://nishan-docs.netlify.app/docs/cli): A package to interact with `@nishans/core` from the terminal
+*   **`@nishans/cli`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/cli) [Docs](https://nishan-docs.netlify.app/docs/cli): A package to interact with `@nishans/core` from the terminal
 *   **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) [NPM](https://www.npmjs.com/package/@nishans/constants) [Docs](https://nishan-docs.netlify.app/docs/constants): A small package for all notion specific constants
 *   **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [NPM](https://www.npmjs.com/package/@nishans/core) [Docs](https://nishan-docs.netlify.app/docs/core): Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more
-*   **`@nishans/discord-bot`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) [NPM](https://www.npmjs.com/package/@nishans/discord-bot) [Docs](https://nishan-docs.netlify.app/docs/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
+*   **`@nishans/discord-bot`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot) [Docs](https://nishan-docs.netlify.app/docs/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 *   **`@nishans/endpoints`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) [NPM](https://www.npmjs.com/package/@nishans/endpoints) [Docs](https://nishan-docs.netlify.app/docs/endpoints): A package to expose all notion endpoints for queries and mutations
 *   **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors) [Docs](https://nishan-docs.netlify.app/docs/errors): A small package containing various notion specific error classes
 *   **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator) [Docs](https://nishan-docs.netlify.app/docs/fabricator): A package to generate notion blocks using a simple api
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql) [Docs](https://nishan-docs.netlify.app/docs/graphql): A graphql server for notion built using `@nishans/core`
 *   **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz) [Docs](https://nishan-docs.netlify.app/docs/idz): A small package to validate, generate and parse notion ids
 *   **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks) [Docs](https://nishan-docs.netlify.app/docs/inline-blocks): Package providing an easy to use api to generate contents for notion inline blocks
-*   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [NPM](https://www.npmjs.com/package/@nishans/logger) [Docs](https://nishan-docs.netlify.app/docs/logger): A logger built specifically for nishan ecosystem
-*   **`@nishans/markdown`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/markdown) [NPM](https://www.npmjs.com/package/@nishans/markdown) [Docs](https://nishan-docs.netlify.app/docs/markdown): A package to upload markdown content into notion
+*   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [Docs](https://nishan-docs.netlify.app/docs/logger): A logger built specifically for nishan ecosystem
+*   **`@nishans/markdown`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/markdown) [Docs](https://nishan-docs.netlify.app/docs/markdown): A package to upload markdown content into notion
 *   **`@nishans/notion-formula`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) [NPM](https://www.npmjs.com/package/@nishans/notion-formula) [Docs](https://nishan-docs.netlify.app/docs/notion-formula): A package to generate notion formula with ease
 *   **`@nishans/operations`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) [NPM](https://www.npmjs.com/package/@nishans/operations) [Docs](https://nishan-docs.netlify.app/docs/operations): A package to inspect, modify and store notion operations
-*   **`@nishans/orm`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/orm) [NPM](https://www.npmjs.com/package/@nishans/orm) [Docs](https://nishan-docs.netlify.app/docs/orm): A package to use notion as a database by providing an easy to use orm api
+*   **`@nishans/orm`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/orm) [Docs](https://nishan-docs.netlify.app/docs/orm): A package to use notion as a database by providing an easy to use orm api
 *   **`@nishans/permissions`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/permissions) [NPM](https://www.npmjs.com/package/@nishans/permissions) [Docs](https://nishan-docs.netlify.app/docs/permissions): A package to easily deal with notion permissions
-*   **`@nishans/react-filters`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/react-filters) [NPM](https://www.npmjs.com/package/@nishans/react-filters) [Docs](https://nishan-docs.netlify.app/docs/react-filters): A react component that emulates notions advanced filter
-*   **`@nishans/remark-notion`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) [NPM](https://www.npmjs.com/package/@nishans/remark-notion) [Docs](https://nishan-docs.netlify.app/docs/remark-notion): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
-*   **`@nishans/schema-builder`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder) [NPM](https://www.npmjs.com/package/@nishans/schema-builder) [Docs](https://nishan-docs.netlify.app/docs/schema-builder): A package to create notion collection schema painlessly
-*   **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [NPM](https://www.npmjs.com/package/@nishans/sync) [Docs](https://nishan-docs.netlify.app/docs/sync): A package to keep local notion data in sync with remote one by storing and restoring it.
-*   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen) [NPM](https://www.npmjs.com/package/@nishans/typegen) [Docs](https://nishan-docs.netlify.app/docs/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
+*   **`@nishans/react-filters`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/react-filters) [Docs](https://nishan-docs.netlify.app/docs/react-filters): A react component that emulates notions advanced filter
+*   **`@nishans/remark-notion`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion) [Docs](https://nishan-docs.netlify.app/docs/remark-notion): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
+*   **`@nishans/schema-builder`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder) [Docs](https://nishan-docs.netlify.app/docs/schema-builder): A package to create notion collection schema painlessly
+*   **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [NPM](https://www.npmjs.com/package/@nishans/sync) [Docs](https://nishan-docs.netlify.app/docs/sync): A package to keep local notion data in sync with remote one by storing and restoring it
+*   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen) [Docs](https://nishan-docs.netlify.app/docs/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
 *   **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [NPM](https://www.npmjs.com/package/@nishans/types) [Docs](https://nishan-docs.netlify.app/docs/types): Typescript type definitions for notion
 *   **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [NPM](https://www.npmjs.com/package/@nishans/utils) [Docs](https://nishan-docs.netlify.app/docs/utils): A bunch of small utility modules used across nishans ecosystem
 

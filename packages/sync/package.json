@@ -1,7 +1,7 @@
 {
   "name": "@nishans/sync",
   "version": "0.0.14",
-  "description": "A package to keep local notion data in sync with remote one by storing and restoring it.",
+  "description": "A package to keep local notion data in sync with remote one by storing and restoring it",
   "keywords": [
     "notion",
     "notion-import",

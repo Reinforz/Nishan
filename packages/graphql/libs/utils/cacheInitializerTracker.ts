@@ -1,5 +1,9 @@
 import { NotionCacheInitializerTracker } from '../types';
 
+/**
+ * Creates default cache initializer
+ * @returns Notion Cache Map
+ */
 export const cacheInitializerTracker = () => {
 	return {
 		block: new Map(),

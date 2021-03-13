@@ -11,5 +11,8 @@
     "rehype": "^11.0.0",
     "remark": "^13.0.0",
     "tsc-prog": "^2.2.1"
+  },
+  "script": {
+    "start": "echo Hello"
   }
 }

@@ -3,9 +3,16 @@
   "version": "0.0.0",
   "description": "",
   "keywords": [],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/validators/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fvalidators"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
   "directories": {
@@ -15,18 +22,11 @@
   "files": [
     "dist/libs"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
   "scripts": {
     "prepublishOnly": "npm run build && npm run build:nocomments",
     "prebuild": "npm run test",
     "build": "npx del-cli ./dist && tsc --sourceMap false",
     "build:nocomments": "tsc -p ./tsconfig.nocomments.json --sourceMap false"
-  },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fvalidators"
   },
   "dependencies": {},
   "devDependencies": {

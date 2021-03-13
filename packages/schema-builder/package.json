@@ -7,9 +7,16 @@
     "notion-collection-schema",
     "notion-schema-builder"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/schema-builder/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "directories": {
@@ -20,12 +27,5 @@
     "dist/src",
     "dist/utils"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
-  "scripts": {},
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
-  }
+  "scripts": {}
 }

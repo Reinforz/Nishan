@@ -8,9 +8,16 @@
     "notion-typescript",
     "notion-type-definitions"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/types/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Ftypes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "",
   "types": "dist/src/index.d.ts",
   "directories": {
@@ -19,14 +26,7 @@
   "files": [
     "dist/src"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
   "scripts": {
     "build": "tsc --sourceMap false"
-  },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Ftypes"
   }
 }

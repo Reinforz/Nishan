@@ -10,9 +10,16 @@
     "notion-download",
     "notion-sync"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/sync/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fsync"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
   "directories": {
@@ -22,23 +29,16 @@
   "files": [
     "dist/libs"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
   "scripts": {
     "test": "npx jest --runInBand --config ../../jest.config.js",
     "build": "tsc --sourceMap false"
   },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fsync"
-  },
   "dependencies": {
+    "@nishans/cache": "0.0.28",
+    "@nishans/operations": "0.0.26",
     "js-yaml": "^4.0.0",
     "mongodb": "^3.6.3",
-    "uuid": "^8.3.2",
-    "@nishans/cache": "0.0.28",
-    "@nishans/operations": "0.0.26"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@nishans/types": "0.0.27",

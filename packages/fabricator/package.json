@@ -6,9 +6,16 @@
     "notion",
     "notion-api"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/fabricator/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
   "directories": {
@@ -19,30 +26,23 @@
     "dist/libs",
     "dist/types"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
-  },
   "dependencies": {
-    "@nishans/notion-formula": "^0.0.25",
-    "@nishans/endpoints": "^0.0.26",
-    "@nishans/operations": "^0.0.26",
-    "@nishans/errors": "^0.0.24",
     "@nishans/cache": "^0.0.28",
+    "@nishans/endpoints": "^0.0.26",
+    "@nishans/errors": "^0.0.24",
     "@nishans/idz": "0.0.15",
+    "@nishans/notion-formula": "^0.0.25",
+    "@nishans/operations": "^0.0.26",
     "@nishans/utils": "0.0.18"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.27"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

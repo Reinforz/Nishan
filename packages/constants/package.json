@@ -6,9 +6,16 @@
     "notion",
     "notion constants"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/constants/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
   "directories": {
@@ -18,21 +25,14 @@
   "files": [
     "dist/libs"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Devorein/Nishan.git"
-  },
   "scripts": {
     "test": "npx jest --runInBand --config ../../jest.config.js",
     "build": "tsc --sourceMap false"
   },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues"
-  },
   "devDependencies": {
     "@nishans/types": "^0.0.27"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

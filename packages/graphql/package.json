@@ -8,42 +8,42 @@
     "apollo-graphql-server",
     "graphql"
   ],
-  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/graphql/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fgraphql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nishan-Open-Source/Nishan.git"
+  },
   "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
   "directories": {
     "lib": "libs",
     "test": "tests"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "files": [
     "dist/libs"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Nishan-Open-Source/Nishan.git"
-  },
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
-  "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fgraphql"
-  },
   "dependencies": {
-    "@nishans/core": "0.0.24",
-    "@nishans/utils": "0.0.18",
-    "@nishans/endpoints": "0.0.26",
     "@nishans/cache": "0.0.28",
+    "@nishans/core": "0.0.24",
+    "@nishans/endpoints": "0.0.26",
+    "@nishans/utils": "0.0.18",
     "apollo-server": "^2.21.0",
     "graphql": "^15.5.0",
     "graphql-type-json": "^0.3.2"
   },
   "devDependencies": {
     "@nishans/types": "0.0.27"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

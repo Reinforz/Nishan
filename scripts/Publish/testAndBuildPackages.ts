@@ -2,7 +2,7 @@ import cp from 'child_process';
 import colors from 'colors';
 import path from 'path';
 
-export async function testAndBuildPackages (packages: string[]) {
+export function testAndBuildPackages (packages: string[]) {
 	const packages_dir = path.resolve(__dirname, '../../../packages'),
 		package_dirs: string[] = [];
 	for (let index = 0; index < packages.length; index++) {
@@ -25,6 +25,7 @@ export async function testAndBuildPackages (packages: string[]) {
 			break;
 		}
 	}
+	return package_dirs;
 }
 
 testAndBuildPackages([ '@nishans/idz' ]);

@@ -25,7 +25,8 @@
   },
   "scripts": {
     "prepublishOnly": "npm run build && npm run build:nocomments",
-    "build": "npx del-cli ./dist && tsc --sourceMap false",
+    "prebuild": "npx del-cli ./dist",
+    "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js",
     "build:nocomments": "tsc --sourceMap false --removeComments --declaration false"
   },

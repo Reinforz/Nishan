@@ -9,10 +9,10 @@ import { testAndBuildPackages } from './testAndBuildPackages';
 export async function publishUpdatedPackages (updated_packages_name: string[]) {
 	const packages_map = await createPackageMap(),
 		updated_packages_map = getUpdatedPackages(updated_packages_name, packages_map),
-		rearranged_packages_map = rearrangePackageOrder(updated_packages_map, packages_map),
+		rearranged_packages_map = rearrangePackageOrder(updated_packages_map.all, packages_map),
 		rearranged_packages = Array.from(rearranged_packages_map.keys());
 	updatePatchVersion(rearranged_packages_map);
-	updatePackageJsonDependencies(updated_packages_map);
+	updatePackageJsonDependencies(updated_packages_map.all);
 	const package_dirs = testAndBuildPackages(rearranged_packages);
 	publishPackages(package_dirs);
 }

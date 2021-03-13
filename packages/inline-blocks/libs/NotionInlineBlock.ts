@@ -1,4 +1,5 @@
 import { InlineDate, TTextFormat } from '@nishans/types';
+import { ITextStyleFormatter } from './types';
 
 /**
  * A class to construct notion inline blocks with provided methods
@@ -23,7 +24,7 @@ export class NotionInlineBlock {
    */
 	text (text: string) {
 		const { TextStyleFormatter } = require('./');
-		return new TextStyleFormatter(this.content.concat([ [ text, [] ] ]));
+		return new TextStyleFormatter(this.content.concat([ [ text, [] ] ])) as ITextStyleFormatter;
 	}
 
 	/**

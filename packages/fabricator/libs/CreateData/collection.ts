@@ -1,4 +1,4 @@
-import { generateId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -13,7 +13,7 @@ import { CreateData, ICollectionBlockInput, INotionFabricatorOptions } from './'
  */
 export async function collection (input: ICollectionBlockInput, parent_id: string, options: INotionFabricatorOptions, cb?: ((data: TView)=>any)) {
 	// Generate the collection id
-	const collection_id = generateId(input.collection_id);
+	const collection_id = NotionIdz.Generate.id(input.collection_id);
 	// Generate the schema to store in the collection
 	const [ schema, ,format ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,

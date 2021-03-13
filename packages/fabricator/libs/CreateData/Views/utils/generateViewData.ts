@@ -1,4 +1,4 @@
-import { generateId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { TView } from '@nishans/types';
 import { INotionFabricatorOptions } from '../../';
@@ -17,7 +17,7 @@ export async function generateViewData (
 	parent_id: string
 ) {
 	// construct the view id, using a custom id
-	const view_id = generateId(id);
+	const view_id = NotionIdz.Generate.id(id);
 	// Construct the view data
 	const view_data = {
 		id: view_id,

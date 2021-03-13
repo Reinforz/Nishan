@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionFabricator, RepositionParams, TBlockInput } from '@nishans/fabricator';
-import { generateId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -35,7 +35,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const block_map = CreateMaps.block(),
 			block = this.getCachedData();
 		const ids: string[] =
-			typeof infos === 'number' ? Array(infos).fill(generateId()) : infos.map((info) => generateId(info));
+			typeof infos === 'number'
+				? Array(infos).fill(NotionIdz.Generate.id())
+				: infos.map((info) => NotionIdz.Generate.id(info));
 
 		for (let index = 0; index < ids.length; index++) {
 			const block_id = ids[index];

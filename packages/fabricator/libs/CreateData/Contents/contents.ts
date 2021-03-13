@@ -1,6 +1,6 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
-import { generateId } from "@nishans/idz";
+import { NotionIdz } from "@nishans/idz";
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
@@ -37,7 +37,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
   
   const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space') => {
     for (let index = 0; index < contents.length; index++) {
-      const content = contents[index], block_id = generateId((content as any).id);
+      const content = contents[index], block_id = NotionIdz.Generate.id((content as any).id);
       // Common data to be used for all blocks
       const common_data = {
         id: block_id,
@@ -63,7 +63,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       if (content.type === "collection_view_page" || content.type === "collection_view") {
         // Construct the collection first
-        const collection_id = generateId(content.collection_id);
+        const collection_id = NotionIdz.Generate.id(content.collection_id);
         // Construct the collection block object
         const data: ICollectionBlock = {
           ...common_data,
@@ -131,7 +131,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
 
         // For each contents create a column
         for (let index = 0; index < contents.length; index++) {
-          const column_id = generateId(contents[index].id), column_data: IColumn = {
+          const column_id = NotionIdz.Generate.id(contents[index].id), column_data: IColumn = {
             id: column_id,
             parent_id: block_id,
             parent_table: "block",

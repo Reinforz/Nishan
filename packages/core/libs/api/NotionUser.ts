@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
 import { NotionFabricator } from '@nishans/fabricator';
-import { generateId, idToUuid, uuidToId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
 import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
@@ -82,7 +82,7 @@ class NotionUser extends Data<INotionUser> {
     const spaces: Space[] = [];
 
     for (let index = 0; index < opts.length; index++) {
-      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = generateId(), { spaceId: space_id, recordMap: {space} } = await NotionEndpoints.Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getProps());
+      const opt = opts[index], { name, icon = "", disable_public_access = false, disable_export = false, disable_move_to_space = false, disable_guests = false, beta_enabled = true, invite_link_enabled = true } = opt, space_view_id = NotionIdz.Generate.id(), { spaceId: space_id, recordMap: {space} } = await NotionEndpoints.Mutations.createSpace({initialUseCases: [], planType: "personal", name, icon }, this.getProps());
       spaces.push(new Space({
         id: space_id,
         ...this.getProps(),
@@ -220,7 +220,7 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async getPagesById(ids: string[]) {
-    ids = ids.map(id=>idToUuid(uuidToId(id)));
+    ids = ids.map(id=>NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id)));
     const page_map = CreateMaps.page();
     await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), this.getProps());
     for (let index = 0; index < ids.length; index++) {

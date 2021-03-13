@@ -1,5 +1,5 @@
 import { NotionErrors } from '@nishans/errors';
-import { createShortId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { INotionCoreOptions } from '../';
@@ -43,7 +43,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 
 	async duplicate () {
 		const data = this.getCachedData(),
-			id = createShortId();
+			id = NotionIdz.Generate.shortId();
 		const schema_unit = data.schema[this.schema_id];
 		if (schema_unit.type !== 'title') {
 			data.schema[id] = data.schema[this.schema_id];

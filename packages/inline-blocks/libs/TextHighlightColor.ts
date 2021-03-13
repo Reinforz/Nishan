@@ -1,10 +1,11 @@
 import { InlineFormat, TTextFormat } from '@nishans/types';
 import { NotionInlineBlock } from './';
+import { ITextHighlightColor } from './types';
 
 /**
  * A class used to style inline text through their text and background colors 
  */
-export class TextHighlightColor extends NotionInlineBlock {
+export class TextHighlightColor extends NotionInlineBlock implements ITextHighlightColor {
 	constructor (text?: TTextFormat) {
 		super(text);
 	}

@@ -1,10 +1,11 @@
 import { TFormatBlockColor, TTextFormat } from '@nishans/types';
 import { TextHighlightColor } from './';
+import { ITextStyleFormatter } from './types';
 
 /**
  * A class to add text style formatters
  */
-export class TextStyleFormatter extends TextHighlightColor {
+export class TextStyleFormatter extends TextHighlightColor implements ITextStyleFormatter {
 	constructor (text?: TTextFormat) {
 		super(text);
 	}

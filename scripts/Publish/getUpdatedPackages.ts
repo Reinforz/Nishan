@@ -1,5 +1,4 @@
 import { IPackageMap } from '../types';
-import { createPackageMap } from './createPackageMap';
 
 export function getUpdatedPackages (updated_package_names: string[], packages_map: IPackageMap) {
 	const updated_package_map: {
@@ -23,10 +22,12 @@ export function getUpdatedPackages (updated_package_names: string[], packages_ma
 			Object.entries(dependents)
 				.filter(([ dependent_name ]) => !updated_package_map.all.get(dependent_name))
 				.forEach(([ dependent_name, dependent_version ]) => {
-					updated_package_map.all.set(dependent_name, dependent_version);
-					if (level === 0) updated_package_map.direct.set(dependent_name, dependent_version);
-					else updated_package_map.indirect.set(dependent_name, dependent_version);
-					traverse(packages_map.get(dependent_name)!.dependents, level + 1);
+					if (dependent_version !== '0.0.0') {
+						updated_package_map.all.set(dependent_name, dependent_version);
+						if (level === 0) updated_package_map.direct.set(dependent_name, dependent_version);
+						else updated_package_map.indirect.set(dependent_name, dependent_version);
+						traverse(packages_map.get(dependent_name)!.dependents, level + 1);
+					}
 				});
 		}
 
@@ -36,4 +37,4 @@ export function getUpdatedPackages (updated_package_names: string[], packages_ma
 	return updated_package_map;
 }
 
-createPackageMap().then((package_map) => console.log(getUpdatedPackages([ 'idz' ], package_map)));
+// createPackageMap().then((package_map) => console.log(getUpdatedPackages([ 'inline-blocks' ], package_map)));

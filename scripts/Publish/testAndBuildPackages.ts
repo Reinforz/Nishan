@@ -29,5 +29,3 @@ export function testAndBuildPackages (packages: string[]) {
 	}
 	return package_dirs;
 }
-
-testAndBuildPackages([ '@nishans/idz' ]);

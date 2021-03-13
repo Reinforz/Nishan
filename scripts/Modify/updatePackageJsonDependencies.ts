@@ -15,22 +15,16 @@ export async function updatePackageJsonDependencies (updated_packages_map: Map<s
 		package_package_json_data.version = package_version;
 
 		for (const [ updated_package_name, updated_package_version ] of Array.from(updated_packages_map.entries())) {
-			if (package_package_json_data.dependencies[updated_package_name]) {
-				console.log(
-					`DEP ${colors.blue.bold(updated_package_name)} : ${colors.red.bold(
-						package_package_json_data.dependencies[updated_package_name]
-					)} => ${colors.green.blue(updated_package_version)}`
-				);
-				package_package_json_data.dependencies[updated_package_name] = updated_package_version;
-			}
-			if (package_package_json_data.devDependencies[updated_package_name]) {
-				console.log(
-					`DEV ${colors.blue.bold(updated_package_name)} : ${colors.red.bold(
-						package_package_json_data.devDependencies[updated_package_name]
-					)} => ${colors.green.blue(updated_package_version)}`
-				);
-				package_package_json_data.devDependencies[updated_package_name] = updated_package_version;
-			}
+			[ 'dependencies', 'devDependencies' ].forEach((dependency_type) => {
+				if (package_package_json_data[dependency_type]?.[updated_package_name]) {
+					console.log(
+						`DEP ${colors.blue.bold(updated_package_name)} : ${colors.red.bold(
+							package_package_json_data[dependency_type][updated_package_name]
+						)} => ${colors.green.blue(updated_package_version)}`
+					);
+					package_package_json_data[dependency_type][updated_package_name] = updated_package_version;
+				}
+			});
 		}
 		console.log();
 

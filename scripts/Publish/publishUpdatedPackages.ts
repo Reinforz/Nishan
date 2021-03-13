@@ -12,9 +12,9 @@ export async function publishUpdatedPackages (updated_packages_name: string[]) {
 		rearranged_packages_map = rearrangePackageOrder(updated_packages_map.all, packages_map),
 		rearranged_packages = Array.from(rearranged_packages_map.keys());
 	updatePatchVersion(rearranged_packages_map);
-	updatePackageJsonDependencies(updated_packages_map.all);
+	await updatePackageJsonDependencies(rearranged_packages_map);
 	const package_dirs = testAndBuildPackages(rearranged_packages);
 	publishPackages(package_dirs);
 }
 
-publishUpdatedPackages([ 'core' ]);
+publishUpdatedPackages([ 'inline-blocks' ]);

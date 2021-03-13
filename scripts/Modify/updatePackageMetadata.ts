@@ -7,9 +7,9 @@ import packages_data from '../packages.json';
 import { updatePackageJsonDescription } from './updatePackageJsonDescription';
 
 async function main () {
-	const docs_dir = path.resolve(__dirname, '../../docs/docs'),
-		packages_dir = path.resolve(__dirname, '../../packages'),
-		root_readme_path = path.resolve(__dirname, '../../README.md'),
+	const docs_dir = path.resolve(__dirname, '../../../docs/docs'),
+		packages_dir = path.resolve(__dirname, '../../../packages'),
+		root_readme_path = path.resolve(__dirname, '../../../README.md'),
 		root_readme_text = await fs.promises.readFile(root_readme_path, 'utf-8'),
 		parsed_root_readme_md: any = remark().parse(root_readme_text);
 
@@ -28,7 +28,7 @@ async function main () {
 				? ` [Docs](https://nishan-docs.netlify.app/docs/${package_data.name})`
 				: '',
 			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name})` : '';
-		packages_readme_text += `* **\`@nishans/${package_data.name}\`** ${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
+		packages_readme_text += `* **\`@nishans/${package_data.name}\`**${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
 		console.log(colors.bold.green(`Done with ${package_data.name}`));
 	}
 

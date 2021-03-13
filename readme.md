@@ -13,9 +13,15 @@
     <img src="https://img.shields.io/discord/804219491763617842.svg?style=flat&label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2">
   </a>
 </p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Total%20Packages-26-green">
+  <img src="https://img.shields.io/badge/Published%20Packages-15-green">
+</p>
 
 <div align="center"> <h1>Nishan</h1> </div>
 <div align="center"><b>An ecosystem of packages for notion written in typescript.</b></div>
+
+</br>
 
 This monorepo contains/will contain the following packages and apps:-
 

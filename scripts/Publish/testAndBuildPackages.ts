@@ -13,6 +13,8 @@ export function testAndBuildPackages (packages: string[]) {
 		try {
 			cp.execSync(`npm run test`, { cwd: package_dir });
 			console.log(colors.green.bold(`Test completed`));
+			cp.execSync(`npx del-cli ./dist`, { cwd: package_dir });
+			console.log(colors.green.bold(`Deleted dist folder`));
 			cp.execSync(`npm run build`, { cwd: package_dir });
 			console.log(colors.green.bold(`Regular build completed`));
 			cp.execSync(`tsc --sourceMap false --removeComments --declaration false`, {

@@ -16,7 +16,7 @@ describe('NotionInlineBlock ctor', () => {
 
 it('text', () => {
 	const notion_inline_block = new NotionInlineBlock();
-	expect(notion_inline_block.text('123').content).toStrictEqual([ [ '123', [] ] ]);
+	expect(notion_inline_block.text('123').bold.content).toStrictEqual([ [ '123', [] ] ]);
 });
 
 it('mention', () => {

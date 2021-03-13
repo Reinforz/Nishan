@@ -10,10 +10,9 @@ cd "${GITHUB_WORKSPACE}/packages";
 
 for dir in */
   do
-    package="${dir/\//}"
-    if [ -d "$package/coverage" ]
+    if [ -d "${dir}coverage" ]
     then
-      $FILENAME="$PWD/$package/coverage/lcov.info"
+      FILENAME="$PWD/${dir}coverage/lcov.info"
       if [ -z $FILES ]
       then
         FILES=$FILENAME
@@ -22,8 +21,6 @@ for dir in */
       fi
     fi
   done
-
-echo "Uploading $FILES"
 
 if [ ! -z "$FILES" ]
 then

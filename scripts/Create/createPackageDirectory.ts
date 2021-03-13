@@ -4,7 +4,7 @@ import path from 'path';
 import dedent from 'ts-dedent';
 import { createReadme } from './createReadme';
 
-async function main () {
+export async function createPackageDirectory () {
 	const [ package_name ] = process.argv.slice(2);
 
 	const packages_dir_path = path.resolve(__dirname, '../../packages'),
@@ -72,11 +72,8 @@ async function main () {
         "url": "git+https://github.com/Devorein/Nishan.git"
       },
       "scripts": {
-        "prepublishOnly": "npm run build && npm run build:nocomments",
-        "prebuild": "npm run test",
-        "build": "npx del-cli ./dist && tsc --sourceMap false",
-        "test": "npx jest --runInBand --config ../../jest.config.js",
-        "build:nocomments": "tsc --sourceMap false --removeComments --declaration false"
+        "build": "tsc --sourceMap false",
+        "test": "npx jest --runInBand --config ../../jest.config.js"
       },
       "publishConfig": {
         "access": "public"
@@ -95,5 +92,3 @@ async function main () {
 	createReadme(package_readme_file_path, package_name);
 	console.log(colors.green.bold(`Created package ${package_name}`));
 }
-
-main();

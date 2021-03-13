@@ -17,8 +17,6 @@
 <div align="center"> <h1>Nishan</h1> </div>
 <div align="center"><b>An ecosystem of packages for notion written in typescript.</b></div>
 
-***
-
 This monorepo contains/will contain the following packages and apps:-
 
 ## Packages

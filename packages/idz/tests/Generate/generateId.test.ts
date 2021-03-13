@@ -1,21 +1,21 @@
 import { v4 } from 'uuid';
-import { generateId, uuidToId } from '../libs';
+import { NotionIdz } from '../../libs';
 
 it(`Should generate random id when none provided`, () => {
-	expect(generateId()).toBeTruthy();
+	expect(NotionIdz.Generate.id()).toBeTruthy();
 });
 
 it(`Should return passed id when correct uuid is provided`, () => {
-	expect(generateId(v4())).toBeTruthy();
+	expect(NotionIdz.Generate.id(v4())).toBeTruthy();
 });
 
 it(`Should return passed id when correct id is provided`, () => {
-	expect(generateId(uuidToId(v4()))).toBeTruthy();
+	expect(NotionIdz.Generate.id(NotionIdz.Transform.toId(v4()))).toBeTruthy();
 });
 
 it(`Should generate random id when correct id is not provided`, () => {
 	const consoleLogMock = jest.spyOn(console, 'log');
-	const generated_id = generateId(v4().slice(1));
+	const generated_id = NotionIdz.Generate.id(v4().slice(1));
 	expect(generated_id).toBeTruthy();
 	expect(consoleLogMock).toHaveBeenCalledWith('Invalid uuid provided');
 	expect(consoleLogMock).toHaveBeenCalledTimes(1);

@@ -1,10 +1,10 @@
 import { NotionCache } from '@nishans/cache';
-import { idToUuid, uuidToId } from '@nishans/idz';
+import { NotionIdz } from '@nishans/idz';
 import { NotionFormula } from '../libs';
 import { dsmu, dsu, tsmu, tsu } from './utils';
 
 it('generateSchemaMap', async () => {
-	const id = idToUuid(uuidToId('4b4bb21df68b4113b342830687a5337a'));
+	const id = NotionIdz.Transform.toUuid(NotionIdz.Transform.toId('4b4bb21df68b4113b342830687a5337a'));
 	const initializeCacheForSpecificDataMock = jest
 		.spyOn(NotionCache, 'initializeCacheForSpecificData')
 		.mockImplementationOnce(async () => undefined);

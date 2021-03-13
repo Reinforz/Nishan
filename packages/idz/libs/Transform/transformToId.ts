@@ -3,4 +3,4 @@
  * @param uuid The uuid to convert to an id
  * @returns The converted id
  */
-export const uuidToId = (uuid: string) => uuid.replace(/-/g, '');
+export const transformToId = (uuid: string) => uuid.replace(/-/g, '');

@@ -1,4 +1,5 @@
 import { IPackageMap } from '../types';
+import { createPackageMap } from './createPackageMap';
 
 export function getUpdatedPackages (updated_package_names: string[], packages_map: IPackageMap) {
 	const updated_package_map: Map<string, string> = new Map();
@@ -15,3 +16,5 @@ export function getUpdatedPackages (updated_package_names: string[], packages_ma
 
 	return updated_package_map;
 }
+
+createPackageMap().then((package_map) => console.log(getUpdatedPackages([ 'idz' ], package_map)));

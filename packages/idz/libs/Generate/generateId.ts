@@ -1,6 +1,5 @@
 import { v4, validate } from 'uuid';
-import { idToUuid } from './id2uuid';
-import { uuidToId } from './uuid2id';
+import { NotionIdz } from '../';
 
 /**
  * Generates notion specific id, using the passed id or a new one
@@ -10,7 +9,7 @@ export function generateId (id?: string) {
 	if (id) {
 		// Checks if the passed id is valid or not
 		// transform to regular id then back to uuid to validate
-		const is_valid = validate(idToUuid(uuidToId(id)));
+		const is_valid = validate(NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id)));
 		// if valid no point in creating a new one, return it
 		if (is_valid) return id;
 		else {

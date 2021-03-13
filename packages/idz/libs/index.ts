@@ -1,4 +1,7 @@
-export * from './createShortId';
-export * from './generateId';
-export * from './id2uuid';
-export * from './uuid2id';
+import { NotionIdzGenerate } from './Generate';
+import { NotionIdzTransform } from './Transform';
+
+export const NotionIdz = {
+	Generate: NotionIdzGenerate,
+	Transform: NotionIdzTransform
+};

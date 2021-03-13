@@ -7,12 +7,14 @@ import packages_data from '../packages.json';
 import { updatePackageJsonDescription } from './updatePackageJsonDescription';
 
 async function main () {
-	const packages_dir = path.resolve(__dirname, '../../packages');
-	const root_readme_path = path.resolve(__dirname, '../../README.md'),
+	const docs_dir = path.resolve(__dirname, '../../docs/docs'),
+		packages_dir = path.resolve(__dirname, '../../packages'),
+		root_readme_path = path.resolve(__dirname, '../../README.md'),
 		root_readme_text = await fs.promises.readFile(root_readme_path, 'utf-8'),
 		parsed_root_readme_md: any = remark().parse(root_readme_text);
 
 	let packages_readme_text = ``;
+	const docs_dirs = await fs.promises.readdir(docs_dir);
 
 	for (let index = 0; index < packages_data.length; index++) {
 		const package_data = packages_data[index],
@@ -21,9 +23,12 @@ async function main () {
 			package_json_path = path.join(package_dir, 'package.json');
 		await createReadme(package_readme_path, package_data.name, package_data.description);
 		await updatePackageJsonDescription(package_json_path, package_data.description);
-		packages_readme_text += `* **\`@nishans/${package_data.name}\`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/${package_data.name})${package_data.published
-			? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name}) `
-			: ' '}[Docs](https://nishan-docs.netlify.app/docs/${package_data.name}): ${package_data.description}\n`;
+		const github_link = ` [Github](https://github.com/Devorein/Nishan/tree/master/packages/${package_data.name})`,
+			doc_link = docs_dirs.includes(package_data.name)
+				? ` [Docs](https://nishan-docs.netlify.app/docs/${package_data.name})`
+				: '',
+			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name})` : '';
+		packages_readme_text += `* **\`@nishans/${package_data.name}\`** ${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
 		console.log(colors.bold.green(`Done with ${package_data.name}`));
 	}
 

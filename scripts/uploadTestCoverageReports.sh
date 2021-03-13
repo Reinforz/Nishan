@@ -11,6 +11,6 @@ for dir in */
   do
     if [ -d "${dir}coverage" ]
     then
-      $codecov_file -f "$PWD/$package/coverage/lcov.info" -v -t $CODECOV_TOKEN
+      $CODECOV_SCRIPT -f "$PWD/$package/coverage/lcov.info" -v -t $CODECOV_TOKEN
     fi
   done

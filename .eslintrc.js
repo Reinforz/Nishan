@@ -32,6 +32,7 @@ module.exports = {
 		'@typescript-eslint/no-extra-semi': 'off',
 		'@typescript-eslint/no-empty-interface': 'off',
 		'@typescript-eslint/no-this-alias': 'off',
-		'@typescript-eslint/no-unused-vars': 'error'
+		'@typescript-eslint/no-unused-vars': 'error',
+    "@typescript-eslint/no-non-null-assertion": "off"
 	}
 };

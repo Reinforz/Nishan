@@ -1,8 +1,7 @@
 import { IPackageMap } from '../types';
 
-export function getUpdatedPackages (updated_packages_name: string, packages_map: IPackageMap) {
-	const updated_package_names = updated_packages_name.split(','),
-		updated_package_map: Map<string, string> = new Map();
+export function getUpdatedPackages (updated_package_names: string[], packages_map: IPackageMap) {
+	const updated_package_map: Map<string, string> = new Map();
 
 	for (const updated_package_name of updated_package_names) {
 		const package_map = packages_map.get(`@nishans/${updated_package_name}`);

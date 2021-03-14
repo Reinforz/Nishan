@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { trimDependencies } from '../Publish/trimDependencies';
+import { NishanScripts } from '../';
 import { IPackageMap } from "../types";
 
 export async function createPackageMap(){
@@ -12,7 +12,7 @@ export async function createPackageMap(){
 			await fs.promises.readFile(path.join(packages_dir, package_dir, 'package.json'), 'utf-8')
 		);
 		packages_map.set(`@nishans/${package_dir}`, {
-			dependencies: trimDependencies({...(package_package_json_data.dependencies ?? {}), ...(package_package_json_data.devDependencies ?? {})}),
+			dependencies: NishanScripts.Extract.dependencies({...(package_package_json_data.dependencies ?? {}), ...(package_package_json_data.devDependencies ?? {})}),
 			version: package_package_json_data.version,
 			dependents: {},
 			name: `@nishans/${package_dir}`

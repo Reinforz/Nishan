@@ -2,7 +2,7 @@ import cp from 'child_process';
 import colors from 'colors';
 import path from 'path';
 
-export function testAndBuildPackages (packages: string[]) {
+export function buildAfterTest (packages: string[]) {
 	const packages_dir = path.resolve(__dirname, '../../../packages'),
 		package_dirs: string[] = [];
 	for (let index = 0; index < packages.length; index++) {

@@ -1,7 +1,7 @@
 {
   "name": "scripts",
   "version": "1.0.0",
-  "description": "",
+  "description": "A collection of libs and modules for automating manual package related tasks",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
@@ -11,9 +11,7 @@
     "rehype": "^11.0.0",
     "remark": "^13.0.0",
     "tsc-prog": "^2.2.1",
-    "ts-dedent": "2.0.0"
-  },
-  "script": {
-    "start": "echo Hello"
+    "ts-dedent": "2.0.0",
+    "colors": "1.4.0"
   }
 }

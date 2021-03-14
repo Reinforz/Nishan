@@ -3,6 +3,8 @@
 <div align="center"> <h1>Nishan</h1> </div>
 <div align="center"><b>An ecosystem of packages for notion written in typescript.</b></div>
 
+</br>
+
 <p align="center">
   <a href="https://app.codecov.io/gh/Devorein/Nishan/branch/master"><img src="https://img.shields.io/codecov/c/github/devorein/Nishan?color=blue"/></a>
   <a href="https://github.com/Devorein/Nishan/actions?query=workflow%3A%22Lint%2C+Build+and+Test%22"><img src="https://github.com/devorein/nishan/workflows/Lint,%20Build%20and%20Test/badge.svg"/></a>
@@ -21,8 +23,6 @@
   <img src="https://img.shields.io/badge/Total%20Packages-27-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
 </p>
-
-</br>
 
 This monorepo contains/will contain the following packages and apps:-
 

@@ -55,8 +55,6 @@ class Nishan {
    * @param args An array of string ids, a predicate passed the INotionUser or undefined to indicate everything
    */
   async getNotionUsers(args?: FilterTypes<INotionUser>, multiple?: boolean) {
-    args = args ?? (() => true);
-
     await this.#initializeCache();
 
     const common_props = {

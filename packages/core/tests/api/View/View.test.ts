@@ -60,6 +60,33 @@ const construct = () => {
 						visible: true,
 						property: 'text'
 					}
+				],
+				list_properties: [
+					{
+						visible: true,
+						property: 'title'
+					},
+					{
+						visible: true,
+						property: 'text'
+					}
+				]
+			}
+		} as any,
+		collection_view_2 = {
+			type: 'list',
+			parent_id: 'block_1',
+			id: 'collection_view_2',
+			format: {
+				list_properties: [
+					{
+						visible: true,
+						property: 'title'
+					},
+					{
+						visible: true,
+						property: 'text'
+					}
 				]
 			}
 		} as any,
@@ -68,7 +95,10 @@ const construct = () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
 			collection: new Map([ [ 'collection_1', collection_1 as any ] ]),
-			collection_view: new Map([ [ 'collection_view_1', collection_view_1 ] ])
+			collection_view: new Map([
+				[ 'collection_view_2', collection_view_2 ],
+				[ 'collection_view_1', collection_view_1 ]
+			])
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
@@ -77,7 +107,12 @@ const construct = () => {
 		cache,
 		id: 'collection_view_1'
 	});
-	return { view, cache, block_1, collection_view_1, collection_1, executeOperationsMock };
+	const view_2 = new View({
+		...default_nishan_arg,
+		cache,
+		id: 'collection_view_2'
+	});
+	return { view, cache, block_1, view_2, collection_view_2, collection_view_1, collection_1, executeOperationsMock };
 };
 
 it('getCollection', async () => {
@@ -230,25 +265,23 @@ describe('updateFormatProperty', () => {
 	});
 
 	it(`format, width and position none given`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
-		const table_properties = [
+		const { view_2, collection_view_2, executeOperationsMock } = construct();
+		const list_properties = [
 			{
-				width: 150,
 				visible: true,
 				property: 'title'
 			},
 			{
-				width: 150,
 				visible: true,
 				property: 'text'
 			}
 		];
 
-		await view.updateFormatProperty([ 'Title', { type: 'table' } ]);
+		await view_2.updateFormatProperty([ 'Title', { type: 'list' } ]);
 
-		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
+		expect(collection_view_2.format.list_properties).toStrictEqual(list_properties);
 		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties)
+			o.cv.s('collection_view_2', [ 'format', 'list_properties' ], list_properties)
 		]);
 	});
 });

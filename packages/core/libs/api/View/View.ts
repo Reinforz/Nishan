@@ -246,8 +246,8 @@ class View<T extends TView> extends Data<T> {
 					format_properties.splice(position, 0, target_format_property);
 				}
 				target_format_property.visible = visible ?? target_format_property.visible;
-        if(updated_data.type === "table")
-          (target_format_property as any).width = updated_data.width ?? (target_format_property as any).width;
+        if(updated_data.type === "table" && updated_data.width !== undefined && updated_data.width !== null)
+          (target_format_property as any).width = updated_data.width;
 			}
 		);
     await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.set(this.id, [`format`, `${data.type}_properties`], format_properties)], this.getProps())

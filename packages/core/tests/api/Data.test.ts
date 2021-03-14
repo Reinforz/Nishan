@@ -9,6 +9,21 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
+describe('constructor', () => {
+	it(`default cache, interval and token not provided`, () => {
+		expect(
+			() =>
+				new NotionData({
+					id: 'block_1',
+					shard_id: 123,
+					space_id: 'space_1',
+					type: 'block',
+					user_id: 'notion_user_1'
+				} as any)
+		).toThrow();
+	});
+});
+
 it(`getLastEditedProps`, async () => {
 	const cache = {
 		...NotionCache.createDefaultCache(),
@@ -335,11 +350,9 @@ it(`deleteIterate`, async () => {
 
 	const initializeCacheForThisDataMock = jest
 		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
-		.mockImplementation(() => {
-			return {} as any;
-		});
+		.mockImplementation(async () => undefined);
 
-	const ChildTraverserDeleteMock = jest.spyOn(ChildTraverser, 'delete').mockImplementation(() => {
+	const ChildTraverserDeleteMock = jest.spyOn(ChildTraverser, 'delete').mockImplementationOnce(() => {
 		return {} as any;
 	});
 

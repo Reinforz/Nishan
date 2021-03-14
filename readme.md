@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-28-%2371368a">
+  <img src="https://img.shields.io/badge/Total%20Packages-29-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
 </p>
 
@@ -37,6 +37,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/endpoints`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) [Docs](https://nishan-docs.netlify.app/docs/endpoints) [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
 *   **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors): A small package containing various notion specific error classes
 *   **`@nishans/export`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/export): A small package to export notion page and database with ease
+*   **`@nishans/extract`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/extract): A small package to extract required notion data
 *   **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator): A package to generate notion blocks using a simple api
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql): A graphql server for notion built using `@nishans/core`
 *   **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz): A small package to validate, generate and parse notion ids

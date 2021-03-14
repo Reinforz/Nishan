@@ -45,6 +45,11 @@
     "published": false
   },
   {
+    "name": "extract",
+    "description": "A small package to extract required notion data",
+    "published": false
+  },
+  {
     "name": "fabricator",
     "description": "A package to generate notion blocks using a simple api",
     "published": true

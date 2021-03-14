@@ -1,15 +1,19 @@
-import { IPackageMap } from '../types';
+import colors from 'colors';
+import { IPackageDependencyVersionMap } from '../types';
 
-export function showOutdatedDeps (package_map: IPackageMap) {
-	const outdated_package_map: Map<string, Record<string, [string, string]>> = new Map();
-
-	for (const [ package_name, { dependencies } ] of package_map) {
-		const outdated_package_record: Record<string, [string, string]> = {};
-		outdated_package_map.set(package_name, outdated_package_record);
-		Object.entries(dependencies).forEach(([ dependency_name, dependency_version ]) => {
-			outdated_package_record[dependency_name] = [ dependency_version, package_map.get(dependency_name)!.version ];
-		});
+export function showOutdatedDeps (package_dependency_version_map: IPackageDependencyVersionMap) {
+	for (const [ package_name, dependency_version_map ] of package_dependency_version_map) {
+		for (const [ dependency_name, [ current_version, latest_version ] ] of dependency_version_map) {
+			if (current_version.replace(/(\^|~)/g, '') !== latest_version)
+				console.log(
+					colors.green(package_name) +
+						' ' +
+						colors.green.bold(dependency_name) +
+						' ' +
+						colors.blue(current_version) +
+						' ' +
+						colors.blue.bold(latest_version)
+				);
+		}
 	}
-
-	return outdated_package_map;
 }

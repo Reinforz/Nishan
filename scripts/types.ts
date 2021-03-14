@@ -13,3 +13,5 @@ export interface IPackageDependencyMap {
 	indirect: Map<string, string>;
 	all: Map<string, string>;
 }
+
+export type IPackageDependencyVersionMap = Map<string, Map<string, [string, string]>>;

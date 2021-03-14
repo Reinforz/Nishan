@@ -49,11 +49,11 @@ async function main () {
 		}
 	}
 	parsed_root_readme_md.children[target_node_index] = packages_readme_node;
-	parsed_root_readme_md.children[3] = remark().parse(dedent`
+	parsed_root_readme_md.children[5] = remark().parse(dedent`
   <p align="center">
     <img src="https://img.shields.io/badge/Total%20Packages-${packages_data.length}-%2371368a">
     <img src="https://img.shields.io/badge/Published%20Packages-${total_published_packages}-%2311806a">
-  /p>`);
+  </p>`);
 	await fs.promises.writeFile(root_readme_path, remark().stringify(parsed_root_readme_md), 'utf-8');
 }
 

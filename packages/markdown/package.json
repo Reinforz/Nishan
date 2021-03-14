@@ -29,8 +29,8 @@
   ],
   "scripts": {},
   "dependencies": {
-    "@nishans/inline-blocks": "0.0.20",
-    "@nishans/remark-notion": "0.0.1",
+    "@nishans/inline-blocks": "0.0.29",
+    "@nishans/remark-notion": "0.0.0",
     "axios": "^0.21.1",
     "remark-frontmatter": "^3.0.0",
     "remark-gfm": "^1.0.0",

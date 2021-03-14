@@ -81,10 +81,7 @@ export async function createPackageDirectory () {
       "bugs": {
         "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2F${package_name}"
       },
-      "dependencies": {},
-      "devDependencies": {
-        "@nishans/types": "^0.0.0"
-      }
+      "dependencies": {}
     }`,
 		'utf-8'
 	);

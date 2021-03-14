@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
+import { trimDependencies } from '../Publish/trimDependencies';
 import { IPackageMap } from "../types";
-import { trimDependencies } from './trimDependencies';
 
 export async function createPackageMap(){
   const packages_dir = path.resolve(__dirname, '../../../packages'),
@@ -29,3 +29,5 @@ export async function createPackageMap(){
 
   return packages_map;
 }
+
+createPackageMap().then(console.log)

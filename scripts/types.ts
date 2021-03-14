@@ -6,3 +6,10 @@ export type IPackageInfo = {
 };
 
 export type IPackageMap = Map<string, IPackageInfo>;
+
+export interface IPackageDependencyMap {
+	main: Map<string, string>;
+	direct: Map<string, string>;
+	indirect: Map<string, string>;
+	all: Map<string, string>;
+}

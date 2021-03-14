@@ -1,6 +1,6 @@
 {
   "name": "@nishans/react-filters",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "A react component that emulates notions advanced filter",
   "keywords": [
     "notion",

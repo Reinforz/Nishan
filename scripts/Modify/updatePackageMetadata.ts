@@ -2,6 +2,7 @@ import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
 import remark from 'remark';
+import dedent from 'ts-dedent';
 import { createReadme } from '../Create/createReadme';
 import packages_data from '../packages.json';
 import { updatePackageJsonDescription } from './updatePackageJsonDescription';
@@ -13,7 +14,8 @@ async function main () {
 		root_readme_text = await fs.promises.readFile(root_readme_path, 'utf-8'),
 		parsed_root_readme_md: any = remark().parse(root_readme_text);
 
-	let packages_readme_text = ``;
+	let total_published_packages = 0,
+		packages_readme_text = ``;
 	const docs_dirs = await fs.promises.readdir(docs_dir);
 
 	for (let index = 0; index < packages_data.length; index++) {
@@ -28,6 +30,7 @@ async function main () {
 				? ` [Docs](https://nishan-docs.netlify.app/docs/${package_data.name})`
 				: '',
 			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name})` : '';
+		total_published_packages += package_data.published ? 1 : 0;
 		packages_readme_text += `* **\`@nishans/${package_data.name}\`**${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
 		console.log(colors.bold.green(`Done with ${package_data.name}`));
 	}
@@ -46,6 +49,11 @@ async function main () {
 		}
 	}
 	parsed_root_readme_md.children[target_node_index] = packages_readme_node;
+	parsed_root_readme_md.children[3] = remark().parse(dedent`
+  <p align="center">
+    <img src="https://img.shields.io/badge/Total%20Packages-${packages_data.length}-%2371368a">
+    <img src="https://img.shields.io/badge/Published%20Packages-${total_published_packages}-%2311806a">
+  /p>`);
 	await fs.promises.writeFile(root_readme_path, remark().stringify(parsed_root_readme_md), 'utf-8');
 }
 

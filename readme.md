@@ -17,7 +17,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Total%20Packages-27-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
-</p>
+/p>
 
 <div align="center"> <h1>Nishan</h1> </div>
 <div align="center"><b>An ecosystem of packages for notion written in typescript.</b></div>

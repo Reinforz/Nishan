@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cli",
-  "version": "0.0.12",
+  "version": "0.0.0",
   "description": "A package to interact with `@nishans/core` from the terminal",
   "keywords": [
     "notion",

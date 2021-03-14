@@ -27,6 +27,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@nishans/types": "^0.0.0"
+    "@nishans/types": "0.0.27"
   }
 }

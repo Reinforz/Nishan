@@ -15,7 +15,9 @@ export async function createPackageMap(){
 			dependencies: extractDependencies({...(package_package_json_data.dependencies ?? {}), ...(package_package_json_data.devDependencies ?? {})}),
 			version: package_package_json_data.version,
 			dependents: {},
-			name: `@nishans/${package_dir}`
+			name: `@nishans/${package_dir}`,
+      description: package_package_json_data.description,
+      published: package_package_json_data.version !== "0.0.0"
 		});
 	}
 

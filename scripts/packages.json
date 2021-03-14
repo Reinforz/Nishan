@@ -1,146 +1,146 @@
 [
   {
-    "name": "cache",
+    "name": "@nishans/cache",
     "description": "A cache specially designed to retrieve and store notion data in memory",
     "published": true
   },
   {
-    "name": "cli",
+    "name": "@nishans/cli",
     "description": "A package to interact with `@nishans/core` from the terminal",
     "published": false
   },
   {
-    "name": "cms",
+    "name": "@nishans/cms",
     "description": "A cms for notion",
     "published": false
   },
   {
-    "name": "constants",
+    "name": "@nishans/constants",
     "description": "A small package for all notion specific constants",
     "published": true
   },
   {
-    "name": "core",
+    "name": "@nishans/core",
     "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
     "published": true
   },
   {
-    "name": "discord-bot",
+    "name": "@nishans/discord-bot",
     "description": "A general purpose discord bot for working with `@nishans/core` from the discord chat textbox",
     "published": false
   },
   {
-    "name": "endpoints",
+    "name": "@nishans/endpoints",
     "description": "A package to expose all notion endpoints for queries and mutations",
     "published": true
   },
   {
-    "name": "errors",
+    "name": "@nishans/errors",
     "description": "A small package containing various notion specific error classes",
     "published": true
   },
   {
-    "name": "export",
+    "name": "@nishans/export",
     "description": "A small package to export notion page and database with ease",
     "published": false
   },
   {
-    "name": "extract",
+    "name": "@nishans/extract",
     "description": "A small package to extract required notion data",
     "published": false
   },
   {
-    "name": "fabricator",
+    "name": "@nishans/fabricator",
     "description": "A package to generate notion blocks using a simple api",
     "published": true
   },
   {
-    "name": "graphql",
+    "name": "@nishans/graphql",
     "description": "A graphql server for notion built using `@nishans/core`",
     "published": true
   },
   {
-    "name": "idz",
+    "name": "@nishans/idz",
     "description": "A small package to validate, generate and parse notion ids",
     "published": true
   },
   {
-    "name": "inline-blocks",
+    "name": "@nishans/inline-blocks",
     "description": "Package providing an easy to use api to generate contents for notion inline blocks",
     "published": true
   },
   {
-    "name": "logger",
+    "name": "@nishans/logger",
     "description": "A logger built specifically for nishan ecosystem",
     "published": false
   },
   {
-    "name": "markdown",
+    "name": "@nishans/markdown",
     "description": "A package to upload markdown content into notion",
     "published": false
   },
   {
-    "name": "notion-formula",
+    "name": "@nishans/notion-formula",
     "description": "A package to generate notion formula with ease",
     "published": true
   },
   {
-    "name": "operations",
+    "name": "@nishans/operations",
     "description": "A package to inspect, modify and store notion operations",
     "published": true
   },
   {
-    "name": "orm",
+    "name": "@nishans/orm",
     "description": "A package to use notion as a database by providing an easy to use orm api",
     "published": false
   },
   {
-    "name": "permissions",
+    "name": "@nishans/permissions",
     "description": "A package to easily deal with notion permissions",
     "published": true
   },
   {
-    "name": "react-filters",
+    "name": "@nishans/react-filters",
     "description": "A react component that emulates notions advanced filter",
     "published": false
   },
   {
-    "name": "remark-notion",
+    "name": "@nishans/remark-notion",
     "description": "A remark plugin to support custom notion specific syntax for `@nishans/markdown` package",
     "published": false
   },
   {
-    "name": "schema-builder",
+    "name": "@nishans/schema-builder",
     "description": "A package to create notion collection schema painlessly",
     "published": false
   },
   {
-    "name": "sync",
+    "name": "@nishans/sync",
     "description": "A package to keep local notion data in sync with remote one by storing and restoring it",
     "published": true
   },
   {
-    "name": "typegen",
+    "name": "@nishans/typegen",
     "description": "A package to automatically generate typescript definitions from a remote notion collection schema",
     "published": false
   },
   {
-    "name": "types",
+    "name": "@nishans/types",
     "description": "Typescript type definitions for notion",
     "published": true
   },
   {
-    "name": "upload",
+    "name": "@nishans/upload",
     "description": "A small package to upload content into notion",
     "published": false
   },
   {
-    "name": "utils",
+    "name": "@nishans/utils",
     "description": "A bunch of small utility modules used across nishans ecosystem",
     "published": true
   },
   {
-    "name": "validators",
+    "name": "@nishans/validators",
     "description": "A group of modules to validate various things related to notion",
     "published": false
   }

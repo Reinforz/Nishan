@@ -3,6 +3,8 @@ export type IPackageInfo = {
 	dependents: Record<string, string>;
 	dependencies: Record<string, string>;
 	name: string;
+	description: string;
+	published: boolean;
 };
 
 export type IPackageMap = Map<string, IPackageInfo>;

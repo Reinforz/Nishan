@@ -13,9 +13,10 @@
     <img src="https://img.shields.io/discord/804219491763617842.svg?style=flat&label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2">
   </a>
 </p>
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-26-green">
-  <img src="https://img.shields.io/badge/Published%20Packages-15-green">
+  <img src="https://img.shields.io/badge/Total%20Packages-27-%2371368a">
+  <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
 </p>
 
 <div align="center"> <h1>Nishan</h1> </div>
@@ -53,6 +54,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
 *   **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [Docs](https://nishan-docs.netlify.app/docs/types) [NPM](https://www.npmjs.com/package/@nishans/types): Typescript type definitions for notion
 *   **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [Docs](https://nishan-docs.netlify.app/docs/utils) [NPM](https://www.npmjs.com/package/@nishans/utils): A bunch of small utility modules used across nishans ecosystem
+*   **`@nishans/validators`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/validators): A group of modules to validate various things related to notion
 
 ## Apps
 

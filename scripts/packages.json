@@ -128,5 +128,10 @@
     "name": "utils",
     "description": "A bunch of small utility modules used across nishans ecosystem",
     "published": true
+  },
+  {
+    "name": "validators",
+    "description": "A group of modules to validate various things related to notion",
+    "published": false
   }
 ]

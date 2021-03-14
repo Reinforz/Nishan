@@ -1,5 +1,5 @@
 import { NotionFormula } from '../../libs';
-import { abs, cn, ct, pn, pt, sc, sn, test_schema_map } from '../utils';
+import { abs, cn, ct, pn, pt, sc, scf, sn, test_schema_map } from '../utils';
 
 describe('String function formula parsing error', () => {
 	it('Should throw for improper function argument length', () => {
@@ -120,9 +120,9 @@ describe('Function formula string representation parsing success', () => {
 		expect({
 			name: 'and',
 			type: 'function',
-			args: [ sc, sc ],
+			args: [ sc, scf ],
 			result_type: 'checkbox'
-		}).toStrictEqual(NotionFormula.GenerateAST.string('and(true, true)', test_schema_map));
+		}).toStrictEqual(NotionFormula.GenerateAST.string('and(true, false)', test_schema_map));
 	});
 
 	it(`Should match output for function argument type`, () => {

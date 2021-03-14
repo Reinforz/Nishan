@@ -68,6 +68,12 @@ export const sc = {
 	result_type: 'checkbox'
 };
 
+export const scf = {
+	type: 'symbol',
+	name: 'false',
+	result_type: 'checkbox'
+};
+
 // property number
 export const pn = {
 	type: 'property',

@@ -103,109 +103,115 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 	});
 });
 
-it(`type=collection_view_page`, async () => {
-	const collection_id = v4(),
-		cache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', { type: 'page', id: 'block_1' } as any ] ])
-		},
-		row_one_id = v4(),
-		cv_id = v4();
+[ `collection_view_page`, `collection_view` ].forEach((collection_block_type) => {
+	it(`type=${collection_block_type}`, async () => {
+		const collection_id = v4(),
+			cache = {
+				...NotionCache.createDefaultCache(),
+				block: new Map([ [ 'block_1', { type: 'page', id: 'block_1' } as any ] ])
+			},
+			row_one_id = v4(),
+			cv_id = v4();
 
-	const logger_spy = jest.fn();
-	const createDataCollectionMock = jest
-			.spyOn(NotionFabricator.CreateData, 'collection')
-			.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		const logger_spy = jest.fn();
+		const createDataCollectionMock = jest
+				.spyOn(NotionFabricator.CreateData, 'collection')
+				.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
+			executeOperationsMock = jest
+				.spyOn(NotionOperations, 'executeOperations')
+				.mockImplementation(async () => undefined);
 
-	await NotionFabricator.CreateData.contents(
-		[
+		await NotionFabricator.CreateData.contents(
+			[
+				{
+					collection_id,
+					id: cv_id,
+					type: collection_block_type as any,
+					name: [ [ 'Collection Name' ] ],
+					schema: [ tsu ],
+					views: [
+						{
+							type: 'table',
+							name: 'Table',
+							schema_units: [ tsu ]
+						}
+					],
+					rows: [
+						{
+							type: 'page',
+							id: row_one_id,
+							properties: {
+								title: [ [ 'Row one' ] ]
+							},
+							contents: []
+						}
+					]
+				}
+			],
+			'block_1',
+			'block',
 			{
-				collection_id,
-				id: cv_id,
-				type: 'collection_view_page',
-				name: [ [ 'Collection Name' ] ],
-				schema: [ tsu ],
-				views: [
-					{
-						type: 'table',
-						name: 'Table',
-						schema_units: [ tsu ]
-					}
-				],
-				rows: [
-					{
-						type: 'page',
-						id: row_one_id,
-						properties: {
-							title: [ [ 'Row one' ] ]
-						},
-						contents: []
-					}
-				]
+				...default_nishan_arg,
+				cache,
+				logger: logger_spy
 			}
-		],
-		'block_1',
-		'block',
-		{
-			...default_nishan_arg,
-			cache,
-			logger: logger_spy
-		}
-	);
+		);
 
-	const collection_view = cache.block.get(cv_id) as ICollectionView;
+		const collection_view = cache.block.get(cv_id) as ICollectionView;
 
-	const collection_view_page_snapshot = {
-		id: cv_id,
-		type: 'collection_view_page',
-		collection_id,
-		permissions: [
-			{
-				type: 'space_permission',
-				role: 'editor',
-				user_id
-			}
-		],
-		view_ids: [ 'view_1' ],
-		parent_id: 'block_1',
-		parent_table: 'block',
-		...metadata
-	};
+		const collection_block_snapshot: any = {
+			id: cv_id,
+			type: collection_block_type,
+			collection_id,
+			view_ids: [ 'view_1' ],
+			parent_id: 'block_1',
+			parent_table: 'block',
+			...metadata
+		};
 
-	expect(collection_view).toEqual(collection_view_page_snapshot);
-	expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenCalledTimes(2);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', row_one_id);
-	expect(logger_spy).toHaveBeenNthCalledWith(2, 'CREATE', 'block', collection_view.id);
-	expect(cache.block.get(collection_view.id)).toBeTruthy();
-	expect(cache.block.get(row_one_id)).toBeTruthy();
-	expect(executeOperationsMock).toHaveBeenCalledTimes(4);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
-		o.b.u(cv_id, [], { ...collection_view_page_snapshot, view_ids: [] })
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.s(cv_id, [ 'view_ids' ], [ 'view_1' ]) ]);
-	expect(executeOperationsMock.mock.calls[2][0]).toEqual([
-		o.b.u(row_one_id, [], {
-			content: [],
-			permissions: [
+		if (collection_block_type === 'collection_view_page')
+			collection_block_snapshot.permissions = [
 				{
 					type: 'space_permission',
 					role: 'editor',
-					user_id: 'user_root_1'
+					user_id
 				}
-			],
-			id: row_one_id,
-			parent_table: 'collection',
-			parent_id: collection_id,
-			type: 'page',
-			properties: {
-				title: [ [ 'Row one' ] ]
-			},
-			...metadata
-		})
-	]);
-	expect(executeOperationsMock.mock.calls[3][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: cv_id }) ]);
+			];
+
+		expect(collection_view).toEqual(collection_block_snapshot);
+		expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
+		expect(logger_spy).toHaveBeenCalledTimes(2);
+		expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', row_one_id);
+		expect(logger_spy).toHaveBeenNthCalledWith(2, 'CREATE', 'block', collection_view.id);
+		expect(cache.block.get(collection_view.id)).toBeTruthy();
+		expect(cache.block.get(row_one_id)).toBeTruthy();
+		expect(executeOperationsMock).toHaveBeenCalledTimes(4);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+			o.b.u(cv_id, [], { ...collection_block_snapshot, view_ids: [] })
+		]);
+		expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.s(cv_id, [ 'view_ids' ], [ 'view_1' ]) ]);
+		expect(executeOperationsMock.mock.calls[2][0]).toEqual([
+			o.b.u(row_one_id, [], {
+				content: [],
+				permissions: [
+					{
+						type: 'space_permission',
+						role: 'editor',
+						user_id: 'user_root_1'
+					}
+				],
+				id: row_one_id,
+				parent_table: 'collection',
+				parent_id: collection_id,
+				type: 'page',
+				properties: {
+					title: [ [ 'Row one' ] ]
+				},
+				...metadata
+			})
+		]);
+		expect(executeOperationsMock.mock.calls[3][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: cv_id }) ]);
+	});
 });
 
 it(`type=link_to_page`, async () => {

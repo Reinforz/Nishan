@@ -42,7 +42,7 @@ describe('initializeCacheForSpecificData', () => {
 	});
 
 	describe(`type=block`, () => {
-		it(`type=page`, async () => {
+		it(`type=page, more chunks`, async () => {
 			const block_1: any = {
 				id: 'block_1',
 				type: 'page',
@@ -60,23 +60,42 @@ describe('initializeCacheForSpecificData', () => {
 			const updateCacheIfNotPresentMock = jest
 				.spyOn(NotionCache, 'updateCacheIfNotPresent')
 				.mockImplementationOnce(async () => undefined);
-			const loadPageChunkMock = jest.spyOn(NotionEndpoints.Queries, 'loadPageChunk').mockImplementationOnce(
-				async () =>
-					({
-						recordMap: {
-							block: {
-								block_2: {
-									value: {
-										id: 'block_2'
+			const loadPageChunkMock = jest
+				.spyOn(NotionEndpoints.Queries, 'loadPageChunk')
+				.mockImplementationOnce(
+					async () =>
+						({
+							recordMap: {
+								block: {
+									block_2: {
+										value: {
+											id: 'block_2'
+										}
 									}
 								}
+							},
+							cursor: {
+								stack: [ [ { index: 5 } ] ]
 							}
-						},
-						cursor: {
-							stack: []
-						}
-					} as any)
-			);
+						} as any)
+				)
+				.mockImplementationOnce(
+					async () =>
+						({
+							recordMap: {
+								block: {
+									block_2: {
+										value: {
+											id: 'block_2'
+										}
+									}
+								}
+							},
+							cursor: {
+								stack: []
+							}
+						} as any)
+				);
 
 			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
 				token: 'token',
@@ -94,6 +113,23 @@ describe('initializeCacheForSpecificData', () => {
 								table: 'block',
 								id: 'block_1',
 								index: 0
+							}
+						]
+					]
+				},
+				chunkNumber: 1,
+				verticalColumns: false
+			});
+			expect(loadPageChunkMock.mock.calls[1][0]).toStrictEqual({
+				pageId: 'block_1',
+				limit: 100,
+				cursor: {
+					stack: [
+						[
+							{
+								table: 'block',
+								id: 'block_1',
+								index: 5
 							}
 						]
 					]

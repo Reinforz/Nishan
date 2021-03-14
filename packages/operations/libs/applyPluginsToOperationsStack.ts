@@ -1,9 +1,9 @@
 import { IOperation } from '@nishans/types';
 import { NotionOperationPluginFunction } from './';
 
-export function applyPluginsToOperationsStack (operations: IOperation[], plugins: NotionOperationPluginFunction[]) {
+export function applyPluginsToOperationsStack (operations: IOperation[], plugins?: NotionOperationPluginFunction[]) {
 	// Skip the plugin processing process if its empty
-	if (plugins.length !== 0) {
+	if (plugins && plugins.length !== 0) {
 		// This array stores the operations that will be stored in the operations stack after plugin processing
 		const updated_operations: IOperation[] = [];
 		// Iterate through all the operations and run it through each of the plugins

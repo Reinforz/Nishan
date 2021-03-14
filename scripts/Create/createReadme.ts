@@ -4,7 +4,7 @@ import dedent from 'ts-dedent';
 export const createReadme = async (
 	package_readme_file_path: string,
 	package_name: string,
-	package_description?: string
+	package_description: string
 ) => {
 	await fs.promises.writeFile(
 		package_readme_file_path,

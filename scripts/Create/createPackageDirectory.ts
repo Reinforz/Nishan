@@ -4,10 +4,8 @@ import path from 'path';
 import dedent from 'ts-dedent';
 import { createReadme } from './createReadme';
 
-export async function createPackageDirectory () {
-	const [ package_name ] = process.argv.slice(2);
-
-	const packages_dir_path = path.resolve(__dirname, '../../packages'),
+export async function createPackageDirectory (package_name: string, package_description: string) {
+	const packages_dir_path = path.resolve(__dirname, '../../../packages'),
 		package_root_dir_path = path.join(packages_dir_path, package_name),
 		package_tests_dir_path = path.join(package_root_dir_path, 'tests'),
 		package_libs_dir_path = path.join(package_root_dir_path, 'libs');
@@ -53,11 +51,19 @@ export async function createPackageDirectory () {
 		dedent`{
       "name": "@nishans/${package_name}",
       "version": "0.0.0",
-      "description": "",
-      "keywords": [],
-      "author": "Safwan Shaheer <devorein00@gmail.com>",
+      "description": "${package_description}",
+      "keywords": [
+      ],
       "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/${package_name}/README.md",
+      "bugs": {
+        "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2F${package_name}"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Devorein/Nishan.git"
+      },
       "license": "MIT",
+      "author": "Safwan Shaheer <devorein00@gmail.com>",
       "main": "dist/libs/index.js",
       "typings": "dist/libs/index.d.ts",
       "directories": {
@@ -67,25 +73,14 @@ export async function createPackageDirectory () {
       "files": [
         "dist/libs"
       ],
-      "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Devorein/Nishan.git"
-      },
       "scripts": {
         "build": "tsc --sourceMap false",
         "test": "npx jest --runInBand --config ../../jest.config.js"
-      },
-      "publishConfig": {
-        "access": "public"
-      },
-      "bugs": {
-        "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2F${package_name}"
-      },
-      "dependencies": {}
+      }
     }`,
 		'utf-8'
 	);
 	await fs.promises.writeFile(package_lib_index_file_path, ``, 'utf-8');
-	createReadme(package_readme_file_path, package_name);
+	createReadme(package_readme_file_path, package_name, package_description);
 	console.log(colors.green.bold(`Created package ${package_name}`));
 }

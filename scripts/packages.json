@@ -125,6 +125,11 @@
     "published": true
   },
   {
+    "name": "upload",
+    "description": "A small package to upload content into notion",
+    "published": false
+  },
+  {
     "name": "utils",
     "description": "A bunch of small utility modules used across nishans ecosystem",
     "published": true

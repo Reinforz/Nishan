@@ -16,5 +16,3 @@ export async function publishUpdatedPackages (updated_packages_name: string[]) {
 	const package_dirs = buildAfterTest(rearranged_packages);
 	publishPackages(package_dirs);
 }
-
-publishUpdatedPackages([ 'inline-blocks' ]);

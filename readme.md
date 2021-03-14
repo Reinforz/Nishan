@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-27-%2371368a">
+  <img src="https://img.shields.io/badge/Total%20Packages-28-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
 </p>
 
@@ -53,6 +53,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [Docs](https://nishan-docs.netlify.app/docs/sync) [NPM](https://www.npmjs.com/package/@nishans/sync): A package to keep local notion data in sync with remote one by storing and restoring it
 *   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
 *   **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [Docs](https://nishan-docs.netlify.app/docs/types) [NPM](https://www.npmjs.com/package/@nishans/types): Typescript type definitions for notion
+*   **`@nishans/upload`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/upload): A small package to upload content into notion
 *   **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [Docs](https://nishan-docs.netlify.app/docs/utils) [NPM](https://www.npmjs.com/package/@nishans/utils): A bunch of small utility modules used across nishans ecosystem
 *   **`@nishans/validators`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/validators): A group of modules to validate various things related to notion
 

@@ -49,7 +49,7 @@ export async function updatePackageMetadata () {
 		}
 	}
 	parsed_root_readme_md.children[target_node_index] = packages_readme_node;
-	parsed_root_readme_md.children[6] = remark().parse(dedent`
+	parsed_root_readme_md.children[5] = remark().parse(dedent`
   <p align="center">
     <img src="https://img.shields.io/badge/Total%20Packages-${packages_data.length}-%2371368a">
     <img src="https://img.shields.io/badge/Published%20Packages-${total_published_packages}-%2311806a">

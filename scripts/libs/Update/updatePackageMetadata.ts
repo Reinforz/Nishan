@@ -3,13 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import remark from 'remark';
 import dedent from 'ts-dedent';
-import { NishanScripts } from '../';
-import packages_data from '../packages.json';
+import packages_data from '../../packages.json';
+import { createReadme } from '../Create/createReadme';
+import { updatePackageJsonDescription } from './updatePackageJsonDescription';
 
 export async function updatePackageMetadata () {
-	const docs_dir = path.resolve(__dirname, '../../../docs/docs'),
-		packages_dir = path.resolve(__dirname, '../../../packages'),
-		root_readme_path = path.resolve(__dirname, '../../../README.md'),
+	const docs_dir = path.resolve(__dirname, '../../../../docs/docs'),
+		packages_dir = path.resolve(__dirname, '../../../../packages'),
+		root_readme_path = path.resolve(__dirname, '../../../../README.md'),
 		root_readme_text = await fs.promises.readFile(root_readme_path, 'utf-8'),
 		parsed_root_readme_md: any = remark().parse(root_readme_text);
 
@@ -22,8 +23,8 @@ export async function updatePackageMetadata () {
 			package_dir = path.join(packages_dir, package_data.name),
 			package_readme_path = path.join(package_dir, 'README.md'),
 			package_json_path = path.join(package_dir, 'package.json');
-		await NishanScripts.Create.readme(package_readme_path, package_data.name, package_data.description);
-		await NishanScripts.Update.packageJsonDescription(package_json_path, package_data.description);
+		await createReadme(package_readme_path, package_data.name, package_data.description);
+		await updatePackageJsonDescription(package_json_path, package_data.description);
 		const github_link = ` [Github](https://github.com/Devorein/Nishan/tree/master/packages/${package_data.name})`,
 			doc_link = docs_dirs.includes(package_data.name)
 				? ` [Docs](https://nishan-docs.netlify.app/docs/${package_data.name})`

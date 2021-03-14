@@ -2,10 +2,10 @@ import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
 import dedent from 'ts-dedent';
-import { NishanScripts } from '../';
+import { createReadme } from './createReadme';
 
 export async function createPackageDirectory (package_name: string, package_description: string) {
-	const packages_dir_path = path.resolve(__dirname, '../../../packages'),
+	const packages_dir_path = path.resolve(__dirname, '../../../../packages'),
 		package_root_dir_path = path.join(packages_dir_path, package_name),
 		package_tests_dir_path = path.join(package_root_dir_path, 'tests'),
 		package_libs_dir_path = path.join(package_root_dir_path, 'libs');
@@ -81,6 +81,6 @@ export async function createPackageDirectory (package_name: string, package_desc
 		'utf-8'
 	);
 	await fs.promises.writeFile(package_lib_index_file_path, ``, 'utf-8');
-	NishanScripts.Create.readme(package_readme_file_path, package_name, package_description);
+	await createReadme(package_readme_file_path, package_name, package_description);
 	console.log(colors.green.bold(`Created package ${package_name}`));
 }

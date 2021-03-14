@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 export async function updatePackageJsonDependencies (updated_packages_map: Map<string, string>) {
-	const packages_dir = path.resolve(__dirname, '../../../packages');
+	const packages_dir = path.resolve(__dirname, '../../../../packages');
 	for (const [ package_name, package_version ] of Array.from(updated_packages_map.entries())) {
 		console.log(colors.white.bold(package_name));
 		console.log(colors.yellow.bold(`Updating ${package_name} to ${package_version}`));

@@ -2,7 +2,7 @@ import path from 'path';
 import { build } from 'tsc-prog';
 
 export function buildWithoutComments (package_name: string) {
-	const ROOT_PACKAGE_DIR = path.resolve(__dirname, '../../packages');
+	const ROOT_PACKAGE_DIR = path.resolve(__dirname, '../../../../packages');
 	const PACKAGE_DIR = path.join(ROOT_PACKAGE_DIR, package_name);
 	build({
 		basePath: PACKAGE_DIR,

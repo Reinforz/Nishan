@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { NishanScripts } from '../';
+import { extractDependencies } from '../Extract/extractDependencies';
 import { IPackageMap } from "../types";
 
 export async function createPackageMap(){
-  const packages_dir = path.resolve(__dirname, '../../../packages'),
+  const packages_dir = path.resolve(__dirname, '../../../../packages'),
 		package_dirs = await fs.promises.readdir(packages_dir), packages_map: IPackageMap = new Map();
 
 	for (const package_dir of package_dirs) {
@@ -12,7 +12,7 @@ export async function createPackageMap(){
 			await fs.promises.readFile(path.join(packages_dir, package_dir, 'package.json'), 'utf-8')
 		);
 		packages_map.set(`@nishans/${package_dir}`, {
-			dependencies: NishanScripts.Extract.dependencies({...(package_package_json_data.dependencies ?? {}), ...(package_package_json_data.devDependencies ?? {})}),
+			dependencies: extractDependencies({...(package_package_json_data.dependencies ?? {}), ...(package_package_json_data.devDependencies ?? {})}),
 			version: package_package_json_data.version,
 			dependents: {},
 			name: `@nishans/${package_dir}`

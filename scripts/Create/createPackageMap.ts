@@ -29,5 +29,3 @@ export async function createPackageMap(){
 
   return packages_map;
 }
-
-createPackageMap().then(console.log)

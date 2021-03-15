@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import axios from 'axios';
 import { INotionEndpointsOptions } from '..';
 import { NotionEndpointsRequest } from './';
@@ -18,8 +19,10 @@ export const sendRequest = <T>(endpoint: string, arg: any, configs?: INotionEndp
 			try {
 				const headers = NotionEndpointsRequest.constructHeaders(configs);
 				const response = await axios.post<T>(`${BASE_NOTION_URL}/${endpoint}`, arg, headers);
+				NotionLogger.endpoint.info(endpoint);
 				resolve(response.data);
 			} catch (err) {
+				NotionLogger.endpoint.error(err.message);
 				reject(err);
 			}
 		}, default_configs.interval);

@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import { INotionEndpoints } from '@nishans/types';
 import axios from 'axios';
 import { NotionEndpoints } from '../../libs';
@@ -24,8 +25,9 @@ describe('NotionRequest.send', () => {
 
 		const axiosPostMock = jest.spyOn(axios, 'post').mockImplementationOnce(async () => ({ data: response_data }));
 		const constructHeadersMock = jest.spyOn(NotionEndpoints.Request, 'constructHeaders').mockImplementationOnce(() => {
-			return headers;
-		});
+				return headers;
+			}),
+			endpointInfoLogger = jest.spyOn(NotionLogger.endpoint, 'info').mockImplementationOnce(() => undefined as any);
 
 		const response = await NotionEndpoints.Request.send<INotionEndpoints['syncRecordValues']['response']>(
 			'syncRecordValues',
@@ -35,6 +37,7 @@ describe('NotionRequest.send', () => {
 		expect(constructHeadersMock).toHaveBeenCalledWith(notion_request_configs);
 		expect(axiosPostMock).toHaveBeenCalledWith('https://www.notion.so/api/v3/syncRecordValues', request_data, headers);
 		expect(response).toStrictEqual(response_data);
+		expect(endpointInfoLogger).toHaveBeenCalledWith('syncRecordValues');
 	});
 
 	it(`Should respond to request error`, async () => {
@@ -46,7 +49,8 @@ describe('NotionRequest.send', () => {
 					'x-notion-active-user-header': 'user_id',
 					cookie: 'cookie'
 				}
-			};
+			},
+			endpointErrorLogger = jest.spyOn(NotionLogger.endpoint, 'error').mockImplementationOnce(() => undefined as any);
 
 		const axiosPostMock = jest.spyOn(axios, 'post').mockImplementationOnce(async () => {
 			throw new Error('Error occurred');
@@ -63,6 +67,7 @@ describe('NotionRequest.send', () => {
 			)
 		).rejects.toThrow(`Error occurred`);
 		expect(constructHeadersMock).toHaveBeenCalledWith(notion_request_configs);
+		expect(endpointErrorLogger).toHaveBeenCalledWith('Error occurred');
 		expect(axiosPostMock).toHaveBeenCalledWith('https://www.notion.so/api/v3/syncRecordValues', request_data, headers);
 	});
 });

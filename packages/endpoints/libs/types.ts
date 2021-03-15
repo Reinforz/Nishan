@@ -13,4 +13,5 @@ export interface INotionEndpointsOptions {
 	token: string;
 	user_id: string;
 	interval?: number;
+	logger?: boolean;
 }

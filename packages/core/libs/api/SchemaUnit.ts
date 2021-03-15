@@ -1,5 +1,6 @@
 import { NotionErrors } from '@nishans/errors';
 import { NotionIdz } from '@nishans/idz';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TSchemaUnit } from '@nishans/types';
 import { INotionCoreOptions } from '../';
@@ -25,7 +26,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 			[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 			this.getProps()
 		);
-		this.logger && this.logger('UPDATE', 'collection', this.id);
+		this.logger && NotionLogger.method.info(`UPDATE collection ${this.id}`);
 	}
 
 	async delete () {
@@ -37,7 +38,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 				[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 				this.getProps()
 			);
-			this.logger && this.logger('DELETE', 'collection', this.id);
+			this.logger && NotionLogger.method.info(`DELETE collection ${this.id}`);
 		} else NotionErrors.Log.error(`Title schema unit cannot be deleted`);
 	}
 
@@ -51,7 +52,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 				[ NotionOperations.Chunk.collection.update(this.id, [], { schema: JSON.parse(JSON.stringify(data.schema)) }) ],
 				this.getProps()
 			);
-			this.logger && this.logger('UPDATE', 'collection', this.id);
+			this.logger && NotionLogger.method.info(`UPDATE collection ${this.id}`);
 		} else NotionErrors.Log.error(`Title schema unit cannot be duplicated`);
 	}
 

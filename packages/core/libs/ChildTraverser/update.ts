@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -34,7 +35,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 
 	const iterateUtil = async (child_id: string, child_data: CD, updated_data: RD) => {
 		cb && (await cb(child_id, child_data, updated_data, container));
-		logger && logger('UPDATE', child_type, child_id);
+		logger && NotionLogger.method.info(`UPDATE ${child_type} ${child_id}`);
 
 		let last_edited_props = {};
 		if (!manual) {

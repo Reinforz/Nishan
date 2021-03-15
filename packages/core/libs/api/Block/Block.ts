@@ -2,6 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionFabricator, RepositionParams, TBlockInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -81,7 +82,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 				);
 				this.cache.block.set(block_id, JSON.parse(JSON.stringify(duplicated_block)));
 			}
-			this.logger && this.logger('CREATE', 'block', block_id);
+			this.logger && NotionLogger.method.info(`CREATE block ${block_id}`);
 			await PopulateMap.block(block, block_map, this.getProps());
 		}
 		return block_map;
@@ -93,7 +94,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
    */
 	async update (args: Partial<A>) {
 		const data = this.getCachedData() as any;
-		this.logger && this.logger('UPDATE', 'block', data.id);
+		this.logger && NotionLogger.method.info(`UPDATE block ${data.id}`);
 		NotionUtils.deepMerge(data, args);
 		await NotionOperations.executeOperations(
 			[
@@ -114,7 +115,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	async convertTo (type: TBasicBlockType) {
 		const data = this.getCachedData() as any;
 		data.type = type;
-		this.logger && this.logger('UPDATE', 'block', data.id);
+		this.logger && NotionLogger.method.info('UPDATE', 'block', data.id);
 		await NotionOperations.executeOperations(
 			[
 				NotionOperations.Chunk.block.update(this.id, [ 'type' ], type),
@@ -134,8 +135,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		await NotionFabricator.updateChildContainer(data.parent_table, data.parent_id, false, this.id, this.getProps());
 
 		data.alive = false;
-		this.logger && this.logger('DELETE', 'block', data.id);
-		this.logger && this.logger('UPDATE', data.parent_table, parent_data.id);
+		this.logger && NotionLogger.method.info(`DELETE block ${data.id}`);
+		this.logger && NotionLogger.method.info(`UPDATE ${data.parent_table} ${parent_data.id}`);
 
 		await NotionOperations.executeOperations(
 			[
@@ -164,9 +165,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		parent_data.content = parent_data.content.filter((id) => id !== data.id);
 		new_parent_data.content.push(data.id);
 
-		this.logger && this.logger('UPDATE', 'block', data.id);
-		this.logger && this.logger('UPDATE', 'block', parent_data.id);
-		this.logger && this.logger('UPDATE', 'block', new_parent_data.id);
+		this.logger && NotionLogger.method.info(`UPDATE block ${data.id}`);
+		this.logger && NotionLogger.method.info(`UPDATE block ${parent_data.id}`);
+		this.logger && NotionLogger.method.info(`UPDATE block ${new_parent_data.id}`);
 
 		await NotionOperations.executeOperations(
 			[

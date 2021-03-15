@@ -1,5 +1,4 @@
 import { ICache, NotionCache } from "@nishans/cache";
-import { Logger, NotionFabricator } from "@nishans/fabricator";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { INotionUser } from "@nishans/types";
 import { ChildTraverser, FilterType, FilterTypes, INotionCoreOptions } from "../";
@@ -17,7 +16,7 @@ class Nishan {
   token: string;
   interval: number;
   #init_cache: boolean;
-  logger: Logger;
+  logger: boolean;
   notion_operation_plugins: NotionOperationPluginFunction[];
   cache: ICache;
 
@@ -25,7 +24,7 @@ class Nishan {
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;
-    this.logger = NotionFabricator.constructLogger(arg.logger)
+    this.logger = arg.logger ?? true;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.cache = NotionCache.createDefaultCache();
   }

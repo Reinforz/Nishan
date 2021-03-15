@@ -1,4 +1,5 @@
 import { NotionFabricator } from '@nishans/fabricator';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -37,7 +38,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 
 	const updateData = async (child_id: string, child_data: TD) => {
 		cb && (await cb(child_id, child_data, container));
-		logger && logger('DELETE', child_type, child_id);
+		logger && NotionLogger.method.info(`DELETE ${child_type} ${child_id}`);
 
 		let last_edited_props = {};
 		// If the update is not manual,

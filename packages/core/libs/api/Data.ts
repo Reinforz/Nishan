@@ -1,8 +1,9 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
-import { INotionFabricatorOptions, Logger, NotionFabricator, RepositionParams } from '@nishans/fabricator';
+import { INotionFabricatorOptions, RepositionParams } from '@nishans/fabricator';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
+import { NotionLogger } from 'packages/logger/dist/libs';
 import { ChildTraverser, FilterTypes, INotionCoreOptions, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, positionChildren, UpdateTypes } from '../';
 import { updateLastEditedProps } from '../ChildTraverser/utils';
 
@@ -15,7 +16,7 @@ export default class NotionData<T extends TData> {
   id: string;
   type: TDataType;
   #init_cache = false;
-  protected logger: Logger;
+  logger: boolean;
   user_id: string;
   notion_operation_plugins: NotionOperationPluginFunction[];
   shard_id: number;
@@ -28,7 +29,7 @@ export default class NotionData<T extends TData> {
     this.type = arg.type;
     this.id = arg.id;
     this.#init_cache = false;
-    this.logger = NotionFabricator.constructLogger(arg.logger);
+    this.logger = arg.logger ?? true;
     this.user_id = arg.user_id;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.shard_id = arg.shard_id;
@@ -86,7 +87,7 @@ export default class NotionData<T extends TData> {
         delete (data as any)[key]
     })
 
-    this.logger && this.logger("UPDATE", this.type as any, this.id);
+    this.logger && NotionLogger.method.info(`UPDATE ${this.type} ${this.id}`);
     await NotionOperations.executeOperations([NotionOperations.Chunk[this.type].update(this.id, [], data)], this.getProps())
   }
 

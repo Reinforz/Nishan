@@ -1,10 +1,11 @@
 import { NotionErrors } from '@nishans/errors';
-import { Logger, NotionFabricator, RepositionParams } from '@nishans/fabricator/';
+import { NotionFabricator, RepositionParams } from '@nishans/fabricator/';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
 
 interface PositionChildrenParam {
-	logger?: Logger;
+	logger?: boolean;
 	parent: TData;
 	child_id: string;
 	position?: RepositionParams;
@@ -24,7 +25,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 	// If the parent doesn't contain the child container create one
 	if (!contains_container) parent[child_path] = [];
 	const container: string[] = parent[child_path];
-	logger && logger('UPDATE', parent_type, parent.id);
+	logger && NotionLogger.method.info(`UPDATE ${parent_type} ${parent.id}`);
 
 	if (position !== undefined && position !== null) {
 		// Where should the new child_id be placed in reference to the pivot id

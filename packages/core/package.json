@@ -41,6 +41,7 @@
     "@nishans/operations": "^0.0.26",
     "@nishans/permissions": "0.0.17",
     "@nishans/utils": "0.0.18",
+    "@nishans/logger": "0.0.15",
     "colors": "^1.4.0"
   },
   "devDependencies": {

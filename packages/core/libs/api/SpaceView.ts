@@ -1,5 +1,6 @@
 import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
+import { NotionLogger } from 'packages/logger/dist/libs';
 import {
 	CreateMaps,
 	FilterType,
@@ -54,7 +55,7 @@ class SpaceView extends Data<ISpaceView> {
 				break;
 			}
 		}
-		this.logger && this.logger('READ', 'space', target_space.id);
+		this.logger && NotionLogger.method.info(`READ space ${target_space.id}`);
 		return new Space({
 			id: target_space.id,
 			...this.getProps()

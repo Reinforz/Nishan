@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import { TData } from '@nishans/types';
 import { FilterTypes, IterateAndGetChildrenOptions } from '../';
 import { getChildIds, iterateChildren } from './utils';
@@ -20,7 +21,7 @@ export const get = async <T extends TData, TD, C = any[]>(
 
 	const iterateUtil = async (child_id: string, child_data: TD) => {
 		cb && (await cb(child_id, child_data, container));
-		logger && logger('READ', child_type, child_id);
+		logger && NotionLogger.method.info(`READ ${child_type} ${child_id}`);
 	};
 
 	await iterateChildren<TD, boolean>({ args, method: 'READ', cb: iterateUtil }, transform, {

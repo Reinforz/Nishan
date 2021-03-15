@@ -3,6 +3,7 @@ import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
 import { NotionFabricator } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
 import { CollectionViewPage, CreateMaps, FilterType, FilterTypes, INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, Page, TNotionUserUpdateKeys, UpdateType, UpdateTypes } from '../';
@@ -33,7 +34,7 @@ class NotionUser extends Data<INotionUser> {
    */
   getUserSettings() {
     const user_settings = this.cache.user_settings.get(this.user_id) as IUserSettings;
-    this.logger && this.logger('READ', 'user_settings', user_settings.id)
+    this.logger && NotionLogger.method.info(`READ user_settings ${user_settings.id}`);
     return new UserSettings({
       ...this.getProps(),
       id: user_settings.id,
@@ -42,7 +43,7 @@ class NotionUser extends Data<INotionUser> {
 
   getUserRoot() {
     const notion_user = this.cache.user_root.get(this.id) as IUserRoot;
-    this.logger && this.logger('READ', 'user_root', notion_user.id)
+    this.logger && NotionLogger.method.info(`READ user_root ${notion_user.id}`);
     return new UserRoot({
       ...this.getProps(),
       id: this.id
@@ -140,10 +141,10 @@ class NotionUser extends Data<INotionUser> {
         NotionOperations.Chunk.user_root.listAfter(this.user_id, ['space_views'], { after: '', id: space_view_id })
       ], this.getProps());
 
-      this.logger && this.logger(`CREATE`, 'space', space_id);
-      this.logger && this.logger(`CREATE`, 'space_view', space_view_id);
-      this.logger && this.logger(`UPDATE`, 'user_root', this.user_id);
-      this.logger && this.logger(`UPDATE`, 'space', space_id);
+      this.logger && NotionLogger.method.info(`CREATE space ${space_id}`);
+      this.logger && NotionLogger.method.info(`CREATE space_view ${space_view_id}`);
+      this.logger && NotionLogger.method.info(`UPDATE user_root ${this.user_id}`);
+      this.logger && NotionLogger.method.info(`UPDATE space ${space_id}`);
 
       await NotionFabricator.CreateData.contents(opt.contents, space_id, "space", {...this.getProps(), space_id})
     };

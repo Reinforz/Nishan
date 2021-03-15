@@ -4,6 +4,7 @@ import { NotionErrors } from '@nishans/errors';
 import { ICollectionViewPageInput, ICollectionViewPageUpdateInput, IPageCreateInput, IPageUpdateInput, NotionFabricator } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, ICollectionViewPage, INotionUser, IOperation, IPage, ISpace, ISpaceView, IUserPermission, TPage, TSpaceMemberPermissionRole } from '@nishans/types';
+import { NotionLogger } from 'packages/logger/dist/libs';
 import { CreateMaps, FilterType, FilterTypes, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys, UpdateType, UpdateTypes } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
@@ -50,7 +51,7 @@ export default class Space extends Data<ISpace> {
    */
   getSpaceView() {
     const target_space_view = this.spaceView;
-    this.logger && this.logger("READ", "space_view", target_space_view.id)
+    this.logger && NotionLogger.method.info(`READ space_view ${target_space_view.id}`);
     return new SpaceView({
       id: target_space_view.id,
       ...this.getProps()
@@ -78,7 +79,7 @@ export default class Space extends Data<ISpace> {
         }
       }
     }, this.getProps());
-    this.logger && this.logger("DELETE", "space", this.id);
+    this.logger && NotionLogger.method.info(`DELETE space ${this.id}`);
   }
 
   async createRootPages(contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
@@ -157,7 +158,7 @@ export default class Space extends Data<ISpace> {
         operations.push(NotionOperations.Chunk.space.setPermissionItem(this.id, ["permissions"], permission_data));
         data.permissions.push(permission_data)
         notion_users.push(notion_user)
-        this.logger && this.logger("UPDATE", "space", this.id)
+        this.logger && NotionLogger.method.info(`UPDATE space ${this.id}`)
       }
     };
     await NotionOperations.executeOperations(

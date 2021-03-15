@@ -1,4 +1,4 @@
-import { INotionFabricatorOptions, Logger } from '@nishans/fabricator';
+import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { TDataType } from '@nishans/types';
 import { Predicate } from './utils';
 export interface INotionCoreOptions extends INotionFabricatorOptions {
@@ -62,7 +62,7 @@ export type IterateChildren<TD = any, RD = any> =
 export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C>, Pick<INotionCoreOptions, 'cache'> {
 	parent_type: TDataType;
 	parent_id: string;
-	logger?: Logger;
+	logger?: boolean;
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
 export type IterateAndUpdateChildrenOptions<T, C> = Omit<INotionCoreOptions, 'id'> &

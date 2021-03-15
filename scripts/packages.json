@@ -70,6 +70,11 @@
     "published": true
   },
   {
+    "name": "@nishans/lineage",
+    "description": "A package to work with notion child data",
+    "published": false
+  },
+  {
     "name": "@nishans/logger",
     "description": "A logger built specifically for nishan ecosystem",
     "published": true

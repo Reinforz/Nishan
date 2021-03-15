@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-30-%2371368a">
+  <img src="https://img.shields.io/badge/Total%20Packages-31-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-16-%2311806a">
 </p>
 
@@ -42,6 +42,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql): A graphql server for notion built using `@nishans/core`
 *   **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz): A small package to validate, generate and parse notion ids
 *   **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks): Package providing an easy to use api to generate contents for notion inline blocks
+*   **`@nishans/lineage`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/lineage): A package to work with notion child data
 *   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [NPM](https://www.npmjs.com/package/@nishans/logger): A logger built specifically for nishan ecosystem
 *   **`@nishans/markdown`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/markdown) [Docs](https://nishan-docs.netlify.app/docs/markdown): A package to upload markdown content into notion
 *   **`@nishans/notion-formula`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) [Docs](https://nishan-docs.netlify.app/docs/notion-formula) [NPM](https://www.npmjs.com/package/@nishans/notion-formula): A package to generate notion formula with ease

@@ -1,4 +1,5 @@
 import { NotionIdz } from '@nishans/idz';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { TView } from '@nishans/types';
 import { INotionFabricatorOptions } from '../../';
@@ -40,6 +41,6 @@ export async function generateViewData (
 	);
 	// Add the view to the cache
 	options.cache.collection_view.set(view_id, view_data);
-	options.logger && options.logger('CREATE', 'collection_view', view_data.id);
+	options.logger && NotionLogger.method.info(`CREATE collection_view ${view_data.id}`);
 	return view_data;
 }

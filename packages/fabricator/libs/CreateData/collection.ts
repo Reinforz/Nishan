@@ -1,4 +1,5 @@
 import { NotionIdz } from '@nishans/idz';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -50,7 +51,7 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
 	// Store the collection in cache
 	options.cache.collection.set(collection_id, collection_data);
 	// Log the collection creation
-	options.logger && options.logger('CREATE', 'collection', collection_id);
+	options.logger && NotionLogger.method.info(`CREATE collection ${collection_id}`);
 
 	return [ collection_data, views_data ] as const;
 }

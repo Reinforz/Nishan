@@ -1,5 +1,6 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionIdz } from "@nishans/idz";
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
 import { INotionFabricatorOptions } from "packages/fabricator/types";
@@ -17,7 +18,7 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
   // Get the child_collection from cache first
   const child_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, options);
   // Log the event of reading the child collection
-  options.logger && options.logger("READ", "collection", child_collection_id);
+  options.logger && NotionLogger.method.info(`READ collection ${child_collection_id}`);
 
   // Construct the relation_schema_unit, its erroneous now, as it uses incorrect data passed from the input
   const relation_schema_unit: RelationSchemaUnit = {
@@ -53,7 +54,7 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
       name: [[relation_schema_unit_name]],
     })], options);
     // Log since a new operation is taking place
-    options.logger && options.logger("UPDATE", "collection", child_collection_id)
+    options.logger && NotionLogger.method.info(`UPDATE collection ${child_collection_id}`);
   }
   // Return the constructed parent collection relation schema unit
   return relation_schema_unit;

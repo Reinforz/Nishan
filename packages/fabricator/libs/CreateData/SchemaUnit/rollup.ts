@@ -1,5 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
+import { NotionLogger } from '@nishans/logger';
 import { ISchemaMap } from '@nishans/notion-formula';
 import { ICollection, RollupSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
@@ -36,7 +37,7 @@ export async function rollup (
 	);
 
 	// Log the collection read operation
-	options.logger && options.logger('READ', 'collection', collection_id);
+	options.logger && NotionLogger.method.info(`READ collection ${collection_id}`);
 
 	const target_collection_schema_unit_map = NotionUtils.getSchemaMapUnit(
 		NotionUtils.generateSchemaMap(target_collection.schema),

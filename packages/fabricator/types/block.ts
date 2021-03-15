@@ -56,12 +56,12 @@ export interface ICollectionViewPageInput extends ICollectionBlockInput {
 	isPrivate?: boolean;
 }
 
-interface IInput {
+interface IBlockInput {
 	id?: string;
 	type: TBlockType;
 }
 
-export interface ILinkedDBInput extends IInput {
+export interface ILinkedDBInput extends IBlockInput {
 	type: 'linked_db';
 	collection_id: string;
 	properties?: Record<string, unknown>;
@@ -75,38 +75,38 @@ export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageIn
 
 // Media IBlock Input
 
-export interface IVideoInput extends IInput {
+export interface IVideoInput extends IBlockInput {
 	type: 'video';
 	properties: IVideo['properties'];
 	format?: IVideo['format'];
 }
 
-export interface IImageInput extends IInput {
+export interface IImageInput extends IBlockInput {
 	type: 'image';
 	properties: IImage['properties'];
 	format?: IImage['format'];
 }
 
-export interface IAudioInput extends IInput {
+export interface IAudioInput extends IBlockInput {
 	type: 'audio';
 	properties: IAudio['properties'];
 	format?: IAudio['format'];
 }
 
-export interface IWebBookmarkInput extends IInput {
+export interface IWebBookmarkInput extends IBlockInput {
 	type: 'bookmark';
 	properties: IWebBookmark['properties'];
 	format?: IWebBookmark['format'];
 }
 
 // Basic block input
-export interface ICodeInput extends IInput {
+export interface ICodeInput extends IBlockInput {
 	type: 'code';
 	properties: ICode['properties'];
 	format?: ICode['format'];
 }
 
-export interface IFileInput extends IInput {
+export interface IFileInput extends IBlockInput {
 	type: 'file';
 	properties: IFile['properties'];
 	format?: IFile['format'];
@@ -116,7 +116,7 @@ export type TMediaBlockInput = IVideoInput | IImageInput | IAudioInput | IWebBoo
 
 // Basic IBlock Input
 
-export interface IColumnListInput extends IInput {
+export interface IColumnListInput extends IBlockInput {
 	type: 'column_list';
 	contents: {
 		id?: string;
@@ -124,7 +124,7 @@ export interface IColumnListInput extends IInput {
 	}[];
 }
 
-export interface IPageCreateInput extends IInput {
+export interface IPageCreateInput extends IBlockInput {
 	type: 'page';
 	properties: IPage['properties'];
 	format?: Partial<IPage['format']>;
@@ -148,49 +148,49 @@ export interface ICollectionViewPageUpdateInput {
 	title?: string[][];
 }
 
-export interface ITextInput extends IInput {
+export interface ITextInput extends IBlockInput {
 	properties: IText['properties'];
 	format?: IText['format'];
 	type: 'text';
 }
 
-export interface IHeaderInput extends IInput {
+export interface IHeaderInput extends IBlockInput {
 	properties: IHeader['properties'];
 	format?: IHeader['format'];
 	type: 'header';
 }
 
-export interface ISubHeaderInput extends IInput {
+export interface ISubHeaderInput extends IBlockInput {
 	properties: ISubHeader['properties'];
 	format?: ISubHeader['format'];
 	type: 'sub_header';
 }
 
-export interface ISubSubHeaderInput extends IInput {
+export interface ISubSubHeaderInput extends IBlockInput {
 	properties: ISubSubHeader['properties'];
 	format?: ISubSubHeader['format'];
 	type: 'sub_sub_header';
 }
 
-export interface INumberedListInput extends IInput {
+export interface INumberedListInput extends IBlockInput {
 	properties: INumberedList['properties'];
 	format?: INumberedList['format'];
 	type: 'numbered_list';
 }
 
-export interface IBulletedListInput extends IInput {
+export interface IBulletedListInput extends IBlockInput {
 	properties: IBulletedList['properties'];
 	format?: IBulletedList['format'];
 	type: 'bulleted_list';
 }
 
-export interface IToggleInput extends IInput {
+export interface IToggleInput extends IBlockInput {
 	properties: IToggle['properties'];
 	format?: IToggle['format'];
 	type: 'toggle';
 }
 
-export interface IQuoteInput extends IInput {
+export interface IQuoteInput extends IBlockInput {
 	properties: IQuote['properties'];
 	format?: IQuote['format'];
 	type: 'quote';
@@ -201,19 +201,19 @@ export interface ILinkToPageInput {
 	page_id: string;
 }
 
-export interface IDividerInput extends IInput {
+export interface IDividerInput extends IBlockInput {
 	type: 'divider';
 	properties?: IDivider['properties'];
 	format?: IDivider['format'];
 }
 
-export interface ICalloutInput extends IInput {
+export interface ICalloutInput extends IBlockInput {
 	type: 'callout';
 	format?: ICallout['format'];
 	properties?: ICallout['properties'];
 }
 
-export interface ITodoInput extends IInput {
+export interface ITodoInput extends IBlockInput {
 	type: 'to_do';
 	properties: ITodo['properties'];
 	format?: ITodo['format'];
@@ -235,26 +235,26 @@ export type TBasicBlockInput =
 	| IHeaderInput
 	| ITextInput;
 // Advanced block input
-export interface ITOCInput extends IInput {
+export interface ITOCInput extends IBlockInput {
 	type: 'table_of_contents';
 	format?: ITOC['format'];
 	properties?: ITOC['properties'];
 }
 
-export interface IEquationInput extends IInput {
+export interface IEquationInput extends IBlockInput {
 	type: 'equation';
 	properties: IEquation['properties'];
 	format?: IEquation['format'];
 }
 
-export interface IFactoryInput extends IInput {
+export interface IFactoryInput extends IBlockInput {
 	type: 'factory';
 	properties: IFactory['properties'];
 	format?: IFactory['format'];
 	contents: TBlockInput[];
 }
 
-export interface IBreadcrumbInput extends IInput {
+export interface IBreadcrumbInput extends IBlockInput {
 	type: 'breadcrumb';
 	properties?: IBreadcrumb['properties'];
 	format?: IBreadcrumb['format'];
@@ -263,44 +263,44 @@ export interface IBreadcrumbInput extends IInput {
 export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationInput | ITOCInput;
 
 // Embed block input
-export interface IEmbedInput extends IInput {
+export interface IEmbedInput extends IBlockInput {
 	type: 'embed';
 	properties: IEmbed['properties'];
 	format?: IEmbed['format'];
 }
 
-export interface IDriveInput extends IInput {
+export interface IDriveInput extends IBlockInput {
 	type: 'drive';
 	properties?: IDrive['properties'];
 	format?: IDrive['format'];
 	file_id: string;
 }
 
-export interface ITweetInput extends IInput {
+export interface ITweetInput extends IBlockInput {
 	type: 'tweet';
 	properties: ITweet['properties'];
 	format?: ITweet['format'];
 }
 
-export interface ICodepenInput extends IInput {
+export interface ICodepenInput extends IBlockInput {
 	type: 'codepen';
 	properties: ICodepen['properties'];
 	format?: ICodepen['format'];
 }
 
-export interface IMapsInput extends IInput {
+export interface IMapsInput extends IBlockInput {
 	type: 'maps';
 	properties: IMaps['properties'];
 	format?: IMaps['format'];
 }
 
-export interface IGistInput extends IInput {
+export interface IGistInput extends IBlockInput {
 	type: 'gist';
 	properties: IGist['properties'];
 	format?: IGist['format'];
 }
 
-export interface IFigmaInput extends IInput {
+export interface IFigmaInput extends IBlockInput {
 	type: 'figma';
 	properties: IFigma['properties'];
 	format?: IFigma['format'];

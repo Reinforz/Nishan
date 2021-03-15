@@ -1,6 +1,7 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
 import { NotionIdz } from "@nishans/idz";
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
@@ -190,7 +191,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       if(parent_table === "block" || parent_table==="space" || (parent_table === "collection" && (content as any).is_template))
         await updateChildContainer(parent_table, parent_id, true, content_id, options);
 
-      options.logger && options.logger("CREATE","block", content_id)
+      options.logger && NotionLogger.method.info(`CREATE block ${content_id}`)
     }
   }
 

@@ -1,8 +1,7 @@
-import { NotionCache } from '@nishans/cache';
-import { NotionOperations } from '@nishans/operations';
+import { INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { TDataType } from '@nishans/types';
-import { NotionFabricator } from '.';
-import { INotionFabricatorOptions } from '../types';
+import { detectChildData } from './detectChildData';
 
 /**
  * Update the operation stack and parent's child container by either removing or adding the it based on the `keep` parameter
@@ -18,10 +17,10 @@ export async function updateChildContainer (
 	parent_id: string,
 	keep: boolean,
 	child_id: string,
-	options: INotionFabricatorOptions
+	options: INotionCacheOptions & INotionOperationOptions
 ) {
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, options);
-	const [ child_path ] = NotionFabricator.detectChildData(parent_table as any, parent_data as any);
+	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
 	// Extract the child container from the parent using child_path

@@ -2,8 +2,7 @@
   "name": "@nishans/lineage",
   "version": "0.0.0",
   "description": "A package to work with notion child data",
-  "keywords": [
-  ],
+  "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/lineage/README.md",
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Flineage"
@@ -26,5 +25,14 @@
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.27"
+  },
+  "dependencies": {
+    "@nishans/logger": "0.0.15",
+    "@nishans/errors": "0.0.24",
+    "@nishans/operations": "0.0.26",
+    "@nishans/cache": "0.0.28"
   }
 }

@@ -1,6 +1,6 @@
 import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
+import { NotionLogger } from '@nishans/logger';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import { NotionLogger } from 'packages/logger/dist/libs';
 import {
 	CreateMaps,
 	FilterType,

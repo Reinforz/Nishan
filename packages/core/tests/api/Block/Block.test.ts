@@ -1,5 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { Block, NotionData, PopulateMap } from '../../../libs';
@@ -26,12 +27,11 @@ const construct = () => {
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ], [ 'block_4', block_4 ] ])
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const logger_spy = jest.fn();
 	const block = new Block({
 		...default_nishan_arg,
-		cache,
-		logger: logger_spy
+		cache
 	});
 
 	return { block_4, block_3, block_2, block, executeOperationsMock, block_1, cache, logger_spy };
@@ -95,7 +95,7 @@ it('update', async () => {
 			}
 		})
 	);
-	expect(logger_spy).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
+	expect(logger_spy).toHaveBeenCalledWith('UPDATE block block_1');
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(
 			'block_1',
@@ -122,7 +122,7 @@ describe('duplicate', () => {
 
 		await block.duplicate([ id ]);
 		expect(cache.block.get(id)).toStrictEqual(expect.objectContaining(cached_data));
-		expect(logger_spy).toHaveBeenCalledWith('CREATE', 'block', id);
+		expect(logger_spy).toHaveBeenCalledWith(`CREATE block ${id}`);
 		expect(executeOperationsMock.mock.calls[0][0]).toEqual([ o.b.u(id, [], expect.objectContaining(cached_data)) ]);
 	});
 
@@ -190,7 +190,7 @@ it('convertTo', async () => {
 		o.b.u('block_1', [], last_edited_props)
 	]);
 
-	expect(logger_spy).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
+	expect(logger_spy).toHaveBeenCalledWith('UPDATE block block_1');
 });
 
 it(`delete`, async () => {
@@ -199,8 +199,8 @@ it(`delete`, async () => {
 	await block.delete();
 
 	expect(logger_spy).toHaveBeenCalledTimes(2);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'DELETE', 'block', 'block_1');
-	expect(logger_spy).toHaveBeenNthCalledWith(2, 'UPDATE', 'block', 'block_3');
+	expect(logger_spy).toHaveBeenNthCalledWith(1, 'DELETE block block_1');
+	expect(logger_spy).toHaveBeenNthCalledWith(2, 'UPDATE block block_3');
 	expect(block_1).toEqual(
 		expect.objectContaining({
 			alive: false
@@ -225,9 +225,9 @@ it(`transfer`, async () => {
 	await block.transfer('block_4');
 
 	expect(logger_spy).toHaveBeenCalledTimes(3);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'UPDATE', 'block', 'block_1');
-	expect(logger_spy).toHaveBeenNthCalledWith(2, 'UPDATE', 'block', 'block_3');
-	expect(logger_spy).toHaveBeenNthCalledWith(3, 'UPDATE', 'block', 'block_4');
+	expect(logger_spy).toHaveBeenNthCalledWith(1, 'UPDATE block block_1');
+	expect(logger_spy).toHaveBeenNthCalledWith(2, 'UPDATE block block_3');
+	expect(logger_spy).toHaveBeenNthCalledWith(3, 'UPDATE block block_4');
 
 	expect(block_1.parent_id).toBe('block_4');
 	expect(block_3.content).toEqual([ 'block_2' ]);

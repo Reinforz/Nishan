@@ -26,7 +26,8 @@ const construct = () => {
 
 	const page = new Page({
 		...default_nishan_arg,
-		cache
+		cache,
+		logger: false
 	});
 	return { space_1, cache, block_1, block_2, page, initializeCacheForSpecificDataMock, executeOperationsMock };
 };
@@ -116,12 +117,10 @@ it(`updateBookmarkedStatus`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
-
 	const page = new Page({
 		...default_nishan_arg,
 		cache,
-		logger: logger_spy
+		logger: false
 	});
 
 	await page.updateBookmarkedStatus(false);

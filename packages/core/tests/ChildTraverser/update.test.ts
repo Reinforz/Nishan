@@ -1,4 +1,5 @@
 import { ICache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
@@ -13,9 +14,9 @@ it(`manual=false`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
+	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const logger_spy = jest.fn(),
-		cb_spy = jest.fn();
+	const cb_spy = jest.fn();
 
 	const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
 		[ [ c1id, { data: c1id } as any ], [ c2id, { data: c2id } as any ] ],
@@ -24,7 +25,7 @@ it(`manual=false`, async () => {
 			container: [],
 			cache,
 			child_ids,
-			logger: logger_spy,
+			logger: true,
 			...update_props
 		},
 		(id, data, update_data, container) => {
@@ -33,7 +34,7 @@ it(`manual=false`, async () => {
 		}
 	);
 
-	expect(logger_spy.mock.calls).toEqual([ [ 'UPDATE', 'block', c1id ], [ 'UPDATE', 'block', c2id ] ]);
+	expect(methodLoggerMock.mock.calls).toEqual([ [ `UPDATE block ${c1id}` ], [ `UPDATE block ${c2id}` ] ]);
 	expect(cb_spy.mock.calls).toEqual([
 		[
 			c1id,

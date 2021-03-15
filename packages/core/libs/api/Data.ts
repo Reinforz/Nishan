@@ -1,9 +1,9 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
 import { INotionFabricatorOptions, RepositionParams } from '@nishans/fabricator';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { TData, TDataType } from '@nishans/types';
-import { NotionLogger } from 'packages/logger/dist/libs';
 import { ChildTraverser, FilterTypes, INotionCoreOptions, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, positionChildren, UpdateTypes } from '../';
 import { updateLastEditedProps } from '../ChildTraverser/utils';
 

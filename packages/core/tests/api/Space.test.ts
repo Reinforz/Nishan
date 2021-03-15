@@ -1,5 +1,6 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
@@ -44,6 +45,8 @@ describe('createSpaceIterateArguments', () => {
 })
 
 it(`getSpaceView`, async () => {
+  const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
+
 	const cache: ICache = {
 			...NotionCache.createDefaultCache(),
 			space_view: new Map([
@@ -51,16 +54,14 @@ it(`getSpaceView`, async () => {
 				[ 'space_view_1', { alive: true, space_id: 'space_1', id: 'space_view_1' } as any ]
 			]),
 		};
-	const logger_spy = jest.fn();
 	const space = new Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
-		logger: logger_spy
 	});
 
 	const space_view = space.getSpaceView();
-	expect(logger_spy).toHaveBeenCalledWith('READ', 'space_view', 'space_view_1');
+	expect(methodLoggerMock).toHaveBeenCalledWith('READ space_view space_view_1');
 	expect(space_view.getCachedData()).toStrictEqual({
 		alive: true,
 		space_id: 'space_1',
@@ -75,6 +76,7 @@ it(`update`, async () => {
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
+    logger: false
 	});
 
 	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(async () => undefined);
@@ -93,13 +95,12 @@ it(`update`, async () => {
 
 it(`delete`, async () => {
 	const cache = NotionCache.createDefaultCache();
-	const logger_spy = jest.fn();
+  const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	const space = new Space({
     ...default_nishan_arg,
 		cache,
-		id: 'space_1',
-		logger: logger_spy
+		id: 'space_1'
 	});
 
 	const enqueueTaskMock = jest.spyOn(NotionEndpoints.Mutations, 'enqueueTask').mockImplementationOnce(() => {
@@ -108,8 +109,7 @@ it(`delete`, async () => {
 
 	await space.delete();
 
-	expect(logger_spy).toHaveBeenCalledWith('DELETE', 'space', 'space_1');
-
+	expect(methodLoggerMock).toHaveBeenCalledWith('DELETE space space_1');
 	expect(enqueueTaskMock).toHaveBeenCalledTimes(1);
 	expect(enqueueTaskMock).toHaveBeenCalledWith(
 		{
@@ -139,6 +139,7 @@ it(`createRootPages`, async () => {
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
+    logger: false
 	});
 
 	const block_map = await space.createRootPages([
@@ -192,13 +193,11 @@ it(`getRootPage`, async () => {
 		},
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
-	const logger_spy = jest.fn();
-
 	const space = new Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
-		logger: logger_spy
+    logger: false
 	});
 
 	const page_map_1 = await space.getRootPage('block_1');
@@ -221,6 +220,7 @@ it(`updateRootPage`, async()=>{
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
+    logger: false
 	});
   const update_arg: any = {
     properties: {
@@ -256,6 +256,7 @@ it(`deleteRootPage`, async()=>{
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
+    logger: false
 	});
 
 	await space.deleteRootPage('block_1');

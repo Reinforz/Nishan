@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IHeader } from '@nishans/types';
 import colors from 'colors';
@@ -187,13 +188,12 @@ it(`updateCacheLocally`, async () => {
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const logger = jest.fn();
+	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
 
 	const block = new NotionData<IHeader>({
 		...default_nishan_arg,
 		cache,
-		type: 'block',
-		logger
+		type: 'block'
 	});
 
 	block.updateCacheLocally(
@@ -204,8 +204,8 @@ it(`updateCacheLocally`, async () => {
 		[ 'alive' ]
 	);
 
-	expect(logger).toHaveBeenCalledTimes(1);
-	expect(logger).toHaveBeenCalledWith('UPDATE', 'block', 'block_1');
+	expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+	expect(methodLoggerMock).toHaveBeenCalledWith('UPDATE block block_1');
 
 	expect(cache.block.get('block_1')).toStrictEqual({ id: 'block_1', type: 'header', alive: false });
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([

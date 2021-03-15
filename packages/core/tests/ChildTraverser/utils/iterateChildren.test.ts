@@ -1,6 +1,6 @@
 import { ICache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { TPage } from '@nishans/types';
-import colors from 'colors';
 import { iterateChildren } from '../../../libs/ChildTraverser/utils';
 
 afterEach(() => {
@@ -37,7 +37,7 @@ describe('method=UPDATE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -69,12 +69,8 @@ describe('method=UPDATE', () => {
 				{ content: 'content2' }
 			);
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_one_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_one_id does not exist in the cache');
 		});
 
 		it('multiple=true', async () => {
@@ -111,7 +107,7 @@ describe('method=UPDATE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -153,24 +149,11 @@ describe('method=UPDATE', () => {
 				{ content: 'content2' }
 			);
 
-			expect(console_log_spy).toHaveBeenCalledTimes(4);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_three_id does not exist in the cache')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				2,
-				colors.yellow.bold('block:child_four_id is not a child of block:parent_one_id')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				3,
-				colors.yellow.bold('block:child_five_id does not exist in the cache')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				4,
-				colors.yellow.bold('block:child_five_id is not a child of block:parent_one_id')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(4);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_three_id does not exist in the cache');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(2, 'block:child_four_id is not a child of block:parent_one_id');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(3, 'block:child_five_id does not exist in the cache');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(4, 'block:child_five_id is not a child of block:parent_one_id');
 		});
 	});
 
@@ -203,7 +186,7 @@ describe('method=UPDATE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -240,12 +223,8 @@ describe('method=UPDATE', () => {
 				{ content: 'content2' }
 			);
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_one_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_one_id does not exist in the cache');
 		});
 
 		it('multiple=true', async () => {
@@ -288,7 +267,7 @@ describe('method=UPDATE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -337,12 +316,8 @@ describe('method=UPDATE', () => {
 				{ content: 'content2' }
 			);
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_three_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_three_id does not exist in the cache');
 		});
 	});
 });
@@ -377,7 +352,7 @@ describe('method=READ | DELETE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -400,12 +375,8 @@ describe('method=READ | DELETE', () => {
 				id: 'child_two_id'
 			});
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_one_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_one_id does not exist in the cache');
 		});
 
 		it('multiple=true', async () => {
@@ -442,7 +413,7 @@ describe('method=READ | DELETE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -468,24 +439,11 @@ describe('method=READ | DELETE', () => {
 				id: 'child_two_id'
 			});
 
-			expect(console_log_spy).toHaveBeenCalledTimes(4);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_three_id does not exist in the cache')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				2,
-				colors.yellow.bold('block:child_four_id is not a child of block:parent_one_id')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				3,
-				colors.yellow.bold('block:child_five_id does not exist in the cache')
-			);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				4,
-				colors.yellow.bold('block:child_five_id is not a child of block:parent_one_id')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(4);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_three_id does not exist in the cache');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(2, 'block:child_four_id is not a child of block:parent_one_id');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(3, 'block:child_five_id does not exist in the cache');
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(4, 'block:child_five_id is not a child of block:parent_one_id');
 		});
 	});
 
@@ -518,7 +476,7 @@ describe('method=READ | DELETE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -550,12 +508,8 @@ describe('method=READ | DELETE', () => {
 				id: 'child_two_id'
 			});
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_one_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_one_id does not exist in the cache');
 		});
 
 		it('multiple=true', async () => {
@@ -598,7 +552,7 @@ describe('method=READ | DELETE', () => {
 			} as any;
 
 			const spyfn = jest.fn();
-			const console_log_spy = jest.spyOn(console, 'log');
+			const methodLoggerMock = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(() => undefined as any);
 
 			await iterateChildren<TPage>(
 				{
@@ -637,12 +591,8 @@ describe('method=READ | DELETE', () => {
 				id: 'child_two_id'
 			});
 
-			expect(console_log_spy).toHaveBeenCalledTimes(1);
-			expect(console_log_spy).toHaveBeenNthCalledWith(
-				1,
-				colors.yellow.bold('block:child_three_id does not exist in the cache')
-			);
-			console_log_spy.mockClear();
+			expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+			expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'block:child_three_id does not exist in the cache');
 		});
 	});
 });

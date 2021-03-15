@@ -1,4 +1,5 @@
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { Nishan } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
@@ -8,12 +9,11 @@ afterEach(() => {
 
 describe('get', () => {
 	it('arg=cb,multiple=true', async () => {
-		const logger_spy = jest.fn();
+		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
 
 		const nishan = new Nishan({
 			...default_nishan_arg,
-			notion_operation_plugins: [],
-			logger: logger_spy
+			notion_operation_plugins: []
 		});
 
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
@@ -45,19 +45,15 @@ describe('get', () => {
 			return user.id === 'a';
 		});
 
-		expect(logger_spy).toHaveBeenCalledTimes(1);
-		expect(logger_spy).toHaveBeenCalledWith('READ', 'notion_user', 'a');
+		expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+		expect(methodLoggerMock).toHaveBeenCalledWith('READ notion_user a');
 
 		expect(users[0].getCachedData()).toStrictEqual({ id: 'a', data: 'data' });
 	});
 
 	it('arg=cb,multiple=false', async () => {
-		const logger_spy = jest.fn();
-
-		const nishan = new Nishan({
-			...default_nishan_arg,
-			logger: logger_spy
-		});
+		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
+		const nishan = new Nishan(default_nishan_arg);
 
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
 			return {
@@ -88,18 +84,17 @@ describe('get', () => {
 			return user.id === 'b';
 		});
 
-		expect(logger_spy).toHaveBeenCalledTimes(1);
-		expect(logger_spy).toHaveBeenCalledWith('READ', 'notion_user', 'b');
+		expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+		expect(methodLoggerMock).toHaveBeenCalledWith('READ notion_user b');
 
 		expect(user.getCachedData()).toStrictEqual({ id: 'b', data: 'data' });
 	});
 
 	it('arg=string,multiple=false', async () => {
-		const logger_spy = jest.fn();
+		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 		const nishan = new Nishan({
-			token: 'token',
-			logger: logger_spy
+			token: 'token'
 		});
 
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
@@ -130,9 +125,9 @@ describe('get', () => {
 		const user_a = await nishan.getNotionUser('a');
 		const user_b = await nishan.getNotionUser('b');
 
-		expect(logger_spy).toHaveBeenCalledTimes(2);
-		expect(logger_spy).toHaveBeenNthCalledWith(1, 'READ', 'notion_user', 'a');
-		expect(logger_spy).toHaveBeenNthCalledWith(2, 'READ', 'notion_user', 'b');
+		expect(methodLoggerMock).toHaveBeenCalledTimes(2);
+		expect(methodLoggerMock).toHaveBeenNthCalledWith(1, 'READ notion_user a');
+		expect(methodLoggerMock).toHaveBeenNthCalledWith(2, 'READ notion_user b');
 
 		expect(user_a.getCachedData()).toStrictEqual({ id: 'a', data: 'data' });
 		expect(user_b.getCachedData()).toStrictEqual({ id: 'b', data: 'data' });

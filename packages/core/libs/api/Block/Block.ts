@@ -115,7 +115,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	async convertTo (type: TBasicBlockType) {
 		const data = this.getCachedData() as any;
 		data.type = type;
-		this.logger && NotionLogger.method.info('UPDATE', 'block', data.id);
+		this.logger && NotionLogger.method.info(`UPDATE block ${data.id}`);
 		await NotionOperations.executeOperations(
 			[
 				NotionOperations.Chunk.block.update(this.id, [ 'type' ], type),

@@ -1,4 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { NotionData, SpaceView } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
@@ -91,18 +92,17 @@ it(`getSpace`, () => {
 		space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
 	};
 
-	const logger_spy = jest.fn();
+	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		logger: logger_spy,
 		id: 'space_view_1'
 	});
 
 	const space = space_view.getSpace();
-	expect(logger_spy).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenCalledWith('READ', 'space', 'space_1');
+	expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+	expect(methodLoggerMock).toHaveBeenCalledWith('READ space space_1');
 	expect(space.getCachedData()).toStrictEqual({ id: 'space_1' });
 });
 
@@ -128,18 +128,15 @@ it(`getBookmarkedPage`, async () => {
 		]),
 		space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 	};
-
 	const initializeCacheForSpecificDataMock = jest
 		.spyOn(NotionCache, 'initializeCacheForSpecificData')
 		.mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
-
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		logger: logger_spy,
-		id: 'space_view_1'
+		id: 'space_view_1',
+		logger: false
 	});
 
 	const page_map = await space_view.getBookmarkedPage('block_1');
@@ -185,13 +182,11 @@ it(`updateBookmarkedPages`, async () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
-
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
-		logger: logger_spy,
-		id: 'space_view_1'
+		id: 'space_view_1',
+		logger: false
 	});
 
 	const page_map = await space_view.updateBookmarkedPage([ 'block_2', true ]);

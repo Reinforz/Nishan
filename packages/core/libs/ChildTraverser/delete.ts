@@ -41,7 +41,6 @@ export const remove = async <T extends TData, TD, C = any[]>(
 		logger && NotionLogger.method.info(`DELETE ${child_type} ${child_id}`);
 
 		let last_edited_props = {};
-		// If the update is not manual,
 		if (!manual) {
 			const updated_data = { alive: false };
 

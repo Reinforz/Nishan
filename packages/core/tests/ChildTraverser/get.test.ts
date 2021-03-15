@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import { ISpace, TBlock, TPage } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
 import { c1id, c2id, cd, constructCache, d } from './utils';
@@ -11,8 +12,9 @@ const child_ids = [ c1id, c2id ];
 it('child_ids=array', async () => {
 	const cache = constructCache(child_ids);
 
-	const logger = jest.fn(),
-		cb_spy = jest.fn();
+	const cb_spy = jest.fn();
+	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
+
 	const container = await ChildTraverser.get<ISpace, TPage, TBlock[]>(
 		child_ids,
 		(id) => cache.block.get(id) as TPage,
@@ -23,7 +25,7 @@ it('child_ids=array', async () => {
 			child_ids,
 			container: [],
 			cache,
-			logger
+			logger: true
 		},
 		(id, data, container) => {
 			cb_spy(id, data);
@@ -32,6 +34,6 @@ it('child_ids=array', async () => {
 	);
 
 	expect(cb_spy.mock.calls).toEqual([ cd(c1id), cd(c2id) ]);
-	expect(logger.mock.calls).toEqual([ [ 'READ', 'block', c1id ], [ 'READ', 'block', c2id ] ]);
+	expect(methodLoggerMock.mock.calls).toEqual([ [ `READ block ${c1id}` ], [ `READ block ${c2id}` ] ]);
 	expect(container).toStrictEqual([ d(c1id), d(c2id) ]);
 });

@@ -1,5 +1,5 @@
 import { NotionErrors } from '@nishans/errors';
-import { NotionFabricator, RepositionParams } from '@nishans/fabricator/';
+import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';

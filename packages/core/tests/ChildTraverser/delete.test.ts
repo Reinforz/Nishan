@@ -1,4 +1,5 @@
 import { ICache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TBlock } from '@nishans/types';
 import { ChildTraverser } from '../../libs';
@@ -31,9 +32,9 @@ it(`manual=false`, async () => {
 	const executeOperationsMock = jest
 		.spyOn(NotionOperations, 'executeOperations')
 		.mockImplementation(async () => undefined);
+	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const logger_spy = jest.fn(),
-		cb_spy = jest.fn();
+	const cb_spy = jest.fn();
 
 	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
 		[ c1id, c2id ],
@@ -42,7 +43,7 @@ it(`manual=false`, async () => {
 			...delete_props,
 			container: [],
 			cache,
-			logger: logger_spy
+			logger: true
 		},
 		(id, data, container) => {
 			cb_spy(id, data);
@@ -50,7 +51,7 @@ it(`manual=false`, async () => {
 		}
 	);
 
-	expect(logger_spy.mock.calls).toEqual([ [ 'DELETE', 'block', c1id ], [ 'DELETE', 'block', c2id ] ]);
+	expect(methodLoggerMock.mock.calls).toEqual([ [ `DELETE block ${c1id}` ], [ `DELETE block ${c2id}` ] ]);
 	expect(cb_spy.mock.calls).toEqual([ [ c1id, dc1d ], [ c2id, dc2d ] ]);
 	expect(cache.block.get(p1id)).toStrictEqual({
 		id: p1id,

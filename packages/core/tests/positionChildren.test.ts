@@ -1,3 +1,4 @@
+import { NotionLogger } from '@nishans/logger';
 import { IPage } from '@nishans/types';
 import { positionChildren } from '../libs';
 import { o } from './utils';
@@ -9,15 +10,17 @@ afterEach(() => {
 describe('positionChildren', () => {
 	it(`Should work when parent doesn't contain container`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
+		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 		const operation = positionChildren({
 			parent,
 			child_id: 'child_id',
 			position: 0,
-			parent_type: 'block'
+			parent_type: 'block',
+			logger: true
 		});
 
 		expect(parent.content[0]).toBe('child_id');
-
+		expect(methodLoggerMock).toHaveBeenCalledWith(`UPDATE block parent_id`);
 		expect(operation).toStrictEqual(
 			o.b.la('parent_id', [ 'content' ], {
 				after: '',
@@ -64,9 +67,6 @@ describe('positionChildren', () => {
 	it(`Should work when position is an object(position: After)`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [ 'child_1_id' ] } as any;
 		const operation = positionChildren({
-			logger: () => {
-				return;
-			},
 			position: {
 				id: 'child_1_id',
 				position: 'After'

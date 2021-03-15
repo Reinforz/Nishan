@@ -1,4 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { SchemaUnit } from '../../libs';
@@ -23,13 +24,14 @@ it(`update`, async () => {
     ]),
   };
 
-  const logger = jest.fn();
+  const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
+
   const schema_unit = new SchemaUnit({
     ...default_nishan_arg,
     cache,
     id: 'collection_1',
     schema_id: 'schema_id_1',
-    logger
+    logger: true
   }), executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
   const update_arg: any = {
@@ -38,8 +40,8 @@ it(`update`, async () => {
   }
   await schema_unit.update(update_arg);
 
-  expect(logger).toHaveBeenCalledTimes(1);
-  expect(logger).toHaveBeenCalledWith("UPDATE", "collection", 'collection_1');
+  expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+  expect(methodLoggerMock).toHaveBeenCalledWith("UPDATE collection collection_1");
 
   expect(cache.collection.get('collection_1')?.schema).toStrictEqual({
     schema_id_1: update_arg
@@ -72,19 +74,19 @@ describe('delete', () => {
     },
       executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
-    const logger = jest.fn();
+    const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
     const schema_unit = new SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
       schema_id: 'schema_id_1',
-      logger
+      logger: true
     });
 
     await schema_unit.delete();
 
-    expect(logger).toHaveBeenCalledTimes(1);
-    expect(logger).toHaveBeenCalledWith("DELETE", "collection", 'collection_1');
+    expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+    expect(methodLoggerMock).toHaveBeenCalledWith("DELETE collection collection_1");
 
     expect(cache.collection.get('collection_1')?.schema).toStrictEqual({
       schema_id_2: tsu
@@ -141,21 +143,21 @@ describe('duplicate', () => {
       ]),
     },
       executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+    const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-    const logger = jest.fn();
     const schema_unit = new SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
       schema_id: 'text',
-      logger
+      logger: true
     });
 
     await schema_unit.duplicate();
 
     expect(Object.keys(collection_1.schema).length).toBe(2);
-    expect(logger).toHaveBeenCalledTimes(1);
-    expect(logger).toHaveBeenCalledWith("UPDATE", "collection", 'collection_1');
+    expect(methodLoggerMock).toHaveBeenCalledTimes(1);
+    expect(methodLoggerMock).toHaveBeenCalledWith("UPDATE collection collection_1");
     expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
       o.c.u('collection_1', [], {schema: expect.objectContaining({
         text: txsu

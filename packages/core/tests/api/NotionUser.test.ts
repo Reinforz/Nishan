@@ -1,16 +1,18 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { CollectionViewPage, NotionData, NotionUser, Page } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
-  jest.resetAllMocks();
+  jest.restoreAllMocks();
 });
 
 it('create space', async () => {
-  const logger_spy = jest.fn(), executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+  const executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+  const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
   const spaceId = v4();
   const cache: ICache = {
@@ -20,8 +22,6 @@ it('create space', async () => {
   const notion_user = new NotionUser({
     ...default_nishan_arg,
     cache,
-    logger: logger_spy,
-    id: 'user_root_1',
   });
 
   const createSpaceMock = jest.spyOn(NotionEndpoints.Mutations, 'createSpace').mockImplementationOnce(async () => {
@@ -83,10 +83,10 @@ it('create space', async () => {
     bookmarked_pages: []
   };
 
-  expect(logger_spy).toHaveBeenNthCalledWith(1, "CREATE", "space", spaceId);
-  expect(logger_spy).toHaveBeenNthCalledWith(2, "CREATE", "space_view", space_views[0]);
-  expect(logger_spy).toHaveBeenNthCalledWith(3, "UPDATE", "user_root", 'user_root_1');
-  expect(logger_spy).toHaveBeenNthCalledWith(4, "UPDATE", "space", spaceId);
+  expect(methodLoggerMock).toHaveBeenNthCalledWith(1, `CREATE space ${spaceId}`);
+  expect(methodLoggerMock).toHaveBeenNthCalledWith(2, `CREATE space_view ${space_views[0]}`);
+  expect(methodLoggerMock).toHaveBeenNthCalledWith(3, `UPDATE user_root user_root_1`);
+  expect(methodLoggerMock).toHaveBeenNthCalledWith(4, `UPDATE space ${spaceId}`, );
 
   expect(createSpaceMock).toHaveBeenCalledTimes(1);
   expect(createSpaceMock).toHaveBeenCalledWith(

@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { o } from '../../core/tests/utils';
-import { NotionFabricator } from '../libs';
+import { NotionLineage } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -14,7 +14,7 @@ const default_fabricator_props = {
 	space_id: 'space_1'
 };
 
-describe('NotionFabricator.updateChildContainer', () => {
+describe('NotionLineage.updateChildContainer', () => {
 	it(`keep=true,bookmarked_pages doesn't include id`, async () => {
 		const space_view_1 = {
 				bookmarked_pages: [],
@@ -27,7 +27,7 @@ describe('NotionFabricator.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
 			cache,
 			...default_fabricator_props
 		});
@@ -53,7 +53,7 @@ describe('NotionFabricator.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', false, 'block_1', {
+		await NotionLineage.updateChildContainer('space_view', 'space_view_1', false, 'block_1', {
 			cache,
 			...default_fabricator_props
 		});
@@ -79,7 +79,7 @@ describe('NotionFabricator.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
 			cache,
 			...default_fabricator_props
 		});
@@ -98,7 +98,7 @@ describe('NotionFabricator.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionFabricator.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
 			cache,
 			...default_fabricator_props
 		});

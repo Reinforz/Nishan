@@ -29,6 +29,7 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "colors": "1.4.0"
   }
 }

@@ -2505,115 +2505,6 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nishans/cache@^0.0.26":
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.26.tgz#0e999cc7bff518e3cb3d824243f8a8060dd8a7b2"
-  integrity sha512-t68mbu4BsDLd8EuMcJPQdnhCVOaapITN1OvoHuYikyvH4me3ZpVhshKGrKr1fum2PAC8uT5UGBhdea4LFL5oKA==
-  dependencies:
-    "@nishans/endpoints" "0.0.24"
-    "@nishans/errors" "0.0.21"
-
-"@nishans/constants@0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.16.tgz#f46175ac0de64a2f1ff49e994d3119342fd45ab4"
-  integrity sha512-zkJg9LDBWULMFaoMCxpD0Wiu4eZ1z/qXhire4Mz3IaU3y24gt24E9ieTBOAGT65G0tzDAK5kkZNPR9RafL+Rdw==
-
-"@nishans/core@0.0.22":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.22.tgz#dc505c4810fc0417ba6538d97177304aaf693bb8"
-  integrity sha512-EdZYhOPtMuF4JG8M0JPh+8PZO1TVnJ34Su4bEM2953XT8Uj95GLJF8EcaVG1iiPnUFV79XMAnX6LEbv6Ze1a2Q==
-  dependencies:
-    "@nishans/cache" "^0.0.26"
-    "@nishans/constants" "0.0.16"
-    "@nishans/endpoints" "^0.0.24"
-    "@nishans/errors" "^0.0.21"
-    "@nishans/fabricator" "^0.0.20"
-    "@nishans/idz" "^0.0.15"
-    "@nishans/notion-formula" "^0.0.23"
-    "@nishans/operations" "^0.0.24"
-    "@nishans/permissions" "0.0.15"
-    "@nishans/utils" "0.0.15"
-    colors "^1.4.0"
-
-"@nishans/endpoints@0.0.24", "@nishans/endpoints@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.24.tgz#a4ce7a997dacecf51c031a12196713040b63415d"
-  integrity sha512-F/aH9Oz0Xn50RGpx+HyHkcAjODehi882wTTTQymA0Oosbsn3zZ/8Xesg2FBerjQ579sG9iG2U/A9S8D6V7NJJg==
-  dependencies:
-    axios "^0.21.1"
-    uuid "^8.3.2"
-
-"@nishans/errors@0.0.21", "@nishans/errors@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.21.tgz#a226a57c47f19b81f2f274971805caae88b50335"
-  integrity sha512-kXaKCsNCk9MXNbne0LuuJS0UZnlBOoYnfwfS2uUd3nzBgffBa+s6b4R2V2BOWTmwKYY0/+UY3YXRdeZJW3ZTcw==
-  dependencies:
-    colors "^1.4.0"
-
-"@nishans/fabricator@^0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@nishans/fabricator/-/fabricator-0.0.20.tgz#7d52d31fa67e8f43d352ba893f8a6732cc942b14"
-  integrity sha512-eTbcRxG7257L9Kh50i/+dQfWosq1feVQH+O8vEvecG6DxyKPiIiGU5jjiWHQ+OEmBqzrq0k8JboG8dDhVV6S6A==
-  dependencies:
-    "@nishans/cache" "^0.0.26"
-    "@nishans/endpoints" "^0.0.24"
-    "@nishans/errors" "^0.0.21"
-    "@nishans/idz" "0.0.15"
-    "@nishans/notion-formula" "^0.0.23"
-    "@nishans/operations" "^0.0.24"
-    "@nishans/utils" "0.0.15"
-
-"@nishans/inline-blocks@0.0.20":
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.20.tgz#c51caccd444d156a0e5eb1936871c3bd9ea2a038"
-  integrity sha512-Umo8c2SR+7SLVucW7a/xsvxqSIyv3WJ4mxrhfLol10sO62qOI4h9SvZCazU0dtuAQiePAr8ZGUFR0/7BsMzqhw==
-
-"@nishans/notion-formula@^0.0.23":
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/@nishans/notion-formula/-/notion-formula-0.0.23.tgz#4fd79319fda0e1482a48a38ecfd46eb41aed620d"
-  integrity sha512-eVPetQdtM7b8/ratDT8gaxjc/l590KFHxYZKQcWzJzf1UQsLt3uK0BKcltzVqjqLemc5+FN3h1REtwGv0i+WEQ==
-  dependencies:
-    "@nishans/endpoints" "0.0.24"
-    "@nishans/idz" "0.0.15"
-
-"@nishans/operations@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.24.tgz#499ebfd48450ddaaa71f1fa54d150a0fede6d24b"
-  integrity sha512-PGRjCfLvoTnet52WI6lyqkYji7DNUKMgZ7qOo6DTxAF/iGy/QZ1sTQV+Spu9fhcNR8FGK8dv5Wo/r561Mu69og==
-  dependencies:
-    "@nishans/endpoints" "0.0.24"
-
-"@nishans/permissions@0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@nishans/permissions/-/permissions-0.0.15.tgz#01521cf602492da6f7c5c40d4410aece6073ea74"
-  integrity sha512-vPd+GjEXged9qiGsFD+F6V9kN0qtRuZwOEzy+ZhKp+W4f28jAJW0r4NurCIt5aNkd70qqotXgOfIM3WWiz8KQw==
-  dependencies:
-    "@nishans/endpoints" "^0.0.24"
-    "@nishans/operations" "^0.0.24"
-    "@nishans/utils" "^0.0.15"
-
-"@nishans/types@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.0.tgz#779d8c9fb90c45c277fad69884eb52af6423ca21"
-  integrity sha512-G9aon4XkCNs4m1RPOkbd1G8aZFXGyUAuXIuTh0wz1ctQa29EHx+57NJt392XCqhR8nI4bNz8oJzNCjpYzZPL6w==
-
-"@nishans/types@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.10.tgz#4e052e2159a8ad577b78d6ef6a2a43f739413f83"
-  integrity sha512-E+BO1gvB70mGhkjotauz6TEkgFBXW1+f1VZk5hKz1KjdFf+y58SlPW8tYkClRzl5hX7sHFE2MoGuhLoW6QJtog==
-
-"@nishans/types@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.12.tgz#a5f3e4dd99c7d3f2c8cc048439eef24d1a9448b4"
-  integrity sha512-sVde7qazhe6bx87Hv3quvj8jH/WXGk3+deMdHIvkx8WscFgItRZayFkG9BIixO+p6Fh2w0jGBMa4F0eNSRNPQw==
-
-"@nishans/utils@0.0.15", "@nishans/utils@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.15.tgz#6a942e560c18f9b0cc737352b5b07370f2c30e0b"
-  integrity sha512-Y+qZ1oUy3acpmyNET7kbtR7maVfB47jJ8zL6qMz9PdvQsKPzTRzI+b78YHg8IhDFV0xG2VrnA8aycfab+9W4rg==
-  dependencies:
-    "@nishans/errors" "^0.0.21"
-
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"
@@ -6530,7 +6421,7 @@ colorette@^1.2.1, colorette@^1.2.2:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.2.2.tgz#cbcc79d5e99caea2dbf10eb3a26fd8b3e6acfa94"
   integrity sha512-MKGMzyfeuutC/ZJ1cba9NqcNpfeqMUcYmyF1ZFY6/Cn7CNSAKx6a+s48sqLqyAiZuaP2TcqMhoo+dlwFnVxT9w==
 
-colors@^1.1.2, colors@^1.2.1, colors@^1.4.0:
+colors@1.4.0, colors@^1.1.2, colors@^1.2.1, colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
@@ -8280,9 +8171,9 @@ eslint-webpack-plugin@^2.1.0:
     schema-utils "^3.0.0"
 
 eslint@^7.11.0, eslint@^7.17.0:
-  version "7.21.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.21.0.tgz#4ecd5b8c5b44f5dedc9b8a110b01bbfeb15d1c83"
-  integrity sha512-W2aJbXpMNofUp0ztQaF40fveSsJBjlSCSWpy//gzfTvwC+USs/nceBrKmlJOiM8r1bLwP2EuYkCqArn/6QTIgg==
+  version "7.22.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.22.0.tgz#07ecc61052fec63661a2cab6bd507127c07adc6f"
+  integrity sha512-3VawOtjSJUQiiqac8MQc+w457iGLfuNGLFn8JmF051tTKbh5/x/0vlcEj8OgDCaw7Ysa2Jn8paGshV7x2abKXg==
   dependencies:
     "@babel/code-frame" "7.12.11"
     "@eslint/eslintrc" "^0.4.0"
@@ -8301,7 +8192,7 @@ eslint@^7.11.0, eslint@^7.17.0:
     file-entry-cache "^6.0.1"
     functional-red-black-tree "^1.0.1"
     glob-parent "^5.0.0"
-    globals "^12.1.0"
+    globals "^13.6.0"
     ignore "^4.0.6"
     import-fresh "^3.0.0"
     imurmurhash "^0.1.4"
@@ -8309,7 +8200,7 @@ eslint@^7.11.0, eslint@^7.17.0:
     js-yaml "^3.13.1"
     json-stable-stringify-without-jsonify "^1.0.1"
     levn "^0.4.1"
-    lodash "^4.17.20"
+    lodash "^4.17.21"
     minimatch "^3.0.4"
     natural-compare "^1.4.0"
     optionator "^0.9.1"
@@ -9297,6 +9188,13 @@ globals@^12.1.0:
   integrity sha512-BWICuzzDvDoH54NHKCseDanAhE3CeDorgDL5MT6LMXXj2WCnd9UC2szdk4AWLfjdgNBCXLUanXYcpBBKOSWGwg==
   dependencies:
     type-fest "^0.8.1"
+
+globals@^13.6.0:
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-13.6.0.tgz#d77138e53738567bb96a3916ff6f6b487af20ef7"
+  integrity sha512-YFKCX0SiPg7l5oKYCJ2zZGxcXprVXHcSnVuvzrT3oSENQonVLqM5pf9fN5dLGZGyCjhw8TN8Btwe/jKnZ0pjvQ==
+  dependencies:
+    type-fest "^0.20.2"
 
 globalthis@^1.0.0:
   version "1.0.2"
@@ -11771,7 +11669,7 @@ lodash.uniq@4.5.0, lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@4.x, "lodash@>=3.5 <5", lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.5:
+lodash@4.x, "lodash@>=3.5 <5", lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.5:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -17175,7 +17073,7 @@ tryer@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-dedent@2.0.0, ts-dedent@^2.0.0:
+ts-dedent@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ts-dedent/-/ts-dedent-2.0.0.tgz#47c5eb23d9096f3237cc413bc82d387d36dbe690"
   integrity sha512-DfxKjSFQfw9+uf7N9Cy8Ebx9fv5fquK4hZ6SD3Rzr+1jKP6AVA6H8+B5457ZpUs0JKsGpGqIevbpZ9DMQJDp1A==
@@ -17290,6 +17188,11 @@ type-fest@^0.18.0:
   version "0.18.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
   integrity sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==
+
+type-fest@^0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.20.2.tgz#1bf207f4b28f91583666cb5fbd327887301cd5f4"
+  integrity sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
 
 type-fest@^0.3.1:
   version "0.3.1"

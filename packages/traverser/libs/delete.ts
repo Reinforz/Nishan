@@ -3,7 +3,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { FilterTypes, IterateAndDeleteChildrenOptions } from '../../types';
+import { FilterTypes, IterateAndDeleteChildrenOptions } from './types';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**

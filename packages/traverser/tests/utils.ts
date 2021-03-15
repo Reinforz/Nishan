@@ -1,5 +1,5 @@
 import { ICache } from '@nishans/cache';
-import { last_edited_props, o } from '../utils';
+import { last_edited_props, o } from '../../core/tests/utils';
 
 export const c1id = 'child_one_id';
 export const c2id = 'child_two_id';

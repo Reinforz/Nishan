@@ -1,7 +1,7 @@
 import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { TPage } from '@nishans/types';
-import { iterateChildren } from '../../../libs/ChildTraverser/utils';
+import { iterateChildren } from '../../libs/utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();

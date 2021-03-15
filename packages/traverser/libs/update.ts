@@ -2,7 +2,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { IterateAndUpdateChildrenOptions, UpdateTypes } from '../';
+import { IterateAndUpdateChildrenOptions, UpdateTypes } from './types';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
 
 /**

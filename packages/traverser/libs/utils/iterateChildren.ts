@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
 import { TDataType } from '@nishans/types';
-import { IterateChildren } from '../../../types';
+import { IterateChildren } from '../types';
 
 /**
  * Iterates over all the child of a parent, and uses a cb to pass them to the caller

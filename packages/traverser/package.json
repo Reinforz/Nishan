@@ -2,8 +2,7 @@
   "name": "@nishans/traverser",
   "version": "0.0.0",
   "description": "Traverse notion data with ease",
-  "keywords": [
-  ],
+  "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/traverser/README.md",
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Ftraverser"
@@ -26,5 +25,13 @@
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
+  },
+  "dependencies": {
+    "@nishans/operations": "0.0.26",
+    "@nishans/logger": "0.0.15",
+    "@nishans/utils": "0.0.18"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.27"
   }
 }

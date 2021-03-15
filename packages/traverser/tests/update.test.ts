@@ -2,8 +2,8 @@ import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TBlock } from '@nishans/types';
-import { ChildTraverser } from '../../libs';
-import { o } from '../utils';
+import { o } from '../../core/tests/utils';
+import { NotionTraverser } from '../libs';
 import { c1id, c1uo, c2id, c2uo, c3id, cd, constructCache, p1id, p1uo, uc1d, uc2d, up1d, update_props } from './utils';
 
 afterEach(() => {
@@ -18,7 +18,7 @@ it(`manual=false`, async () => {
 
 	const cb_spy = jest.fn();
 
-	const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
+	const updated_data = await NotionTraverser.update<IPage, TBlock, TBlock>(
 		[ [ c1id, { data: c1id } as any ], [ c2id, { data: c2id } as any ] ],
 		(id) => cache.block.get(id),
 		{
@@ -72,7 +72,7 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 		])
 	} as ICache;
 
-	await ChildTraverser.update<IPage, ICollection, ICollection>(
+	await NotionTraverser.update<IPage, ICollection, ICollection>(
 		[ [ c1id, { data: c1id } as any ] ],
 		(id) => cache.collection.get(id),
 		{
@@ -101,7 +101,7 @@ it(`manual=true`, async () => {
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const cache = constructCache(child_ids);
 
-	const updated_data = await ChildTraverser.update<IPage, TBlock, TBlock>(
+	const updated_data = await NotionTraverser.update<IPage, TBlock, TBlock>(
 		[ [ c1id, { data: c1id } as any ], [ c2id, { data: c2id } as any ] ],
 		(id) => cache.block.get(id),
 		{

@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
 import { ISpace, TBlock, TPage } from '@nishans/types';
-import { ChildTraverser } from '../../libs';
+import { NotionTraverser } from '../libs';
 import { c1id, c2id, cd, constructCache, d } from './utils';
 
 afterEach(() => {
@@ -15,7 +15,7 @@ it('child_ids=array', async () => {
 	const cb_spy = jest.fn();
 	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const container = await ChildTraverser.get<ISpace, TPage, TBlock[]>(
+	const container = await NotionTraverser.get<ISpace, TPage, TBlock[]>(
 		child_ids,
 		(id) => cache.block.get(id) as TPage,
 		{

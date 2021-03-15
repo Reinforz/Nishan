@@ -1,4 +1,4 @@
-import { updateLastEditedProps } from '../../../libs/ChildTraverser/utils';
+import { updateLastEditedProps } from '../../libs/utils';
 
 it(`updateLastEditedProps`, () => {
 	const data = {};

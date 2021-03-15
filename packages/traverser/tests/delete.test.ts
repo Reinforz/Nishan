@@ -2,8 +2,8 @@ import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, IPage, TBlock } from '@nishans/types';
-import { ChildTraverser } from '../../libs';
-import { last_edited_props, o } from '../utils';
+import { last_edited_props, o } from '../../core/tests/utils';
+import { NotionTraverser } from '../libs';
 import {
 	c1do,
 	c1id,
@@ -36,7 +36,7 @@ it(`manual=false`, async () => {
 
 	const cb_spy = jest.fn();
 
-	const deleted_data = await ChildTraverser.delete<IPage, TBlock>(
+	const deleted_data = await NotionTraverser.delete<IPage, TBlock>(
 		[ c1id, c2id ],
 		(id) => cache.block.get(id),
 		{
@@ -71,7 +71,7 @@ it(`manual=true`, async () => {
 		.spyOn(NotionOperations, 'executeOperations')
 		.mockImplementationOnce(async () => undefined);
 
-	await ChildTraverser.delete<IPage, TBlock>([ c1id, c2id ], (id) => cache.block.get(id), {
+	await NotionTraverser.delete<IPage, TBlock>([ c1id, c2id ], (id) => cache.block.get(id), {
 		...delete_props,
 		container: [],
 		cache,
@@ -102,7 +102,7 @@ it(`child_type & parent_type != block, child_path=undefined`, async () => {
 		.spyOn(NotionOperations, 'executeOperations')
 		.mockImplementationOnce(async () => undefined);
 
-	await ChildTraverser.delete<IPage, ICollection>([ c1id ], (id) => cache.collection.get(id), {
+	await NotionTraverser.delete<IPage, ICollection>([ c1id ], (id) => cache.collection.get(id), {
 		...delete_props,
 		container: [],
 		cache,

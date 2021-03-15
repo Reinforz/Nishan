@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
 import { TData } from '@nishans/types';
-import { FilterTypes, IterateAndGetChildrenOptions } from '../';
+import { FilterTypes, IterateAndGetChildrenOptions } from './types';
 import { getChildIds, iterateChildren } from './utils';
 
 /**

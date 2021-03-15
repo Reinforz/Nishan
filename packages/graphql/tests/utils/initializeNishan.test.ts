@@ -10,7 +10,7 @@ it('server', async () => {
 		.spyOn(Nishan.prototype, 'getNotionUser')
 		.mockImplementationOnce(async () => new NotionUser({ user_id: 'user_root_1', token: 'token' } as any));
 
-	const context = (await initializeNishan({ interval: 0, token: 'token', user_id: 'user_root_1' }))();
+	const context = (await initializeNishan({ logger: false, interval: 0, token: 'token', user_id: 'user_root_1' }))();
 
 	expect(getNotionUserMock).toHaveBeenCalledWith('user_root_1');
 

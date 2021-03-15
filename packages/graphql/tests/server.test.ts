@@ -11,7 +11,7 @@ it('server', async () => {
 		.spyOn(Nishan.prototype, 'getNotionUser')
 		.mockImplementationOnce(async () => undefined as any);
 
-	const server = await NotionGraphql.server({ interval: 0, token: 'token', user_id: 'user_root_1' });
+	const server = await NotionGraphql.server({ logger: false, interval: 0, token: 'token', user_id: 'user_root_1' });
 
 	expect(getNotionUserMock).toHaveBeenCalledWith('user_root_1');
 	expect(server instanceof ApolloServer).toBe(true);

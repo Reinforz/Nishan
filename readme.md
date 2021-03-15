@@ -20,8 +20,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-29-%2371368a">
-  <img src="https://img.shields.io/badge/Published%20Packages-15-%2311806a">
+  <img src="https://img.shields.io/badge/Total%20Packages-30-%2371368a">
+  <img src="https://img.shields.io/badge/Published%20Packages-16-%2311806a">
 </p>
 
 This monorepo contains/will contain the following packages and apps:-
@@ -42,7 +42,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql): A graphql server for notion built using `@nishans/core`
 *   **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz): A small package to validate, generate and parse notion ids
 *   **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks): Package providing an easy to use api to generate contents for notion inline blocks
-*   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger): A logger built specifically for nishan ecosystem
+*   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [NPM](https://www.npmjs.com/package/@nishans/logger): A logger built specifically for nishan ecosystem
 *   **`@nishans/markdown`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/markdown) [Docs](https://nishan-docs.netlify.app/docs/markdown): A package to upload markdown content into notion
 *   **`@nishans/notion-formula`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/notion-formula) [Docs](https://nishan-docs.netlify.app/docs/notion-formula) [NPM](https://www.npmjs.com/package/@nishans/notion-formula): A package to generate notion formula with ease
 *   **`@nishans/operations`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/operations) [NPM](https://www.npmjs.com/package/@nishans/operations): A package to inspect, modify and store notion operations
@@ -52,6 +52,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/remark-notion`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/remark-notion): A remark plugin to support custom notion specific syntax for `@nishans/markdown` package
 *   **`@nishans/schema-builder`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/schema-builder): A package to create notion collection schema painlessly
 *   **`@nishans/sync`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/sync) [Docs](https://nishan-docs.netlify.app/docs/sync) [NPM](https://www.npmjs.com/package/@nishans/sync): A package to keep local notion data in sync with remote one by storing and restoring it
+*   **`@nishans/traverser`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/traverser): Traverse notion data with ease
 *   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
 *   **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [Docs](https://nishan-docs.netlify.app/docs/types) [NPM](https://www.npmjs.com/package/@nishans/types): Typescript type definitions for notion
 *   **`@nishans/upload`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/upload): A small package to upload content into notion

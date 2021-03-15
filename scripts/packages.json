@@ -72,7 +72,7 @@
   {
     "name": "@nishans/logger",
     "description": "A logger built specifically for nishan ecosystem",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/markdown",
@@ -118,6 +118,11 @@
     "name": "@nishans/sync",
     "description": "A package to keep local notion data in sync with remote one by storing and restoring it",
     "published": true
+  },
+  {
+    "name": "@nishans/traverser",
+    "description": "Traverse notion data with ease",
+    "published": false
   },
   {
     "name": "@nishans/typegen",

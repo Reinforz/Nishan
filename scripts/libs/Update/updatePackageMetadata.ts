@@ -19,20 +19,20 @@ export async function updatePackageMetadata () {
 	const docs_dirs = await fs.promises.readdir(docs_dir);
 
 	for (let index = 0; index < packages_data.length; index++) {
+		packages_data[index].name = packages_data[index].name.split('/')[1];
 		const package_data = packages_data[index],
-			package_dir = path.join(packages_dir, package_data.name),
+			{ name } = package_data,
+			package_dir = path.join(packages_dir, name),
 			package_readme_path = path.join(package_dir, 'README.md'),
 			package_json_path = path.join(package_dir, 'package.json');
-		await createReadme(package_readme_path, package_data.name, package_data.description);
+		await createReadme(package_readme_path, name, package_data.description);
 		await updatePackageJsonDescription(package_json_path, package_data.description);
-		const github_link = ` [Github](https://github.com/Devorein/Nishan/tree/master/packages/${package_data.name})`,
-			doc_link = docs_dirs.includes(package_data.name)
-				? ` [Docs](https://nishan-docs.netlify.app/docs/${package_data.name})`
-				: '',
-			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${package_data.name})` : '';
+		const github_link = ` [Github](https://github.com/Devorein/Nishan/tree/master/packages/${name})`,
+			doc_link = docs_dirs.includes(name) ? ` [Docs](https://nishan-docs.netlify.app/docs/${name})` : '',
+			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${name})` : '';
 		total_published_packages += package_data.published ? 1 : 0;
-		packages_readme_text += `* **\`@nishans/${package_data.name}\`**${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
-		console.log(colors.bold.green(`Done with ${package_data.name}`));
+		packages_readme_text += `* **\`@nishans/${name}\`**${github_link}${doc_link}${npm_link}: ${package_data.description}\n`;
+		console.log(colors.bold.green(`Done with ${name}`));
 	}
 
 	const packages_readme_node = remark().parse(packages_readme_text);

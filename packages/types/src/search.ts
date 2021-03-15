@@ -1,3 +1,14 @@
+interface ISearchTimeFilter {
+	starting?: {
+		type: 'date';
+		start_dat: string;
+	};
+	ending?: {
+		type: 'date';
+		start_dat: string;
+	};
+}
+
 interface SearchNotionEndpoint {
 	query: string;
 	spaceId: string;
@@ -10,11 +21,11 @@ interface SearchNotionEndpoint {
 		ancestors: string[];
 		createdBy: string[];
 		editedBy: string[];
-		lastEditedTime: Record<string, never>;
-		createdTime: Record<string, never>;
+		lastEditedTime: ISearchTimeFilter;
+		createdTime: ISearchTimeFilter;
 	};
-	sort: 'Relevance';
-	source: 'relation_setup_menu' | 'trash';
+	sort: 'Relevance' | 'LastEditedNewest' | 'LastEditedOldest' | 'CreatedNewest' | 'CreatedOldest';
+	source: 'relation_setup_menu' | 'trash' | 'quick_find';
 }
 
 export interface SearchCollectionInSpace extends SearchNotionEndpoint {
@@ -26,9 +37,9 @@ export interface SearchBlocksInAncestor extends SearchNotionEndpoint {
 	ancestorId: string;
 }
 
-export type SearchBlocksInSpace = {
+export interface SearchBlocksInSpace extends SearchNotionEndpoint {
 	type: 'BlocksInSpace';
 	source: 'relation_setup_menu' | 'trash';
-};
+}
 
 export type TSearchNotionEndpointPayload = SearchCollectionInSpace | SearchBlocksInAncestor | SearchBlocksInSpace;

@@ -10,6 +10,7 @@ export const default_nishan_arg: INotionCoreOptions = {
 	space_id: 'space_1',
 	token: 'token',
 	user_id: 'user_root_1',
+	logger: true,
 	notion_operation_plugins: []
 };
 

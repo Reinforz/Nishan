@@ -1,6 +1,8 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { default_nishan_arg } from '../../../../core/tests/utils';
 import { NotionFabricator } from '../../../libs';
 import { tsu } from '../../utils';
 
@@ -17,7 +19,7 @@ const schema: Schema = {
 const schema_map = NotionUtils.generateSchemaMap(schema);
 
 it(`Should work correctly for target_property=title`, async () => {
-	const logger = jest.fn(),
+	const logger = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any),
 		rollup_arg = {
 			collection_id: 'target_collection_id',
 			name: 'Rollup Column',
@@ -26,7 +28,7 @@ it(`Should work correctly for target_property=title`, async () => {
 			aggregation: 'average'
 		} as any;
 	const generated_rollup_schema = await NotionFabricator.CreateData.schema_unit.rollup(rollup_arg, schema_map, {
-		user_id: 'user_root_1',
+		...default_nishan_arg,
 		cache: {
 			...NotionCache.createDefaultCache(),
 			collection: new Map([
@@ -39,12 +41,10 @@ it(`Should work correctly for target_property=title`, async () => {
 					} as any
 				]
 			])
-		},
-		token: 'token',
-		logger
+		}
 	});
 
-	expect(logger).toHaveBeenCalledWith('READ', 'collection', 'target_collection_id');
+	expect(logger).toHaveBeenCalledWith('READ collection target_collection_id');
 
 	expect(generated_rollup_schema).toStrictEqual({
 		...rollup_arg,

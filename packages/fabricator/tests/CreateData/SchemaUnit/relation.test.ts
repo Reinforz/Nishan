@@ -1,4 +1,5 @@
 import { ICache, NotionCache } from "@nishans/cache";
+import { NotionLogger } from "@nishans/logger";
 import { NotionOperations } from "@nishans/operations";
 import { ICollection } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
@@ -6,6 +7,10 @@ import { default_nishan_arg, o } from "../../../../core/tests/utils";
 import { NotionFabricator } from "../../../libs";
 import { ParentCollectionData } from "../../../types";
 import { tsu } from "../../utils";
+
+afterEach(()=>{
+  jest.restoreAllMocks()
+});
 
 const returnChildCollectionAndCache = () =>{
   const child_collection: ICollection = {
@@ -47,6 +52,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
   const executeOperationsMock = jest
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
       
   const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
     relation_arg,
@@ -66,6 +72,8 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
     ...common_parent_collection_relation_schema_unit
   })
   expect(executeOperationsMock).not.toHaveBeenCalled();
+  expect(logger_spy).toHaveBeenCalledTimes(1);
+  expect(logger_spy).toHaveBeenCalledWith("READ collection child_collection_id");
 });
 
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
@@ -73,6 +81,8 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
   const executeOperationsMock = jest
   .spyOn(NotionOperations, 'executeOperations')
   .mockImplementationOnce(async () => undefined);
+
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
   const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
     {
@@ -83,7 +93,6 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
     {
       ...default_nishan_arg,
       cache,
-      logger: ()=>undefined
     }
   );
 
@@ -103,4 +112,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
     name: [["Child Column"]],
     ...common_child_collection_relation_schema_unit
   })]);
+  expect(logger_spy).toHaveBeenCalledTimes(2);
+  expect(logger_spy).toHaveBeenNthCalledWith(1, "READ collection child_collection_id");
+  expect(logger_spy).toHaveBeenNthCalledWith(2, "UPDATE collection child_collection_id");
 });

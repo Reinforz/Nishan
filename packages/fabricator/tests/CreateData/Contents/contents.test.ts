@@ -1,5 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
@@ -57,7 +58,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -77,13 +78,12 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 		'collection',
 		{
 			...default_nishan_arg,
-			cache,
-			logger: logger_spy
+			cache
 		}
 	);
 
 	expect(logger_spy).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', page_id);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(page_id, [], {
@@ -113,7 +113,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			row_one_id = v4(),
 			cv_id = v4();
 
-		const logger_spy = jest.fn();
+		const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 		const createDataCollectionMock = jest
 				.spyOn(NotionFabricator.CreateData, 'collection')
 				.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
@@ -152,8 +152,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			'block',
 			{
 				...default_nishan_arg,
-				cache,
-				logger: logger_spy
+				cache
 			}
 		);
 
@@ -181,8 +180,8 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 		expect(collection_view).toEqual(collection_block_snapshot);
 		expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
 		expect(logger_spy).toHaveBeenCalledTimes(2);
-		expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', row_one_id);
-		expect(logger_spy).toHaveBeenNthCalledWith(2, 'CREATE', 'block', collection_view.id);
+		expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${row_one_id}`);
+		expect(logger_spy).toHaveBeenNthCalledWith(2, `CREATE block ${collection_view.id}`);
 		expect(cache.block.get(collection_view.id)).toBeTruthy();
 		expect(cache.block.get(row_one_id)).toBeTruthy();
 		expect(executeOperationsMock).toHaveBeenCalledTimes(4);
@@ -232,6 +231,7 @@ it(`type=link_to_page`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
+			logger: false,
 			cache
 		}
 	);
@@ -279,6 +279,7 @@ it(`type=column_list`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
+			logger: false,
 			cache
 		}
 	);
@@ -364,6 +365,7 @@ it(`type=factory`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
+			logger: false,
 			cache
 		}
 	);
@@ -451,6 +453,7 @@ it(`type=linked_db`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
+			logger: false,
 			cache
 		}
 	);
@@ -488,7 +491,7 @@ it(`type=bookmark`, async () => {
 			.mockImplementation(async () => undefined as any),
 		updateCacheManuallyMock = jest.spyOn(NotionCache, 'updateCacheManually').mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -502,13 +505,12 @@ it(`type=bookmark`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			logger: logger_spy
+			cache
 		}
 	);
 
 	expect(logger_spy).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', block_id);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${block_id}`);
 	expect(setBookmarkMetadataMock).toHaveBeenCalledTimes(1);
 	expect(setBookmarkMetadataMock.mock.calls[0][0]).toStrictEqual({
 		blockId: block_id,
@@ -546,7 +548,7 @@ it(`type=codepen`, async () => {
 		),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const logger_spy = jest.fn();
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -560,13 +562,12 @@ it(`type=codepen`, async () => {
 		'block',
 		{
 			...default_nishan_arg,
-			cache,
-			logger: logger_spy
+			cache
 		}
 	);
 
 	expect(logger_spy).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, 'CREATE', 'block', block_id);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${block_id}`);
 	expect(getGenericEmbedBlockDataMock).toHaveBeenCalledTimes(1);
 	expect(getGenericEmbedBlockDataMock.mock.calls[0][0]).toStrictEqual({
 		pageWidth: 500,

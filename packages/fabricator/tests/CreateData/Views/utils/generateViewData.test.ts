@@ -1,4 +1,5 @@
 import { ICache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
@@ -10,7 +11,7 @@ const id = v4(),
 	} as any;
 
 it(`Should work correctly`, async () => {
-	const logger = jest.fn(),
+	const logger = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any),
 		executeOperationsMock = jest
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
@@ -23,7 +24,7 @@ it(`Should work correctly`, async () => {
 			format: {} as any,
 			query2: {} as any
 		},
-		{ ...default_nishan_arg, cache, logger },
+		{ ...default_nishan_arg, cache },
 		'parent_id'
 	);
 
@@ -42,7 +43,7 @@ it(`Should work correctly`, async () => {
 		space_id: 'space_1'
 	};
 
-	expect(logger).toHaveBeenCalledWith('CREATE', 'collection_view', id);
+	expect(logger).toHaveBeenCalledWith(`CREATE collection_view ${id}`);
 	expect(view_data).toStrictEqual(expected_view_data);
 	expect(cache.collection_view.get(id)).toStrictEqual(expected_view_data);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ o.cv.u(id, [], expected_view_data) ]);

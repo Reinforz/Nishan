@@ -1,4 +1,5 @@
 import { ICache, NotionCache } from '@nishans/cache';
+import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionFabricator } from '../../libs';
@@ -21,7 +22,7 @@ it(`should work correctly`, async () => {
 		executeOperationsMock = jest
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined),
-		logger = jest.fn();
+		logger = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
 
 	const [ collection_data ] = await NotionFabricator.CreateData.collection(
 		{
@@ -45,8 +46,7 @@ it(`should work correctly`, async () => {
 		'parent_id',
 		{
 			...default_nishan_arg,
-			cache,
-			logger
+			cache
 		}
 	);
 
@@ -72,6 +72,6 @@ it(`should work correctly`, async () => {
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ o.c.u(collection_data.id, [], output_collection) ]);
 	expect(createDataViewsMock).toHaveBeenCalledTimes(1);
 	expect(createDataSchemaMock).toHaveBeenCalledTimes(1);
-	expect(logger).toHaveBeenCalledWith('CREATE', 'collection', collection_data.id);
+	expect(logger).toHaveBeenCalledWith(`CREATE collection ${collection_data.id}`);
 	expect(cache.collection.get(collection_data.id)).toStrictEqual(output_collection);
 });

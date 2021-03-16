@@ -12,13 +12,9 @@ import { LocalFileStructure } from '../types';
 export async function writeToFile (filepath: string, result_data: LocalFileStructure) {
 	const ext = path.extname(filepath);
 	if (ext === '.json')
-		await fs.promises.writeFile(
-			filepath,
-			JSON.stringify(NotionSync.ExtractData.extract(result_data), null, 2),
-			'utf-8'
-		);
+		await fs.promises.writeFile(filepath, JSON.stringify(NotionSync.extractData(result_data), null, 2), 'utf-8');
 	else if (ext === '.yaml' || ext === '.yml') {
-		const extracted_data = NotionSync.ExtractData.extract(result_data);
+		const extracted_data = NotionSync.extractData(result_data);
 		const yaml_data = yaml.dump(extracted_data);
 		await fs.promises.writeFile(filepath, yaml_data, 'utf-8');
 	} else

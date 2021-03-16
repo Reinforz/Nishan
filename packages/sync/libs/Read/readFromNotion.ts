@@ -31,7 +31,7 @@ export async function readFromNotion (database_id: string, options: INotionCache
 
 	collection_block.view_ids.forEach((view_id) => views.push(options.cache.collection_view.get(view_id) as TView));
 
-	return NotionSync.ExtractData.extract({
+	return NotionSync.extractData({
 		collection,
 		views,
 		template_pages,

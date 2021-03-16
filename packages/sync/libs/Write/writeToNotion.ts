@@ -1,7 +1,7 @@
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { IUserPermission } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
-import { LocalFileStructure } from '../types';
+import { LocalFileStructure } from '../';
 
 /**
  * Writes extracted notion data to a remote notion block

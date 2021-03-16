@@ -1,6 +1,6 @@
+import { CollectionExtracted, PageExtracted, TViewExtracted } from '@nishans/extract';
 import { MongoClient } from 'mongodb';
 import { NotionSync } from '../';
-import { CollectionExtracted, PageExtracted, TViewExtracted } from '../types';
 
 /**
  * Reads and extracts data from a mongodb instance
@@ -12,7 +12,7 @@ export async function readFromMongodb (connection_uri: string) {
 	try {
 		await client.connect();
 		const db = client.db();
-		return NotionSync.ExtractData.extract({
+		return NotionSync.extractData({
 			collection: await db.collection<CollectionExtracted>('collection').findOne({}),
 			views: await db.collection<TViewExtracted>('views').find({}).toArray(),
 			row_pages: await db.collection<PageExtracted>('row_pages').find({}).toArray(),

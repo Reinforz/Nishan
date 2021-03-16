@@ -10,7 +10,7 @@ describe(`writeToFile`, () => {
 	it(`ext=json`, async () => {
 		const data: any = { views: [] },
 			writeFileMock = jest.spyOn(fs.promises, 'writeFile').mockImplementationOnce(async () => undefined),
-			extractDataMock = jest.spyOn(NotionSync.ExtractData, 'extract').mockImplementationOnce(() => data);
+			extractDataMock = jest.spyOn(NotionSync, 'extractData').mockImplementationOnce(() => data);
 		await NotionSync.Write.toFile('data.json', data);
 		expect(writeFileMock).toHaveBeenCalledWith('data.json', JSON.stringify(data, null, 2), 'utf-8');
 		expect(extractDataMock).toHaveBeenCalledWith(data);
@@ -23,7 +23,7 @@ describe(`writeToFile`, () => {
 	it(`ext=yaml`, async () => {
 		const data: any = { views: [] },
 			writeFileMock = jest.spyOn(fs.promises, 'writeFile').mockImplementationOnce(async () => undefined),
-			extractDataMock = jest.spyOn(NotionSync.ExtractData, 'extract').mockImplementationOnce(() => data),
+			extractDataMock = jest.spyOn(NotionSync, 'extractData').mockImplementationOnce(() => data),
 			yamlDumpMock = jest.spyOn(yaml, 'dump').mockImplementationOnce(() => data);
 		await NotionSync.Write.toFile('data.yml', data);
 		expect(writeFileMock).toHaveBeenCalledWith('data.yml', data, 'utf-8');

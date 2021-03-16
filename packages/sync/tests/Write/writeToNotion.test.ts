@@ -1,7 +1,7 @@
+import { CollectionExtracted, PageExtracted, TViewExtracted } from '@nishans/extract';
 import { NotionOperations } from '@nishans/operations';
 import { o } from '../../../core/tests/utils';
-import { CollectionExtracted, PageExtracted, TViewExtracted } from '../../libs';
-import { writeToNotion } from '../../libs/Write/writeToNotion';
+import { NotionSync } from '../../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -38,7 +38,7 @@ it('writeToNotion', async () => {
 		.spyOn(NotionOperations, 'executeOperations')
 		.mockImplementationOnce(async () => undefined);
 
-	await writeToNotion(
+	await NotionSync.Write.toNotion(
 		{
 			collection: collection_1,
 			views: [ view_1 ],

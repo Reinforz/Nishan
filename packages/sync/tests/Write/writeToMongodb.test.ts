@@ -6,7 +6,7 @@ afterEach(() => {
 });
 
 it(`writeToMongodb`, async () => {
-	const extractDataMock = jest.spyOn(NotionSync.ExtractData, 'extract').mockImplementationOnce(
+	const extractDataMock = jest.spyOn(NotionSync, 'extractData').mockImplementationOnce(
 			() =>
 				({
 					views: [ 'view_1' ],

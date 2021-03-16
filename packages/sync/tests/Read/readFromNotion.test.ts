@@ -9,9 +9,7 @@ it('readFromNotion', async () => {
 	const initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined),
-		extractDataMock = jest
-			.spyOn(NotionSync.ExtractData, 'extract')
-			.mockImplementationOnce(() => ({ data: 'block' } as any));
+		extractDataMock = jest.spyOn(NotionSync, 'extractData').mockImplementationOnce(() => ({ data: 'block' } as any));
 
 	const block_1: any = {
 			id: 'block_1',

@@ -6,9 +6,7 @@ afterEach(() => {
 });
 
 it(`readFromMongodb`, async () => {
-	const extractDataMock = jest
-		.spyOn(NotionSync.ExtractData, 'extract')
-		.mockImplementationOnce(() => ({ views: [] } as any));
+	const extractDataMock = jest.spyOn(NotionSync, 'extractData').mockImplementationOnce(() => ({ views: [] } as any));
 	const mongoConnectMock = jest.spyOn(MongoClient.prototype, 'connect').mockImplementationOnce(async () => undefined);
 	const collection_strings: string[] = [];
 	const mongoDbMock = jest.spyOn(MongoClient.prototype, 'db').mockImplementationOnce(() => {

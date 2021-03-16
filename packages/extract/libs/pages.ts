@@ -1,5 +1,5 @@
 import { IPage } from '@nishans/types';
-import { PageExtracted } from '../';
+import { PageExtracted } from './types';
 
 export const extractPagesData = (row_pages: (IPage | PageExtracted)[]) =>
 	row_pages.map((page) => ({

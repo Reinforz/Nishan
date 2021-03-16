@@ -2,14 +2,14 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
 import { NotionSync } from '../';
-import { LocalFileStructure } from '../types';
+import { INotionSyncFileShape } from '../types';
 
 /**
  * Writes extracted notion data to a local file
  * @param filepath Full path of the file to write data to
  * @param result_data Extracted notion data
  */
-export async function writeToFile (filepath: string, result_data: LocalFileStructure) {
+export async function writeToFile (filepath: string, result_data: INotionSyncFileShape) {
 	const ext = path.extname(filepath);
 	if (ext === '.json')
 		await fs.promises.writeFile(filepath, JSON.stringify(NotionSync.extractData(result_data), null, 2), 'utf-8');

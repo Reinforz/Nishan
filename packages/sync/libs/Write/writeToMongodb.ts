@@ -1,13 +1,13 @@
 import { CollectionExtracted, PageExtracted, TViewExtracted } from '@nishans/extract';
 import { MongoClient } from 'mongodb';
-import { LocalFileStructure, NotionSync } from '../';
+import { INotionSyncFileShape, NotionSync } from '../';
 
 /**
  * Writes extracted notion data to a mongodb instance
  * @param connection_uri Connection uri of the mongodb instance
  * @param result_data Extracted notion data to write
  */
-export async function writeToMongodb (connection_uri: string, result_data: LocalFileStructure) {
+export async function writeToMongodb (connection_uri: string, result_data: INotionSyncFileShape) {
 	const client = new MongoClient(connection_uri, { useNewUrlParser: true, useUnifiedTopology: true });
 	const { collection, views, row_pages, template_pages } = NotionSync.extractData(result_data);
 	try {

@@ -1,14 +1,14 @@
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { IUserPermission } from '@nishans/types';
 import { v4 as uuidv4 } from 'uuid';
-import { LocalFileStructure } from '../';
+import { INotionSyncFileShape } from '../';
 
 /**
  * Writes extracted notion data to a remote notion block
  * @param result_data Extracted notion data
  * @param options Notion operations options
  */
-export async function writeToNotion (result_data: LocalFileStructure, options: INotionOperationOptions) {
+export async function writeToNotion (result_data: INotionSyncFileShape, options: INotionOperationOptions) {
 	const metadata = {
 			alive: true,
 			created_time: Date.now(),

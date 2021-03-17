@@ -1,6 +1,8 @@
+import colors from 'colors';
 import { extractPackageDependencies } from './extractPackageDependencies';
 
 export const extractPackageInstalledDependencies = async (package_name: string) => {
+	console.log(colors.blue.bold(`Extracting package dependencies for ${package_name}`));
 	const imported_package_dependencies_map = await extractPackageDependencies(package_name);
 	const nishans_dependencies_map: Map<string, string[]> = new Map();
 	for (const [ imported_module_dependency, module_names ] of imported_package_dependencies_map) {

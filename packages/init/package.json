@@ -1,9 +1,8 @@
 {
   "name": "@nishans/init",
-  "version": "0.0.0",
+  "version": "0.0.15",
   "description": "A package to initialize notion view & block data",
-  "keywords": [
-  ],
+  "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/init/README.md",
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Finit"
@@ -26,5 +25,8 @@
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.27"
   }
 }

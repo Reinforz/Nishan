@@ -3,7 +3,7 @@ import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
-import { Block, NotionData, PopulateMap } from '../../../libs';
+import { Block, PopulateMap } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -62,7 +62,7 @@ it('reposition', async () => {
 		...NotionCache.createDefaultCache(),
 		block: new Map([
 			[ 'block_1', { id: 'block_1', parent_table: 'block', parent_id: 'block_2' } ],
-			[ 'block_2', { id: 'block_2' } ]
+			[ 'block_2', { id: 'block_2', type: 'page' } ]
 		])
 	} as any;
 
@@ -71,12 +71,14 @@ it('reposition', async () => {
 		cache
 	});
 
-	const addToChildArrayMock = jest
-		.spyOn(NotionData.prototype, 'addToChildArray' as any)
-		.mockImplementationOnce(() => undefined);
+	const executeOperationsMock = jest
+		.spyOn(NotionOperations, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
 
-	await block.reposition(0);
-	expect(addToChildArrayMock).toHaveBeenLastCalledWith('block', { id: 'block_2' }, 0);
+	await block.reposition();
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.la('block_2', [ 'content' ], expect.objectContaining({ id: 'block_1' }))
+	]);
 });
 
 it('update', async () => {

@@ -1,9 +1,10 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
+import { NotionTraverser } from '@nishans/traverser';
 import { IHeader } from '@nishans/types';
 import colors from 'colors';
-import { ChildTraverser, NotionData } from '../../libs';
+import { NotionData } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
@@ -159,28 +160,6 @@ it(`deleteCachedData`, async () => {
 	expect(cache.block.get('block_1')).toBeUndefined();
 });
 
-it(`addToChildArray`, async () => {
-	const cache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([
-				[ 'block_1', { id: 'block_1', type: 'header' } ],
-				[ 'block_2', { id: 'block_2', type: 'page' } ]
-			])
-		} as any,
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
-
-	const block = new NotionData({
-		...default_nishan_arg,
-		cache,
-		type: 'block'
-	});
-
-	await (block as any).addToChildArray('block', { id: 'block_2', type: 'page' }, 0);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.la('block_2', [ 'content' ], { after: '', id: 'block_1' })
-	]);
-});
-
 it(`updateCacheLocally`, async () => {
 	const cache = {
 			...NotionCache.createDefaultCache(),
@@ -300,13 +279,13 @@ it(`getIterate`, async () => {
 			return {} as any;
 		});
 
-	const ChildTraverserGetMock = jest.spyOn(ChildTraverser, 'get').mockImplementation(() => {
+	const NotionTraverserGetMock = jest.spyOn(NotionTraverser, 'get').mockImplementation(() => {
 		return {} as any;
 	});
 
 	await (block as any).getIterate();
 	expect(initializeCacheForThisDataMock).toHaveBeenCalledTimes(1);
-	expect(ChildTraverserGetMock).toHaveBeenCalledTimes(1);
+	expect(NotionTraverserGetMock).toHaveBeenCalledTimes(1);
 });
 
 it(`updateIterate`, async () => {
@@ -327,13 +306,13 @@ it(`updateIterate`, async () => {
 			return {} as any;
 		});
 
-	const ChildTraverserUpdateMock = jest.spyOn(ChildTraverser, 'update').mockImplementationOnce(() => {
+	const NotionTraverserUpdateMock = jest.spyOn(NotionTraverser, 'update').mockImplementationOnce(() => {
 		return {} as any;
 	});
 
 	await (block as any).updateIterate();
 	expect(initializeCacheForThisDataMock).toHaveBeenCalledTimes(1);
-	expect(ChildTraverserUpdateMock).toHaveBeenCalledTimes(1);
+	expect(NotionTraverserUpdateMock).toHaveBeenCalledTimes(1);
 });
 
 it(`deleteIterate`, async () => {
@@ -352,11 +331,11 @@ it(`deleteIterate`, async () => {
 		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
 		.mockImplementation(async () => undefined);
 
-	const ChildTraverserDeleteMock = jest.spyOn(ChildTraverser, 'delete').mockImplementationOnce(() => {
+	const NotionTraverserDeleteMock = jest.spyOn(NotionTraverser, 'delete').mockImplementationOnce(() => {
 		return {} as any;
 	});
 
 	await (block as any).deleteIterate();
 	expect(initializeCacheForThisDataMock).toHaveBeenCalledTimes(1);
-	expect(ChildTraverserDeleteMock).toHaveBeenCalledTimes(1);
+	expect(NotionTraverserDeleteMock).toHaveBeenCalledTimes(1);
 });

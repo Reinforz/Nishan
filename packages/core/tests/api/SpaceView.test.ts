@@ -39,25 +39,27 @@ it(`reposition`, async () => {
 		user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ])
 	};
 
+	const executeOperationsMock = jest
+		.spyOn(NotionOperations, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
+
 	const space_view = new SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_2'
 	});
-	const addToChildArrayMock = jest
-		.spyOn(NotionData.prototype, 'addToChildArray' as any)
-		.mockImplementationOnce(async () => undefined);
 
-	await space_view.reposition(0);
-	expect(addToChildArrayMock).toHaveBeenCalledTimes(1);
-	expect(addToChildArrayMock).toHaveBeenCalledWith(
-		'user_root',
-		{
-			id: 'user_root_1',
-			space_views: [ 'space_view_1' ]
-		},
-		0
-	);
+	await space_view.reposition();
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.ur.la(
+			'user_root_1',
+			[ 'space_views' ],
+			expect.objectContaining({
+				id: 'space_view_2'
+			})
+		)
+	]);
 });
 
 it(`update`, async () => {

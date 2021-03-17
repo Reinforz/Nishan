@@ -30,7 +30,7 @@ class View<T extends TView> extends Data<T> {
 		return await NotionCache.fetchDataOrReturnCached('block', this.getCachedData().parent_id, this.getProps()) as TCollectionBlock;
 	}
 
-	async reposition (arg: INotionRepositionParams) {
+	async reposition (arg?: INotionRepositionParams) {
     await NotionOperations.executeOperations([NotionLineage.positionChildren({ logger: this.logger, child_id: this.id, position: arg, parent: await this.getCachedParentData(), parent_type: 'block' })], this.getProps())
 	}
 

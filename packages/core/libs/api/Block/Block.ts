@@ -24,7 +24,7 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as TData;
 	}
 
-	async reposition (arg: INotionRepositionParams) {
+	async reposition (arg?: INotionRepositionParams) {
 		await NotionOperations.executeOperations(
 			[
 				NotionLineage.positionChildren({

@@ -28,7 +28,7 @@ class SpaceView extends Data<ISpaceView> {
 		return this.cache.user_root.get(this.user_id) as IUserRoot;
 	}
 
-	async reposition (arg: INotionRepositionParams) {
+	async reposition (arg?: INotionRepositionParams) {
 		await NotionOperations.executeOperations(
 			[
 				NotionLineage.positionChildren({

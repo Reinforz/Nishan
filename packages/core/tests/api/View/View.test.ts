@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
-import { NotionData, View } from '../../../libs';
+import { View } from '../../../libs';
 import { default_nishan_arg, o } from '../../utils';
 import { tas, txas } from './utils';
 
@@ -90,7 +90,7 @@ const construct = () => {
 				]
 			}
 		} as any,
-		block_1 = { collection_id: 'collection_1', id: 'block_1' },
+		block_1 = { collection_id: 'collection_1', id: 'block_1', type: 'collection_view_page' },
 		cache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ]),
@@ -127,12 +127,20 @@ it('getCachedParentData', async () => {
 
 it('reposition', async () => {
 	const { view, block_1 } = construct();
-	const addToChildArrayMock = jest
-		.spyOn(NotionData.prototype, 'addToChildArray' as any)
-		.mockImplementationOnce(() => undefined);
+	const executeOperationsMock = jest
+		.spyOn(NotionOperations, 'executeOperations')
+		.mockImplementationOnce(async () => undefined);
 
-	await view.reposition(0);
-	expect(addToChildArrayMock).toHaveBeenCalledWith('block', block_1, 0);
+	await view.reposition();
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.b.la(
+			block_1.id,
+			[ 'view_ids' ],
+			expect.objectContaining({
+				id: 'collection_view_1'
+			})
+		)
+	]);
 });
 
 it('update', async () => {

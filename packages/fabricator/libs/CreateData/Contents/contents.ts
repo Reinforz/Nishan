@@ -1,12 +1,12 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
 import { NotionIdz } from "@nishans/idz";
+import { NotionLineage } from "@nishans/lineage";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CreateData, INotionFabricatorOptions, TBlockCreateInput } from "..";
-import { updateChildContainer } from "../../updateChildContainer";
 import { populatePermissions, stackCacheMap } from "./utils";
 
 /**
@@ -189,7 +189,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       
       // if the parent table is either a block, or a space, or a collection and page is a template, push to child append operation to the stack
       if(parent_table === "block" || parent_table==="space" || (parent_table === "collection" && (content as any).is_template))
-        await updateChildContainer(parent_table, parent_id, true, content_id, options);
+        await NotionLineage.updateChildContainer(parent_table, parent_id, true, content_id, options);
 
       options.logger && NotionLogger.method.info(`CREATE block ${content_id}`)
     }

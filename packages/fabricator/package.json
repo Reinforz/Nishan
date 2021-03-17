@@ -38,7 +38,8 @@
     "@nishans/notion-formula": "^0.0.25",
     "@nishans/operations": "^0.0.26",
     "@nishans/utils": "0.0.18",
-    "@nishans/logger": "0.0.15"
+    "@nishans/logger": "0.0.15",
+    "@nishans/lineage": "0.0.15"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.27"

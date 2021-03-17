@@ -1,17 +1,15 @@
-import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
+import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
+import { NotionOperations } from '@nishans/operations';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
 import {
 	CreateMaps,
-	FilterType,
-	FilterTypes,
 	INotionCoreOptions,
 	IPageMap,
 	ISpaceViewUpdateInput,
 	PopulateMap,
-	TSpaceViewUpdateKeys,
-	UpdateType,
-	UpdateTypes
+	TSpaceViewUpdateKeys
 } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
@@ -30,8 +28,19 @@ class SpaceView extends Data<ISpaceView> {
 		return this.cache.user_root.get(this.user_id) as IUserRoot;
 	}
 
-	async reposition (arg: RepositionParams) {
-		await this.addToChildArray('user_root', this.getCachedParentData(), arg);
+	async reposition (arg: INotionRepositionParams) {
+		await NotionOperations.executeOperations(
+			[
+				NotionLineage.positionChildren({
+					logger: this.logger,
+					child_id: this.id,
+					position: arg,
+					parent: this.getCachedParentData(),
+					parent_type: 'user_root'
+				})
+			],
+			this.getProps()
+		);
 	}
 
 	/**
@@ -111,13 +120,7 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
-				await NotionFabricator.updateChildContainer(
-					'space_view',
-					data.id,
-					updated_favorite_status,
-					id,
-					this.getProps()
-				);
+				await NotionLineage.updateChildContainer('space_view', data.id, updated_favorite_status, id, this.getProps());
 				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);

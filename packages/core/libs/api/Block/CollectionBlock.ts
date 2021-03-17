@@ -1,8 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionFabricator, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
-import { CreateMaps, FilterType, FilterTypes, INotionCoreOptions, IViewMap, UpdateType, UpdateTypes } from '../../';
+import { CreateMaps, INotionCoreOptions, IViewMap } from '../../';
 import { transformToMultiple } from '../../utils';
 import Collection from '../Collection';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';

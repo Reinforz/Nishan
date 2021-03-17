@@ -1,7 +1,8 @@
 import { ICache, NotionCache } from "@nishans/cache";
 import { NotionOperationPluginFunction } from "@nishans/operations";
+import { FilterType, FilterTypes, NotionTraverser } from "@nishans/traverser";
 import { INotionUser } from "@nishans/types";
-import { ChildTraverser, FilterType, FilterTypes, INotionCoreOptions } from "../";
+import { INotionCoreOptions } from "../";
 import { transformToMultiple } from "../utils";
 import Collection from "./Collection";
 import NotionData from "./Data";
@@ -69,7 +70,7 @@ class Nishan {
       notion_user_ids.push(notion_user_id)
     }
 
-    return await ChildTraverser.get<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
+    return await NotionTraverser.get<INotionUser, INotionUser, NotionUser[]>(args, (id)=>this.cache.notion_user.get(id), {
       ...common_props,
       multiple,
       child_ids: notion_user_ids,

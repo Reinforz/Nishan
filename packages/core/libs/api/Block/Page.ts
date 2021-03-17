@@ -1,18 +1,11 @@
 import { NotionCache } from '@nishans/cache';
 import { IPageCreateInput, NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
+import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
-import {
-	CreateMaps,
-	FilterType,
-	FilterTypes,
-	IBlockMap,
-	INotionCoreOptions,
-	PopulateMap,
-	UpdateType,
-	UpdateTypes
-} from '../../';
+import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
 import Block from './Block';
 
@@ -48,7 +41,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-		await NotionFabricator.updateChildContainer(
+		await NotionLineage.updateChildContainer(
 			'space_view',
 			target_space_view.id,
 			favorite_status,

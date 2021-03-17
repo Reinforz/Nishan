@@ -2,19 +2,10 @@ import { NotionErrors } from '@nishans/errors';
 import { IPageCreateInput, IPageUpdateInput, NotionFabricator, TSchemaUnitInput } from '@nishans/fabricator';
 import {} from '@nishans/notion-formula';
 import { NotionOperations } from '@nishans/operations';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, IPage, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { ISchemaMapValue, NotionUtils } from '@nishans/utils';
-import {
-	CreateMaps,
-	FilterType,
-	FilterTypes,
-	ICollectionUpdateInput,
-	INotionCoreOptions,
-	ISchemaUnitMap,
-	TCollectionUpdateKeys,
-	UpdateType,
-	UpdateTypes
-} from '../';
+import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
 import { transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';

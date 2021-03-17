@@ -1,15 +1,13 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionErrors } from "@nishans/errors";
-import { ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, NotionFabricator, RepositionParams, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, NotionFabricator, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { INotionRepositionParams, NotionLineage } from "@nishans/lineage";
 import { NotionOperations } from '@nishans/operations';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from "@nishans/traverser";
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { NotionUtils } from "@nishans/utils";
 import {
-  FilterType,
-  FilterTypes,
-  INotionCoreOptions,
-  UpdateType,
-  UpdateTypes
+  INotionCoreOptions
 } from '../../';
 import { transformToMultiple } from "../../utils";
 import Data from '../Data';
@@ -32,8 +30,8 @@ class View<T extends TView> extends Data<T> {
 		return await NotionCache.fetchDataOrReturnCached('block', this.getCachedData().parent_id, this.getProps()) as TCollectionBlock;
 	}
 
-	async reposition (arg: RepositionParams) {
-		await this.addToChildArray('block', await this.getCachedParentData(), arg);
+	async reposition (arg: INotionRepositionParams) {
+    await NotionOperations.executeOperations([NotionLineage.positionChildren({ logger: this.logger, child_id: this.id, position: arg, parent: await this.getCachedParentData(), parent_type: 'block' })], this.getProps())
 	}
 
 	/**

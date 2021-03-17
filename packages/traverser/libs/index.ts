@@ -7,3 +7,5 @@ export const NotionTraverser = {
 	update,
 	delete: remove
 };
+
+export * from './types';

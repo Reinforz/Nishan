@@ -7,9 +7,10 @@ import {
 	TAggregationsUpdateInput
 } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
 import { ISchemaMap, NotionUtils } from '@nishans/utils';
-import { FilterType, FilterTypes, INotionCoreOptions, UpdateType, UpdateTypes } from '../../';
+import { INotionCoreOptions } from '../../';
 import { transformToMultiple } from '../../utils';
 import View from './View';
 

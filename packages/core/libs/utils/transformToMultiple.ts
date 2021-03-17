@@ -1,4 +1,4 @@
-import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '../';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from "@nishans/traverser";
 
 /**
  * Transforms the parameter that is suitable to be used in a multiple=true Nishan method

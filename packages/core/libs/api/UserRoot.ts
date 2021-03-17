@@ -1,5 +1,6 @@
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ISpaceView, IUserRoot } from '@nishans/types';
-import { FilterType, FilterTypes, INotionCoreOptions, ISpaceViewUpdateInput, UpdateType, UpdateTypes } from '../';
+import { INotionCoreOptions, ISpaceViewUpdateInput } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';

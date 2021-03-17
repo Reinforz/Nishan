@@ -1,11 +1,12 @@
 import { ICache, NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
-import { INotionFabricatorOptions, RepositionParams } from '@nishans/fabricator';
+import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
+import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
+import { updateLastEditedProps } from '@nishans/traverser/libs/utils';
 import { TData, TDataType } from '@nishans/types';
-import { ChildTraverser, FilterTypes, INotionCoreOptions, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, positionChildren, UpdateTypes } from '../';
-import { updateLastEditedProps } from '../ChildTraverser/utils';
+import { INotionCoreOptions } from '../';
 
 /**
  * A class to update and control data specific stuffs
@@ -73,10 +74,6 @@ export default class NotionData<T extends TData> {
     this.cache[this.type].delete(this.id);
   }
 
-  protected async addToChildArray(parent_type: TDataType, parent: TData, position: RepositionParams) {
-    await NotionOperations.executeOperations([positionChildren({ logger: this.logger, child_id: this.id, position, parent, parent_type })], this.getProps())
-  }
-
   async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
     const parent_data = this.getCachedData(), data = arg;
 
@@ -100,7 +97,7 @@ export default class NotionData<T extends TData> {
 
   protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData();
-    return await ChildTraverser.delete<T, TD, C>(args, transform, {
+    return await NotionTraverser.delete<T, TD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),
@@ -110,7 +107,7 @@ export default class NotionData<T extends TData> {
 
   protected async updateIterate<TD, RD, C = any[]>(args: UpdateTypes<TD, RD>, options: IterateAndUpdateOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD, updated_data: RD, container: C) => any) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData();
-    return await ChildTraverser.update<T, TD, RD, C>(args, transform, {
+    return await NotionTraverser.update<T, TD, RD, C>(args, transform, {
       parent_type: this.type,
       parent_id: this.id,
       ...this.getProps(),
@@ -120,7 +117,7 @@ export default class NotionData<T extends TData> {
 
   protected async getIterate<RD, C>(args: FilterTypes<RD>, options: IterateAndGetOptions<T, C>, transform: ((id: string) => RD | undefined | Promise<RD | undefined>), cb?: (id: string, data: RD, container: C) => any) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData();
-    return await ChildTraverser.get<T, RD, C>(args, transform, {
+    return await NotionTraverser.get<T, RD, C>(args, transform, {
       parent_id: this.id,
       parent_type: this.type,
       ...this.getProps(),

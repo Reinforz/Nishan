@@ -42,7 +42,7 @@
     "@nishans/permissions": "0.0.17",
     "@nishans/utils": "0.0.18",
     "@nishans/logger": "0.0.15",
-    "@nishans/traverser": "0.0.0",
+    "@nishans/traverser": "0.0.15",
     "colors": "^1.4.0"
   },
   "devDependencies": {

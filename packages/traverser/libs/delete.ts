@@ -1,11 +1,10 @@
-import { NotionFabricator } from '@nishans/fabricator';
+import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from './types';
 import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
-
 /**
  * Iterates over the children of a parent and deletes it
  * @param args Array of ids or a cb passed with the transformed data
@@ -55,7 +54,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			);
 
 			if (typeof child_path === 'string')
-				await NotionFabricator.updateChildContainer(parent_type, parent_id, false, child_id, options);
+				await NotionLineage.updateChildContainer(parent_type, parent_id, false, child_id, options);
 		}
 	};
 

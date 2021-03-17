@@ -2,8 +2,7 @@
   "name": "@nishans/upload",
   "version": "0.0.0",
   "description": "A small package to upload content into notion",
-  "keywords": [
-  ],
+  "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/upload/README.md",
   "bugs": {
     "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fupload"

@@ -22,12 +22,12 @@
   "files": [
     "dist/libs"
   ],
-  "devDependencies": {
-    "@nishans/types": "0.0.27"
-  },
   "scripts": {
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.27"
   },
   "publishConfig": {
     "access": "public"

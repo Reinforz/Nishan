@@ -38,13 +38,13 @@
     "@nishans/errors": "^0.0.24",
     "@nishans/fabricator": "^0.0.22",
     "@nishans/idz": "^0.0.15",
+    "@nishans/init": "0.0.15",
+    "@nishans/lineage": "0.0.15",
+    "@nishans/logger": "0.0.15",
     "@nishans/operations": "^0.0.26",
     "@nishans/permissions": "0.0.17",
-    "@nishans/utils": "0.0.18",
-    "@nishans/logger": "0.0.15",
     "@nishans/traverser": "0.0.15",
-    "@nishans/lineage": "0.0.15",
-    "@nishans/init": "0.0.15"
+    "@nishans/utils": "0.0.18"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.27"

@@ -14,9 +14,6 @@
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "license": "MIT",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",
@@ -32,7 +29,10 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "winston": "^3.3.3",
-    "colors": "1.4.0"
+    "colors": "1.4.0",
+    "winston": "^3.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

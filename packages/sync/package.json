@@ -35,8 +35,8 @@
   },
   "dependencies": {
     "@nishans/cache": "0.0.28",
-    "@nishans/operations": "0.0.26",
     "@nishans/extract": "0.0.15",
+    "@nishans/operations": "0.0.26",
     "js-yaml": "^4.0.0",
     "mongodb": "^3.6.3",
     "uuid": "^8.3.2"

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "A package to expose all notion endpoints for queries and mutations",
   "keywords": [
     "notion",
@@ -33,11 +33,11 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/logger": "0.0.15",
+    "@nishans/logger": "0.0.16",
     "axios": "^0.21.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.27"
+    "@nishans/types": "0.0.28"
   }
 }

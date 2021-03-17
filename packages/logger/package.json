@@ -1,6 +1,6 @@
 {
   "name": "@nishans/logger",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A logger built specifically for nishan ecosystem",
   "keywords": [
     "notion",

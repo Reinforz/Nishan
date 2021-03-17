@@ -1,6 +1,7 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionErrors } from "@nishans/errors";
 import { ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, NotionFabricator, SchemaFormatPropertiesUpdateInput, TSortCreateInput, TSortUpdateInput, TViewFilterCreateInput, TViewFilterUpdateInput } from "@nishans/fabricator";
+import { NotionInit } from "@nishans/init";
 import { INotionRepositionParams, NotionLineage } from "@nishans/lineage";
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from "@nishans/traverser";
@@ -138,7 +139,7 @@ class View<T extends TView> extends Data<T> {
 	async createFilters (args: TViewFilterCreateInput[]) {
 		const schema_map = NotionUtils.generateSchemaMap((await this.getCollection()).schema),
 			data = this.getCachedData(),
-			filters = NotionFabricator.InitializeView.filter(data).filters;
+			filters = NotionInit.View.filter(data).filters;
     NotionFabricator.PopulateViewData.query2.filters(args, filters, schema_map);
 		
     await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, ['query2', 'filter'], (data.query2 as any).filter)], this.getProps())

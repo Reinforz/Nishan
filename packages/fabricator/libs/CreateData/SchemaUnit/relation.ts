@@ -3,11 +3,11 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
-import { INotionFabricatorOptions } from "packages/fabricator/types";
+import { INotionFabricatorOptions } from "../../../types";
 import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
 
 /**
- * Generates a new relation schema by validating the input relation schema unit passed   
+ * Generates a new relation schema by validating the input relation schema unit passed
  * @param input_schema_unit The input relation schema
  * @param collection_data An object containing info used to make request, push to op stack and save to cache
  * @return The newly generated relation schema unit
@@ -23,7 +23,7 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
   // Construct the relation_schema_unit, its erroneous now, as it uses incorrect data passed from the input
   const relation_schema_unit: RelationSchemaUnit = {
     type: "relation",
-    // The child collection relation schema unit that is related to this schema unit 
+    // The child collection relation schema unit that is related to this schema unit
     property: child_relation_schema_unit_id,
     // The name of the parent collection schema unit
     name: input_schema_unit.name,

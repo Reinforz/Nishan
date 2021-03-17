@@ -1,8 +1,8 @@
-import { NotionFabricator } from '../../libs';
+import { NotionInit } from '../../libs';
 
 it(`Should create query2 and return filters`, () => {
 	const view: any = {};
-	const filters = NotionFabricator.InitializeView.filter(view);
+	const filters = NotionInit.View.filter(view);
 	expect(filters).toStrictEqual({
 		operator: 'and',
 		filters: []
@@ -19,7 +19,7 @@ it(`Should create query2 and return filters`, () => {
 
 it(`Should create and return filters`, () => {
 	const view: any = { query2: { aggregations: [] } };
-	const filters = NotionFabricator.InitializeView.filter(view);
+	const filters = NotionInit.View.filter(view);
 	expect(filters).toStrictEqual({
 		operator: 'and',
 		filters: []

@@ -34,5 +34,8 @@
     "@nishans/errors": "0.0.24",
     "@nishans/operations": "0.0.26",
     "@nishans/cache": "0.0.28"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

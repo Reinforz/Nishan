@@ -14,6 +14,9 @@
     "type": "git",
     "url": "git+https://github.com/Devorein/Nishan.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "dist/libs/index.js",

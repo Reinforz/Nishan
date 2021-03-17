@@ -76,6 +76,9 @@ export async function createPackageDirectory (package_name: string, package_desc
       "scripts": {
         "build": "tsc --sourceMap false",
         "test": "npx jest --runInBand --config ../../jest.config.js"
+      },
+      "publishConfig": {
+        "access": "public"
       }
     }`,
 		'utf-8'

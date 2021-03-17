@@ -47,7 +47,7 @@
   {
     "name": "@nishans/extract",
     "description": "A small package to extract required notion data",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/fabricator",
@@ -65,6 +65,11 @@
     "published": true
   },
   {
+    "name": "@nishans/init",
+    "description": "A package to initialize notion view & block data",
+    "published": false
+  },
+  {
     "name": "@nishans/inline-blocks",
     "description": "Package providing an easy to use api to generate contents for notion inline blocks",
     "published": true
@@ -72,7 +77,7 @@
   {
     "name": "@nishans/lineage",
     "description": "A package to work with notion child data",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/logger",
@@ -127,7 +132,7 @@
   {
     "name": "@nishans/traverser",
     "description": "Traverse notion data with ease",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/typegen",

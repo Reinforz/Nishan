@@ -1,3 +1,4 @@
+import { INotionRepositionParams } from '@nishans/lineage';
 import {
 	IBoardViewFormat,
 	ICalendarViewFormat,
@@ -11,7 +12,6 @@ import {
 	TViewGroupFilterOperator,
 	TViewType
 } from '@nishans/types';
-import { RepositionParams } from './block';
 import { TViewFilterCreateInput } from './filter';
 
 export interface IViewQuery2CreateInput {
@@ -104,7 +104,7 @@ export type TViewFormatCreateInput =
 
 export interface IViewCreateInput extends IViewQuery2CreateInput {
 	id?: string;
-	position?: RepositionParams;
+	position?: INotionRepositionParams;
 	filters?: TViewFilterCreateInput[];
 	name: string;
 }

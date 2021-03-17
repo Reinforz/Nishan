@@ -1,14 +1,14 @@
 import { NotionErrors } from '@nishans/errors';
-import { NotionFabricator, RepositionParams } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
+import { INotionRepositionParams, NotionLineage } from './';
 
 interface PositionChildrenParam {
 	logger?: boolean;
 	parent: TData;
 	child_id: string;
-	position?: RepositionParams;
+	position?: INotionRepositionParams;
 	parent_type: TDataType;
 }
 
@@ -20,7 +20,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 	const { child_id, position, parent_type, logger } = arg;
 	const parent: any = arg.parent;
 	// Get the child path based on the parent type
-	const child_path = NotionFabricator.detectChildData(parent_type as any, parent as any)[0],
+	const child_path = NotionLineage.detectChildData(parent_type as any, parent as any)[0],
 		contains_container = parent[child_path];
 	// If the parent doesn't contain the child container create one
 	if (!contains_container) parent[child_path] = [];

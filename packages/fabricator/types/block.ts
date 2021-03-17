@@ -1,3 +1,4 @@
+import { INotionRepositionParams } from '@nishans/lineage';
 import {
 	IAudio,
 	IBreadcrumb,
@@ -33,7 +34,7 @@ import {
 	TPropertyVisibility,
 	TTextFormat
 } from '@nishans/types';
-import { TSchemaUnitInput, TViewCreateInput } from '.';
+import { TSchemaUnitInput, TViewCreateInput } from './';
 
 export interface ICollectionBlockInput {
 	id?: string;
@@ -323,14 +324,6 @@ export type TBlockInput =
 	| TCollectionBlockInput
 	| IColumnListInput;
 
-export type RepositionParams =
-	| {
-			id: string;
-			position: 'Before' | 'After';
-		}
-	| number
-	| undefined;
-
 export type TBlockCreateInput = TBlockInput & {
-	position?: RepositionParams;
+	position?: INotionRepositionParams;
 };

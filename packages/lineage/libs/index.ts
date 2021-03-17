@@ -7,3 +7,4 @@ export const NotionLineage = {
 	positionChildren,
 	updateChildContainer
 };
+export * from './types';

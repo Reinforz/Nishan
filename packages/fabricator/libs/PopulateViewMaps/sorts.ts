@@ -1,6 +1,7 @@
+import { NotionInit } from "@nishans/init";
 import { Schema, TView } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ISchemaSortsMap, NotionFabricator } from "../";
+import { ISchemaSortsMap } from "../";
 
 /**
  * Populates and returns an sort map
@@ -8,7 +9,7 @@ import { ISchemaSortsMap, NotionFabricator } from "../";
  * @param schema Schema used to check for property reference and get schema_unit
  */
 export function sorts(data: TView, schema: Schema){
-  const sorts_map: ISchemaSortsMap = new Map(), sorts = NotionFabricator.InitializeView.sort(data);
+  const sorts_map: ISchemaSortsMap = new Map(), sorts = NotionInit.View.sort(data);
   // Go through each of the sorts and add it to the sort map
   sorts.forEach((sort, index) => {
     // get the referenced schema unit based on the property

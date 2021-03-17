@@ -12,6 +12,9 @@
       "path": "./packages/extract/tsconfig.json"
     },
     {
+      "path": "./packages/init/tsconfig.json"
+    },
+    {
       "path": "./packages/constants/tsconfig.json"
     },
     {

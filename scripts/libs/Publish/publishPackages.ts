@@ -1,12 +1,15 @@
 import cp from 'child_process';
 import colors from 'colors';
 import path from 'path';
+import { NishanScripts } from '..';
 
-export async function publishPackages (package_dirs: string[]) {
-	for (let index = 0; index < package_dirs.length; index++) {
-		const package_name = path.basename(package_dirs[index]);
+export async function publishPackages (packages_version_map: Map<string, string>) {
+	const packages_dir = path.resolve(__dirname, '../../../../packages');
+	for (const [ scoped_package_name ] of Array.from(packages_version_map.entries())) {
+		const package_name = scoped_package_name.split('/')[1];
 		try {
-			cp.execSync(`npm publish`, { cwd: package_dirs[index] });
+			await NishanScripts.Update.packageJsonDependency(packages_version_map, scoped_package_name);
+			cp.execSync(`npm publish`, { cwd: path.join(packages_dir, package_name) });
 			console.log(colors.green.bold(`Published ${package_name}`));
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));

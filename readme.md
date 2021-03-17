@@ -21,7 +21,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Total%20Packages-32-%2371368a">
-  <img src="https://img.shields.io/badge/Published%20Packages-19-%2311806a">
+  <img src="https://img.shields.io/badge/Published%20Packages-20-%2311806a">
 </p>
 
 This monorepo contains/will contain the following packages and apps:-
@@ -41,7 +41,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator): A package to generate notion blocks using a simple api
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql): A graphql server for notion built using `@nishans/core`
 *   **`@nishans/idz`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/idz) [NPM](https://www.npmjs.com/package/@nishans/idz): A small package to validate, generate and parse notion ids
-*   **`@nishans/init`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/init): A package to initialize notion view & block data
+*   **`@nishans/init`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/init) [NPM](https://www.npmjs.com/package/@nishans/init): A package to initialize notion view & block data
 *   **`@nishans/inline-blocks`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/inline-blocks) [NPM](https://www.npmjs.com/package/@nishans/inline-blocks): Package providing an easy to use api to generate contents for notion inline blocks
 *   **`@nishans/lineage`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/lineage) [NPM](https://www.npmjs.com/package/@nishans/lineage): A package to work with notion child data
 *   **`@nishans/logger`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/logger) [NPM](https://www.npmjs.com/package/@nishans/logger): A logger built specifically for nishan ecosystem

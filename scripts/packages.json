@@ -67,7 +67,7 @@
   {
     "name": "@nishans/init",
     "description": "A package to initialize notion view & block data",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/inline-blocks",

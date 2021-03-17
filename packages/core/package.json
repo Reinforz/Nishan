@@ -44,8 +44,7 @@
     "@nishans/logger": "0.0.15",
     "@nishans/traverser": "0.0.15",
     "@nishans/lineage": "0.0.15",
-    "@nishans/init": "0.0.15",
-    "colors": "^1.4.0"
+    "@nishans/init": "0.0.15"
   },
   "devDependencies": {
     "@nishans/types": "^0.0.27"

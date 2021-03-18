@@ -17,6 +17,10 @@ const configs = {
 	};
 
 ([
+	'getCsatMilestones',
+	'getActivityLog',
+	'getAssetsJsonV2',
+	'getUserAnalyticsSettings',
 	'getPageVisits',
 	'getUserSharedPages',
 	'getUserSharedPagesInSpace',

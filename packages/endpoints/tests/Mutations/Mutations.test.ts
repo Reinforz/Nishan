@@ -23,7 +23,9 @@ const request_data = {
 	'initializePageTemplate',
 	'initializeGoogleDriveBlock',
 	'loginWithEmail',
-	'deleteBlocks'
+	'deleteBlocks',
+	'logout',
+	'loginWithGoogleAuth'
 ] as (keyof typeof NotionEndpoints.Mutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {

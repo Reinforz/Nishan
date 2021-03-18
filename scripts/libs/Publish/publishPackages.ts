@@ -8,7 +8,7 @@ export async function publishPackages (packages_version_map: Map<string, string>
 	for (const [ scoped_package_name ] of Array.from(packages_version_map.entries())) {
 		const package_name = scoped_package_name.split('/')[1];
 		try {
-			await NishanScripts.Update.packageJsonDependency(packages_version_map, scoped_package_name);
+			await NishanScripts.Update.packageDependency(packages_version_map, scoped_package_name);
 			cp.execSync(`npm publish`, { cwd: path.join(packages_dir, package_name) });
 			console.log(colors.green.bold(`Published ${package_name}`));
 		} catch (err) {

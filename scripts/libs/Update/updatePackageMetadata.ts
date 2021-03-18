@@ -5,7 +5,7 @@ import remark from 'remark';
 import dedent from 'ts-dedent';
 import packages_data from '../../packages.json';
 import { createReadme } from '../Create/createReadme';
-import { updatePackageJsonDescription } from './updatePackageJsonDescription';
+import { updatePackageDescription } from './updatePackageDescription';
 
 export async function updatePackageMetadata () {
 	const docs_dir = path.resolve(__dirname, '../../../../docs/docs'),
@@ -26,7 +26,7 @@ export async function updatePackageMetadata () {
 			package_readme_path = path.join(package_dir, 'README.md'),
 			package_json_path = path.join(package_dir, 'package.json');
 		await createReadme(package_readme_path, name, package_data.description);
-		await updatePackageJsonDescription(package_json_path, package_data.description);
+		await updatePackageDescription(package_json_path, package_data.description);
 		const github_link = ` [Github](https://github.com/Devorein/Nishan/tree/master/packages/${name})`,
 			doc_link = docs_dirs.includes(name) ? ` [Docs](https://nishan-docs.netlify.app/docs/${name})` : '',
 			npm_link = package_data.published ? ` [NPM](https://www.npmjs.com/package/@nishans/${name})` : '';

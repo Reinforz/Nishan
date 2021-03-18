@@ -1,4 +1,4 @@
-import { NishanScripts } from '..';
+import { NishanScripts } from '../';
 
 export const getPackageNonInstalledDependencies = async (package_name: string) => {
 	const package_imported_dependency_map = await NishanScripts.Extract.packageInstalledDependencies(package_name);

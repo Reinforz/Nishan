@@ -5,18 +5,18 @@ import { NotionUtils } from "@nishans/utils";
 import { NotionValidators } from "@nishans/validators";
 import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../../";
 
-export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
-export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
-export function populateViewQuery2(view: GalleryViewQuery2CreateInput): IGalleryViewQuery2;
-export function populateViewQuery2(view: TimelineViewQuery2CreateInput, schema_map: ISchemaMap): ITimelineViewQuery2;
-export function populateViewQuery2(view: CalendarViewQuery2CreateInput, schema_map: ISchemaMap): ICalendarViewQuery2;
-export function populateViewQuery2(view: BoardViewQuery2CreateInput, schema_map: ISchemaMap): IBoardViewQuery2;
 /**
  * Populates and returns the query2 data of a view
  * @param view View create input data
  * @param schema_map Schema map used to resolve property reference
  * @returns Populated query2 data with sort, filter, aggregations and other view specific infos
  */
+export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
+export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
+export function populateViewQuery2(view: GalleryViewQuery2CreateInput): IGalleryViewQuery2;
+export function populateViewQuery2(view: TimelineViewQuery2CreateInput, schema_map: ISchemaMap): ITimelineViewQuery2;
+export function populateViewQuery2(view: CalendarViewQuery2CreateInput, schema_map: ISchemaMap): ICalendarViewQuery2;
+export function populateViewQuery2(view: BoardViewQuery2CreateInput, schema_map: ISchemaMap): IBoardViewQuery2;
 export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: ISchemaMap): TViewQuery2 {
   const query2: TViewQuery2 = {} as any, operator = view.filter_operator ?? "and";
   switch (view.type) {

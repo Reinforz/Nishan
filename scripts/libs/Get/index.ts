@@ -1,3 +1,4 @@
+import { getOutdatedDeps } from './getOutdatedDeps';
 import { getPackageJsonDependencies } from './getPackageJsonDependencies';
 import { getPackageNonInstalledDependencies } from './getPackageNonInstalledDependencies';
 import { getPackagesNonInstalledDependencies } from './getPackagesNonInstalledDependencies';
@@ -5,5 +6,6 @@ import { getPackagesNonInstalledDependencies } from './getPackagesNonInstalledDe
 export const NishanScriptsGet = {
 	packageJsonDependencies: getPackageJsonDependencies,
 	packageNonInstalledDependencies: getPackageNonInstalledDependencies,
-	packagesNonInstalledDependencies: getPackagesNonInstalledDependencies
+	packagesNonInstalledDependencies: getPackagesNonInstalledDependencies,
+	outdatedDeps: getOutdatedDeps
 };

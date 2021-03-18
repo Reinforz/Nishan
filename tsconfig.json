@@ -27,6 +27,9 @@
       "path": "./packages/errors/tsconfig.json"
     },
     {
+      "path": "./packages/validators/tsconfig.json"
+    },
+    {
       "path": "./packages/utils/tsconfig.json"
     },
     {

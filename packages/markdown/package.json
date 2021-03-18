@@ -39,6 +39,6 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "^0.0.27"
+    "@nishans/types": "0.0.28"
   }
 }

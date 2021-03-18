@@ -31,7 +31,7 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "@nishans/core": "0.0.24",
+    "@nishans/core": "0.0.25",
     "yargs": "^16.2.0"
   },
   "devDependencies": {

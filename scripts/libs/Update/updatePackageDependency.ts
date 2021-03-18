@@ -10,12 +10,12 @@ export async function updatePackageDependency (packages_deps_version_map: IPacka
     package_json_data.version = package_deps_version_info[1];
 
   [ 'dependencies', 'devDependencies' ].forEach((dependency_type) => {
-    Object.entries(package_json_data[dependency_type]).forEach(([dependency_name])=>{
+    Object.keys(package_json_data[dependency_type]).forEach((dependency_name)=>{
       const dependency_version_info = package_version.get(dependency_name)!;
-      package_json_data[dependency_type][dependency_name] = dependency_version_info[0];
+      if(dependency_version_info)
+        package_json_data[dependency_type][dependency_name] = dependency_version_info[1];
     });
   });
-  console.log();
 
   await fs.promises.writeFile(package_json_path, JSON.stringify(package_json_data, null, 2), 'utf-8');
 }

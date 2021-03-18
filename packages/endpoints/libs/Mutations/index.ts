@@ -12,6 +12,19 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async logout (params: INotionEndpoints['logout']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['logout']['response']>('logout', params, options);
+	},
+	async loginWithGoogleAuth (
+		params: INotionEndpoints['loginWithGoogleAuth']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['loginWithGoogleAuth']['response']>(
+			'loginWithGoogleAuth',
+			params,
+			options
+		);
+	},
 	async setSpaceNotificationsAsRead (
 		params: INotionEndpoints['setSpaceNotificationsAsRead']['payload'],
 		options: INotionEndpointsOptions

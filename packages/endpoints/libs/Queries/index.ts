@@ -14,6 +14,44 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getCsatMilestones (
+		params: INotionEndpoints['getCsatMilestones']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getCsatMilestones']['response']>(
+			'getCsatMilestones',
+			params,
+			options
+		);
+	},
+
+	async getActivityLog (params: INotionEndpoints['getActivityLog']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getActivityLog']['response']>(
+			'getActivityLog',
+			params,
+			options
+		);
+	},
+
+	async getAssetsJsonV2 (params: INotionEndpoints['getAssetsJsonV2']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getAssetsJsonV2']['response']>(
+			'getAssetsJsonV2',
+			params,
+			options
+		);
+	},
+
+	async getUserAnalyticsSettings (
+		params: INotionEndpoints['getUserAnalyticsSettings']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getUserAnalyticsSettings']['response']>(
+			'getUserAnalyticsSettings',
+			params,
+			options
+		);
+	},
+
 	async getClientExperiments (
 		params: INotionEndpoints['getClientExperiments']['payload'],
 		options?: INotionEndpointsOptions

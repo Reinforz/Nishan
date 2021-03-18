@@ -1,5 +1,9 @@
 import { NotionErrors } from '@nishans/errors';
-import { ISchemaMapValue } from '@nishans/notion-formula';
+import { TSchemaUnit } from '@nishans/types';
+
+type ISchemaMapValue = {
+	schema_id: string;
+} & TSchemaUnit;
 
 export function checkDateSchemaUnit (schema_map_unit: ISchemaMapValue, value: string, path: string[]) {
 	if (

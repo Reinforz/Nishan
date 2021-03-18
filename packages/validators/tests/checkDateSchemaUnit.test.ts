@@ -1,8 +1,8 @@
-import { checkDateSchemaUnit } from '../../../libs/PopulateViewData/utils';
+import { NotionValidators } from '../libs';
 
 it(`schema_unit=title`, () => {
 	expect(() =>
-		checkDateSchemaUnit(
+		NotionValidators.checkDateSchemaUnit(
 			{
 				schema_id: 'title',
 				type: 'title',
@@ -16,7 +16,7 @@ it(`schema_unit=title`, () => {
 
 it(`schema_unit=formula.text`, () => {
 	expect(() =>
-		checkDateSchemaUnit(
+		NotionValidators.checkDateSchemaUnit(
 			{
 				schema_id: 'formula.text',
 				type: 'formula',
@@ -33,7 +33,7 @@ it(`schema_unit=formula.text`, () => {
 
 it(`schema_unit=date`, () => {
 	expect(() =>
-		checkDateSchemaUnit(
+		NotionValidators.checkDateSchemaUnit(
 			{
 				schema_id: 'date',
 				type: 'date',
@@ -47,7 +47,7 @@ it(`schema_unit=date`, () => {
 
 it(`schema_unit=formula.date`, () => {
 	expect(() =>
-		checkDateSchemaUnit(
+		NotionValidators.checkDateSchemaUnit(
 			{
 				schema_id: 'formula.text',
 				type: 'formula',

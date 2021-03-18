@@ -1,6 +1,6 @@
 {
   "name": "@nishans/validators",
-  "version": "0.0.0",
+  "version": "0.0.15",
   "description": "A group of modules to validate various things related to notion",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/validators/README.md",
@@ -23,9 +23,12 @@
     "dist/libs"
   ],
   "scripts": {
-    "build": "tsc --sourceMap false"
+    "build": "tsc --sourceMap false",
+    "test": "npx jest --config ../../jest.config.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@nishans/errors": "0.0.25"
+  },
   "devDependencies": {
     "@nishans/types": "0.0.27"
   }

@@ -2505,6 +2505,110 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/cache@0.0.28", "@nishans/cache@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.28.tgz#7d85820eb3b33cb66fe4edf5bd90b17e8a7e487a"
+  integrity sha512-4NyovhYklKIHexl4ID6kJ7C5ix6mj6bul71G2nvToHCjRLBxKg3il9P1vDDNhB7SLFT8f4okwE6fALdmJSTiTA==
+  dependencies:
+    "@nishans/endpoints" "0.0.26"
+    "@nishans/errors" "0.0.24"
+    "@nishans/utils" "0.0.18"
+
+"@nishans/constants@0.0.18", "@nishans/constants@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.18.tgz#c766a83e8c4414e5851b53ab33b7205000ad1f53"
+  integrity sha512-MUJOrwj/066m+cvlmVo+zTBpy1Q4x9yfAYivWB0dAz56naMlwkB968fCGAV704qbq64fh0Amp8JkOOLPdP8Q1A==
+
+"@nishans/core@0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.24.tgz#70827210cefecf2061ce5abf1ba5393d50f49b4c"
+  integrity sha512-Isf17uJFURgIC8PNvWZurDgBMhhUh1cm5obyReQzj/caTcR2l7nSGtxKeFeuTdrPrKYBJWiF5D3ip8PMF4BSvA==
+  dependencies:
+    "@nishans/cache" "^0.0.28"
+    "@nishans/constants" "0.0.18"
+    "@nishans/endpoints" "^0.0.26"
+    "@nishans/errors" "^0.0.24"
+    "@nishans/fabricator" "^0.0.22"
+    "@nishans/idz" "^0.0.15"
+    "@nishans/operations" "^0.0.26"
+    "@nishans/permissions" "0.0.17"
+    "@nishans/utils" "0.0.18"
+    colors "^1.4.0"
+
+"@nishans/endpoints@0.0.26", "@nishans/endpoints@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.26.tgz#5471d25df49d5bda10bd513c20954d2ecb95fd92"
+  integrity sha512-fWb/d4tj7KFisSF9DGmoFCJjJHL+j/k28/WIsx8RytLZuuU+zqZX4gjSZ1a7qGg7UnjbmscbKu/LT046yUfhmQ==
+  dependencies:
+    axios "^0.21.1"
+    uuid "^8.3.2"
+
+"@nishans/errors@0.0.24", "@nishans/errors@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.24.tgz#cab455b89afb54e21ecd4e4957a5e1e624291f24"
+  integrity sha512-isIrU6FLnJ2yC98DGJ1Raq3yCzFwvEOfuTYlvpPfZJ7kkqQoX/VcwjL2WnbcNhW8SjzilJCbD0BlSd5cbc/c9g==
+  dependencies:
+    colors "^1.4.0"
+
+"@nishans/fabricator@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@nishans/fabricator/-/fabricator-0.0.22.tgz#e05a792e7ddfd1d53679234d73c396018af48b4e"
+  integrity sha512-8tFhq52rSDO1WwcnBkWfIrfzofzWlfqcVi9jYbgxc6Yq4P86FFmjJjlAtRQqsbTunr2fvggJO1AMGoHP+N1o0Q==
+  dependencies:
+    "@nishans/cache" "^0.0.28"
+    "@nishans/endpoints" "^0.0.26"
+    "@nishans/errors" "^0.0.24"
+    "@nishans/idz" "0.0.15"
+    "@nishans/notion-formula" "^0.0.25"
+    "@nishans/operations" "^0.0.26"
+    "@nishans/utils" "0.0.18"
+
+"@nishans/inline-blocks@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.29.tgz#55a63fa09845e14f2ea47d022fa21317fd3937cc"
+  integrity sha512-pXoMQQv//S68DR7xgyvHG+atTGAORaFRyvI4NSXmjWuhDgRFd5TNOgOgr/WMoZ/J9vbUDoq58rXAqtzpCiWS0A==
+
+"@nishans/notion-formula@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@nishans/notion-formula/-/notion-formula-0.0.25.tgz#686a04fea4e65496d52e6fff895e4141855a1c23"
+  integrity sha512-h2/mHm00CpC3yTYeUBxeYK29/9BcmyIUyTnJfWCvOL1QU5qEWdmFf5dohBTzp32lEGkTPsOeH/h99F21r9mtFA==
+  dependencies:
+    "@nishans/cache" "0.0.28"
+    "@nishans/constants" "0.0.18"
+    "@nishans/errors" "0.0.24"
+    "@nishans/idz" "0.0.15"
+    "@nishans/utils" "0.0.18"
+
+"@nishans/operations@0.0.26", "@nishans/operations@^0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.26.tgz#3e6a21592fa40316798dfba25bde888533f179e0"
+  integrity sha512-xSpU66B/PXnAdi77YuE+O0ykKWQOEjyUcQiBmt/FsGhUzI2JKwcTpO9d1tA6pKRpdkXXbbs3PeDjDdv7frjg2w==
+  dependencies:
+    "@nishans/constants" "0.0.18"
+    "@nishans/endpoints" "0.0.26"
+
+"@nishans/permissions@0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@nishans/permissions/-/permissions-0.0.17.tgz#d3f0ebc21831e58acae9c879cda4b5e9037e5d1e"
+  integrity sha512-Mh7Yj529HMhVFB7w1BoOCdfPhfkAtJxc0YzbrCwrMn+ruyhBS3W348jp1qWN0ueZKJ625I5OxCD3nP9Y/8NVVg==
+  dependencies:
+    "@nishans/endpoints" "0.0.26"
+    "@nishans/operations" "0.0.26"
+    "@nishans/utils" "0.0.18"
+
+"@nishans/types@0.0.27", "@nishans/types@^0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.27.tgz#b6e542bd55b678784ac6eb1f3485df7f2659247e"
+  integrity sha512-hPPSbLxp6DFLbuoDqCrfV1d4DV4J0DssSe/f4MqJjSfEujTfF4ZbMtly3Guc/E6DUYHWAgik1lk57EcmWZEvOw==
+
+"@nishans/utils@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.18.tgz#10b20dd487ad8deb35b2653c544811757ce6b4d8"
+  integrity sha512-USmCuGVS153+x1KDpKUKafmSh2rIi4C7bjyzpqyXp6fF9gzY+E7Ll8P1tVCVBqz7cFMUkz40WiV1mszfcWr+Ng==
+  dependencies:
+    "@nishans/constants" "^0.0.18"
+    "@nishans/errors" "^0.0.24"
+
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"
@@ -17091,9 +17195,9 @@ ts-invariant@^0.4.0:
     tslib "^1.9.3"
 
 ts-jest@^26.4.4:
-  version "26.5.3"
-  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.5.3.tgz#a6ee00ba547be3b09877550df40a1465d0295554"
-  integrity sha512-nBiiFGNvtujdLryU7MiMQh1iPmnZ/QvOskBbD2kURiI1MwqvxlxNnaAB/z9TbslMqCsSbu5BXvSSQPc5tvHGeA==
+  version "26.5.4"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-26.5.4.tgz#207f4c114812a9c6d5746dd4d1cdf899eafc9686"
+  integrity sha512-I5Qsddo+VTm94SukBJ4cPimOoFZsYTeElR2xy6H2TOVs+NsvgYglW8KuQgKoApOKuaU/Ix/vrF9ebFZlb5D2Pg==
   dependencies:
     bs-logger "0.x"
     buffer-from "1.x"

@@ -1,3 +1,4 @@
+export * from './activity';
 export * from './aggregator';
 export * from './block';
 export * from './color';

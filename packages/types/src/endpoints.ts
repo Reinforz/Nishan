@@ -1,42 +1,97 @@
 import {
-  BlockData,
-  EnqueueTaskPayload,
-  EnqueueTaskResponse,
-  IDrive,
-  INotionUser,
-  IPermission,
-  IViewFilter,
-  MediaFormat,
-  RecordMap,
-  SpaceData,
-  SubscribedSubscriptionData,
-  TData,
-  TPermissionRole,
-  TPlanType,
-  Transaction,
-  TSchemaUnitType,
-  TSearchNotionEndpointPayload,
-  TViewAggregationsAggregators,
-  TViewType,
-  UnsubscribedSubscriptionData,
-  ViewAggregations,
-  ViewSorts
+	BlockData,
+	EnqueueTaskPayload,
+	EnqueueTaskResponse,
+	IDrive,
+	INotionUser,
+	IPermission,
+	IViewFilter,
+	MediaFormat,
+	RecordMap,
+	SpaceData,
+	SubscribedSubscriptionData,
+	TActivity,
+	TData,
+	TDataType,
+	TEmbedBlockType,
+	TPermissionRole,
+	TPlanType,
+	Transaction,
+	TSchemaUnitType,
+	TSearchNotionEndpointPayload,
+	TViewAggregationsAggregators,
+	TViewType,
+	UnsubscribedSubscriptionData,
+	ViewAggregations,
+	ViewSorts
 } from './';
-import { TEmbedBlockType } from './block';
-import { TDataType } from './types';
 
 interface INotionEndpoint<P, R> {
 	payload: P;
 	response: R;
 }
 export interface INotionEndpoints {
-  getUserSharedPagesInSpace: INotionEndpoint<{
-    includeDeleted: boolean,
-    spaceId: string
-  }, {
-    pages: string[],
-    recordMap: Pick<RecordMap, "block" | "collection" | "space">
-  }>,
+	getUserAnalyticsSettings: INotionEndpoint<
+		{
+			platform: 'web' | 'desktop' | 'mobile';
+		},
+		{
+			intercomAppId: string;
+			intercomUserHash: string;
+			isIntercomEnabled: boolean;
+			isLoaded: boolean;
+			isSegmentEnabled: boolean;
+			noIntercomUserId: boolean;
+			user_email: string;
+			user_id: string;
+		}
+	>;
+	logout: INotionEndpoint<Record<string, never>, Record<string, never>>;
+	loginWithGoogleAuth: INotionEndpoint<
+		{
+			code: string;
+			encryptedToken: string;
+		},
+		{
+			isNewSignup: boolean;
+			userId: string;
+		}
+	>;
+	getAssetsJsonV2: INotionEndpoint<
+		{ hash: string },
+		{
+			entry: string;
+			files: {
+				hash: string;
+				path: string;
+				size: number;
+			}[];
+			hash: string;
+			headersWhitelist: string[];
+			localeHtml: {
+				'en-US': string;
+				'es-ES': string;
+				'fr-FR': string;
+				'ja-JP': string;
+				'ko-KR': string;
+				'pt-BR': string;
+				'zh-CN': string;
+				'zh-TW': string;
+			};
+			proxyServerPathPrefixes: string[];
+			version: string;
+		}
+	>;
+	getUserSharedPagesInSpace: INotionEndpoint<
+		{
+			includeDeleted: boolean;
+			spaceId: string;
+		},
+		{
+			pages: string[];
+			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
+		}
+	>;
 	getRecordValues: INotionEndpoint<
 		INotionEndpoints['syncRecordValues']['payload'],
 		{
@@ -122,6 +177,37 @@ export interface INotionEndpoints {
 		{
 			pages: { id: string; spaceId: string }[];
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
+		}
+	>;
+	getActivityLog: INotionEndpoint<
+		{
+			limit: number;
+			navigableBlockId: string;
+			spaceId: string;
+		},
+		{
+			activityIds: string[];
+			recordMap: RecordMap & {
+				activity: TActivity;
+				follow: {
+					[k: string]: {
+						role: TPermissionRole;
+						value: {
+							created_time: number;
+							following: boolean;
+							id: string;
+							navigable_block_id: string;
+							user_id: string;
+							version: number;
+						};
+					};
+				};
+				slack_integration: {
+					[k: string]: {
+						role: TPermissionRole;
+					};
+				};
+			};
 		}
 	>;
 	getPublicPageData: INotionEndpoint<
@@ -400,7 +486,7 @@ export interface INotionEndpoints {
 			recordMap: RecordMap;
 		}
 	>;
-
+	getCsatMilestones: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
 	getUserTasks: INotionEndpoint<
 		Record<string, unknown>,
 		{

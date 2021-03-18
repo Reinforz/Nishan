@@ -2,8 +2,8 @@ import { NotionErrors } from "@nishans/errors";
 import { ISchemaMap } from "@nishans/notion-formula";
 import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
+import { NotionValidators } from "@nishans/validators";
 import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../../";
-import { checkDateSchemaUnit } from "../utils";
 
 export function populateViewQuery2(view: TableViewQuery2CreateInput): ITableViewQuery2;
 export function populateViewQuery2(view: ListViewQuery2CreateInput): IListViewQuery2;
@@ -57,7 +57,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
     }
     case "calendar":{
       const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.calendar_by, ["calendar_by"]);
-      checkDateSchemaUnit(schema_map_unit, view.calendar_by, ["calendar_by"])
+      NotionValidators.checkDateSchemaUnit(schema_map_unit, view.calendar_by, ["calendar_by"])
 
       const calendar_query2: ICalendarViewQuery2 = query2 as any;
       calendar_query2.sort = [];
@@ -70,7 +70,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
     }
     case "timeline":{
       const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.timeline_by, ["timeline_by"]);
-      checkDateSchemaUnit(schema_map_unit, view.timeline_by, ["timeline_by"])
+      NotionValidators.checkDateSchemaUnit(schema_map_unit, view.timeline_by, ["timeline_by"])
 
       const timeline_query2: ITimelineViewQuery2 = query2 as any;
       timeline_query2.aggregations = [];

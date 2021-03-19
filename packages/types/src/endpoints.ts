@@ -1,35 +1,35 @@
 import {
-  BlockData,
-  EnqueueTaskPayload,
-  EnqueueTaskResponse,
-  GetTasksResponse,
-  IDrive,
-  INotionUser,
-  IPermission,
-  IViewFilter,
-  MediaFormat,
-  NotionApiUserRateLimitResponseError,
-  NotionApiUserValidationIncorrectPasswordError,
-  NotionApiUserValidationInvalidOrExpiredPasswordError,
-  NotionApiUserValidationUserWithEmailExistsError,
-  RecordMap,
-  SpaceData,
-  SubscribedSubscriptionData,
-  TActivity,
-  TData,
-  TDataType,
-  TEmbedBlockType,
-  TNotification,
-  TPermissionRole,
-  TPlanType,
-  Transaction,
-  TSchemaUnitType,
-  TSearchNotionEndpointPayload,
-  TViewAggregationsAggregators,
-  TViewType,
-  UnsubscribedSubscriptionData,
-  ViewAggregations,
-  ViewSorts
+	BlockData,
+	EnqueueTaskPayload,
+	EnqueueTaskResponse,
+	GetTasksResponse,
+	IDrive,
+	INotionUser,
+	IPermission,
+	IViewFilter,
+	MediaFormat,
+	NotionApiUserRateLimitResponseError,
+	NotionApiUserValidationIncorrectPasswordError,
+	NotionApiUserValidationInvalidOrExpiredPasswordError,
+	NotionApiUserValidationUserWithEmailExistsError,
+	RecordMap,
+	SpaceData,
+	SubscribedSubscriptionData,
+	TActivity,
+	TData,
+	TDataType,
+	TEmbedBlockType,
+	TNotification,
+	TPermissionRole,
+	TPlanType,
+	Transaction,
+	TSchemaUnitType,
+	TSearchNotionEndpointPayload,
+	TViewAggregationsAggregators,
+	TViewType,
+	UnsubscribedSubscriptionData,
+	ViewAggregations,
+	ViewSorts
 } from './';
 
 interface INotionEndpoint<P, R> {
@@ -59,13 +59,16 @@ export interface INotionEndpoints {
 			}[];
 		}
 	>;
-  getSnapshotContents: INotionEndpoint<{
-    blockId: string
-    timestamp: string
-  }, {
-    contentMap: Pick<RecordMap, "block" | "collection" | "collection_view" | "space">,
-    recordMap: Pick<RecordMap, "notion_user">
-  }>,
+	getSnapshotContents: INotionEndpoint<
+		{
+			blockId: string;
+			timestamp: string;
+		},
+		{
+			contentMap: Pick<RecordMap, 'block' | 'collection' | 'collection_view' | 'space'>;
+			recordMap: Pick<RecordMap, 'notion_user'>;
+		}
+	>;
 	setPassword:
 		| INotionEndpoint<{ newPassword: string }, { action: 'Set' }>
 		| INotionEndpoint<
@@ -406,7 +409,7 @@ export interface INotionEndpoints {
 		},
 		{
 			activityIds: string[];
-			recordMap: RecordMap & {
+			recordMap: Pick<RecordMap, 'block' | 'collection' | 'notion_user' | 'space'> & {
 				activity: TActivity;
 				follow: {
 					[k: string]: {

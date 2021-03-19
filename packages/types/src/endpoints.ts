@@ -32,6 +32,102 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	getDataAccessConsent: INotionEndpoint<Record<string, unknown>, { userId: string }>;
+	disconnectDrive: INotionEndpoint<{ googleUserId: string }, Record<string, unknown>>;
+	getConnectedAppsStatus: INotionEndpoint<
+		Record<string, unknown>,
+		{
+			drive: {
+				accountId: string;
+				accountName: string;
+			}[];
+		}
+	>;
+	getInvoiceData: INotionEndpoint<
+		{
+			invoiceId: string;
+			type: 'invoice';
+		},
+		{
+			spaceId: string;
+			status: 'not_paid';
+			date: number;
+			customer: {
+				email: string;
+				name: string;
+				businessName: string;
+				addressLine1: string;
+				addressLine2: string;
+				zipCode: string;
+				city: string;
+				state: string;
+				country: string;
+				vatId: string;
+			};
+			items: {
+				productId: string;
+				start: number;
+				end: number;
+				quantity: number;
+				proration: boolean;
+				planAmount: number;
+				planInterval: 'year' | 'month';
+				amount: number;
+			}[];
+			total: number;
+			startingBalance: number;
+			amountRemaining: number;
+			amountPaid: number;
+			endingBalance: number;
+		}
+	>;
+	updateSubscription: INotionEndpoint<
+		{
+			addressCity?: string;
+			addressCountry?: string;
+			addressLine1?: string;
+			addressLine2?: string;
+			addressState?: string;
+			addressZip?: string;
+			businessName?: string;
+			customerName?: string;
+			billingEmail?: string;
+			vatId?: string;
+			spaceId: string;
+		},
+		Record<string, any>
+	>;
+	getBillingHistory: INotionEndpoint<
+		{
+			limit: number;
+			spaceId: string;
+		},
+		{
+			events: {
+				amount: number;
+				attempted: boolean;
+				id: string;
+				status: 'open';
+				timestamp: number;
+				total: number;
+				type: 'invoice';
+				url: string;
+			}[];
+			reachedEndOfResults: boolean;
+		}
+	>;
+	getBots: INotionEndpoint<
+		{
+			id: string;
+			table: 'space';
+			type: string;
+		},
+		{
+			botIds: string[];
+			recordMap: Record<string, unknown>;
+		}
+	>;
+	getSamlConfigForSpace: INotionEndpoint<{ spaceId: string }, Record<string, unknown>>;
 	getAvailableCountries: INotionEndpoint<Record<string, unknown>, { countries: { name: string }[] }>;
 	getUserAnalyticsSettings: INotionEndpoint<
 		{

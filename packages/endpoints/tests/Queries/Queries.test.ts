@@ -41,7 +41,11 @@ const configs = {
 	'getTasks',
 	'search',
 	'getClientExperiments',
-	'checkEmailType'
+	'checkEmailType',
+	'getBillingHistory',
+	'getSamlConfigForSpace',
+	'getBots',
+	'getInvoiceData'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest
@@ -62,7 +66,8 @@ const configs = {
 	'isUserDomainJoinable',
 	'isEmailEducation',
 	'ping',
-  'getAvailableCountries'
+	'getAvailableCountries',
+	'getConnectedAppsStatus'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

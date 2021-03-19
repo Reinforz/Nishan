@@ -12,6 +12,7 @@ const request_data = {
 	};
 
 ([
+	'updateSubscription',
 	'setPageNotificationsAsRead',
 	'setSpaceNotificationsAsRead',
 	'removeUsersFromSpace',
@@ -25,7 +26,8 @@ const request_data = {
 	'loginWithEmail',
 	'deleteBlocks',
 	'logout',
-	'loginWithGoogleAuth'
+	'loginWithGoogleAuth',
+	'disconnectDrive'
 ] as (keyof typeof NotionEndpoints.Mutations)[]).forEach((method) => {
 	it(method, async () => {
 		const configs = {

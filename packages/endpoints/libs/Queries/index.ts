@@ -14,12 +14,62 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getDataAccessConsent (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getDataAccessConsent']['response']>(
+			'getDataAccessConsent',
+			{},
+			options
+		);
+	},
+
+	async getConnectedAppsStatus (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getConnectedAppsStatus']['response']>(
+			'getConnectedAppsStatus',
+			{},
+			options
+		);
+	},
+
+	async getInvoiceData (params: INotionEndpoints['getInvoiceData']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getInvoiceData']['response']>(
+			'getInvoiceData',
+			params,
+			options
+		);
+	},
+
 	async checkEmailType (params: INotionEndpoints['checkEmailType']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['checkEmailType']['response']>(
 			'checkEmailType',
 			params,
 			options
 		);
+	},
+
+	async getSamlConfigForSpace (
+		params: INotionEndpoints['getSamlConfigForSpace']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getSamlConfigForSpace']['response']>(
+			'getSamlConfigForSpace',
+			params,
+			options
+		);
+	},
+
+	async getBillingHistory (
+		params: INotionEndpoints['getBillingHistory']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getBillingHistory']['response']>(
+			'getBillingHistory',
+			params,
+			options
+		);
+	},
+
+	async getBots (params: INotionEndpoints['getBots']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getBots']['response']>('getBots', params, options);
 	},
 
 	async getCsatMilestones (

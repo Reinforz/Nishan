@@ -12,6 +12,13 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async disconnectDrive (params: INotionEndpoints['disconnectDrive']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['disconnectDrive']['response']>(
+			'disconnectDrive',
+			params,
+			options
+		);
+	},
 	async logout (params: INotionEndpoints['logout']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['logout']['response']>('logout', params, options);
 	},

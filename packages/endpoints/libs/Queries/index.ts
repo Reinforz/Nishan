@@ -54,6 +54,25 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getSnapshotsList (params: INotionEndpoints['getSnapshotsList']['payload'], options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getSnapshotsList']['response']>(
+			'getSnapshotsList',
+			params,
+			options
+		);
+	},
+
+	async getSnapshotContents (
+		params: INotionEndpoints['getSnapshotContents']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getSnapshotContents']['response']>(
+			'getSnapshotContents',
+			params,
+			options
+		);
+	},
+
 	async getNotificationLog (
 		params: INotionEndpoints['getNotificationLog']['payload'],
 		options?: INotionEndpointsOptions

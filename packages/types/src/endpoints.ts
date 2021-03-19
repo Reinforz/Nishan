@@ -1,35 +1,35 @@
 import {
-	BlockData,
-	EnqueueTaskPayload,
-	EnqueueTaskResponse,
-	GetTasksResponse,
-	IDrive,
-	INotionUser,
-	IPermission,
-	IViewFilter,
-	MediaFormat,
-	NotionApiUserRateLimitResponseError,
-	NotionApiUserValidationIncorrectPasswordError,
-	NotionApiUserValidationInvalidOrExpiredPasswordError,
-	NotionApiUserValidationUserWithEmailExistsError,
-	RecordMap,
-	SpaceData,
-	SubscribedSubscriptionData,
-	TActivity,
-	TData,
-	TDataType,
-	TEmbedBlockType,
-	TNotification,
-	TPermissionRole,
-	TPlanType,
-	Transaction,
-	TSchemaUnitType,
-	TSearchNotionEndpointPayload,
-	TViewAggregationsAggregators,
-	TViewType,
-	UnsubscribedSubscriptionData,
-	ViewAggregations,
-	ViewSorts
+  BlockData,
+  EnqueueTaskPayload,
+  EnqueueTaskResponse,
+  GetTasksResponse,
+  IDrive,
+  INotionUser,
+  IPermission,
+  IViewFilter,
+  MediaFormat,
+  NotionApiUserRateLimitResponseError,
+  NotionApiUserValidationIncorrectPasswordError,
+  NotionApiUserValidationInvalidOrExpiredPasswordError,
+  NotionApiUserValidationUserWithEmailExistsError,
+  RecordMap,
+  SpaceData,
+  SubscribedSubscriptionData,
+  TActivity,
+  TData,
+  TDataType,
+  TEmbedBlockType,
+  TNotification,
+  TPermissionRole,
+  TPlanType,
+  Transaction,
+  TSchemaUnitType,
+  TSearchNotionEndpointPayload,
+  TViewAggregationsAggregators,
+  TViewType,
+  UnsubscribedSubscriptionData,
+  ViewAggregations,
+  ViewSorts
 } from './';
 
 interface INotionEndpoint<P, R> {
@@ -37,6 +37,35 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	getSnapshotsList: INotionEndpoint<
+		{
+			blockId: string;
+			size: number;
+		},
+		{
+			snapshots: {
+				author_ids: null | string[];
+				authors: { id: string; table: 'notion_user' }[];
+				collection_ids: null | string[];
+				id: string;
+				inline_collection_block_ids: null | string[];
+				last_version: number;
+				parent_id: string;
+				parent_table: 'collection' | 'block';
+				shard_id: number;
+				space_id: string;
+				timestamp: string;
+				version: number;
+			}[];
+		}
+	>;
+  getSnapshotContents: INotionEndpoint<{
+    blockId: string
+    timestamp: string
+  }, {
+    contentMap: Pick<RecordMap, "block" | "collection" | "collection_view" | "space">,
+    recordMap: Pick<RecordMap, "notion_user">
+  }>,
 	setPassword:
 		| INotionEndpoint<{ newPassword: string }, { action: 'Set' }>
 		| INotionEndpoint<

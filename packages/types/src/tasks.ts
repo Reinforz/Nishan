@@ -8,7 +8,8 @@ export type TTaskType =
 	| 'importEvernote'
 	| 'duplicateBlock'
 	| 'exportSpace'
-	| 'renameGroup';
+	| 'renameGroup'
+	| 'restoreSnapshot';
 export type TaskState = 'in_progress' | 'success';
 
 interface IEnqueueTaskPayload<T extends TTaskType, R> {
@@ -220,7 +221,8 @@ export type EnqueueTaskPayload =
 	| ExportBlockTaskPayload
 	| ExportSpaceTaskPayload
 	| DeleteSpaceTaskPayload
-	| ExportBlockTaskPayload;
+	| ExportBlockTaskPayload
+	| RestoreSnapshotTaskPayload;
 
 export interface EnqueueTaskResponse {
 	taskId: string;
@@ -250,6 +252,31 @@ export interface ImportFileReplaceBlockTaskResponse {
 
 export type TImportFileTaskResponse = ImportFileMergeIntoCollectionTaskResponse | ImportFileReplaceBlockTaskResponse;
 
+export type RestoreSnapshotTaskPayload = IEnqueueTaskPayload<
+	'restoreSnapshot',
+	{
+		blockId: string;
+		timestamp: string;
+	}
+>;
+export interface RestoreSnapshotTaskInProgressResponse {
+	actor: ITaskActor;
+	eventName: 'restoreSnapshot';
+	id: string;
+	request: RestoreSnapshotTaskPayload['task']['request'];
+	state: 'in_progress';
+}
+
+export interface RestoreSnapshotTaskSuccessResponse {
+	actor: ITaskActor;
+	eventName: 'restoreSnapshot';
+	id: string;
+	request: RestoreSnapshotTaskPayload['task']['request'];
+	state: 'success';
+}
+
+export type TRestoreSnapshotTaskResponse = RestoreSnapshotTaskInProgressResponse | RestoreSnapshotTaskSuccessResponse;
+
 export type GetTasksResponse = {
 	results: (
 		| TImportFileTaskResponse
@@ -258,5 +285,6 @@ export type GetTasksResponse = {
 		| TExportSpaceTaskResponse
 		| DeleteSpaceTaskResponse
 		| RenameGroupTaskResponse
-		| ImportEvernoteResponse)[];
+		| ImportEvernoteResponse
+		| TRestoreSnapshotTaskResponse)[];
 };

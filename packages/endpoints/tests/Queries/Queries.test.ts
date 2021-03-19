@@ -46,7 +46,9 @@ const configs = {
 	'getBillingHistory',
 	'getSamlConfigForSpace',
 	'getBots',
-	'getInvoiceData'
+	'getInvoiceData',
+	'getSnapshotsList',
+	'getSnapshotContents'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

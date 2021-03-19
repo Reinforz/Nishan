@@ -19,6 +19,16 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async updateSubscription (
+		params: INotionEndpoints['updateSubscription']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['updateSubscription']['response']>(
+			'updateSubscription',
+			params,
+			options
+		);
+	},
 	async logout (params: INotionEndpoints['logout']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['logout']['response']>('logout', params, options);
 	},

@@ -8,6 +8,9 @@ import {
 	IPermission,
 	IViewFilter,
 	MediaFormat,
+	NotionApiUserRateLimitResponseError,
+	NotionApiUserValidationInvalidOrExpiredPasswordError,
+	NotionApiUserValidationUserWithEmailExistsError,
 	RecordMap,
 	SpaceData,
 	SubscribedSubscriptionData,
@@ -40,29 +43,13 @@ export interface INotionEndpoints {
 			newEmailPasscode: string;
 			type: 'CurrentEmail';
 		},
-		| {
-			errorId: string;
-			name: 'UserValidationError';
-			message: string;
-			clientData: {
-				type: 'invalid_or_expired_password';
-			};
-		}
-		| Record<string, unknown>
+		NotionApiUserValidationInvalidOrExpiredPasswordError | Record<string, unknown>
 	>;
 	sendEmailVerification: INotionEndpoint<
 		{
 			email: string;
 		},
-		| {
-			clientData: {
-				type: 'user_with_email_already_exists';
-			};
-			errorId: string;
-			message: 'A user with this email already exists.';
-			name: 'UserValidationError';
-		}
-		| Record<string, unknown>
+		NotionApiUserValidationUserWithEmailExistsError | Record<string, unknown>
 	>;
 	sendTemporaryPassword: INotionEndpoint<
 		{
@@ -70,15 +57,7 @@ export interface INotionEndpoints {
 			email: string;
 			isSignup: boolean;
 		},
-		| { csrfState: string }
-		| {
-			errorId: string;
-			name: 'UserRateLimitResponse';
-			message: 'Please try again later.';
-			clientData: {
-				type: 'rate_limited';
-			};
-		}
+		{ csrfState: string } | NotionApiUserRateLimitResponseError
 	>;
 	setDataAccessConsent: INotionEndpoint<
 		{ expiryTime?: number },

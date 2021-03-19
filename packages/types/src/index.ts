@@ -5,6 +5,7 @@ export * from './color';
 export * from './credit';
 export * from './date';
 export * from './endpoints';
+export * from './error';
 export * from './filter';
 export * from './formula';
 export * from './inlineformat';

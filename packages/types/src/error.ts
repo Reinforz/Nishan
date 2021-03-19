@@ -6,6 +6,7 @@ export type TNotionApiErrorName =
 	| 'UserRateLimitResponse'
 	| 'ValidationError'
 	| 'PostgresNullConstraintError';
+
 export interface INotionApiError {
 	errorId: string;
 	name: TNotionApiErrorName;
@@ -14,7 +15,8 @@ export interface INotionApiError {
 
 export type TNotionApiUserValidationError =
 	| NotionApiUserValidationPasswordNotEnteredError
-	| NotionApiUserValidationIncorrectPasswordError;
+	| NotionApiUserValidationIncorrectPasswordError
+	| NotionApiUserValidationInvalidOrExpiredPasswordError;
 
 export interface NotionApiUserValidationPasswordNotEnteredError extends INotionApiError {
 	message: 'Please enter your password.';
@@ -26,6 +28,18 @@ export interface NotionApiUserValidationIncorrectPasswordError extends INotionAp
 	message: 'Incorrect password.';
 	name: 'UserValidationError';
 	clientData: { type: 'incorrect_password' };
+}
+
+export interface NotionApiUserValidationInvalidOrExpiredPasswordError extends INotionApiError {
+	message: 'Invalid or expired password.';
+	name: 'UserValidationError';
+	clientData: { type: 'invalid_or_expired_password' };
+}
+
+export interface NotionApiUserValidationUserWithEmailExistsError extends INotionApiError {
+	message: 'A user with this email already exists.';
+	name: 'UserValidationError';
+	clientData: { type: 'user_with_email_already_exists' };
 }
 
 export interface NotionApiUnauthorizedError extends INotionApiError {

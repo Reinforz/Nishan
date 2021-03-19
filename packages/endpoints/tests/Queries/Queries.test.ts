@@ -17,6 +17,7 @@ const configs = {
 	};
 
 ([
+	'getNotificationLog',
 	'getCsatMilestones',
 	'getActivityLog',
 	'getAssetsJsonV2',
@@ -67,7 +68,8 @@ const configs = {
 	'isEmailEducation',
 	'ping',
 	'getAvailableCountries',
-	'getConnectedAppsStatus'
+	'getConnectedAppsStatus',
+	'getDataAccessConsent'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

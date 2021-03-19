@@ -38,6 +38,17 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getNotificationLog (
+		params: INotionEndpoints['getNotificationLog']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getNotificationLog']['response']>(
+			'getNotificationLog',
+			params,
+			options
+		);
+	},
+
 	async checkEmailType (params: INotionEndpoints['checkEmailType']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['checkEmailType']['response']>(
 			'checkEmailType',

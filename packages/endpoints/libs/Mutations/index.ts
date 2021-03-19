@@ -2,6 +2,13 @@ import { INotionEndpoints } from '@nishans/types';
 import { INotionEndpointsOptions, NotionEndpoints } from '../';
 
 export const NotionEndpointsMutations = {
+	async setPassword (params: INotionEndpoints['setPassword']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['setPassword']['response']>(
+			'setPassword',
+			params,
+			options
+		);
+	},
 	async logoutActiveSessions (
 		params: INotionEndpoints['logoutActiveSessions']['payload'],
 		options: INotionEndpointsOptions

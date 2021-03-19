@@ -1,4 +1,5 @@
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import {
   INotionOperationOptions,
   NotionOperationPluginFunction,
@@ -35,6 +36,7 @@ export class NotionBlockPermissions {
 	shard_id: number;
 	notion_operation_plugins: NotionOperationPluginFunction[];
 	cache: { block: Map<string, TBlock> };
+  logger: boolean
 
 	constructor (arg: NotionPermissionsCtorArg) {
 		this.id = arg.id;
@@ -45,6 +47,7 @@ export class NotionBlockPermissions {
 		this.shard_id = arg.shard_id;
 		this.space_id = arg.space_id;
 		this.cache = arg.cache;
+    this.logger = arg.logger ?? true;
 	}
 
 	getProps () {
@@ -146,6 +149,7 @@ export class NotionBlockPermissions {
 			[ ...operations, NotionOperations.Chunk.block.update(this.id, [], { last_edited_time: Date.now() }) ],
 			this.getProps()
 		);
+    this.logger && NotionLogger.method.info(`UPDATE block ${this.id}`)
 	}
 
 	/**
@@ -185,6 +189,7 @@ export class NotionBlockPermissions {
 			],
 			this.getProps()
 		);
+    this.logger && NotionLogger.method.info(`UPDATE block ${this.id}`)
 	}
 
 	async addPublicPermission (options: { role: TPublicPermissionRole } & Partial<IPublicPermissionOptions>) {

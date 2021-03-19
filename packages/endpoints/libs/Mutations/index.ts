@@ -19,6 +19,30 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async authWithEvernote (params: INotionEndpoints['authWithEvernote']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['authWithEvernote']['response']>(
+			'authWithEvernote',
+			params,
+			options
+		);
+	},
+	async authWithAsana (params: INotionEndpoints['authWithAsana']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['authWithAsana']['response']>(
+			'authWithAsana',
+			params,
+			options
+		);
+	},
+	async authWithGoogleForDrive (
+		params: INotionEndpoints['authWithGoogleForDrive']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['authWithGoogleForDrive']['response']>(
+			'authWithGoogleForDrive',
+			params,
+			options
+		);
+	},
 	async setPageNotificationsAsRead (
 		params: INotionEndpoints['setPageNotificationsAsRead']['payload'],
 		options: INotionEndpointsOptions

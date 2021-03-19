@@ -30,6 +30,22 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getTrelloBoards (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getTrelloBoards']['response']>(
+			'getTrelloBoards',
+			{},
+			options
+		);
+	},
+
+	async getAsanaWorkspaces (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getAsanaWorkspaces']['response']>(
+			'getAsanaWorkspaces',
+			{},
+			options
+		);
+	},
+
 	async getInvoiceData (params: INotionEndpoints['getInvoiceData']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getInvoiceData']['response']>(
 			'getInvoiceData',

@@ -12,6 +12,9 @@ const request_data = {
 	};
 
 ([
+	'authWithAsana',
+	'authWithEvernote',
+	'authWithGoogleForDrive',
 	'setPassword',
 	'logoutActiveSessions',
 	'deleteUser',

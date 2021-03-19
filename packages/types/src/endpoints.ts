@@ -1,35 +1,35 @@
 import {
-	BlockData,
-	EnqueueTaskPayload,
-	EnqueueTaskResponse,
-	GetTasksResponse,
-	IDrive,
-	INotionUser,
-	IPermission,
-	IViewFilter,
-	MediaFormat,
-	NotionApiUserRateLimitResponseError,
-	NotionApiUserValidationIncorrectPasswordError,
-	NotionApiUserValidationInvalidOrExpiredPasswordError,
-	NotionApiUserValidationUserWithEmailExistsError,
-	RecordMap,
-	SpaceData,
-	SubscribedSubscriptionData,
-	TActivity,
-	TData,
-	TDataType,
-	TEmbedBlockType,
-	TNotification,
-	TPermissionRole,
-	TPlanType,
-	Transaction,
-	TSchemaUnitType,
-	TSearchNotionEndpointPayload,
-	TViewAggregationsAggregators,
-	TViewType,
-	UnsubscribedSubscriptionData,
-	ViewAggregations,
-	ViewSorts
+  BlockData,
+  EnqueueTaskPayload,
+  EnqueueTaskResponse,
+  GetTasksResponse,
+  IDrive,
+  INotionUser,
+  IPermission,
+  IViewFilter,
+  MediaFormat,
+  NotionApiUserRateLimitResponseError,
+  NotionApiUserValidationIncorrectPasswordError,
+  NotionApiUserValidationInvalidOrExpiredPasswordError,
+  NotionApiUserValidationUserWithEmailExistsError,
+  RecordMap,
+  SpaceData,
+  SubscribedSubscriptionData,
+  TActivity,
+  TData,
+  TDataType,
+  TEmbedBlockType,
+  TNotification,
+  TPermissionRole,
+  TPlanType,
+  Transaction,
+  TSchemaUnitType,
+  TSearchNotionEndpointPayload,
+  TViewAggregationsAggregators,
+  TViewType,
+  UnsubscribedSubscriptionData,
+  ViewAggregations,
+  ViewSorts
 } from './';
 
 interface INotionEndpoint<P, R> {
@@ -108,6 +108,31 @@ export interface INotionEndpoints {
 				accountId: string;
 				accountName: string;
 			}[];
+		}
+	>;
+	getTrelloBoards: INotionEndpoint<Record<string, unknown>, { boards: string[] }>;
+	getEvernoteNotebooks: INotionEndpoint<
+		Record<string, unknown>,
+		{
+			notebooks: {
+				guid: string;
+				isDefault: boolean;
+				noteCount: number;
+				title: string;
+			}[];
+			userInfo: {
+				email: null | string;
+				name: string;
+				photoUrl: null | string;
+				username: string;
+			};
+		}
+	>;
+	getAsanaWorkspaces: INotionEndpoint<
+		Record<string, unknown>,
+		{
+			projects: Record<string, unknown>;
+			workspaces: [];
 		}
 	>;
 	getInvoiceData: INotionEndpoint<
@@ -427,6 +452,15 @@ export interface INotionEndpoints {
 			};
 		}
 	>;
+  authWithAsana: INotionEndpoint<{code: string, encryptedState: string}, Record<string, unknown>>,
+	authWithEvernote: INotionEndpoint<
+		{
+			requestToken: string;
+			verifier: string;
+		},
+		Record<string, unknown>
+	>;
+	authWithGoogleForDrive: INotionEndpoint<{ code: string }, { accessToken: string; id: string }>;
 
 	initializePageTemplate: INotionEndpoint<
 		{
@@ -448,9 +482,7 @@ export interface INotionEndpoints {
 			shallow: boolean;
 		},
 		{
-			subtreeRecordMap: {
-				block: BlockData;
-			};
+			subtreeRecordMap: Pick<RecordMap, 'block' | 'space' | 'collection_view' | 'collection'>;
 		}
 	>;
 

@@ -1,5 +1,3 @@
-export type TNotionApiError = TNotionApiUserValidationError;
-
 export type TNotionApiErrorName =
 	| 'UserValidationError'
 	| 'UnauthorizedError'
@@ -16,7 +14,8 @@ export interface INotionApiError {
 export type TNotionApiUserValidationError =
 	| NotionApiUserValidationPasswordNotEnteredError
 	| NotionApiUserValidationIncorrectPasswordError
-	| NotionApiUserValidationInvalidOrExpiredPasswordError;
+	| NotionApiUserValidationInvalidOrExpiredPasswordError
+	| NotionApiUserValidationUserWithEmailExistsError;
 
 export interface NotionApiUserValidationPasswordNotEnteredError extends INotionApiError {
 	message: 'Please enter your password.';
@@ -53,7 +52,7 @@ export interface NotionApiUserRateLimitResponseError extends INotionApiError {
 	clientData: { type: 'rate_limited' };
 }
 
-export interface NotionApiValidationError extends INotionApiError {
+export interface NotionApiUnsavedTransactionError extends INotionApiError {
 	message: 'Unsaved transactions.';
 	name: 'ValidationError';
 	clientData: {
@@ -88,3 +87,20 @@ export interface NotionApiPostgresNullConstraintError extends INotionApiError {
 		untried: [];
 	};
 }
+
+export interface NotionApiMissingTokenError extends INotionApiError {
+	message: string;
+	name: 'ValidationError';
+}
+
+export type TNotionApiValidatorError =
+	| NotionApiMissingTokenError
+	| NotionApiInvalidInputError
+	| NotionApiUnsavedTransactionError;
+
+export type TNotionApiError =
+	| NotionApiUserRateLimitResponseError
+	| NotionApiUnauthorizedError
+	| TNotionApiValidatorError
+	| TNotionApiUserValidationError
+	| NotionApiPostgresNullConstraintError;

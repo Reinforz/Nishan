@@ -59,6 +59,7 @@ const configs = {
 });
 
 ([
+	'getAsanaWorkspaces',
 	'getUserTasks',
 	'getSpaces',
 	'getGoogleDriveAccounts',
@@ -69,7 +70,8 @@ const configs = {
 	'ping',
 	'getAvailableCountries',
 	'getConnectedAppsStatus',
-	'getDataAccessConsent'
+	'getDataAccessConsent',
+	'getTrelloBoards'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

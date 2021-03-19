@@ -25,7 +25,7 @@ interface SearchNotionEndpoint {
 		createdTime: ISearchTimeFilter;
 	};
 	sort: 'Relevance' | 'LastEditedNewest' | 'LastEditedOldest' | 'CreatedNewest' | 'CreatedOldest';
-	source: 'relation_setup_menu' | 'trash' | 'quick_find';
+	source: 'relation_setup_menu' | 'trash' | 'quick_find' | 'quick_find_public';
 }
 
 export interface SearchCollectionInSpace extends SearchNotionEndpoint {

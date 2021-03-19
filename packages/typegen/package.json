@@ -25,8 +25,12 @@
     "test": "tests"
   },
   "files": [
-    "dist/src",
-    "dist/utils"
+    "dist/libs"
   ],
-  "scripts": {}
+  "scripts": {
+    "build": "tsc --sourceMap false"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

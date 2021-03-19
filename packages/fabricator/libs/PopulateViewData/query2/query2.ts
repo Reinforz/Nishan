@@ -1,4 +1,3 @@
-import { NotionErrors } from "@nishans/errors";
 import { ISchemaMap } from "@nishans/notion-formula";
 import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
@@ -32,10 +31,7 @@ export function populateViewQuery2(view: TViewQuery2CreateInput, schema_map?: IS
     }
     case "board":{
       const schema_map_unit = NotionUtils.getSchemaMapUnit(schema_map as any, view.group_by, ["group_by"]);
-      // group_by should reference a select or multi select property
-      if(schema_map_unit.type !== "select" && schema_map_unit.type !== "multi_select")
-        throw new NotionErrors.unsupported_property_type(schema_map_unit.name, ["group_by"], schema_map_unit.type, ["select", "multi_select"])
-
+      NotionValidators.checkSelectSchemaUnit(schema_map_unit, ["group_by"]);
       const board_query2: IBoardViewQuery2 = query2 as any;
       board_query2.aggregations = [];
       board_query2.sort = [];

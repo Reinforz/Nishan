@@ -1,35 +1,35 @@
 import {
-  BlockData,
-  EnqueueTaskPayload,
-  EnqueueTaskResponse,
-  GetTasksResponse,
-  IDrive,
-  INotionUser,
-  IPermission,
-  IViewFilter,
-  MediaFormat,
-  NotionApiUserRateLimitResponseError,
-  NotionApiUserValidationIncorrectPasswordError,
-  NotionApiUserValidationInvalidOrExpiredPasswordError,
-  NotionApiUserValidationUserWithEmailExistsError,
-  RecordMap,
-  SpaceData,
-  SubscribedSubscriptionData,
-  TActivity,
-  TData,
-  TDataType,
-  TEmbedBlockType,
-  TNotification,
-  TPermissionRole,
-  TPlanType,
-  Transaction,
-  TSchemaUnitType,
-  TSearchNotionEndpointPayload,
-  TViewAggregationsAggregators,
-  TViewType,
-  UnsubscribedSubscriptionData,
-  ViewAggregations,
-  ViewSorts
+	BlockData,
+	EnqueueTaskPayload,
+	EnqueueTaskResponse,
+	GetTasksResponse,
+	IDrive,
+	INotionUser,
+	IPermission,
+	IViewFilter,
+	MediaFormat,
+	NotionApiUserRateLimitResponseError,
+	NotionApiUserValidationIncorrectPasswordError,
+	NotionApiUserValidationInvalidOrExpiredPasswordError,
+	NotionApiUserValidationUserWithEmailExistsError,
+	RecordMap,
+	SpaceData,
+	SubscribedSubscriptionData,
+	TActivity,
+	TData,
+	TDataType,
+	TEmbedBlockType,
+	TNotification,
+	TPermissionRole,
+	TPlanType,
+	Transaction,
+	TSchemaUnitType,
+	TSearchNotionEndpointPayload,
+	TViewAggregationsAggregators,
+	TViewType,
+	UnsubscribedSubscriptionData,
+	ViewAggregations,
+	ViewSorts
 } from './';
 
 interface INotionEndpoint<P, R> {
@@ -452,7 +452,16 @@ export interface INotionEndpoints {
 			};
 		}
 	>;
-  authWithAsana: INotionEndpoint<{code: string, encryptedState: string}, Record<string, unknown>>,
+	authWithTrello: INotionEndpoint<
+		{
+			requestToken: string;
+			verifier: string;
+		},
+		Record<string, unknown>
+	>;
+	authWithAsana: INotionEndpoint<{ code: string; encryptedState: string }, Record<string, unknown>>;
+	disconnectAsana: INotionEndpoint<{ code: string; encryptedState: string }, Record<string, unknown>>;
+	disconnectTrello: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
 	authWithEvernote: INotionEndpoint<
 		{
 			requestToken: string;

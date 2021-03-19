@@ -1,7 +1,14 @@
 import { BlockData, RecordMap } from './recordMap';
 
 export type TExportType = 'markdown' | 'pdf' | 'html';
-export type TTaskType = 'deleteSpace' | 'exportBlock' | 'importFile' | 'duplicateBlock' | 'exportSpace' | 'renameGroup';
+export type TTaskType =
+	| 'deleteSpace'
+	| 'exportBlock'
+	| 'importFile'
+	| 'importEvernote'
+	| 'duplicateBlock'
+	| 'exportSpace'
+	| 'renameGroup';
 export type TaskState = 'in_progress' | 'success';
 
 interface IEnqueueTaskPayload<T extends TTaskType, R> {
@@ -91,6 +98,28 @@ export type ExportBlockTaskPayload = IEnqueueTaskPayload<
 	}
 >;
 
+export type ImportEvernotePayload = IEnqueueTaskPayload<
+	'importEvernote',
+	{
+		notebookId: string;
+		blockId: string;
+		timestamp: number;
+		parentTable: 'block';
+	}
+>;
+
+export type ImportEvernoteResponse = {
+	id: string;
+	eventName: 'importEvernote';
+	request: ImportEvernotePayload['task']['request'];
+	actor: ITaskActor;
+	state: 'success';
+	status: {
+		'importedNotes': number;
+		'totalNotes': number;
+	};
+};
+
 export interface ExportBlockTaskInProgressResponse {
 	id: string;
 	eventName: 'exportBlock';
@@ -172,11 +201,13 @@ export type DeleteSpaceTaskResponse = DeleteSpaceTaskSuccessResponse | DeleteSpa
 
 export type EnqueueTaskPayload =
 	| ImportFileTaskPayload
+	| ImportEvernotePayload
 	| RenameGroupTaskPayload
 	| DuplicateBlockTaskPayload
 	| ExportBlockTaskPayload
 	| ExportSpaceTaskPayload
-	| DeleteSpaceTaskPayload;
+	| DeleteSpaceTaskPayload
+	| ExportBlockTaskPayload;
 
 export interface EnqueueTaskResponse {
 	taskId: string;
@@ -200,5 +231,6 @@ export type GetTasksResponse = {
 		| TExportBlockTaskResponse
 		| TExportSpaceTaskResponse
 		| DeleteSpaceTaskResponse
-		| RenameGroupTaskResponse)[];
+		| RenameGroupTaskResponse
+		| ImportEvernoteResponse)[];
 };

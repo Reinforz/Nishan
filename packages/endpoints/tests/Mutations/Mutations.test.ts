@@ -12,6 +12,8 @@ const request_data = {
 	};
 
 ([
+	'authWithTrello',
+	'disconnectAsana',
 	'authWithAsana',
 	'authWithEvernote',
 	'authWithGoogleForDrive',

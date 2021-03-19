@@ -19,9 +19,30 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async disconnectAsana (params: INotionEndpoints['disconnectAsana']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['disconnectAsana']['response']>(
+			'disconnectAsana',
+			params,
+			options
+		);
+	},
+	async disconnectTrello (params: INotionEndpoints['disconnectTrello']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['disconnectTrello']['response']>(
+			'disconnectTrello',
+			params,
+			options
+		);
+	},
 	async authWithEvernote (params: INotionEndpoints['authWithEvernote']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['authWithEvernote']['response']>(
 			'authWithEvernote',
+			params,
+			options
+		);
+	},
+	async authWithTrello (params: INotionEndpoints['authWithTrello']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['authWithTrello']['response']>(
+			'authWithTrello',
 			params,
 			options
 		);

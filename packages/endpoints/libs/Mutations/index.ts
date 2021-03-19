@@ -12,6 +12,50 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async sendEmailVerification (
+		params: INotionEndpoints['sendEmailVerification']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['sendEmailVerification']['response']>(
+			'sendEmailVerification',
+			params,
+			options
+		);
+	},
+	async deleteUser (params: INotionEndpoints['deleteUser']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['deleteUser']['response']>(
+			'deleteUser',
+			params,
+			options
+		);
+	},
+	async changeEmail (params: INotionEndpoints['changeEmail']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['changeEmail']['response']>(
+			'changeEmail',
+			params,
+			options
+		);
+	},
+	async sendTemporaryPassword (
+		params: INotionEndpoints['sendTemporaryPassword']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['sendTemporaryPassword']['response']>(
+			'sendTemporaryPassword',
+			params,
+			options
+		);
+	},
+	async setDataAccessConsent (
+		params: INotionEndpoints['setDataAccessConsent']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['setDataAccessConsent']['response']>(
+			'setDataAccessConsent',
+			params,
+			options
+		);
+	},
 	async disconnectDrive (params: INotionEndpoints['disconnectDrive']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['disconnectDrive']['response']>(
 			'disconnectDrive',

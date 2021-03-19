@@ -32,6 +32,61 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	deleteUser: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
+	changeEmail: INotionEndpoint<
+		{
+			currentEmailPasscode: string;
+			newEmail: string;
+			newEmailPasscode: string;
+			type: 'CurrentEmail';
+		},
+		| {
+			errorId: string;
+			name: 'UserValidationError';
+			message: string;
+			clientData: {
+				type: 'invalid_or_expired_password';
+			};
+		}
+		| Record<string, unknown>
+	>;
+	sendEmailVerification: INotionEndpoint<
+		{
+			email: string;
+		},
+		| {
+			clientData: {
+				type: 'user_with_email_already_exists';
+			};
+			errorId: string;
+			message: 'A user with this email already exists.';
+			name: 'UserValidationError';
+		}
+		| Record<string, unknown>
+	>;
+	sendTemporaryPassword: INotionEndpoint<
+		{
+			disableLoginLink: boolean;
+			email: string;
+			isSignup: boolean;
+		},
+		| { csrfState: string }
+		| {
+			errorId: string;
+			name: 'UserRateLimitResponse';
+			message: 'Please try again later.';
+			clientData: {
+				type: 'rate_limited';
+			};
+		}
+	>;
+	setDataAccessConsent: INotionEndpoint<
+		{ expiryTime?: number },
+		{
+			expiryTime?: number;
+			userId: string;
+		}
+	>;
 	getDataAccessConsent: INotionEndpoint<Record<string, unknown>, { userId: string }>;
 	disconnectDrive: INotionEndpoint<{ googleUserId: string }, Record<string, unknown>>;
 	getConnectedAppsStatus: INotionEndpoint<
@@ -205,9 +260,9 @@ export interface INotionEndpoints {
 		},
 		{
 			hasAccount: boolean;
-			hasPassword: boolean;
+			hasPassword?: boolean;
 			isGoogleAppsEmail: boolean;
-			mustReverify: boolean;
+			mustReverify?: boolean;
 		}
 	>;
 	loginWithEmail: INotionEndpoint<

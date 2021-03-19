@@ -12,6 +12,11 @@ const request_data = {
 	};
 
 ([
+	'deleteUser',
+	'sendEmailVerification',
+	'sendTemporaryPassword',
+	'changeEmail',
+	'setDataAccessConsent',
 	'updateSubscription',
 	'setPageNotificationsAsRead',
 	'setSpaceNotificationsAsRead',

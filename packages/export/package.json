@@ -1,6 +1,6 @@
 {
   "name": "@nishans/export",
-  "version": "0.0.0",
+  "version": "0.0.15",
   "description": "A small package to export notion page and database with ease",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/export/README.md",

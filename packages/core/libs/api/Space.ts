@@ -8,6 +8,8 @@ import {
 	NotionFabricator
 } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
+import { NotionPermissions } from '@nishans/permissions';
+import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/Space';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
 import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys } from '../';
@@ -40,9 +42,11 @@ export async function createSpaceIterateArguments (
  */
 export default class Space extends Data<ISpace> {
 	space_view?: ISpaceView;
+	Permissions: NotionSpacePermissions;
 
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space' });
+		this.Permissions = new NotionPermissions.Space(arg);
 	}
 
 	get spaceView () {

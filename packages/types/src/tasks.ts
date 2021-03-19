@@ -175,6 +175,7 @@ export type EnqueueTaskPayload =
 	| RenameGroupTaskPayload
 	| DuplicateBlockTaskPayload
 	| ExportBlockTaskPayload
+	| ExportSpaceTaskPayload
 	| DeleteSpaceTaskPayload;
 
 export interface EnqueueTaskResponse {

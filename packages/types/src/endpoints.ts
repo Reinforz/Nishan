@@ -9,6 +9,7 @@ import {
 	IViewFilter,
 	MediaFormat,
 	NotionApiUserRateLimitResponseError,
+	NotionApiUserValidationIncorrectPasswordError,
 	NotionApiUserValidationInvalidOrExpiredPasswordError,
 	NotionApiUserValidationUserWithEmailExistsError,
 	RecordMap,
@@ -36,6 +37,22 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	setPassword:
+		| INotionEndpoint<{ newPassword: string }, { action: 'Set' }>
+		| INotionEndpoint<
+				{
+					clearPassword: boolean;
+					oldPassword: string;
+				},
+				{ action: 'Remove' } | NotionApiUserValidationIncorrectPasswordError
+			>
+		| INotionEndpoint<
+				{
+					newPassword: string;
+					oldPassword: string;
+				},
+				{ action: 'Change' } | NotionApiUserValidationIncorrectPasswordError
+			>;
 	getNotificationLog: INotionEndpoint<
 		{
 			size: number;

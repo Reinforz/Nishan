@@ -11,7 +11,8 @@ afterEach(() => {
 it(`addUserPermission`, async () => {
 	const notion_permissions = new NotionPermissions.Block({
 		...default_nishan_arg,
-		notion_operation_plugins: undefined
+		notion_operation_plugins: undefined,
+		logger: undefined
 	});
 	const updateUserPermissionsMock = jest
 		.spyOn(NotionPermissions.Block.prototype, 'updateUserPermissions')

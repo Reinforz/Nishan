@@ -5,7 +5,7 @@ import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
 import { createSpaceIterateArguments } from '../../libs/api/Space';
-import { default_nishan_arg, last_edited_props, o } from '../utils';
+import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -267,99 +267,4 @@ it(`deleteRootPage`, async()=>{
 	expect(cache.space.get('space_1')).toStrictEqual(expect.objectContaining({
     pages: []
   }));
-});
-
-it(`addMembers`, async()=>{
-	const cache: ICache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
-			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
-        user_id: 'user_root_1'
-      } ] } as any ] ]),
-		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
-
-	const space = new Space({
-    ...default_nishan_arg,
-		cache,
-		id: 'space_1',
-	});
-
-  const findUser = jest.spyOn(NotionEndpoints.Queries, 'findUser').mockImplementationOnce(()=>{
-    return {
-      value: {
-        value: {
-          id: 'user_root_2' 
-        }
-      }
-    } as any;
-  })
-
-	const notion_users = await space.addMembers([['user_root_2@gmail.com', 'editor']]);
-  
-  expect(findUser).toHaveBeenCalledTimes(1);
-  expect(findUser).toHaveBeenNthCalledWith(1, {email: 'user_root_2@gmail.com'}, expect.objectContaining({
-    interval: 0,
-    token: 'token',
-    user_id: 'user_root_1'
-  }));
-  expect(cache.space.get('space_1')?.permissions).toStrictEqual([
-    { user_id: 'user_root_1' },
-    { role: 'editor', type: "user_permission", user_id: 'user_root_2' }
-  ]);
-  expect(notion_users).toStrictEqual([
-    {
-      id: 'user_root_2'
-    }
-  ]);
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-    o.s.spi('space_1', ["permissions"], { role: 'editor', type: "user_permission", user_id: 'user_root_2' }),
-    o.s.u('space_1', [], last_edited_props)
-  ]);
-  findUser.mockImplementationOnce(()=>{
-    return {
-    } as any;
-  });
-	await expect(()=>space.addMembers([['user_root_2@gmail.com', 'editor']])).rejects.toThrow();
-});
-
-it(`removeUsers`, async()=>{
-	const cache: ICache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
-			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
-        user_id: 'user_root_1'
-      }, {
-        user_id: 'user_root_2'
-      } ] } as any ] ]),
-		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
-
-	const space = new Space({
-    ...default_nishan_arg,
-		cache,
-		id: 'space_1',
-	});
-
-  const removeUsersFromSpaceMock = jest.spyOn(NotionEndpoints.Mutations, 'removeUsersFromSpace').mockImplementationOnce(()=>{
-    return {} as any;
-  })
-
-	await space.removeUsers(['user_root_2']);
-  expect(removeUsersFromSpaceMock).toHaveBeenCalledTimes(1);
-  expect(removeUsersFromSpaceMock).toHaveBeenCalledWith({
-    removePagePermissions: true,
-    revokeUserTokens: false,
-    spaceId: 'space_1',
-    userIds: ['user_root_2']
-  }, expect.objectContaining({
-    token: 'token',
-    interval: 0
-  }));
-  expect(cache.space.get('space_1')?.permissions).toStrictEqual([{
-    user_id: 'user_root_1'
-  }]);
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-    o.s.u('space_1', [], last_edited_props)
-  ]);
 });

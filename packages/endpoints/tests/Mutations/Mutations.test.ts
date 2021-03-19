@@ -12,6 +12,7 @@ const request_data = {
 	};
 
 ([
+	'logoutActiveSessions',
 	'deleteUser',
 	'sendEmailVerification',
 	'sendTemporaryPassword',

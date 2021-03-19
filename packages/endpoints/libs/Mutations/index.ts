@@ -2,6 +2,16 @@ import { INotionEndpoints } from '@nishans/types';
 import { INotionEndpointsOptions, NotionEndpoints } from '../';
 
 export const NotionEndpointsMutations = {
+	async logoutActiveSessions (
+		params: INotionEndpoints['logoutActiveSessions']['payload'],
+		options: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['logoutActiveSessions']['response']>(
+			'logoutActiveSessions',
+			params,
+			options
+		);
+	},
 	async setPageNotificationsAsRead (
 		params: INotionEndpoints['setPageNotificationsAsRead']['payload'],
 		options: INotionEndpointsOptions

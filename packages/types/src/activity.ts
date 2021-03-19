@@ -1,17 +1,17 @@
 import { TBlock } from './block';
 import { TPermissionRole } from './permissions';
+import { TDataType } from './types';
 
+export interface IEditAuthor {
+	'id': string;
+	'table': 'notion_user';
+}
 interface IBlockEdit<
 	BD = {
 		'block_value': TBlock;
 	}
 > {
-	'authors': [
-		{
-			'id': string;
-			'table': 'notion_user';
-		}
-	];
+	'authors': IEditAuthor[];
 	'block_id': string;
 	'space_id': string;
 	'timestamp': number;
@@ -39,31 +39,42 @@ export interface IBlockChangedEdit
 	type: 'block-changed';
 }
 
-export type TBlockEdits = IBlockCreatedEdit | IBlockDeletedEdit;
+export type TBlockEdits = IBlockCreatedEdit | IBlockChangedEdit | IBlockDeletedEdit;
 
-interface IActivity<V> {
-	[k: string]: {
-		role: TPermissionRole;
-		value: V;
-	};
+interface IEmailChanged {
+	type: 'email-changed';
+	authors: IEditAuthor;
+	space_id: string;
+	new_email: string;
+	old_email: string;
+	timestamp: number;
 }
 
-export type IBlockEditedActivity = IActivity<{
-	'id': string;
-	'version': number;
-	'index': number;
-	'type': 'block-edited';
-	'parent_table': string;
-	'parent_id': string;
-	'start_time': string;
-	'end_time': string;
-	'invalid': boolean;
-	'space_id': string;
-	'navigable_block_id': string;
-	'edits': TBlockEdits[];
-	'shard_id': number;
-	'context_id': string;
-	'in_log': boolean;
-}>;
+export type TEmailEdits = IEmailChanged;
 
-export type TActivity = IBlockEditedActivity;
+interface IActivity<E, T> {
+	id: string;
+	version: number;
+	index: number;
+	type: T;
+	parent_table: TDataType;
+	parent_id: string;
+	start_time: string;
+	end_time: string;
+	invalid: boolean;
+	space_id: string;
+	edits: E;
+	shard_id: number;
+	context_id: string;
+	in_log: boolean;
+}
+
+export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
+export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
+
+export type TActivity = {
+	[k: string]: {
+		role: TPermissionRole;
+		value: IBlockEditedActivity | IEmailEditedActivity;
+	};
+};

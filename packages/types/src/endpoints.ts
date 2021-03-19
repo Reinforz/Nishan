@@ -18,6 +18,7 @@ import {
 	TData,
 	TDataType,
 	TEmbedBlockType,
+	TNotification,
 	TPermissionRole,
 	TPlanType,
 	Transaction,
@@ -35,6 +36,21 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	getNotificationLog: INotionEndpoint<
+		{
+			size: number;
+			spaceId: string;
+			type?: 'mentions' | 'following' | 'archive';
+		},
+		{
+			notificationIds: string[];
+			recordMap: Pick<RecordMap, 'user_root' | 'space' | 'notion_user'> & {
+				activity: TActivity;
+				notifications: TNotification;
+			};
+		}
+	>;
+	logoutActiveSessions: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
 	deleteUser: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
 	changeEmail: INotionEndpoint<
 		{

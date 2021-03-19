@@ -9,6 +9,7 @@ export * from './error';
 export * from './filter';
 export * from './formula';
 export * from './inlineformat';
+export * from './notifications';
 export * from './operation';
 export * from './permissions';
 export * from './recordMap';

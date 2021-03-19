@@ -13,7 +13,7 @@ import {
 
 type NotionPermissionsCtorArg = INotionOperationOptions & { id: string; cache: { space: Map<string, ISpace> } };
 
-export class NotionBlockPermissions {
+export class NotionSpacePermissions {
 	id: string;
 	token: string;
 	user_id: string;

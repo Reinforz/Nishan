@@ -61,7 +61,8 @@ const configs = {
 	'getJoinableSpaces',
 	'isUserDomainJoinable',
 	'isEmailEducation',
-	'ping'
+	'ping',
+  'getAvailableCountries'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

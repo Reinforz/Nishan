@@ -32,6 +32,7 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+	getAvailableCountries: INotionEndpoint<Record<string, unknown>, { countries: { name: string }[] }>;
 	getUserAnalyticsSettings: INotionEndpoint<
 		{
 			platform: 'web' | 'desktop' | 'mobile';

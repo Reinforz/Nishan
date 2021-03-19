@@ -19,7 +19,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 
 	constructor (arg: INotionCoreOptions) {
 		super(arg);
-		this.Permissions = new NotionPermissions.block(arg);
+		this.Permissions = new NotionPermissions.Block(arg);
 	}
 
 	async getCachedParentData () {

@@ -6,6 +6,14 @@ export const NotionEndpointsQueries = {
 		return await NotionEndpoints.Request.send<Record<string, never>>('ping', {}, options);
 	},
 
+	async getAvailableCountries (options?: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getAvailableCountries']['response']>(
+			'getAvailableCountries',
+			{},
+			options
+		);
+	},
+
 	async checkEmailType (params: INotionEndpoints['checkEmailType']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['checkEmailType']['response']>(
 			'checkEmailType',

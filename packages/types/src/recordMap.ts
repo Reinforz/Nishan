@@ -1,16 +1,19 @@
 import {
-	CreateProps,
+	CreatedProps,
 	ICollection,
 	ISpacePermission,
 	IUserPermission,
 	LastEditedProps,
-	Node,
+	NotionNode,
+	ParentProps,
 	TBlock,
 	TLocale,
 	TPermissionRole,
 	TPlanType,
 	TView
 } from './';
+import { SpaceShardProps } from './block';
+import { TTextFormat } from './inlineformat';
 import { TData } from './types';
 
 interface Data<T extends TData> {
@@ -29,7 +32,7 @@ export type NotionUserData = Data<INotionUser>;
 export type UserRootData = Data<IUserRoot>;
 export type UserSettingsData = Data<IUserSettings>;
 
-export interface ISpace extends CreateProps, LastEditedProps {
+export interface ISpace extends CreatedProps, LastEditedProps {
 	beta_enabled: boolean;
 	icon?: string;
 	id: string;
@@ -48,7 +51,7 @@ export interface ISpace extends CreateProps, LastEditedProps {
 	domain?: string;
 }
 
-export interface ISpaceView extends Node {
+export interface ISpaceView extends NotionNode {
 	created_getting_started: boolean;
 	created_onboarding_templates?: boolean;
 	joined: boolean;
@@ -103,6 +106,21 @@ export interface IUserSettingsSettings {
 	time_zone: string;
 	type: 'personal';
 	used_desktop_web_app: boolean;
+}
+
+export interface IComment extends NotionNode, ParentProps, SpaceShardProps, CreatedProps, LastEditedProps {
+	text: TTextFormat;
+	parent_table: 'discussion';
+}
+
+export interface IDiscussion extends SpaceShardProps, ParentProps {
+	text: TTextFormat;
+	id: string;
+	version: number;
+	resolved: boolean;
+	context: [[string]];
+	comments: string[];
+	parent_table: 'block';
 }
 
 export interface RecordMap {

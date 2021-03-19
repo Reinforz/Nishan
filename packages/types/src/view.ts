@@ -1,4 +1,4 @@
-import { IViewFilter, Node, ParentProps, SpaceShardProps, ViewAggregations } from './';
+import { IViewFilter, ParentProps, SpaceShardProps, ViewAggregations } from './';
 
 export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
 export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property'; property: string };

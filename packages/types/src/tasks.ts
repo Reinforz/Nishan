@@ -18,7 +18,7 @@ interface IEnqueueTaskPayload<T extends TTaskType, R> {
 	};
 }
 
-export type ImportFileTaskPayload = IEnqueueTaskPayload<
+export type ImportFileMergeIntoCollectionTaskPayload = IEnqueueTaskPayload<
 	'importFile',
 	{
 		importType: 'MergeIntoCollection';
@@ -27,6 +27,19 @@ export type ImportFileTaskPayload = IEnqueueTaskPayload<
 		collectionId: string;
 	}
 >;
+
+export type ImportFileReplaceBlockTaskPayload = IEnqueueTaskPayload<
+	'importFile',
+	{
+		fileName: string;
+		fileURL: string;
+		importType: 'ReplaceBlock';
+		pageId: string;
+		spaceId: string;
+	}
+>;
+
+export type TImportFileTaskPayload = ImportFileMergeIntoCollectionTaskPayload | ImportFileReplaceBlockTaskPayload;
 
 export type RenameGroupTaskPayload = IEnqueueTaskPayload<
 	'renameGroup',
@@ -200,7 +213,7 @@ export interface DeleteSpaceTaskSuccessResponse {
 export type DeleteSpaceTaskResponse = DeleteSpaceTaskSuccessResponse | DeleteSpaceTaskInProgressResponse;
 
 export type EnqueueTaskPayload =
-	| ImportFileTaskPayload
+	| TImportFileTaskPayload
 	| ImportEvernotePayload
 	| RenameGroupTaskPayload
 	| DuplicateBlockTaskPayload
@@ -213,20 +226,33 @@ export interface EnqueueTaskResponse {
 	taskId: string;
 }
 
-export interface ImportFileTaskResponse {
+export interface ImportFileMergeIntoCollectionTaskResponse {
 	actor: ITaskActor;
 	eventName: 'importFile';
 	id: string;
-	request: ImportFileTaskPayload['task']['request'];
+	request: ImportFileMergeIntoCollectionTaskPayload['task']['request'];
 	state: 'success';
 	status: {
 		recordMap: Pick<RecordMap, 'collection'>;
 	};
 }
 
+export interface ImportFileReplaceBlockTaskResponse {
+	actor: ITaskActor;
+	eventName: 'importFile';
+	id: string;
+	request: ImportFileReplaceBlockTaskPayload['task']['request'];
+	state: 'success';
+	status: {
+		recordMap: Pick<RecordMap, 'block'>;
+	};
+}
+
+export type TImportFileTaskResponse = ImportFileMergeIntoCollectionTaskResponse | ImportFileReplaceBlockTaskResponse;
+
 export type GetTasksResponse = {
 	results: (
-		| ImportFileTaskResponse
+		| TImportFileTaskResponse
 		| TDuplicateBlockTaskResponse
 		| TExportBlockTaskResponse
 		| TExportSpaceTaskResponse

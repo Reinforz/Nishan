@@ -1,7 +1,7 @@
 import { IPermission, ISpace, Schema, TCodeLanguage, TFormatBlockColor, TTextFormat } from '.';
 import { ViewFormatProperties } from './view';
 
-export interface Node {
+export interface NotionNode {
 	alive: boolean;
 	version: number;
 	id: string;
@@ -9,10 +9,10 @@ export interface Node {
 
 export interface ParentProps {
 	parent_id: string;
-	parent_table: 'block' | 'space' | 'user_root' | 'collection';
+	parent_table: 'block' | 'space' | 'user_root' | 'collection' | 'discussion';
 }
 
-export interface CreateProps {
+export interface CreatedProps {
 	created_by_id: string;
 	created_by_table: 'notion_user';
 	created_time: number;
@@ -29,7 +29,9 @@ export interface SpaceShardProps {
 	space_id: string;
 }
 
-export interface IBlock extends SpaceShardProps, Node, ParentProps, CreateProps, LastEditedProps {}
+export interface IBlock extends SpaceShardProps, NotionNode, ParentProps, CreatedProps, LastEditedProps {
+	discussions?: string[];
+}
 
 export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
 export type TBasicBlockType =
@@ -206,13 +208,19 @@ export interface IColumnFormat {
 	};
 }
 
-export interface IColumn extends Node, ParentProps, CreateProps, LastEditedProps, IColumnFormat, SpaceShardProps {
+export interface IColumn
+	extends NotionNode,
+		ParentProps,
+		CreatedProps,
+		LastEditedProps,
+		IColumnFormat,
+		SpaceShardProps {
 	content: string[];
 	type: 'column';
 	properties?: Record<string, unknown>;
 }
 
-export interface IColumnList extends Node, ParentProps, CreateProps, LastEditedProps, SpaceShardProps {
+export interface IColumnList extends NotionNode, ParentProps, CreatedProps, LastEditedProps, SpaceShardProps {
 	content: string[];
 	type: 'column_list';
 	format?: Record<string, unknown>;
@@ -418,7 +426,7 @@ export type CollectionFormatPropertyVisibility = {
 	visibility: 'show' | 'hide_if_empty' | 'hide';
 };
 
-export interface ICollection extends Node, ParentProps {
+export interface ICollection extends NotionNode, ParentProps {
 	description?: TTextFormat;
 	icon?: string;
 	cover?: string;

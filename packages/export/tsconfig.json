@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "include": [
+    "./libs/index.ts",
+    "./experiment"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./"
+  }
+}

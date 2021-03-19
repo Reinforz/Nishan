@@ -26,7 +26,10 @@
     "build": "tsc --sourceMap false",
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@nishans/endpoints": "0.0.27",
+    "@nishans/idz": "0.0.15"
+  },
   "devDependencies": {
     "@nishans/types": "0.0.28"
   },

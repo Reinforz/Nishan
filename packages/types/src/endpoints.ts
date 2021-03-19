@@ -2,6 +2,7 @@ import {
 	BlockData,
 	EnqueueTaskPayload,
 	EnqueueTaskResponse,
+	GetTasksResponse,
 	IDrive,
 	INotionUser,
 	IPermission,
@@ -552,7 +553,7 @@ export interface INotionEndpoints {
 		{
 			taskIds: string[];
 		},
-		Record<string, unknown>
+		GetTasksResponse
 	>;
 	recordPageVisit: INotionEndpoint<
 		{

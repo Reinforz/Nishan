@@ -176,7 +176,7 @@ export interface PageProps {
 
 export interface PageFormat {
 	page_icon?: string;
-	page_font?: string;
+	page_font?: null | 'mono' | 'serif';
 	page_full_width?: boolean;
 	page_small_text?: boolean;
 	block_locked_by?: string;

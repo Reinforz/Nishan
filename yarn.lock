@@ -2505,110 +2505,6 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nishans/cache@0.0.28", "@nishans/cache@^0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.28.tgz#7d85820eb3b33cb66fe4edf5bd90b17e8a7e487a"
-  integrity sha512-4NyovhYklKIHexl4ID6kJ7C5ix6mj6bul71G2nvToHCjRLBxKg3il9P1vDDNhB7SLFT8f4okwE6fALdmJSTiTA==
-  dependencies:
-    "@nishans/endpoints" "0.0.26"
-    "@nishans/errors" "0.0.24"
-    "@nishans/utils" "0.0.18"
-
-"@nishans/constants@0.0.18", "@nishans/constants@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.18.tgz#c766a83e8c4414e5851b53ab33b7205000ad1f53"
-  integrity sha512-MUJOrwj/066m+cvlmVo+zTBpy1Q4x9yfAYivWB0dAz56naMlwkB968fCGAV704qbq64fh0Amp8JkOOLPdP8Q1A==
-
-"@nishans/core@0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.24.tgz#70827210cefecf2061ce5abf1ba5393d50f49b4c"
-  integrity sha512-Isf17uJFURgIC8PNvWZurDgBMhhUh1cm5obyReQzj/caTcR2l7nSGtxKeFeuTdrPrKYBJWiF5D3ip8PMF4BSvA==
-  dependencies:
-    "@nishans/cache" "^0.0.28"
-    "@nishans/constants" "0.0.18"
-    "@nishans/endpoints" "^0.0.26"
-    "@nishans/errors" "^0.0.24"
-    "@nishans/fabricator" "^0.0.22"
-    "@nishans/idz" "^0.0.15"
-    "@nishans/operations" "^0.0.26"
-    "@nishans/permissions" "0.0.17"
-    "@nishans/utils" "0.0.18"
-    colors "^1.4.0"
-
-"@nishans/endpoints@0.0.26", "@nishans/endpoints@^0.0.26":
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.26.tgz#5471d25df49d5bda10bd513c20954d2ecb95fd92"
-  integrity sha512-fWb/d4tj7KFisSF9DGmoFCJjJHL+j/k28/WIsx8RytLZuuU+zqZX4gjSZ1a7qGg7UnjbmscbKu/LT046yUfhmQ==
-  dependencies:
-    axios "^0.21.1"
-    uuid "^8.3.2"
-
-"@nishans/errors@0.0.24", "@nishans/errors@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.24.tgz#cab455b89afb54e21ecd4e4957a5e1e624291f24"
-  integrity sha512-isIrU6FLnJ2yC98DGJ1Raq3yCzFwvEOfuTYlvpPfZJ7kkqQoX/VcwjL2WnbcNhW8SjzilJCbD0BlSd5cbc/c9g==
-  dependencies:
-    colors "^1.4.0"
-
-"@nishans/fabricator@^0.0.22":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@nishans/fabricator/-/fabricator-0.0.22.tgz#e05a792e7ddfd1d53679234d73c396018af48b4e"
-  integrity sha512-8tFhq52rSDO1WwcnBkWfIrfzofzWlfqcVi9jYbgxc6Yq4P86FFmjJjlAtRQqsbTunr2fvggJO1AMGoHP+N1o0Q==
-  dependencies:
-    "@nishans/cache" "^0.0.28"
-    "@nishans/endpoints" "^0.0.26"
-    "@nishans/errors" "^0.0.24"
-    "@nishans/idz" "0.0.15"
-    "@nishans/notion-formula" "^0.0.25"
-    "@nishans/operations" "^0.0.26"
-    "@nishans/utils" "0.0.18"
-
-"@nishans/inline-blocks@0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.29.tgz#55a63fa09845e14f2ea47d022fa21317fd3937cc"
-  integrity sha512-pXoMQQv//S68DR7xgyvHG+atTGAORaFRyvI4NSXmjWuhDgRFd5TNOgOgr/WMoZ/J9vbUDoq58rXAqtzpCiWS0A==
-
-"@nishans/notion-formula@^0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@nishans/notion-formula/-/notion-formula-0.0.25.tgz#686a04fea4e65496d52e6fff895e4141855a1c23"
-  integrity sha512-h2/mHm00CpC3yTYeUBxeYK29/9BcmyIUyTnJfWCvOL1QU5qEWdmFf5dohBTzp32lEGkTPsOeH/h99F21r9mtFA==
-  dependencies:
-    "@nishans/cache" "0.0.28"
-    "@nishans/constants" "0.0.18"
-    "@nishans/errors" "0.0.24"
-    "@nishans/idz" "0.0.15"
-    "@nishans/utils" "0.0.18"
-
-"@nishans/operations@0.0.26", "@nishans/operations@^0.0.26":
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.26.tgz#3e6a21592fa40316798dfba25bde888533f179e0"
-  integrity sha512-xSpU66B/PXnAdi77YuE+O0ykKWQOEjyUcQiBmt/FsGhUzI2JKwcTpO9d1tA6pKRpdkXXbbs3PeDjDdv7frjg2w==
-  dependencies:
-    "@nishans/constants" "0.0.18"
-    "@nishans/endpoints" "0.0.26"
-
-"@nishans/permissions@0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@nishans/permissions/-/permissions-0.0.17.tgz#d3f0ebc21831e58acae9c879cda4b5e9037e5d1e"
-  integrity sha512-Mh7Yj529HMhVFB7w1BoOCdfPhfkAtJxc0YzbrCwrMn+ruyhBS3W348jp1qWN0ueZKJ625I5OxCD3nP9Y/8NVVg==
-  dependencies:
-    "@nishans/endpoints" "0.0.26"
-    "@nishans/operations" "0.0.26"
-    "@nishans/utils" "0.0.18"
-
-"@nishans/types@0.0.27", "@nishans/types@^0.0.27":
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.27.tgz#b6e542bd55b678784ac6eb1f3485df7f2659247e"
-  integrity sha512-hPPSbLxp6DFLbuoDqCrfV1d4DV4J0DssSe/f4MqJjSfEujTfF4ZbMtly3Guc/E6DUYHWAgik1lk57EcmWZEvOw==
-
-"@nishans/utils@0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.18.tgz#10b20dd487ad8deb35b2653c544811757ce6b4d8"
-  integrity sha512-USmCuGVS153+x1KDpKUKafmSh2rIi4C7bjyzpqyXp6fF9gzY+E7Ll8P1tVCVBqz7cFMUkz40WiV1mszfcWr+Ng==
-  dependencies:
-    "@nishans/constants" "^0.0.18"
-    "@nishans/errors" "^0.0.24"
-
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"
@@ -3755,7 +3651,7 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
-"@types/express-serve-static-core@*", "@types/express-serve-static-core@4.17.18", "@types/express-serve-static-core@^4.17.18":
+"@types/express-serve-static-core@4.17.18", "@types/express-serve-static-core@^4.17.18":
   version "4.17.18"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.18.tgz#8371e260f40e0e1ca0c116a9afcd9426fa094c40"
   integrity sha512-m4JTwx5RUBNZvky/JJ8swEJPKFd8si08pPF2PfizYjGZOKr/svUWPcoUmLow6MmPzhasphB7gSTINY67xn3JNA==
@@ -3764,23 +3660,13 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express@*":
+"@types/express@*", "@types/express@4.17.11":
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.11.tgz#debe3caa6f8e5fcda96b47bd54e2f40c4ee59545"
   integrity sha512-no+R6rW60JEc59977wIxreQVsIEOAYwgCqldrA/vkpCnbD7MqTefO97lmoBe4WE0F156bC4uLSP1XHDOySnChg==
   dependencies:
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "^4.17.18"
-    "@types/qs" "*"
-    "@types/serve-static" "*"
-
-"@types/express@4.17.7":
-  version "4.17.7"
-  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.7.tgz#42045be6475636d9801369cd4418ef65cdb0dd59"
-  integrity sha512-dCOT5lcmV/uC2J9k0rPafATeeyz+99xTt54ReX11/LObZgfzJqZNcW27zGhYyX+9iSEGXGt5qLPwRSvBZcLvtQ==
-  dependencies:
-    "@types/body-parser" "*"
-    "@types/express-serve-static-core" "*"
     "@types/qs" "*"
     "@types/serve-static" "*"
 
@@ -4773,10 +4659,10 @@ apollo-server-caching@^0.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.21.1:
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.21.1.tgz#5494e558e51a64cdd63b00a762ed600c4c73ee10"
-  integrity sha512-aI+soLaqKMkWxH6l9xvPP1fCuZgD053SK09D79LQfMbJAHHvs3MI90UpydiY/W61K5l8ELl0YsKdqkQg8262nw==
+apollo-server-core@^2.21.2:
+  version "2.21.2"
+  resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.21.2.tgz#9f44bdcb4d5467a426f0fecd112afc95479d4b07"
+  integrity sha512-jIXMVQPOUzIOl4El/mzSixxJ5IDrqSk3L9uJ1U+ncwiQj0IjtkkyDSuYngcgyEi+KfO2lAzxeOiAy9fIjjkC2A==
   dependencies:
     "@apollographql/apollo-tools" "^0.4.3"
     "@apollographql/graphql-playground-html" "1.6.27"
@@ -4817,19 +4703,19 @@ apollo-server-errors@^2.4.2:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.4.2.tgz#1128738a1d14da989f58420896d70524784eabe5"
   integrity sha512-FeGxW3Batn6sUtX3OVVUm7o56EgjxDlmgpTLNyWcLb0j6P8mw9oLNyAm3B+deHA4KNdNHO5BmHS2g1SJYjqPCQ==
 
-apollo-server-express@^2.21.1:
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.21.1.tgz#b11af5ca952667e07952c0e5af8a65490a26c70a"
-  integrity sha512-O8msL01rl1iOfx4qmgpdNDXCh2u+adis8m2pHXZJfHciOoBmAgYaLlH7AOxpW5iHK/vQIwBM0dkPpxu5SaWpag==
+apollo-server-express@^2.21.2:
+  version "2.21.2"
+  resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.21.2.tgz#922f8df7c1d0816470a3d8188d5f8577a331fe7e"
+  integrity sha512-5aNE1i/My8c9eBJg5uRyZSvE/NThm1X/fewcs4U5WpuEAMdmg/vf0oZnSZ8Nvmj7H8R2E5xiMkTm6Mv+MKOl9A==
   dependencies:
     "@apollographql/graphql-playground-html" "1.6.27"
     "@types/accepts" "^1.3.5"
     "@types/body-parser" "1.19.0"
     "@types/cors" "2.8.8"
-    "@types/express" "4.17.7"
+    "@types/express" "4.17.11"
     "@types/express-serve-static-core" "4.17.18"
     accepts "^1.3.5"
-    apollo-server-core "^2.21.1"
+    apollo-server-core "^2.21.2"
     apollo-server-types "^0.6.3"
     body-parser "^1.18.3"
     cors "^2.8.4"
@@ -4857,12 +4743,12 @@ apollo-server-types@^0.6.3:
     apollo-server-env "^3.0.0"
 
 apollo-server@^2.21.0:
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/apollo-server/-/apollo-server-2.21.1.tgz#9956b5e0e1cf87c3f050efb60bdb77da889e887e"
-  integrity sha512-z10nghSdF9tYvmTIezQlIpO7Q94YrbAuZtIBLswVdJXijHYmAtpWdlJ3BhWDiUFVFjocrcXrXhdw2jCtyXASDQ==
+  version "2.21.2"
+  resolved "https://registry.yarnpkg.com/apollo-server/-/apollo-server-2.21.2.tgz#7e63a4501c12fad4f5930273deacae59199c75d0"
+  integrity sha512-HLUeIiNDyz+KyKyqlXvZov4dj1V0/QbySqcfPpVGyCwdpf+ZAU7CVhZASNbfwmA4hh436jLhQnoIIKhfBD1kWw==
   dependencies:
-    apollo-server-core "^2.21.1"
-    apollo-server-express "^2.21.1"
+    apollo-server-core "^2.21.2"
+    apollo-server-express "^2.21.2"
     express "^4.0.0"
     graphql-subscriptions "^1.0.0"
     graphql-tools "^4.0.8"

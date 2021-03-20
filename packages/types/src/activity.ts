@@ -165,7 +165,7 @@ export type ICollectionRowCreatedActivity = IActivity<ICollectionRowCreatedEdit,
 };
 export type IUserInvitedActivity = IActivity<IUserInvitedEdit, 'user-invited'>;
 
-export type IActivityData = INotionData<
+export type TActivity =
 	| IBlockEditedActivity
 	| IEmailEditedActivity
 	| IPermissionEditedActivity
@@ -174,5 +174,5 @@ export type IActivityData = INotionData<
 	| ITopLevelBlockCreatedActivity
 	| ICollectionViewCreatedActivity
 	| ICollectionRowCreatedActivity
-	| IUserInvitedActivity
->;
+	| IUserInvitedActivity;
+export type IActivityData = INotionData<TActivity>;

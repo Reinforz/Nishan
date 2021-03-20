@@ -1,5 +1,20 @@
 import { INotionEndpointsOptions } from '@nishans/endpoints';
-import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TBlock, TView } from '@nishans/types';
+import {
+	ICollection,
+	IComment,
+	IDiscussion,
+	IFollow,
+	INotionUser,
+	IPageVisits,
+	ISlackIntegration,
+	ISpace,
+	ISpaceView,
+	IUserRoot,
+	IUserSettings,
+	TActivity,
+	TBlock,
+	TView
+} from '@nishans/types';
 export interface ICache {
 	block: Map<string, TBlock>;
 	collection: Map<string, ICollection>;
@@ -9,6 +24,12 @@ export interface ICache {
 	space_view: Map<string, ISpaceView>;
 	user_root: Map<string, IUserRoot>;
 	user_settings: Map<string, IUserSettings>;
+	discussion: Map<string, IDiscussion>;
+	comment: Map<string, IComment>;
+	follow: Map<string, IFollow>;
+	slack_integration: Map<string, ISlackIntegration>;
+	page_visits: Map<string, IPageVisits>;
+	activity: Map<string, TActivity>;
 }
 export interface INotionCacheOptions extends INotionEndpointsOptions {
 	cache: ICache;

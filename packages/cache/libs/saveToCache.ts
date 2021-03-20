@@ -1,3 +1,4 @@
+import { NotionConstants } from '@nishans/constants';
 import { RecordMap, TData, TDataType } from '@nishans/types';
 import { ICache } from './';
 
@@ -12,16 +13,7 @@ export function saveToCache (
 ) {
 	// Loop through each of the cache keys
 	// Store all the values of that particular key thats present in the recordMap in the cache
-	([
-		'block',
-		'collection',
-		'space',
-		'collection_view',
-		'notion_user',
-		'space_view',
-		'user_root',
-		'user_settings'
-	] as (keyof ICache)[]).forEach((key) => {
+	NotionConstants.dataTypes().forEach((key) => {
 		if (recordMap[key])
 			Object.entries(recordMap[key] as Record<any, any>).forEach(([ record_id, record_value ]) => {
 				cache[key].set(record_id, record_value.value);

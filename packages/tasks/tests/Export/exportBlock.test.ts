@@ -1,14 +1,19 @@
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionIdz } from '@nishans/idz';
-import { NotionExport } from "../libs";
+import { NotionTasks } from "../../libs";
 
-it(`exportSpace`, async () => {
-	const space_id = NotionIdz.Generate.id(), enqueueTaskMock = jest
+it(`exportBlock`, async () => {
+	const block_id = NotionIdz.Generate.id(), enqueueTaskMock = jest
 			.spyOn(NotionEndpoints.Mutations, 'enqueueTask')
 			.mockImplementationOnce(async () => ({ taskId: '123' })),
 		getTasksMock = jest.spyOn(NotionEndpoints.Queries, 'getTasks').mockImplementationOnce(async () => ({results: [
 			{
-				eventName: 'exportSpace',
+				eventName: 'exportBlock',
+				state: 'in_progress',
+			}
+		] as any})).mockImplementationOnce(async () => ({results: [
+			{
+				eventName: 'exportBlock',
 				state: 'success',
 				status: {
 					exportURL: 'exportUrl'
@@ -20,7 +25,10 @@ it(`exportSpace`, async () => {
     locale: 'en',
     timeZone: 'Asia/Dhaka'
   } as const;
-  const export_url = await NotionExport.space(space_id, export_options, {
+  const export_url = await NotionTasks.Export.block(block_id, {
+    ...export_options,
+    recursive: true,
+  }, {
     token: 'token',
     user_id: 'user_1',
   });
@@ -28,14 +36,15 @@ it(`exportSpace`, async () => {
   expect(export_url).toBe('exportUrl');
   expect(enqueueTaskMock.mock.calls[0][0]).toStrictEqual({
     task: {
-      eventName: 'exportSpace',
+      eventName: 'exportBlock',
       request: {
         exportOptions: expect.objectContaining(export_options),
-        spaceId: space_id,
+        blockId: block_id,
+        recursive: true
       }
     }
   });
-  expect(getTasksMock).toHaveBeenCalledTimes(1);
+  expect(getTasksMock).toHaveBeenCalledTimes(2);
   expect(getTasksMock.mock.calls[0][0]).toStrictEqual({taskIds: [
     '123'
   ]})

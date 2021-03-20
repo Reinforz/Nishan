@@ -20,8 +20,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-32-%2371368a">
-  <img src="https://img.shields.io/badge/Published%20Packages-20-%2311806a">
+  <img src="https://img.shields.io/badge/Total%20Packages-31-%2371368a">
+  <img src="https://img.shields.io/badge/Published%20Packages-22-%2311806a">
 </p>
 
 This monorepo contains/will contain the following packages and apps:-
@@ -36,7 +36,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/discord-bot`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
 *   **`@nishans/endpoints`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) [Docs](https://nishan-docs.netlify.app/docs/endpoints) [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
 *   **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors): A small package containing various notion specific error classes
-*   **`@nishans/export`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/export): A small package to export notion page and database with ease
+*   **`@nishans/export`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/export) [NPM](https://www.npmjs.com/package/@nishans/export): A small package to export notion page and database with ease
 *   **`@nishans/extract`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/extract) [NPM](https://www.npmjs.com/package/@nishans/extract): A small package to extract required notion data
 *   **`@nishans/fabricator`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/fabricator) [NPM](https://www.npmjs.com/package/@nishans/fabricator): A package to generate notion blocks using a simple api
 *   **`@nishans/graphql`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/graphql) [NPM](https://www.npmjs.com/package/@nishans/graphql): A graphql server for notion built using `@nishans/core`
@@ -57,9 +57,8 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/traverser`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/traverser) [NPM](https://www.npmjs.com/package/@nishans/traverser): Traverse notion data with ease
 *   **`@nishans/typegen`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/typegen): A package to automatically generate typescript definitions from a remote notion collection schema
 *   **`@nishans/types`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/types) [Docs](https://nishan-docs.netlify.app/docs/types) [NPM](https://www.npmjs.com/package/@nishans/types): Typescript type definitions for notion
-*   **`@nishans/upload`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/upload): A small package to upload content into notion
 *   **`@nishans/utils`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/utils) [Docs](https://nishan-docs.netlify.app/docs/utils) [NPM](https://www.npmjs.com/package/@nishans/utils): A bunch of small utility modules used across nishans ecosystem
-*   **`@nishans/validators`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/validators): A group of modules to validate various things related to notion
+*   **`@nishans/validators`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/validators) [NPM](https://www.npmjs.com/package/@nishans/validators): A group of modules to validate various things related to notion
 
 ## Apps
 

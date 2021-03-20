@@ -42,7 +42,7 @@
   {
     "name": "@nishans/export",
     "description": "A small package to export notion page and database with ease",
-    "published": false
+    "published": true
   },
   {
     "name": "@nishans/extract",
@@ -145,11 +145,6 @@
     "published": true
   },
   {
-    "name": "@nishans/upload",
-    "description": "A small package to upload content into notion",
-    "published": false
-  },
-  {
     "name": "@nishans/utils",
     "description": "A bunch of small utility modules used across nishans ecosystem",
     "published": true
@@ -157,6 +152,6 @@
   {
     "name": "@nishans/validators",
     "description": "A group of modules to validate various things related to notion",
-    "published": false
+    "published": true
   }
 ]

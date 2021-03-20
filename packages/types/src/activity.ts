@@ -80,6 +80,11 @@ interface ICommentEdit {
 	permission_data: IPermission;
 }
 
+export interface ICommentCreatedEdit extends ICommentEdit {
+	comment_data: IComment;
+	type: 'comment-created';
+}
+
 export interface ICommentChangedEdit extends ICommentEdit {
 	type: 'comment-changed';
 	comment_data: {
@@ -93,7 +98,7 @@ export interface ICommentDeletedEdit extends ICommentEdit {
 	comment_data: IComment;
 }
 
-export type TCommentEdits = ICommentChangedEdit | ICommentDeletedEdit;
+export type TCommentEdits = ICommentCreatedEdit | ICommentChangedEdit | ICommentDeletedEdit;
 
 interface IActivity<E, T> extends ParentProps, SpaceShardProps {
 	id: string;
@@ -110,7 +115,7 @@ interface IActivity<E, T> extends ParentProps, SpaceShardProps {
 
 export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
 export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
-export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'email-edited'>;
+export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'permission-edited'>;
 export type ICommentedActivity = IActivity<TCommentEdits[], 'commented'> & { navigable_block_id: string };
 
 export type TActivity = {

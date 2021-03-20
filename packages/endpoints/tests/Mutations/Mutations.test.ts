@@ -12,6 +12,7 @@ const request_data = {
 	};
 
 ([
+	'authWithSlack',
 	'authWithTrello',
 	'disconnectAsana',
 	'authWithAsana',

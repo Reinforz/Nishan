@@ -108,6 +108,19 @@ export interface IUserSettingsSettings {
 	used_desktop_web_app: boolean;
 }
 
+export interface ISlackIntegration {
+	channel: string;
+	channel_id: string;
+	configuration_url: string;
+	enabled: boolean;
+	id: string;
+	parent_id: string;
+	parent_table: 'block';
+	team_name: string;
+	version: number;
+	webhook_url: string;
+}
+
 export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, LastEditedProps {
 	text: TTextFormat;
 	parent_id: string;

@@ -40,6 +40,13 @@ export const NotionEndpointsMutations = {
 			options
 		);
 	},
+	async authWithSlack (params: INotionEndpoints['authWithSlack']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['authWithSlack']['response']>(
+			'authWithSlack',
+			params,
+			options
+		);
+	},
 	async authWithTrello (params: INotionEndpoints['authWithTrello']['payload'], options: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['authWithTrello']['response']>(
 			'authWithTrello',

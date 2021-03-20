@@ -1,35 +1,35 @@
 import {
-	BlockData,
-	EnqueueTaskPayload,
-	EnqueueTaskResponse,
-	GetTasksResponse,
-	IDrive,
-	INotionUser,
-	IPermission,
-	IViewFilter,
-	MediaFormat,
-	NotionApiUserRateLimitResponseError,
-	NotionApiUserValidationIncorrectPasswordError,
-	NotionApiUserValidationInvalidOrExpiredPasswordError,
-	NotionApiUserValidationUserWithEmailExistsError,
-	RecordMap,
-	SpaceData,
-	SubscribedSubscriptionData,
-	TActivity,
-	TData,
-	TDataType,
-	TEmbedBlockType,
-	TNotification,
-	TPermissionRole,
-	TPlanType,
-	Transaction,
-	TSchemaUnitType,
-	TSearchNotionEndpointPayload,
-	TViewAggregationsAggregators,
-	TViewType,
-	UnsubscribedSubscriptionData,
-	ViewAggregations,
-	ViewSorts
+  BlockData,
+  EnqueueTaskPayload,
+  EnqueueTaskResponse,
+  GetTasksResponse,
+  IDrive,
+  INotionUser,
+  IPermission,
+  IViewFilter,
+  MediaFormat,
+  NotionApiUserRateLimitResponseError,
+  NotionApiUserValidationIncorrectPasswordError,
+  NotionApiUserValidationInvalidOrExpiredPasswordError,
+  NotionApiUserValidationUserWithEmailExistsError,
+  RecordMap,
+  SpaceData,
+  SubscribedSubscriptionData,
+  TActivity,
+  TData,
+  TDataType,
+  TEmbedBlockType,
+  TNotification,
+  TPermissionRole,
+  TPlanType,
+  Transaction,
+  TSchemaUnitType,
+  TSearchNotionEndpointPayload,
+  TViewAggregationsAggregators,
+  TViewType,
+  UnsubscribedSubscriptionData,
+  ViewAggregations,
+  ViewSorts
 } from './';
 
 interface INotionEndpoint<P, R> {
@@ -37,6 +37,10 @@ interface INotionEndpoint<P, R> {
 	response: R;
 }
 export interface INotionEndpoints {
+  authWithSlack: INotionEndpoint<{
+    code: string
+    encryptedState: string
+  }, Record<string, unknown>>,
 	getSnapshotsList: INotionEndpoint<
 		{
 			blockId: string;

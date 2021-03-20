@@ -530,7 +530,7 @@ export interface INotionEndpoints {
 	getSpaces: INotionEndpoint<
 		Record<string, never>,
 		{
-			[k: string]: RecordMap;
+			[k: string]: Partial<RecordMap>;
 		}
 	>;
 
@@ -651,7 +651,7 @@ export interface INotionEndpoints {
 			}[];
 		},
 		{
-			recordMap: RecordMap;
+			recordMap: Partial<RecordMap>;
 		}
 	>;
 
@@ -714,7 +714,7 @@ export interface INotionEndpoints {
 		},
 		{
 			cursor: Cursor;
-			recordMap: RecordMap;
+			recordMap: Partial<RecordMap>;
 		}
 	>;
 	getCsatMilestones: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;

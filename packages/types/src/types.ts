@@ -1,4 +1,4 @@
-import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, RecordMap, TBlock, TView } from '.';
+import { RecordMap } from '.';
 
 export type Args = any;
 
@@ -76,4 +76,4 @@ export type TDataType = keyof RecordMap;
 export type TPlanType = 'personal';
 export type TSortValue = 'ascending' | 'descending';
 
-export type TData = TBlock | ICollection | TView | ISpace | INotionUser | ISpaceView | IUserRoot | IUserSettings;
+export type TData = RecordMap[keyof RecordMap];

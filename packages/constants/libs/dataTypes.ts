@@ -10,11 +10,12 @@ export const createDataTypes = () => {
 		'space_view',
 		'user_root',
 		'user_settings',
-		'notification',
-		'comment',
-		'slack_integration',
 		'discussion',
+		'comment',
 		'follow',
-		'page_visits'
+		'slack_integration',
+		'page_visits',
+		'activity',
+		'notification'
 	] as TDataType[];
 };

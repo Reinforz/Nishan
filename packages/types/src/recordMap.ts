@@ -15,6 +15,7 @@ import {
 import { IActivityData } from './activity';
 import { SpaceShardProps } from './block';
 import { TTextFormat } from './inlineformat';
+import { INotificationData } from './notifications';
 
 export interface INotionData<T> {
 	[key: string]: {
@@ -182,4 +183,5 @@ export interface RecordMap {
 	slack_integration: ISlackIntegrationData;
 	page_visits: IPageVisitsData;
 	activity: IActivityData;
+	notification: INotificationData;
 }

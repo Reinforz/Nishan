@@ -108,9 +108,10 @@ export interface IUserSettingsSettings {
 	used_desktop_web_app: boolean;
 }
 
-export interface IComment extends NotionNode, ParentProps, SpaceShardProps, CreatedProps, LastEditedProps {
+export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, LastEditedProps {
 	text: TTextFormat;
-	parent_table: 'discussion';
+	parent_id: string;
+	parent_table: 'collection';
 }
 
 export interface IDiscussion extends SpaceShardProps, ParentProps {

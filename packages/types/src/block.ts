@@ -9,7 +9,7 @@ export interface NotionNode {
 
 export interface ParentProps {
 	parent_id: string;
-	parent_table: 'block' | 'space' | 'user_root' | 'collection' | 'discussion';
+	parent_table: 'block' | 'space' | 'user_root' | 'collection';
 }
 
 export interface CreatedProps {

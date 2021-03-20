@@ -14,9 +14,8 @@ import {
 } from './';
 import { SpaceShardProps } from './block';
 import { TTextFormat } from './inlineformat';
-import { TData } from './types';
 
-interface Data<T extends TData> {
+interface Data<T> {
 	[key: string]: {
 		role: TPermissionRole;
 		value: T;
@@ -121,11 +120,31 @@ export interface ISlackIntegration {
 	webhook_url: string;
 }
 
+export interface ISlackIntegrationData {
+	[k: string]: {
+		role: TPermissionRole;
+		value: ISlackIntegration;
+	};
+}
+
+export interface IFollow {
+	created_time: number;
+	following: boolean;
+	id: string;
+	navigable_block_id: string;
+	user_id: string;
+	version: number;
+}
+
+export type IFollowData = Data<IFollow>;
+
 export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, LastEditedProps {
 	text: TTextFormat;
 	parent_id: string;
 	parent_table: 'collection';
 }
+
+export type ICommentData = Data<IComment>;
 
 export interface IDiscussion extends SpaceShardProps, ParentProps {
 	text: TTextFormat;
@@ -136,6 +155,8 @@ export interface IDiscussion extends SpaceShardProps, ParentProps {
 	comments: string[];
 	parent_table: 'block';
 }
+
+export type IDiscussionData = Data<IDiscussion>;
 
 export interface RecordMap {
 	block: BlockData;

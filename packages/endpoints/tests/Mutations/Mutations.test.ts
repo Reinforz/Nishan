@@ -12,6 +12,7 @@ const request_data = {
 	};
 
 ([
+	'restoreBlock',
 	'authWithSlack',
 	'authWithTrello',
 	'disconnectAsana',

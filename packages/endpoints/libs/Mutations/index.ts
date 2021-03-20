@@ -249,5 +249,12 @@ export const NotionEndpointsMutations = {
 			params,
 			options
 		);
+	},
+	async restoreBlock (params: INotionEndpoints['restoreBlock']['payload'], options: INotionEndpointsOptions) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['restoreBlock']['response']>(
+			'restoreBlock',
+			params,
+			options
+		);
 	}
 };

@@ -1,46 +1,60 @@
 import {
-  BlockData,
-  EnqueueTaskPayload,
-  EnqueueTaskResponse,
-  GetTasksResponse,
-  IDrive,
-  INotionUser,
-  IPermission,
-  IViewFilter,
-  MediaFormat,
-  NotionApiUserRateLimitResponseError,
-  NotionApiUserValidationIncorrectPasswordError,
-  NotionApiUserValidationInvalidOrExpiredPasswordError,
-  NotionApiUserValidationUserWithEmailExistsError,
-  RecordMap,
-  SpaceData,
-  SubscribedSubscriptionData,
-  TActivity,
-  TData,
-  TDataType,
-  TEmbedBlockType,
-  TNotification,
-  TPermissionRole,
-  TPlanType,
-  Transaction,
-  TSchemaUnitType,
-  TSearchNotionEndpointPayload,
-  TViewAggregationsAggregators,
-  TViewType,
-  UnsubscribedSubscriptionData,
-  ViewAggregations,
-  ViewSorts
+	BlockData,
+	EnqueueTaskPayload,
+	EnqueueTaskResponse,
+	GetTasksResponse,
+	IDrive,
+	INotionUser,
+	IPermission,
+	IViewFilter,
+	MediaFormat,
+	NotionApiUserRateLimitResponseError,
+	NotionApiUserValidationIncorrectPasswordError,
+	NotionApiUserValidationInvalidOrExpiredPasswordError,
+	NotionApiUserValidationUserWithEmailExistsError,
+	RecordMap,
+	SpaceData,
+	SubscribedSubscriptionData,
+	TActivity,
+	TData,
+	TDataType,
+	TEmbedBlockType,
+	TNotification,
+	TPermissionRole,
+	TPlanType,
+	Transaction,
+	TSchemaUnitType,
+	TSearchNotionEndpointPayload,
+	TViewAggregationsAggregators,
+	TViewType,
+	UnsubscribedSubscriptionData,
+	ViewAggregations,
+	ViewSorts
 } from './';
+import { ICommentData, IDiscussionData, IFollowData, ISlackIntegration } from './recordMap';
 
 interface INotionEndpoint<P, R> {
 	payload: P;
 	response: R;
 }
 export interface INotionEndpoints {
-  authWithSlack: INotionEndpoint<{
-    code: string
-    encryptedState: string
-  }, Record<string, unknown>>,
+	restoreBlock: INotionEndpoint<
+		{
+			pointer: {
+				id: string;
+				spaceId: string;
+				table: 'block';
+			};
+		},
+		{ recordMap: Pick<RecordMap, 'block'> }
+	>;
+	authWithSlack: INotionEndpoint<
+		{
+			code: string;
+			encryptedState: string;
+		},
+		Record<string, unknown>
+	>;
 	getSnapshotsList: INotionEndpoint<
 		{
 			blockId: string;
@@ -97,10 +111,12 @@ export interface INotionEndpoints {
 		},
 		{
 			notificationIds: string[];
-			recordMap: Pick<RecordMap, 'user_root' | 'space' | 'notion_user'> & {
-				activity: TActivity;
-				notifications: TNotification;
-			};
+			recordMap: Partial<
+				Pick<RecordMap, 'user_root' | 'space' | 'notion_user'> & {
+					activity: TActivity;
+					notifications: TNotification;
+				}
+			>;
 		}
 	>;
 	logoutActiveSessions: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
@@ -408,29 +424,20 @@ export interface INotionEndpoints {
 	getActivityLog: INotionEndpoint<
 		{
 			limit: number;
-			navigableBlockId: string;
+			navigableBlockId?: string;
 			spaceId: string;
 		},
 		{
 			activityIds: string[];
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'notion_user' | 'space'> & {
 				activity: TActivity;
-				follow: {
-					[k: string]: {
-						role: TPermissionRole;
-						value: {
-							created_time: number;
-							following: boolean;
-							id: string;
-							navigable_block_id: string;
-							user_id: string;
-							version: number;
-						};
-					};
-				};
+				follow: IFollowData;
+				discussion: IDiscussionData;
+				comment: ICommentData;
 				slack_integration: {
 					[k: string]: {
 						role: TPermissionRole;
+						value?: ISlackIntegration;
 					};
 				};
 			};

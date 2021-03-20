@@ -1,7 +1,14 @@
 import { ParentProps, SpaceShardProps, TBlock } from './block';
 import { IPermission, TPermissionRole } from './permissions';
 import { IComment } from './recordMap';
+import { TSchemaUnitType } from './schema';
+import { TView } from './view';
 
+interface IEdit {
+	space_id: string;
+	authors: IEditAuthor[];
+	timestamp: number;
+}
 export interface IEditAuthor {
 	'id': string;
 	'table': 'notion_user';
@@ -11,11 +18,8 @@ interface IBlockEdit<
 	BD = {
 		'block_value': TBlock;
 	}
-> {
-	authors: IEditAuthor[];
+> extends IEdit {
 	block_id: string;
-	space_id: string;
-	timestamp: number;
 	block_data: BD;
 	navigable_block_id: string;
 }
@@ -42,21 +46,15 @@ export interface IBlockChangedEdit
 
 export type TBlockEdits = IBlockCreatedEdit | IBlockChangedEdit | IBlockDeletedEdit;
 
-interface IEmailChanged {
+interface IEmailChanged extends IEdit {
 	type: 'email-changed';
-	authors: IEditAuthor;
-	space_id: string;
 	new_email: string;
 	old_email: string;
-	timestamp: number;
 }
 
 export type TEmailEdits = IEmailChanged;
 
-interface IPermissionEdit {
-	authors: IEditAuthor[];
-	timestamp: string;
-	space_id: string;
+interface IPermissionEdit extends IEdit {
 	navigable_block_id: string;
 	permission_data: IPermission;
 }
@@ -70,12 +68,9 @@ export interface IPermissionDeletedEdit extends IPermissionEdit {
 
 export type TPermissionEdits = IPermissionCreatedEdit | IPermissionDeletedEdit;
 
-interface ICommentEdit {
+interface ICommentEdit extends IEdit {
 	comment_id: string;
 	discussion_id: string;
-	authors: IEditAuthor[];
-	timestamp: number;
-	space_id: string;
 	navigable_block_id: string;
 	permission_data: IPermission;
 }
@@ -111,16 +106,69 @@ interface IActivity<E, T> extends ParentProps, SpaceShardProps {
 	edits: E;
 	context_id: string;
 	in_log: boolean;
+	parent_table: 'block';
+}
+
+export interface ITopLevelBlockDeletedEdit extends IEdit {
+	type: 'top-level-block-deleted';
+	top_level_block_id: string;
+}
+
+export interface ITopLevelBlockCreatedEdit extends IEdit {
+	type: 'top-level-block-created';
+	top_level_block_id: string;
+}
+
+export interface ICollectionViewCreatedEdit extends IEdit {
+	type: 'collection-view-created';
+	block_schema: {
+		[k: string]: {
+			name: string;
+			type: TSchemaUnitType;
+		};
+	};
+	collection_id: string;
+	collection_view_id: string;
+	collection_block_id: string;
+	collection_view_data: TView;
+}
+export interface ICollectionRowCreatedEdit extends IEdit {
+	type: 'collection-row-created';
+	collection_row_id: string;
+	collection_id: string;
 }
 
 export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
 export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
 export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'permission-edited'>;
 export type ICommentedActivity = IActivity<TCommentEdits[], 'commented'> & { navigable_block_id: string };
+export type ITopLevelBlockDeletedActivity = IActivity<ITopLevelBlockDeletedEdit[], 'top-level-block-deleted'> & {
+	top_level_block_id: string;
+};
+export type ITopLevelBlockCreatedActivity = IActivity<ITopLevelBlockCreatedEdit[], 'top-level-block-created'> & {
+	top_level_block_id: string;
+};
+export type ICollectionViewCreatedActivity = IActivity<ICollectionViewCreatedEdit, 'collection-view-created'> & {
+	collection_view_id: string;
+	navigable_block_id: string;
+	collection_id: string;
+};
+export type ICollectionRowCreatedActivity = IActivity<ICollectionRowCreatedEdit, 'collection-row-created'> & {
+	collection_row_id: string;
+	collection_id: string;
+};
 
 export type TActivity = {
 	[k: string]: {
 		role: TPermissionRole;
-		value: IBlockEditedActivity | IEmailEditedActivity | IPermissionEditedActivity | ICommentedActivity;
+		value:
+			| IBlockEditedActivity
+			| IEmailEditedActivity
+			| IPermissionEditedActivity
+			| ICommentedActivity
+			| ITopLevelBlockDeletedActivity
+			| ITopLevelBlockCreatedActivity
+			| ICollectionViewCreatedActivity
+			| ICollectionRowCreatedActivity;
 	};
 };

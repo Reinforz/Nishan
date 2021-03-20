@@ -120,12 +120,20 @@ export interface ISlackIntegration {
 	webhook_url: string;
 }
 
-export interface ISlackIntegrationData {
-	[k: string]: {
-		role: TPermissionRole;
-		value: ISlackIntegration;
-	};
+export type ISlackIntegrationData = Data<ISlackIntegration>;
+
+export interface IPageVisits {
+	id: string;
+	parent_id: string;
+	parent_table: 'block';
+	shard_id: number;
+	space_id: string;
+	user_id: string;
+	version: number;
+	visited_at: number;
 }
+
+export type IPageVisitsData = Data<IPageVisits>;
 
 export interface IFollow {
 	created_time: number;

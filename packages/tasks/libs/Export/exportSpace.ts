@@ -1,13 +1,13 @@
 import { INotionEndpointsOptions } from '@nishans/endpoints';
 import { ExportOptions } from '@nishans/types';
-import { exportData } from './utils';
+import { enqueueAndPollTask } from '../utils';
 
 export const exportSpace = async (
 	space_id: string,
 	export_options: ExportOptions,
 	options: INotionEndpointsOptions
 ) => {
-	return await exportData(
+	return await enqueueAndPollTask(
 		space_id,
 		{
 			task: {

@@ -2,7 +2,7 @@ import { INotionEndpointsOptions, NotionEndpoints } from '@nishans/endpoints';
 import { NotionIdz } from '@nishans/idz';
 import { ExportBlockTaskPayload, ExportSpaceTaskPayload } from '@nishans/types';
 
-export const exportData = async (
+export const enqueueAndPollTask = async (
 	id: string,
 	task: ExportBlockTaskPayload | ExportSpaceTaskPayload,
 	options: INotionEndpointsOptions

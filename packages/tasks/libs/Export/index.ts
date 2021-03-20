@@ -1,7 +1,7 @@
 import { exportBlock } from './exportBlock';
 import { exportSpace } from './exportSpace';
 
-export const NotionExport = {
+export const ExportTask = {
 	block: exportBlock,
-  space: exportSpace
+	space: exportSpace
 };

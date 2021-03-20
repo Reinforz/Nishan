@@ -144,6 +144,14 @@ export interface IUserInvitedEdit extends IEdit {
 	navigable_block_id: string;
 }
 
+export interface IMentionCreatedEdit extends IEdit {
+	type: 'mention-created';
+	navigable_block_id: string;
+	mentioned_user_id: string;
+	mentioned_block_id: string;
+	mentioned_property: string;
+}
+
 export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
 export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
 export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'permission-edited'>;
@@ -164,7 +172,12 @@ export type ICollectionRowCreatedActivity = IActivity<ICollectionRowCreatedEdit,
 	collection_id: string;
 };
 export type IUserInvitedActivity = IActivity<IUserInvitedEdit, 'user-invited'>;
-
+export type IUserMentionedActivity = IActivity<IMentionCreatedEdit, 'user-mentioned'> & {
+	navigable_block_id: string;
+	mentioned_user_id: string;
+	mentioned_block_id: string;
+	mentioned_property: string;
+};
 export type TActivity =
 	| IBlockEditedActivity
 	| IEmailEditedActivity
@@ -174,5 +187,6 @@ export type TActivity =
 	| ITopLevelBlockCreatedActivity
 	| ICollectionViewCreatedActivity
 	| ICollectionRowCreatedActivity
-	| IUserInvitedActivity;
+	| IUserInvitedActivity
+	| IUserMentionedActivity;
 export type IActivityData = INotionData<TActivity>;

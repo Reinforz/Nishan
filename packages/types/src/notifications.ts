@@ -1,6 +1,6 @@
 import { INotionData } from '.';
 
-interface INotification<T> {
+interface INotification<T, C> {
 	id: string;
 	version: number;
 	user_id: string;
@@ -13,18 +13,23 @@ interface INotification<T> {
 	space_id: string;
 	end_time: string;
 	type: T;
-	channel: 'mentions';
+	channel: C;
 }
 
-export interface IEmailEditedNotification extends INotification<'email-edited'> {}
-export interface IBlockEditedNotification extends INotification<'block-edited'> {}
-export interface IPermissionEditedNotification extends INotification<'permission-edited'> {}
-export interface ICommentedNotification extends INotification<'commented'> {}
-export interface ITopLevelBlockDeletedNotification extends INotification<'top-level-block-deleted'> {}
-export interface ITopLevelBlockCreatedNotification extends INotification<'top-level-block-created'> {}
-export interface ICollectionViewCreatedNotification extends INotification<'collection-view-created'> {}
-export interface ICollectionRowCreatedNotification extends INotification<'collection-row-created'> {}
-export interface UserInvitedNotification extends INotification<'user-invited'> {
+export interface IEmailEditedNotification extends INotification<'email-edited', 'following'> {}
+export interface IBlockEditedNotification extends INotification<'block-edited', 'following'> {
+	navigable_block_id: string;
+}
+export interface IPermissionEditedNotification extends INotification<'permission-edited', 'following'> {}
+export interface ICommentedNotification extends INotification<'commented', 'mentions'> {}
+export interface ITopLevelBlockDeletedNotification extends INotification<'top-level-block-deleted', 'following'> {}
+export interface ITopLevelBlockCreatedNotification extends INotification<'top-level-block-created', 'following'> {}
+export interface ICollectionViewCreatedNotification extends INotification<'collection-view-created', 'following'> {}
+export interface ICollectionRowCreatedNotification extends INotification<'collection-row-created', 'following'> {}
+export interface UserInvitedNotification extends INotification<'user-invited', 'mentions'> {
+	navigable_block_id: string;
+}
+export interface UserMentionedNotification extends INotification<'user-mentioned', 'mentions'> {
 	navigable_block_id: string;
 }
 
@@ -36,6 +41,7 @@ export type TNotification =
 	| ITopLevelBlockDeletedNotification
 	| ITopLevelBlockCreatedNotification
 	| ICollectionViewCreatedNotification
-	| ICollectionRowCreatedNotification;
+	| ICollectionRowCreatedNotification
+	| UserMentionedNotification;
 
 export type INotificationData = INotionData<TNotification>;

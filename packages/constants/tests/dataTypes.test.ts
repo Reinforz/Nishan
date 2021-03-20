@@ -6,7 +6,7 @@ it('NotionConstants.dataTypes', () => {
 	const data_types_map: Map<TDataType, true> = new Map();
 	data_types.forEach((data_type) => data_types_map.set(data_type, true));
 
-	const expected_data_types: TDataType[] = [
+	const expected_data_types = [
 		'block',
 		'collection',
 		'collection_view',
@@ -14,8 +14,14 @@ it('NotionConstants.dataTypes', () => {
 		'notion_user',
 		'space_view',
 		'user_root',
-		'user_settings'
-	];
+		'user_settings',
+		'notification',
+		'comment',
+		'slack_integration',
+		'discussion',
+		'follow',
+		'page_visits'
+	] as TDataType[];
 
 	expect(data_types.length === expected_data_types.length).toBe(true);
 	expected_data_types.forEach((expected_data_type) => expect(data_types_map.get(expected_data_type)).toBe(true));

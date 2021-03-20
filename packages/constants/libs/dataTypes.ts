@@ -9,6 +9,12 @@ export const createDataTypes = () => {
 		'notion_user',
 		'space_view',
 		'user_root',
-		'user_settings'
+		'user_settings',
+		'notification',
+		'comment',
+		'slack_integration',
+		'discussion',
+		'follow',
+		'page_visits'
 	] as TDataType[];
 };

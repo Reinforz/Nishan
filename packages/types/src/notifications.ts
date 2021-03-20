@@ -23,7 +23,9 @@ export interface IBlockEditedNotification extends INotification<'block-edited', 
 	navigable_block_id: string;
 }
 export interface IPermissionEditedNotification extends INotification<'permission-edited', 'following'> {}
-export interface ICommentedNotification extends INotification<'commented', 'mentions'> {}
+export interface ICommentedNotification extends INotification<'commented', 'mentions'> {
+	navigable_block_id: string;
+}
 export interface ITopLevelBlockDeletedNotification extends INotification<'top-level-block-deleted', 'following'> {}
 export interface ITopLevelBlockCreatedNotification extends INotification<'top-level-block-created', 'following'> {}
 export interface ICollectionViewCreatedNotification extends INotification<'collection-view-created', 'following'> {}

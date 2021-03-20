@@ -30,6 +30,11 @@
     "published": false
   },
   {
+    "name": "@nishans/discussions",
+    "description": "A package for notion discussions & comments",
+    "published": false
+  },
+  {
     "name": "@nishans/endpoints",
     "description": "A package to expose all notion endpoints for queries and mutations",
     "published": true

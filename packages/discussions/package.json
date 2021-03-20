@@ -1,0 +1,33 @@
+{
+  "name": "@nishans/discussions",
+  "version": "0.0.0",
+  "description": "A package for notion discussions & comments",
+  "keywords": [
+  ],
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/discussions/README.md",
+  "bugs": {
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fdiscussions"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devorein/Nishan.git"
+  },
+  "license": "MIT",
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "main": "dist/libs/index.js",
+  "typings": "dist/libs/index.d.ts",
+  "directories": {
+    "lib": "libs",
+    "test": "tests"
+  },
+  "files": [
+    "dist/libs"
+  ],
+  "scripts": {
+    "build": "tsc --sourceMap false",
+    "test": "npx jest --runInBand --config ../../jest.config.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

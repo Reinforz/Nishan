@@ -107,12 +107,12 @@ export interface INotionEndpoints {
 		{
 			size: number;
 			spaceId: string;
-			type?: 'mentions' | 'following' | 'archive';
+			type?: TNotificationChannel;
 		},
 		{
 			notificationIds: string[];
 			recordMap: Partial<
-				Pick<RecordMap, 'user_root' | 'space' | 'notion_user'> & {
+				Pick<RecordMap, 'user_root' | 'space' | 'notion_user' | 'block' | 'comment' | 'discussion'> & {
 					activity: IActivityData;
 					notifications: INotificationData;
 				}

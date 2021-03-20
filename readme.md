@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Total%20Packages-31-%2371368a">
+  <img src="https://img.shields.io/badge/Total%20Packages-32-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-22-%2311806a">
 </p>
 
@@ -34,6 +34,7 @@ This monorepo contains/will contain the following packages and apps:-
 *   **`@nishans/constants`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/constants) [NPM](https://www.npmjs.com/package/@nishans/constants): A small package for all notion specific constants
 *   **`@nishans/core`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/core) [Docs](https://nishan-docs.netlify.app/docs/core) [NPM](https://www.npmjs.com/package/@nishans/core): Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more
 *   **`@nishans/discord-bot`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discord-bot): A general purpose discord bot for working with `@nishans/core` from the discord chat textbox
+*   **`@nishans/discussions`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/discussions): A package for notion discussions & comments
 *   **`@nishans/endpoints`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/endpoints) [Docs](https://nishan-docs.netlify.app/docs/endpoints) [NPM](https://www.npmjs.com/package/@nishans/endpoints): A package to expose all notion endpoints for queries and mutations
 *   **`@nishans/errors`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/errors) [NPM](https://www.npmjs.com/package/@nishans/errors): A small package containing various notion specific error classes
 *   **`@nishans/extract`** [Github](https://github.com/Devorein/Nishan/tree/master/packages/extract) [NPM](https://www.npmjs.com/package/@nishans/extract): A small package to extract required notion data

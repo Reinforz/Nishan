@@ -3,8 +3,11 @@ import {
 	EnqueueTaskPayload,
 	EnqueueTaskResponse,
 	GetTasksResponse,
+	IActivityData,
 	IDrive,
+	INotificationData,
 	INotionUser,
+	IPageVisitsData,
 	IPermission,
 	IViewFilter,
 	MediaFormat,
@@ -15,11 +18,9 @@ import {
 	RecordMap,
 	SpaceData,
 	SubscribedSubscriptionData,
-	TActivity,
 	TData,
 	TDataType,
 	TEmbedBlockType,
-	TNotification,
 	TPermissionRole,
 	TPlanType,
 	Transaction,
@@ -31,7 +32,7 @@ import {
 	ViewAggregations,
 	ViewSorts
 } from './';
-import { ICommentData, IDiscussionData, IFollowData, ISlackIntegration } from './recordMap';
+import { ICommentData, IDiscussionData, IFollowData, IPageVisits, ISlackIntegration } from './recordMap';
 
 interface INotionEndpoint<P, R> {
 	payload: P;
@@ -113,8 +114,8 @@ export interface INotionEndpoints {
 			notificationIds: string[];
 			recordMap: Partial<
 				Pick<RecordMap, 'user_root' | 'space' | 'notion_user'> & {
-					activity: TActivity;
-					notifications: TNotification;
+					activity: IActivityData;
+					notifications: INotificationData;
 				}
 			>;
 		}
@@ -402,12 +403,7 @@ export interface INotionEndpoints {
 		},
 		{
 			recordMap: {
-				page_visit: {
-					[key: string]: {
-						role: TPermissionRole;
-						value: IPageVisits;
-					};
-				};
+				page_visit: IPageVisitsData;
 			};
 			pageVisits: IPageVisits[];
 		}
@@ -430,7 +426,7 @@ export interface INotionEndpoints {
 		{
 			activityIds: string[];
 			recordMap: Pick<RecordMap, 'block' | 'collection' | 'notion_user' | 'space'> & {
-				activity: TActivity;
+				activity: IActivityData;
 				follow: IFollowData;
 				discussion: IDiscussionData;
 				comment: ICommentData;
@@ -861,15 +857,6 @@ export interface GoogleDriveFile {
 	thumbnailVersion: '0';
 	trashed: boolean;
 	webViewLink: string;
-}
-
-export interface IPageVisits {
-	id: string;
-	version: number;
-	parent_table: 'block';
-	parent_id: string;
-	user_id: string;
-	visited_at: number;
 }
 
 export interface IPublicSpaceData {

@@ -1,6 +1,6 @@
 import { ParentProps, SpaceShardProps, TBlock } from './block';
-import { IPermission, TPermissionRole } from './permissions';
-import { IComment } from './recordMap';
+import { IPermission } from './permissions';
+import { IComment, INotionData } from './recordMap';
 import { TSchemaUnitType } from './schema';
 import { TView } from './view';
 
@@ -158,17 +158,13 @@ export type ICollectionRowCreatedActivity = IActivity<ICollectionRowCreatedEdit,
 	collection_id: string;
 };
 
-export type TActivity = {
-	[k: string]: {
-		role: TPermissionRole;
-		value:
-			| IBlockEditedActivity
-			| IEmailEditedActivity
-			| IPermissionEditedActivity
-			| ICommentedActivity
-			| ITopLevelBlockDeletedActivity
-			| ITopLevelBlockCreatedActivity
-			| ICollectionViewCreatedActivity
-			| ICollectionRowCreatedActivity;
-	};
-};
+export type IActivityData = INotionData<
+	| IBlockEditedActivity
+	| IEmailEditedActivity
+	| IPermissionEditedActivity
+	| ICommentedActivity
+	| ITopLevelBlockDeletedActivity
+	| ITopLevelBlockCreatedActivity
+	| ICollectionViewCreatedActivity
+	| ICollectionRowCreatedActivity
+>;

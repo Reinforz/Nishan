@@ -15,21 +15,21 @@ import {
 import { SpaceShardProps } from './block';
 import { TTextFormat } from './inlineformat';
 
-interface Data<T> {
+export interface INotionData<T> {
 	[key: string]: {
 		role: TPermissionRole;
 		value: T;
 	};
 }
 
-export type BlockData = Data<TBlock>;
-export type SpaceData = Data<ISpace>;
-export type SpaceViewData = Data<ISpaceView>;
-export type CollectionData = Data<ICollection>;
-export type ViewData = Data<TView>;
-export type NotionUserData = Data<INotionUser>;
-export type UserRootData = Data<IUserRoot>;
-export type UserSettingsData = Data<IUserSettings>;
+export type BlockData = INotionData<TBlock>;
+export type SpaceData = INotionData<ISpace>;
+export type SpaceViewData = INotionData<ISpaceView>;
+export type CollectionData = INotionData<ICollection>;
+export type ViewData = INotionData<TView>;
+export type NotionUserData = INotionData<INotionUser>;
+export type UserRootData = INotionData<IUserRoot>;
+export type UserSettingsData = INotionData<IUserSettings>;
 
 export interface ISpace extends CreatedProps, LastEditedProps {
 	beta_enabled: boolean;
@@ -120,7 +120,7 @@ export interface ISlackIntegration {
 	webhook_url: string;
 }
 
-export type ISlackIntegrationData = Data<ISlackIntegration>;
+export type ISlackIntegrationData = INotionData<ISlackIntegration>;
 
 export interface IPageVisits {
 	id: string;
@@ -133,7 +133,7 @@ export interface IPageVisits {
 	visited_at: number;
 }
 
-export type IPageVisitsData = Data<IPageVisits>;
+export type IPageVisitsData = INotionData<IPageVisits>;
 
 export interface IFollow {
 	created_time: number;
@@ -144,7 +144,7 @@ export interface IFollow {
 	version: number;
 }
 
-export type IFollowData = Data<IFollow>;
+export type IFollowData = INotionData<IFollow>;
 
 export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, LastEditedProps {
 	text: TTextFormat;
@@ -152,7 +152,7 @@ export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, Las
 	parent_table: 'collection';
 }
 
-export type ICommentData = Data<IComment>;
+export type ICommentData = INotionData<IComment>;
 
 export interface IDiscussion extends SpaceShardProps, ParentProps {
 	text: TTextFormat;
@@ -164,7 +164,7 @@ export interface IDiscussion extends SpaceShardProps, ParentProps {
 	parent_table: 'block';
 }
 
-export type IDiscussionData = Data<IDiscussion>;
+export type IDiscussionData = INotionData<IDiscussion>;
 
 export interface RecordMap {
 	block: BlockData;

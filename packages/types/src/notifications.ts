@@ -1,26 +1,24 @@
-import { TPermissionRole } from './permissions';
+import { INotionData } from '.';
 
 interface INotification<T> {
-	[k: string]: {
-		role: TPermissionRole;
-		value: {
-			id: string;
-			version: number;
-			user_id: string;
-			activity_id: string;
-			received: boolean;
-			read: boolean;
-			emailed: boolean;
-			invalid: boolean;
-			visited: boolean;
-			space_id: string;
-			end_time: string;
-			type: T;
-			channel: 'mentions';
-		};
-	};
+	id: string;
+	version: number;
+	user_id: string;
+	activity_id: string;
+	received: boolean;
+	read: boolean;
+	emailed: boolean;
+	invalid: boolean;
+	visited: boolean;
+	space_id: string;
+	end_time: string;
+	type: T;
+	channel: 'mentions';
 }
 
 export interface EmailEditedNotification extends INotification<'email-edited'> {}
+export interface UserInvitedNotification extends INotification<'user-invited'> {
+	navigable_block_id: string;
+}
 
-export type TNotification = EmailEditedNotification;
+export type INotificationData = INotionData<UserInvitedNotification | EmailEditedNotification>;

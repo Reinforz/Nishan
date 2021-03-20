@@ -12,6 +12,7 @@ import {
 	TPlanType,
 	TView
 } from './';
+import { IActivityData } from './activity';
 import { SpaceShardProps } from './block';
 import { TTextFormat } from './inlineformat';
 
@@ -22,14 +23,14 @@ export interface INotionData<T> {
 	};
 }
 
-export type BlockData = INotionData<TBlock>;
-export type SpaceData = INotionData<ISpace>;
-export type SpaceViewData = INotionData<ISpaceView>;
-export type CollectionData = INotionData<ICollection>;
-export type ViewData = INotionData<TView>;
-export type NotionUserData = INotionData<INotionUser>;
-export type UserRootData = INotionData<IUserRoot>;
-export type UserSettingsData = INotionData<IUserSettings>;
+export type IBlockData = INotionData<TBlock>;
+export type ISpaceData = INotionData<ISpace>;
+export type ISpaceViewData = INotionData<ISpaceView>;
+export type ICollectionData = INotionData<ICollection>;
+export type IViewData = INotionData<TView>;
+export type INotionUserData = INotionData<INotionUser>;
+export type IUserRootData = INotionData<IUserRoot>;
+export type IUserSettingsData = INotionData<IUserSettings>;
 
 export interface ISpace extends CreatedProps, LastEditedProps {
 	beta_enabled: boolean;
@@ -167,12 +168,18 @@ export interface IDiscussion extends SpaceShardProps, ParentProps {
 export type IDiscussionData = INotionData<IDiscussion>;
 
 export interface RecordMap {
-	block: BlockData;
-	collection: CollectionData;
-	collection_view: ViewData;
-	space: SpaceData;
-	notion_user: NotionUserData;
-	space_view: SpaceViewData;
-	user_root: UserRootData;
-	user_settings: UserSettingsData;
+	block: IBlockData;
+	collection: ICollectionData;
+	collection_view: IViewData;
+	space: ISpaceData;
+	notion_user: INotionUserData;
+	space_view: ISpaceViewData;
+	user_root: IUserRootData;
+	user_settings: IUserSettingsData;
+	discussion: IDiscussionData;
+	comment: ICommentData;
+	follow: IFollowData;
+	slack_integration: ISlackIntegrationData;
+	page_visits: IPageVisitsData;
+	activity: IActivityData;
 }

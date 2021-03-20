@@ -1,4 +1,4 @@
-import { BlockData, RecordMap } from './recordMap';
+import { RecordMap } from './recordMap';
 
 export type TExportType = 'markdown' | 'pdf' | 'html';
 export type TTaskType =
@@ -81,9 +81,7 @@ export interface DuplicateBlockTaskSuccessResponse {
 	actor: ITaskActor;
 	state: 'success';
 	status: {
-		recordMap: {
-			block: BlockData;
-		};
+		recordMap: Pick<RecordMap, 'block'>;
 	};
 }
 

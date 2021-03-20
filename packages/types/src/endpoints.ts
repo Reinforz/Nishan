@@ -1,5 +1,4 @@
 import {
-	BlockData,
 	EnqueueTaskPayload,
 	EnqueueTaskResponse,
 	GetTasksResponse,
@@ -16,7 +15,6 @@ import {
 	NotionApiUserValidationInvalidOrExpiredPasswordError,
 	NotionApiUserValidationUserWithEmailExistsError,
 	RecordMap,
-	SpaceData,
 	SubscribedSubscriptionData,
 	TData,
 	TDataType,
@@ -485,10 +483,7 @@ export interface INotionEndpoints {
 			userIds: string[];
 		},
 		{
-			recordMap: {
-				block: BlockData;
-				space: SpaceData;
-			};
+			recordMap: Pick<RecordMap, 'block' | 'space'>;
 		}
 	>;
 	authWithTrello: INotionEndpoint<
@@ -518,9 +513,7 @@ export interface INotionEndpoints {
 			targetBlockId: string;
 		},
 		{
-			recordMap: {
-				block: BlockData;
-			};
+			recordMap: Pick<RecordMap, 'block'>;
 		}
 	>;
 
@@ -645,9 +638,7 @@ export interface INotionEndpoints {
 			blockId: string;
 		},
 		{
-			recordMap: {
-				block: BlockData;
-			};
+			recordMap: Pick<RecordMap, 'block'>;
 		}
 	>;
 
@@ -684,9 +675,7 @@ export interface INotionEndpoints {
 			planType: 'personal';
 		},
 		{
-			recordMap: {
-				space: SpaceData;
-			};
+			recordMap: Pick<RecordMap, 'space'>;
 			spaceId: string;
 		}
 	>;
@@ -702,10 +691,7 @@ export interface INotionEndpoints {
 		Record<string, unknown>,
 		{
 			pages: { id: string; spaceId: string }[];
-			recordMap: {
-				block: BlockData;
-				space: SpaceData;
-			};
+			recordMap: Pick<RecordMap, 'block' | 'space'>;
 		}
 	>;
 

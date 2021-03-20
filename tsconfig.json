@@ -39,6 +39,9 @@
       "path": "./packages/endpoints/tsconfig.json"
     },
     {
+      "path": "./packages/tasks/tsconfig.json"
+    },
+    {
       "path": "./packages/operations/tsconfig.json"
     },
     {

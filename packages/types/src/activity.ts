@@ -1,5 +1,6 @@
 import { ParentProps, SpaceShardProps, TBlock } from './block';
 import { IPermission, TPermissionRole } from './permissions';
+import { IComment } from './recordMap';
 
 export interface IEditAuthor {
 	'id': string;
@@ -69,6 +70,31 @@ export interface IPermissionDeletedEdit extends IPermissionEdit {
 
 export type TPermissionEdits = IPermissionCreatedEdit | IPermissionDeletedEdit;
 
+interface ICommentEdit {
+	comment_id: string;
+	discussion_id: string;
+	authors: IEditAuthor[];
+	timestamp: number;
+	space_id: string;
+	navigable_block_id: string;
+	permission_data: IPermission;
+}
+
+export interface ICommentChangedEdit extends ICommentEdit {
+	type: 'comment-changed';
+	comment_data: {
+		before: IComment;
+		after: IComment;
+	};
+}
+
+export interface ICommentDeletedEdit extends ICommentEdit {
+	type: 'comment-deleted';
+	comment_data: IComment;
+}
+
+export type TCommentEdits = ICommentChangedEdit | ICommentDeletedEdit;
+
 interface IActivity<E, T> extends ParentProps, SpaceShardProps {
 	id: string;
 	version: number;
@@ -85,10 +111,11 @@ interface IActivity<E, T> extends ParentProps, SpaceShardProps {
 export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
 export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
 export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'email-edited'>;
+export type ICommentedActivity = IActivity<TCommentEdits[], 'commented'> & { navigable_block_id: string };
 
 export type TActivity = {
 	[k: string]: {
 		role: TPermissionRole;
-		value: IBlockEditedActivity | IEmailEditedActivity | IPermissionEditedActivity;
+		value: IBlockEditedActivity | IEmailEditedActivity | IPermissionEditedActivity | ICommentedActivity;
 	};
 };

@@ -1,4 +1,4 @@
-import { IViewFilter, ParentProps, SpaceShardProps, ViewAggregations } from './';
+import { IViewFilter, NotionNode, ParentProps, SpaceShardProps, ViewAggregations } from './';
 
 export type TViewType = 'table' | 'list' | 'board' | 'gallery' | 'calendar' | 'timeline';
 export type TViewFormatCover = { type: 'page_content' | 'page_cover' } | { type: 'property'; property: string };
@@ -31,7 +31,7 @@ export interface ITableViewFormat {
 }
 
 export type ITableViewQuery2 = Partial<IViewQuery2>;
-export interface ITableView extends Node, ParentProps, SpaceShardProps {
+export interface ITableView extends NotionNode, ParentProps, SpaceShardProps {
 	name: string;
 	type: 'table';
 	page_sort: string[];
@@ -45,7 +45,7 @@ export interface IListViewFormat {
 }
 
 export type IListViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>>;
-export interface IListView extends Node, ParentProps, SpaceShardProps {
+export interface IListView extends NotionNode, ParentProps, SpaceShardProps {
 	name: string;
 	type: 'list';
 	format: IListViewFormat;
@@ -64,7 +64,7 @@ export type IBoardViewQuery2 = Partial<IViewQuery2> & {
 	group_by: string;
 };
 
-export interface IBoardView extends Node, ParentProps, SpaceShardProps {
+export interface IBoardView extends NotionNode, ParentProps, SpaceShardProps {
 	type: 'board';
 	name: string;
 	format: IBoardViewFormat;
@@ -81,7 +81,7 @@ export interface IGalleryViewFormat {
 
 export type IGalleryViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>>;
 
-export interface IGalleryView extends Node, ParentProps, SpaceShardProps {
+export interface IGalleryView extends NotionNode, ParentProps, SpaceShardProps {
 	type: 'gallery';
 	name: string;
 	format: IGalleryViewFormat;
@@ -96,7 +96,7 @@ export type ICalendarViewQuery2 = Partial<Omit<IViewQuery2, 'aggregations'>> & {
 	calendar_by: string;
 };
 
-export interface ICalendarView extends Node, ParentProps, SpaceShardProps {
+export interface ICalendarView extends NotionNode, ParentProps, SpaceShardProps {
 	type: 'calendar';
 	name: string;
 	format: ICalendarViewFormat;
@@ -119,7 +119,7 @@ export interface ITimelineViewFormat {
 export type ITimelineViewQuery2 = Partial<IViewQuery2> & {
 	timeline_by: string;
 };
-export interface ITimelineView extends Node, ParentProps, SpaceShardProps {
+export interface ITimelineView extends NotionNode, ParentProps, SpaceShardProps {
 	type: 'timeline';
 	name: string;
 	format: ITimelineViewFormat;

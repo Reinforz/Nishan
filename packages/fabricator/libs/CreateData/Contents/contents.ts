@@ -93,7 +93,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       else if (content.type === "linked_db") {
         const { collection_id, views } = content, view_ids: string[] = [],
           // fetch the referenced collection id
-          collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', collection_id, options),
+          collection = await NotionCache.fetchDataOrReturnCached('collection', collection_id, options) as ICollection,
           // Create the views separately, without creating the collection, as its only referencing one
           collection_view_data: ICollectionView = {
             ...common_data,

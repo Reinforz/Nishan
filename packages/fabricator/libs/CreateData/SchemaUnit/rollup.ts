@@ -30,11 +30,11 @@ export async function rollup (
 		);
 	// Get the info required for making the request and store in cache
 	// Get the target collection from the passed cache
-	const target_collection = await NotionCache.fetchDataOrReturnCached<ICollection>(
+	const target_collection = (await NotionCache.fetchDataOrReturnCached(
 		'collection',
 		collection_id,
 		options
-	);
+	)) as ICollection;
 
 	// Log the collection read operation
 	options.logger && NotionLogger.method.info(`READ collection ${collection_id}`);

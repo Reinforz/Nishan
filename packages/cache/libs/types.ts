@@ -13,6 +13,7 @@ import {
 	IUserSettings,
 	TActivity,
 	TBlock,
+	TNotification,
 	TView
 } from '@nishans/types';
 export interface ICache {
@@ -30,6 +31,7 @@ export interface ICache {
 	slack_integration: Map<string, ISlackIntegration>;
 	page_visits: Map<string, IPageVisits>;
 	activity: Map<string, TActivity>;
+	notification: Map<string, TNotification>;
 }
 export interface INotionCacheOptions extends INotionEndpointsOptions {
 	cache: ICache;

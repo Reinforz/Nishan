@@ -21,4 +21,5 @@ export interface UserInvitedNotification extends INotification<'user-invited'> {
 	navigable_block_id: string;
 }
 
-export type INotificationData = INotionData<UserInvitedNotification | EmailEditedNotification>;
+export type TNotification = UserInvitedNotification | EmailEditedNotification;
+export type INotificationData = INotionData<TNotification>;

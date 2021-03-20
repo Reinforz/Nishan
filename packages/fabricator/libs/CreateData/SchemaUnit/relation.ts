@@ -3,8 +3,8 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
-import { INotionFabricatorOptions } from "../../../types";
 import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
+import { INotionFabricatorOptions } from "../../../types";
 
 /**
  * Generates a new relation schema by validating the input relation schema unit passed
@@ -16,7 +16,7 @@ export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput,
   const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name} = collection_data, child_relation_schema_unit_id = NotionIdz.Generate.shortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;
   // Get the child_collection from cache first
-  const child_collection = await NotionCache.fetchDataOrReturnCached<ICollection>('collection', child_collection_id, options);
+  const child_collection = await NotionCache.fetchDataOrReturnCached('collection', child_collection_id, options) as ICollection;
   // Log the event of reading the child collection
   options.logger && NotionLogger.method.info(`READ collection ${child_collection_id}`);
 

@@ -1,15 +1,6 @@
 import { INotionOperationOptions } from '@nishans/operations';
-import {
-	ICollection,
-	INotionUser,
-	ISpace,
-	ISpaceView,
-	IUserRoot,
-	IUserSettings,
-	TBlock,
-	TDataType,
-	TView
-} from '@nishans/types';
+import { TDataType } from '@nishans/types';
+import { ICache } from 'packages/cache/dist/libs';
 
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void | null | undefined;
 
@@ -71,16 +62,7 @@ export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C> {
 	parent_type: TDataType;
 	parent_id: string;
 	logger?: boolean;
-	cache: {
-		block: Map<string, TBlock>;
-		collection: Map<string, ICollection>;
-		collection_view: Map<string, TView>;
-		space: Map<string, ISpace>;
-		notion_user: Map<string, INotionUser>;
-		space_view: Map<string, ISpaceView>;
-		user_root: Map<string, IUserRoot>;
-		user_settings: Map<string, IUserSettings>;
-	};
+	cache: ICache;
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
 export type IterateAndUpdateChildrenOptions<T, C> = INotionOperationOptions &

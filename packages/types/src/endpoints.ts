@@ -530,7 +530,17 @@ export interface INotionEndpoints {
 	getSpaces: INotionEndpoint<
 		Record<string, never>,
 		{
-			[k: string]: Partial<RecordMap>;
+			[k: string]: Pick<
+				RecordMap,
+				| 'block'
+				| 'collection'
+				| 'collection_view'
+				| 'space'
+				| 'space_view'
+				| 'notion_user'
+				| 'user_settings'
+				| 'user_root'
+			>;
 		}
 	>;
 

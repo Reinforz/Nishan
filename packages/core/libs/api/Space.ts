@@ -21,11 +21,9 @@ export async function createSpaceIterateArguments (
 	block_id: string,
 	props: Pick<INotionCoreOptions, 'cache' | 'token' | 'interval' | 'user_id'>
 ): Promise<IPage | (ICollectionViewPage & { collection: ICollection }) | undefined> {
-	const data = await NotionCache.fetchDataOrReturnCached<IPage | (ICollectionViewPage & { collection: ICollection })>(
-		'block',
-		block_id,
-		props
-	);
+	const data = (await NotionCache.fetchDataOrReturnCached('block', block_id, props)) as
+		| IPage
+		| (ICollectionViewPage & { collection: ICollection });
 	if (data.type === 'page') return data;
 	else if (data.type === 'collection_view_page') {
 		await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, props);

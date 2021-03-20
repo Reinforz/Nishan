@@ -1,5 +1,21 @@
 import { NotionConstants } from '@nishans/constants';
-import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TBlock, TView } from '@nishans/types';
+import {
+	ICollection,
+	IComment,
+	IDiscussion,
+	IFollow,
+	INotionUser,
+	IPageVisits,
+	ISlackIntegration,
+	ISpace,
+	ISpaceView,
+	IUserRoot,
+	IUserSettings,
+	TActivity,
+	TBlock,
+	TNotification,
+	TView
+} from '@nishans/types';
 
 export const createDefaultRecordMap = () => {
 	const recordMap: {
@@ -11,6 +27,13 @@ export const createDefaultRecordMap = () => {
 		space_view: ISpaceView[];
 		user_root: IUserRoot[];
 		user_settings: IUserSettings[];
+		comment: IComment[];
+		discussion: IDiscussion[];
+		follow: IFollow[];
+		slack_integration: ISlackIntegration[];
+		page_visits: IPageVisits[];
+		activity: TActivity[];
+		notification: TNotification[];
 	} = {} as any;
 
 	NotionConstants.dataTypes().map((data_type) => (recordMap[data_type] = []));

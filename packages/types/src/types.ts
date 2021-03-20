@@ -76,4 +76,4 @@ export type TDataType = keyof RecordMap;
 export type TPlanType = 'personal';
 export type TSortValue = 'ascending' | 'descending';
 
-export type TData = RecordMap[keyof RecordMap];
+export type TData = RecordMap[keyof RecordMap]['']['value'];

@@ -10,8 +10,8 @@ interface IEdit {
 	timestamp: number;
 }
 export interface IEditAuthor {
-	'id': string;
-	'table': 'notion_user';
+	id: string;
+	table: 'notion_user';
 }
 
 interface IBlockEdit<
@@ -138,6 +138,12 @@ export interface ICollectionRowCreatedEdit extends IEdit {
 	collection_id: string;
 }
 
+export interface IUserInvitedEdit extends IEdit {
+	type: 'user-invited';
+	invited_user_id: string;
+	navigable_block_id: string;
+}
+
 export type IBlockEditedActivity = IActivity<TBlockEdits[], 'block-edited'> & { navigable_block_id: string };
 export type IEmailEditedActivity = IActivity<TEmailEdits[], 'email-edited'>;
 export type IPermissionEditedActivity = IActivity<TPermissionEdits[], 'permission-edited'>;
@@ -157,6 +163,7 @@ export type ICollectionRowCreatedActivity = IActivity<ICollectionRowCreatedEdit,
 	collection_row_id: string;
 	collection_id: string;
 };
+export type IUserInvitedActivity = IActivity<IUserInvitedEdit, 'user-invited'>;
 
 export type IActivityData = INotionData<
 	| IBlockEditedActivity
@@ -167,4 +174,5 @@ export type IActivityData = INotionData<
 	| ITopLevelBlockCreatedActivity
 	| ICollectionViewCreatedActivity
 	| ICollectionRowCreatedActivity
+	| IUserInvitedActivity
 >;

@@ -40,11 +40,6 @@
     "published": true
   },
   {
-    "name": "@nishans/export",
-    "description": "A small package to export notion page and database with ease",
-    "published": true
-  },
-  {
     "name": "@nishans/extract",
     "description": "A small package to extract required notion data",
     "published": true
@@ -127,6 +122,11 @@
   {
     "name": "@nishans/sync",
     "description": "A package to keep local notion data in sync with remote one by storing and restoring it",
+    "published": true
+  },
+  {
+    "name": "@nishans/tasks",
+    "description": "A package to enqueue and poll notion tasks",
     "published": true
   },
   {

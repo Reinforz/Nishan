@@ -1,11 +1,11 @@
 {
-  "name": "@nishans/export",
+  "name": "@nishans/tasks",
   "version": "0.0.15",
-  "description": "A small package to export notion page and database with ease",
+  "description": "A package to enqueue and poll notion tasks",
   "keywords": [],
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/export/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/tasks/README.md",
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fexport"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Ftasks"
   },
   "repository": {
     "type": "git",

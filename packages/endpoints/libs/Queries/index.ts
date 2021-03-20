@@ -73,6 +73,17 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getUnvisitedNotificationIds (
+		params: INotionEndpoints['getUnvisitedNotificationIds']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getUnvisitedNotificationIds']['response']>(
+			'getUnvisitedNotificationIds',
+			params,
+			options
+		);
+	},
+
 	async getNotificationLog (
 		params: INotionEndpoints['getNotificationLog']['payload'],
 		options?: INotionEndpointsOptions

@@ -17,6 +17,7 @@ const configs = {
 	};
 
 ([
+	'getUnvisitedNotificationIds',
 	'getNotificationLog',
 	'getCsatMilestones',
 	'getActivityLog',

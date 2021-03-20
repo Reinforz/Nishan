@@ -1,5 +1,7 @@
 import { INotionData } from '.';
 
+export type TNotificationChannel = 'mentions' | 'following' | 'archive';
+
 interface INotification<T, C> {
 	id: string;
 	version: number;

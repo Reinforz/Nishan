@@ -19,6 +19,7 @@ import {
 	TData,
 	TDataType,
 	TEmbedBlockType,
+	TNotificationChannel,
 	TPermissionRole,
 	TPlanType,
 	Transaction,
@@ -761,7 +762,17 @@ export interface INotionEndpoints {
 			isJoinable: boolean;
 		}
 	>;
-
+	getUnvisitedNotificationIds: INotionEndpoint<
+		{
+			size: number;
+			spaceId: string;
+			timestamp: number;
+			type: TNotificationChannel;
+		},
+		{
+			notificationIds: string[];
+		}
+	>;
 	isEmailEducation: INotionEndpoint<
 		Record<string, unknown>,
 		{

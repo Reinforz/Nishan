@@ -15,30 +15,41 @@ export const startDiscussions = async (
 		const comment_id = NotionIdz.Generate.id(comment.id);
 		comment_ids.push(comment_id);
 		comment_creation_operations.push(
-			NotionOperations.Chunk.comment.update(comment_id, [], {
+			NotionOperations.Chunk.comment.set(comment_id, [], {
 				parent_id: discussion_id,
 				parent_table: 'discussion',
 				text: comment.text,
 				alive: true,
 				id: comment_id,
-				version: 1
+				version: 1,
+				space_id: options.space_id,
+				shard_id: options.shard_id,
+				created_by_id: options.user_id,
+				created_by_table: 'notion_user',
+				created_time: Date.now(),
+				last_edited_by_id: options.user_id,
+				last_edited_by_table: 'notion_user',
+				last_edited_time: Date.now()
 			})
 		);
 	});
 	const block_data = (await NotionCache.fetchDataOrReturnCached('block', block_id, options)) as IText;
+
 	await NotionOperations.executeOperations(
 		[
-			...comment_creation_operations,
-			NotionOperations.Chunk.discussion.update(discussion_id, [], {
+			NotionOperations.Chunk.discussion.set(discussion_id, [], {
 				id: discussion_id,
 				parent_id: block_id,
 				parent_table: 'block',
 				resolved: false,
 				context: block_data.properties.title,
 				comments: comment_ids,
-				version: 1
+				version: 1,
+				space_id: options.space_id,
+				shard_id: options.shard_id
 			}),
-			NotionOperations.Chunk.discussion.listAfter(block_id, [ 'discussions' ], {
+			...comment_creation_operations,
+			NotionOperations.Chunk.block.listAfter(block_id, [ 'discussions' ], {
 				id: discussion_id
 			})
 		],

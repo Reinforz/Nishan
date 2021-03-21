@@ -7,7 +7,7 @@ import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CreateData, INotionFabricatorOptions, TBlockCreateInput } from "..";
-import { populatePermissions, stackCacheMap } from "./utils";
+import { executeOperationAndStoreInCache, populatePermissions } from "./utils";
 
 /**
  * * Iterate through each of the content
@@ -73,7 +73,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           view_ids: [],
         };
         if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(options.user_id, content.isPrivate)];
-        await stackCacheMap<ICollectionViewPage>(data as any, options, cb);
+        await executeOperationAndStoreInCache<ICollectionViewPage>(data as any, options, cb);
         
         const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, options);
         const view_ids = views_data.map(view_data=>view_data.id);
@@ -87,7 +87,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         }
         
-        await stackCacheMap<IFactory>(factory_data, options, cb);
+        await executeOperationAndStoreInCache<IFactory>(factory_data, options, cb);
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "linked_db") {
@@ -102,7 +102,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             collection_id,
             type: 'collection_view'
           };
-        await stackCacheMap<ICollectionView>(collection_view_data, options, cb);
+        await executeOperationAndStoreInCache<ICollectionView>(collection_view_data, options, cb);
         const views_data = await CreateData.views(collection, views, options, block_id);
         await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], options);
         views_data.forEach(({id})=>view_ids.push(id))
@@ -117,7 +117,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           permissions: [populatePermissions(options.user_id, content.isPrivate)],
         }
 
-        await stackCacheMap<IPage>(page_data, options, cb);
+        await executeOperationAndStoreInCache<IPage>(page_data, options, cb);
         await traverse(content.contents, block_id, "block");
       }
       else if (content.type === "column_list") {
@@ -128,7 +128,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...metadata
         };
 
-        await stackCacheMap(column_list_data, options, cb);
+        await executeOperationAndStoreInCache(column_list_data, options, cb);
 
         // For each contents create a column
         for (let index = 0; index < contents.length; index++) {
@@ -144,7 +144,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             content: []
           };
           
-          await stackCacheMap<IColumn>(column_data, options, cb);
+          await executeOperationAndStoreInCache<IColumn>(column_data, options, cb);
           await traverse(contents[index].contents, column_id, "block");
           column_ids.push(column_id);
         }
@@ -158,14 +158,15 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           type: content.type as any
         }, options));
         
-        NotionUtils.deepMerge(common_data, response);
+        if(!response.empty)
+          NotionUtils.deepMerge(common_data, response);
         
         const block_data: any = {
           ...common_data,
           ...metadata
         };
 
-        await stackCacheMap<any>(block_data, options, cb);
+        await executeOperationAndStoreInCache<any>(block_data, options, cb);
       }
       // Block is a non parent type
       else if (content.type !== "link_to_page") {
@@ -173,7 +174,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
           ...common_data,
           ...metadata
         };
-        await stackCacheMap<any>(block_data, options, cb);
+        await executeOperationAndStoreInCache<any>(block_data, options, cb);
       }
 
       if (content.type === "bookmark") {

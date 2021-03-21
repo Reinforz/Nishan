@@ -1,2 +1,2 @@
+export * from './executeOperationAndStoreInCache';
 export * from './populatePermissions';
-export * from './stackCacheMap';

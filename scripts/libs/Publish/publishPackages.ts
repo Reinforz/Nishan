@@ -9,7 +9,7 @@ export async function publishPackages (packages_deps_version_map: Map<string, st
 		const package_name = scoped_package_name.split('/')[1];
 		try {
 			await NishanScripts.Update.packageDependency(packages_deps_version_map, scoped_package_name);
-			cp.execSync(`npm publish`, { cwd: path.join(packages_dir, package_name) });
+			cp.execSync(`npm publish --access=public`, { cwd: path.join(packages_dir, package_name) });
 			console.log(colors.green.bold(`Published ${package_name}`));
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));

@@ -12,7 +12,7 @@ import { INotionFabricatorOptions } from '../..';
  * @param options Nishan options passed to generated object
  * @param name Name of the block, used to create a key for the block map
  */
-export async function stackCacheMap<T extends TBlock> (
+export async function executeOperationAndStoreInCache<T extends TBlock> (
 	data: T,
 	options: INotionFabricatorOptions,
 	cb?: ((data: TBlock) => any)

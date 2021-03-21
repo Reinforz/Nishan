@@ -556,6 +556,7 @@ export interface INotionEndpoints {
 			properties: {
 				source: string[][];
 			};
+			empty?: boolean;
 			type: TEmbedBlockType;
 		}
 	>;

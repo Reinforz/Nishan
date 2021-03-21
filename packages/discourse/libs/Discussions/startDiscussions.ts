@@ -2,6 +2,7 @@ import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { IComment, IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 
 export const startDiscussions = async (
 	ids: { block_id: string; discussion_id?: string },
@@ -50,8 +51,7 @@ export const startDiscussions = async (
 	};
 
 	options.cache.discussion.set(discussion_id, discussion_data);
-	if (!block_data.discussions) block_data.discussions = [ discussion_id ];
-	else block_data.discussions.push(discussion_id);
+	NotionUtils.populateChildPath({ data: block_data, child_path: 'discussions', child_id: discussion_id });
 
 	await NotionOperations.executeOperations(
 		[

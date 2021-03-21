@@ -1,6 +1,6 @@
 {
   "name": "@nishans/utils",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A bunch of small utility modules used across nishans ecosystem",
   "keywords": [
     "notion",
@@ -33,10 +33,13 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/constants": "0.0.19",
-    "@nishans/errors": "0.0.25"
+    "@nishans/constants": "0.0.20",
+    "@nishans/errors": "0.0.28"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.28"
+    "@nishans/types": "0.0.31"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -9,9 +9,9 @@ export function createDependencyMap (package_names: string[], packages_map: IPac
 	};
 
 	for (const package_name of package_names) {
-		const package_map = packages_map.get(`@nishans/${package_name}`)!;
-		package_dependency_map.main.set(package_map.name, package_map.version);
-		package_dependency_map.all.set(package_map.name, package_map.version);
+		const package_info = packages_map.get(`@nishans/${package_name}`)!;
+		package_dependency_map.main.set(package_info.name, package_info.version);
+		package_dependency_map.all.set(package_info.name, package_info.version);
 
 		function traverse (dependents: Record<string, string>, level: number) {
 			Object.entries(dependents)
@@ -26,7 +26,7 @@ export function createDependencyMap (package_names: string[], packages_map: IPac
 				});
 		}
 
-		traverse(package_map.dependents, 0);
+		traverse(package_info.dependents, 0);
 	}
 
 	return package_dependency_map;

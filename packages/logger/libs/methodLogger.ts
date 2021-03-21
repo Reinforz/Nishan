@@ -10,7 +10,9 @@ export const methodLogger = createLogger({
 		timestamp({
 			format: 'HH:mm:ss'
 		}),
-		printf(({ level, message, timestamp }) => `${colors.blue.bold(timestamp)} ${level}: ${colors.bold.white(message)}`)
+		printf(
+			({ level, message, timestamp }) => `${colors.blue.bold(timestamp)} - ${level}: ${colors.bold.white(message)}`
+		)
 	),
 	transports: [ new transports.Console() ]
 });

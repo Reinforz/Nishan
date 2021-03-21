@@ -35,5 +35,8 @@
   },
   "devDependencies": {
     "@types/uuid": "^8.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

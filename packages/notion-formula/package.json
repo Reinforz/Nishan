@@ -1,6 +1,6 @@
 {
   "name": "@nishans/notion-formula",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "A package to generate notion formula with ease",
   "keywords": [
     "notion",
@@ -33,13 +33,13 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.29",
-    "@nishans/constants": "0.0.19",
-    "@nishans/errors": "0.0.25",
+    "@nishans/cache": "0.0.30",
+    "@nishans/constants": "0.0.20",
+    "@nishans/errors": "0.0.28",
     "@nishans/idz": "0.0.15",
-    "@nishans/utils": "0.0.19"
+    "@nishans/utils": "0.0.20"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.28"
+    "@nishans/types": "0.0.31"
   }
 }

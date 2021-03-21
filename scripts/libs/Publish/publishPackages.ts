@@ -1,7 +1,7 @@
 import cp from 'child_process';
 import colors from 'colors';
 import path from 'path';
-import { NishanScripts } from '..';
+import { NishanScripts } from '../';
 
 export async function publishPackages (packages_deps_version_map: Map<string, string>) {
 	const packages_dir = path.resolve(__dirname, '../../../../packages');
@@ -14,7 +14,7 @@ export async function publishPackages (packages_deps_version_map: Map<string, st
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));
 			console.log(err.stdout.toString());
-			break;
+			process.exit(0);
 		}
 	}
 }

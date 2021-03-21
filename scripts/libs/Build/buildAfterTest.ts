@@ -26,6 +26,7 @@ export async function buildAfterTest (packages: string[]) {
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));
 			console.log(err.message);
+      process.exit(0);
 			break;
 		}
 	}

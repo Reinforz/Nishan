@@ -1,6 +1,6 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.28",
+  "version": "0.0.31",
   "description": "Typescript type definitions for notion",
   "keywords": [
     "notion",
@@ -28,5 +28,8 @@
   ],
   "scripts": {
     "build": "tsc --sourceMap false"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

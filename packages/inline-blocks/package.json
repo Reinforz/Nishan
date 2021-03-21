@@ -1,6 +1,6 @@
 {
   "name": "@nishans/inline-blocks",
-  "version": "0.0.30",
+  "version": "0.0.33",
   "description": "Package providing an easy to use api to generate contents for notion inline blocks",
   "keywords": [
     "notion",
@@ -31,6 +31,9 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.28"
+    "@nishans/types": "0.0.31"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

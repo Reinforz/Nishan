@@ -5,7 +5,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
 import { TData, TDataType } from '@nishans/types';
-import { updateLastEditedProps } from '@nishans/utils';
+import { NotionUtils } from '@nishans/utils';
 import { INotionCoreOptions } from '../';
 
 /**
@@ -48,7 +48,7 @@ export default class NotionData<T extends TData> {
   }
 
   protected updateLastEditedProps(data?:TData){
-    return updateLastEditedProps(data ?? this.getCachedData() as any, this.user_id)
+    return NotionUtils.updateLastEditedProps(data ?? this.getCachedData() as any, this.user_id)
   }
 
   /**

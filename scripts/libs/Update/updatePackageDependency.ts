@@ -1,3 +1,4 @@
+import colors from 'colors';
 import fs from 'fs';
 import { NishanScripts } from '../';
 
@@ -9,7 +10,10 @@ export async function updatePackageDependency (packages_deps_version_map: Map<st
 	[ 'dependencies', 'devDependencies' ].forEach((dependency_type) => {
 		Object.keys(package_json_data[dependency_type] ?? {}).forEach((dependency_name) => {
 			const packages_deps_version = packages_deps_version_map.get(dependency_name)!;
-			if (packages_deps_version) package_json_data[dependency_type][dependency_name] = packages_deps_version;
+			if (packages_deps_version) {
+        package_json_data[dependency_type][dependency_name] = packages_deps_version;
+        console.log(colors.bold.blue(`${dependency_type} ${dependency_name} ${packages_deps_version}`));
+      }
 		});
 	});
 

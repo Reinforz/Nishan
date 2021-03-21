@@ -1,12 +1,15 @@
 {
-  "name": "@nishans/discussions",
+  "name": "@nishans/discourse",
   "version": "0.0.0",
-  "description": "A package for notion discussions & comments",
+  "description": "A package for working with notion discussions & comments",
   "keywords": [
+    "notion-api",
+    "notion-comments",
+    "notion-discussions"
   ],
-  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/discussions/README.md",
+  "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/discourse/README.md",
   "bugs": {
-    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fdiscussions"
+    "url": "https://github.com/Devorein/Nishan/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%40nishans%2Fdiscourse"
   },
   "repository": {
     "type": "git",

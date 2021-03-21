@@ -1,14 +1,8 @@
+import { NotionConstants } from '@nishans/constants';
 import { ICache } from './';
 
 export function createDefaultCache () {
-	return {
-		block: new Map(),
-		collection: new Map(),
-		collection_view: new Map(),
-		notion_user: new Map(),
-		space: new Map(),
-		space_view: new Map(),
-		user_root: new Map(),
-		user_settings: new Map()
-	} as ICache;
+	const cache: ICache = {} as any;
+	NotionConstants.dataTypes().forEach((data_type) => (cache[data_type] = new Map()));
+	return cache;
 }

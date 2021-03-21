@@ -1,3 +1,4 @@
+import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
 import { ICache } from './';
 
@@ -6,16 +7,7 @@ import { ICache } from './';
  * @param cache The cache to validate
  */
 export function validateCache (cache: ICache) {
-	const cache_keys: (keyof ICache)[] = [
-		'block',
-		'collection',
-		'space',
-		'collection_view',
-		'notion_user',
-		'space_view',
-		'user_root',
-		'user_settings'
-	];
+	const cache_keys = NotionConstants.dataTypes();
 
 	// Throw error if the required items are not present in the cache
 	const passed_cache_keys = Object.keys(cache);

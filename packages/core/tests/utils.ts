@@ -29,6 +29,22 @@ export const o = {
 		lr: NotionOperations.Chunk.block.listRemove,
 		sp: NotionOperations.Chunk.block.setPermissionItem
 	},
+	d: {
+		u: NotionOperations.Chunk.discussion.update,
+		s: NotionOperations.Chunk.discussion.set,
+		la: NotionOperations.Chunk.discussion.listAfter,
+		lb: NotionOperations.Chunk.discussion.listBefore,
+		lr: NotionOperations.Chunk.discussion.listRemove,
+		sp: NotionOperations.Chunk.discussion.setPermissionItem
+	},
+	cm: {
+		u: NotionOperations.Chunk.comment.update,
+		s: NotionOperations.Chunk.comment.set,
+		la: NotionOperations.Chunk.comment.listAfter,
+		lb: NotionOperations.Chunk.comment.listBefore,
+		lr: NotionOperations.Chunk.comment.listRemove,
+		sp: NotionOperations.Chunk.comment.setPermissionItem
+	},
 	ur: {
 		u: NotionOperations.Chunk.user_root.update,
 		s: NotionOperations.Chunk.user_root.set,

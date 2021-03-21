@@ -4,13 +4,13 @@ import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { IComment, IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
 
 export const startDiscussions = async (
-	block_id: string,
+	ids: { block_id: string; discussion_id?: string },
 	comments: { text: TTextFormat; id?: string }[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
 	const comment_creation_operations: IOperation[] = [],
 		comment_ids: string[] = [],
-		discussion_id = NotionIdz.Generate.id();
+		discussion_id = NotionIdz.Generate.id(ids.discussion_id);
 	comments.forEach((comment) => {
 		const comment_id = NotionIdz.Generate.id(comment.id);
 		comment_ids.push(comment_id);
@@ -31,15 +31,15 @@ export const startDiscussions = async (
 			last_edited_time: Date.now()
 		};
 		comment_creation_operations.push(
-			NotionOperations.Chunk.comment.set(comment_id, [], JSON.stringify(comment_data, null, 2))
+			NotionOperations.Chunk.comment.update(comment_id, [], JSON.parse(JSON.stringify(comment_data, null, 2)))
 		);
 		options.cache.comment.set(comment_id, comment_data);
 	});
-	const block_data: IText = (await NotionCache.fetchDataOrReturnCached('block', block_id, options)) as IText;
+	const block_data: IText = (await NotionCache.fetchDataOrReturnCached('block', ids.block_id, options)) as IText;
 
 	const discussion_data: IDiscussion = {
 		id: discussion_id,
-		parent_id: block_id,
+		parent_id: ids.block_id,
 		parent_table: 'block',
 		resolved: false,
 		context: block_data.properties.title,
@@ -55,9 +55,9 @@ export const startDiscussions = async (
 
 	await NotionOperations.executeOperations(
 		[
-			NotionOperations.Chunk.discussion.set(discussion_id, [], JSON.stringify(discussion_data, null, 2)),
+			NotionOperations.Chunk.discussion.update(discussion_id, [], JSON.parse(JSON.stringify(discussion_data, null, 2))),
 			...comment_creation_operations,
-			NotionOperations.Chunk.block.listAfter(block_id, [ 'discussions' ], {
+			NotionOperations.Chunk.block.listAfter(ids.block_id, [ 'discussions' ], {
 				id: discussion_id
 			})
 		],

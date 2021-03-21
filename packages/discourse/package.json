@@ -32,5 +32,13 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@nishans/cache": "0.0.30",
+    "@nishans/operations": "0.0.28",
+    "@nishans/idz": "0.0.15"
+  },
+  "devDependencies": {
+    "@nishans/types": "0.0.31"
   }
 }

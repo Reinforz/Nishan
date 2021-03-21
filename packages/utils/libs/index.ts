@@ -7,6 +7,7 @@ import { generateSchemaMap } from './generateSchemaMap';
 import { getSchemaMapUnit } from './getSchemaMapUnit';
 import { getSchemaUnit } from './getSchemaUnit';
 import { setDefault } from './setDefault';
+import { updateLastEditedProps } from './updateLastEditedProps';
 
 export const NotionUtils = {
 	getSchemaMapUnit,
@@ -15,5 +16,6 @@ export const NotionUtils = {
 	setDefault,
 	generateSchemaMap,
 	extractInlineBlockContent,
-	createDefaultRecordMap
+	createDefaultRecordMap,
+	updateLastEditedProps
 };

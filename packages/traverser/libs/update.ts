@@ -3,7 +3,7 @@ import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { IterateAndUpdateChildrenOptions, UpdateTypes } from './types';
-import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
+import { getChildIds, iterateChildren } from './utils';
 
 /**
  * Iterates over the children of a parent and updates it
@@ -44,7 +44,8 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			// 2. deeply merge the new data with the existing data
 			// 3. Push the updated properties to the stack
 
-			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
+			if (child_type.match(/^(block|space)$/))
+				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
 			operations.push(
@@ -63,7 +64,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 
 	if (parent_type.match(/^(block|space)$/))
 		operations.push(
-			NotionOperations.Chunk[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id))
+			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
 		);
 	await NotionOperations.executeOperations(operations, options);
 	return container as C;

@@ -4,8 +4,8 @@ import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
-import { updateLastEditedProps } from '@nishans/traverser/libs/utils';
 import { TData, TDataType } from '@nishans/types';
+import { updateLastEditedProps } from '@nishans/utils';
 import { INotionCoreOptions } from '../';
 
 /**

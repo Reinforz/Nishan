@@ -4,7 +4,7 @@ import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from './types';
-import { getChildIds, iterateChildren, updateLastEditedProps } from './utils';
+import { getChildIds, iterateChildren } from './utils';
 /**
  * Iterates over the children of a parent and deletes it
  * @param args Array of ids or a cb passed with the transformed data
@@ -44,7 +44,8 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			const updated_data = { alive: false };
 
 			// Only attach last_edited_props if the child_type is block
-			if (child_type.match(/^(block|space)$/)) last_edited_props = updateLastEditedProps(child_data, user_id);
+			if (child_type.match(/^(block|space)$/))
+				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
 
@@ -69,7 +70,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 	// if parent data exists, update the last_edited_props for the cache and push to stack
 	if (parent_type.match(/^(block|space)$/))
 		operations.push(
-			NotionOperations.Chunk[parent_type].update(parent_id, [], updateLastEditedProps(parent_data, user_id))
+			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
 		);
 	await NotionOperations.executeOperations(operations, options);
 	return container;

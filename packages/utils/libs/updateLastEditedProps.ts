@@ -1,4 +1,4 @@
-import { NotionUtils } from '@nishans/utils';
+import { NotionUtils } from './';
 
 export function updateLastEditedProps (block: any, user_id: string) {
 	const last_edited_props = {

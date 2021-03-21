@@ -6,6 +6,7 @@ import { extractInlineBlockContent } from './extractInlineBlockContent';
 import { generateSchemaMap } from './generateSchemaMap';
 import { getSchemaMapUnit } from './getSchemaMapUnit';
 import { getSchemaUnit } from './getSchemaUnit';
+import { populateChildPath } from './populateChildPath';
 import { setDefault } from './setDefault';
 import { updateLastEditedProps } from './updateLastEditedProps';
 
@@ -17,5 +18,6 @@ export const NotionUtils = {
 	generateSchemaMap,
 	extractInlineBlockContent,
 	createDefaultRecordMap,
-	updateLastEditedProps
+	updateLastEditedProps,
+	populateChildPath
 };

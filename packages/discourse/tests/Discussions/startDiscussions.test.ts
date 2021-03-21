@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
-import { o } from '../../../core/tests/utils';
+import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
 it(`NishanDiscourse.startDiscussions`, async () => {
@@ -18,13 +18,8 @@ it(`NishanDiscourse.startDiscussions`, async () => {
 		comment_1_id = NotionIdz.Generate.id(),
 		discussion_id = NotionIdz.Generate.id();
 	const options = {
-			cache,
-			shard_id: 830241,
-			space_id: 'b924ae1a-c424-4f52-ac55-0ea6bbfcab21',
-			token: 'token',
-			user_id: '72e85506-b758-481a-92b1-73984a903002',
-			interval: 0,
-			logger: true
+			...default_nishan_arg,
+			cache
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
 		comment_1_data = {

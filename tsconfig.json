@@ -51,6 +51,9 @@
       "path": "./packages/cache/tsconfig.json"
     },
     {
+      "path": "./packages/discourse/tsconfig.json"
+    },
+    {
       "path": "./packages/lineage/tsconfig.json"
     },
     {

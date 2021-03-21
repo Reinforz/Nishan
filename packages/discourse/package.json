@@ -36,7 +36,8 @@
   "dependencies": {
     "@nishans/cache": "0.0.31",
     "@nishans/operations": "0.0.28",
-    "@nishans/idz": "0.0.16"
+    "@nishans/idz": "0.0.16",
+    "@nishans/utils": "0.0.20"
   },
   "devDependencies": {
     "@nishans/types": "0.0.31"

@@ -1,5 +1,7 @@
+import { resolveDiscussions } from './resolveDiscussions';
 import { startDiscussions } from './startDiscussions';
 
 export const NotionDiscourseDiscussions = {
-	start: startDiscussions
+	start: startDiscussions,
+	resolve: resolveDiscussions
 };

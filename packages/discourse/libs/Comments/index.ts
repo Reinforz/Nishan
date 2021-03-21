@@ -1,5 +1,7 @@
 import { createComments } from './createComments';
+import { updateComments } from './updateComments';
 
 export const NotionDiscourseComments = {
-	create: createComments
+	create: createComments,
+	update: updateComments
 };

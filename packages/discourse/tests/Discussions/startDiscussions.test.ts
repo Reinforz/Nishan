@@ -54,11 +54,16 @@ it(`NishanDiscourse.startDiscussions`, async () => {
 		};
 
 	await NotionDiscourse.Discussions.start(
-		{ block_id: block_1_id, discussion_id: discussion_id },
 		[
 			{
-				id: comment_1_id,
-				text: [ [ 'First Comment' ] ]
+				comments: [
+					{
+						id: comment_1_id,
+						text: [ [ 'First Comment' ] ]
+					}
+				],
+				block_id: block_1_id,
+				discussion_id: discussion_id
 			}
 		],
 		options
@@ -68,8 +73,8 @@ it(`NishanDiscourse.startDiscussions`, async () => {
 	expect(cache.discussion.get(discussion_id)).toStrictEqual(expect.objectContaining(discussion_data));
 	expect(cache.block.get(block_1_id)).toStrictEqual(expect.objectContaining({ discussions: [ discussion_id ] }));
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.d.u(discussion_id, [], expect.objectContaining(discussion_data)),
 		o.cm.u(comment_1_id, [], expect.objectContaining(comment_1_data)),
+		o.d.u(discussion_id, [], expect.objectContaining(discussion_data)),
 		o.b.la(
 			block_1_id,
 			[ 'discussions' ],

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/graphql",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A graphql server for notion built using `@nishans/core`",
   "keywords": [
     "notion",
@@ -32,8 +32,8 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.30",
-    "@nishans/core": "0.0.26",
+    "@nishans/cache": "0.0.31",
+    "@nishans/core": "0.0.27",
     "@nishans/endpoints": "0.0.28",
     "@nishans/utils": "0.0.20",
     "apollo-server": "^2.21.0",

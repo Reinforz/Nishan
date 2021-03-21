@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
@@ -32,18 +32,18 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.30",
+    "@nishans/cache": "0.0.31",
     "@nishans/constants": "0.0.20",
     "@nishans/endpoints": "0.0.28",
     "@nishans/errors": "0.0.28",
-    "@nishans/fabricator": "0.0.24",
-    "@nishans/idz": "^0.0.15",
+    "@nishans/fabricator": "0.0.25",
+    "@nishans/idz": "0.0.16",
     "@nishans/init": "0.0.19",
-    "@nishans/lineage": "0.0.17",
+    "@nishans/lineage": "0.0.18",
     "@nishans/logger": "0.0.16",
     "@nishans/operations": "0.0.28",
     "@nishans/permissions": "0.0.19",
-    "@nishans/traverser": "0.0.17",
+    "@nishans/traverser": "0.0.18",
     "@nishans/utils": "0.0.20"
   },
   "devDependencies": {

@@ -151,17 +151,16 @@ export type IFollowData = INotionData<IFollow>;
 export interface IComment extends NotionNode, SpaceShardProps, CreatedProps, LastEditedProps {
 	text: TTextFormat;
 	parent_id: string;
-	parent_table: 'collection';
+	parent_table: 'discussion';
 }
 
 export type ICommentData = INotionData<IComment>;
 
 export interface IDiscussion extends SpaceShardProps, ParentProps {
-	text: TTextFormat;
 	id: string;
 	version: number;
 	resolved: boolean;
-	context: [[string]];
+	context: TTextFormat;
 	comments: string[];
 	parent_table: 'block';
 }

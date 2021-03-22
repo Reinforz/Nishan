@@ -135,11 +135,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	}
 
 	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
-		const discussion_ids: string[] = [];
-		this.getCachedData().content.forEach((block_id) => {
-			const block_data = this.cache.block.get(block_id);
-			if ((block_data as any).discussions) discussion_ids.push(...(block_data as any).discussions);
-		});
+		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
 
 		return await this.getIterate<IDiscussion, Discussion[]>(
 			args,

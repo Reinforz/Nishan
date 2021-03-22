@@ -2505,6 +2505,149 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nishans/cache@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.29.tgz#c0c5310fc30ce8ca334fbda3241ce7a3751602ec"
+  integrity sha512-o+GPBNz0tbGLkvBqqR9j1QGMHfnxdcnGyKWBSiy2bIw1ZefVD+umvy1E142HWgMj47VSKlsSfPy5qIQM8cwFtA==
+  dependencies:
+    "@nishans/endpoints" "0.0.27"
+    "@nishans/errors" "0.0.25"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/constants@0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.19.tgz#455473c10bf68f3bb15794519e7fc5654f934c02"
+  integrity sha512-6yEEHP7aezJS6kQgptJP4cSUKKnOwiD4xiYI/7Ul9XnXGHAoBWAWacZGU7jUvRjytdmTxuNs5e9KchTus4aTYw==
+
+"@nishans/core@0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@nishans/core/-/core-0.0.25.tgz#c6d3208c320b97a11879bf3b738257cc52b35586"
+  integrity sha512-OKt7hgJefQr+CRi+mpJzMHQXy01A86MPCJt3dSddxcMktQ9WXxzB/OY4oDCge/5gF2B+gQND2JsF10BEwGl0Ww==
+  dependencies:
+    "@nishans/cache" "0.0.29"
+    "@nishans/constants" "0.0.19"
+    "@nishans/endpoints" "0.0.27"
+    "@nishans/errors" "0.0.25"
+    "@nishans/fabricator" "0.0.23"
+    "@nishans/idz" "^0.0.15"
+    "@nishans/init" "0.0.16"
+    "@nishans/lineage" "0.0.16"
+    "@nishans/logger" "0.0.16"
+    "@nishans/operations" "0.0.27"
+    "@nishans/permissions" "0.0.18"
+    "@nishans/traverser" "0.0.16"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/endpoints@0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.27.tgz#5b66974cf812051f0350c56a8ae83a9c30ab4527"
+  integrity sha512-EymYATDSCsezI7I0nm+BLOD0aL0UK3SXttOlyNSkRQrXpMGBuCJMMDlCC9Z56unIxskbxr2N4uz21+qiP2JDXg==
+  dependencies:
+    "@nishans/logger" "0.0.16"
+    axios "^0.21.1"
+    uuid "^8.3.2"
+
+"@nishans/errors@0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.25.tgz#e58cbf15b4f7c6004386f0e00d12c14894e2f054"
+  integrity sha512-Mc7hm6xTBjPvI5vu4YoQYWqgmP5fYqEy8Pny2br5zxaJjrS1obZJ78CVMtslEKchlQ7d0HRc5QxcxYAiDZM1KA==
+  dependencies:
+    colors "^1.4.0"
+
+"@nishans/fabricator@0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@nishans/fabricator/-/fabricator-0.0.23.tgz#96763426ce80ac13d01530756754b8707c4a6be1"
+  integrity sha512-jL+CZkwthg25IMZ0zkfjVcJ7/v55Flm/p6xhfALACllxCp+nWiLMwy87RSu6vrDXpw2nv7p7VI/hITbMmhj/5Q==
+  dependencies:
+    "@nishans/cache" "0.0.29"
+    "@nishans/endpoints" "0.0.27"
+    "@nishans/errors" "0.0.25"
+    "@nishans/idz" "0.0.15"
+    "@nishans/init" "0.0.16"
+    "@nishans/lineage" "0.0.16"
+    "@nishans/logger" "0.0.16"
+    "@nishans/notion-formula" "0.0.26"
+    "@nishans/operations" "0.0.27"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/idz@0.0.15", "@nishans/idz@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@nishans/idz/-/idz-0.0.15.tgz#7f4cef61e402b7aef7fc59f6dafbaf28f4dcb326"
+  integrity sha512-0Ra0yzzGdNI7jXziTi8qPB90CPd2RqIq3CC2cBBwWtlyPv8Z007/jre1b3SbtBq2guGn0trpX9Jd6S9d6UMl3A==
+  dependencies:
+    uuid "^8.3.2"
+
+"@nishans/init@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@nishans/init/-/init-0.0.16.tgz#90a5b3a4ad237b488d41dbd0f4dffb1feef9548c"
+  integrity sha512-X3ZS7GkvkLJEzNUw0KQSgTHJMY2RyU6WD3QfIW4RrE9jRoqenn3qN4jSNnw8GXcBW7JtlM43/GZM3k10OnOWGQ==
+
+"@nishans/inline-blocks@0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@nishans/inline-blocks/-/inline-blocks-0.0.30.tgz#ded409546677bc3a4ad3c28c8e68cb21b6dd5dac"
+  integrity sha512-jIJQFl3qNKt4k88fwZabtA1TlwJH70585LOJUemcZhkZR43uDg5httv/pfh7QPnLZNp8GNZ32CFJdcpUd+sBAw==
+
+"@nishans/lineage@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@nishans/lineage/-/lineage-0.0.16.tgz#9c4b5d5147f5121fdf12af7f20fe63c8fb1fc564"
+  integrity sha512-rylE9GonS0U1Qurz0XmmlkmVhrVZ6Bc8T1jQnZPzyhwXLS0ZaOHstv2zydq6aUzC8KanyO9ytCoyz3Qe5DFohQ==
+  dependencies:
+    "@nishans/cache" "0.0.29"
+    "@nishans/errors" "0.0.25"
+    "@nishans/logger" "0.0.16"
+    "@nishans/operations" "0.0.27"
+
+"@nishans/notion-formula@0.0.26":
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/@nishans/notion-formula/-/notion-formula-0.0.26.tgz#b220ff05520e2aa5e00395b3314ba94b9e8d9a59"
+  integrity sha512-DDmFkuw0/nHblyxLMDv8wBkPn+Age1lOzcFjasUWsyFNEQwrWHT5zPBXeAsEwOvbhXdhnPmxpo4PhhNn3pO7aw==
+  dependencies:
+    "@nishans/cache" "0.0.29"
+    "@nishans/constants" "0.0.19"
+    "@nishans/errors" "0.0.25"
+    "@nishans/idz" "0.0.15"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/operations@0.0.27":
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.27.tgz#42a496d625309ce8993aa8a5c419cd96087458b4"
+  integrity sha512-XcS9BBNlb9DGqFcQtyBssxcUsVygwLQ5ui/p15nltnIR4vcA+1ikNjVNzgSCMy6BG6zaTrytCi/FRJZVaSIO8A==
+  dependencies:
+    "@nishans/constants" "0.0.19"
+    "@nishans/endpoints" "0.0.27"
+
+"@nishans/permissions@0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@nishans/permissions/-/permissions-0.0.18.tgz#bbafb9201271b1e4b77ae45f18c73c6f7a278fe5"
+  integrity sha512-qL21myow3mwU876qOoq43Ztc0XAR4eEbePd7CPWmlPbATS9DPZHoOOnVsohge86Do9RZVBo9Jrsa84rw3Eh8Lw==
+  dependencies:
+    "@nishans/endpoints" "0.0.27"
+    "@nishans/operations" "0.0.27"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/traverser@0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@nishans/traverser/-/traverser-0.0.16.tgz#9a799323e76b14e1132be0525675c1b0b36cc503"
+  integrity sha512-ydfPDm2SPfzt3JjQwdhFbUgQTCW7G17tGn+NKO3EsAiIN8+HWxt9q7udLsuKFS4zFsdd+Ii9ewuIQL49yazwMQ==
+  dependencies:
+    "@nishans/lineage" "0.0.16"
+    "@nishans/logger" "0.0.16"
+    "@nishans/operations" "0.0.27"
+    "@nishans/utils" "0.0.19"
+
+"@nishans/types@0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.28.tgz#4319dbbbcbb36d375b619912f73168c36350c298"
+  integrity sha512-b4niZI/9iEuYB2c8NXoYQbGrdLTN924lZrz1lR4Iy8DszsnWX5YX/Vg6+Om0mxqzbWmExmg4P7ow2kuNM9hW2Q==
+
+"@nishans/utils@0.0.19":
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.19.tgz#5127ae7a9240290d2ea03fecdcb4df455aa8f2cc"
+  integrity sha512-NA2RlVmpuTbcEffV4jfpeJF0EOKVKnCRwHdwzS+c0PQdE5YJx2DZ9LuJ7yeoIItW4HlbyUDZ+j0hbr1t4bRJ6Q==
+  dependencies:
+    "@nishans/constants" "0.0.19"
+    "@nishans/errors" "0.0.25"
+
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.4.tgz#d4b3549a5db5de2683e0c1071ab4f140904bbf69"
@@ -9825,9 +9968,9 @@ humanize-ms@^1.2.1:
     ms "^2.0.0"
 
 husky@^5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-5.1.3.tgz#1a0645a4fe3ffc006c4d0d8bd0bcb4c98787cc9d"
-  integrity sha512-fbNJ+Gz5wx2LIBtMweJNY1D7Uc8p1XERi5KNRMccwfQA+rXlxWNSdUxswo0gT8XqxywTIw7Ywm/F4v/O35RdMg==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-5.2.0.tgz#fc5e1c2300d34855d47de4753607d00943fc0802"
+  integrity sha512-AM8T/auHXRBxlrfPVLKP6jt49GCM2Zz47m8G3FOMsLmTv8Dj/fKVWE0Rh2d4Qrvmy131xEsdQnb3OXRib67PGg==
 
 hyphenate-style-name@^1.0.3:
   version "1.0.4"

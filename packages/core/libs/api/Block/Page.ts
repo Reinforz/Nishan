@@ -4,9 +4,10 @@ import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/Block';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
+import { Comment } from '../Comment';
 import { Discussion } from '../Discussion';
 import Block from './Block';
 
@@ -143,6 +144,23 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			(discussion_id) => this.cache.discussion.get(discussion_id),
 			async (id, __, container) => {
 				container.push(new Discussion({ ...this.getProps(), id }));
+			}
+		);
+	}
+
+	async getComment (arg?: FilterType<IComment>) {
+		return (await this.getComments(transformToMultiple(arg), false))[0];
+	}
+
+	async getComments (args?: FilterTypes<IComment>, multiple?: boolean) {
+		const comment_ids = NotionLineage.Page.getCommentIds(this.getCachedData(), this.cache);
+
+		return await this.getIterate<IComment, Comment[]>(
+			args,
+			{ container: [], multiple, child_ids: comment_ids, child_type: 'comment' },
+			(comment_id) => this.cache.comment.get(comment_id),
+			async (id, __, container) => {
+				container.push(new Comment({ ...this.getProps(), id }));
 			}
 		);
 	}

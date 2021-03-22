@@ -1,9 +1,8 @@
 {
   "extends": "../tsconfig.shared.json",
   "include": [
-    "./libs/index.ts",
-    "./experiment",
-    "./examples"
+    "./libs/**/*.ts",
+    "./experiment"
   ],
   "compilerOptions": {
     "target": "ES2020",

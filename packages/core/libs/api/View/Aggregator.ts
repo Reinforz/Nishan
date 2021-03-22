@@ -1,15 +1,16 @@
 import { NotionErrors } from '@nishans/errors';
-import {
-	ISchemaAggregationMap,
-	ISchemaAggregationMapValue,
-	NotionFabricator,
-	TAggregationsCreateInput,
-	TAggregationsUpdateInput
-} from '@nishans/fabricator';
+import { NotionFabricator, TAggregationsCreateInput, TAggregationsUpdateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IBoardView, ITableView, ITimelineView } from '@nishans/types';
-import { ISchemaMap, NotionUtils } from '@nishans/utils';
+import {
+	IBoardView,
+	ISchemaAggregationMap,
+	ISchemaAggregationMapValue,
+	ISchemaMap,
+	ITableView,
+	ITimelineView
+} from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { INotionCoreOptions } from '../../';
 import { transformToMultiple } from '../../utils';
 import View from './View';

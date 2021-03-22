@@ -2,40 +2,12 @@ import { FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput } from '@nish
 import {
 	CreatedBySchemaUnit,
 	CreatedTimeSchemaUnit,
-	IViewFilter,
 	LastEditedBySchemaUnit,
 	LastEditedTimeSchemaUnit,
 	RollupSchemaUnit,
 	TBasicSchemaUnit,
-	TSchemaUnit,
-	TViewFilters,
-	TViewType,
-	ViewAggregations,
-	ViewFormatProperties,
-	ViewSorts
+	TViewType
 } from '@nishans/types';
-
-export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
-export type ISchemaMap = Map<string, ISchemaMapValue>;
-
-export type ISchemaAggregationMapValue = {
-	schema_id: string;
-	aggregation: ViewAggregations;
-} & TSchemaUnit;
-export type ISchemaAggregationMap = Map<string, ISchemaAggregationMapValue>;
-
-export type ISchemaSortsMapValue = { schema_id: string; sort: ViewSorts } & TSchemaUnit;
-export type ISchemaSortsMap = Map<string, ISchemaSortsMapValue>;
-
-export type ISchemaFiltersMapValue = {
-	schema_id: string;
-	parent_filter: IViewFilter;
-	child_filter: TViewFilters;
-} & TSchemaUnit;
-export type ISchemaFiltersMap = Map<string, ISchemaFiltersMapValue>;
-
-export type ISchemaFormatMapValue = { schema_id: string; format: Omit<ViewFormatProperties, 'property'> } & TSchemaUnit;
-export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 
 export type SchemaFormatPropertiesUpdateInput =
 	| ({ type: 'table' } & Partial<{ position: number; visible: boolean; width: number }>)

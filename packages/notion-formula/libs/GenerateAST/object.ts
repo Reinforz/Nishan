@@ -1,5 +1,5 @@
-import { TFormula } from '@nishans/types';
-import { FormulaObjectSchemaUnitInput, ISchemaMap } from '..';
+import { ISchemaMap, TFormula } from '@nishans/types';
+import { FormulaObjectSchemaUnitInput } from '../';
 import { generateNotionFormulaAST } from './utils';
 
 /**

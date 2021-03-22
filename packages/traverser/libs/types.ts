@@ -11,6 +11,7 @@ import {
 	ISpaceView,
 	IUserRoot,
 	IUserSettings,
+	Predicate,
 	TActivity,
 	TBlock,
 	TDataType,
@@ -34,8 +35,6 @@ interface ICache {
 	activity: Map<string, TActivity>;
 	notification: Map<string, TNotification>;
 }
-export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void | null | undefined;
-
 export type FilterTypes<T> = undefined | string[] | Predicate<T>;
 export type FilterType<T> = undefined | string | Predicate<T>;
 export type UpdateTypes<T1, T2> =

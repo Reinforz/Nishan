@@ -1,5 +1,5 @@
 import { NotionErrors } from '@nishans/errors';
-import { ISchemaMap } from './types';
+import { ISchemaMap } from '@nishans/types';
 
 export const getSchemaMapUnit = (schema_map: ISchemaMap, key: string, path: string[]) => {
 	const schema_map_unit = schema_map.get(key);

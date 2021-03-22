@@ -1,6 +1,5 @@
 import { NotionErrors } from '@nishans/errors';
-import { TFormulaResultType, TPropertyFormula } from '@nishans/types';
-import { ISchemaMap } from '../';
+import { ISchemaMap, TFormulaResultType, TPropertyFormula } from '@nishans/types';
 import { getResultTypeFromSchemaType } from '../GenerateAST/utils';
 
 /**

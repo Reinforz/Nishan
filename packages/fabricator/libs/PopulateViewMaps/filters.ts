@@ -1,7 +1,6 @@
 import { NotionInit } from "@nishans/init";
-import { IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
+import { ISchemaFiltersMap, IViewFilter, Schema, TView, TViewFilters } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ISchemaFiltersMap } from "../";
 
 /**
  * Populates and returns a filter map

@@ -1,5 +1,3 @@
-export * from './types';
-
 import { createDefaultRecordMap } from './createDefaultRecordMap';
 import { deepMerge } from './deepMerge';
 import { extractInlineBlockContent } from './extractInlineBlockContent';

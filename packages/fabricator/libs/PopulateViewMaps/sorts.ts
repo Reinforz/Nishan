@@ -1,7 +1,6 @@
 import { NotionInit } from "@nishans/init";
-import { Schema, TView } from "@nishans/types";
+import { ISchemaSortsMap, Schema, TView } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ISchemaSortsMap } from "../";
 
 /**
  * Populates and returns an sort map

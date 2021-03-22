@@ -1,7 +1,6 @@
 import { NotionInit } from "@nishans/init";
-import { IBoardView, ITableView, ITimelineView, Schema } from "@nishans/types";
+import { IBoardView, ISchemaAggregationMap, ITableView, ITimelineView, Schema } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ISchemaAggregationMap } from "../";
 
 /**
  * Populates and returns an aggregation map

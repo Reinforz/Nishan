@@ -1,5 +1,4 @@
-import { ISchemaMap } from "@nishans/notion-formula";
-import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
+import { IBoardViewQuery2, ICalendarViewQuery2, IGalleryViewQuery2, IListViewQuery2, ISchemaMap, ITableViewQuery2, ITimelineViewQuery2, TViewQuery2 } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { NotionValidators } from "@nishans/validators";
 import { BoardViewQuery2CreateInput, CalendarViewQuery2CreateInput, GalleryViewQuery2CreateInput, ListViewQuery2CreateInput, TableViewQuery2CreateInput, TimelineViewQuery2CreateInput, TViewQuery2CreateInput } from "../../";

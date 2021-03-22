@@ -1,6 +1,5 @@
 import { TBlockCreateInput } from "@nishans/fabricator";
-import { ICollection, INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "@nishans/types";
-import { ElementType } from ".";
+import { ElementType, ICollection, INotionUser, ISpace, ISpaceView, IUserSettingsSettings } from "@nishans/types";
 
 export const TSpaceUpdateKeys = ["name", "icon", "disable_public_access", "disable_guests", "disable_move_to_space", "disable_export", "domain", "invite_link_enabled", "beta_enabled"] as const;
 export const TCollectionUpdateKeys = ["name", "icon", "description"] as const;

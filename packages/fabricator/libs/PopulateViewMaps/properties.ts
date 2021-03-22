@@ -1,6 +1,5 @@
-import { Schema, TView, ViewFormatProperties } from "@nishans/types";
+import { ISchemaFormatMap, Schema, TView, ViewFormatProperties } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ISchemaFormatMap } from "../";
 
 /**
  * Populates and returns an format properties map

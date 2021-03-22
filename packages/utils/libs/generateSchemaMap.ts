@@ -1,5 +1,4 @@
-import { Schema } from '@nishans/types';
-import { ISchemaMap } from './types';
+import { ISchemaMap, Schema } from '@nishans/types';
 
 /**
  * Generates a schema_map from the passed schema

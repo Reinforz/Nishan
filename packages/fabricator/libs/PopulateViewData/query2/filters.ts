@@ -1,5 +1,4 @@
-import { ISchemaMap } from '@nishans/notion-formula';
-import { IViewFilter, TViewFilters } from '@nishans/types';
+import { ISchemaMap, IViewFilter, TViewFilters } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { TViewFilterCreateInput } from '../../';
 

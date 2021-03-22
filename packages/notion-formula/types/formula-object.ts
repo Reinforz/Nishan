@@ -1,7 +1,4 @@
-import { TDateConstantValueType, TFunctionName, TSchemaUnit } from '@nishans/types';
-
-export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
-export type ISchemaMap = Map<string, ISchemaMapValue>;
+import { TDateConstantValueType, TFunctionName } from '@nishans/types';
 
 // Formula Inputs
 export type TFormulaObjectArgument =

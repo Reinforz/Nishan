@@ -1,5 +1,5 @@
-import { TFunctionName } from '@nishans/types';
-import { ISchemaMap, NotionFormula } from '..';
+import { ISchemaMap, TFunctionName } from '@nishans/types';
+import { NotionFormula } from '../';
 
 /**
  * Generate notion client compatible formula ast from string 

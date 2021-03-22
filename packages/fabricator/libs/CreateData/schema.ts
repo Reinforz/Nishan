@@ -1,7 +1,7 @@
 import { NotionErrors } from "@nishans/errors";
 import { NotionIdz } from "@nishans/idz";
-import { ISchemaMapValue, NotionFormula } from "@nishans/notion-formula";
-import { CollectionFormatPropertyVisibility, ICollection, Schema } from "@nishans/types";
+import { NotionFormula } from "@nishans/notion-formula";
+import { CollectionFormatPropertyVisibility, ICollection, ISchemaMapValue, Schema } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { ICollectionBlockInput, ParentCollectionData } from ".";
 import { INotionFabricatorOptions } from "../";

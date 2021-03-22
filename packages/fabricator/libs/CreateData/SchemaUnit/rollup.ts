@@ -1,8 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
 import { NotionLogger } from '@nishans/logger';
-import { ISchemaMap } from '@nishans/notion-formula';
-import { ICollection, RollupSchemaUnit } from '@nishans/types';
+import { ICollection, ISchemaMap, RollupSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { INotionFabricatorOptions, TRollupSchemaUnitInput } from '..';
 

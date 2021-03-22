@@ -1,9 +1,8 @@
 import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
-import { TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
+import { ISchemaMap, TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
 import {
   FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput,
-  ISchemaMap,
   TFormulaArrayArgument,
   TFormulaObject,
   TFormulaObjectArgument

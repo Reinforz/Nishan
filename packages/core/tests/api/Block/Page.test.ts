@@ -12,12 +12,19 @@ const construct = () => {
 	const space_1 = {
 			id: 'space_1'
 		},
+		discussion_1 = { id: 'discussion_1', comments: [] } as any,
 		block_1 = { id: 'block_1', parent_table: 'space', parent_id: 'space_1', type: 'page', content: [ 'block_2' ] },
-		block_2 = { id: 'block_2', type: 'header', properties: { title: [ [ 'Header' ] ] } } as any,
+		block_2 = {
+			discussions: [ 'discussion_1' ],
+			id: 'block_2',
+			type: 'header',
+			properties: { title: [ [ 'Header' ] ] }
+		} as any,
 		cache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
-			space: new Map([ [ 'space_1', space_1 ] ])
+			space: new Map([ [ 'space_1', space_1 ] ]),
+			discussion: new Map([ [ 'discussion_1', discussion_1 ] ])
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
 		initializeCacheForSpecificDataMock = jest
@@ -29,7 +36,16 @@ const construct = () => {
 		cache,
 		logger: false
 	});
-	return { space_1, cache, block_1, block_2, page, initializeCacheForSpecificDataMock, executeOperationsMock };
+	return {
+		space_1,
+		discussion_1,
+		cache,
+		block_1,
+		block_2,
+		page,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock
+	};
 };
 
 it(`getCachedParentData`, async () => {
@@ -126,4 +142,13 @@ it(`updateBookmarkedStatus`, async () => {
 	await page.updateBookmarkedStatus(false);
 
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+});
+
+it(`getDiscussion`, async () => {
+	const { discussion_1, page, initializeCacheForSpecificDataMock } = construct();
+
+	const discussion = await page.getDiscussion('discussion_1');
+
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
+	expect(discussion.getCachedData()).toBe(discussion_1);
 });

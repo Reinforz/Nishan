@@ -131,7 +131,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 	}
 
 	async getDiscussion (arg?: FilterType<IDiscussion>) {
-		return await this.getDiscussions(transformToMultiple(arg), false);
+		return (await this.getDiscussions(transformToMultiple(arg), false))[0];
 	}
 
 	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
@@ -141,7 +141,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			if ((block_data as any).discussions) discussion_ids.push(...(block_data as any).discussions);
 		});
 
-		await this.getIterate<IDiscussion, Discussion[]>(
+		return await this.getIterate<IDiscussion, Discussion[]>(
 			args,
 			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
 			(discussion_id) => this.cache.discussion.get(discussion_id),

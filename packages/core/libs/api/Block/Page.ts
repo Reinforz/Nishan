@@ -110,7 +110,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @param arg id string or a predicate acting as a filter
    */
 	async deleteBlock (arg?: FilterType<TBlock>) {
-		return await this.deleteBlocks(transformToMultiple(arg), false);
+		await this.deleteBlocks(transformToMultiple(arg), false);
 	}
 
 	/**
@@ -142,9 +142,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			args,
 			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
 			(discussion_id) => this.cache.discussion.get(discussion_id),
-			async (id, __, container) => {
-				container.push(new Discussion({ ...this.getProps(), id }));
-			}
+			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
 		);
 	}
 
@@ -159,9 +157,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			args,
 			{ container: [], multiple, child_ids: comment_ids, child_type: 'comment' },
 			(comment_id) => this.cache.comment.get(comment_id),
-			async (id, __, container) => {
-				container.push(new Comment({ ...this.getProps(), id }));
-			}
+			async (id, __, container) => container.push(new Comment({ ...this.getProps(), id }))
 		);
 	}
 }

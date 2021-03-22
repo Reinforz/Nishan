@@ -1,5 +1,6 @@
 import { createDependencyMap } from './createDependencyMap';
 import { createDependencyVersionMap } from './createDependencyVersionMap';
+import { createImportedCode } from './createImportedCode';
 import { createPackageDirectory } from './createPackageDirectory';
 import { createPackageMap } from './createPackageMap';
 import { createPackagePublishOrder } from './createPackagePublishOrder';
@@ -13,5 +14,6 @@ export const NishanScriptsCreate = {
 	packageMap: createPackageMap,
 	packagePublishOrder: createPackagePublishOrder,
 	readme: createReadme,
-	packagesData: createPackagesData
+	packagesData: createPackagesData,
+	importedCode: createImportedCode
 };

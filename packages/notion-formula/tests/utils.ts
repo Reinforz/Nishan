@@ -1,4 +1,4 @@
-import { ISchemaMap } from '../libs';
+import { ISchemaMap } from '@nishans/types';
 
 // Title schema unit
 export const tsu: any = {

@@ -21,9 +21,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --ignore-optional
       - run: yarn test
+      - name: Checking internal dependencies
+        run: yarn run install:scripts && yarn run transpile:scripts && yarn run test:imports
       - name: Uploading test coverage reports
         run: |
           chmod +x "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"
           "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"
-      - name: Checking internal dependencies
-        run: yarn run transpile:scripts && yarn run test:imports

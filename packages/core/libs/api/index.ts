@@ -9,6 +9,7 @@ import UserRoot from './UserRoot';
 import UserSettings from './UserSettings';
 
 export * from './Block';
-export * from './Discourse';
+export * from './Comment';
+export * from './Discussion';
 export * from './View';
 export { Nishan, Collection, NotionUser, UserSettings, UserRoot, SpaceView, Space, SchemaUnit, NotionData };

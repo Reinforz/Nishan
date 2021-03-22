@@ -4,9 +4,10 @@ import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/Block';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
+import { Discussion } from '../Discussion';
 import Block from './Block';
 
 /**
@@ -126,6 +127,27 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				container: []
 			},
 			(block_id) => this.cache.block.get(block_id)
+		);
+	}
+
+	async getDiscussion (arg?: FilterType<IDiscussion>) {
+		return await this.getDiscussions(transformToMultiple(arg), false);
+	}
+
+	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
+		const discussion_ids: string[] = [];
+		this.getCachedData().content.forEach((block_id) => {
+			const block_data = this.cache.block.get(block_id);
+			if ((block_data as any).discussions) discussion_ids.push(...(block_data as any).discussions);
+		});
+
+		await this.getIterate<IDiscussion, Discussion[]>(
+			args,
+			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
+			(discussion_id) => this.cache.discussion.get(discussion_id),
+			async (id, __, container) => {
+				container.push(new Discussion({ ...this.getProps(), id }));
+			}
 		);
 	}
 }

@@ -15,7 +15,7 @@ export async function createImportedPackagesSourceFile () {
 				package_name_chunks
 					.map((package_name_chunk) => package_name_chunk.charAt(0).toUpperCase() + package_name_chunk.substr(1))
 					.join(''); */
-			if (package_data.name !== 'types')
+			if (package_data.name !== '@nishans/types')
 				import_declarations.push(
 					ts.factory.createExportDeclaration(
 						undefined,

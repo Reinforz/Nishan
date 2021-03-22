@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
-import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { ICollection, TBlock, TCollectionBlock, TPage, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { INotionFabricatorOptions } from 'packages/fabricator/dist/libs';
 import { IBlockMap, IPageMap } from '../types';
 import { createBlockClass } from './createBlockClass';
 

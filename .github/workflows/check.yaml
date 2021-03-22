@@ -25,3 +25,5 @@ jobs:
         run: |
           chmod +x "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"
           "${GITHUB_WORKSPACE}/scripts/uploadTestCoverageReports.sh"
+      - name: Checking internal dependencies
+        run: yarn run transpile:scripts && yarn run test:imports

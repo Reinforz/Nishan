@@ -5,7 +5,7 @@
     "./experiment"
   ],
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es2015",
     "outDir": "./dist",
     "rootDir": "./",
     "resolveJsonModule": true

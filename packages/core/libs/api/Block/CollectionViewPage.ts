@@ -13,7 +13,7 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
 	Permissions: NotionBlockPermissions;
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
-		this.Permissions = new NotionPermissions.Block(arg) as any;
+		this.Permissions = new NotionPermissions.Block(arg);
 	}
 
 	async getCachedParentData () {

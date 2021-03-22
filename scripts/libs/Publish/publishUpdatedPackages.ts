@@ -12,7 +12,7 @@ export async function publishUpdatedPackages (updated_packages_name: string[]) {
 		rearranged_packages = createPackagePublishOrder(Array.from(package_dependency_map.all.keys()), packages_map);
 	console.log(colors.blue.bold(rearranged_packages.join('\n')));
 
-	const rearranged_packages_map = updatePatchVersion(rearranged_packages, packages_map, 1);
+	const updated_packages_map = updatePatchVersion(rearranged_packages, packages_map, 1);
 	await buildAfterTest(rearranged_packages);
-	await publishPackages(rearranged_packages_map);
+	await publishPackages(updated_packages_map);
 }

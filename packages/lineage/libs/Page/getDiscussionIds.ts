@@ -1,5 +1,4 @@
-import { ICache } from '@nishans/cache';
-import { IPage } from '@nishans/types';
+import { ICache, IPage } from '@nishans/types';
 
 export const getDiscussionIds = (page: IPage, cache: ICache) => {
 	const discussion_ids: string[] = [];

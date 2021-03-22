@@ -13,6 +13,7 @@ import {
   TBlock,
   TNotification, TSchemaUnit, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
 } from './';
+export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
 
 export type ISchemaAggregationMapValue = {

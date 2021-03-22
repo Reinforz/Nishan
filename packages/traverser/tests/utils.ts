@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/cache';
+import { ICache } from '@nishans/types';
 import { last_edited_props, o } from '../../core/tests/utils';
 
 export const c1id = 'child_one_id';

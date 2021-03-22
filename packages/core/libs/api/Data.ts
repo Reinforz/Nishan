@@ -1,10 +1,10 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionErrors } from '@nishans/errors';
 import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
-import { TData, TDataType } from '@nishans/types';
+import { ICache, TData, TDataType } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { INotionCoreOptions } from '../';
 

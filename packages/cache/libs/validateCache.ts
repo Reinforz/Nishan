@@ -1,6 +1,6 @@
 import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
-import { ICache } from './';
+import { ICache } from '@nishans/types';
 
 /**
  * Validates the passed cache 

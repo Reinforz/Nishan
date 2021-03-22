@@ -1,6 +1,5 @@
 import { NotionConstants } from '@nishans/constants';
-import { RecordMap, TData, TDataType } from '@nishans/types';
-import { ICache } from './';
+import { ICache, RecordMap, TData, TDataType } from '@nishans/types';
 
 /**
 * Save all the items of a recordMap in internal cache

@@ -1,5 +1,4 @@
-import { ICache } from '@nishans/cache';
-import { IPage, IText } from '@nishans/types';
+import { ICache, IPage, IText } from '@nishans/types';
 
 export const getCommentIds = (page: IPage, cache: ICache) => {
 	const comment_ids: string[] = [];

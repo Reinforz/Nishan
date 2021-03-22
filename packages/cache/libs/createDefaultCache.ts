@@ -1,5 +1,5 @@
 import { NotionConstants } from '@nishans/constants';
-import { ICache } from './';
+import { ICache } from '@nishans/types';
 
 export function createDefaultCache () {
 	const cache: ICache = {} as any;

@@ -1,6 +1,18 @@
-import { IViewFilter, TSchemaUnit, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts } from './';
-
-export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
+import {
+  ICollection,
+  IComment,
+  IDiscussion,
+  IFollow,
+  INotionUser,
+  IPageVisits,
+  ISlackIntegration,
+  ISpace,
+  ISpaceView,
+  IUserRoot,
+  IUserSettings, IViewFilter, TActivity,
+  TBlock,
+  TNotification, TSchemaUnit, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
+} from './';
 export type ISchemaMap = Map<string, ISchemaMapValue>;
 
 export type ISchemaAggregationMapValue = {
@@ -23,3 +35,21 @@ export type ISchemaFormatMapValue = { schema_id: string; format: Omit<ViewFormat
 export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void | null | undefined;
+
+export interface ICache {
+	block: Map<string, TBlock>;
+	collection: Map<string, ICollection>;
+	collection_view: Map<string, TView>;
+	space: Map<string, ISpace>;
+	notion_user: Map<string, INotionUser>;
+	space_view: Map<string, ISpaceView>;
+	user_root: Map<string, IUserRoot>;
+	user_settings: Map<string, IUserSettings>;
+	discussion: Map<string, IDiscussion>;
+	comment: Map<string, IComment>;
+	follow: Map<string, IFollow>;
+	slack_integration: Map<string, ISlackIntegration>;
+	page_visits: Map<string, IPageVisits>;
+	activity: Map<string, TActivity>;
+	notification: Map<string, TNotification>;
+}

@@ -1,7 +1,7 @@
-import { ICache, NotionCache } from "@nishans/cache";
+import { NotionCache } from "@nishans/cache";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { FilterType, FilterTypes, NotionTraverser } from "@nishans/traverser";
-import { INotionUser } from "@nishans/types";
+import { ICache, INotionUser } from "@nishans/types";
 import { INotionCoreOptions } from "../";
 import { transformToMultiple } from "../utils";
 import NotionUser from "./NotionUser";

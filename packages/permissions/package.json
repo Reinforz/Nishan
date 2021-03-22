@@ -1,6 +1,6 @@
 {
   "name": "@nishans/permissions",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A package to easily deal with notion permissions",
   "keywords": [
     "notion",
@@ -35,7 +35,7 @@
     "@nishans/logger": "0.0.16",
     "@nishans/errors": "0.0.28",
     "@nishans/operations": "0.0.28",
-    "@nishans/utils": "0.0.20"
+    "@nishans/utils": "0.0.21"
   },
   "devDependencies": {
     "@nishans/types": "0.0.31"

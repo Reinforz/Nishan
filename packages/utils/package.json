@@ -1,6 +1,6 @@
 {
   "name": "@nishans/utils",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A bunch of small utility modules used across nishans ecosystem",
   "keywords": [
     "notion",

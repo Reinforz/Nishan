@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cache",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "A cache specially designed to retrieve and store notion data in memory",
   "keywords": [
     "notion",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@nishans/endpoints": "0.0.28",
     "@nishans/errors": "0.0.28",
-    "@nishans/utils": "0.0.20",
+    "@nishans/utils": "0.0.21",
     "@nishans/constants": "0.0.20"
   },
   "devDependencies": {

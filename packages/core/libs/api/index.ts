@@ -83,6 +83,7 @@ class Nishan {
 }
 
 export * from "./Block";
+export * from "./Discourse";
 export * from "./View";
 export {
   Nishan,

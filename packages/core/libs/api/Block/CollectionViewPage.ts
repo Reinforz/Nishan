@@ -12,7 +12,7 @@ import CollectionBlock from './CollectionBlock';
 class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
 	Permissions: NotionBlockPermissions;
 	constructor (arg: INotionCoreOptions) {
-		super({ ...arg });
+		super(arg);
 		this.Permissions = new NotionPermissions.Block(arg);
 	}
 

@@ -1,5 +1,6 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { ICache, NotionCache } from '../libs';
+import { ICache } from '@nishans/types';
+import { NotionCache } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();

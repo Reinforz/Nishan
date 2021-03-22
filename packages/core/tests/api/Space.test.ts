@@ -1,7 +1,8 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
 import { createSpaceIterateArguments } from '../../libs/api/Space';

@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICollection, IPage, TBlock } from '@nishans/types';
+import { ICache, ICollection, IPage, TBlock } from '@nishans/types';
 import { last_edited_props, o } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import {

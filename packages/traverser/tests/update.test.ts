@@ -1,7 +1,6 @@
-import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICollection, IPage, TBlock } from '@nishans/types';
+import { ICache, ICollection, IPage, TBlock } from '@nishans/types';
 import { o } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import { c1id, c1uo, c2id, c2uo, c3id, cd, constructCache, p1id, p1uo, uc1d, uc2d, up1d, update_props } from './utils';

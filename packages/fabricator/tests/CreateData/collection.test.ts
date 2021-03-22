@@ -1,6 +1,7 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionFabricator } from '../../libs';
 import { tsu } from '../utils';

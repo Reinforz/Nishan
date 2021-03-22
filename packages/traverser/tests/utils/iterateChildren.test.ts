@@ -1,6 +1,5 @@
-import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
-import { TPage } from '@nishans/types';
+import { ICache, TPage } from '@nishans/types';
 import { iterateChildren } from '../../libs/utils';
 
 afterEach(() => {

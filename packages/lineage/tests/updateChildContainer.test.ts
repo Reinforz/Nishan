@@ -1,5 +1,5 @@
-import { ICache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { o } from '../../core/tests/utils';
 import { NotionLineage } from '../libs';
 

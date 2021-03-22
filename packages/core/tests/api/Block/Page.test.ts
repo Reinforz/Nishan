@@ -1,5 +1,6 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Page } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';

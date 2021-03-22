@@ -24,7 +24,7 @@ async function testImports () {
 			},
 			include: [ './test.ts' ]
 		});
-		cp.execFile(path.join(root_dir, 'dist', 'index.js'));
+		cp.execSync('node test.js', { cwd: path.join(root_dir, 'dist') });
 	} catch (err) {
 		console.log(err.stdout.toString());
 	}

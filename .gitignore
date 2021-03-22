@@ -2,6 +2,7 @@
 **/feature.md
 **/dist
 /docs/.docusaurus
+/test.ts
 .netlify
 /docs/build
 **/env.ts

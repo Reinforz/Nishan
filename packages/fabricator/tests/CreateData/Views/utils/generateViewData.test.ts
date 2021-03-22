@@ -1,6 +1,6 @@
-import { ICache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { generateViewData } from '../../../../libs/CreateData/Views/utils';

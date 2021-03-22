@@ -15,15 +15,16 @@ export async function createImportedPackagesSourceFile () {
 				package_name_chunks
 					.map((package_name_chunk) => package_name_chunk.charAt(0).toUpperCase() + package_name_chunk.substr(1))
 					.join(''); */
-			import_declarations.push(
-				ts.factory.createExportDeclaration(
-					undefined,
-					undefined,
-					false,
-					ts.factory.createIdentifier('*') as any,
-					ts.factory.createStringLiteral(package_data.name)
-				)
-			);
+			if (package_data.name !== 'types')
+				import_declarations.push(
+					ts.factory.createExportDeclaration(
+						undefined,
+						undefined,
+						false,
+						ts.factory.createIdentifier('*') as any,
+						ts.factory.createStringLiteral(package_data.name)
+					)
+				);
 		}
 	});
 

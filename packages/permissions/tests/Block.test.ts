@@ -1,6 +1,7 @@
-import { ICache, NotionCache } from '@nishans/cache';
+import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionOperations } from '@nishans/operations';
+import { ICache } from '@nishans/types';
 import { default_nishan_arg, o } from '../../core/tests/utils';
 import { NotionPermissions } from '../libs';
 

@@ -6,9 +6,11 @@ import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { IPage, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
+import { UpdateType, UpdateTypes } from '@nishans/traverser';
+import { IDiscussion, IPage, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
+import { transformToMultiple } from '../../utils';
 import Data from '../Data';
 
 /**
@@ -210,6 +212,34 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			args.map((arg) => ({ ...arg, block_id: this.id })),
 			this.getProps()
 		)).map((discussion) => new Discussion({ id: discussion.id, ...this.getProps() }));
+	}
+
+	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
+		return (await this.updateDiscussions(transformToMultiple(arg), false))[0];
+	}
+
+	async updateDiscussions (
+		args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
+		multiple?: boolean
+	) {
+		return await this.updateIterate<IDiscussion, { context?: TTextFormat; resolved?: boolean }, Discussion[]>(
+			args,
+			{
+				multiple,
+				child_ids: 'discussions' as any,
+				child_type: 'discussion',
+				container: []
+			},
+			(child_id) => this.cache.discussion.get(child_id),
+			async (id, _, __, discussions) => {
+				discussions.push(
+					new Discussion({
+						id,
+						...this.getProps()
+					})
+				);
+			}
+		);
 	}
 }
 

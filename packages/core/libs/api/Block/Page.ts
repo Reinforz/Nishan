@@ -4,7 +4,7 @@ import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/Block';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock, TTextFormat } from '@nishans/types';
+import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
 import { Comment } from '../Comment';
@@ -143,36 +143,6 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
 			(discussion_id) => this.cache.discussion.get(discussion_id),
 			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
-		);
-	}
-
-	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
-		return (await this.updateDiscussions(transformToMultiple(arg), false))[0];
-	}
-
-	async updateDiscussions (
-		args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
-		multiple?: boolean
-	) {
-		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
-
-		return await this.updateIterate<IDiscussion, { context?: TTextFormat; resolved?: boolean }, Discussion[]>(
-			args,
-			{
-				multiple,
-				child_ids: discussion_ids,
-				child_type: 'discussion',
-				container: []
-			},
-			(child_id) => this.cache.discussion.get(child_id),
-			async (id, _, __, discussions) => {
-				discussions.push(
-					new Discussion({
-						id,
-						...this.getProps()
-					})
-				);
-			}
 		);
 	}
 

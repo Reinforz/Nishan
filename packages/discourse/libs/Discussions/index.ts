@@ -1,7 +1,7 @@
-import { startDiscussions } from './startDiscussions';
+import { createDiscussions } from './createDiscussions';
 import { updateDiscussions } from './updateDiscussions';
 
 export const NotionDiscourseDiscussions = {
-	start: startDiscussions,
+	create: createDiscussions,
 	update: updateDiscussions
 };

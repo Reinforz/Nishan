@@ -4,7 +4,7 @@ import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
 import { IComment, IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 
-export const startDiscussions = async (
+export const createDiscussions = async (
 	args: { context?: TTextFormat, block_id: string; discussion_id?: string; comments: { text: TTextFormat; id?: string }[] }[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {

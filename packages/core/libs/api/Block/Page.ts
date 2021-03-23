@@ -155,9 +155,13 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			comments: { text: TTextFormat; id?: string }[];
 		}[]
 	) {
-		return (await NotionDiscourse.Discussions.start(args, this.getProps())).map(
+		return (await NotionDiscourse.Discussions.create(args, this.getProps())).map(
 			(discussion) => new Discussion({ id: discussion.id, ...this.getProps() })
 		);
+	}
+
+	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
+		return (await this.updateDiscussions(transformToMultiple(arg), false))[0];
 	}
 
 	async updateDiscussions (

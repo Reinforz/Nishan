@@ -12,7 +12,6 @@ export const updateDiscussions = async (
     const discussion_data = options.cache.discussion.get(arg.id)!;
     discussion_data.context = arg.context ?? discussion_data.context;
     discussion_data.resolved = arg.resolved ?? discussion_data.resolved;
-
 		operations.push(NotionOperations.Chunk.discussion.update(arg.id, [ ], {
       context: discussion_data.context,
       resolved: discussion_data.resolved,

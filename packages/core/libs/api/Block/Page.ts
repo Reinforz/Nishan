@@ -160,6 +160,32 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 		);
 	}
 
+	async updateDiscussions (
+		args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
+		multiple?: boolean
+	) {
+		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
+
+		return await this.updateIterate<IDiscussion, { context?: TTextFormat; resolved?: boolean }, Discussion[]>(
+			args,
+			{
+				multiple,
+				child_ids: discussion_ids,
+				child_type: 'discussion',
+				container: []
+			},
+			(child_id) => this.cache.discussion.get(child_id),
+			async (id, _, __, discussions) => {
+				discussions.push(
+					new Discussion({
+						id,
+						...this.getProps()
+					})
+				);
+			}
+		);
+	}
+
 	async getComment (arg?: FilterType<IComment>) {
 		return (await this.getComments(transformToMultiple(arg), false))[0];
 	}

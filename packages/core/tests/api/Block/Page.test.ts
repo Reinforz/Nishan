@@ -178,7 +178,7 @@ it(`getComment`, async () => {
 	expect(comment.getCachedData()).toBe(comment_1);
 });
 
-it.only(`createDiscussions`, async () => {
+it(`createDiscussions`, async () => {
 	const { executeOperationsMock, page, cache } = construct();
 	const comment_id = v4(),
 		discussion_id = v4();
@@ -242,4 +242,36 @@ it.only(`createDiscussions`, async () => {
 			id: discussion_id
 		})
 	);
+});
+
+it(`updateDiscussions`, async () => {
+	const { executeOperationsMock, page, cache, initializeCacheForSpecificDataMock } = construct();
+
+	const discussion = await page.updateDiscussion([
+		'discussion_1',
+		{
+			resolved: false
+		}
+	]);
+
+	expect(cache.discussion.get('discussion_1')).toStrictEqual(
+		expect.objectContaining({
+			resolved: false
+		})
+	);
+	expect(discussion.getCachedData()).toStrictEqual(
+		expect.objectContaining({
+			resolved: false
+		})
+	);
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
+	expect(executeOperationsMock.mock.calls[0][0].slice(0, 1)).toStrictEqual([
+		o.d.u(
+			'discussion_1',
+			[],
+			expect.objectContaining({
+				resolved: false
+			})
+		)
+	]);
 });

@@ -27,6 +27,77 @@ const metadata = {
 	alive: true
 };
 
+it(`parent=space`, async () => {
+	const space_1 = { id: 'space_1' } as any,
+		page_id = v4();
+	const common_page_snapshot = {
+		...metadata,
+		type: 'page',
+		properties: {
+			title: [ [ 'Page' ] ]
+		},
+		content: [],
+		parent_id: space_id,
+		parent_table: 'space',
+		alive: true,
+		format: {
+			block_color: 'blue'
+		},
+		permissions: [
+			{
+				type: 'user_permission',
+				role: 'editor',
+				user_id
+			}
+		]
+	};
+	const cache = {
+			...NotionCache.createDefaultCache(),
+			space: new Map([ [ 'space_1', space_1 ] ])
+		},
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
+
+	await NotionFabricator.CreateData.contents(
+		[
+			{
+				type: 'page',
+				properties: { title: [ [ 'Page' ] ] },
+				format: {
+					block_color: 'blue'
+				},
+				isPrivate: true,
+				id: page_id,
+				contents: []
+			}
+		],
+		'space_1',
+		'space',
+		{
+			...default_nishan_arg,
+			cache
+		}
+	);
+
+	expect(logger_spy).toHaveBeenCalledTimes(1);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+		o.b.u(page_id, [], {
+			...common_page_snapshot,
+			id: page_id,
+			parent_id: 'space_1',
+			parent_table: 'space'
+		})
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.s.la('space_1', [ 'pages' ], { id: page_id }) ]);
+	expect(cache.space.get('space_1')).toStrictEqual({
+		id: 'space_1',
+		pages: [ page_id ]
+	});
+});
+
 it(`is_template=true,contents=[],parent=collection`, async () => {
 	const collection_id = v4(),
 		collection_1 = { id: collection_id } as any,
@@ -585,6 +656,61 @@ it(`type=codepen`, async () => {
 				format: {
 					display_source: 500
 				}
+			})
+		)
+	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
+});
+
+it(`type=embed`, async () => {
+	const block_id = v4();
+	const cache = {
+			...NotionCache.createDefaultCache(),
+			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
+		},
+		getGenericEmbedBlockDataMock = jest.spyOn(NotionEndpoints.Queries, 'getGenericEmbedBlockData').mockImplementation(
+			async () =>
+				({
+					format: {},
+					empty: true
+				} as any)
+		),
+		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+
+	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
+
+	await NotionFabricator.CreateData.contents(
+		[
+			{
+				type: 'embed',
+				properties: { source: [ [ 'https://google.com' ] ] },
+				id: block_id
+			}
+		],
+		'block_1',
+		'block',
+		{
+			...default_nishan_arg,
+			cache
+		}
+	);
+
+	expect(logger_spy).toHaveBeenCalledTimes(1);
+	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${block_id}`);
+	expect(getGenericEmbedBlockDataMock).toHaveBeenCalledTimes(1);
+	expect(getGenericEmbedBlockDataMock.mock.calls[0][0]).toStrictEqual({
+		pageWidth: 500,
+		source: 'https://google.com',
+		type: 'embed'
+	});
+	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+		o.b.u(
+			block_id,
+			[],
+			expect.objectContaining({
+				id: block_id,
+				type: 'embed'
 			})
 		)
 	]);

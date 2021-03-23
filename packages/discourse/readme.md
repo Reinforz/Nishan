@@ -20,4 +20,4 @@
   <a href="https://discord.com/invite/SpwHCz8ysx">Discord</a> |
 </p>
 
-<p align="center"><b>A package for notion discourse & comments</b></p>
+<p align="center"><b>A package for working with notion discussions & comments</b></p>

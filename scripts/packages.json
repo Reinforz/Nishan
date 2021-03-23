@@ -25,14 +25,19 @@
     "published": true
   },
   {
+    "name": "@nishans/dgen",
+    "description": "A package to generate notion data",
+    "published": false
+  },
+  {
     "name": "@nishans/discord-bot",
     "description": "A general purpose discord bot for working with `@nishans/core` from the discord chat textbox",
     "published": false
   },
   {
-    "name": "@nishans/discussions",
-    "description": "A package for notion discussions & comments",
-    "published": false
+    "name": "@nishans/discourse",
+    "description": "A package for working with notion discussions & comments",
+    "published": true
   },
   {
     "name": "@nishans/endpoints",

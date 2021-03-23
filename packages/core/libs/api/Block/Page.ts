@@ -1,5 +1,4 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionDiscourse } from '@nishans/discourse';
 import { IPageCreateInput, NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
 import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
@@ -147,19 +146,6 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 		);
 	}
 
-	async createDiscussions (
-		args: {
-			context?: TTextFormat;
-			block_id: string;
-			discussion_id?: string;
-			comments: { text: TTextFormat; id?: string }[];
-		}[]
-	) {
-		return (await NotionDiscourse.Discussions.create(args, this.getProps())).map(
-			(discussion) => new Discussion({ id: discussion.id, ...this.getProps() })
-		);
-	}
-
 	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
 		return (await this.updateDiscussions(transformToMultiple(arg), false))[0];
 	}
@@ -187,6 +173,26 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 					})
 				);
 			}
+		);
+	}
+
+	async deleteDiscussion (arg: FilterType<IDiscussion>) {
+		return (await this.deleteDiscussions(transformToMultiple(arg), false))[0];
+	}
+
+	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
+		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
+
+		return await this.deleteIterate<IDiscussion, Discussion[]>(
+			args,
+			{
+				child_path: 'discussions',
+				multiple,
+				child_ids: discussion_ids,
+				child_type: 'discussion',
+				container: []
+			},
+			(child_id) => this.cache.discussion.get(child_id)
 		);
 	}
 

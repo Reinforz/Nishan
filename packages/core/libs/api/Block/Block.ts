@@ -1,13 +1,14 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { TBlockInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { IPage, TBasicBlockType, TBlock, TData } from '@nishans/types';
+import { IPage, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateMaps, INotionCoreOptions, PopulateMap } from '../../';
+import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
 import Data from '../Data';
 
 /**
@@ -196,6 +197,19 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			],
 			this.getProps()
 		);
+	}
+
+	async createDiscussions (
+		args: {
+			context?: TTextFormat;
+			discussion_id?: string;
+			comments: { text: TTextFormat; id?: string }[];
+		}[]
+	) {
+		return (await NotionDiscourse.Discussions.create(
+			args.map((arg) => ({ ...arg, block_id: this.id })),
+			this.getProps()
+		)).map((discussion) => new Discussion({ id: discussion.id, ...this.getProps() }));
 	}
 }
 

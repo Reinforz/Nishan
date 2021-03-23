@@ -146,26 +146,6 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 		);
 	}
 
-	async deleteDiscussion (arg: FilterType<IDiscussion>) {
-		return (await this.deleteDiscussions(transformToMultiple(arg), false))[0];
-	}
-
-	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
-		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
-
-		return await this.deleteIterate<IDiscussion, Discussion[]>(
-			args,
-			{
-				child_path: 'discussions',
-				multiple,
-				child_ids: discussion_ids,
-				child_type: 'discussion',
-				container: []
-			},
-			(child_id) => this.cache.discussion.get(child_id)
-		);
-	}
-
 	async getComment (arg?: FilterType<IComment>) {
 		return (await this.getComments(transformToMultiple(arg), false))[0];
 	}

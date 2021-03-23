@@ -6,7 +6,7 @@ import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { UpdateType, UpdateTypes } from '@nishans/traverser';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IDiscussion, IPage, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
@@ -239,6 +239,24 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 					})
 				);
 			}
+		);
+	}
+
+	async deleteDiscussion (arg: FilterType<IDiscussion>) {
+		return (await this.deleteDiscussions(transformToMultiple(arg), false))[0];
+	}
+
+	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
+		return await this.deleteIterate<IDiscussion, Discussion[]>(
+			args,
+			{
+				child_path: 'discussions' as any,
+				multiple,
+				child_ids: 'discussions' as any,
+				child_type: 'discussion',
+				container: []
+			},
+			(child_id) => this.cache.discussion.get(child_id)
 		);
 	}
 }

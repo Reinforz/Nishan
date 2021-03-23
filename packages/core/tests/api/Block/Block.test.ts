@@ -11,21 +11,29 @@ afterEach(() => {
 });
 
 const construct = () => {
-	const block_1: any = {
+	const discussion_1: any = {
+			id: 'discussion_1'
+		},
+		block_1: any = {
 			type: 'header',
 			id: 'block_1',
 			properties: { title: [ [ 'Title' ] ] },
 			format: { page_full_width: false },
 			parent_id: 'block_3',
-			parent_table: 'block'
+			parent_table: 'block',
+			discussions: [ 'discussion_1' ]
 		},
 		block_2: any = { parent_id: 'block_3', id: 'block_2', type: 'collection_view_page' },
 		block_3: any = { parent_id: 'space_1', id: 'block_3', type: 'page', content: [ 'block_1', 'block_2' ] },
 		block_4: any = { parent_id: 'space_1', id: 'block_4', type: 'page', content: [] },
 		cache = {
 			...NotionCache.createDefaultCache(),
+			discussion: new Map([ [ 'discussion_1', discussion_1 ] ]),
 			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ], [ 'block_4', block_4 ] ])
 		} as any,
+		initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
+			.mockImplementationOnce(async () => undefined),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
@@ -34,7 +42,18 @@ const construct = () => {
 		cache
 	});
 
-	return { block_4, block_3, block_2, block, executeOperationsMock, block_1, cache, logger_spy };
+	return {
+		block_4,
+		discussion_1,
+		block_3,
+		block_2,
+		block,
+		initializeCacheForSpecificDataMock,
+		executeOperationsMock,
+		block_1,
+		cache,
+		logger_spy
+	};
 };
 
 it('getCachedParentData', async () => {
@@ -260,5 +279,103 @@ it(`transfer`, async () => {
 		),
 		o.b.u('block_3', [], last_edited_props),
 		o.b.u('block_4', [], last_edited_props)
+	]);
+});
+
+it(`createDiscussions`, async () => {
+	const { executeOperationsMock, block, cache } = construct();
+	const comment_id = v4(),
+		discussion_id = v4();
+	const discussions = await block.createDiscussions([
+		{
+			discussion_id,
+			comments: [
+				{
+					id: comment_id,
+					text: [ [ 'Comment One' ] ]
+				}
+			]
+		}
+	]);
+	expect(cache.comment.get(comment_id)).toStrictEqual(
+		expect.objectContaining({
+			parent_id: discussion_id,
+			parent_table: 'discussion',
+			text: [ [ 'Comment One' ] ],
+			id: comment_id
+		})
+	);
+	expect(cache.discussion.get(discussion_id)).toStrictEqual(
+		expect.objectContaining({
+			id: discussion_id,
+			parent_id: 'block_1',
+			parent_table: 'block',
+			resolved: false,
+			context: [ [ 'Title' ] ],
+			comments: [ comment_id ]
+		})
+	);
+	expect(cache.block.get('block_1').discussions).toStrictEqual([ 'discussion_1', discussion_id ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.cm.u(
+			comment_id,
+			[],
+			expect.objectContaining({
+				id: comment_id
+			})
+		),
+		o.d.u(
+			discussion_id,
+			[],
+			expect.objectContaining({
+				id: discussion_id
+			})
+		),
+		o.b.la(
+			'block_1',
+			[ 'discussions' ],
+			expect.objectContaining({
+				id: discussion_id
+			})
+		)
+	]);
+	expect(discussions.length).toStrictEqual(1);
+	expect(discussions[0].getCachedData()).toStrictEqual(
+		expect.objectContaining({
+			id: discussion_id
+		})
+	);
+});
+
+it(`getDiscussion`, async () => {
+	const { block, discussion_1, initializeCacheForSpecificDataMock } = construct();
+
+	const discussion = await block.getDiscussion('discussion_1');
+
+	expect(discussion.getCachedData()).toStrictEqual(discussion_1);
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
+});
+
+it(`updateDiscussion`, async () => {
+	const { block, executeOperationsMock, initializeCacheForSpecificDataMock } = construct();
+
+	const discussion = await block.updateDiscussion([ 'discussion_1', { resolved: false } ]);
+
+	expect(discussion.getCachedData()).toStrictEqual(
+		expect.objectContaining({
+			id: 'discussion_1',
+			resolved: false
+		})
+	);
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.d.u(
+			'discussion_1',
+			[],
+			expect.objectContaining({
+				resolved: false
+			})
+		),
+		o.b.u('block_1', [], last_edited_props)
 	]);
 });

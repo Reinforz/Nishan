@@ -1,9 +1,7 @@
-import { reopenDiscussions } from './reopenDiscussions';
-import { resolveDiscussions } from './resolveDiscussions';
 import { startDiscussions } from './startDiscussions';
+import { updateDiscussions } from './updateDiscussions';
 
 export const NotionDiscourseDiscussions = {
 	start: startDiscussions,
-	resolve: resolveDiscussions,
-	reopen: reopenDiscussions
+	update: updateDiscussions
 };

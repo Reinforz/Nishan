@@ -1,7 +1,6 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { TDataType } from '@nishans/types';
-import { detectChildData } from './detectChildData';
+import { TData, TDataType } from '@nishans/types';
 
 /**
  * Update the operation stack and parent's child container by either removing or adding the it based on the `keep` parameter
@@ -12,15 +11,15 @@ import { detectChildData } from './detectChildData';
  * @param stack Stack where to push the operation to
  * @param parent_type The parent data type
  */
-export async function updateChildContainer (
+export async function updateChildContainer<T extends TData> (
 	parent_table: TDataType,
 	parent_id: string,
 	keep: boolean,
 	child_id: string,
+	child_path: keyof T,
 	options: INotionCacheOptions & INotionOperationOptions
 ) {
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, options);
-	const [ child_path ] = detectChildData(parent_table as any, parent_data as any);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
 	// Extract the child container from the parent using child_path
@@ -32,7 +31,7 @@ export async function updateChildContainer (
 		(parent_data as any)[child_path] = container.filter((page_id) => page_id !== child_id) as any;
 		await NotionOperations.executeOperations(
 			[
-				NotionOperations.Chunk[parent_table].listRemove(parent_data.id, [ child_path ], {
+				NotionOperations.Chunk[parent_table].listRemove(parent_data.id, [ child_path as string ], {
 					id: child_id
 				})
 			],
@@ -45,7 +44,7 @@ export async function updateChildContainer (
 		container.push(child_id);
 		await NotionOperations.executeOperations(
 			[
-				NotionOperations.Chunk[parent_table].listAfter(parent_data.id, [ child_path ], {
+				NotionOperations.Chunk[parent_table].listAfter(parent_data.id, [ child_path as string ], {
 					id: child_id
 				})
 			],

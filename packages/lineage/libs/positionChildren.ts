@@ -2,7 +2,7 @@ import { NotionErrors } from '@nishans/errors';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData, TDataType } from '@nishans/types';
-import { INotionRepositionParams, NotionLineage } from './';
+import { INotionRepositionParams } from './';
 
 interface PositionChildrenParam {
 	logger?: boolean;
@@ -16,12 +16,11 @@ interface PositionChildrenParam {
  * Positions a child of a parent based on the passed argument
  * @param arg Data containing Child position information
  */
-export function positionChildren (arg: PositionChildrenParam) {
+export function positionChildren<T extends TData> (child_path: keyof T, arg: PositionChildrenParam) {
 	const { child_id, position, parent_type, logger } = arg;
 	const parent: any = arg.parent;
 	// Get the child path based on the parent type
-	const child_path = NotionLineage.detectChildData(parent_type as any, parent as any)[0],
-		contains_container = parent[child_path];
+	const contains_container = parent[child_path];
 	// If the parent doesn't contain the child container create one
 	if (!contains_container) parent[child_path] = [];
 	const container: string[] = parent[child_path];
@@ -40,7 +39,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 			container.splice(position, 0, child_id);
 			// IF the container doesn't exist and position is not zero or if the pivot_id is undefined or null, which could be the case if the position is outta index, throw an error
 			if ((!contains_container && position !== 0) || pivot_id === undefined || pivot_id === null)
-				throw new NotionErrors.child_index_out_of_bound(position, container.length, child_path);
+				throw new NotionErrors.child_index_out_of_bound(position, container.length, child_path as string);
 			// If the container exists make where to be Before, reason is that, it should be occupying the index of the pivot_id
 			// else make if after, ie push to last since its the first and only element
 			where = contains_container ? 'Before' : 'After';
@@ -65,7 +64,7 @@ export function positionChildren (arg: PositionChildrenParam) {
 		// If the passed position is undefined or null, its pushed to the last
 		container.push(child_id);
 		// Returns the appropriate operation for positioning the child
-		return NotionOperations.Chunk[parent_type].listAfter(parent.id, [ child_path ], {
+		return NotionOperations.Chunk[parent_type].listAfter(parent.id, [ child_path as string ], {
 			after: '',
 			id: child_id
 		}) as IOperation;

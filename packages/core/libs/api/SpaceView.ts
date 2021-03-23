@@ -31,7 +31,7 @@ class SpaceView extends Data<ISpaceView> {
 	async reposition (arg?: INotionRepositionParams) {
 		await NotionOperations.executeOperations(
 			[
-				NotionLineage.positionChildren({
+				NotionLineage.positionChildren<IUserRoot>('space_views', {
 					logger: this.logger,
 					child_id: this.id,
 					position: arg,
@@ -120,7 +120,14 @@ class SpaceView extends Data<ISpaceView> {
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
-				await NotionLineage.updateChildContainer('space_view', data.id, updated_favorite_status, id, this.getProps());
+				await NotionLineage.updateChildContainer<ISpaceView>(
+					'space_view',
+					data.id,
+					updated_favorite_status,
+					id,
+					'bookmarked_pages',
+					this.getProps()
+				);
 				await PopulateMap.page(page, page_map, this.getProps());
 			}
 		);

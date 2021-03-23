@@ -43,11 +43,12 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 				break;
 			}
 		}
-		await NotionLineage.updateChildContainer(
+		await NotionLineage.updateChildContainer<ISpaceView>(
 			'space_view',
 			target_space_view.id,
 			favorite_status,
 			data.id,
+			'bookmarked_pages',
 			this.getProps()
 		);
 	}

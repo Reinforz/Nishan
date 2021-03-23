@@ -7,7 +7,7 @@ import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IDiscussion, IPage, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
+import { IDiscussion, IPage, ISpace, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
@@ -28,18 +28,33 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	}
 
 	async reposition (arg?: INotionRepositionParams) {
-		await NotionOperations.executeOperations(
-			[
-				NotionLineage.positionChildren({
-					logger: this.logger,
-					child_id: this.id,
-					position: arg,
-					parent: await this.getCachedParentData(),
-					parent_type: 'block'
-				})
-			],
-			this.getProps()
-		);
+		const data = this.getCachedData();
+		if (data.parent_table === 'space')
+			await NotionOperations.executeOperations(
+				[
+					NotionLineage.positionChildren<ISpace>('pages', {
+						logger: this.logger,
+						child_id: this.id,
+						position: arg,
+						parent: await this.getCachedParentData(),
+						parent_type: 'block'
+					})
+				],
+				this.getProps()
+			);
+		else if (data.parent_table === 'block')
+			await NotionOperations.executeOperations(
+				[
+					NotionLineage.positionChildren<IPage>('content', {
+						logger: this.logger,
+						child_id: this.id,
+						position: arg,
+						parent: await this.getCachedParentData(),
+						parent_type: 'block'
+					})
+				],
+				this.getProps()
+			);
 	}
 
 	/**
@@ -147,7 +162,24 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData(),
 			parent_data = await this.getCachedParentData();
 
-		await NotionLineage.updateChildContainer(data.parent_table, data.parent_id, false, this.id, this.getProps());
+		if (data.parent_table === 'space')
+			await NotionLineage.updateChildContainer<ISpace>(
+				data.parent_table,
+				data.parent_id,
+				false,
+				this.id,
+				'pages',
+				this.getProps()
+			);
+		else if (data.parent_table === 'block')
+			await NotionLineage.updateChildContainer<IPage>(
+				data.parent_table,
+				data.parent_id,
+				false,
+				this.id,
+				'content',
+				this.getProps()
+			);
 
 		data.alive = false;
 		this.logger && NotionLogger.method.info(`DELETE block ${data.id}`);

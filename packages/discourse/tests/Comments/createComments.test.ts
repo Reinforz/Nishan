@@ -4,6 +4,10 @@ import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it(`NotionDiscourse.createComments`, async () => {
 	const discussion_data: any = { id: 'discussion_1' },
 		cache = {

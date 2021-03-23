@@ -4,6 +4,10 @@ import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
+afterEach(() => {
+	jest.restoreAllMocks();
+});
+
 it(`NotionDiscourse.updateComments`, async () => {
 	const comment_id = NotionIdz.Generate.id(),
 		comment_data: any = { id: comment_id },

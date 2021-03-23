@@ -44,7 +44,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 			// 2. deeply merge the new data with the existing data
 			// 3. Push the updated properties to the stack
 
-			if (child_type.match(/^(block|space)$/))
+			if (child_type.match(/^(block|space|comment)$/))
 				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
@@ -62,7 +62,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 		parent_type
 	});
 
-	if (parent_type.match(/^(block|space)$/))
+	if (parent_type.match(/^(block|space|comment)$/))
 		operations.push(
 			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
 		);

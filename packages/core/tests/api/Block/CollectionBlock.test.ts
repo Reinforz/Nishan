@@ -25,7 +25,7 @@ const construct = () =>{
   } as any,
   initializeCacheForSpecificDataMock = jest
     .spyOn(NotionCache, 'initializeCacheForSpecificData')
-    .mockImplementationOnce(async () => undefined),
+    .mockImplementation(async () => undefined),
   executeOperationsMock = jest
     .spyOn(NotionOperations, 'executeOperations')
     .mockImplementation(async () => undefined);

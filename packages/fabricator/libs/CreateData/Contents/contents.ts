@@ -4,7 +4,7 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionLineage } from "@nishans/lineage";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, ISpace, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CreateData, INotionFabricatorOptions, TBlockCreateInput } from "..";
 import { executeOperationAndStoreInCache, populatePermissions } from "./utils";
@@ -189,9 +189,12 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
       const content_id = content.type === "link_to_page" ? content.page_id : block_id;
       
       // if the parent table is either a block, or a space, or a collection and page is a template, push to child append operation to the stack
-      if(parent_table === "block" || parent_table==="space" || (parent_table === "collection" && (content as any).is_template))
-        await NotionLineage.updateChildContainer(parent_table, parent_id, true, content_id, options);
-
+      if(parent_table === "block")
+        await NotionLineage.updateChildContainer<IPage>(parent_table, parent_id, true, content_id, 'content',options);
+      else if(parent_table==="space")
+        await NotionLineage.updateChildContainer<ISpace>(parent_table, parent_id, true, content_id, 'pages',options);
+      else if((parent_table === "collection" && (content as any).is_template))
+        await NotionLineage.updateChildContainer<ICollection>(parent_table, parent_id, true, content_id, 'template_pages',options);
       options.logger && NotionLogger.method.info(`CREATE block ${content_id}`)
     }
   }

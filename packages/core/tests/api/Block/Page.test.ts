@@ -15,16 +15,27 @@ const construct = () => {
 		},
 		discussion_1 = { id: 'discussion_1', comments: [ 'comment_1' ] } as any,
 		comment_1: any = { id: 'comment_1' },
-		block_1 = { id: 'block_1', parent_table: 'space', parent_id: 'space_1', type: 'page', content: [ 'block_2' ] },
+		block_1 = {
+			id: 'block_1',
+			parent_table: 'space',
+			parent_id: 'space_1',
+			type: 'page',
+			content: [ 'block_2', 'block_3' ]
+		},
 		block_2 = {
 			discussions: [ 'discussion_1' ],
 			id: 'block_2',
 			type: 'header',
 			properties: { title: [ [ 'Header' ] ] }
 		} as any,
+		block_3 = {
+			id: 'block_3',
+			type: 'embed',
+			properties: { title: [ [ 'Embed' ] ] }
+		} as any,
 		cache = {
 			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
+			block: new Map([ [ 'block_3', block_3 ], [ 'block_1', block_1 ], [ 'block_2', block_2 ] ]),
 			space: new Map([ [ 'space_1', space_1 ] ]),
 			discussion: new Map([ [ 'discussion_1', discussion_1 ] ]),
 			comment: new Map([ [ 'comment_1', comment_1 ] ])
@@ -40,6 +51,7 @@ const construct = () => {
 		logger: false
 	});
 	return {
+		block_3,
 		space_1,
 		comment_1,
 		discussion_1,
@@ -164,4 +176,70 @@ it(`getComment`, async () => {
 
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(comment.getCachedData()).toBe(comment_1);
+});
+
+it.only(`createDiscussions`, async () => {
+	const { executeOperationsMock, page, cache } = construct();
+	const comment_id = v4(),
+		discussion_id = v4();
+	const discussions = await page.createDiscussions([
+		{
+			discussion_id,
+			block_id: 'block_3',
+			comments: [
+				{
+					id: comment_id,
+					text: [ [ 'Comment One' ] ]
+				}
+			]
+		}
+	]);
+	expect(cache.comment.get(comment_id)).toStrictEqual(
+		expect.objectContaining({
+			parent_id: discussion_id,
+			parent_table: 'discussion',
+			text: [ [ 'Comment One' ] ],
+			id: comment_id
+		})
+	);
+	expect(cache.discussion.get(discussion_id)).toStrictEqual(
+		expect.objectContaining({
+			id: discussion_id,
+			parent_id: 'block_3',
+			parent_table: 'block',
+			resolved: false,
+			context: [ [ 'Embed' ] ],
+			comments: [ comment_id ]
+		})
+	);
+	expect(cache.block.get('block_3').discussions).toStrictEqual([ discussion_id ]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		o.cm.u(
+			comment_id,
+			[],
+			expect.objectContaining({
+				id: comment_id
+			})
+		),
+		o.d.u(
+			discussion_id,
+			[],
+			expect.objectContaining({
+				id: discussion_id
+			})
+		),
+		o.b.la(
+			'block_3',
+			[ 'discussions' ],
+			expect.objectContaining({
+				id: discussion_id
+			})
+		)
+	]);
+	expect(discussions.length).toStrictEqual(1);
+	expect(discussions[0].getCachedData()).toStrictEqual(
+		expect.objectContaining({
+			id: discussion_id
+		})
+	);
 });

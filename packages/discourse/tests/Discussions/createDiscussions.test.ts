@@ -78,7 +78,7 @@ describe('createDiscussions', () => {
 			executeOperationsMock,
 			discussion_data
 		} = init();
-		await NotionDiscourse.Discussions.create(
+		const discussions = await NotionDiscourse.Discussions.create(
 			[
 				{
 					comments: [
@@ -108,6 +108,7 @@ describe('createDiscussions', () => {
 				})
 			)
 		]);
+		expect(discussions).toStrictEqual([ discussion_data ]);
 	});
 
 	it(`custom input`, async () => {
@@ -121,7 +122,7 @@ describe('createDiscussions', () => {
 			executeOperationsMock,
 			discussion_data
 		} = init();
-		await NotionDiscourse.Discussions.create(
+		const discussions = await NotionDiscourse.Discussions.create(
 			[
 				{
 					context: [ [ 'Different context' ] ],
@@ -154,5 +155,6 @@ describe('createDiscussions', () => {
 				})
 			)
 		]);
+		expect(discussions).toStrictEqual([ { ...discussion_data, context: [ [ 'Different context' ] ] } ]);
 	});
 });

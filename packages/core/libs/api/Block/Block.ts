@@ -259,6 +259,19 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			(child_id) => this.cache.discussion.get(child_id)
 		);
 	}
+
+	async getDiscussion (arg?: FilterType<IDiscussion>) {
+		return (await this.getDiscussions(transformToMultiple(arg), false))[0];
+	}
+
+	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
+		return await this.getIterate<IDiscussion, Discussion[]>(
+			args,
+			{ container: [], multiple, child_ids: 'discussions' as any, child_type: 'discussion' },
+			(discussion_id) => this.cache.discussion.get(discussion_id),
+			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
+		);
+	}
 }
 
 export default Block;

@@ -1,7 +1,7 @@
 import { ICache, IPage } from '@nishans/types';
 
 export const getDiscussionIds = (page: IPage, cache: ICache) => {
-	const discussion_ids: string[] = [];
+	const discussion_ids: string[] = [...(page.discussions ?? [])];
 
 	page.content.forEach((block_id) => {
 		const block_data = cache.block.get(block_id);

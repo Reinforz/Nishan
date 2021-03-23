@@ -19,7 +19,7 @@
     "test": "lerna run test",
     "lint": "npx eslint . --color",
     "transpile:scripts": "cd scripts && tsc",
-    "install:scripts": "cd scripts && npm install",
+    "install:scripts": "cd scripts && npm install --ignore-optional",
     "update:metadata": "node ./scripts/dist/libs/Modify/updatePackageMetadata",
     "publish:package": "node ./scripts/dist/libs/Publish/publishUpdatedPackages",
     "create": "node ./scripts/dist/Create/createPackageDirectory",

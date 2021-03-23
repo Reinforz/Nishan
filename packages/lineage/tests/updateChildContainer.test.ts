@@ -1,5 +1,5 @@
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { ICache, ISpaceView } from '@nishans/types';
 import { o } from '../../core/tests/utils';
 import { NotionLineage } from '../libs';
 
@@ -27,7 +27,9 @@ describe('NotionLineage.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer<
+			ISpaceView
+		>('space_view', 'space_view_1', true, 'block_1', 'bookmarked_pages', {
 			cache,
 			...default_fabricator_props
 		});
@@ -53,7 +55,9 @@ describe('NotionLineage.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionLineage.updateChildContainer('space_view', 'space_view_1', false, 'block_1', {
+		await NotionLineage.updateChildContainer<
+			ISpaceView
+		>('space_view', 'space_view_1', false, 'block_1', 'bookmarked_pages', {
 			cache,
 			...default_fabricator_props
 		});
@@ -79,7 +83,9 @@ describe('NotionLineage.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer<
+			ISpaceView
+		>('space_view', 'space_view_1', true, 'block_1', 'bookmarked_pages', {
 			cache,
 			...default_fabricator_props
 		});
@@ -98,7 +104,9 @@ describe('NotionLineage.updateChildContainer', () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-		await NotionLineage.updateChildContainer('space_view', 'space_view_1', true, 'block_1', {
+		await NotionLineage.updateChildContainer<
+			ISpaceView
+		>('space_view', 'space_view_1', true, 'block_1', 'bookmarked_pages', {
 			cache,
 			...default_fabricator_props
 		});

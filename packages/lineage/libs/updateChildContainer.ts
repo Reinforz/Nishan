@@ -19,9 +19,7 @@ export async function updateChildContainer<T extends TData> (
 	child_path: keyof T,
 	options: INotionCacheOptions & INotionOperationOptions
 ) {
-	console.log(child_path);
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, options);
-	console.log(parent_data);
 
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
 	// Extract the child container from the parent using child_path

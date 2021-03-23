@@ -11,7 +11,7 @@ describe('NotionLineage.positionChildren', () => {
 	it(`Should work when parent doesn't contain container`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
 		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
-		const operation = NotionLineage.positionChildren({
+		const operation = NotionLineage.positionChildren<IPage>('content', {
 			parent,
 			child_id: 'child_id',
 			position: 0,
@@ -31,7 +31,7 @@ describe('NotionLineage.positionChildren', () => {
 
 	it(`Should work when position is a number`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [ 'child_1_id' ] } as any;
-		const operation = NotionLineage.positionChildren({
+		const operation = NotionLineage.positionChildren<IPage>('content', {
 			parent,
 			child_id: 'child_id',
 			position: 0,
@@ -49,7 +49,7 @@ describe('NotionLineage.positionChildren', () => {
 
 	it(`Should push to last if position not provided`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [] } as any;
-		const operation = NotionLineage.positionChildren({
+		const operation = NotionLineage.positionChildren<IPage>('content', {
 			parent,
 			child_id: 'child_id',
 			parent_type: 'block'
@@ -66,7 +66,7 @@ describe('NotionLineage.positionChildren', () => {
 
 	it(`Should work when position is an object(position: After)`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [ 'child_1_id' ] } as any;
-		const operation = NotionLineage.positionChildren({
+		const operation = NotionLineage.positionChildren<IPage>('content', {
 			position: {
 				id: 'child_1_id',
 				position: 'After'
@@ -87,7 +87,7 @@ describe('NotionLineage.positionChildren', () => {
 
 	it(`Should work when position is an object(position: Before)`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [ 'child_1_id' ] } as any;
-		const operation = NotionLineage.positionChildren({
+		const operation = NotionLineage.positionChildren<IPage>('content', {
 			position: {
 				id: 'child_1_id',
 				position: 'Before'
@@ -110,7 +110,7 @@ describe('NotionLineage.positionChildren', () => {
 		const parent: IPage = { type: 'page', id: 'parent_id' } as any;
 		delete (parent as any).content;
 		expect(() =>
-			NotionLineage.positionChildren({
+			NotionLineage.positionChildren<IPage>('content', {
 				parent,
 				child_id: 'child_id',
 				position: 3,
@@ -122,7 +122,7 @@ describe('NotionLineage.positionChildren', () => {
 	it(`Should throw an error if the pivot doesn't exist for number position`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [] } as any;
 		expect(() =>
-			NotionLineage.positionChildren({
+			NotionLineage.positionChildren<IPage>('content', {
 				parent,
 				child_id: 'child_id',
 				position: 3,
@@ -134,7 +134,7 @@ describe('NotionLineage.positionChildren', () => {
 	it(`Should throw an error if the pivot doesn't exist for object position`, () => {
 		const parent: IPage = { type: 'page', id: 'parent_id', content: [] } as any;
 		expect(() =>
-			NotionLineage.positionChildren({
+			NotionLineage.positionChildren<IPage>('content', {
 				parent,
 				child_id: 'child_id',
 				position: {

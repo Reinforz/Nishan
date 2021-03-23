@@ -44,16 +44,17 @@ export const remove = async <T extends TData, TD, C = any[]>(
 			const updated_data: any = {};
 			if (child_type.match(/^(block|space_view|collection_view|comment)$/)) updated_data.alive = false;
 
-			// Only attach last_edited_props if the child_type is block
 			if (child_type.match(/^(block|space|comment)$/))
 				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
+			const updated_data_payload = { ...updated_data, ...last_edited_props };
 
 			// Push the updated block data to the stack
-			operations.push(
-				NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
-			);
+			if (Object.keys(updated_data_payload).length)
+				operations.push(
+					NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
+				);
 
 			if (typeof child_path === 'string')
 				await NotionLineage.updateChildContainer<T>(parent_type, parent_id, false, child_id, child_path, options);

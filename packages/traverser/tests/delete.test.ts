@@ -1,7 +1,7 @@
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICache, ICollection, IPage, TBlock } from '@nishans/types';
-import { last_edited_props, o } from '../../core/tests/utils';
+import { last_edited_props } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import {
 	c1do,
@@ -115,9 +115,5 @@ it(`child_type & parent_type != block, child_path=undefined`, async () => {
 		content: [ c1id ],
 		type: 'page'
 	});
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.c.u(c1id, [], {
-			alive: false
-		})
-	]);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([]);
 });

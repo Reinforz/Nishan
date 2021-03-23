@@ -5,10 +5,11 @@ import { IComment, IDiscussion, IOperation, IText, TTextFormat } from '@nishans/
 import { NotionUtils } from '@nishans/utils';
 
 export const startDiscussions = async (
-	args: { block_id: string; discussion_id?: string; comments: { text: TTextFormat; id?: string }[] }[],
+	args: { context?: TTextFormat, block_id: string; discussion_id?: string; comments: { text: TTextFormat; id?: string }[] }[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
 	const operations: IOperation[] = [],
+		discussions: IDiscussion[] = [],
 		{ block: blocks_data } = await NotionCache.fetchMultipleDataOrReturnCached(
 			args.map((arg) => [ arg.block_id, 'block' ]),
 			options
@@ -50,13 +51,13 @@ export const startDiscussions = async (
 			parent_id: block_id,
 			parent_table: 'block',
 			resolved: false,
-			context: block_data.properties.title,
+			context: arg.context ?? block_data.properties.title,
 			comments: comment_ids,
 			version: 1,
 			space_id: options.space_id,
 			shard_id: options.shard_id
 		};
-
+		discussions.push(discussion_data);
 		options.cache.discussion.set(discussion_id, discussion_data);
 		NotionUtils.populateChildPath({ data: block_data, child_path: 'discussions', child_id: discussion_id });
 		operations.push(
@@ -68,4 +69,5 @@ export const startDiscussions = async (
 	}
 
 	await NotionOperations.executeOperations(operations, options);
+	return discussions;
 };

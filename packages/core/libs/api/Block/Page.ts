@@ -1,10 +1,11 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionDiscourse } from '@nishans/discourse';
 import { IPageCreateInput, NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
 import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/Block';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock, TTextFormat } from '@nishans/types';
 import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
 import { Comment } from '../Comment';
@@ -143,6 +144,19 @@ export default class Page extends Block<IPage, IPageCreateInput> {
 			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
 			(discussion_id) => this.cache.discussion.get(discussion_id),
 			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
+		);
+	}
+
+	async createDiscussions (
+		args: {
+			context?: TTextFormat;
+			block_id: string;
+			discussion_id?: string;
+			comments: { text: TTextFormat; id?: string }[];
+		}[]
+	) {
+		return (await NotionDiscourse.Discussions.start(args, this.getProps())).map(
+			(discussion) => new Discussion({ id: discussion.id, ...this.getProps() })
 		);
 	}
 

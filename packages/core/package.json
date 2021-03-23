@@ -44,7 +44,8 @@
     "@nishans/operations": "0.0.28",
     "@nishans/permissions": "0.0.20",
     "@nishans/traverser": "0.0.19",
-    "@nishans/utils": "0.0.21"
+    "@nishans/utils": "0.0.21",
+    "@nishans/discourse": "0.0.17"
   },
   "devDependencies": {
     "@nishans/types": "0.0.31"

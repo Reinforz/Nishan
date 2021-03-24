@@ -276,11 +276,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	}
 
 	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
-		return await this.getIterate<IDiscussion, Discussion[]>(
-			args,
-			{ container: [], multiple, child_ids: 'discussions' as any, child_type: 'discussion' },
-			(discussion_id) => this.cache.discussion.get(discussion_id),
-			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
+		const props = this.getProps();
+		return (await NotionDiscourse.Discussions.get(this.id, args, { ...props, multiple })).map(
+			(discussion) => new Discussion({ ...props, id: discussion.id })
 		);
 	}
 }

@@ -1,5 +1,4 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
-import { NotionIdz } from '@nishans/idz';
 import { INotionOperationOptions } from '@nishans/operations';
 import { NotionTraverser, UpdateTypes } from '@nishans/traverser';
 import { IDiscussion, IPage, TTextFormat } from '@nishans/types';
@@ -9,7 +8,6 @@ export const updateDiscussions = async (
 	args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
 	options: INotionOperationOptions & INotionCacheOptions & { multiple?: boolean }
 ) => {
-	block_id = NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(block_id));
 	await NotionCache.initializeCacheForSpecificData(block_id, 'block', options);
 	return await NotionTraverser.update<
 		IPage,

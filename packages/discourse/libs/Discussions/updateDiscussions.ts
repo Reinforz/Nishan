@@ -1,21 +1,35 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
-import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { IOperation, TTextFormat } from '@nishans/types';
+import { NotionIdz } from '@nishans/idz';
+import { INotionOperationOptions } from '@nishans/operations';
+import { NotionTraverser, UpdateTypes } from '@nishans/traverser';
+import { IDiscussion, IPage, TTextFormat } from '@nishans/types';
 
 export const updateDiscussions = async (
-	args: { id: string; context?: TTextFormat; resolved?: boolean }[],
-	options: INotionOperationOptions & INotionCacheOptions
+	block_id: string,
+	args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
+	options: INotionOperationOptions & INotionCacheOptions & { multiple?: boolean }
 ) => {
-	const operations: IOperation[] = [];
-  await NotionCache.fetchMultipleDataOrReturnCached(args.map(arg=>[arg.id, 'discussion']), options);
-	args.forEach((arg) => {
-    const discussion_data = options.cache.discussion.get(arg.id)!;
-    discussion_data.context = arg.context ?? discussion_data.context;
-    discussion_data.resolved = arg.resolved ?? discussion_data.resolved;
-		operations.push(NotionOperations.Chunk.discussion.update(arg.id, [ ], {
-      context: discussion_data.context,
-      resolved: discussion_data.resolved,
-    }));
-	});
-	await NotionOperations.executeOperations(operations, options);
+	block_id = NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(block_id));
+	await NotionCache.initializeCacheForSpecificData(block_id, 'block', options);
+	return await NotionTraverser.update<
+		IPage,
+		IDiscussion,
+		{ context?: TTextFormat; resolved?: boolean },
+		IDiscussion[]
+	>(
+		args,
+		(child_id) => options.cache.discussion.get(child_id),
+		{
+			multiple: options.multiple,
+			child_ids: 'discussions' as any,
+			child_type: 'discussion',
+			container: [],
+			parent_id: block_id,
+			parent_type: 'block',
+			...options
+		},
+		async (_, data, __, discussions) => {
+			discussions.push(data);
+		}
+	);
 };

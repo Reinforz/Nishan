@@ -254,8 +254,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
 		multiple?: boolean
 	) {
-		return (await NotionDiscourse.Discussions.update(this.id, args, { ...this.getProps(), multiple })).map(
-			(discussion) => new Discussion({ ...this.getProps(), id: discussion.id })
+		const props = this.getProps();
+		return (await NotionDiscourse.Discussions.update(this.id, args, { ...props, multiple })).map(
+			(discussion) => new Discussion({ ...props, id: discussion.id })
 		);
 	}
 
@@ -264,16 +265,9 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 	}
 
 	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
-		return await this.deleteIterate<IDiscussion, Discussion[]>(
-			args,
-			{
-				child_path: 'discussions' as any,
-				multiple,
-				child_ids: 'discussions' as any,
-				child_type: 'discussion',
-				container: []
-			},
-			(child_id) => this.cache.discussion.get(child_id)
+		const props = this.getProps();
+		return (await NotionDiscourse.Discussions.delete(this.id, args, { ...props, multiple })).map(
+			(discussion) => new Discussion({ ...props, id: discussion.id })
 		);
 	}
 

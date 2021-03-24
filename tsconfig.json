@@ -51,13 +51,13 @@
       "path": "./packages/cache/tsconfig.json"
     },
     {
-      "path": "./packages/discourse/tsconfig.json"
-    },
-    {
       "path": "./packages/lineage/tsconfig.json"
     },
     {
       "path": "./packages/traverser/tsconfig.json"
+    },
+    {
+      "path": "./packages/discourse/tsconfig.json"
     },
     {
       "path": "./packages/notion-formula/tsconfig.json"

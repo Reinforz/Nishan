@@ -49,12 +49,9 @@ export const remove = async <T extends TData, TD, C = any[]>(
 
 			NotionUtils.deepMerge(child_data, updated_data);
 			const updated_data_payload = { ...updated_data, ...last_edited_props };
-
 			// Push the updated block data to the stack
-			if (Object.keys(updated_data_payload).length)
-				operations.push(
-					NotionOperations.Chunk[child_type].update(child_id, [], { ...updated_data, ...last_edited_props })
-				);
+			if (Object.keys(updated_data_payload).length !== 0)
+				operations.push(NotionOperations.Chunk[child_type].update(child_id, [], updated_data_payload));
 
 			if (typeof child_path === 'string')
 				await NotionLineage.updateChildContainer<T>(parent_type, parent_id, false, child_id, child_path, options);

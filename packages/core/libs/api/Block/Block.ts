@@ -254,23 +254,8 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		args: UpdateTypes<IDiscussion, { context?: TTextFormat; resolved?: boolean }>,
 		multiple?: boolean
 	) {
-		return await this.updateIterate<IDiscussion, { context?: TTextFormat; resolved?: boolean }, Discussion[]>(
-			args,
-			{
-				multiple,
-				child_ids: 'discussions' as any,
-				child_type: 'discussion',
-				container: []
-			},
-			(child_id) => this.cache.discussion.get(child_id),
-			async (id, _, __, discussions) => {
-				discussions.push(
-					new Discussion({
-						id,
-						...this.getProps()
-					})
-				);
-			}
+		return (await NotionDiscourse.Discussions.update(this.id, args, { ...this.getProps(), multiple })).map(
+			(discussion) => new Discussion({ ...this.getProps(), id: discussion.id })
 		);
 	}
 

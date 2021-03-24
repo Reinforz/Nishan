@@ -28,8 +28,6 @@ export const updateDiscussions = async (
 			parent_type: 'block',
 			...options
 		},
-		async (_, data, __, discussions) => {
-			discussions.push(data);
-		}
+		async (_, data, __, discussions) => discussions.push(data)
 	);
 };

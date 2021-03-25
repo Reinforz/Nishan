@@ -66,7 +66,6 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 			container.push([ notion_user_id, 'notion_user' ])
 		);
 	} else if (type === 'discussion') {
-		// If the type is space, fetch its pages and notion_user
 		const data = (await NotionCache.fetchDataOrReturnCached('discussion', id, options)) as IDiscussion;
 		data.comments.forEach((id) => container.push([ id, 'comment' ]));
 		container.push([ data.parent_id, 'block' ]);

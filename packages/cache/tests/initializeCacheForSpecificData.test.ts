@@ -11,6 +11,33 @@ const createUpdateCacheIfNotPresentMock = () =>
 	jest.spyOn(NotionCache, 'updateCacheIfNotPresent').mockImplementationOnce(async () => undefined);
 
 describe('initializeCacheForSpecificData', () => {
+	it(`type=discussion`, async () => {
+		const discussion_1 = {
+			id: 'discussion_1',
+			parent_id: 'block_1',
+			comments: [ 'comment_1' ]
+		};
+
+		const cache = {
+			...NotionCache.createDefaultCache(),
+			discussion: new Map([ [ 'discussion_1', discussion_1 ] ])
+		} as any;
+
+		const updateCacheIfNotPresentMock = jest.spyOn(NotionCache, 'updateCacheIfNotPresent');
+
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
+
+		await NotionCache.initializeCacheForSpecificData('discussion_1', 'discussion', {
+			token: 'token',
+			cache,
+			user_id: 'user_root_1'
+		});
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+			[ 'comment_1', 'comment' ],
+			[ 'block_1', 'block' ]
+		]);
+	});
+
 	it(`type=collection_view`, async () => {
 		const block_1: any = {
 				id: 'block_1',

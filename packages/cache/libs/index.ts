@@ -3,6 +3,7 @@ export * from './types';
 import { constructAndSyncRecordsParams } from './constructAndSyncRecordsParams';
 import { constructSyncRecordsParams } from './constructSyncRecordsParams';
 import { createDefaultCache } from './createDefaultCache';
+import { createDefaultCacheInitializeTracker } from './createDefaultCacheInitializeTracker';
 import { extractNotionUserIds } from './extractNotionUserIds';
 import { extractSpaceAndParentId } from './extractSpaceAndParentId';
 import { fetchDataOrReturnCached } from './fetchDataOrReturnCached';
@@ -29,5 +30,6 @@ export const NotionCache = {
 	extractSpaceAndParentId,
 	fetchDataOrReturnCached,
 	fetchMultipleDataOrReturnCached,
-	initializeCacheForSpecificData
+	initializeCacheForSpecificData,
+	createDefaultCacheInitializeTracker
 };

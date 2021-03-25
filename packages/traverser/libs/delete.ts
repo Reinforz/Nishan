@@ -3,6 +3,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { IOperation, TData } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { NotionValidators } from '@nishans/validators';
 import { FilterTypes, IterateAndDeleteChildrenOptions } from './types';
 import { getChildIds, iterateChildren } from './utils';
 /**
@@ -42,9 +43,9 @@ export const remove = async <T extends TData, TD, C = any[]>(
 		let last_edited_props = {};
 		if (!manual) {
 			const updated_data: any = {};
-			if (child_type.match(/^(block|space_view|collection_view|comment)$/)) updated_data.alive = false;
+			if (NotionValidators.dataContainsAliveProp(child_type)) updated_data.alive = false;
 
-			if (child_type.match(/^(block|space|comment)$/))
+			if (NotionValidators.dataContainsEditedProps(child_type))
 				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
 
 			NotionUtils.deepMerge(child_data, updated_data);
@@ -67,7 +68,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 	});
 
 	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (parent_type.match(/^(block|space|comment)$/))
+	if (NotionValidators.dataContainsEditedProps(parent_type))
 		operations.push(
 			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
 		);

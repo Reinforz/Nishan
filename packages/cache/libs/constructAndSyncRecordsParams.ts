@@ -7,7 +7,10 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param options The notion request options
  * @param cache The cache to store result
  */
-export async function constructAndSyncRecordsParams (args: UpdateCacheManuallyParam, options: INotionCacheOptions) {
+export async function constructAndSyncRecordsParams (
+	args: UpdateCacheManuallyParam,
+	options: Omit<INotionCacheOptions, 'cache_init_tracker'>
+) {
 	const sync_record_values = NotionCache.constructSyncRecordsParams(args);
 	// fetch and save notion data to cache
 	if (sync_record_values.length) {

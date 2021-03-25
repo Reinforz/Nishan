@@ -110,6 +110,6 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 			parent = cache.block.get(data.parent_id) as TCollectionBlock;
 		extra_container.push([ parent.collection_id, 'collection' ]);
 	}
-
+	options.cache_init_tracker[type].set(id, true);
 	await NotionCache.updateCacheIfNotPresent(extra_container, options);
 }

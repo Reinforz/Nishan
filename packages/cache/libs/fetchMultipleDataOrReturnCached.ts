@@ -8,7 +8,10 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param id the id of the data
  * @param options Notion cache options
  */
-export async function fetchMultipleDataOrReturnCached (params: UpdateCacheManuallyParam, options: INotionCacheOptions) {
+export async function fetchMultipleDataOrReturnCached (
+	params: UpdateCacheManuallyParam,
+	options: Omit<INotionCacheOptions, 'cache_init_tracker'>
+) {
 	const result = NotionUtils.createDefaultRecordMap();
 	const sync_record_values: UpdateCacheManuallyParam = [];
 	for (let index = 0; index < params.length; index++) {

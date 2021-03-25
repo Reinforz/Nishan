@@ -10,7 +10,7 @@ import { INotionCacheOptions, NotionCache } from './';
 export async function fetchDataOrReturnCached (
 	table: TDataType,
 	id: string,
-	options: INotionCacheOptions
+	options: Omit<INotionCacheOptions, 'cache_init_tracker'>
 ): Promise<TData> {
 	return (await NotionCache.fetchMultipleDataOrReturnCached([ [ id, table ] ], options))[table][0] as any;
 }

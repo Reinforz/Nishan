@@ -13,10 +13,11 @@ const createUpdateCacheIfNotPresentMock = () =>
 describe('initializeCacheForSpecificData', () => {
 	it(`type=discussion`, async () => {
 		const discussion_1 = {
-			id: 'discussion_1',
-			parent_id: 'block_1',
-			comments: [ 'comment_1' ]
-		};
+				id: 'discussion_1',
+				parent_id: 'block_1',
+				comments: [ 'comment_1' ]
+			},
+			cache_init_tracker = NotionCache.createDefaultCacheInitializeTracker();
 
 		const cache = {
 			...NotionCache.createDefaultCache(),
@@ -30,8 +31,10 @@ describe('initializeCacheForSpecificData', () => {
 		await NotionCache.initializeCacheForSpecificData('discussion_1', 'discussion', {
 			token: 'token',
 			cache,
-			user_id: 'user_root_1'
+			user_id: 'user_root_1',
+			cache_init_tracker
 		});
+		expect(cache_init_tracker.discussion.get('discussion_1')).toBe(true);
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'comment_1', 'comment' ],
 			[ 'block_1', 'block' ]
@@ -62,7 +65,8 @@ describe('initializeCacheForSpecificData', () => {
 		await NotionCache.initializeCacheForSpecificData('collection_view_1', 'collection_view', {
 			token: 'token',
 			cache,
-			user_id: 'user_root_1'
+			user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 		});
 		expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'block_1', 'block' ] ]);
@@ -128,7 +132,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 
 			expect(loadPageChunkMock.mock.calls[0][0]).toStrictEqual({
@@ -198,7 +203,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 
 			expect(loadPageChunkMock).not.toHaveBeenCalled();
@@ -236,7 +242,8 @@ describe('initializeCacheForSpecificData', () => {
 		await NotionCache.initializeCacheForSpecificData('space_1', 'space', {
 			token: 'token',
 			cache,
-			user_id: 'user_root_1'
+			user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 		});
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 			[ 'block_1', 'block' ],
@@ -262,7 +269,8 @@ describe('initializeCacheForSpecificData', () => {
 		await NotionCache.initializeCacheForSpecificData('user_root_1', 'user_root', {
 			token: 'token',
 			cache,
-			user_id: 'user_root_1'
+			user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 		});
 		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([ [ 'space_view_1', 'space_view' ] ]);
 	});
@@ -287,7 +295,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 				[ 'block_1', 'block' ],
@@ -307,7 +316,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('space_view_1', 'space_view', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 			expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
 				[ 'space_1', 'space' ],
@@ -353,7 +363,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 
 			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
@@ -381,7 +392,8 @@ describe('initializeCacheForSpecificData', () => {
 			await NotionCache.initializeCacheForSpecificData('collection_1', 'collection', {
 				token: 'token',
 				cache,
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			});
 
 			expect(queryCollectionMock.mock.calls[0][0]).toStrictEqual(query_collection_payload);
@@ -397,7 +409,8 @@ describe('initializeCacheForSpecificData', () => {
 			NotionCache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any, {
 				cache,
 				token: 'token',
-				user_id: 'user_root_1'
+				user_id: 'user_root_1',
+cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 			})
 		).rejects.toThrow(colors.red.bold(`unknown data is not supported`));
 	});

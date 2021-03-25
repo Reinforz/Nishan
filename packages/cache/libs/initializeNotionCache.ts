@@ -4,7 +4,7 @@ import { INotionCacheOptions, NotionCache } from './';
 /**
  * Initialize the cache by sending a post request to the `getSpaces` endpoint 
  */
-export async function initializeNotionCache (options: INotionCacheOptions) {
+export async function initializeNotionCache (options: Omit<INotionCacheOptions, 'cache_init_tracker'>) {
 	const data = await NotionEndpoints.Queries.getSpaces(options);
 	// Contains a set of external notion user that has access to the space
 	const external_notion_users: Set<string> = new Set();

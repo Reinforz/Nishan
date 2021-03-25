@@ -1,6 +1,16 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import { NotionErrors } from '@nishans/errors';
-import { ICollection, ISpace, ISpaceView, IUserRoot, TBlock, TCollectionBlock, TDataType, TView } from '@nishans/types';
+import {
+	ICollection,
+	IDiscussion,
+	ISpace,
+	ISpaceView,
+	IUserRoot,
+	TBlock,
+	TCollectionBlock,
+	TDataType,
+	TView
+} from '@nishans/types';
 import { INotionCacheOptions, NotionCache } from './';
 
 /**
@@ -55,6 +65,11 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		NotionCache.extractNotionUserIds(data).forEach((notion_user_id) =>
 			container.push([ notion_user_id, 'notion_user' ])
 		);
+	} else if (type === 'discussion') {
+		// If the type is space, fetch its pages and notion_user
+		const data = (await NotionCache.fetchDataOrReturnCached('discussion', id, options)) as IDiscussion;
+		data.comments.forEach((id) => container.push([ id, 'comment' ]));
+		container.push([ data.parent_id, 'block' ]);
 	} else if (type === 'user_root') {
 		// If the type is user_root, fetch its space_view
 		const data = (await NotionCache.fetchDataOrReturnCached('user_root', id, options)) as IUserRoot;

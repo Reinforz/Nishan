@@ -38,6 +38,7 @@ const configs = {
 	'getRecordValues',
 	'queryCollection',
 	'loadPageChunk',
+	'loadCachedPageChunk',
 	'recordPageVisit',
 	'getUserNotifications',
 	'getTasks',

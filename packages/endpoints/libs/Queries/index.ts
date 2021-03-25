@@ -347,6 +347,17 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async loadCachedPageChunk (
+		params: INotionEndpoints['loadCachedPageChunk']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['loadCachedPageChunk']['response']>(
+			'loadCachedPageChunk',
+			params,
+			options
+		);
+	},
+
 	async recordPageVisit (params: INotionEndpoints['recordPageVisit']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['recordPageVisit']['response']>(
 			'recordPageVisit',

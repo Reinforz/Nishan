@@ -11,6 +11,7 @@ import {
   IUserRoot,
   IUserSettings, IViewFilter, TActivity,
   TBlock,
+  TDataType,
   TNotification, TSchemaUnit, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
 } from './';
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
@@ -54,3 +55,5 @@ export interface ICache {
 	activity: Map<string, TActivity>;
 	notification: Map<string, TNotification>;
 }
+
+export type NotionCacheInitializerTracker = Record<TDataType, Map<string, boolean>>;

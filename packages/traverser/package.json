@@ -30,7 +30,8 @@
     "@nishans/lineage": "0.0.19",
     "@nishans/logger": "0.0.16",
     "@nishans/operations": "0.0.28",
-    "@nishans/utils": "0.0.21"
+    "@nishans/utils": "0.0.21",
+    "@nishans/validators": "0.0.18"
   },
   "devDependencies": {
     "@nishans/types": "0.0.31"

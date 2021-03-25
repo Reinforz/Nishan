@@ -21,17 +21,25 @@ it(`NotionDiscourse.deleteComments`, async () => {
 			...default_nishan_arg,
 			cache
 		},
+		initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
+			.mockImplementation(async () => undefined),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	await NotionDiscourse.Comments.delete([ comment_id ], options);
+	await NotionDiscourse.Comments.delete('discussion_1', [ comment_id ], options);
 
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cm.s(comment_id, [ 'alive' ], false),
 		o.d.lr('discussion_1', [ 'comments' ], {
 			id: comment_id
-		}),
-		o.cm.u(comment_id, [], last_edited_props)
+		})
 	]);
+	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+		o.cm.u(comment_id, [], {
+			alive: false,
+			...last_edited_props
+		})
+	]);
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'discussion_1', 'discussion' ]);
 	expect(comment_data.alive).toBe(false);
 	expect(discussion_data.comments).toStrictEqual([]);
 });

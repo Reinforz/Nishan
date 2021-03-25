@@ -22,6 +22,6 @@ export const deleteComments = async (
 			parent_type: 'discussion',
 			...options
 		},
-		async (_, data, discussions) => discussions.push(data)
+		async (_, data, comments) => comments.push(data)
 	);
 };

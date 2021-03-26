@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { default_nishan_arg } from '../../../../core/tests/utils';
 import { NotionGraphqlNotionUserResolvers } from '../../../libs/Resolvers/utils';
 
 ([ `last_edited_by`, 'created_by' ] as (keyof typeof NotionGraphqlNotionUserResolvers)[]).forEach((method) => {
@@ -13,10 +14,8 @@ import { NotionGraphqlNotionUserResolvers } from '../../../libs/Resolvers/utils'
 			block_1,
 			{},
 			{
-				cache,
-				token: 'token',
-				user_id: 'notion_user_1',
-				interval: 0
+				...default_nishan_arg,
+				cache
 			}
 		);
 		expect(data).toStrictEqual(notion_user_1);

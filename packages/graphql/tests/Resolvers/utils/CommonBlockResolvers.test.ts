@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { default_nishan_arg } from '../../../../core/tests/utils';
 import { NotionGraphqlCommonBlockResolvers } from '../../../libs/Resolvers/utils';
 
 it(`parent`, async () => {
@@ -13,10 +14,8 @@ it(`parent`, async () => {
 		block_1,
 		{},
 		{
-			cache,
-			token: 'token',
-			user_id: 'notion_user_1',
-			interval: 0
+			...default_nishan_arg,
+			cache
 		}
 	);
 	expect(data).toStrictEqual(block_2);
@@ -34,10 +33,8 @@ it(`space`, async () => {
 		block_1,
 		{},
 		{
-			cache,
-			token: 'token',
-			user_id: 'notion_user_1',
-			interval: 0
+			...default_nishan_arg,
+			cache
 		}
 	);
 	expect(data).toStrictEqual(space_1);

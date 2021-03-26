@@ -2,20 +2,13 @@ import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
+import { default_nishan_arg } from '../../../../core/tests/utils';
 import { NotionFabricator } from '../../../libs';
 import { tsu } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
-
-const default_nishan_arg = {
-	token: 'token',
-	user_id: 'user_id',
-	space_id: 'space_id',
-	shard_id: 123,
-	cache: NotionCache.createDefaultCache()
-};
 
 const default_collection = {
 	id: 'collection_id',

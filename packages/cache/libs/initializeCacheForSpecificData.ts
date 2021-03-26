@@ -1,4 +1,5 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import {
 	ICollection,
 	IDiscussion,
@@ -18,6 +19,7 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param type The type of data
  */
 export async function initializeCacheForSpecificData (id: string, type: TDataType, options: INotionCacheOptions) {
+	let should_initialize_cache = true;
 	const { cache } = options;
 	const container: UpdateCacheManuallyParam = [],
 		extra_container: UpdateCacheManuallyParam = [];
@@ -94,21 +96,25 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		const data = cache[type].get(id) as TView;
 		container.push([ data.parent_id, 'block' ]);
 	} else if (type === 'space_view') {
-		// If the type is space_view, fetch its bookmarked_pages
 		const data = (await NotionCache.fetchDataOrReturnCached('space_view', id, options)) as ISpaceView;
 		if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 		container.push([ data.space_id, 'space' ]);
 		container.push([ data.parent_id, 'user_root' ]);
+	} else {
+		should_initialize_cache = false;
+		NotionLogger.method.warn(`Unknown datatype ${type} passed`);
 	}
 
-	// Filters data that doesn't exist in the cache
-	await NotionCache.updateCacheIfNotPresent(container, options);
+	if (should_initialize_cache) {
+		// Filters data that doesn't exist in the cache
+		await NotionCache.updateCacheIfNotPresent(container, options);
 
-	if (type === 'collection_view') {
-		const data = cache[type].get(id) as TView,
-			parent = cache.block.get(data.parent_id) as TCollectionBlock;
-		extra_container.push([ parent.collection_id, 'collection' ]);
+		if (type === 'collection_view') {
+			const data = cache[type].get(id) as TView,
+				parent = cache.block.get(data.parent_id) as TCollectionBlock;
+			extra_container.push([ parent.collection_id, 'collection' ]);
+		}
+		await NotionCache.updateCacheIfNotPresent(extra_container, options);
+		options.cache_init_tracker[type].set(id, true);
 	}
-	await NotionCache.updateCacheIfNotPresent(extra_container, options);
-	options.cache_init_tracker[type].set(id, true);
 }

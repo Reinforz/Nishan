@@ -10,7 +10,7 @@ afterEach(() => {
 describe('createBlockClass', () => {
 	NotionConstants.blockTypes().forEach((block_type) => {
 		it(`Should create Block Class for ${block_type}`, () => {
-			expect(createBlockClass(block_type, v4(), default_nishan_arg).id).toBe('123');
+			expect(createBlockClass(block_type, v4(), default_nishan_arg).id).toBe('block_1');
 		});
 	});
 

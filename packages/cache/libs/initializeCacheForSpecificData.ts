@@ -1,5 +1,4 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { NotionErrors } from '@nishans/errors';
 import {
 	ICollection,
 	IDiscussion,
@@ -100,7 +99,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 		if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 		container.push([ data.space_id, 'space' ]);
 		container.push([ data.parent_id, 'user_root' ]);
-	} else NotionErrors.Log.error(`${type} data is not supported`);
+	}
 
 	// Filters data that doesn't exist in the cache
 	await NotionCache.updateCacheIfNotPresent(container, options);
@@ -110,6 +109,6 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 			parent = cache.block.get(data.parent_id) as TCollectionBlock;
 		extra_container.push([ parent.collection_id, 'collection' ]);
 	}
-	options.cache_init_tracker[type].set(id, true);
 	await NotionCache.updateCacheIfNotPresent(extra_container, options);
+	options.cache_init_tracker[type].set(id, true);
 }

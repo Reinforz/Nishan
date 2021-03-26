@@ -1,4 +1,3 @@
-import colors from 'colors';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -12,7 +11,7 @@ describe('validateCache', () => {
 				...NotionCache.createDefaultCache(),
 				block: true
 			} as any)
-		).toThrow(colors.red.bold(`block is not an instance of Map`));
+		).toThrow(`block is not an instance of Map`);
 	});
 
 	it(`Should fail if cache_item is not passed`, () => {
@@ -26,7 +25,7 @@ describe('validateCache', () => {
 				space_view: new Map(),
 				user_root: new Map()
 			} as any)
-		).toThrow(colors.red.bold(`user_settings must be present in Cache argument`));
+		).toThrow(`user_settings must be present in Cache argument`);
 	});
 
 	it(`Should fail if an unknown cache_item is passed`, () => {
@@ -35,7 +34,7 @@ describe('validateCache', () => {
 				...NotionCache.createDefaultCache(),
 				unknown: new Map()
 			} as any)
-		).toThrow(colors.red.bold(`Unknown key unknown passed`));
+		).toThrow(`Unknown key unknown passed`);
 	});
 
 	it(`Should return cache if no error is thrown`, () => {

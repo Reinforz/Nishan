@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@nishans/endpoints": "0.0.28",
-    "@nishans/errors": "0.0.28",
+    "@nishans/logger": "0.0.16",
     "@nishans/utils": "0.0.21",
     "@nishans/constants": "0.0.20"
   },

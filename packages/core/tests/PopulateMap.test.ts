@@ -27,8 +27,8 @@ it(`PopulateMap.collection_block`, async () => {
 	await PopulateMap.collection_block(
 		block_1,
 		{
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		},
 		block_map
 	);
@@ -49,8 +49,8 @@ describe('PopulateMap.page', () => {
 		const cache = NotionCache.createDefaultCache();
 
 		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(page_map.page.get('block_1')).not.toBeUndefined();
@@ -79,8 +79,8 @@ describe('PopulateMap.page', () => {
 		});
 
 		await PopulateMap.page(block_1 as any, page_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(PopulateMapCollectionBlockMock).toHaveBeenCalledTimes(1);
@@ -111,8 +111,8 @@ describe('PopulateMap.block', () => {
 		});
 
 		await PopulateMap.block(block_1 as any, block_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(PopulateMapPageMock).toHaveBeenCalledTimes(1);
@@ -131,8 +131,8 @@ describe('PopulateMap.block', () => {
 		} as any;
 
 		await PopulateMap.block(block_1 as any, block_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(block_map.header.get('block_1') instanceof Block).toBe(true);
@@ -151,8 +151,8 @@ describe('PopulateMap.block', () => {
 		} as any;
 
 		await PopulateMap.block(block_1 as any, block_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(block_map.header.get('block_1') instanceof Block).toBe(true);
@@ -174,8 +174,8 @@ describe('PopulateMap.block', () => {
 		});
 
 		await PopulateMap.block(block_1 as any, block_map, {
-			cache,
-			...default_nishan_arg
+			...default_nishan_arg,
+			cache
 		});
 
 		expect(PopulateMapCollectionBlockMock).toHaveBeenCalledTimes(1);

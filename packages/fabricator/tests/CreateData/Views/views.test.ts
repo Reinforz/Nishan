@@ -69,7 +69,7 @@ describe('Output correctly', () => {
 				}
 			},
 			shard_id: 123,
-			space_id: 'space_id'
+			space_id: 'space_1'
 		};
 
 		const views_data = await NotionFabricator.CreateData.views(

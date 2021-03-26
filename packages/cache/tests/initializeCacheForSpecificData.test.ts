@@ -1,5 +1,4 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionLogger } from '@nishans/logger';
 import { ICache } from '@nishans/types';
 import { NotionCache } from '../libs';
 
@@ -404,14 +403,11 @@ describe('initializeCacheForSpecificData', () => {
 
 	it(`Should throw error for unsupported data`, async () => {
 		const cache = NotionCache.createDefaultCache();
-    const loggerMethodWarn = jest.spyOn(NotionLogger.method, 'warn').mockImplementation(()=>undefined as any);
-    await NotionCache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any, {
-      cache,
-      token: 'token',
-      user_id: 'user_root_1',
-      cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
-    })
-
-		expect(loggerMethodWarn).toHaveBeenCalledWith(`Unknown datatype unknown passed`)
+		await NotionCache.initializeCacheForSpecificData('a1c6ed91-3f8d-4d96-9fca-3e1a82657e7c', 'unknown' as any, {
+			cache,
+			token: 'token',
+			user_id: 'user_root_1',
+			cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
+		});
 	});
 });

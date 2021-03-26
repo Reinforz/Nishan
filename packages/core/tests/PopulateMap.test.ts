@@ -1,18 +1,10 @@
 import { NotionCache } from '@nishans/cache';
 import { Block, IBlockMap, IPageMap, PopulateMap } from '../libs';
+import { default_nishan_arg } from './utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
-
-const NishanArgs = {
-	interval: 0,
-	shard_id: 123,
-	space_id: 'space_1',
-	stack: [],
-	token: 'token',
-	user_id: 'user_root_1'
-};
 
 it(`PopulateMap.collection_block`, async () => {
 	const block_map: IBlockMap = {
@@ -36,7 +28,7 @@ it(`PopulateMap.collection_block`, async () => {
 		block_1,
 		{
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		},
 		block_map
 	);
@@ -58,7 +50,7 @@ describe('PopulateMap.page', () => {
 
 		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(page_map.page.get('block_1')).not.toBeUndefined();
@@ -88,7 +80,7 @@ describe('PopulateMap.page', () => {
 
 		await PopulateMap.page(block_1 as any, page_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(PopulateMapCollectionBlockMock).toHaveBeenCalledTimes(1);
@@ -120,7 +112,7 @@ describe('PopulateMap.block', () => {
 
 		await PopulateMap.block(block_1 as any, block_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(PopulateMapPageMock).toHaveBeenCalledTimes(1);
@@ -140,7 +132,7 @@ describe('PopulateMap.block', () => {
 
 		await PopulateMap.block(block_1 as any, block_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(block_map.header.get('block_1') instanceof Block).toBe(true);
@@ -160,7 +152,7 @@ describe('PopulateMap.block', () => {
 
 		await PopulateMap.block(block_1 as any, block_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(block_map.header.get('block_1') instanceof Block).toBe(true);
@@ -183,7 +175,7 @@ describe('PopulateMap.block', () => {
 
 		await PopulateMap.block(block_1 as any, block_map, {
 			cache,
-			...NishanArgs
+			...default_nishan_arg
 		});
 
 		expect(PopulateMapCollectionBlockMock).toHaveBeenCalledTimes(1);

@@ -1,6 +1,7 @@
 import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
 import {
 	ICollection,
+	IComment,
 	IDiscussion,
 	ISpace,
 	ISpaceView,
@@ -113,6 +114,13 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 				if (data.bookmarked_pages) data.bookmarked_pages.forEach((id) => container.push([ id, 'block' ]));
 				container.push([ data.space_id, 'space' ]);
 				container.push([ data.parent_id, 'user_root' ]);
+				break;
+			}
+			case 'comment': {
+				const data = (await NotionCache.fetchDataOrReturnCached('comment', id, options)) as IComment;
+				NotionCache.extractNotionUserIds(data).forEach((id) => container.push([ id, 'notion_user' ]));
+				container.push([ data.space_id, 'space' ]);
+				container.push([ data.parent_id, data.parent_table ]);
 				break;
 			}
 		}

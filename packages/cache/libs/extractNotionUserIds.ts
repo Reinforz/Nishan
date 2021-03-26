@@ -1,11 +1,11 @@
-import { ISpace, TBlock } from "@nishans/types";
+import { IComment, ISpace, TBlock } from "@nishans/types";
 
 /**
    * Extracts and returns an array of notion user ids from the passed data
    * @param data Data to extract notion user id from
    * @returns Array of extracted notion user ids
    */
-export function extractNotionUserIds(data: TBlock | ISpace){
+export function extractNotionUserIds(data: TBlock | ISpace | IComment){
   const notion_users: Set<string> = new Set();
   (data as ISpace).permissions?.forEach(
       (permission) => permission.type === 'user_permission' && notion_users.add(permission.user_id)

@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { default_nishan_arg } from '../../../core/tests/utils';
 import { NotionGraphqlQueryResolvers } from '../../libs/Resolvers/query';
 
 it(`space`, async () => {
@@ -11,10 +12,8 @@ it(`space`, async () => {
 		undefined,
 		{ id: 'space_1' },
 		{
-			cache,
-			token: 'token',
-			user_id: 'notion_user_1',
-			interval: 0
+			...default_nishan_arg,
+			cache
 		}
 	);
 	expect(data).toStrictEqual(space_1);

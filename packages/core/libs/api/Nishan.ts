@@ -1,7 +1,7 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { FilterType, FilterTypes, NotionTraverser } from "@nishans/traverser";
-import { ICache, INotionUser } from "@nishans/types";
+import { ICache, INotionUser, NotionCacheInitializerTracker } from "@nishans/types";
 import { INotionCoreOptions } from "../";
 import { transformToMultiple } from "../utils";
 import NotionUser from "./NotionUser";
@@ -13,6 +13,7 @@ export default class Nishan {
   logger: boolean;
   notion_operation_plugins: NotionOperationPluginFunction[];
   cache: ICache;
+  cache_init_tracker: NotionCacheInitializerTracker;
 
   constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"]}) {
     this.token = arg.token;
@@ -21,6 +22,7 @@ export default class Nishan {
     this.logger = arg.logger ?? true;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.cache = NotionCache.createDefaultCache();
+    this.cache_init_tracker = NotionCache.createDefaultCacheInitializeTracker()
   }
 
   #initializeCache = async () => {
@@ -55,7 +57,8 @@ export default class Nishan {
       cache: this.cache,
       interval: this.interval,
       logger: this.logger,
-      notion_operation_plugins: this.notion_operation_plugins
+      notion_operation_plugins: this.notion_operation_plugins,
+      cache_init_tracker: this.cache_init_tracker
     }
 
     const notion_user_ids: string[] = [];

@@ -11,7 +11,8 @@ export const default_nishan_arg: INotionCoreOptions = {
 	token: 'token',
 	user_id: 'user_root_1',
 	logger: true,
-	notion_operation_plugins: []
+	notion_operation_plugins: [],
+	cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 };
 
 export const last_edited_props = {

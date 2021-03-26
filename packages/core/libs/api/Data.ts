@@ -4,7 +4,7 @@ import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
-import { ICache, TData, TDataType } from '@nishans/types';
+import { ICache, NotionCacheInitializerTracker, TData, TDataType } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { INotionCoreOptions } from '../';
 
@@ -16,7 +16,6 @@ import { INotionCoreOptions } from '../';
 export default class NotionData<T extends TData> {
   id: string;
   type: TDataType;
-  #init_cache = false;
   logger: boolean;
   user_id: string;
   notion_operation_plugins: NotionOperationPluginFunction[];
@@ -25,19 +24,19 @@ export default class NotionData<T extends TData> {
   interval: number;
   token: string;
   cache: ICache;
+  cache_init_tracker: NotionCacheInitializerTracker;
 
   constructor(arg: INotionCoreOptions & { cache?: ICache, type: TDataType }) {
     this.type = arg.type;
     this.id = arg.id;
-    this.#init_cache = false;
     this.logger = arg.logger ?? true;
     this.user_id = arg.user_id;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
     this.shard_id = arg.shard_id;
     this.space_id = arg.space_id;
 		this.interval = arg.interval ?? 500;
-    // Validate the cache first if its passed, otherwise store a default one
 		this.cache = (arg.cache && NotionCache.validateCache(arg.cache)) || NotionCache.createDefaultCache();
+    this.cache_init_tracker = arg.cache_init_tracker || NotionCache.createDefaultCacheInitializeTracker();
     if(!arg.token)
       throw new Error(`Token not provided`);
 		this.token = arg.token;
@@ -89,9 +88,8 @@ export default class NotionData<T extends TData> {
   }
 
   async initializeCacheForThisData() {
-    if (!this.#init_cache && this.type !== "notion_user") {
+    if (this.cache_init_tracker[this.type].get(this.id) !== true && this.type !== "notion_user") {
       await NotionCache.initializeCacheForSpecificData(this.id, this.type, this.getProps())
-      this.#init_cache = true;
     }
   }
 
@@ -134,7 +132,8 @@ export default class NotionData<T extends TData> {
       space_id: this.space_id,
       cache: this.cache,
       logger: this.logger,
-      notion_operation_plugins: this.notion_operation_plugins
+      notion_operation_plugins: this.notion_operation_plugins,
+      cache_init_tracker: this.cache_init_tracker
     } as INotionFabricatorOptions
   }
 }

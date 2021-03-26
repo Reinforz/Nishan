@@ -1,0 +1,624 @@
+
+> nishans@0.0.0 pretest
+> run-s build
+
+
+> nishans@0.0.0 prebuild
+> npm run lint && run-s clean
+
+
+> nishans@0.0.0 lint
+> npx eslint . --color
+
+
+> nishans@0.0.0 clean
+> del-cli packages/*/dist
+
+
+> nishans@0.0.0 build
+> tsc --build tsconfig.json
+
+
+> nishans@0.0.0 test
+> lerna run test
+
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |       0 |        0 |       0 |       0 |                   
+----------|---------|----------|---------|---------|-------------------
+Done in 13.31s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |       0 |        0 |       0 |       0 |                   
+----------|---------|----------|---------|---------|-------------------
+Done in 12.39s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+----------------------|---------|----------|---------|---------|-------------------
+File                  | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------|---------|----------|---------|---------|-------------------
+All files             |     100 |      100 |     100 |     100 |                   
+ bgColorTypes.ts      |     100 |      100 |     100 |     100 |                   
+ blockTypes.ts        |     100 |      100 |     100 |     100 |                   
+ colorTypes.ts        |     100 |      100 |     100 |     100 |                   
+ dataTypes.ts         |     100 |      100 |     100 |     100 |                   
+ functionNames.ts     |     100 |      100 |     100 |     100 |                   
+ index.ts             |     100 |      100 |     100 |     100 |                   
+ operationCommands.ts |     100 |      100 |     100 |     100 |                   
+ schemaUnitTypes.ts   |     100 |      100 |     100 |     100 |                   
+ viewTypes.ts         |     100 |      100 |     100 |     100 |                   
+----------------------|---------|----------|---------|---------|-------------------
+Done in 16.54s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+----------------------------|---------|----------|---------|---------|-------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------------|---------|----------|---------|---------|-------------------
+All files                   |   99.18 |      100 |   98.81 |   99.15 |                   
+ libs                       |     100 |      100 |     100 |     100 |                   
+  index.ts                  |     100 |      100 |     100 |     100 |                   
+ libs/Mutations             |   96.97 |      100 |   96.77 |   96.97 |                   
+  index.ts                  |   96.97 |      100 |   96.77 |   96.97 | 30                
+ libs/Queries               |     100 |      100 |     100 |     100 |                   
+  index.ts                  |     100 |      100 |     100 |     100 |                   
+ libs/Request               |     100 |      100 |     100 |     100 |                   
+  constructNotionHeaders.ts |     100 |      100 |     100 |     100 |                   
+  createTransaction.ts      |     100 |      100 |     100 |     100 |                   
+  index.ts                  |     100 |      100 |     100 |     100 |                   
+  sendRequest.ts            |     100 |      100 |     100 |     100 |                   
+ tests/Request              |     100 |      100 |     100 |     100 |                   
+  utils.ts                  |     100 |      100 |     100 |     100 |                   
+----------------------------|---------|----------|---------|---------|-------------------
+Done in 19.37s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+---------------|---------|----------|---------|---------|-------------------
+File           | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------|---------|----------|---------|---------|-------------------
+All files      |     100 |      100 |     100 |     100 |                   
+ collection.ts |     100 |      100 |     100 |     100 |                   
+ index.ts      |     100 |      100 |     100 |     100 |                   
+ pages.ts      |     100 |      100 |     100 |     100 |                   
+ views.ts      |     100 |      100 |     100 |     100 |                   
+---------------|---------|----------|---------|---------|-------------------
+Done in 16.70s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+  console.log
+    [33m[1m123[22m[39m
+
+      at console.<anonymous> (../../node_modules/jest-mock/build/index.js:845:25)
+
+------------------------------------|---------|----------|---------|---------|-------------------
+File                                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------------------------|---------|----------|---------|---------|-------------------
+All files                           |     100 |      100 |     100 |     100 |                   
+ libs                               |     100 |      100 |     100 |     100 |                   
+  ChildIndexOutOfBound.ts           |     100 |      100 |     100 |     100 |                   
+  FunctionArgumentLengthMismatch.ts |     100 |      100 |     100 |     100 |                   
+  FunctionArgumentTypeMismatch.ts   |     100 |      100 |     100 |     100 |                   
+  NonExistentData.ts                |     100 |      100 |     100 |     100 |                   
+  NonExistentSchemaUnitType.ts      |     100 |      100 |     100 |     100 |                   
+  PreExistentValue.ts               |     100 |      100 |     100 |     100 |                   
+  SchemaDuplicatePropertyName.ts    |     100 |      100 |     100 |     100 |                   
+  UnknownPropertyReference.ts       |     100 |      100 |     100 |     100 |                   
+  UnsupportedBlockType.ts           |     100 |      100 |     100 |     100 |                   
+  UnsupportedDataType.ts            |     100 |      100 |     100 |     100 |                   
+  UnsupportedFunctionName.ts        |     100 |      100 |     100 |     100 |                   
+  UnsupportedPropertyType.ts        |     100 |      100 |     100 |     100 |                   
+  index.ts                          |     100 |      100 |     100 |     100 |                   
+ libs/Log                           |     100 |      100 |     100 |     100 |                   
+  index.ts                          |     100 |      100 |     100 |     100 |                   
+------------------------------------|---------|----------|---------|---------|-------------------
+Done in 25.35s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+  console.log
+    Invalid uuid provided
+
+      at console.<anonymous> (../../node_modules/jest-mock/build/index.js:845:25)
+
+---------------------|---------|----------|---------|---------|-------------------
+File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------|---------|----------|---------|---------|-------------------
+All files            |     100 |      100 |     100 |     100 |                   
+ libs                |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Generate       |     100 |      100 |     100 |     100 |                   
+  generateId.ts      |     100 |      100 |     100 |     100 |                   
+  generateShortId.ts |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Transform      |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  transformToId.ts   |     100 |      100 |     100 |     100 |                   
+  transformToUuid.ts |     100 |      100 |     100 |     100 |                   
+ libs/Validate       |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  validateId.ts      |     100 |      100 |     100 |     100 |                   
+  validateUuid.ts    |     100 |      100 |     100 |     100 |                   
+---------------------|---------|----------|---------|---------|-------------------
+Done in 24.22s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+-----------------|---------|----------|---------|---------|-------------------
+File             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------|---------|----------|---------|---------|-------------------
+All files        |     100 |      100 |     100 |     100 |                   
+ libs            |     100 |      100 |     100 |     100 |                   
+  index.ts       |     100 |      100 |     100 |     100 |                   
+ libs/View       |     100 |      100 |     100 |     100 |                   
+  aggregation.ts |     100 |      100 |     100 |     100 |                   
+  filter.ts      |     100 |      100 |     100 |     100 |                   
+  index.ts       |     100 |      100 |     100 |     100 |                   
+  sort.ts        |     100 |      100 |     100 |     100 |                   
+-----------------|---------|----------|---------|---------|-------------------
+Done in 21.31s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |     100 |      100 |     100 |     100 |                   
+ NotionInlineBlock.ts  |     100 |      100 |     100 |     100 |                   
+ TextHighlightColor.ts |     100 |      100 |     100 |     100 |                   
+ TextStyleFormatter.ts |     100 |      100 |     100 |     100 |                   
+ index.ts              |     100 |      100 |     100 |     100 |                   
+-----------------------|---------|----------|---------|---------|-------------------
+Done in 23.91s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+------------------------------|---------|----------|---------|---------|-------------------
+File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------------------|---------|----------|---------|---------|-------------------
+All files                     |     100 |      100 |     100 |     100 |                   
+ createDefaultRecordMap.ts    |     100 |      100 |     100 |     100 |                   
+ deepMerge.ts                 |     100 |      100 |     100 |     100 |                   
+ extractInlineBlockContent.ts |     100 |      100 |     100 |     100 |                   
+ generateSchemaMap.ts         |     100 |      100 |     100 |     100 |                   
+ getSchemaMapUnit.ts          |     100 |      100 |     100 |     100 |                   
+ getSchemaUnit.ts             |     100 |      100 |     100 |     100 |                   
+ index.ts                     |     100 |      100 |     100 |     100 |                   
+ populateChildPath.ts         |     100 |      100 |     100 |     100 |                   
+ setDefault.ts                |     100 |      100 |     100 |     100 |                   
+ updateLastEditedProps.ts     |     100 |      100 |     100 |     100 |                   
+------------------------------|---------|----------|---------|---------|-------------------
+Done in 28.53s.
+yarn run v1.22.5
+$ npx jest --config ../../jest.config.js
+----------------------------|---------|----------|---------|---------|-------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------------|---------|----------|---------|---------|-------------------
+All files                   |     100 |      100 |     100 |     100 |                   
+ checkDateSchemaUnit.ts     |     100 |      100 |     100 |     100 |                   
+ checkSelectSchemaUnit.ts   |     100 |      100 |     100 |     100 |                   
+ dataContainsAliveProp.ts   |     100 |      100 |     100 |     100 |                   
+ dataContainsEditedProps.ts |     100 |      100 |     100 |     100 |                   
+ index.ts                   |     100 |      100 |     100 |     100 |                   
+----------------------------|---------|----------|---------|---------|-------------------
+Done in 27.96s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+  console.log
+    The operation stack is empty
+
+      at console.<anonymous> (../../node_modules/jest-mock/build/index.js:845:25)
+
+-----------------------------------|---------|----------|---------|---------|-------------------
+File                               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------------------|---------|----------|---------|---------|-------------------
+All files                          |     100 |      100 |     100 |     100 |                   
+ libs                              |     100 |      100 |     100 |     100 |                   
+  applyPluginsToOperationsStack.ts |     100 |      100 |     100 |     100 |                   
+  executeOperations.ts             |     100 |      100 |     100 |     100 |                   
+  index.ts                         |     100 |      100 |     100 |     100 |                   
+ libs/Chunk                        |     100 |      100 |     100 |     100 |                   
+  index.ts                         |     100 |      100 |     100 |     100 |                   
+ libs/Plugins                      |     100 |      100 |     100 |     100 |                   
+  index.ts                         |     100 |      100 |     100 |     100 |                   
+  removeEmptyOperationsPlugin.ts   |     100 |      100 |     100 |     100 |                   
+  removeLastEditedPropsPlugin.ts   |     100 |      100 |     100 |     100 |                   
+  validateOperationsPlugin.ts      |     100 |      100 |     100 |     100 |                   
+ libs/Plugins/Options              |     100 |      100 |     100 |     100 |                   
+  index.ts                         |     100 |      100 |     100 |     100 |                   
+  skip.ts                          |     100 |      100 |     100 |     100 |                   
+ tests                             |     100 |      100 |     100 |     100 |                   
+  utils.ts                         |     100 |      100 |     100 |     100 |                   
+-----------------------------------|---------|----------|---------|---------|-------------------
+Done in 31.89s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+------------------------|---------|----------|---------|---------|-------------------
+File                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------------|---------|----------|---------|---------|-------------------
+All files               |     100 |      100 |     100 |     100 |                   
+ libs                   |     100 |      100 |     100 |     100 |                   
+  index.ts              |     100 |      100 |     100 |     100 |                   
+ libs/Export            |     100 |      100 |     100 |     100 |                   
+  exportBlock.ts        |     100 |      100 |     100 |     100 |                   
+  exportSpace.ts        |     100 |      100 |     100 |     100 |                   
+  index.ts              |     100 |      100 |     100 |     100 |                   
+ libs/utils             |     100 |      100 |     100 |     100 |                   
+  enqueueAndPollTask.ts |     100 |      100 |     100 |     100 |                   
+  index.ts              |     100 |      100 |     100 |     100 |                   
+------------------------|---------|----------|---------|---------|-------------------
+Done in 26.25s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+----------------------------------------|---------|----------|---------|---------|-------------------
+File                                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------------------------------|---------|----------|---------|---------|-------------------
+All files                               |     100 |      100 |     100 |     100 |                   
+ constructAndSyncRecordsParams.ts       |     100 |      100 |     100 |     100 |                   
+ constructSyncRecordsParams.ts          |     100 |      100 |     100 |     100 |                   
+ createDefaultCache.ts                  |     100 |      100 |     100 |     100 |                   
+ createDefaultCacheInitializeTracker.ts |     100 |      100 |     100 |     100 |                   
+ extractNotionUserIds.ts                |     100 |      100 |     100 |     100 |                   
+ extractSpaceAndParentId.ts             |     100 |      100 |     100 |     100 |                   
+ fetchDataOrReturnCached.ts             |     100 |      100 |     100 |     100 |                   
+ fetchMultipleDataOrReturnCached.ts     |     100 |      100 |     100 |     100 |                   
+ index.ts                               |     100 |      100 |     100 |     100 |                   
+ initializeCacheForSpecificData.ts      |     100 |      100 |     100 |     100 |                   
+ initializeNotionCache.ts               |     100 |      100 |     100 |     100 |                   
+ returnNonCachedData.ts                 |     100 |      100 |     100 |     100 |                   
+ saveToCache.ts                         |     100 |      100 |     100 |     100 |                   
+ updateCacheIfNotPresent.ts             |     100 |      100 |     100 |     100 |                   
+ updateCacheManually.ts                 |     100 |      100 |     100 |     100 |                   
+ validateCache.ts                       |     100 |      100 |     100 |     100 |                   
+----------------------------------------|---------|----------|---------|---------|-------------------
+Done in 23.89s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+[34m[1m20:34:14[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_1[39m[22m
+[34m[1m20:34:14[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_1[39m[22m
+[34m[1m20:34:15[22m[39m - [32minfo[39m: [1m[37mUPDATE space space_1[39m[22m
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ Block.ts |     100 |      100 |     100 |     100 |                   
+ Space.ts |     100 |      100 |     100 |     100 |                   
+ index.ts |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
+Done in 27.38s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+---------------------------------------|---------|----------|---------|---------|-------------------
+File                                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------------------------|---------|----------|---------|---------|-------------------
+All files                              |     100 |      100 |     100 |     100 |                   
+ libs                                  |     100 |      100 |     100 |     100 |                   
+  generateSchemaMapFromRemoteSchema.ts |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+ libs/FunctionFormulaInfo              |     100 |      100 |     100 |     100 |                   
+  array.ts                             |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+  map.ts                               |     100 |      100 |     100 |     100 |                   
+ libs/FunctionFormulaInfo/utils        |     100 |      100 |     100 |     100 |                   
+  generateFormulaInfo.ts               |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+ libs/GenerateAST                      |     100 |      100 |     100 |     100 |                   
+  array.ts                             |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+  object.ts                            |     100 |      100 |     100 |     100 |                   
+  string.ts                            |     100 |      100 |     100 |     100 |                   
+ libs/GenerateAST/utils                |     100 |      100 |     100 |     100 |                   
+  generateNotionFormulaAST.ts          |     100 |      100 |     100 |     100 |                   
+  getResultTypeFromSchemaType.ts       |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+ libs/GenerateArg                      |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+  literal.ts                           |     100 |      100 |     100 |     100 |                   
+  property.ts                          |     100 |      100 |     100 |     100 |                   
+ tests                                 |     100 |      100 |     100 |     100 |                   
+  utils.ts                             |     100 |      100 |     100 |     100 |                   
+ types                                 |     100 |      100 |     100 |     100 |                   
+  index.ts                             |     100 |      100 |     100 |     100 |                   
+---------------------------------------|---------|----------|---------|---------|-------------------
+Done in 19.08s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+--------------------------|---------|----------|---------|---------|-------------------
+File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------------------|---------|----------|---------|---------|-------------------
+All files                 |     100 |      100 |     100 |     100 |                   
+ libs                     |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+  positionChildren.ts     |     100 |      100 |     100 |     100 |                   
+  updateChildContainer.ts |     100 |      100 |     100 |     100 |                   
+ libs/Block               |     100 |      100 |     100 |     100 |                   
+  getCommentIds.ts        |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+ libs/Page                |     100 |      100 |     100 |     100 |                   
+  getCommentIds.ts        |     100 |      100 |     100 |     100 |                   
+  getDiscussionIds.ts     |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+--------------------------|---------|----------|---------|---------|-------------------
+Done in 26.93s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+---------------------|---------|----------|---------|---------|-------------------
+File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------|---------|----------|---------|---------|-------------------
+All files            |     100 |      100 |     100 |     100 |                   
+ libs                |     100 |      100 |     100 |     100 |                   
+  extractData.ts     |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Read           |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  readFromFile.ts    |     100 |      100 |     100 |     100 |                   
+  readFromMongodb.ts |     100 |      100 |     100 |     100 |                   
+  readFromNotion.ts  |     100 |      100 |     100 |     100 |                   
+ libs/Restore        |     100 |      100 |     100 |     100 |                   
+  fromFile.ts        |     100 |      100 |     100 |     100 |                   
+  fromMongodb.ts     |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Store          |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Store/File     |     100 |      100 |     100 |     100 |                   
+  fromMongodb.ts     |     100 |      100 |     100 |     100 |                   
+  fromNotion.ts      |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Store/Mongodb  |     100 |      100 |     100 |     100 |                   
+  fromFile.ts        |     100 |      100 |     100 |     100 |                   
+  fromNotion.ts      |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+ libs/Write          |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  writeToFile.ts     |     100 |      100 |     100 |     100 |                   
+  writeToMongodb.ts  |     100 |      100 |     100 |     100 |                   
+  writeToNotion.ts   |     100 |      100 |     100 |     100 |                   
+---------------------|---------|----------|---------|---------|-------------------
+Done in 38.91s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+---------------------|---------|----------|---------|---------|-------------------
+File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------|---------|----------|---------|---------|-------------------
+All files            |     100 |      100 |     100 |     100 |                   
+ libs                |     100 |      100 |     100 |     100 |                   
+  delete.ts          |     100 |      100 |     100 |     100 |                   
+  get.ts             |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  update.ts          |     100 |      100 |     100 |     100 |                   
+ libs/utils          |     100 |      100 |     100 |     100 |                   
+  getChildIds.ts     |     100 |      100 |     100 |     100 |                   
+  index.ts           |     100 |      100 |     100 |     100 |                   
+  iterateChildren.ts |     100 |      100 |     100 |     100 |                   
+ tests               |     100 |      100 |     100 |     100 |                   
+  utils.ts           |     100 |      100 |     100 |     100 |                   
+---------------------|---------|----------|---------|---------|-------------------
+Done in 24.53s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+-------------------------------------|---------|----------|---------|---------|-------------------
+File                                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------------------|---------|----------|---------|---------|-------------------
+All files                            |     100 |      100 |     100 |     100 |                   
+ libs                                |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+ libs/CreateData                     |     100 |      100 |     100 |     100 |                   
+  collection.ts                      |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  schema.ts                          |     100 |      100 |     100 |     100 |                   
+ libs/CreateData/Contents            |     100 |      100 |     100 |     100 |                   
+  contents.ts                        |     100 |      100 |     100 |     100 |                   
+ libs/CreateData/Contents/utils      |     100 |      100 |     100 |     100 |                   
+  executeOperationAndStoreInCache.ts |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  populatePermissions.ts             |     100 |      100 |     100 |     100 |                   
+ libs/CreateData/SchemaUnit          |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  relation.ts                        |     100 |      100 |     100 |     100 |                   
+  rollup.ts                          |     100 |      100 |     100 |     100 |                   
+ libs/CreateData/Views               |     100 |      100 |     100 |     100 |                   
+  views.ts                           |     100 |      100 |     100 |     100 |                   
+ libs/CreateData/Views/utils         |     100 |      100 |     100 |     100 |                   
+  generateViewData.ts                |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+ libs/PopulateViewData               |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+ libs/PopulateViewData/format        |     100 |      100 |     100 |     100 |                   
+  format.ts                          |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  properties.ts                      |     100 |      100 |     100 |     100 |                   
+ libs/PopulateViewData/format/utils  |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  tableFormat.ts                     |     100 |      100 |     100 |     100 |                   
+ libs/PopulateViewData/query2        |     100 |      100 |     100 |     100 |                   
+  aggregation.ts                     |     100 |      100 |     100 |     100 |                   
+  filters.ts                         |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  query2.ts                          |     100 |      100 |     100 |     100 |                   
+  sort.ts                            |     100 |      100 |     100 |     100 |                   
+ libs/PopulateViewMaps               |     100 |      100 |     100 |     100 |                   
+  aggregations.ts                    |     100 |      100 |     100 |     100 |                   
+  filters.ts                         |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+  properties.ts                      |     100 |      100 |     100 |     100 |                   
+  sorts.ts                           |     100 |      100 |     100 |     100 |                   
+ tests                               |     100 |      100 |     100 |     100 |                   
+  utils.ts                           |     100 |      100 |     100 |     100 |                   
+ tests/PopulateViewMaps              |     100 |      100 |     100 |     100 |                   
+  utils.ts                           |     100 |      100 |     100 |     100 |                   
+ types                               |     100 |      100 |     100 |     100 |                   
+  index.ts                           |     100 |      100 |     100 |     100 |                   
+-------------------------------------|---------|----------|---------|---------|-------------------
+Done in 34.58s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+[34m[1m20:35:27[22m[39m - [32minfo[39m: [1m[37mDELETE discussion discussion_1[39m[22m
+[34m[1m20:35:28[22m[39m - [32minfo[39m: [1m[37mUPDATE discussion discussion_1[39m[22m
+[34m[1m20:35:30[22m[39m - [32minfo[39m: [1m[37mDELETE comment 403c07ee-06d4-4c55-b229-aa0a8c939593[39m[22m
+[34m[1m20:35:30[22m[39m - [32minfo[39m: [1m[37mREAD discussion discussion_1[39m[22m
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |     100 |      100 |     100 |     100 |                   
+ libs                  |     100 |      100 |     100 |     100 |                   
+  index.ts             |     100 |      100 |     100 |     100 |                   
+ libs/Comments         |     100 |      100 |     100 |     100 |                   
+  createComments.ts    |     100 |      100 |     100 |     100 |                   
+  deleteComments.ts    |     100 |      100 |     100 |     100 |                   
+  index.ts             |     100 |      100 |     100 |     100 |                   
+  restoreComments.ts   |     100 |      100 |     100 |     100 |                   
+  updateComments.ts    |     100 |      100 |     100 |     100 |                   
+ libs/Discussions      |     100 |      100 |     100 |     100 |                   
+  createDiscussions.ts |     100 |      100 |     100 |     100 |                   
+  deleteDiscussions.ts |     100 |      100 |     100 |     100 |                   
+  getDiscussions.ts    |     100 |      100 |     100 |     100 |                   
+  index.ts             |     100 |      100 |     100 |     100 |                   
+  updateDiscussions.ts |     100 |      100 |     100 |     100 |                   
+-----------------------|---------|----------|---------|---------|-------------------
+Done in 23.40s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mREAD block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mDELETE block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mCREATE block 78abc37f-424e-4c29-a185-d39f13862f58[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mREAD block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mDELETE block block_1[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mREAD collection Title[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mUPDATE collection Title[39m[22m
+[34m[1m20:36:01[22m[39m - [32minfo[39m: [1m[37mDELETE collection Checkbox[39m[22m
+[34m[1m20:36:02[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_2[39m[22m
+  console.log
+    [33m[1mblock:block_1 is not alive[22m[39m
+
+      at Object.warn (../errors/libs/Log/index.ts:8:11)
+
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE block block_1[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Title[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Text[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Title[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mDELETE collection_view Title[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Title[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Title[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view 0[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view 0[39m[22m
+[34m[1m20:36:04[22m[39m - [32minfo[39m: [1m[37mDELETE collection_view 0[39m[22m
+[34m[1m20:36:06[22m[39m - [32minfo[39m: [1m[37mREAD space space_2[39m[22m
+[34m[1m20:36:06[22m[39m - [32minfo[39m: [1m[37mUPDATE space space_1[39m[22m
+[34m[1m20:36:06[22m[39m - [32minfo[39m: [1m[37mREAD user_settings user_root_1[39m[22m
+[34m[1m20:36:06[22m[39m - [32minfo[39m: [1m[37mREAD user_root user_root_1[39m[22m
+[34m[1m20:36:06[22m[39m - [32minfo[39m: [1m[37mDELETE space space_1[39m[22m
+  console.log
+    The operation stack is empty
+
+      at Object.<anonymous> (../operations/libs/executeOperations.ts:7:39)
+
+  console.log
+    [33m[1mblock:block_2 doesnot exist in the cache[22m[39m
+
+      at console.<anonymous> (../../node_modules/jest-mock/build/index.js:845:25)
+
+  console.log
+    [33m[1mblock:block_1 is not alive[22m[39m
+
+      at console.<anonymous> (../../node_modules/jest-mock/build/index.js:845:25)
+
+[34m[1m20:36:08[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view Text[39m[22m
+[34m[1m20:36:08[22m[39m - [32minfo[39m: [1m[37mDELETE collection_view Text[39m[22m
+[34m[1m20:36:13[22m[39m - [32minfo[39m: [1m[37mUPDATE user_root user_root_1[39m[22m
+  console.log
+    The operation stack is empty
+
+      at Object.<anonymous> (../operations/libs/executeOperations.ts:7:39)
+
+[34m[1m20:36:15[22m[39m - [32minfo[39m: [1m[37mCREATE collection_view c2309047-afe3-4118-842d-8920062b7b56[39m[22m
+[34m[1m20:36:15[22m[39m - [32minfo[39m: [1m[37mREAD collection_view collection_view_1[39m[22m
+[34m[1m20:36:15[22m[39m - [32minfo[39m: [1m[37mUPDATE collection_view collection_view_1[39m[22m
+[34m[1m20:36:15[22m[39m - [32minfo[39m: [1m[37mDELETE collection_view collection_view_1[39m[22m
+[34m[1m20:36:16[22m[39m - [32minfo[39m: [1m[37mREAD space_view space_view_1[39m[22m
+[34m[1m20:36:16[22m[39m - [32minfo[39m: [1m[37mUPDATE space_view space_view_1[39m[22m
+-------------------------|---------|----------|---------|---------|-------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------------|---------|----------|---------|---------|-------------------
+All files                |   99.31 |    98.26 |   98.92 |   99.26 |                   
+ libs                    |     100 |      100 |     100 |     100 |                   
+  PopulateMap.ts         |     100 |      100 |     100 |     100 |                   
+  createBlockClass.ts    |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+ libs/CreateMaps         |     100 |      100 |     100 |     100 |                   
+  block.ts               |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+  page.ts                |     100 |      100 |     100 |     100 |                   
+  schema_unit.ts         |     100 |      100 |     100 |     100 |                   
+  view.ts                |     100 |      100 |     100 |     100 |                   
+ libs/api                |     100 |      100 |     100 |     100 |                   
+  Collection.ts          |     100 |      100 |     100 |     100 |                   
+  Comment.ts             |     100 |      100 |     100 |     100 |                   
+  Data.ts                |     100 |      100 |     100 |     100 |                   
+  Discussion.ts          |     100 |      100 |     100 |     100 |                   
+  Nishan.ts              |     100 |      100 |     100 |     100 |                   
+  NotionUser.ts          |     100 |      100 |     100 |     100 |                   
+  SchemaUnit.ts          |     100 |      100 |     100 |     100 |                   
+  Space.ts               |     100 |      100 |     100 |     100 |                   
+  SpaceView.ts           |     100 |      100 |     100 |     100 |                   
+  UserRoot.ts            |     100 |      100 |     100 |     100 |                   
+  UserSettings.ts        |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+ libs/api/Block          |   96.95 |     87.5 |   95.71 |   96.79 |                   
+  Block.ts               |   92.59 |    86.67 |   86.36 |   92.41 | 33,166,264-270    
+  CollectionBlock.ts     |     100 |      100 |     100 |     100 |                   
+  CollectionView.ts      |     100 |      100 |     100 |     100 |                   
+  CollectionViewPage.ts  |     100 |      100 |     100 |     100 |                   
+  Page.ts                |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+ libs/api/View           |     100 |      100 |     100 |     100 |                   
+  Aggregator.ts          |     100 |      100 |     100 |     100 |                   
+  BoardView.ts           |     100 |      100 |     100 |     100 |                   
+  CalendarView.ts        |     100 |      100 |     100 |     100 |                   
+  GalleryView.ts         |     100 |      100 |     100 |     100 |                   
+  ListView.ts            |     100 |      100 |     100 |     100 |                   
+  TableView.ts           |     100 |      100 |     100 |     100 |                   
+  TimelineView.ts        |     100 |      100 |     100 |     100 |                   
+  View.ts                |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+ libs/utils              |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+  transformToMultiple.ts |     100 |      100 |     100 |     100 |                   
+ tests                   |     100 |      100 |     100 |     100 |                   
+  utils.ts               |     100 |      100 |     100 |     100 |                   
+ tests/api/View          |     100 |      100 |     100 |     100 |                   
+  utils.ts               |     100 |      100 |     100 |     100 |                   
+ types                   |     100 |      100 |     100 |     100 |                   
+  block.ts               |     100 |      100 |     100 |     100 |                   
+  index.ts               |     100 |      100 |     100 |     100 |                   
+-------------------------|---------|----------|---------|---------|-------------------
+Done in 53.38s.
+yarn run v1.22.5
+$ npx jest --runInBand --config ../../jest.config.js
+--------------------------|---------|----------|---------|---------|-------------------
+File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------------------|---------|----------|---------|---------|-------------------
+All files                 |     100 |      100 |     100 |     100 |                   
+ libs                     |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+  server.ts               |     100 |      100 |     100 |     100 |                   
+  typedefs.ts             |     100 |      100 |     100 |     100 |                   
+ libs/Resolvers           |     100 |      100 |     100 |     100 |                   
+  collection.ts           |     100 |      100 |     100 |     100 |                   
+  collection_block.ts     |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+  page.ts                 |     100 |      100 |     100 |     100 |                   
+  query.ts                |     100 |      100 |     100 |     100 |                   
+  space.ts                |     100 |      100 |     100 |     100 |                   
+ libs/Resolvers/utils     |     100 |      100 |     100 |     100 |                   
+  commonBlockResolvers.ts |     100 |      100 |     100 |     100 |                   
+  getBlockResolveType.ts  |     100 |      100 |     100 |     100 |                   
+  getParentResolveType.ts |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+  notionUserResolvers.ts  |     100 |      100 |     100 |     100 |                   
+ libs/utils               |     100 |      100 |     100 |     100 |                   
+  index.ts                |     100 |      100 |     100 |     100 |                   
+  initializeNishan.ts     |     100 |      100 |     100 |     100 |                   
+--------------------------|---------|----------|---------|---------|-------------------
+Done in 20.44s.

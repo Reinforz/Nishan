@@ -26,7 +26,8 @@ it('generateSchemaMap', async () => {
 					} as any
 				]
 			])
-		}
+		},
+		cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker()
 	});
 
 	expect(Array.from(schema_map.entries())).toStrictEqual([ dsmu, tsmu ]);

@@ -17,7 +17,7 @@ export async function updateChildContainer<T extends TData> (
 	keep: boolean,
 	child_id: string,
 	child_path: keyof T,
-	options: INotionCacheOptions & INotionOperationOptions
+	options: Omit<INotionCacheOptions, "cache_init_tracker"> & INotionOperationOptions
 ) {
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, options);
 

@@ -244,7 +244,7 @@ describe('rows', () => {
 			} as any,
 			initializeCacheForSpecificDataMock = jest
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
-				.mockImplementationOnce(async () => undefined),
+				.mockImplementation(async () => undefined),
 			executeOperationsMock = jest
 				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
@@ -284,7 +284,7 @@ describe('rows', () => {
 		const row = await collection.getRow('block_1');
 
 		expect(row.getCachedData()).toStrictEqual(expect.objectContaining({ id: 'block_1' }));
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 	});
 
@@ -303,7 +303,7 @@ describe('rows', () => {
 				alive: true
 			})
 		);
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.b.u(
@@ -321,7 +321,7 @@ describe('rows', () => {
 
 		await collection.deleteRow('block_1');
 
-		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 			o.b.u(

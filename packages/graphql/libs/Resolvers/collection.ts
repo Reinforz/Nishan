@@ -1,23 +1,23 @@
 import { NotionCache } from '@nishans/cache';
+import { INotionCoreOptions } from '@nishans/core';
 import { ICollection, IPage } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { INotionGraphqlOptions } from '..';
 
 export const NotionGraphqlCollectionResolver = {
 	name: (parent: ICollection) => NotionUtils.extractInlineBlockContent(parent.name),
-	parent: async ({ parent_id }: ICollection, _: any, ctx: INotionGraphqlOptions) =>
+	parent: async ({ parent_id }: ICollection, _: any, ctx: INotionCoreOptions) =>
 		await NotionCache.fetchDataOrReturnCached('block', parent_id, ctx),
-	templates: async ({ id, template_pages }: ICollection, _: any, ctx: INotionGraphqlOptions) => {
-		if (!ctx.cache_initializer_tracker.collection.get(id)) {
+	templates: async ({ id, template_pages }: ICollection, _: any, ctx: INotionCoreOptions) => {
+		if (!ctx.cache_init_tracker.collection.get(id)) {
 			await NotionCache.initializeCacheForSpecificData(id, 'collection', ctx);
-			ctx.cache_initializer_tracker.collection.set(id, true);
+			ctx.cache_init_tracker.collection.set(id, true);
 		}
 		return template_pages ? template_pages.map((template_page) => ctx.cache.block.get(template_page)) : [];
 	},
-	rows: async ({ id }: ICollection, _: any, ctx: INotionGraphqlOptions) => {
-		if (!ctx.cache_initializer_tracker.collection.get(id)) {
+	rows: async ({ id }: ICollection, _: any, ctx: INotionCoreOptions) => {
+		if (!ctx.cache_init_tracker.collection.get(id)) {
 			await NotionCache.initializeCacheForSpecificData(id, 'collection', ctx);
-			ctx.cache_initializer_tracker.collection.set(id, true);
+			ctx.cache_init_tracker.collection.set(id, true);
 		}
 		const pages: IPage[] = [];
 		for (const [ , page ] of ctx.cache.block)

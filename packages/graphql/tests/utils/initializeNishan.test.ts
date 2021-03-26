@@ -14,6 +14,6 @@ it('server', async () => {
 
 	expect(getNotionUserMock).toHaveBeenCalledWith('user_root_1');
 
-	expect(context.cache_initializer_tracker).not.toBeUndefined();
+	expect(context.cache_init_tracker).not.toBeUndefined();
 	expect(context.user_id).toBe(`user_root_1`);
 });

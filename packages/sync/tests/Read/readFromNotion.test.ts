@@ -43,6 +43,7 @@ it('readFromNotion', async () => {
 			collection: new Map([ [ 'collection_1', collection_1 ] ]),
 			collection_view: new Map([ [ 'view_1', view_1 ] ])
 		},
+		cache_init_tracker: NotionCache.createDefaultCacheInitializeTracker(),
 		token: 'token',
 		user_id: 'user_1'
 	});

@@ -7,7 +7,7 @@ afterEach(() => {
 
 describe('rows', () => {
 	it(`initialized_cache=false`, async () => {
-		const cache_initializer_tracker: any = {
+		const cache_init_tracker: any = {
 				collection: new Map([ [ 'collection_1', false ] ])
 			},
 			collection_1: any = { id: 'collection_1' },
@@ -31,10 +31,10 @@ describe('rows', () => {
 			cache,
 			token: 'token',
 			user_id: 'user_root_1',
-			cache_initializer_tracker
+			cache_init_tracker
 		} as any);
 
-		expect(cache_initializer_tracker.collection.get('collection_1')).toBe(true);
+		expect(cache_init_tracker.collection.get('collection_1')).toBe(true);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(data).toStrictEqual([ block_1 ]);
 	});
@@ -64,7 +64,7 @@ describe('rows', () => {
 			cache,
 			token: 'token',
 			user_id: 'user_root_1',
-			cache_initializer_tracker: {
+			cache_init_tracker: {
 				collection: new Map([ [ 'collection_1', true ] ])
 			}
 		} as any);
@@ -96,7 +96,7 @@ describe('templates', () => {
 				cache,
 				token: 'token',
 				user_id: 'user_root_1',
-				cache_initializer_tracker: {
+				cache_init_tracker: {
 					collection: new Map([ [ 'collection_1', true ] ])
 				}
 			} as any
@@ -107,7 +107,7 @@ describe('templates', () => {
 	});
 
 	it(`initialized_cache=false`, async () => {
-		const cache_initializer_tracker = {
+		const cache_init_tracker = {
 				collection: new Map([ [ 'collection_1', false ] ])
 			},
 			collection_1: any = { id: 'collection_1' },
@@ -130,11 +130,11 @@ describe('templates', () => {
 				cache,
 				token: 'token',
 				user_id: 'user_root_1',
-				cache_initializer_tracker
+				cache_init_tracker
 			} as any
 		);
 
-		expect(cache_initializer_tracker.collection.get('collection_1')).toBe(true);
+		expect(cache_init_tracker.collection.get('collection_1')).toBe(true);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(data).toStrictEqual([ block_1 ]);
 	});
@@ -153,7 +153,7 @@ describe('templates', () => {
 			cache,
 			token: 'token',
 			user_id: 'user_root_1',
-			cache_initializer_tracker: {
+			cache_init_tracker: {
 				collection: new Map([ [ 'collection_1', false ] ])
 			}
 		} as any);

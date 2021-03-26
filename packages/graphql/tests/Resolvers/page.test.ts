@@ -7,7 +7,7 @@ afterEach(() => {
 
 describe('content', () => {
 	it(`initialize_cache=false`, async () => {
-		const cache_initializer_tracker = {
+		const cache_init_tracker = {
 				block: new Map([ [ 'block_1', false ] ])
 			},
 			cache = NotionCache.createDefaultCache();
@@ -22,10 +22,10 @@ describe('content', () => {
 			cache,
 			token: 'token',
 			user_id: 'user_root_1',
-			cache_initializer_tracker
+			cache_init_tracker
 		} as any);
 
-		expect(cache_initializer_tracker.block.get('block_1')).toBe(true);
+		expect(cache_init_tracker.block.get('block_1')).toBe(true);
 		expect(data).toStrictEqual([ block_2 ]);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	});
@@ -44,7 +44,7 @@ describe('content', () => {
 			cache,
 			token: 'token',
 			user_id: 'user_root_1',
-			cache_initializer_tracker: {
+			cache_init_tracker: {
 				block: new Map([ [ 'block_1', true ] ])
 			}
 		} as any);

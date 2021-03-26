@@ -8,7 +8,7 @@ export const getComments = async (
 	args: FilterTypes<IComment>,
 	options: INotionOperationOptions & INotionCacheOptions & { multiple?: boolean }
 ) => {
-	await NotionCache.initializeCacheForSpecificData(discussion_id, 'block', options);
+	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 	return await NotionTraverser.get<IDiscussion, IComment, IComment[]>(
 		args,
 		(child_id) => options.cache.comment.get(child_id),

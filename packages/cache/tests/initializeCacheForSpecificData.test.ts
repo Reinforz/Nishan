@@ -40,6 +40,40 @@ describe('initializeCacheForSpecificData', () => {
 		]);
 	});
 
+	it(`type=comment`, async () => {
+		const comment_1 = {
+				id: 'comment_1',
+				parent_id: 'discussion_1',
+				parent_table: 'discussion',
+				space_id: 'space_1',
+				created_by_id: 'notion_user_1',
+				last_edited_by_id: 'notion_user_1'
+			},
+			cache_init_tracker = NotionCache.createDefaultCacheInitializeTracker();
+
+		const cache = {
+			...NotionCache.createDefaultCache(),
+			comment: new Map([ [ 'comment_1', comment_1 ] ])
+		} as any;
+
+		const updateCacheIfNotPresentMock = jest.spyOn(NotionCache, 'updateCacheIfNotPresent');
+
+		updateCacheIfNotPresentMock.mockImplementationOnce(async () => undefined);
+
+		await NotionCache.initializeCacheForSpecificData('comment_1', 'comment', {
+			token: 'token',
+			cache,
+			user_id: 'user_root_1',
+			cache_init_tracker
+		});
+		expect(cache_init_tracker.comment.get('comment_1')).toBe(true);
+		expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
+			[ 'notion_user_1', 'notion_user' ],
+			[ 'space_1', 'space' ],
+			[ 'discussion_1', 'discussion' ]
+		]);
+	});
+
 	it(`type=collection_view`, async () => {
 		const block_1: any = {
 				id: 'block_1',

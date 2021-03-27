@@ -418,14 +418,14 @@ describe('schema unit', () => {
 		const new_schema = {
 			title: {
 				type: 'title',
-				name: 'title'
+				name: 'New Title'
 			}
 		};
 
-		const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { name: 'title' } ]);
+		const schema_unit_map = await collection.updateSchemaUnit([ 'Title', { name: 'New Title' } ]);
 
+		expect(schema_unit_map.title.get('New Title')).not.toBeUndefined();
 		expect(schema_unit_map.title.get('Title')).toBeUndefined();
-		expect(schema_unit_map.title.get('title')).not.toBeUndefined();
 		expect(schema).toStrictEqual(expect.objectContaining(new_schema));
 		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
 			o.c.u('collection_1', [ 'schema' ], expect.objectContaining(new_schema))

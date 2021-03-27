@@ -269,7 +269,13 @@ class Collection extends Data<ICollection> {
 			(name) => schema_map.get(name),
 			(_, schema_unit, updated_data, schema_unit_map) => {
 				data.schema[schema_unit.schema_id] = NotionUtils.deepMerge(data.schema[schema_unit.schema_id], updated_data);
-				PopulateMap.schemaUnit(this.id, schema_unit.schema_id, schema_unit, this.getProps(), schema_unit_map);
+				PopulateMap.schemaUnit(
+					this.id,
+					schema_unit.schema_id,
+					data.schema[schema_unit.schema_id],
+					this.getProps(),
+					schema_unit_map
+				);
 			}
 		);
 		await NotionOperations.executeOperations(

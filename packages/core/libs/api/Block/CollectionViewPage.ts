@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionPermissions } from '@nishans/permissions';
-import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/Block';
+import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { INotionCoreOptions } from '../../';
 import CollectionBlock from './CollectionBlock';

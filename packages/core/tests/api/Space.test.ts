@@ -5,14 +5,14 @@ import { NotionOperations } from '@nishans/operations';
 import { ICache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
-import { createSpaceIterateArguments } from '../../libs/api/Space';
+import { createSpaceIterateData } from '../../libs/utils';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('createSpaceIterateArguments', () => {
+describe('createSpaceIterateData', () => {
   it(`type=page`, async()=>{
     const cache = {
       block: new Map([
@@ -20,7 +20,7 @@ describe('createSpaceIterateArguments', () => {
         ['block_2', {type: "header", id: "block_1"}]
       ])
     } as any;
-    const data = await createSpaceIterateArguments('block_1', {cache, token: 'token', user_id: 'user_1'});
+    const data = await createSpaceIterateData('block_1', {cache, token: 'token', user_id: 'user_1'});
     expect(data).toStrictEqual({id: "block_1", type: "page"});
   })
 
@@ -29,7 +29,7 @@ describe('createSpaceIterateArguments', () => {
       collection: new Map([['collection_1', {id: 'collection_1'}]]),
       block: new Map([['block_1', {type: "collection_view_page", id: "block_1", collection_id: 'collection_1'}]])
     } as any;
-    const data = await createSpaceIterateArguments('block_1', {cache, token: 'token', user_id: 'user_1'});
+    const data = await createSpaceIterateData('block_1', {cache, token: 'token', user_id: 'user_1'});
     expect(data).toStrictEqual({collection: {id: 'collection_1'}, type: "collection_view_page", id: "block_1", collection_id: 'collection_1'})
   })
 
@@ -40,7 +40,7 @@ describe('createSpaceIterateArguments', () => {
         ['block_2', {type: "header", id: "block_1"}]
       ])
     } as any;
-    const data = await createSpaceIterateArguments('block_2', {cache, token: 'token', user_id: 'user_1'});
+    const data = await createSpaceIterateData('block_2', {cache, token: 'token', user_id: 'user_1'});
     expect(data).toBeUndefined();
   })
 })

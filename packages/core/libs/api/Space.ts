@@ -1,4 +1,3 @@
-import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import {
 	ICollectionViewPageInput,
@@ -13,26 +12,9 @@ import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/Space';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
 import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys } from '../';
-import { transformToMultiple } from '../utils';
+import { createSpaceIterateData, transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';
-
-export async function createSpaceIterateArguments (
-	block_id: string,
-	props: Pick<INotionCoreOptions, 'cache' | 'token' | 'interval' | 'user_id'>
-): Promise<IPage | (ICollectionViewPage & { collection: ICollection }) | undefined> {
-	const data = (await NotionCache.fetchDataOrReturnCached('block', block_id, props)) as
-		| IPage
-		| (ICollectionViewPage & { collection: ICollection });
-	if (data.type === 'page') return data;
-	else if (data.type === 'collection_view_page') {
-		await NotionCache.fetchDataOrReturnCached('collection', data.collection_id, props);
-		return {
-			...data,
-			collection: props.cache.collection.get(data.collection_id) as ICollection
-		};
-	}
-}
 
 /**
  * A class to represent space of Notion
@@ -123,7 +105,7 @@ export default class Space extends Data<ISpace> {
 		return await this.getIterate<IPage | (ICollectionViewPage & { collection: ICollection }), IPageMap>(
 			args,
 			{ container: CreateMaps.page(), multiple, child_ids: 'pages', child_type: 'block' },
-			async (id) => await createSpaceIterateArguments(id, this.getProps()),
+			async (id) => await createSpaceIterateData(id, this.getProps()),
 			async (_, page, page_map) => await PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
@@ -154,7 +136,7 @@ export default class Space extends Data<ISpace> {
 				multiple,
 				container: CreateMaps.page()
 			},
-			async (id) => await createSpaceIterateArguments(id, this.getProps()),
+			async (id) => await createSpaceIterateData(id, this.getProps()),
 			async (_, page, __, page_map) => await PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
@@ -182,7 +164,7 @@ export default class Space extends Data<ISpace> {
 				child_type: 'block',
 				container: []
 			},
-			async (block_id) => await createSpaceIterateArguments(block_id, this.getProps())
+			async (block_id) => await createSpaceIterateData(block_id, this.getProps())
 		);
 	}
 }

@@ -26,7 +26,8 @@
     "dist/libs"
   ],
   "scripts": {
-    "build": "tsc --sourceMap false"
+    "build": "tsc --sourceMap false",
+    "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
     "colors": "1.4.0",

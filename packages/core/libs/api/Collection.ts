@@ -5,10 +5,10 @@ import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/trave
 import { ICollection, IPage, ISchemaMapValue, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
+import { PopulateMap } from '../PopulateMap';
 import { transformToMultiple } from '../utils';
 import Page from './Block/Page';
 import Data from './Data';
-import SchemaUnit from './SchemaUnit';
 
 /**
  * A class to represent collection of Notion
@@ -202,15 +202,7 @@ class Collection extends Data<ICollection> {
 				current_schema: data.schema
 			},
 			this.getProps(),
-			(schema_unit) => {
-				const schema_unit_obj = new SchemaUnit({
-					id: data.id,
-					...props,
-					schema_id: schema_unit.schema_id
-				});
-				schema_unit_map[schema_unit.type].set(schema_unit.schema_id, schema_unit_obj);
-				schema_unit_map[schema_unit.type].set(schema_unit.name, schema_unit_obj);
-			}
+			(schema_unit) => PopulateMap.schemaUnit(this.id, schema_unit.schema_id, schema_unit, props, schema_unit_map)
 		);
 		await NotionOperations.executeOperations(
 			[ NotionOperations.Chunk.collection.update(this.id, [ 'schema' ], data.schema) ],
@@ -242,11 +234,8 @@ class Collection extends Data<ICollection> {
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
-			(_, { schema_id, name, type }, schema_unit_map) => {
-				const schema_obj = new SchemaUnit({ ...this.getProps(), id: this.id, schema_id });
-				schema_unit_map[type].set(schema_id, schema_obj);
-				schema_unit_map[type].set(name, schema_obj);
-			}
+			(_, schema_unit, schema_unit_map) =>
+				PopulateMap.schemaUnit(this.id, schema_unit.schema_id, schema_unit, this.getProps(), schema_unit_map)
 		);
 	}
 
@@ -278,11 +267,9 @@ class Collection extends Data<ICollection> {
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
-			(_, { schema_id }, updated_data, results) => {
-				data.schema[schema_id] = NotionUtils.deepMerge(data.schema[schema_id], updated_data);
-				const schema_obj = new SchemaUnit({ schema_id, ...this.getProps(), id: this.id });
-				results[data.schema[schema_id].type].set(schema_id, schema_obj);
-				results[data.schema[schema_id].type].set(data.schema[schema_id].name, schema_obj);
+			(_, schema_unit, updated_data, schema_unit_map) => {
+				data.schema[schema_unit.schema_id] = NotionUtils.deepMerge(data.schema[schema_unit.schema_id], updated_data);
+				PopulateMap.schemaUnit(this.id, schema_unit.schema_id, schema_unit, this.getProps(), schema_unit_map);
 			}
 		);
 		await NotionOperations.executeOperations(
@@ -320,12 +307,10 @@ class Collection extends Data<ICollection> {
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
-			(_, { schema_id, name, type }, container) => {
-				if (schema_id === 'title') NotionLogger.error(`Title schema unit cannot be deleted`);
-				delete data.schema[schema_id];
-				const schema_unit_object = new SchemaUnit({ id: data.id, schema_id, ...this.getProps() }) as any;
-				container[type].set(schema_id, schema_unit_object);
-				container[type].set(name, schema_unit_object);
+			(_, schema_unit, schema_unit_map) => {
+				if (schema_unit.schema_id === 'title') NotionLogger.error(`Title schema unit cannot be deleted`);
+				delete data.schema[schema_unit.schema_id];
+				PopulateMap.schemaUnit(this.id, schema_unit.schema_id, schema_unit, this.getProps(), schema_unit_map);
 			}
 		);
 		await NotionOperations.executeOperations(

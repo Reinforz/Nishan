@@ -4,19 +4,10 @@ import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { CreateMaps, INotionCoreOptions, IViewMap } from '../../';
+import { PopulateMap } from '../../PopulateMap';
 import { transformToMultiple } from '../../utils';
 import Collection from '../Collection';
-import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from './../View';
 import Block from './Block';
-
-const view_class = {
-	board: BoardView,
-	gallery: GalleryView,
-	list: ListView,
-	timeline: TimelineView,
-	table: TableView,
-	calendar: CalendarView
-};
 
 /**
  * A class to represent collection block type in Notion
@@ -49,14 +40,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				params,
 				this.getProps(),
 				data.id,
-				(view) => {
-					const view_obj = new view_class[view.type]({
-						id: view.id,
-						...props
-					}) as any;
-					view_map[view.type].set(view.id, view_obj);
-					view_map[view.type].set(view.name, view_obj);
-				}
+				(view) => PopulateMap.view(view, props, view_map)
 			);
 		const view_ids = views_data.map((view_data) => view_data.id);
 		await NotionOperations.executeOperations(
@@ -79,14 +63,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 			args,
 			{ multiple, container: CreateMaps.view(), child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
-			(view_id, { type, name }, view_map) => {
-				const view_obj = new view_class[type]({
-					id: view_id,
-					...this.getProps()
-				}) as any;
-				view_map[type].set(view_id, view_obj);
-				view_map[type].set(name, view_obj);
-			}
+			(x_, view, view_map) => PopulateMap.view(view, this.getProps(), view_map)
 		);
 	}
 
@@ -104,11 +81,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				child_type: 'collection_view'
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
-			(id, { type, name }, _, view_map) => {
-				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
-				view_map[type].set(id, view_obj);
-				view_map[type].set(name, view_obj);
-			}
+			(_, view, __, view_map) => PopulateMap.view(view, this.getProps(), view_map)
 		);
 	}
 
@@ -136,11 +109,7 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
 				container: CreateMaps.view()
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
-			async (id, { type, name }, view_map) => {
-				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
-				view_map[type].set(id, view_obj);
-				view_map[type].set(name, view_obj);
-			}
+			(_, view, view_map) => PopulateMap.view(view, this.getProps(), view_map)
 		);
 	}
 }

@@ -1,5 +1,4 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionErrors } from "@nishans/errors";
 import { NotionLogger } from "@nishans/logger";
 import {
   INotionOperationOptions,
@@ -52,7 +51,7 @@ export class NotionSpacePermissions {
     const notion_users: INotionUser[] = [], data = this.cache.space.get(this.id)!, operations: IOperation[] = []
     for (let i = 0; i < infos.length; i++) {
       const [email, role] = infos[i], { value } = await NotionEndpoints.Queries.findUser({email}, this.getProps());
-      if (!value?.value) NotionErrors.Log.error(`User does not have a notion account`);
+      if (!value?.value) NotionLogger.method.error(`User does not have a notion account`);
       else{
         const notion_user = value.value;
         const permission_data = { role, type: "user_permission", user_id: notion_user.id } as IUserPermission;

@@ -1,5 +1,4 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionErrors } from '@nishans/errors';
 import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
@@ -56,9 +55,9 @@ export default class NotionData<T extends TData> {
   getCachedData() {
     const data = this.cache[this.type].get(this.id);
     if (!data)
-      NotionErrors.Log.warn(`${this.type}:${this.id} doesnot exist in the cache`);
+      NotionLogger.method.warn(`${this.type}:${this.id} doesnot exist in the cache`);
     else if((data as any).alive === false)
-      NotionErrors.Log.warn(`${this.type}:${this.id} is not alive`);
+      NotionLogger.method.warn(`${this.type}:${this.id} is not alive`);
     return data as T;
   }
 

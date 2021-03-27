@@ -1,9 +1,9 @@
-import { NotionErrors } from '@nishans/errors';
 import { IPageCreateInput, IPageUpdateInput, NotionFabricator, TSchemaUnitInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, IPage, ISchemaMapValue, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { NotionLogger } from 'packages/logger/dist/libs';
 import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
 import { transformToMultiple } from '../utils';
 import Page from './Block/Page';
@@ -319,7 +319,10 @@ class Collection extends Data<ICollection> {
 			},
 			(name) => schema_map.get(name),
 			(_, { schema_id }) => {
-				if (schema_id === 'title') NotionErrors.Log.error(`Title schema unit cannot be deleted`);
+				if (schema_id === 'title') {
+					NotionLogger.method.error(`Title schema unit cannot be deleted`);
+					throw new Error(`Title schema unit cannot be deleted`);
+				}
 				delete data.schema[schema_id];
 			}
 		);

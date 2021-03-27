@@ -2,6 +2,7 @@ import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
 import { NotionOperations } from "@nishans/operations";
 import { ICache } from "@nishans/types";
+import colors from "colors";
 import { default_nishan_arg, o } from "../../core/tests/utils";
 import { NotionPermissions } from "../libs";
 
@@ -55,7 +56,7 @@ it(`addMembers`, async()=>{
     return {
     } as any;
   });
-	await expect(()=>space.addMembers([['user_root_2@gmail.com', 'editor']])).rejects.toThrow();
+	await expect(()=>space.addMembers([['user_root_2@gmail.com', 'editor']])).rejects.toThrow(colors.red.bold(`User does not have a notion account`));
 });
 
 it(`removeUsers`, async()=>{

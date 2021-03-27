@@ -38,10 +38,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 				this.getProps()
 			);
 			this.logger && NotionLogger.method.info(`DELETE collection ${this.id}`);
-		} else {
-			NotionLogger.method.error(`Title schema unit cannot be deleted`);
-			throw new Error(`Title schema unit cannot be deleted`);
-		}
+		} else NotionLogger.error(`Title schema unit cannot be deleted`);
 	}
 
 	async duplicate () {
@@ -55,10 +52,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 				this.getProps()
 			);
 			this.logger && NotionLogger.method.info(`UPDATE collection ${this.id}`);
-		} else {
-			NotionLogger.method.error(`Title schema unit cannot be duplicated`);
-			throw new Error(`Title schema unit cannot be duplicated`);
-		}
+		} else NotionLogger.error(`Title schema unit cannot be duplicated`);
 	}
 
 	getCachedChildData () {

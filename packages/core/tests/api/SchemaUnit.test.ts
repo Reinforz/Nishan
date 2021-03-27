@@ -2,6 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICache } from '@nishans/types';
+import colors from "colors";
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { SchemaUnit } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
@@ -124,7 +125,7 @@ describe('delete', () => {
       schema_id: 'schema_id_1',
     });
 
-    await expect(()=>schema_unit.delete()).rejects.toThrow();
+    await expect(()=>schema_unit.delete()).rejects.toThrow(colors.red.bold(`Title schema unit cannot be deleted`));
   });
 })
 
@@ -188,7 +189,7 @@ describe('duplicate', () => {
       schema_id: 'schema_id_1',
     });
 
-    await expect(()=>schema_unit.duplicate()).rejects.toThrow();
+    await expect(()=>schema_unit.duplicate()).rejects.toThrow(colors.red.bold(`Title schema unit cannot be duplicated`));
   });
 })
 

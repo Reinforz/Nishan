@@ -3,7 +3,6 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { NotionTraverser } from '@nishans/traverser';
 import { IHeader } from '@nishans/types';
-import colors from 'colors';
 import { NotionData } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
@@ -92,7 +91,7 @@ describe('getCachedData', () => {
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
-		const consoleLogSpy = jest.spyOn(console, 'log');
+		const loggerMethodMock = jest.spyOn(NotionLogger.method, 'warn');
 
 		const block = new NotionData({
 			...default_nishan_arg,
@@ -101,8 +100,8 @@ describe('getCachedData', () => {
 			id: 'block_2'
 		});
 		block.getCachedData();
-		expect(consoleLogSpy).toHaveBeenCalledTimes(1);
-		expect(consoleLogSpy).toHaveBeenCalledWith(colors.yellow.bold(`block:block_2 doesnot exist in the cache`));
+		expect(loggerMethodMock).toHaveBeenCalledTimes(1);
+		expect(loggerMethodMock).toHaveBeenCalledWith(`block:block_2 doesnot exist in the cache`);
 	});
 
 	it(`data is not alive`, async () => {
@@ -111,7 +110,7 @@ describe('getCachedData', () => {
 			block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 		} as any;
 
-		const consoleLogSpy = jest.spyOn(console, 'log');
+		const loggerMethodMock = jest.spyOn(NotionLogger.method, 'warn');
 
 		const block = new NotionData({
 			...default_nishan_arg,
@@ -119,8 +118,8 @@ describe('getCachedData', () => {
 			type: 'block'
 		});
 		block.getCachedData();
-		expect(consoleLogSpy).toHaveBeenCalledTimes(1);
-		expect(consoleLogSpy).toHaveBeenCalledWith(colors.yellow.bold(`block:block_1 is not alive`));
+		expect(loggerMethodMock).toHaveBeenCalledTimes(1);
+		expect(loggerMethodMock).toHaveBeenCalledWith(`block:block_1 is not alive`);
 	});
 });
 

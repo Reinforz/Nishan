@@ -126,16 +126,21 @@ class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBl
    * @param multiple whether or not multiple root pages should be deleted
    */
 	async deleteViews (args?: FilterTypes<TView>, multiple?: boolean) {
-		await this.deleteIterate<TView>(
+		return await this.deleteIterate<TView, IViewMap>(
 			args,
 			{
 				child_ids: 'view_ids',
 				child_path: 'view_ids',
 				child_type: 'collection_view',
 				multiple,
-				container: []
+				container: CreateMaps.view()
 			},
-			(view_id) => this.cache.collection_view.get(view_id)
+			(view_id) => this.cache.collection_view.get(view_id),
+			async (id, { type, name }, view_map) => {
+				const view_obj = new view_class[type]({ ...this.getProps(), id }) as any;
+				view_map[type].set(id, view_obj);
+				view_map[type].set(name, view_obj);
+			}
 		);
 	}
 }

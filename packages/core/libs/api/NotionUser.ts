@@ -7,6 +7,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
+import { NotionUtils } from '@nishans/utils';
 import { CollectionViewPage, CreateMaps, INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, Page, TNotionUserUpdateKeys } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
@@ -69,7 +70,6 @@ class NotionUser extends Data<INotionUser> {
     return (await this.createSpaces([opt]))[0];
   };
 
-  // ? FEAT:1:H Take root pages to create as parameter
   async createSpaces(opts: ISpaceCreateInput[]) {
     const metadata = {
       created_by_id: this.user_id,
@@ -203,13 +203,13 @@ class NotionUser extends Data<INotionUser> {
   }
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
-    await this.deleteIterate<ISpace>(args, {
+    return await this.deleteIterate<ISpace, Space[]>(args, {
       child_ids: this.#getSpaceIds(),
       multiple,
       child_type: "space",
       manual: true,
       container: []
-    }, (space_id) => this.cache.space.get(space_id), async (spaceId)=>{
+    }, (space_id) => this.cache.space.get(space_id), async (spaceId, _, container)=>{
       await NotionEndpoints.Mutations.enqueueTask({
         task: {
           eventName: "deleteSpace",
@@ -217,7 +217,8 @@ class NotionUser extends Data<INotionUser> {
             spaceId
           }
         }
-      }, this.getProps())
+      }, this.getProps());
+      container.push(new Space({id: spaceId, ...this.getProps()}))
     });
   }
 
@@ -227,13 +228,12 @@ class NotionUser extends Data<INotionUser> {
     await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), this.getProps());
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index], page = this.cache.block.get(id) as TPage;
+      await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
       if (page.type === "page") {
-        await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
         const page_obj = new Page({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id })
         page_map.page.set(page.id, page_obj)
-        page_map.page.set(page.properties.title[0][0], page_obj);
+        page_map.page.set(NotionUtils.extractInlineBlockContent(page.properties.title), page_obj);
       } else if (page.type === "collection_view_page"){
-        await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
         const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
         const collection = this.cache.collection.get(page.collection_id) as ICollection;
         page_map.collection_view_page.set(collection.name[0][0], cvp_obj);

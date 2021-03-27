@@ -92,7 +92,7 @@ export default class NotionData<T extends TData> {
     }
   }
 
-  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD) => void | Promise<any>) {
+  protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD, container: C) => void | Promise<any>) {
     if(options?.initialize_cache ?? true) await this.initializeCacheForThisData();
     return await NotionTraverser.delete<T, TD, C>(args, transform, {
       parent_id: this.id,

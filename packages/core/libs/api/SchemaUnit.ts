@@ -53,6 +53,7 @@ export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<IColle
 			);
 			this.logger && NotionLogger.method.info(`UPDATE collection ${this.id}`);
 		} else NotionLogger.error(`Title schema unit cannot be duplicated`);
+		return new SchemaUnit({ schema_id: id, id: data.id, ...this.getProps() });
 	}
 
 	getCachedChildData () {

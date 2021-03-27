@@ -155,16 +155,17 @@ export default class Space extends Data<ISpace> {
    * @param multiple whether or not multiple root pages should be deleted
    */
 	async deleteRootPages (args?: FilterTypes<TPage>, multiple?: boolean) {
-		await this.deleteIterate<TPage>(
+		return await this.deleteIterate<TPage, IPageMap>(
 			args,
 			{
 				multiple,
 				child_ids: 'pages',
 				child_path: 'pages',
 				child_type: 'block',
-				container: []
+				container: CreateMaps.page()
 			},
-			async (block_id) => await createSpaceIterateData(block_id, this.getProps())
+			async (block_id) => await createSpaceIterateData(block_id, this.getProps()),
+			async (_, page, page_map) => await PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
 }

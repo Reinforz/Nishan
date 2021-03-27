@@ -103,7 +103,7 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    */
 	async deleteTemplates (args?: FilterTypes<IPage>, multiple?: boolean) {
-		await this.deleteIterate<IPage>(
+		return await this.deleteIterate<IPage, Page[]>(
 			args,
 			{
 				multiple,
@@ -112,7 +112,8 @@ class Collection extends Data<ICollection> {
 				child_path: 'template_pages',
 				container: []
 			},
-			(child_id) => this.cache.block.get(child_id) as IPage
+			(child_id) => this.cache.block.get(child_id) as IPage,
+			async (id, _, container) => container.push(new Page({ ...this.getProps(), id }))
 		);
 	}
 
@@ -171,7 +172,7 @@ class Collection extends Data<ICollection> {
    * @param multiple whether multiple or single item is targeted
    */
 	async deleteRows (args?: FilterTypes<IPage>, multiple?: boolean) {
-		await this.deleteIterate<IPage>(
+		return await this.deleteIterate<IPage, Page[]>(
 			args,
 			{
 				child_ids: await this.getRowPageIds(),
@@ -179,7 +180,8 @@ class Collection extends Data<ICollection> {
 				multiple,
 				container: []
 			},
-			(child_id) => this.cache.block.get(child_id) as IPage
+			(child_id) => this.cache.block.get(child_id) as IPage,
+			async (id, _, container) => container.push(new Page({ ...this.getProps(), id }))
 		);
 	}
 
@@ -307,27 +309,30 @@ class Collection extends Data<ICollection> {
 	async deleteSchemaUnits (args?: FilterTypes<ISchemaMapValue>, multiple?: boolean) {
 		const data = this.getCachedData(),
 			schema_map = NotionUtils.generateSchemaMap(data.schema);
-		await this.deleteIterate<ISchemaMapValue>(
+		const deleted_schema_unit_map = await this.deleteIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
 				child_ids: Array.from(schema_map.keys()),
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: [],
+				container: CreateMaps.schema_unit(),
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
-			(_, { schema_id }) => {
-				if (schema_id === 'title')
-					NotionLogger.error(`Title schema unit cannot be deleted`);
+			(_, { schema_id, name, type }, container) => {
+				if (schema_id === 'title') NotionLogger.error(`Title schema unit cannot be deleted`);
 				delete data.schema[schema_id];
+				const schema_unit_object = new SchemaUnit({ id: data.id, schema_id, ...this.getProps() }) as any;
+				container[type].set(schema_id, schema_unit_object);
+				container[type].set(name, schema_unit_object);
 			}
 		);
 		await NotionOperations.executeOperations(
 			[ NotionOperations.Chunk.collection.update(this.id, [ 'schema' ], data.schema) ],
 			this.getProps()
 		);
+		return deleted_schema_unit_map;
 	}
 }
 

@@ -119,16 +119,17 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @param arg array of ids or a predicate acting as a filter
    */
 	async deleteBlocks (args?: FilterTypes<TBlock>, multiple?: boolean) {
-		await this.deleteIterate<TBlock>(
+		return await this.deleteIterate<TBlock, IBlockMap>(
 			args,
 			{
 				multiple,
 				child_ids: 'content',
 				child_path: 'content',
 				child_type: 'block',
-				container: []
+				container: CreateMaps.block()
 			},
-			(block_id) => this.cache.block.get(block_id)
+			(block_id) => this.cache.block.get(block_id),
+			async (id, block, container) => PopulateMap.block(block, container, this.getProps())
 		);
 	}
 

@@ -1,5 +1,6 @@
 import { NotionConstants } from '@nishans/constants';
 import { NotionErrors } from '@nishans/errors';
+import { NotionLogger } from '@nishans/logger';
 import { ISchemaMap, TFormula, TFormulaResultType, TFunctionFormula, TFunctionName } from '@nishans/types';
 import {
   FormulaArraySchemaUnitInput, FormulaObjectSchemaUnitInput,
@@ -96,8 +97,10 @@ export function generateNotionFormulaAST (
     // The argument is a property reference 
     else if ((arg as { property: string }).property) {
       // If a schema_map is not provided but a property of the schema is referenced, throw an error, as the schema_map is required to deduce information for that specific property argument
-			if (!schema_map)
-        NotionErrors.Log.error(`A property is referenced in the formula, but schema_map argument was not passed`);
+			if (!schema_map){
+        NotionLogger.method.error(`A property is referenced in the formula, but schema_map argument was not passed`);
+        throw new Error(`A property is referenced in the formula, but schema_map argument was not passed`)
+      }
       return NotionFormula.GenerateArg.property(arg as { property: string }, schema_map);
 		} else 
       return NotionFormula.GenerateArg.literal(arg as any);

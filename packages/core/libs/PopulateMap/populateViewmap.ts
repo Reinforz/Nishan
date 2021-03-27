@@ -3,7 +3,7 @@ import { TView } from '@nishans/types';
 import { IViewMap } from '../../types';
 import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from '../api/View';
 
-const view_class = {
+const ViewClass = {
 	board: BoardView,
 	gallery: GalleryView,
 	list: ListView,
@@ -13,7 +13,7 @@ const view_class = {
 };
 
 export const populateViewMap = (view: TView, options: INotionFabricatorOptions, view_map: IViewMap) => {
-	const view_obj = new view_class[view.type]({
+	const view_obj = new ViewClass[view.type]({
 		id: view.id,
 		...options
 	}) as any;

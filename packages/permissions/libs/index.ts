@@ -1,5 +1,5 @@
-import { NotionBlockPermissions } from './Block';
-import { NotionSpacePermissions } from './Space';
+import { NotionBlockPermissions } from './BlockPermissions';
+import { NotionSpacePermissions } from './SpacePermissions';
 
 export const NotionPermissions = {
 	Block: NotionBlockPermissions,

@@ -94,7 +94,7 @@ class Collection extends Data<ICollection> {
    * @param args string id or a predicate function
    */
 	async deleteTemplate (arg?: FilterType<IPage>) {
-		await this.deleteTemplates(transformToMultiple(arg), false);
+		return await this.deleteTemplates(transformToMultiple(arg), false);
 	}
 
 	/**

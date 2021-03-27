@@ -82,25 +82,23 @@ describe('delete', () => {
       cache,
       id: 'collection_1',
       schema_id: 'schema_id_1',
-      logger: true
     });
 
-    await schema_unit.delete();
+    const deleted_schema_unit = await schema_unit.delete();
 
     expect(methodLoggerMock).toHaveBeenCalledTimes(1);
     expect(methodLoggerMock).toHaveBeenCalledWith("DELETE collection collection_1");
-
-    expect(cache.collection.get('collection_1')?.schema).toStrictEqual({
+    expect(cache.collection.get('collection_1')!.schema).toStrictEqual({
       schema_id_2: tsu
     });
-
     expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
       o.c.u('collection_1', [], {
         schema: {
           schema_id_2: tsu
         }
       }),
-    ])
+    ]);
+    expect(deleted_schema_unit.getCachedChildData()).toStrictEqual(undefined);
   });
 
   it(`type=title`, async () => {
@@ -152,10 +150,9 @@ describe('duplicate', () => {
       cache,
       id: 'collection_1',
       schema_id: 'text',
-      logger: true
     });
 
-    await schema_unit.duplicate();
+    const duplicated_schema_unit = await schema_unit.duplicate();
 
     expect(Object.keys(collection_1.schema).length).toBe(2);
     expect(methodLoggerMock).toHaveBeenCalledTimes(1);
@@ -165,6 +162,7 @@ describe('duplicate', () => {
         text: txsu
       })})
     ]);
+    expect(duplicated_schema_unit.getCachedChildData()).toStrictEqual(txsu);
   });
 
   it(`type=title`, async () => {

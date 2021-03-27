@@ -111,7 +111,7 @@ export default class Page extends Block<IPage, IPageCreateInput> {
    * @param arg id string or a predicate acting as a filter
    */
 	async deleteBlock (arg?: FilterType<TBlock>) {
-		await this.deleteBlocks(transformToMultiple(arg), false);
+		return await this.deleteBlocks(transformToMultiple(arg), false);
 	}
 
 	/**

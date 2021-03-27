@@ -120,7 +120,7 @@ it(`updateBlock`, async () => {
 it(`deleteBlock`, async () => {
 	const { block_2, page, executeOperationsMock, initializeCacheForSpecificDataMock } = construct();
 
-	await page.deleteBlock('block_2');
+	const deleted_block_map = await page.deleteBlock('block_2');
 
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_2.alive).toBe(false);
@@ -135,6 +135,7 @@ it(`deleteBlock`, async () => {
 		),
 		o.b.u('block_1', [], last_edited_props)
 	]);
+	expect(deleted_block_map.header.get('block_2')!.getCachedData()).toStrictEqual(block_2);
 });
 
 it(`updateBookmarkedStatus`, async () => {

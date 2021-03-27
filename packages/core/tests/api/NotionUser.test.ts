@@ -211,9 +211,9 @@ it('getUserRoot', () => {
 });
 
 it(`delete space`, async () => {
-  const cache: ICache = {
+  const space_1: any = { id: 'space_1', name: 'Space One' }, cache: ICache = {
     ...NotionCache.createDefaultCache(),
-    space: new Map([['space_1', { id: 'space_1', name: 'Space One' }]] as any),
+    space: new Map([['space_1', space_1]] as any),
   };
 
   const notion_user = new NotionUser({
@@ -226,7 +226,7 @@ it(`delete space`, async () => {
     return {} as any;
   });
 
-  await notion_user.deleteSpace('space_1');
+  const deleted_spaces = await notion_user.deleteSpace('space_1');
   expect(enqueueTaskMock).toHaveBeenCalledTimes(1);
   expect(enqueueTaskMock).toHaveBeenCalledWith(
     {
@@ -243,6 +243,8 @@ it(`delete space`, async () => {
       user_id: 'user_root_1'
     })
   );
+  expect(deleted_spaces.length).toBe(1);
+  expect(deleted_spaces[0].getCachedData()).toStrictEqual(space_1)
 });
 
 describe('getPagesById', () => {

@@ -138,13 +138,14 @@ it(`createTemplates`, async () => {
 
 describe('template pages', () => {
 	const templateCrudSetup = () => {
-		const collection_1 = {
+		const block_1: any = { id: 'block_1' },
+			collection_1 = {
 				id: 'collection_1',
 				template_pages: [ 'block_1' ]
 			},
 			cache = {
 				...NotionCache.createDefaultCache(),
-				block: new Map([ [ 'block_1', { id: 'block_1' } ] ]),
+				block: new Map([ [ 'block_1', block_1 ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest
@@ -159,7 +160,7 @@ describe('template pages', () => {
 			cache,
 			id: 'collection_1'
 		});
-		return { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
+		return { cache, block_1, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
 	};
 
 	it(`getTemplates`, async () => {
@@ -200,8 +201,14 @@ describe('template pages', () => {
 	});
 
 	it(`deleteTemplates`, async () => {
-		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
-		await collection.deleteTemplate('block_1');
+		const {
+			cache,
+			block_1,
+			collection,
+			executeOperationsMock,
+			initializeCacheForSpecificDataMock
+		} = templateCrudSetup();
+		const deleted_templates = await collection.deleteTemplate('block_1');
 
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(cache.block.get('block_1')).toStrictEqual(
@@ -227,6 +234,8 @@ describe('template pages', () => {
 				})
 			)
 		]);
+		expect(deleted_templates.length).toBe(1);
+		expect(deleted_templates[0].getCachedData()).toStrictEqual(block_1);
 	});
 });
 
@@ -235,11 +244,10 @@ describe('rows', () => {
 		const collection_1 = {
 				id: 'collection_1'
 			},
+			block_1: any = { id: 'block_1', parent_table: 'collection', parent_id: 'collection_1', type: 'page' },
 			cache = {
 				...NotionCache.createDefaultCache(),
-				block: new Map([
-					[ 'block_1', { id: 'block_1', parent_table: 'collection', parent_id: 'collection_1', type: 'page' } ]
-				]),
+				block: new Map([ [ 'block_1', block_1 ] ]),
 				collection: new Map([ [ 'collection_1', collection_1 ] ])
 			} as any,
 			initializeCacheForSpecificDataMock = jest
@@ -254,7 +262,7 @@ describe('rows', () => {
 			cache,
 			id: 'collection_1'
 		});
-		return { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
+		return { cache, collection, block_1, executeOperationsMock, initializeCacheForSpecificDataMock };
 	};
 
 	it(`createRows`, async () => {
@@ -317,9 +325,9 @@ describe('rows', () => {
 	});
 
 	it(`deleteRow`, async () => {
-		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
+		const { cache, collection, block_1, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
 
-		await collection.deleteRow('block_1');
+		const deleted_rows = await collection.deleteRow('block_1');
 
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
@@ -337,6 +345,8 @@ describe('rows', () => {
 				alive: false
 			})
 		);
+		expect(deleted_rows.length).toBe(1);
+		expect(deleted_rows[0].getCachedData()).toStrictEqual(block_1);
 	});
 });
 
@@ -426,7 +436,7 @@ describe('schema unit', () => {
 		it(`Work correctly`, async () => {
 			const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
 
-			await collection.deleteSchemaUnit('Checkbox');
+			const deleted_schema_unit_map = await collection.deleteSchemaUnit('Checkbox');
 
 			expect(schema.checkbox).toBeUndefined();
 			expect(executeOperationsMock.mock.calls[1][0]).toEqual([
@@ -434,6 +444,7 @@ describe('schema unit', () => {
 					title: tsu
 				})
 			]);
+			expect(deleted_schema_unit_map.checkbox.get('Checkbox')!.getCachedChildData()).toStrictEqual(undefined);
 		});
 
 		it(`throws error when deleting title`, async () => {

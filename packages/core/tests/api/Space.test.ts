@@ -244,10 +244,10 @@ it(`updateRootPage`, async()=>{
 })
 
 it(`deleteRootPage`, async()=>{
-	const cache: ICache = {
+	const block_1: any = {id: 'block_1', type: "page", properties: {title: [['Page One']]}}, cache: ICache = {
 			...NotionCache.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
-			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
+			block: new Map([['block_1', block_1 as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [], created_by_id: 'user_root_1', } as any ] ]),
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined),
@@ -260,7 +260,7 @@ it(`deleteRootPage`, async()=>{
     logger: false
 	});
 
-	await space.deleteRootPage('block_1');
+	const root_page_map = await space.deleteRootPage('block_1');
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(['space_1', 'space']);
   expect(executeOperationsMock).toHaveBeenCalledTimes(2);
@@ -268,4 +268,5 @@ it(`deleteRootPage`, async()=>{
 	expect(cache.space.get('space_1')).toStrictEqual(expect.objectContaining({
     pages: []
   }));
+  expect(root_page_map.page.get('block_1')!.getCachedData()).toStrictEqual(block_1)
 });

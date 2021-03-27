@@ -146,7 +146,7 @@ export default class Space extends Data<ISpace> {
    * @param arg Criteria to filter the page to be deleted
    */
 	async deleteRootPage (arg?: FilterType<TPage>) {
-		await this.deleteRootPages(transformToMultiple(arg), false);
+		return await this.deleteRootPages(transformToMultiple(arg), false);
 	}
 
 	/**

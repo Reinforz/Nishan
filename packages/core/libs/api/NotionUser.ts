@@ -199,7 +199,7 @@ class NotionUser extends Data<INotionUser> {
 
   // FIX:1:H How will deleting a space manipulate the internal cache
   async deleteSpace(arg: FilterType<ISpace>) {
-    (await this.deleteSpaces(transformToMultiple(arg), false));
+    return await this.deleteSpaces(transformToMultiple(arg), false);
   }
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {

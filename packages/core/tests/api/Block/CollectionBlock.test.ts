@@ -95,7 +95,7 @@ it(`updateView`, async () => {
 it(`deleteView`, async () => {
   const {block_1, collection_block, collection_view_1, initializeCacheForSpecificDataMock, executeOperationsMock} = construct();
 
-	await collection_block.deleteView('collection_view_1');
+	const deleted_view_map = await collection_block.deleteView('collection_view_1');
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(collection_view_1).toStrictEqual(expect.objectContaining({alive: false}));
@@ -103,5 +103,6 @@ it(`deleteView`, async () => {
     o.cv.u('collection_view_1', [], expect.objectContaining({alive: false})),
     o.b.u('block_1', [], last_edited_props),
   ]);
+  expect(deleted_view_map.table.get('collection_view_1')!.getCachedData()).toStrictEqual(collection_view_1)
   expect(block_1.view_ids).toStrictEqual([])
 });

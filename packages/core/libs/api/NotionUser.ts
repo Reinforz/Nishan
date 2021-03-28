@@ -1,14 +1,11 @@
-import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionErrors } from '@nishans/errors';
 import { NotionFabricator } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { ICollection, INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings, TPage } from '@nishans/types';
-import { NotionUtils } from '@nishans/utils';
-import { CollectionViewPage, CreateMaps, INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, Page, TNotionUserUpdateKeys } from '../';
+import { INotionUser, ISpace, ISpaceView, IUserRoot, IUserSettings } from '@nishans/types';
+import { INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput, TNotionUserUpdateKeys } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
@@ -222,28 +219,7 @@ class NotionUser extends Data<INotionUser> {
     });
   }
 
-  async getPagesById(ids: string[]) {
-    ids = ids.map(id=>NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id)));
-    const page_map = CreateMaps.page();
-    await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), this.getProps());
-    for (let index = 0; index < ids.length; index++) {
-      const id = ids[index], page = this.cache.block.get(id) as TPage;
-      await NotionCache.initializeCacheForSpecificData(page.id, "block", this.getProps());
-      if (page.type === "page") {
-        const page_obj = new Page({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id })
-        page_map.page.set(page.id, page_obj)
-        page_map.page.set(NotionUtils.extractInlineBlockContent(page.properties.title), page_obj);
-      } else if (page.type === "collection_view_page"){
-        const cvp_obj = new CollectionViewPage({ ...this.getProps(), id: page.id, space_id: page.space_id, shard_id: page.shard_id });
-        const collection = this.cache.collection.get(page.collection_id) as ICollection;
-        page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
-        page_map.collection_view_page.set(page.id, cvp_obj);
-      }
-      else
-        throw new NotionErrors.unsupported_block_type((page as any).type,['page', 'collection_view_page'])
-    }
-    return page_map;
-  }
+  
 }
 
 export default NotionUser;

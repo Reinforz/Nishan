@@ -1,16 +1,17 @@
 import { NotionEndpoints } from '@nishans/endpoints';
 import {
-  ICollectionViewPageInput,
-  ICollectionViewPageUpdateInput,
-  IPageCreateInput,
-  IPageUpdateInput,
-  NotionFabricator
+	ICollectionViewPageInput,
+	ICollectionViewPageUpdateInput,
+	IPageCreateInput,
+	IPageUpdateInput,
+	NotionFabricator
 } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/SpacePermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
+import { NotionLineage } from 'packages/lineage/dist/libs';
 import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys } from '../';
 import { createSpaceIterateData, transformToMultiple } from '../utils';
 import Data from './Data';
@@ -27,14 +28,7 @@ export default class Space extends Data<ISpace> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space' });
 		this.Permissions = new NotionPermissions.Space(arg);
-		let target_space_view: ISpaceView = null as any;
-		for (const [ , space_view ] of this.cache.space_view) {
-			if (space_view.space_id === this.id) {
-				target_space_view = space_view;
-				break;
-			}
-		}
-		this.space_view = target_space_view;
+		this.space_view = NotionLineage.Space.getSpaceView(this.id, this.cache);
 	}
 
 	/**

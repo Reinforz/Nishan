@@ -1,6 +1,7 @@
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionFabricator } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
+import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
@@ -21,12 +22,6 @@ class NotionUser extends Data<INotionUser> {
     super({ ...arg, type: "notion_user" });
   }
 
-  #getSpaceIds = () => {
-    const space_ids: string[] = [];
-    for (const [space_id] of this.cache.space)
-      space_ids.push(space_id)
-    return space_ids;
-  }
   /**
    * Get the current logged in user settings
    * @returns Returns the logged in UserSettings object
@@ -169,7 +164,7 @@ class NotionUser extends Data<INotionUser> {
       multiple,
       container: [],
       child_type: "space",
-      child_ids: this.#getSpaceIds(),
+      child_ids: NotionLineage.NotionUser.getSpaceIds(this.cache),
     }, (space_id) => this.cache.space.get(space_id), (id, {shard_id}, spaces)=>{
       spaces.push(new Space({
         ...this.getProps(),
@@ -187,7 +182,7 @@ class NotionUser extends Data<INotionUser> {
 
   async updateSpaces(args: UpdateTypes<ISpace, ISpaceUpdateInput>, multiple?: boolean) {
     return await this.updateIterate<ISpace, ISpaceUpdateInput, Space[]>(args, {
-      child_ids: this.#getSpaceIds(),
+      child_ids: NotionLineage.NotionUser.getSpaceIds(this.cache),
       child_type: "space",
       multiple,
       container: []
@@ -201,7 +196,7 @@ class NotionUser extends Data<INotionUser> {
 
   async deleteSpaces(args: FilterTypes<ISpace>, multiple?: boolean) {
     return await this.deleteIterate<ISpace, Space[]>(args, {
-      child_ids: this.#getSpaceIds(),
+      child_ids: NotionLineage.NotionUser.getSpaceIds(this.cache),
       multiple,
       child_type: "space",
       manual: true,

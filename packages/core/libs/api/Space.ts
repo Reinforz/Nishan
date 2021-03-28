@@ -1,10 +1,10 @@
 import { NotionEndpoints } from '@nishans/endpoints';
 import {
-	ICollectionViewPageInput,
-	ICollectionViewPageUpdateInput,
-	IPageCreateInput,
-	IPageUpdateInput,
-	NotionFabricator
+  ICollectionViewPageInput,
+  ICollectionViewPageUpdateInput,
+  IPageCreateInput,
+  IPageUpdateInput,
+  NotionFabricator
 } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionPermissions } from '@nishans/permissions';
@@ -21,15 +21,12 @@ import SpaceView from './SpaceView';
  * @noInheritDoc
  */
 export default class Space extends Data<ISpace> {
-	space_view?: ISpaceView;
+	space_view: ISpaceView;
 	Permissions: NotionSpacePermissions;
 
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space' });
 		this.Permissions = new NotionPermissions.Space(arg);
-	}
-
-	get spaceView () {
 		let target_space_view: ISpaceView = null as any;
 		for (const [ , space_view ] of this.cache.space_view) {
 			if (space_view.space_id === this.id) {
@@ -37,7 +34,7 @@ export default class Space extends Data<ISpace> {
 				break;
 			}
 		}
-		return target_space_view;
+		this.space_view = target_space_view;
 	}
 
 	/**
@@ -45,10 +42,9 @@ export default class Space extends Data<ISpace> {
    * @returns The associated space view object
    */
 	getSpaceView () {
-		const target_space_view = this.spaceView;
-		this.logger && NotionLogger.method.info(`READ space_view ${target_space_view.id}`);
+		this.logger && NotionLogger.method.info(`READ space_view ${this.space_view.id}`);
 		return new SpaceView({
-			id: target_space_view.id,
+			id: this.space_view.id,
 			...this.getProps()
 		});
 	}

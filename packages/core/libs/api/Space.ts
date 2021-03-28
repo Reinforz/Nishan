@@ -6,12 +6,12 @@ import {
 	IPageUpdateInput,
 	NotionFabricator
 } from '@nishans/fabricator';
+import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/SpacePermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
-import { NotionLineage } from 'packages/lineage/dist/libs';
 import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys } from '../';
 import { createSpaceIterateData, transformToMultiple } from '../utils';
 import Data from './Data';

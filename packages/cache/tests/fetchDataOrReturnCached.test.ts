@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -9,7 +9,7 @@ it(`data exists in cache`, async () => {
 	const block_1 = {
 			id: 'block_1'
 		},
-		cache: ICache = {
+		cache: INotionCache = {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 	const data = await NotionCache.fetchDataOrReturnCached('block', 'block_1', {

@@ -1,18 +1,18 @@
 import {
-  ICollection,
-  IComment,
-  IDiscussion,
-  IFollow,
-  INotionUser,
-  IPageVisits,
-  ISlackIntegration,
-  ISpace,
-  ISpaceView,
-  IUserRoot,
-  IUserSettings, IViewFilter, TActivity,
-  TBlock,
-  TDataType,
-  TNotification, TSchemaUnit, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
+    ICollection,
+    IComment,
+    IDiscussion,
+    IFollow,
+    INotionUser,
+    IPageVisits,
+    ISlackIntegration,
+    ISpace,
+    ISpaceView,
+    IUserRoot,
+    IUserSettings, IViewFilter, TActivity,
+    TBlock,
+    TDataType,
+    TNotification, TSchemaUnit, TView, TViewFilters, ViewAggregations, ViewFormatProperties, ViewSorts
 } from './';
 export type ISchemaMapValue = { schema_id: string } & TSchemaUnit;
 export type ISchemaMap = Map<string, ISchemaMapValue>;
@@ -38,7 +38,7 @@ export type ISchemaFormatMap = Map<string, ISchemaFormatMapValue>;
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType> ? ElementType : never
 export type Predicate<T> = (T: T, index: number) => Promise<boolean> | boolean | void | null | undefined;
 
-export interface ICache {
+export interface INotionCache {
 	block: Map<string, TBlock>;
 	collection: Map<string, ICollection>;
 	collection_view: Map<string, TView>;

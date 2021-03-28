@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -6,7 +6,7 @@ afterEach(() => {
 });
 
 it(`updateCacheIfNotPresent method`, async () => {
-	const cache: ICache = {
+	const cache: INotionCache = {
 		...NotionCache.createDefaultCache(),
 		collection: new Map([ [ 'collection_1', { id: 'collection_1' } as any ] ])
 	};

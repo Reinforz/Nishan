@@ -1,6 +1,6 @@
-import { ICache, IPage } from '@nishans/types';
+import { INotionCache, IPage } from '@nishans/types';
 
-export const getDiscussionIds = (page: IPage, cache: ICache) => {
+export const getDiscussionIds = (page: IPage, cache: INotionCache) => {
 	const discussion_ids: string[] = [...(page.discussions ?? [])];
 
 	page.content.forEach((block_id) => {

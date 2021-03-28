@@ -1,5 +1,5 @@
 import { INotionOperationOptions } from '@nishans/operations';
-import { ICache, Predicate, TDataType } from '@nishans/types';
+import { INotionCache, Predicate, TDataType } from '@nishans/types';
 
 export type FilterTypes<T> = undefined | string[] | Predicate<T>;
 export type FilterType<T> = undefined | string | Predicate<T>;
@@ -59,7 +59,7 @@ export interface IterateChildrenOptions<T, C> extends IterateOptions<T, C> {
 	parent_type: TDataType;
 	parent_id: string;
 	logger?: boolean;
-	cache: ICache;
+	cache: INotionCache;
 }
 export interface IterateAndGetChildrenOptions<T, C> extends IterateChildrenOptions<T, C>, IterateAndGetOptions<T, C> {}
 export type IterateAndUpdateChildrenOptions<T, C> = INotionOperationOptions &

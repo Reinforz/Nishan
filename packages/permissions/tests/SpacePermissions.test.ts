@@ -1,13 +1,13 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
 import { NotionOperations } from "@nishans/operations";
-import { ICache } from "@nishans/types";
+import { INotionCache } from "@nishans/types";
 import colors from "colors";
 import { default_nishan_arg, o } from "../../core/tests/utils";
 import { NotionPermissions } from "../libs";
 
 it(`addMembers`, async()=>{
-	const cache: ICache = {
+	const cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {
@@ -60,7 +60,7 @@ it(`addMembers`, async()=>{
 });
 
 it(`removeUsers`, async()=>{
-	const cache: ICache = {
+	const cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: ['block_1'], permissions: [ {

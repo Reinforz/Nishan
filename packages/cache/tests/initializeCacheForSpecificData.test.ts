@@ -1,5 +1,5 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -266,7 +266,7 @@ describe('initializeCacheForSpecificData', () => {
 				id: 'space_1',
 				pages: [ 'block_1' ]
 			},
-			cache: ICache = { ...NotionCache.createDefaultCache(), space: new Map([ [ 'space_1', space_1 ] ]) };
+			cache: INotionCache = { ...NotionCache.createDefaultCache(), space: new Map([ [ 'space_1', space_1 ] ]) };
 
 		const updateCacheIfNotPresentMock = jest
 			.spyOn(NotionCache, 'updateCacheIfNotPresent')
@@ -290,7 +290,7 @@ describe('initializeCacheForSpecificData', () => {
 				space_views: [ 'space_view_1' ],
 				id: 'user_root_1'
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				user_root: new Map([ [ 'user_root_1', user_root_1 ] ])
 			};
@@ -313,7 +313,7 @@ describe('initializeCacheForSpecificData', () => {
 			return {
 				...NotionCache.createDefaultCache(),
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
-			} as ICache;
+			} as INotionCache;
 		};
 
 		it(`bookmarked_pages=[id]`, async () => {

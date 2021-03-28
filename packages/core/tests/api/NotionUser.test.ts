@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NotionData, NotionUser } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
@@ -16,7 +16,7 @@ it('create space', async () => {
   const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
   const spaceId = v4();
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     user_root: new Map([['user_root_1', { space_views: [] }] as any]),
   };
@@ -122,7 +122,7 @@ it('create space', async () => {
 });
 
 it(`get space`, async () => {
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     space: new Map([
       ['space_1', { id: 'space_1', shard_id: 123 }],
@@ -143,7 +143,7 @@ it(`get space`, async () => {
 });
 
 it(`update space`, async () => {
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     space: new Map([
       ['space_1', { id: 'space_1', shard_id: 123, name: 'Space 1' }],
@@ -179,7 +179,7 @@ it(`update space`, async () => {
 });
 
 it('getUserSettings', () => {
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     user_settings: new Map([['user_root_1', { id: 'user_root_1', name: 'User Settings 1' }]] as any)
   };
@@ -195,7 +195,7 @@ it('getUserSettings', () => {
 });
 
 it('getUserRoot', () => {
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     user_root: new Map([['user_root_1', { id: 'user_root_1', name: 'User Root 1' }]] as any),
   };
@@ -211,7 +211,7 @@ it('getUserRoot', () => {
 });
 
 it(`delete space`, async () => {
-  const space_1: any = { id: 'space_1', name: 'Space One' }, cache: ICache = {
+  const space_1: any = { id: 'space_1', name: 'Space One' }, cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     space: new Map([['space_1', space_1]] as any),
   };

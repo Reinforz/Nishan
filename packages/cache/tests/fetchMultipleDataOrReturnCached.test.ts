@@ -1,5 +1,5 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { NotionCache } from '../libs';
 
 afterEach(() => {
@@ -14,7 +14,7 @@ describe('fetchMultipleDataOrReturnCached', () => {
 			block_2 = {
 				id: 'block_2'
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				block: new Map([ [ 'block_1', block_1 ] ])
 			} as any;
 		const syncRecordValuesMock = jest.spyOn(NotionEndpoints.Queries, 'syncRecordValues');

@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Page } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
@@ -140,7 +140,7 @@ it(`deleteBlock`, async () => {
 
 it(`updateBookmarkedStatus`, async () => {
 	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
-		cache: ICache = {
+		cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page', space_id: 'space_1' } as any ] ]),
 			space_view: new Map([

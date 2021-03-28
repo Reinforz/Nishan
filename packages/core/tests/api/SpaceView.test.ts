@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { NotionData, SpaceView } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 it(`getCachedParentData`, () => {
-	const cache: ICache = {
+	const cache: INotionCache = {
 		...NotionCache.createDefaultCache(),
 		space_view: new Map([ [ 'space_view_1', { alive: true } as any ] ]),
 		user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
@@ -27,7 +27,7 @@ it(`getCachedParentData`, () => {
 });
 
 it(`reposition`, async () => {
-	const cache: ICache = {
+	const cache: INotionCache = {
 		...NotionCache.createDefaultCache(),
 		space_view: new Map([
 			[
@@ -89,7 +89,7 @@ it(`update`, async () => {
 });
 
 it(`getSpace`, () => {
-	const cache: ICache = {
+	const cache: INotionCache = {
 		...NotionCache.createDefaultCache(),
 		space_view: new Map([ [ 'space_view_1', { id: 'space_view_1', space_id: 'space_1' } as any ] ]),
 		space: new Map([ [ 'space_2', { id: 'space_2' } as any ], [ 'space_1', { id: 'space_1' } as any ] ])
@@ -110,7 +110,7 @@ it(`getSpace`, () => {
 });
 
 it(`getBookmarkedPage`, async () => {
-	const cache: ICache = {
+	const cache: INotionCache = {
 		...NotionCache.createDefaultCache(),
 		block: new Map([
 			[
@@ -151,7 +151,7 @@ it(`getBookmarkedPage`, async () => {
 
 it(`updateBookmarkedPages`, async () => {
 	const space_view_1 = { id: 'space_view_1', bookmarked_pages: [ 'block_1' ], space_id: 'space_1' },
-		cache: ICache = {
+		cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([
 				[

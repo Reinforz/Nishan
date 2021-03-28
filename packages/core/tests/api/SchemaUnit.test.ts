@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import colors from "colors";
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { SchemaUnit } from '../../libs';
@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 it(`update`, async () => {
-  const cache: ICache = {
+  const cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     collection: new Map([
       [
@@ -60,7 +60,7 @@ it(`update`, async () => {
 
 describe('delete', () => {
   it(`type=text`, async () => {
-    const cache: ICache = {
+    const cache: INotionCache = {
       ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
@@ -102,7 +102,7 @@ describe('delete', () => {
   });
 
   it(`type=title`, async () => {
-    const cache: ICache = {
+    const cache: INotionCache = {
       ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
@@ -133,7 +133,7 @@ describe('duplicate', () => {
       schema: {
         text: txsu
       }
-    }, cache: ICache = {
+    }, cache: INotionCache = {
       ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
@@ -170,7 +170,7 @@ describe('duplicate', () => {
       schema: {
         schema_id_1: tsu
       }
-    }, cache: ICache = {
+    }, cache: INotionCache = {
       ...NotionCache.createDefaultCache(),
       collection: new Map([
         [
@@ -196,7 +196,7 @@ it(`getCachedChildData`, () => {
     schema: {
       schema_id_1: tsu
     }
-  }, cache: ICache = {
+  }, cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     collection: new Map([
       [

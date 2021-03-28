@@ -1,5 +1,5 @@
 import { NotionConstants } from '@nishans/constants';
-import { ICache, RecordMap, TData, TDataType } from '@nishans/types';
+import { INotionCache, RecordMap, TData, TDataType } from '@nishans/types';
 
 /**
 * Save all the items of a recordMap in internal cache
@@ -7,7 +7,7 @@ import { ICache, RecordMap, TData, TDataType } from '@nishans/types';
 */
 export function saveToCache (
 	recordMap: Partial<RecordMap>,
-	cache: ICache,
+	cache: INotionCache,
 	cb?: (key: TDataType, data_id: string, data: TData) => any
 ) {
 	// Loop through each of the cache keys

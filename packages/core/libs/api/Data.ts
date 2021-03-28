@@ -3,7 +3,7 @@ import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
-import { ICache, NotionCacheInitializerTracker, TData, TDataType } from '@nishans/types';
+import { INotionCache, NotionCacheInitializerTracker, TData, TDataType } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { INotionCoreOptions } from '../';
 
@@ -22,10 +22,10 @@ export default class NotionData<T extends TData> {
   space_id: string
   interval: number;
   token: string;
-  cache: ICache;
+  cache: INotionCache;
   cache_init_tracker: NotionCacheInitializerTracker;
 
-  constructor(arg: INotionCoreOptions & { cache?: ICache, type: TDataType }) {
+  constructor(arg: INotionCoreOptions & { cache?: INotionCache, type: TDataType }) {
     this.type = arg.type;
     this.id = arg.id;
     this.logger = arg.logger ?? true;

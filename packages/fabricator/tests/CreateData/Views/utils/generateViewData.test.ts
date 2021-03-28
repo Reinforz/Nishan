@@ -1,12 +1,12 @@
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { default_nishan_arg, o } from '../../../../../core/tests/utils';
 import { generateViewData } from '../../../../libs/CreateData/Views/utils';
 
 const id = v4(),
-	cache: ICache = {
+	cache: INotionCache = {
 		collection_view: new Map()
 	} as any;
 

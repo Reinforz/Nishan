@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
 import { createSpaceIterateData } from '../../libs/utils';
@@ -48,7 +48,7 @@ describe('createSpaceIterateData', () => {
 it(`getSpaceView`, async () => {
   const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const cache: ICache = {
+	const cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			space_view: new Map([
 				[ 'space_view_2', { alive: true, space_id: 'space_2', id: 'space_view_2' } as any ],
@@ -130,7 +130,7 @@ it(`delete`, async () => {
 
 it(`createRootPages`, async () => {
 	const block_id = v4();
-	const cache: ICache = {
+	const cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ]),
 		},
@@ -167,7 +167,7 @@ it(`createRootPages`, async () => {
 });
 
 it(`getRootPage`, async () => {
-	const block_1: any = { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } }, cache: ICache = {
+	const block_1: any = { type: 'page', id: 'block_1', properties: { title: [ [ 'Block One' ] ] } }, cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([
 				[ 'block_1', block_1 ],
@@ -208,7 +208,7 @@ it(`getRootPage`, async () => {
 });
 
 it(`updateRootPage`, async()=>{
-	const cache: ICache = {
+	const cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', {id: 'block_1', type: "page", properties: {title: [['Page One']]}} as any]]),
@@ -244,7 +244,7 @@ it(`updateRootPage`, async()=>{
 })
 
 it(`deleteRootPage`, async()=>{
-	const block_1: any = {id: 'block_1', type: "page", properties: {title: [['Page One']]}}, cache: ICache = {
+	const block_1: any = {id: 'block_1', type: "page", properties: {title: [['Page One']]}}, cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			user_root: new Map([ [ 'user_root_1', { id: 'user_root_1' } as any ] ]),
 			block: new Map([['block_1', block_1 as any]]),

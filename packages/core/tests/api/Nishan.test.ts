@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { CollectionViewPage, Nishan, Page } from '../../libs';
 import { default_nishan_arg } from '../utils';
@@ -205,7 +205,7 @@ describe('getPagesById', () => {
 	it('throw an error for type=header', async () => {
 		const block_1_id = v4(),
 			block_1 = { id: block_1_id, type: 'header' } as any,
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				block: new Map([ [ block_1_id, block_1 ] ])
 			};

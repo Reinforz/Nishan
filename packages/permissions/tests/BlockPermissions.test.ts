@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionOperations } from '@nishans/operations';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { default_nishan_arg, o } from '../../core/tests/utils';
 import { NotionPermissions } from '../libs';
 
@@ -38,7 +38,7 @@ it(`removeUserPermission`, async () => {
 
 it('updateUserPermission', async () => {
 	const block_1: any = { id: 'block_1', permissions: [] },
-		cache: ICache = {
+		cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
@@ -118,7 +118,7 @@ describe('updatePermissionsArray', () => {
 					}
 				]
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
@@ -142,7 +142,7 @@ describe('updatePermissionsArray', () => {
 				id: 'block_1',
 				permissions: []
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
@@ -173,7 +173,7 @@ describe('updatePermissionsArray', () => {
 					}
 				]
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
@@ -200,7 +200,7 @@ describe('updatePermissionsArray', () => {
 					}
 				]
 			},
-			cache: ICache = {
+			cache: INotionCache = {
 				...NotionCache.createDefaultCache(),
 				block: new Map([ [ 'block_1', block_1 ] ])
 			};
@@ -243,7 +243,7 @@ it(`updateNonUserSpecificPermission`, () => {
 			id: 'block_1',
 			permissions: []
 		},
-		cache: ICache = {
+		cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},

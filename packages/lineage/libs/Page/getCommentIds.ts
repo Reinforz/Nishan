@@ -1,7 +1,7 @@
-import { ICache, IPage } from '@nishans/types';
+import { INotionCache, IPage } from '@nishans/types';
 import { NotionLineage } from '../';
 
-export const getCommentIds = (page: IPage, cache: ICache) => {
+export const getCommentIds = (page: IPage, cache: INotionCache) => {
 	const comment_ids: string[] = [];
 
 	page.content.forEach((block_id) => {

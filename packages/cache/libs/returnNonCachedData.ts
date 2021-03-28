@@ -1,5 +1,5 @@
 import { UpdateCacheManuallyParam } from '@nishans/endpoints';
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 
 /**
  * Returns the id and data_type tuple passed that is not present in the cache
@@ -8,7 +8,7 @@ import { ICache } from '@nishans/types';
  */
 export function returnNonCachedData (
 	update_cache_param: UpdateCacheManuallyParam,
-	cache: ICache
+	cache: INotionCache
 ): UpdateCacheManuallyParam {
 	return update_cache_param.filter((info) => !Boolean(cache[info[1]].get(info[0])));
 }

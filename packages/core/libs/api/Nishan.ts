@@ -3,7 +3,7 @@ import { NotionErrors } from "@nishans/errors";
 import { NotionIdz } from "@nishans/idz";
 import { NotionOperationPluginFunction } from "@nishans/operations";
 import { FilterType, FilterTypes, NotionTraverser } from "@nishans/traverser";
-import { ICache, ICollection, INotionUser, NotionCacheInitializerTracker, TPage } from "@nishans/types";
+import { ICollection, INotionCache, INotionUser, NotionCacheInitializerTracker, TPage } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CollectionViewPage, CreateMaps, INotionCoreOptions, Page } from "../";
 import { transformToMultiple } from "../utils";
@@ -15,10 +15,10 @@ export default class Nishan {
   #init_cache: boolean;
   logger: boolean;
   notion_operation_plugins: NotionOperationPluginFunction[];
-  cache: ICache;
+  cache: INotionCache;
   cache_init_tracker: NotionCacheInitializerTracker;
 
-  constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"], cache?: ICache}) {
+  constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"], cache?: INotionCache}) {
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;

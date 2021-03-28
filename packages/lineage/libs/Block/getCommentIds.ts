@@ -1,6 +1,6 @@
-import { ICache, IText, TBlock } from '@nishans/types';
+import { INotionCache, IText, TBlock } from '@nishans/types';
 
-export const getCommentIds = (block: TBlock, cache: ICache) => {
+export const getCommentIds = (block: TBlock, cache: INotionCache) => {
 	const comment_ids: string[] = [];
   (block as IText).discussions?.forEach(discussion_id=>{
     const discussion_data = cache.discussion.get(discussion_id);

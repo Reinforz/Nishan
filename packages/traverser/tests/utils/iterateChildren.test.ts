@@ -1,5 +1,5 @@
 import { NotionLogger } from '@nishans/logger';
-import { ICache, TPage } from '@nishans/types';
+import { INotionCache, TPage } from '@nishans/types';
 import { iterateChildren } from '../../libs/utils';
 
 afterEach(() => {
@@ -11,7 +11,7 @@ describe('method=UPDATE', () => {
 		it('multiple=false', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -75,7 +75,7 @@ describe('method=UPDATE', () => {
 		it('multiple=true', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -160,7 +160,7 @@ describe('method=UPDATE', () => {
 		it('multiple=false', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -229,7 +229,7 @@ describe('method=UPDATE', () => {
 		it('multiple=true', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id', 'child_five_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -326,7 +326,7 @@ describe('method=READ | DELETE', () => {
 		it('multiple=false', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -381,7 +381,7 @@ describe('method=READ | DELETE', () => {
 		it('multiple=true', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -450,7 +450,7 @@ describe('method=READ | DELETE', () => {
 		it('multiple=false', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',
@@ -514,7 +514,7 @@ describe('method=READ | DELETE', () => {
 		it('multiple=true', async () => {
 			const child_ids = [ 'child_one_id', 'child_two_id', 'child_three_id', 'child_five_id' ];
 
-			const cache: ICache = {
+			const cache: INotionCache = {
 				block: new Map([
 					[
 						'parent_one_id',

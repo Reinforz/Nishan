@@ -1,7 +1,7 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionLogger } from "@nishans/logger";
 import { NotionOperations } from "@nishans/operations";
-import { ICache, ICollection } from "@nishans/types";
+import { ICollection, INotionCache } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { default_nishan_arg, o } from "../../../../core/tests/utils";
 import { NotionFabricator } from "../../../libs";
@@ -23,7 +23,7 @@ const returnChildCollectionAndCache = () =>{
   const cache = {
     ...NotionCache.createDefaultCache(),
     collection: new Map([ [ 'child_collection_id', child_collection ] ])
-  } as ICache;
+  } as INotionCache;
   const parent_collection_data: ParentCollectionData = {
     parent_collection_id: 'parent_collection_id',
     parent_relation_schema_unit_id: 'parent_relation_schema_unit_id',

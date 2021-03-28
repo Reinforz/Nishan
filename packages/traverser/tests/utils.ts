@@ -1,4 +1,4 @@
-import { ICache } from '@nishans/types';
+import { INotionCache } from '@nishans/types';
 import { last_edited_props, o } from '../../core/tests/utils';
 
 export const c1id = 'child_one_id';
@@ -102,5 +102,5 @@ export const constructCache = (child_ids: string[]) => {
 			cd(c2id),
 			cd(c3id)
 		])
-	} as ICache;
+	} as INotionCache;
 };

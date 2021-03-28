@@ -1,6 +1,6 @@
 import { INotionEndpointsOptions } from '@nishans/endpoints';
-import { ICache, NotionCacheInitializerTracker } from '@nishans/types';
+import { INotionCache, NotionCacheInitializerTracker } from '@nishans/types';
 export interface INotionCacheOptions extends INotionEndpointsOptions {
-	cache: ICache;
+	cache: INotionCache;
 	cache_init_tracker: NotionCacheInitializerTracker;
 }

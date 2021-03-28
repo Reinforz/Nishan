@@ -1,5 +1,5 @@
 import { NotionOperations } from '@nishans/operations';
-import { ICache, ISpaceView } from '@nishans/types';
+import { INotionCache, ISpaceView } from '@nishans/types';
 import { o } from '../../core/tests/utils';
 import { NotionLineage } from '../libs';
 
@@ -20,7 +20,7 @@ describe('NotionLineage.updateChildContainer', () => {
 				bookmarked_pages: [],
 				id: 'space_view_1'
 			} as any,
-			cache: ICache = {
+			cache: INotionCache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
@@ -48,7 +48,7 @@ describe('NotionLineage.updateChildContainer', () => {
 				bookmarked_pages: [ 'block_1' ],
 				id: 'space_view_1'
 			} as any,
-			cache: ICache = {
+			cache: INotionCache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
@@ -76,7 +76,7 @@ describe('NotionLineage.updateChildContainer', () => {
 				bookmarked_pages: [ 'block_1' ],
 				id: 'space_view_1'
 			} as any,
-			cache: ICache = {
+			cache: INotionCache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest
@@ -97,7 +97,7 @@ describe('NotionLineage.updateChildContainer', () => {
 		const space_view_1 = {
 				id: 'space_view_1'
 			} as any,
-			cache: ICache = {
+			cache: INotionCache = {
 				space_view: new Map([ [ 'space_view_1', space_view_1 ] ])
 			} as any;
 		const executeOperationsMock = jest

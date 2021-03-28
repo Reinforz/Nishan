@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICache, ICollection, IPage, TBlock } from '@nishans/types';
+import { ICollection, INotionCache, IPage, TBlock } from '@nishans/types';
 import { last_edited_props } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import {
@@ -95,7 +95,7 @@ it(`child_type & parent_type != block, child_path=undefined`, async () => {
 			],
 			cd(c1id)
 		])
-	} as ICache;
+	} as INotionCache;
 
 	const executeOperationsMock = jest
 		.spyOn(NotionOperations, 'executeOperations')

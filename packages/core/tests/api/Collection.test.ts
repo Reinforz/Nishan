@@ -12,38 +12,6 @@ afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`getRowPageIds`, async () => {
-	const cache = {
-		...NotionCache.createDefaultCache(),
-		block: new Map([
-			[ 'block_1', { id: 'block_1', type: 'page', parent_table: 'collection', parent_id: 'collection_1' } ],
-			[ 'block_2', { id: 'block_2', type: 'page', parent_table: 'block', parent_id: 'block_1' } ]
-		])
-	} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const initializeCacheForThisDataMock = jest
-		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
-		.mockImplementationOnce(async () => {
-			cache.block.set('block_3', {
-				id: 'block_3',
-				type: 'page',
-				parent_table: 'collection',
-				parent_id: 'collection_1',
-				is_template: true
-			});
-		});
-
-	const row_page_ids = await collection.getRowPageIds();
-	expect(row_page_ids).toStrictEqual([ 'block_1' ]);
-	expect(initializeCacheForThisDataMock).toHaveBeenCalledTimes(1);
-});
-
 it(`getCachedParentData`, async () => {
 	const collection_1 = {
 			id: 'collection_1',

@@ -4,6 +4,7 @@ import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, IPage, ISchemaMapValue, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { NotionLineage } from 'packages/lineage/dist/libs';
 import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
 import { PopulateMap } from '../PopulateMap';
 import { transformToMultiple } from '../utils';
@@ -17,15 +18,6 @@ import Data from './Data';
 class Collection extends Data<ICollection> {
 	constructor (args: INotionCoreOptions) {
 		super({ ...args, type: 'collection' });
-	}
-
-	async getRowPageIds () {
-		await this.initializeCacheForThisData();
-		const page_ids: string[] = [];
-		for (const [ , page ] of this.cache.block)
-			if (page.type === 'page' && page.parent_table === 'collection' && page.parent_id === this.id && !page.is_template)
-				page_ids.push(page.id);
-		return page_ids;
 	}
 
 	getCachedParentData () {
@@ -134,7 +126,7 @@ class Collection extends Data<ICollection> {
 		return await this.getIterate<IPage, Page[]>(
 			args,
 			{
-				child_ids: await this.getRowPageIds(),
+				child_ids: await NotionLineage.Collection.getRowPageIds(this.id, this.getProps()),
 				child_type: 'block',
 				multiple,
 				container: []
@@ -152,7 +144,7 @@ class Collection extends Data<ICollection> {
 		return await this.updateIterate<IPage, Omit<IPageUpdateInput, 'type'>, Page[]>(
 			args,
 			{
-				child_ids: await this.getRowPageIds(),
+				child_ids: await NotionLineage.Collection.getRowPageIds(this.id, this.getProps()),
 				multiple,
 				child_type: 'block',
 				container: []
@@ -175,7 +167,7 @@ class Collection extends Data<ICollection> {
 		return await this.deleteIterate<IPage, Page[]>(
 			args,
 			{
-				child_ids: await this.getRowPageIds(),
+				child_ids: await NotionLineage.Collection.getRowPageIds(this.id, this.getProps()),
 				child_type: 'block',
 				multiple,
 				container: []

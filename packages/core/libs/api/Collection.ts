@@ -1,10 +1,10 @@
 import { IPageCreateInput, IPageUpdateInput, NotionFabricator, TSchemaUnitInput } from '@nishans/fabricator';
+import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, IPage, ISchemaMapValue, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { NotionLineage } from 'packages/lineage/dist/libs';
 import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
 import { PopulateMap } from '../PopulateMap';
 import { transformToMultiple } from '../utils';

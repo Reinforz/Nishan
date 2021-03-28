@@ -18,13 +18,13 @@ export default class Nishan {
   cache: ICache;
   cache_init_tracker: NotionCacheInitializerTracker;
 
-  constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"]}) {
+  constructor(arg: Pick<INotionCoreOptions, "token" | "interval" | "logger" > & {notion_operation_plugins?: INotionCoreOptions["notion_operation_plugins"], cache?: ICache}) {
     this.token = arg.token;
     this.interval = arg.interval ?? 500;
     this.#init_cache = false;
     this.logger = arg.logger ?? true;
     this.notion_operation_plugins = arg.notion_operation_plugins ?? [];
-    this.cache = NotionCache.createDefaultCache();
+    this.cache = arg.cache ? NotionCache.validateCache(arg.cache) : NotionCache.createDefaultCache();
     this.cache_init_tracker = NotionCache.createDefaultCacheInitializeTracker()
   }
 
@@ -82,6 +82,7 @@ export default class Nishan {
   }
 
   async getPagesById(ids: string[]) {
+    await this.#initializeCache();
     ids = ids.map(id=>NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id)));
     const page_map = CreateMaps.page();
     await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), {...this.getProps(), user_id: ''});

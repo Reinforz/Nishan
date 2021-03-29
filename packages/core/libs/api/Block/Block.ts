@@ -29,32 +29,18 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 
 	async reposition (arg?: INotionRepositionParams) {
 		const data = this.getCachedData();
-		if (data.parent_table === 'space')
-			await NotionOperations.executeOperations(
-				[
-					NotionLineage.positionChildren<ISpace>('pages', {
-						logger: this.logger,
-						child_id: this.id,
-						position: arg,
-						parent: await this.getCachedParentData(),
-						parent_type: 'block'
-					})
-				],
-				this.getProps()
-			);
-		else if (data.parent_table === 'block')
-			await NotionOperations.executeOperations(
-				[
-					NotionLineage.positionChildren<IPage>('content', {
-						logger: this.logger,
-						child_id: this.id,
-						position: arg,
-						parent: await this.getCachedParentData(),
-						parent_type: 'block'
-					})
-				],
-				this.getProps()
-			);
+		await NotionOperations.executeOperations(
+			[
+				NotionLineage.positionChildren<ISpace>(data.parent_table === 'space' ? 'pages' : 'content' as any, {
+					logger: this.logger,
+					child_id: this.id,
+					position: arg,
+					parent: await this.getCachedParentData(),
+					parent_type: data.parent_table
+				})
+			],
+			this.getProps()
+		);
 	}
 
 	/**
@@ -162,24 +148,14 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 		const data = this.getCachedData(),
 			parent_data = await this.getCachedParentData();
 
-		if (data.parent_table === 'space')
-			await NotionLineage.updateChildContainer<ISpace>(
-				data.parent_table,
-				data.parent_id,
-				false,
-				this.id,
-				'pages',
-				this.getProps()
-			);
-		else if (data.parent_table === 'block')
-			await NotionLineage.updateChildContainer<IPage>(
-				data.parent_table,
-				data.parent_id,
-				false,
-				this.id,
-				'content',
-				this.getProps()
-			);
+		await NotionLineage.updateChildContainer<IPage>(
+			data.parent_table,
+			data.parent_id,
+			false,
+			this.id,
+			data.parent_table === 'space' ? 'pages' : 'content' as any,
+			this.getProps()
+		);
 
 		data.alive = false;
 		this.logger && NotionLogger.method.info(`DELETE block ${data.id}`);

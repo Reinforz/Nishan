@@ -18,5 +18,5 @@ export function createTransaction (shardId: number, spaceId: string, operations:
 				operations
 			}
 		]
-	} as INotionEndpoints['saveTransaction']['payload'];
+	} as INotionEndpoints['saveTransactions']['payload'];
 }

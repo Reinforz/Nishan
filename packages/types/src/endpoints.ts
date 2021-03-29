@@ -753,7 +753,7 @@ export interface INotionEndpoints {
 		}
 	>;
 
-	saveTransaction: INotionEndpoint<
+	saveTransactions: INotionEndpoint<
 		{
 			requestId: string;
 			transactions: Transaction[];

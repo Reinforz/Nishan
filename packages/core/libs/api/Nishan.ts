@@ -85,7 +85,6 @@ export default class Nishan {
     await this.#initializeCache();
     ids = ids.map(id=>NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id)));
     const page_map = CreateMaps.page();
-    await NotionCache.updateCacheIfNotPresent(ids.map(id=>[id, 'block']), {...this.getProps(), user_id: ''});
     for (let index = 0; index < ids.length; index++) {
       const id = ids[index], page = this.cache.block.get(id) as TPage;
       await NotionCache.initializeCacheForSpecificData(page.id, "block", {...this.getProps(), user_id: page.created_by_id});

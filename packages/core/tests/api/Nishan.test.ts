@@ -210,6 +210,12 @@ describe('getPagesById', () => {
 				block: new Map([ [ block_1_id, block_1 ] ])
 			};
 
+		const initializeCacheForSpecificDataMock = jest
+			.spyOn(NotionCache, 'initializeCacheForSpecificData')
+			.mockImplementation(() => {
+				return {} as any;
+			});
+
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => ({}));
 
 		const nishan = new Nishan({
@@ -218,5 +224,8 @@ describe('getPagesById', () => {
 		});
 
 		await expect(nishan.getPagesById([ block_1_id ])).rejects.toThrow();
+
+		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(1);
+		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_1_id, 'block' ]);
 	});
 });

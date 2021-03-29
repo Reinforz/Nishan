@@ -54,6 +54,17 @@ export const NotionEndpointsQueries = {
 		);
 	},
 
+	async getSignedFileUrls (
+		params: INotionEndpoints['getSignedFileUrls']['payload'],
+		options?: INotionEndpointsOptions
+	) {
+		return await NotionEndpoints.Request.send<INotionEndpoints['getSignedFileUrls']['response']>(
+			'getSignedFileUrls',
+			params,
+			options
+		);
+	},
+
 	async getSnapshotsList (params: INotionEndpoints['getSnapshotsList']['payload'], options?: INotionEndpointsOptions) {
 		return await NotionEndpoints.Request.send<INotionEndpoints['getSnapshotsList']['response']>(
 			'getSnapshotsList',

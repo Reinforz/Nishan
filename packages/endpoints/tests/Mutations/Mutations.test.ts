@@ -12,6 +12,7 @@ const request_data = {
 	};
 
 ([
+	'disconnectTrello',
 	'restoreBlock',
 	'authWithSlack',
 	'authWithTrello',

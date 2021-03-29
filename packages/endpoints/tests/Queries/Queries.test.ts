@@ -50,7 +50,8 @@ const configs = {
 	'getBots',
 	'getInvoiceData',
 	'getSnapshotsList',
-	'getSnapshotContents'
+	'getSnapshotContents',
+	'getSignedFileUrls'
 ] as (keyof typeof NotionEndpoints.Queries)[]).forEach((method) => {
 	it(method, async () => {
 		const notionRequestSendMock = jest

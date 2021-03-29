@@ -1,13 +1,14 @@
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { IOperation } from '@nishans/types';
 import { NotionOperations } from '../libs';
 import { common_execute_operations_options, operation } from './utils';
 
 describe('executeOperations', () => {
 	it(`print to console if the stack is empty`, async () => {
-		const consoleLogMock = jest.spyOn(console, 'log');
+		const endpointWarnMock = jest.spyOn(NotionLogger.endpoint, 'warn');
 		await NotionOperations.executeOperations([], common_execute_operations_options);
-		expect(consoleLogMock).toHaveBeenCalledWith(`The operation stack is empty`);
+		expect(endpointWarnMock).toHaveBeenCalledWith(`The operation stack is empty`);
 	});
 
 	it(`executes operations`, async () => {

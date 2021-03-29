@@ -1,10 +1,11 @@
 import { NotionEndpoints } from '@nishans/endpoints';
+import { NotionLogger } from '@nishans/logger';
 import { IOperation } from '@nishans/types';
 import { INotionOperationOptions, NotionOperations } from './';
 
 export async function executeOperations (operations: IOperation[], options: INotionOperationOptions) {
 	// If the stack is empty print a msg to the console
-	if (operations.length === 0) console.log(`The operation stack is empty`);
+	if (operations.length === 0) NotionLogger.endpoint.warn(`The operation stack is empty`);
 	else {
 		// Create a transaction using the space_id, shard_id and the list of operations
 		const created_transaction = NotionEndpoints.Request.createTransaction(

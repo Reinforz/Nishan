@@ -1,3 +1,4 @@
+import { collection } from './collection';
 import { comment } from './comment';
 import { discussion } from './discussion';
 import { spaceView } from './spaceView';
@@ -7,5 +8,6 @@ export const NotionInit = {
 	View: NotionInitView,
 	comment,
 	discussion,
-	spaceView
+	spaceView,
+	collection
 };

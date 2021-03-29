@@ -260,6 +260,3 @@ it('update', async () => {
     ['family_name', 'given_name', 'profile_photo']
   );
 });
-
-const target = {"beta_enabled": true, "disable_export": false, "disable_guests": false, "disable_move_to_space": false, "disable_public_access": false, "icon": 
-"", "invite_link_code": "", "invite_link_enabled": true, "name": "Space One", "pages": ["dcc699cd-73ab-42de-8f18-f39da1b972b9"], "permissions": [], "plan_type": "personal", "shard_id": 123, "version": 0}

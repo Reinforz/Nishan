@@ -40,17 +40,15 @@ export const createDiscussions = async (
 		});
 		const block_data = blocks_data[index] as IText;
 
-		const discussion_data: IDiscussion = {
-			id: discussion_id,
+		const discussion_data = NotionInit.discussion({
+      id: discussion_id,
 			parent_id: block_id,
-			parent_table: 'block',
 			resolved: false,
 			context: arg.context ?? block_data.properties.title,
 			comments: comment_ids,
-			version: 1,
 			space_id: options.space_id,
 			shard_id: options.shard_id
-		};
+    });
 		discussions.push(discussion_data);
 		options.cache.discussion.set(discussion_id, discussion_data);
 		NotionUtils.populateChildPath({ data: block_data, child_path: 'discussions', child_id: discussion_id });

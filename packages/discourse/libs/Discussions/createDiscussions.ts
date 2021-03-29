@@ -1,7 +1,8 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
+import { NotionInit } from '@nishans/init';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { IComment, IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
+import { IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 
 export const createDiscussions = async (
@@ -23,22 +24,15 @@ export const createDiscussions = async (
 		comments.forEach((comment) => {
 			const comment_id = NotionIdz.Generate.id(comment.id);
 			comment_ids.push(comment_id);
-			const comment_data: IComment = {
-				parent_id: discussion_id,
-				parent_table: 'discussion',
-				text: comment.text,
-				alive: true,
-				id: comment_id,
-				version: 1,
-				space_id: options.space_id,
-				shard_id: options.shard_id,
-				created_by_id: options.user_id,
-				created_by_table: 'notion_user',
-				created_time: Date.now(),
-				last_edited_by_id: options.user_id,
-				last_edited_by_table: 'notion_user',
-				last_edited_time: Date.now()
-			};
+			const comment_data = NotionInit.comment({
+        created_by_id: options.user_id,
+        last_edited_by_id: options.user_id,
+        id: comment_id,
+        parent_id: discussion_id,
+        shard_id: options.shard_id,
+        space_id: options.space_id,
+        text: comment.text
+      });
 			operations.push(
 				NotionOperations.Chunk.comment.update(comment_id, [], JSON.parse(JSON.stringify(comment_data, null, 2)))
 			);

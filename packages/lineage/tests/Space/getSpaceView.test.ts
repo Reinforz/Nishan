@@ -14,7 +14,7 @@ it(`NotionLineage.Space.getSpaceView`, () => {
 		cache = {
 			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', space_1 ] ]),
-			space_view: new Map([ [ 'space_view_1', space_view_1 ], [ 'space_view_2', space_view_2 ] ])
+			space_view: new Map([ [ 'space_view_2', space_view_2 ], [ 'space_view_1', space_view_1 ] ])
 		};
 
 	const space_view = NotionLineage.Space.getSpaceView('space_1', cache);

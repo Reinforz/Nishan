@@ -1,5 +1,5 @@
 import { ElementType, INotionEndpoints } from '@nishans/types';
-import { INotionEndpointsOptions, NotionEndpoints } from '../';
+import { INotionEndpointsOptions, NotionEndpoints } from '.';
 
 const payload_queries = [
   'getUnvisitedNotificationIds',

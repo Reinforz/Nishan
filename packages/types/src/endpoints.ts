@@ -48,6 +48,7 @@ export interface INotionEndpoints {
 		},
 		{ recordMap: Pick<RecordMap, 'block'> }
 	>;
+	ping: INotionEndpoint<Record<string, unknown>, Record<string, unknown>>;
 	authWithSlack: INotionEndpoint<
 		{
 			code: string;

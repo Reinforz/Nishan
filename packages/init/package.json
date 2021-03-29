@@ -1,7 +1,7 @@
 {
   "name": "@nishans/init",
   "version": "0.0.19",
-  "description": "A package to initialize notion view & block data",
+  "description": "A package to initialize raw notion data",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/init/README.md",
   "bugs": {

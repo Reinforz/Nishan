@@ -1,10 +1,10 @@
 import { comment } from './comment';
 import { discussion } from './discussion';
 import { spaceView } from './spaceView';
-import { InitializeView } from './View';
+import { NotionInitView } from './View';
 
 export const NotionInit = {
-	View: InitializeView,
+	View: NotionInitView,
 	comment,
 	discussion,
 	spaceView

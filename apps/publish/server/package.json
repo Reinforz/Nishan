@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -w && nodemon ./dist/index.js"
+    "start": "npx concurrently -n tsc,server \"tsc -w\" \"nodemon ./dist/index.js\""
   },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
@@ -13,5 +13,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "ws": "^7.4.4"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0"
   }
 }

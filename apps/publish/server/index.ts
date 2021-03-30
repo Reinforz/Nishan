@@ -1,9 +1,9 @@
+import { NishanScripts } from '@nishans/scripts';
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import WebSocket from 'ws';
-import { NishanScripts } from '../libs';
 
 const app = express();
 app.use(express.json());
@@ -29,7 +29,7 @@ wss.on('connection', async (ws) => {
 const port = 3000;
 
 app.get('/getPackages', async (req, res) => {
-	const packages = await fs.promises.readdir(path.resolve(__dirname, '../../packages'));
+	const packages = await fs.promises.readdir(path.resolve(__dirname, '../../../../packages'));
 	res.send(packages);
 });
 

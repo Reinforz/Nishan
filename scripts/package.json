@@ -1,14 +1,14 @@
 {
-  "name": "scripts",
+  "name": "@nishans/scripts",
   "version": "1.0.0",
   "description": "A collection of libs for automating manual package related tasks",
-  "main": "index.js",
+  "main": "dist/libs/index.js",
+  "typings": "dist/libs/index.d.ts",
   "scripts": {},
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "tsc-prog": "^2.2.1",
     "typescript": "^4.2.3"
   },
   "optionalDependencies": {

@@ -21,6 +21,14 @@ export interface IPackageStatus {
     {
       step: 'build without comments',
       done: boolean
+    },
+    {
+      step: 'update packagejson',
+      done: boolean
+    },
+    {
+      step: 'publish',
+      done: boolean
     }
   ]
 };
@@ -76,6 +84,14 @@ function App() {
             },
             {
               step: 'build without comments',
+              done: false
+            },
+            {
+              step: 'update packagejson',
+              done: false
+            },
+            {
+              step: 'publish',
               done: false
             }
           ]

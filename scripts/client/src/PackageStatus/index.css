@@ -1,15 +1,41 @@
+.PackageStatus {
+  height: 100%;
+  overflow: auto;
+  background-color: #282828;
+  grid-area: 1/2/3/3;
+}
+
 .PackageStatus-item{
   margin: 20px;
+  background: #3d3d3d;
+  border-spacing: 5px;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .PackageStatus-item-name{
   font-weight: bolder;
   text-align: center;
-  font-size: 1.1  5em;
-  margin-bottom: 5px;
+  font-size: 1em;
+  margin-bottom: 15px;
+  color: white;
+  background-color: #1d1d1d;
+  padding: 5px;
 }
 
 .PackageStatus-item-steps{
   display: flex;
   justify-content: space-evenly;
+}
+
+.PackageStatus-item-step{
+  width: 25px;
+  height: 25px;
+  background: rgb(222 42 42);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  user-select: none;
 }

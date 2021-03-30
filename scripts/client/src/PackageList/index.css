@@ -1,0 +1,20 @@
+.PackageList{
+  height: 100%;
+  overflow: auto;
+  background: #212121;
+}
+
+.PackageList-item{
+  padding: 3px;
+  display: flex;
+  user-select: none;
+  color: white;
+}
+
+.PackageList-item-name {
+  padding-left: 5px;
+}
+
+input.PackageList-item-checkbox {
+  cursor: pointer;
+}

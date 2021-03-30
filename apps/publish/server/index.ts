@@ -13,14 +13,11 @@ const wss = new WebSocket.Server({
 	port: 8000
 });
 
+const ws_clients: WebSocket[] = [];
+
 wss.on('connection', async (ws) => {
 	console.log('New client connected');
-
-	ws.on('message', async (data) => {
-		console.log(`Client has sent ${data}`);
-		ws.send('Server');
-	});
-
+	ws_clients.push(ws);
 	ws.on('close', async () => {
 		console.log('Client has disconnected');
 	});
@@ -41,6 +38,19 @@ app.post('/createPackagePublishOrder', async (req, res) => {
 			packages_map
 		);
 	res.send(rearranged_packages);
+});
+
+app.post('/publishPackages', async (req, res) => {
+	const rearranged_packages = req.body;
+	await NishanScripts.Build.afterTest(rearranged_packages, false, (name, step) =>
+		ws_clients[0].send(
+			JSON.stringify({
+				name,
+				step
+			})
+		)
+	),
+		res.send(rearranged_packages);
 });
 
 app.listen(port, () => {

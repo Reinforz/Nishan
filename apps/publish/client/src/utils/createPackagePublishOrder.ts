@@ -15,7 +15,7 @@ export const createPackagePublishOrder = (packages: IPackageInfo[]): Promise<IPa
 				name: package_name,
 				steps: [
 					{
-						step: 'import checking',
+						step: 'import_checker',
 						done: false
 					},
 					{
@@ -23,15 +23,15 @@ export const createPackagePublishOrder = (packages: IPackageInfo[]): Promise<IPa
 						done: false
 					},
 					{
-						step: 'build',
+						step: 'transpile',
 						done: false
 					},
 					{
-						step: 'build without comments',
+						step: 'transpile_nocomments',
 						done: false
 					},
 					{
-						step: 'update packagejson',
+						step: 'update_json',
 						done: false
 					},
 					{

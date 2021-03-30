@@ -4,7 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { NishanScriptsGet } from '../Get';
 
-export async function buildAfterTest (packages: string[], resume?: boolean) {
+
+export async function buildAfterTest (packages: string[], resume?: boolean, cbs?: (package_name: string, step: string) => any) {
   resume = resume ?? false;
 	const packages_dir = path.resolve(__dirname, '../../../../packages');
   const reversed_packages = [...packages].reverse();
@@ -21,20 +22,24 @@ export async function buildAfterTest (packages: string[], resume?: boolean) {
       console.log(non_installed_deps);
       throw new Error(`Uninstalled deps in @nishans/${package_name}`)
     }
+    cbs && cbs(package_name, 'import_checker');
     const {package_json_data} = (await NishanScriptsGet.packageJsonData(non_builded_packages[index]));
 		try {
       if(package_json_data?.scripts?.test){
         cp.execSync(`npm run test`, { cwd: package_dir });
         console.log(colors.green.bold(`Test completed`));
+        cbs && cbs(package_name, 'test');
       }
 			cp.execSync(`npx del-cli ./dist`, { cwd: package_dir });
 			console.log(colors.green.bold(`Deleted dist folder`));
 			cp.execSync(`npm run build`, { cwd: package_dir });
 			console.log(colors.green.bold(`Regular transpile completed`));
+      cbs && cbs(package_name, 'transpile');
 			cp.execSync(`tsc --sourceMap false --removeComments --declaration false`, {
 				cwd: package_dir
 			});
 			console.log(colors.green.bold(`Nocomments transpile completed`));
+      cbs && cbs(package_name, 'transpile_nocomments');
       console.log();
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));

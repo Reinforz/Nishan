@@ -31,11 +31,18 @@
 .PackageStatus-item-step{
   width: 25px;
   height: 25px;
-  background: rgb(222 42 42);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   user-select: none;
+}
+
+.PackageStatus-item-step--false{
+  background: rgb(222 42 42);
+}
+
+.PackageStatus-item-step--true{
+  background-color: #30ad35;
 }

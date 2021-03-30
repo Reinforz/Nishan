@@ -4,12 +4,11 @@ import { getPackages } from '../utils/getPackages';
 import './App.css';
 import { PackageList } from "./PackageList";
 import { PackageStatus } from "./PackageStatus";
-
 export interface IPackageStatus {
   name: string,
   steps: [
     {
-      step: 'import checking',
+      step: 'import_checker',
       done: boolean
     },
     {
@@ -17,15 +16,15 @@ export interface IPackageStatus {
       done: boolean
     },
     {
-      step: 'build',
+      step: 'transpile',
       done: boolean
     },
     {
-      step: 'build without comments',
+      step: 'transpile_nocomments',
       done: boolean
     },
     {
-      step: 'update packagejson',
+      step: 'update_json',
       done: boolean
     },
     {
@@ -40,29 +39,49 @@ export interface IPackageInfo {
   checked: boolean
 }
 
+export interface IPackageStep {
+  name: string, step: string
+};
+
+const ws = new WebSocket("ws://localhost:8000");
+
 function App() {
   const [packages, setPackages] = useState<IPackageInfo[]>([]);
   const [packages_status, setPackagesStatus] = useState<IPackageStatus[]>([]);
 
   useEffect(() => {
-    /* const ws = new WebSocket("ws://localhost:8000");
-    ws.addEventListener("open", async ()=>{
+    ws.addEventListener("open", async () => {
       console.log("We are connected");
-      ws.send("Client");
     });
 
-    ws.addEventListener("message", async(data)=>{
-      console.log(`Sever has sent ${data}`);
-    }) */
-    getPackages().then(package_data => setPackages(package_data))
+    ws.addEventListener("message", async (e) => {
+      const data = JSON.parse(e.data) as IPackageStep;
+      setPackagesStatus((packages_status) => {
+        const package_status = packages_status.find(package_status => package_status.name === `@nishans/${data.name}`)!;
+        const step = package_status.steps.find(step => step.step === data.step)!;
+        step.done = true;
+        return JSON.parse(JSON.stringify(packages_status));
+      });
+    });
+
+    getPackages().then(package_data => setPackages(package_data));
   }, [])
+
+  console.log("App", packages_status);
 
   return (
     <div className="App">
       <PackageList packages={packages} setPackages={setPackages} />
       <PackageStatus packages_status={packages_status} />
-      <button className="Aoo-generate" onClick={() => createPackagePublishOrder(packages).then(package_status => setPackagesStatus(package_status))}>Generate</button>
-      <button className="App-start">Start</button>
+      <button className="App-generate" onClick={() => createPackagePublishOrder(packages).then(package_status => setPackagesStatus(package_status))}>Generate</button>
+      <button className="App-start" onClick={() => fetch("http://localhost:3000/publishPackages", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(packages_status.map(({ name }) => name))
+      })}>Publish</button>
     </div>
   );
 }

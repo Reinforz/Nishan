@@ -1,6 +1,7 @@
 **/node_modules
 **/feature.md
 **/dist
+**/build
 /docs/.docusaurus
 /test.ts
 .netlify

@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import logo from './logo.svg';
+import { PackageList } from "./PackageList";
 
 function App() {
-  // Create the count state.
-  const [count, setCount] = useState(0);
-  // Update the count (+1 every second).
-  useEffect(() => {
-    const timer = setTimeout(() => setCount(count + 1), 1000);
-    return () => clearTimeout(timer);
-  }, [count, setCount]);
+  const [packages, setPackages] = useState([]);
 
   useEffect(()=>{
-    const ws = new WebSocket("ws://localhost:8000");
+    /* const ws = new WebSocket("ws://localhost:8000");
     ws.addEventListener("open", async ()=>{
       console.log("We are connected");
       ws.send("Client");
@@ -20,18 +14,13 @@ function App() {
 
     ws.addEventListener("message", async(data)=>{
       console.log(`Sever has sent ${data}`);
-    })
+    }) */
+    fetch("http://localhost:3000/getPackages").then(res=>res.json()).then(packages=>setPackages(packages.map(package_name=>({name: package_name, checked: false})))) 
   }, [])
 
-  // Return the App component.
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Page has been open for <code>{count}</code> seconds.
-        </p>
-      </header>
+    <div>
+      <PackageList packages={packages} setPackages={setPackages}/>
     </div>
   );
 }

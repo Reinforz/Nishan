@@ -10,6 +10,19 @@ function App() {
     const timer = setTimeout(() => setCount(count + 1), 1000);
     return () => clearTimeout(timer);
   }, [count, setCount]);
+
+  useEffect(()=>{
+    const ws = new WebSocket("ws://localhost:8000");
+    ws.addEventListener("open", async ()=>{
+      console.log("We are connected");
+      ws.send("Client");
+    });
+
+    ws.addEventListener("message", async(data)=>{
+      console.log(`Sever has sent ${data}`);
+    })
+  }, [])
+
   // Return the App component.
   return (
     <div className="App">

@@ -1,0 +1,15 @@
+.PackageStatus-item{
+  margin: 20px;
+}
+
+.PackageStatus-item-name{
+  font-weight: bolder;
+  text-align: center;
+  font-size: 1.1  5em;
+  margin-bottom: 5px;
+}
+
+.PackageStatus-item-steps{
+  display: flex;
+  justify-content: space-evenly;
+}

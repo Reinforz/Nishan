@@ -9,6 +9,6 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-if (import.meta.hot) {
-  import.meta.hot.accept();
+if ((import.meta as any).hot) {
+  (import.meta as any).hot.accept();
 }

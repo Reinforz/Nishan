@@ -21,6 +21,16 @@ function App() {
   return (
     <div>
       <PackageList packages={packages} setPackages={setPackages}/>
+      <button onClick={()=>{
+        fetch("http://localhost:3000/createPackagePublishOrder", {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(packages.filter(({checked})=>checked).map(({name})=>name))
+        }).then(res=>res.json()).then(packages=>console.log(packages));
+      }}>Send</button>
     </div>
   );
 }

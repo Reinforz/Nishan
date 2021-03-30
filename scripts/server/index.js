@@ -2,9 +2,11 @@ const WebSocket = require("ws");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const cors = require('cors')
+const cors = require('cors');
+const {NishanScripts} = require("../dist/libs");
 
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 const wss = new WebSocket.Server({
@@ -29,6 +31,13 @@ const port = 3000;
 app.get('/getPackages', async (req, res) => {
   const packages = await fs.promises.readdir(path.resolve(__dirname, "../../packages"));
   res.send(packages)
+})
+
+app.post("/createPackagePublishOrder", async(req,res)=>{
+  const packages_map = await NishanScripts.Create.packageMap();
+		package_dependency_map = NishanScripts.Create.dependencyMap(req.body, packages_map),
+		rearranged_packages = NishanScripts.Create.packagePublishOrder(Array.from(package_dependency_map.all.keys()), packages_map);
+  res.send(rearranged_packages);
 })
 
 app.listen(port, () => {

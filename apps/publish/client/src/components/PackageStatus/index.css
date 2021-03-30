@@ -2,7 +2,7 @@
   height: 100%;
   overflow: auto;
   background-color: #282828;
-  grid-area: 1/2/3/3;
+  grid-area: 1/2/2/3;
 }
 
 .PackageStatus-item{

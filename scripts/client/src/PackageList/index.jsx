@@ -1,7 +1,6 @@
 import React from 'react';
 
 export function PackageList({packages, setPackages}) {
-  // Return the App component.
   return (
     <div>
       {packages.map((package_data)=>

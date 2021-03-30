@@ -6,10 +6,14 @@ import { createPackagePublishOrder } from '../Create/createPackagePublishOrder';
 import { updatePatchVersion } from '../Update/updatePatchVersion';
 import { publishPackages } from './publishPackages';
 
-export async function publishUpdatedPackages (updated_packages_name: string[]) {
-	const packages_map = await createPackageMap(),
-		package_dependency_map = createDependencyMap(updated_packages_name, packages_map),
-		rearranged_packages = createPackagePublishOrder(Array.from(package_dependency_map.all.keys()), packages_map);
+export async function publishUpdatedPackages (updated_packages_name: string[], resume: boolean) {
+	const packages_map = await createPackageMap(resume),
+		package_dependency_map = await createDependencyMap(updated_packages_name, packages_map, resume),
+		rearranged_packages = await createPackagePublishOrder(
+			Array.from(package_dependency_map.all.keys()),
+			packages_map,
+			resume
+		);
 	console.log(colors.blue.bold(rearranged_packages.join('\n')));
 
 	const updated_packages_map = updatePatchVersion(rearranged_packages, packages_map, 1);

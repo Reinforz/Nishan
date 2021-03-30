@@ -5,6 +5,7 @@
 /test.ts
 .netlify
 /docs/build
+/scripts/data
 **/env.ts
 **/*.tgz
 **/experiment

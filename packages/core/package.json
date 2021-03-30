@@ -1,6 +1,6 @@
 {
   "name": "@nishans/core",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "Unofficial Notion api for node.js with all crud functionalities for Space, User, Block, Page and many more",
   "keywords": [
     "notion",
@@ -32,23 +32,23 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.32",
-    "@nishans/constants": "0.0.20",
-    "@nishans/endpoints": "0.0.28",
-    "@nishans/errors": "0.0.28",
-    "@nishans/fabricator": "0.0.26",
-    "@nishans/idz": "0.0.16",
-    "@nishans/init": "0.0.19",
-    "@nishans/lineage": "0.0.19",
-    "@nishans/logger": "0.0.16",
-    "@nishans/operations": "0.0.28",
-    "@nishans/permissions": "0.0.20",
-    "@nishans/traverser": "0.0.19",
-    "@nishans/utils": "0.0.21",
-    "@nishans/discourse": "0.0.17"
+    "@nishans/cache": "0.0.33",
+    "@nishans/constants": "0.0.21",
+    "@nishans/endpoints": "0.0.29",
+    "@nishans/errors": "0.0.29",
+    "@nishans/fabricator": "0.0.27",
+    "@nishans/idz": "0.0.17",
+    "@nishans/init": "0.0.20",
+    "@nishans/lineage": "0.0.20",
+    "@nishans/logger": "0.0.17",
+    "@nishans/operations": "0.0.29",
+    "@nishans/permissions": "0.0.21",
+    "@nishans/traverser": "0.0.20",
+    "@nishans/utils": "0.0.22",
+    "@nishans/discourse": "0.0.18"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.31"
+    "@nishans/types": "0.0.32"
   },
   "publishConfig": {
     "access": "public"

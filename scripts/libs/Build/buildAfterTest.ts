@@ -2,10 +2,11 @@ import cp from 'child_process';
 import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
+import { NishanScripts } from '../';
 import { NishanScriptsGet } from '../Get';
 
 
-export async function buildAfterTest (packages: string[], resume?: boolean, cbs?: (package_name: string, step: string) => any) {
+export async function buildAfterTest (packages: string[], packages_deps_version_map: Map<string, string>, resume?: boolean, cbs?: (package_name: string, step: string) => any) {
   resume = resume ?? false;
 	const packages_dir = path.resolve(__dirname, '../../../../packages');
   const reversed_packages = [...packages].reverse();
@@ -40,7 +41,8 @@ export async function buildAfterTest (packages: string[], resume?: boolean, cbs?
 			});
 			console.log(colors.green.bold(`Nocomments transpile completed`));
       cbs && cbs(package_name, 'transpile_nocomments');
-      console.log();
+      await NishanScripts.Update.packageDependency(packages_deps_version_map, non_builded_packages[index]);
+      cbs && cbs(package_name, 'update_json');
 		} catch (err) {
 			console.log(colors.red.bold(`Error encountered in ${package_name}`));
 			console.log(err.message);

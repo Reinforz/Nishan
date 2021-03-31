@@ -42,15 +42,17 @@ app.post('/createPackagePublishOrder', async (req, res) => {
 
 app.post('/publishPackages', async (req, res) => {
 	const rearranged_packages = req.body;
-	await NishanScripts.Build.afterTest(rearranged_packages, false, (name, step) =>
+	const packages_map = await NishanScripts.Create.packageMap();
+	const updated_packages_map = NishanScripts.Update.patchVersion(rearranged_packages, packages_map, 1);
+	await NishanScripts.Build.afterTest(rearranged_packages, updated_packages_map, false, (name, step) =>
 		ws_clients[0].send(
 			JSON.stringify({
 				name,
 				step
 			})
 		)
-	),
-		res.send(rearranged_packages);
+	);
+	res.send(rearranged_packages);
 });
 
 app.listen(port, () => {

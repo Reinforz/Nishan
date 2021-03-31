@@ -13,6 +13,6 @@ export async function publishUpdatedPackages (updated_packages_name: string[], r
 	console.log(colors.blue.bold(rearranged_packages.join('\n')));
 
 	const updated_packages_map = updatePatchVersion(rearranged_packages, packages_map, 1);
-	await buildAfterTest(rearranged_packages, resume);
+	await buildAfterTest(rearranged_packages, updated_packages_map, resume);
 	await publishPackages(updated_packages_map);
 }

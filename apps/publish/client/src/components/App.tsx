@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPackagePublishOrder } from '../utils/createPackagePublishOrder';
 import { getPackages } from '../utils/getPackages';
+import { publishPackages } from '../utils/publishPackages';
 import './App.css';
 import { PackageList } from "./PackageList";
 import { PackageStatus } from "./PackageStatus";
@@ -67,21 +68,12 @@ function App() {
     getPackages().then(package_data => setPackages(package_data));
   }, [])
 
-  console.log("App", packages_status);
-
   return (
     <div className="App">
       <PackageList packages={packages} setPackages={setPackages} />
       <PackageStatus packages_status={packages_status} />
       <button className="App-generate" onClick={() => createPackagePublishOrder(packages).then(package_status => setPackagesStatus(package_status))}>Generate</button>
-      <button className="App-start" onClick={() => fetch("http://localhost:3000/publishPackages", {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(packages_status.map(({ name }) => name))
-      })}>Publish</button>
+      <button className="App-start" onClick={() => publishPackages(packages_status.map(({ name }) => name))}>Publish</button>
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { ICommentCreateInput, NotionDiscourse } from '@nishans/discourse';
-import { FilterType, FilterTypes } from '@nishans/traverser';
+import { ICommentCreateInput, ICommentUpdateInput, NotionDiscourse } from '@nishans/discourse';
+import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion } from '@nishans/types';
 import { INotionCoreOptions } from '../';
 import { transformToMultiple } from '../utils';
@@ -25,6 +25,17 @@ export class Discussion extends NotionData<IDiscussion> {
 	async getComments (args?: FilterTypes<IComment>, multiple?: boolean) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Comments.get(this.id, args, { ...props, multiple })).map(
+			(comment) => new Comment({ ...props, id: comment.id })
+		);
+	}
+
+	async updateComment (arg: UpdateType<IComment, ICommentUpdateInput>) {
+		return (await this.updateComments(transformToMultiple(arg), false))[0];
+	}
+
+	async updateComments (args: UpdateTypes<IComment, ICommentUpdateInput>, multiple?: boolean) {
+		const props = this.getProps();
+		return (await NotionDiscourse.Comments.update(this.id, args, { ...props, multiple })).map(
 			(comment) => new Comment({ ...props, id: comment.id })
 		);
 	}

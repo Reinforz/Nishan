@@ -1,4 +1,4 @@
-// import cp from 'child_process';
+import cp from 'child_process';
 import colors from 'colors';
 import fs from 'fs';
 import path from 'path';
@@ -23,36 +23,36 @@ export async function buildAfterTest (packages: string[], resume?: boolean, cbs?
 		const package_name = non_builded_packages[index].split('/')[1];
 		const package_dir = path.join(packages_dir, package_name);
 		console.log(colors.green.bold(`Building ${non_builded_packages[index]}`));
-    // const non_installed_deps = await NishanScripts.Get.packageNonInstalledDependencies(package_name);
-    // if(Array.from(non_installed_deps.keys()).length !==0 ){
-    //   console.log(non_installed_deps);
-    //   throw new Error(`Uninstalled deps in @nishans/${package_name}`)
-    // }
+    const non_installed_deps = await NishanScripts.Get.packageNonInstalledDependencies(package_name);
+    if(Array.from(non_installed_deps.keys()).length !==0 ){
+      console.log(non_installed_deps);
+      throw new Error(`Uninstalled deps in @nishans/${package_name}`)
+    }
     await sleep(500);
     cbs && cbs(package_name, 'import_checker');
     const {package_json_data} = (await NishanScripts.Get.packageJsonData(non_builded_packages[index]));
 		try {
       if(package_json_data?.scripts?.test){
         await sleep(500);
-        // cp.execSync(`npm run test`, { cwd: package_dir });
+        cp.execSync(`npm run test`, { cwd: package_dir });
         console.log(colors.green.bold(`Test completed`));
         cbs && cbs(package_name, 'test');
       }
       await sleep(500);
-			// cp.execSync(`npx del-cli ./dist`, { cwd: package_dir });
+			cp.execSync(`npx del-cli ./dist`, { cwd: package_dir });
 			console.log(colors.green.bold(`Deleted dist folder`));
       await sleep(500);
-			// cp.execSync(`npm run build`, { cwd: package_dir });
+			cp.execSync(`npm run build`, { cwd: package_dir });
 			console.log(colors.green.bold(`Regular transpile completed`));
       cbs && cbs(package_name, 'transpile');
       await sleep(500);
-			// cp.execSync(`tsc --sourceMap false --removeComments --declaration false`, {
-			// 	cwd: package_dir
-			// });
+			cp.execSync(`tsc --sourceMap false --removeComments --declaration false`, {
+				cwd: package_dir
+			});
 			console.log(colors.green.bold(`Nocomments transpile completed`));
       cbs && cbs(package_name, 'transpile_nocomments');
       await sleep(500);
-      // await NishanScripts.Update.packageDependency(packages_deps_version_map, non_builded_packages[index]);
+      await NishanScripts.Update.packageDependency(packages_deps_version_map, non_builded_packages[index]);
       cbs && cbs(package_name, 'update_json');
 
       await sleep(500);

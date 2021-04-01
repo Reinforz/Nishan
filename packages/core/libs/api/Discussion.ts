@@ -39,4 +39,15 @@ export class Discussion extends NotionData<IDiscussion> {
 			(comment) => new Comment({ ...props, id: comment.id })
 		);
 	}
+
+	async deleteComment (arg?: FilterType<IComment>) {
+		return (await this.deleteComments(transformToMultiple(arg), false))[0];
+	}
+
+	async deleteComments (args?: FilterTypes<IComment>, multiple?: boolean) {
+		const props = this.getProps();
+		return (await NotionDiscourse.Comments.delete(this.id, args, { ...props, multiple })).map(
+			(comment) => new Comment({ ...props, id: comment.id })
+		);
+	}
 }

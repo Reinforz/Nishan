@@ -56,13 +56,17 @@ function App() {
     });
 
     ws.addEventListener("message", async (e) => {
-      const data = JSON.parse(e.data) as IPackageStep;
-      setPackagesStatus((packages_status) => {
-        const package_status = packages_status.find(package_status => package_status.name === `@nishans/${data.name}`)!;
-        const step = package_status.steps.find(step => step.step === data.step)!;
-        step.done = true;
-        return JSON.parse(JSON.stringify(packages_status));
-      });
+      const data = JSON.parse(e.data) as { type: 'package_step', data: IPackageStep };
+      if (data.type === "package_step") {
+        setPackagesStatus((packages_status) => {
+          const package_status = packages_status.find(package_status => package_status.name === `@nishans/${data.data.name}`)!;
+          const step = package_status.steps.find(step => step.step === data.data.step)!;
+          step.done = true;
+          return JSON.parse(JSON.stringify(packages_status));
+        });
+      } else if (data.type === "") {
+
+      }
     });
 
     getPackages().then(package_data => setPackages(package_data));
@@ -72,6 +76,37 @@ function App() {
     <div className="App">
       <PackageList packages={packages} setPackages={setPackages} />
       <PackageStatus packages_status={packages_status} />
+      <button className="App-resume" onClick={() => fetch("http://localhost:3000/resumePackagePublishing").then(data => data.json()).then(packages => {
+        packages.map((package_name: string) => ({
+          name: package_name,
+          steps: [
+            {
+              step: 'import_checker',
+              done: false
+            },
+            {
+              step: 'test',
+              done: false
+            },
+            {
+              step: 'transpile',
+              done: false
+            },
+            {
+              step: 'transpile_nocomments',
+              done: false
+            },
+            {
+              step: 'update_json',
+              done: false
+            },
+            {
+              step: 'publish',
+              done: false
+            }
+          ]
+        }))
+      })}>Resume</button>
       <button className="App-generate" onClick={() => createPackagePublishOrder(packages).then(package_status => setPackagesStatus(package_status))}>Generate</button>
       <button className="App-start" onClick={() => publishPackages(packages_status.map(({ name }) => name))}>Publish</button>
     </div>

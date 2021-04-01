@@ -40,19 +40,33 @@ app.post('/createPackagePublishOrder', async (req, res) => {
 	res.send(rearranged_packages);
 });
 
-app.post('/publishPackages', async (req, res) => {
-	const rearranged_packages = req.body;
-	const packages_map = await NishanScripts.Create.packageMap();
-	const updated_packages_map = NishanScripts.Update.patchVersion(rearranged_packages, packages_map, 1);
-	await NishanScripts.Build.afterTest(rearranged_packages, updated_packages_map, false, (name, step) =>
-		ws_clients[0].send(
-			JSON.stringify({
-				name,
-				step
-			})
+app.post('/publishPackages', async (req) => {
+	await NishanScripts.Build.afterTest(req.body, false, (name, step) =>
+		ws_clients.forEach((ws_client) =>
+			ws_client.send(
+				JSON.stringify({
+					name,
+					step
+				})
+			)
 		)
 	);
-	res.send(rearranged_packages);
+});
+
+app.get('/resumePackagePublishing', async () => {
+	await NishanScripts.Build.afterTest([], true, (name, step) =>
+		ws_clients.forEach((ws_client) =>
+			ws_client.send(
+				JSON.stringify({
+					type: 'package_step',
+					data: {
+						name,
+						step
+					}
+				})
+			)
+		)
+	);
 });
 
 app.listen(port, () => {

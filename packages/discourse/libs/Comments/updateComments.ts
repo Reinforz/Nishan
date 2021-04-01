@@ -1,18 +1,27 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
-import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { IOperation, TTextFormat } from '@nishans/types';
+import { INotionOperationOptions } from '@nishans/operations';
+import { NotionTraverser, UpdateTypes } from '@nishans/traverser';
+import { IComment, IDiscussion, TTextFormat } from '@nishans/types';
 
 export const updateComments = async (
-	args: { comment_id: string; text: TTextFormat }[],
-	options: INotionCacheOptions & INotionOperationOptions
+	discussion_id: string,
+	args: UpdateTypes<IComment, { text?: TTextFormat }>,
+	options: INotionCacheOptions & INotionOperationOptions & { multiple?: boolean }
 ) => {
-	await NotionCache.fetchMultipleDataOrReturnCached(args.map((arg) => [ arg.comment_id, 'comment' ]), options);
-	const operations: IOperation[] = [];
-	args.forEach((arg) => {
-		const comment_data = options.cache.comment.get(arg.comment_id)!;
-		comment_data.text = arg.text;
-		operations.push(NotionOperations.Chunk.comment.set(arg.comment_id, [ 'text' ], arg.text));
-	});
+	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 
-	await NotionOperations.executeOperations(operations, options);
+	return await NotionTraverser.update<IDiscussion, IComment, { text?: TTextFormat }, IComment[]>(
+		args,
+		(child_id) => options.cache.comment.get(child_id),
+		{
+			multiple: options.multiple,
+			child_ids: 'discussions' as any,
+			child_type: 'discussion',
+			container: [],
+			parent_id: discussion_id,
+			parent_type: 'block',
+			...options
+		},
+		async (_, data, __, discussions) => discussions.push(data)
+	);
 };

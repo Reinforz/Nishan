@@ -2,15 +2,17 @@ import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionInit } from '@nishans/init';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { IOperation, TTextFormat } from '@nishans/types';
+import { IComment, IOperation } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { ICommentCreateInput } from '../';
 
 export const createComments = async (
-	args: { comment_id?: string; text: TTextFormat; discussion_id: string }[],
+	args: ICommentCreateInput[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
 	await NotionCache.fetchMultipleDataOrReturnCached(args.map((arg) => [ arg.discussion_id, 'discussion' ]), options);
-	const operations: IOperation[] = [];
+	const operations: IOperation[] = [],
+		comments: IComment[] = [];
 	args.forEach((arg) => {
 		const discussion_data = options.cache.discussion.get(arg.discussion_id)!;
 
@@ -24,6 +26,7 @@ export const createComments = async (
 			space_id: options.space_id,
 			text: arg.text
 		});
+		comments.push(comment_data);
 		operations.push(
 			NotionOperations.Chunk.comment.update(comment_id, [], JSON.parse(JSON.stringify(comment_data, null, 2))),
 			NotionOperations.Chunk.discussion.listAfter(arg.discussion_id, [ 'comments' ], {
@@ -35,4 +38,5 @@ export const createComments = async (
 	});
 
 	await NotionOperations.executeOperations(operations, options);
+	return comments;
 };

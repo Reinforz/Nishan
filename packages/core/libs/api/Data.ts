@@ -5,6 +5,7 @@ import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operat
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
 import { INotionCache, NotionCacheInitializerTracker, TData, TDataType } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { NotionValidators } from '@nishans/validators';
 import { INotionCoreOptions } from '../';
 
 /**
@@ -12,7 +13,7 @@ import { INotionCoreOptions } from '../';
  * @noInheritDoc
  */
 
-export default class NotionData<T extends TData> {
+export default class NotionData<T extends TData, U extends Partial<TData>> {
   id: string;
   type: TDataType;
   logger: boolean;
@@ -72,18 +73,17 @@ export default class NotionData<T extends TData> {
     this.cache[this.type].delete(this.id);
   }
 
-  async updateCacheLocally(arg: Partial<T>, keys: ReadonlyArray<(keyof T)>) {
-    const parent_data = this.getCachedData(), data = arg;
-
-    Object.entries(arg).forEach(([key, value])=>{
-      if(keys.includes(key as keyof T))
-        parent_data[key as keyof T] = value;
-      else
-        delete (data as any)[key]
-    })
-
+  async update(arg: U) {
+    const data = this.getCachedData() as T;
     this.logger && NotionLogger.method.info(`UPDATE ${this.type} ${this.id}`);
-    await NotionOperations.executeOperations([NotionOperations.Chunk[this.type].update(this.id, [], data)], this.getProps())
+    if(NotionValidators.dataContainsEditedProps(this.type)) NotionUtils.deepMerge(arg, this.getLastEditedProps());
+		NotionUtils.deepMerge(data, arg);
+		await NotionOperations.executeOperations(
+			[
+				NotionOperations.Chunk[this.type].update(this.id, [], arg)
+			],
+			this.getProps()
+		);
   }
 
   async initializeCacheForThisData() {

@@ -4,7 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { NotionData, NotionUser } from '../../libs';
+import { NotionUser } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
@@ -233,30 +233,4 @@ it(`delete space`, async () => {
   );
   expect(deleted_spaces.length).toBe(1);
   expect(deleted_spaces[0].getCachedData()).toStrictEqual(space_1)
-});
-
-it('update', async () => {
-  const cache = NotionCache.createDefaultCache();
-
-  const notion_user = new NotionUser({
-    ...default_nishan_arg,
-    cache,
-    id: 'user_root_1',
-  });
-
-  const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(() => {
-    return {} as any;
-  });
-
-  await notion_user.update({
-    family_name: 'Shaheer'
-  });
-
-  expect(updateCacheLocallyMock).toHaveBeenCalledTimes(1);
-  expect(updateCacheLocallyMock).toHaveBeenCalledWith(
-    {
-      family_name: 'Shaheer'
-    },
-    ['family_name', 'given_name', 'profile_photo']
-  );
 });

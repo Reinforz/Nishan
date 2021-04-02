@@ -143,26 +143,6 @@ it('reposition', async () => {
 	]);
 });
 
-it('update', async () => {
-	const { view, collection_view_1, executeOperationsMock } = construct();
-
-	await view.update({
-		alive: false
-	});
-
-	expect(collection_view_1).toStrictEqual(
-		expect.objectContaining({
-			alive: false
-		})
-	);
-
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cv.u('collection_view_1', [], {
-			alive: false
-		})
-	]);
-});
-
 describe('createSorts', () => {
 	it(`pos=undefined`, async () => {
 		const { view, collection_view_1, executeOperationsMock } = construct();

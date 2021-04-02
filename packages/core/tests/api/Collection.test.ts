@@ -5,7 +5,7 @@ import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
-import { Collection, ICollectionUpdateInput, NotionData, TCollectionUpdateKeys } from '../../libs';
+import { Collection } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
 afterEach(() => {
@@ -32,37 +32,6 @@ it(`getCachedParentData`, async () => {
 
 	const parent_data = collection.getCachedParentData();
 	expect(parent_data).toStrictEqual(block_1);
-});
-
-it(`update`, async () => {
-	const collection_1 = {
-			id: 'collection_1',
-			parent_id: 'block_1'
-		},
-		block_1 = { id: 'block_1', type: 'page' },
-		cache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ]),
-			collection: new Map([ [ 'collection_1', collection_1 ] ])
-		} as any;
-
-	const collection = new Collection({
-		...default_nishan_arg,
-		cache,
-		id: 'collection_1'
-	});
-
-	const updateCacheLocallyMock = jest
-		.spyOn(NotionData.prototype, 'updateCacheLocally')
-		.mockImplementationOnce(async () => undefined);
-
-	const collection_update_args: ICollectionUpdateInput = {
-		description: [ [ 'New Description' ] ]
-	};
-
-	await collection.update(collection_update_args);
-
-	expect(updateCacheLocallyMock).toHaveBeenCalledWith(collection_update_args, TCollectionUpdateKeys);
 });
 
 it(`createTemplates`, async () => {

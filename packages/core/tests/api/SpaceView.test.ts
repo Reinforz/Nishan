@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
-import { NotionData, SpaceView } from '../../libs';
+import { SpaceView } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
 afterEach(() => {
@@ -61,31 +61,6 @@ it(`reposition`, async () => {
 			})
 		)
 	]);
-});
-
-it(`update`, async () => {
-	const cache = NotionCache.createDefaultCache();
-	const space_view = new SpaceView({
-		...default_nishan_arg,
-		cache,
-		id: 'space_view_1'
-	});
-
-	const updateCacheLocallyMock = jest
-		.spyOn(NotionData.prototype, 'updateCacheLocally')
-		.mockImplementationOnce(async () => undefined);
-
-	await space_view.update({
-		joined: false
-	});
-
-	expect(updateCacheLocallyMock).toHaveBeenCalledTimes(1);
-	expect(updateCacheLocallyMock).toHaveBeenCalledWith(
-		{
-			joined: false
-		},
-		[ 'notify_desktop', 'notify_email', 'notify_mobile', 'joined', 'created_getting_started' ]
-	);
 });
 
 it(`getSpace`, () => {

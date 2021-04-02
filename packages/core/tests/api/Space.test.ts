@@ -4,7 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { NotionData, Space, TSpaceUpdateKeys } from '../../libs';
+import { Space } from '../../libs';
 import { createSpaceIterateData } from '../../libs/utils';
 import { default_nishan_arg } from '../utils';
 
@@ -68,30 +68,6 @@ it(`getSpaceView`, async () => {
 		space_id: 'space_1',
 		id: 'space_view_1'
 	});
-});
-
-it(`update`, async () => {
-	const cache = NotionCache.createDefaultCache();;
-
-	const space = new Space({
-    ...default_nishan_arg,
-		cache,
-		id: 'space_1',
-    logger: false
-	});
-
-	const updateCacheLocallyMock = jest.spyOn(NotionData.prototype, 'updateCacheLocally').mockImplementationOnce(async () => undefined);
-
-	await space.update({
-		beta_enabled: false
-	});
-
-	expect(updateCacheLocallyMock).toHaveBeenCalledWith(
-		{
-			beta_enabled: false
-		},
-		TSpaceUpdateKeys
-	);
 });
 
 it(`delete`, async () => {

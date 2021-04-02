@@ -5,7 +5,7 @@ import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, IPage, ISchemaMapValue, TCollectionBlock, TSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap, TCollectionUpdateKeys } from '../';
+import { CreateMaps, ICollectionUpdateInput, INotionCoreOptions, ISchemaUnitMap } from '../';
 import { PopulateMap } from '../PopulateMap';
 import { transformToMultiple } from '../utils';
 import Page from './Block/Page';
@@ -15,21 +15,13 @@ import Data from './Data';
  * A class to represent collection of Notion
  * @noInheritDoc
  */
-class Collection extends Data<ICollection> {
+class Collection extends Data<ICollection, ICollectionUpdateInput> {
 	constructor (args: INotionCoreOptions) {
 		super({ ...args, type: 'collection' });
 	}
 
 	getCachedParentData () {
 		return this.cache.block.get(this.getCachedData().parent_id) as TCollectionBlock;
-	}
-
-	/**
-   * Update the collection
-   * @param opt `CollectionUpdateParam`
-   */
-	async update (opt: ICollectionUpdateInput) {
-		await this.updateCacheLocally(opt, TCollectionUpdateKeys);
 	}
 
 	/**

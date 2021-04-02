@@ -7,13 +7,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { INotionUser, ISpace, IUserRoot, IUserSettings } from '@nishans/types';
-import {
-	INotionCoreOptions,
-	INotionUserUpdateInput,
-	ISpaceCreateInput,
-	ISpaceUpdateInput,
-	TNotionUserUpdateKeys
-} from '../';
+import { INotionCoreOptions, INotionUserUpdateInput, ISpaceCreateInput, ISpaceUpdateInput } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
@@ -24,7 +18,7 @@ import UserSettings from './UserSettings';
  * A class to represent NotionUser of Notion
  * @noInheritDoc
  */
-class NotionUser extends Data<INotionUser> {
+class NotionUser extends Data<INotionUser, INotionUserUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'notion_user' });
 	}
@@ -49,15 +43,6 @@ class NotionUser extends Data<INotionUser> {
 			...this.getProps(),
 			id: this.id
 		});
-	}
-
-	/**
-   * Update the notion user
-   * @param opt `UpdatableNotionUserParam`
-   */
-
-	async update (opt: INotionUserUpdateInput) {
-		await this.updateCacheLocally(opt, TNotionUserUpdateKeys);
 	}
 
 	/**

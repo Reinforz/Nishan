@@ -10,7 +10,7 @@ import NotionData from './Data';
  * @noInheritDoc
  */
 
-export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<ICollection> {
+export default class SchemaUnit<T extends TSchemaUnit> extends NotionData<ICollection, Record<string, any>> {
 	schema_id: string;
 
 	constructor (arg: INotionCoreOptions & { schema_id: string }) {

@@ -12,7 +12,7 @@ import { NotionPermissions } from '@nishans/permissions';
 import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/SpacePermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
-import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap, TSpaceUpdateKeys } from '../';
+import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap } from '../';
 import { createSpaceIterateData, transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';
@@ -21,7 +21,7 @@ import SpaceView from './SpaceView';
  * A class to represent space of Notion
  * @noInheritDoc
  */
-export default class Space extends Data<ISpace> {
+export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 	space_view: ISpaceView;
 	Permissions: NotionSpacePermissions;
 
@@ -41,14 +41,6 @@ export default class Space extends Data<ISpace> {
 			id: this.space_view.id,
 			...this.getProps()
 		});
-	}
-
-	/**
-   * Update the space settings
-   * @param opt Properties of the space to update
-   */
-	async update (opt: ISpaceUpdateInput) {
-		await this.updateCacheLocally(opt, TSpaceUpdateKeys);
 	}
 
 	/**

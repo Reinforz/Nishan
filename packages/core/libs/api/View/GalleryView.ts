@@ -7,7 +7,7 @@ import View from './View';
  * @noInheritDoc
  */
 
-class GalleryView extends View<IGalleryView> {
+class GalleryView extends View<IGalleryView, Partial<Pick<IGalleryView, 'format' | 'name' | 'query2' | 'type'>>> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

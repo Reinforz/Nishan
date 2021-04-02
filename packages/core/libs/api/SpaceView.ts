@@ -3,14 +3,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import {
-	CreateMaps,
-	INotionCoreOptions,
-	IPageMap,
-	ISpaceViewUpdateInput,
-	PopulateMap,
-	TSpaceViewUpdateKeys
-} from '../';
+import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceViewUpdateInput, PopulateMap } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
@@ -19,7 +12,7 @@ import Space from './Space';
  * A class to represent space view of Notion
  * @noInheritDoc
  */
-class SpaceView extends Data<ISpaceView> {
+class SpaceView extends Data<ISpaceView, ISpaceViewUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space_view' });
 	}
@@ -41,14 +34,6 @@ class SpaceView extends Data<ISpaceView> {
 			],
 			this.getProps()
 		);
-	}
-
-	/**
-   * Update the current space view
-   * @param arg Options to update the spaceView
-   */
-	async update (arg: ISpaceViewUpdateInput) {
-		await this.updateCacheLocally(arg, TSpaceViewUpdateKeys);
 	}
 
 	/**

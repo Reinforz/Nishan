@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { IPageCreateInput, NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
+import { NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
 import { NotionLineage } from '@nishans/lineage';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
@@ -16,7 +16,7 @@ import Block from './Block';
  * @noInheritDoc
  */
 
-export default class Page extends Block<IPage, IPageCreateInput> {
+export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' | 'format'>>> {
 	Permissions: NotionBlockPermissions;
 
 	constructor (arg: INotionCoreOptions) {

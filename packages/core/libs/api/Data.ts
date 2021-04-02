@@ -87,9 +87,7 @@ export default class NotionData<T extends TData, U extends Partial<TData>> {
   }
 
   async initializeCacheForThisData() {
-    if (this.cache_init_tracker[this.type].get(this.id) !== true && this.type !== "notion_user") {
-      await NotionCache.initializeCacheForSpecificData(this.id, this.type, this.getProps())
-    }
+    await NotionCache.initializeCacheForSpecificData(this.id, this.type, this.getProps())
   }
 
   protected async deleteIterate<TD, C = any[]>(args: FilterTypes<TD>, options: IterateAndDeleteOptions<T, C>, transform: ((id: string) => TD | undefined | Promise<TD | undefined>), cb?: (id: string, data: TD, container: C) => void | Promise<any>) {

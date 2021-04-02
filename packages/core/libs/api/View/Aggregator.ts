@@ -31,7 +31,13 @@ export function detectAggregationErrors (
  * A class to represent the aggregator methods for views that supports it
  * @noInheritDoc
  */
-class Aggregator<T extends ITableView | IBoardView | ITimelineView> extends View<T> {
+class Aggregator<
+	T extends ITableView | IBoardView | ITimelineView,
+	U extends
+		| Partial<Pick<ITableView, 'format' | 'name' | 'query2' | 'type'>>
+		| Partial<Pick<ITimelineView, 'format' | 'name' | 'query2' | 'type'>>
+		| Partial<Pick<IBoardView, 'format' | 'name' | 'query2' | 'type'>>
+> extends View<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

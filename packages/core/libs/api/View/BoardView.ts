@@ -7,7 +7,7 @@ import Aggregator from './Aggregator';
  * @noInheritDoc
  */
 
-class BoardView extends Aggregator<IBoardView> {
+class BoardView extends Aggregator<IBoardView, Partial<Pick<IBoardView, 'format' | 'name' | 'query2' | 'type'>>> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

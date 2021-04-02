@@ -7,7 +7,10 @@ import Aggregator from './Aggregator';
  * @noInheritDoc
  */
 
-class TimelineView extends Aggregator<ITimelineView> {
+class TimelineView extends Aggregator<
+	ITimelineView,
+	Partial<Pick<ITimelineView, 'format' | 'name' | 'query2' | 'type'>>
+> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

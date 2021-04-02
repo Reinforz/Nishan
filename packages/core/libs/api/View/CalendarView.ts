@@ -7,7 +7,7 @@ import View from './View';
  * @noInheritDoc
  */
 
-class CalendarView extends View<ICalendarView> {
+class CalendarView extends View<ICalendarView, Partial<Pick<ICalendarView, 'format' | 'name' | 'query2' | 'type'>>> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

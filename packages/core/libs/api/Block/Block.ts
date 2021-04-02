@@ -1,14 +1,12 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { TBlockInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IDiscussion, IPage, ISpace, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
-import { NotionUtils } from '@nishans/utils';
 import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
 import { transformToMultiple } from '../../utils';
 import Data from '../Data';
@@ -17,7 +15,7 @@ import Data from '../Data';
  * A class to represent block of Notion
  * @noInheritDoc
  */
-class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
+class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'block' });
 	}
@@ -102,26 +100,6 @@ class Block<T extends TBlock, A extends TBlockInput> extends Data<T> {
 			await PopulateMap.block(block, block_map, this.getProps());
 		}
 		return block_map;
-	}
-
-	/**
-   * Update a block's properties and format
-   * @param args Block update format and properties options
-   */
-	async update (args: Partial<A>) {
-		const data = this.getCachedData() as any;
-		this.logger && NotionLogger.method.info(`UPDATE block ${data.id}`);
-		NotionUtils.deepMerge(data, args);
-		await NotionOperations.executeOperations(
-			[
-				NotionOperations.Chunk.block.update(this.id, [], {
-					properties: data.properties,
-					format: data.format,
-					...this.updateLastEditedProps()
-				})
-			],
-			this.getProps()
-		);
 	}
 
 	/**

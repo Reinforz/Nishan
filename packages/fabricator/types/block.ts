@@ -70,7 +70,7 @@ export interface ILinkedDBInput extends IBlockInput {
 	views: TViewCreateInput[];
 }
 
-export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageInput | ILinkedDBInput;
+export type TCollectionBlockInput = ICollectionViewInput | ICollectionViewPageInput;
 
 // -----------------
 
@@ -219,7 +219,6 @@ export interface ITodoInput extends IBlockInput {
 	properties: ITodo['properties'];
 	format?: ITodo['format'];
 }
-// ? TD:2:M Add td for TCollectionBlockInput
 
 export type TBasicBlockInput =
 	| ILinkToPageInput
@@ -322,7 +321,8 @@ export type TBlockInput =
 	| TAdvancedBlockInput
 	| TEmbedBlockInput
 	| TCollectionBlockInput
-	| IColumnListInput;
+	| IColumnListInput
+	| ILinkedDBInput;
 
 export type TBlockCreateInput = TBlockInput & {
 	position?: INotionRepositionParams;

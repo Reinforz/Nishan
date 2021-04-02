@@ -5,7 +5,7 @@ import { NotionInit } from "@nishans/init";
 import { INotionRepositionParams, NotionLineage } from "@nishans/lineage";
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from "@nishans/traverser";
-import { ICollection, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
+import { ICollection, ISchemaFiltersMapValue, ISchemaFormatMapValue, ISchemaSortsMapValue, TCollectionBlock, TView } from '@nishans/types';
 import { NotionUtils } from "@nishans/utils";
 import {
   INotionCoreOptions
@@ -17,7 +17,7 @@ import Data from '../Data';
  * A class to represent view of Notion
  * @noInheritDoc
  */
-class View<T extends TView> extends Data<T> {
+class View<T extends TView, U extends Partial<Pick<TView, "type" | "format" | "query2" | "name">>> extends Data<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'collection_view' });
 	}
@@ -33,17 +33,6 @@ class View<T extends TView> extends Data<T> {
 
 	async reposition (arg?: INotionRepositionParams) {
     await NotionOperations.executeOperations([NotionLineage.positionChildren<TCollectionBlock>('view_ids',{ logger: this.logger, child_id: this.id, position: arg, parent: await this.getCachedParentData(), parent_type: 'block' })], this.getProps())
-	}
-
-	/**
-   * Update the current view
-   * @param options Options to update the view
-   */
-
-	async update (updated_data: TViewUpdateInput) {
-		const view_data = this.getCachedData();
-		NotionUtils.deepMerge(view_data, updated_data);
-    await NotionOperations.executeOperations([NotionOperations.Chunk.collection_view.update(this.id, [], { ...updated_data })], this.getProps())
 	}
 
 	async createSorts (args: TSortCreateInput[]) {

@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { ICollectionViewPageInput } from '@nishans/fabricator';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
@@ -9,7 +10,7 @@ import CollectionBlock from './CollectionBlock';
  * A class to represent collection view page of Notion
  * @noInheritDoc
  */
-class CollectionViewPage extends CollectionBlock<ICollectionViewPage> {
+class CollectionViewPage extends CollectionBlock<ICollectionViewPage, ICollectionViewPageInput> {
 	Permissions: NotionBlockPermissions;
 	constructor (arg: INotionCoreOptions) {
 		super(arg);

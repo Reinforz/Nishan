@@ -1,11 +1,11 @@
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ISpaceView, IUserRoot } from '@nishans/types';
-import { INotionCoreOptions, ISpaceViewUpdateInput } from '../';
+import { INotionCoreOptions, ISpaceViewUpdateInput, IUserRootUpdateInput } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';
 
-class UserRoot extends Data<IUserRoot> {
+class UserRoot extends Data<IUserRoot, IUserRootUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'user_root' });
 	}

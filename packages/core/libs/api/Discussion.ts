@@ -1,4 +1,4 @@
-import { ICommentCreateInput, ICommentUpdateInput, NotionDiscourse } from '@nishans/discourse';
+import { ICommentCreateInput, ICommentUpdateInput, IDiscussionUpdateInput, NotionDiscourse } from '@nishans/discourse';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion } from '@nishans/types';
 import { INotionCoreOptions } from '../';
@@ -6,7 +6,7 @@ import { transformToMultiple } from '../utils';
 import { Comment } from './Comment';
 import NotionData from './Data';
 
-export class Discussion extends NotionData<IDiscussion> {
+export class Discussion extends NotionData<IDiscussion, IDiscussionUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'discussion' });
 	}

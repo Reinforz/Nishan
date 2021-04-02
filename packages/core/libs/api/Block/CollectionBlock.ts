@@ -13,7 +13,7 @@ import Block from './Block';
  * A class to represent collection block type in Notion
  * @noInheritDoc
  */
-class CollectionBlock<T extends TCollectionBlock> extends Block<T, TCollectionBlockInput> {
+class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInput> extends Block<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

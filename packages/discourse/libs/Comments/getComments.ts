@@ -21,6 +21,6 @@ export const getComments = async (
 			parent_type: 'discussion',
 			...options
 		},
-		async (_, data, comments) => comments.push(data)
+		async (_, comment, container) => container.push(comment)
 	);
 };

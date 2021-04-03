@@ -1,7 +1,11 @@
 import { RecordMap } from './recordMap';
 
+export interface ITaskActor {
+	table: 'notion_user';
+	id: string;
+}
 export type TExportType = 'markdown' | 'pdf' | 'html';
-export type TTaskType =
+export type TTaskEventName =
 	| 'deleteSpace'
 	| 'exportBlock'
 	| 'importFile'
@@ -10,14 +14,26 @@ export type TTaskType =
 	| 'exportSpace'
 	| 'renameGroup'
 	| 'restoreSnapshot';
-export type TaskState = 'in_progress' | 'success' | 'failure';
-
-interface IEnqueueTaskPayload<T extends TTaskType, R> {
+export type TTaskState = 'in_progress' | 'success' | 'failure';
+export interface ExportTaskSuccessResponseStatus {
+	exportURL: string;
+	type: 'complete';
+	pagesExported: number;
+}
+interface IEnqueueTaskPayload<T extends TTaskEventName, R> {
 	task: {
 		eventName: T;
 		request: R;
 	};
 }
+
+export type RestoreSnapshotTaskPayload = IEnqueueTaskPayload<
+	'restoreSnapshot',
+	{
+		blockId: string;
+		timestamp: string;
+	}
+>;
 
 export type ImportFileMergeIntoCollectionTaskPayload = IEnqueueTaskPayload<
 	'importFile',
@@ -52,55 +68,6 @@ export type RenameGroupTaskPayload = IEnqueueTaskPayload<
 	}
 >;
 
-export interface RenameGroupTaskResponse {
-	id: string;
-	eventName: 'renameGroup';
-	request: RenameGroupTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'success';
-}
-
-export type DuplicateBlockTaskPayload = IEnqueueTaskPayload<
-	'duplicateBlock',
-	{
-		sourceBlockId: string;
-		targetBlockId: string;
-		addCopyName: boolean;
-	}
->;
-
-export interface ITaskActor {
-	table: 'notion_user';
-	id: string;
-}
-
-export interface DuplicateBlockTaskSuccessResponse {
-	id: string;
-	eventName: 'duplicateBlock';
-	request: DuplicateBlockTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'success';
-	status: {
-		recordMap: Pick<RecordMap, 'block'>;
-	};
-}
-
-export interface DuplicateBlockTaskInProgressResponse {
-	id: string;
-	eventName: 'duplicateBlock';
-	request: DuplicateBlockTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'in_progress';
-}
-
-export type TDuplicateBlockTaskResponse = DuplicateBlockTaskInProgressResponse | DuplicateBlockTaskSuccessResponse;
-
-export interface ExportOptions {
-	exportType: TExportType;
-	locale: 'en';
-	timeZone: string;
-}
-
 export type ExportBlockTaskPayload = IEnqueueTaskPayload<
 	'exportBlock',
 	{
@@ -120,41 +87,14 @@ export type ImportEvernotePayload = IEnqueueTaskPayload<
 	}
 >;
 
-export type ImportEvernoteResponse = {
-	id: string;
-	eventName: 'importEvernote';
-	request: ImportEvernotePayload['task']['request'];
-	actor: ITaskActor;
-	state: 'success';
-	status: {
-		'importedNotes': number;
-		'totalNotes': number;
-	};
-};
-
-export interface ExportBlockTaskInProgressResponse {
-	id: string;
-	eventName: 'exportBlock';
-	request: ExportBlockTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'in_progress';
-}
-
-export interface ExportTaskSuccessResponseStatus {
-	exportURL: string;
-	type: 'complete';
-	pagesExported: number;
-}
-export interface ExportBlockTaskSuccessResponse {
-	id: string;
-	eventName: 'exportBlock';
-	request: ExportBlockTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'success';
-	status: ExportTaskSuccessResponseStatus;
-}
-
-export type TExportBlockTaskResponse = ExportBlockTaskSuccessResponse | ExportBlockTaskInProgressResponse;
+export type DuplicateBlockTaskPayload = IEnqueueTaskPayload<
+	'duplicateBlock',
+	{
+		sourceBlockId: string;
+		targetBlockId: string;
+		addCopyName: boolean;
+	}
+>;
 export type ExportSpaceTaskPayload = IEnqueueTaskPayload<
 	'exportSpace',
 	{
@@ -163,53 +103,12 @@ export type ExportSpaceTaskPayload = IEnqueueTaskPayload<
 	}
 >;
 
-export interface ExportSpaceTaskInProgressResponse {
-	id: string;
-	eventName: 'exportSpace';
-	request: ExportSpaceTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'in_progress';
-	status: {
-		type: 'progress';
-		pagesExported: number;
-	};
-}
-
-export interface ExportSpaceTaskSuccessResponse {
-	id: string;
-	eventName: 'exportSpace';
-	request: ExportSpaceTaskPayload['task']['request'];
-	actor: ITaskActor;
-	state: 'success';
-	status: ExportTaskSuccessResponseStatus;
-}
-
-export type TExportSpaceTaskResponse = ExportSpaceTaskSuccessResponse | ExportSpaceTaskInProgressResponse;
-
 export type DeleteSpaceTaskPayload = IEnqueueTaskPayload<
 	'deleteSpace',
 	{
 		spaceId: string;
 	}
 >;
-
-export interface DeleteSpaceTaskInProgressResponse {
-	actor: ITaskActor;
-	eventName: 'deleteSpace';
-	id: string;
-	request: DeleteSpaceTaskPayload['task']['request'];
-	state: 'in_progress';
-}
-
-export interface DeleteSpaceTaskSuccessResponse {
-	actor: ITaskActor;
-	eventName: 'deleteSpace';
-	id: string;
-	request: DeleteSpaceTaskPayload['task']['request'];
-	state: 'success';
-}
-
-export type DeleteSpaceTaskResponse = DeleteSpaceTaskSuccessResponse | DeleteSpaceTaskInProgressResponse;
 
 export type EnqueueTaskPayload =
 	| TImportFileTaskPayload
@@ -222,58 +121,172 @@ export type EnqueueTaskPayload =
 	| ExportBlockTaskPayload
 	| RestoreSnapshotTaskPayload;
 
-export interface EnqueueTaskResponse {
-	taskId: string;
+// Responses
+
+interface IEnqueueTaskResponse<E extends TTaskEventName, R, S extends TTaskState> {
+	id: string;
+	eventName: E;
+	actor: ITaskActor;
+	request: R;
+	state: S;
 }
 
-export interface ImportFileMergeIntoCollectionTaskResponse {
-	actor: ITaskActor;
-	eventName: 'importFile';
-	id: string;
-	request: ImportFileMergeIntoCollectionTaskPayload['task']['request'];
-	state: 'success';
-	status: {
-		recordMap: Pick<RecordMap, 'collection'>;
-	};
-}
+type IRenameGroupTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'renameGroup',
+	RenameGroupTaskPayload['task']['request'],
+	S
+>;
 
-export interface ImportFileReplaceBlockTaskResponse {
-	actor: ITaskActor;
-	eventName: 'importFile';
-	id: string;
-	request: ImportFileReplaceBlockTaskPayload['task']['request'];
-	state: 'success';
+export type RenameGroupTaskSuccessResponse = IRenameGroupTaskResponse<'success'>;
+export type RenameGroupTaskInProgressResponse = IRenameGroupTaskResponse<'in_progress'>;
+export type RenameGroupTaskFailureResponse = IRenameGroupTaskResponse<'failure'>;
+export type RenameGroupTaskResponse =
+	| RenameGroupTaskSuccessResponse
+	| RenameGroupTaskInProgressResponse
+	| RenameGroupTaskFailureResponse;
+
+type IDuplicateBlockTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'duplicateBlock',
+	DuplicateBlockTaskPayload['task']['request'],
+	S
+>;
+export interface DuplicateBlockTaskSuccessResponse extends IDuplicateBlockTaskResponse<'success'> {
 	status: {
 		recordMap: Pick<RecordMap, 'block'>;
 	};
 }
+export type DuplicateBlockTaskInProgressResponse = IDuplicateBlockTaskResponse<'in_progress'>;
+export type DuplicateBlockTaskFailureResponse = IDuplicateBlockTaskResponse<'failure'>;
+export type TDuplicateBlockTaskResponse =
+	| DuplicateBlockTaskInProgressResponse
+	| DuplicateBlockTaskSuccessResponse
+	| DuplicateBlockTaskFailureResponse;
 
-export type TImportFileTaskResponse = ImportFileMergeIntoCollectionTaskResponse | ImportFileReplaceBlockTaskResponse;
+export interface ExportOptions {
+	exportType: TExportType;
+	locale: 'en';
+	timeZone: string;
+}
 
-export type RestoreSnapshotTaskPayload = IEnqueueTaskPayload<
-	'restoreSnapshot',
-	{
-		blockId: string;
-		timestamp: string;
-	}
+type IImportEvernoteTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'importEvernote',
+	ImportEvernotePayload['task']['request'],
+	S
 >;
-export interface RestoreSnapshotTaskInProgressResponse {
-	actor: ITaskActor;
-	eventName: 'restoreSnapshot';
-	id: string;
-	request: RestoreSnapshotTaskPayload['task']['request'];
-	state: 'in_progress';
+export interface ImportEvernoteTaskSuccessResponse extends IImportEvernoteTaskResponse<'success'> {
+	status: {
+		importedNotes: number;
+		totalNotes: number;
+	};
 }
+export type ImportEvernoteTaskInProgressResponse = IImportEvernoteTaskResponse<'in_progress'>;
+export type ImportEvernoteTaskFailureResponse = IImportEvernoteTaskResponse<'failure'>;
+export type TImportEvernoteTaskResponse =
+	| ImportEvernoteTaskSuccessResponse
+	| ImportEvernoteTaskInProgressResponse
+	| ImportEvernoteTaskFailureResponse;
 
-export interface RestoreSnapshotTaskSuccessResponse {
-	actor: ITaskActor;
-	eventName: 'restoreSnapshot';
-	id: string;
-	request: RestoreSnapshotTaskPayload['task']['request'];
-	state: 'success';
+type IExportBlockTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'exportBlock',
+	ExportBlockTaskPayload['task']['request'],
+	S
+>;
+export interface ExportBlockTaskSuccessResponse extends IExportBlockTaskResponse<'success'> {
+	status: ExportTaskSuccessResponseStatus;
 }
+export type ExportBlockTaskInProgressResponse = IExportBlockTaskResponse<'in_progress'>;
+export type ExportBlockTaskFailureResponse = IExportBlockTaskResponse<'failure'>;
+export type TExportBlockTaskResponse =
+	| ExportBlockTaskSuccessResponse
+	| ExportBlockTaskInProgressResponse
+	| ExportBlockTaskFailureResponse;
 
-export type TRestoreSnapshotTaskResponse = RestoreSnapshotTaskInProgressResponse | RestoreSnapshotTaskSuccessResponse;
+type IExportSpaceTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'exportSpace',
+	ExportSpaceTaskPayload['task']['request'],
+	S
+>;
+export interface ExportSpaceTaskSuccessResponse extends IExportSpaceTaskResponse<'success'> {
+	status: {
+		type: 'progress';
+		pagesExported: number;
+	};
+}
+export type ExportSpaceTaskInProgressResponse = IExportSpaceTaskResponse<'in_progress'> & {
+	status: {
+		type: 'progress';
+		pagesExported: number;
+	};
+};
+export type ExportSpaceTaskFailureResponse = IExportSpaceTaskResponse<'failure'>;
+export type TExportSpaceTaskResponse =
+	| ExportSpaceTaskSuccessResponse
+	| ExportSpaceTaskInProgressResponse
+	| ExportSpaceTaskFailureResponse;
+
+type IDeleteSpaceTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'deleteSpace',
+	DeleteSpaceTaskPayload['task']['request'],
+	S
+>;
+export type DeleteSpaceTaskSuccessResponse = IDeleteSpaceTaskResponse<'success'>;
+export type DeleteSpaceTaskInProgressResponse = IDeleteSpaceTaskResponse<'in_progress'>;
+export type DeleteSpaceTaskFailureResponse = IDeleteSpaceTaskResponse<'failure'>;
+export type TDeleteSpaceTaskResponse =
+	| DeleteSpaceTaskSuccessResponse
+	| DeleteSpaceTaskInProgressResponse
+	| DeleteSpaceTaskFailureResponse;
+
+type IImportFileMergeIntoCollectionTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'importFile',
+	ImportFileMergeIntoCollectionTaskPayload['task']['request'],
+	S
+>;
+export type ImportFileMergeIntoCollectionTaskSuccessResponse = IImportFileMergeIntoCollectionTaskResponse<'success'> & {
+	status: {
+		recordMap: Pick<RecordMap, 'collection'>;
+	};
+};
+export type ImportFileMergeIntoCollectionTaskInProgressResponse = IImportFileMergeIntoCollectionTaskResponse<
+	'in_progress'
+>;
+export type ImportFileMergeIntoCollectionTaskFailureResponse = IImportFileMergeIntoCollectionTaskResponse<'failure'>;
+export type TImportFileMergeIntoCollectionTaskResponse =
+	| ImportFileMergeIntoCollectionTaskSuccessResponse
+	| ImportFileMergeIntoCollectionTaskInProgressResponse
+	| ImportFileMergeIntoCollectionTaskFailureResponse;
+
+type IImportFileReplaceBlockTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'importFile',
+	ImportFileReplaceBlockTaskPayload['task']['request'],
+	S
+>;
+export type ImportFileReplaceBlockTaskSuccessResponse = IImportFileReplaceBlockTaskResponse<'success'> & {
+	status: {
+		recordMap: Pick<RecordMap, 'block'>;
+	};
+};
+export type ImportFileReplaceBlockTaskInProgressResponse = IImportFileReplaceBlockTaskResponse<'in_progress'>;
+export type ImportFileReplaceBlockTaskFailureResponse = IImportFileReplaceBlockTaskResponse<'failure'>;
+export type TImportFileReplaceBlockTaskResponse =
+	| ImportFileReplaceBlockTaskSuccessResponse
+	| ImportFileReplaceBlockTaskInProgressResponse
+	| ImportFileReplaceBlockTaskFailureResponse;
+
+export type TImportFileTaskResponse = TImportFileMergeIntoCollectionTaskResponse | TImportFileReplaceBlockTaskResponse;
+
+type IRestoreSnapshotTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
+	'restoreSnapshot',
+	RestoreSnapshotTaskPayload['task']['request'],
+	S
+>;
+export type RestoreSnapshotTaskSuccessResponse = IRestoreSnapshotTaskResponse<'success'>;
+export type RestoreSnapshotTaskInProgressResponse = IRestoreSnapshotTaskResponse<'in_progress'>;
+export type RestoreSnapshotTaskFailureResponse = IRestoreSnapshotTaskResponse<'failure'>;
+export type TRestoreSnapshotTaskResponse =
+	| RestoreSnapshotTaskSuccessResponse
+	| RestoreSnapshotTaskInProgressResponse
+	| RestoreSnapshotTaskFailureResponse;
 
 export type GetTasksResponse = {
 	results: (
@@ -281,8 +294,12 @@ export type GetTasksResponse = {
 		| TDuplicateBlockTaskResponse
 		| TExportBlockTaskResponse
 		| TExportSpaceTaskResponse
-		| DeleteSpaceTaskResponse
+		| TDeleteSpaceTaskResponse
 		| RenameGroupTaskResponse
-		| ImportEvernoteResponse
+		| TImportEvernoteTaskResponse
 		| TRestoreSnapshotTaskResponse)[];
 };
+
+export interface EnqueueTaskResponse {
+	taskId: string;
+}

@@ -1,26 +1,33 @@
 import { INotionEndpointsOptions, NotionEndpoints } from '@nishans/endpoints';
 import { NotionIdz } from '@nishans/idz';
-import { ExportBlockTaskPayload, ExportSpaceTaskPayload } from '@nishans/types';
+import { EnqueueTaskPayload, GetTasksResponse } from '@nishans/types';
+
+interface ITaskCbs {
+	success: (task: GetTasksResponse['results'][0]) => any;
+	failure: (task: GetTasksResponse['results'][0]) => any;
+	in_progress: (task: GetTasksResponse['results'][0]) => any;
+}
 
 export const enqueueAndPollTask = async (
 	id: string,
-	task: ExportBlockTaskPayload | ExportSpaceTaskPayload,
+	task: EnqueueTaskPayload,
+	cbs: ITaskCbs,
 	options: INotionEndpointsOptions
 ) => {
 	id = NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id));
 	const { taskId } = await NotionEndpoints.Mutations.enqueueTask(task, options);
 
-	let is_task_done = false,
-		export_url = '';
-	while (!is_task_done) {
-		const { results } = await NotionEndpoints.Queries.getTasks({ taskIds: [ taskId ] }, { ...options, interval: 1000 });
+	let is_task_in_progress = true;
+
+	while (!is_task_in_progress) {
+		const { results } = await NotionEndpoints.Queries.getTasks({ taskIds: [ taskId ] }, options);
 		if (results[0].eventName === task.task.eventName && results[0].state === 'success') {
-			is_task_done = true;
-			export_url = results[0].status.exportURL;
-		}
-		else if (results[0].state === 'failure') {
-			throw new Error(results[0].error);
+			is_task_in_progress = false;
+			cbs.success(results[0]);
+		} else if (results[0].state === 'failure') {
+			cbs.failure(results[0]);
+		} else if (results[0].state === 'in_progress') {
+			cbs.in_progress(results[0]);
 		}
 	}
-	return export_url;
 };

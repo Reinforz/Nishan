@@ -14,6 +14,7 @@ export type TTaskEventName =
 	| 'exportSpace'
 	| 'renameGroup'
 	| 'restoreSnapshot';
+
 export type TTaskState = 'in_progress' | 'success' | 'failure';
 export interface ExportTaskSuccessResponseStatus {
 	exportURL: string;
@@ -77,7 +78,7 @@ export type ExportBlockTaskPayload = IEnqueueTaskPayload<
 	}
 >;
 
-export type ImportEvernotePayload = IEnqueueTaskPayload<
+export type ImportEvernoteTaskPayload = IEnqueueTaskPayload<
 	'importEvernote',
 	{
 		notebookId: string;
@@ -112,7 +113,7 @@ export type DeleteSpaceTaskPayload = IEnqueueTaskPayload<
 
 export type EnqueueTaskPayload =
 	| TImportFileTaskPayload
-	| ImportEvernotePayload
+	| ImportEvernoteTaskPayload
 	| RenameGroupTaskPayload
 	| DuplicateBlockTaskPayload
 	| ExportBlockTaskPayload
@@ -140,7 +141,7 @@ type IRenameGroupTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
 export type RenameGroupTaskSuccessResponse = IRenameGroupTaskResponse<'success'>;
 export type RenameGroupTaskInProgressResponse = IRenameGroupTaskResponse<'in_progress'>;
 export type RenameGroupTaskFailureResponse = IRenameGroupTaskResponse<'failure'>;
-export type RenameGroupTaskResponse =
+export type TRenameGroupTaskResponse =
 	| RenameGroupTaskSuccessResponse
 	| RenameGroupTaskInProgressResponse
 	| RenameGroupTaskFailureResponse;
@@ -170,7 +171,7 @@ export interface ExportOptions {
 
 type IImportEvernoteTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
 	'importEvernote',
-	ImportEvernotePayload['task']['request'],
+	ImportEvernoteTaskPayload['task']['request'],
 	S
 >;
 export interface ImportEvernoteTaskSuccessResponse extends IImportEvernoteTaskResponse<'success'> {
@@ -295,11 +296,26 @@ export type GetTasksResponse = {
 		| TExportBlockTaskResponse
 		| TExportSpaceTaskResponse
 		| TDeleteSpaceTaskResponse
-		| RenameGroupTaskResponse
+		| TRenameGroupTaskResponse
 		| TImportEvernoteTaskResponse
 		| TRestoreSnapshotTaskResponse)[];
 };
 
 export interface EnqueueTaskResponse {
 	taskId: string;
+}
+
+interface IEnqueueTaskBuilder<P, R> {
+	payload: P;
+	response: R;
+}
+export interface IEnqueueTask {
+	deleteSpace: IEnqueueTaskBuilder<DeleteSpaceTaskPayload, TDeleteSpaceTaskResponse>;
+	exportBlock: IEnqueueTaskBuilder<ExportBlockTaskPayload, TExportBlockTaskResponse>;
+	importFile: IEnqueueTaskBuilder<TImportFileTaskPayload, TImportFileTaskResponse>;
+	importEvernote: IEnqueueTaskBuilder<ImportEvernoteTaskPayload, TImportEvernoteTaskResponse>;
+	duplicateBlock: IEnqueueTaskBuilder<DuplicateBlockTaskPayload, TDuplicateBlockTaskResponse>;
+	exportSpace: IEnqueueTaskBuilder<ExportSpaceTaskPayload, TExportSpaceTaskResponse>;
+	renameGroup: IEnqueueTaskBuilder<RenameGroupTaskPayload, TRenameGroupTaskResponse>;
+	restoreSnapshot: IEnqueueTaskBuilder<RestoreSnapshotTaskPayload, TRestoreSnapshotTaskResponse>;
 }

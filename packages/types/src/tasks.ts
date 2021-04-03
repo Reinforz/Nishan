@@ -305,17 +305,61 @@ export interface EnqueueTaskResponse {
 	taskId: string;
 }
 
-interface IEnqueueTaskBuilder<P, R> {
+export interface IEnqueueTaskBuilder<P, SR, IPR, FR> {
 	payload: P;
-	response: R;
+	response: {
+		success: SR;
+		in_progress: IPR;
+		failure: FR;
+	};
 }
 export interface IEnqueueTask {
-	deleteSpace: IEnqueueTaskBuilder<DeleteSpaceTaskPayload, TDeleteSpaceTaskResponse>;
-	exportBlock: IEnqueueTaskBuilder<ExportBlockTaskPayload, TExportBlockTaskResponse>;
-	importFile: IEnqueueTaskBuilder<TImportFileTaskPayload, TImportFileTaskResponse>;
-	importEvernote: IEnqueueTaskBuilder<ImportEvernoteTaskPayload, TImportEvernoteTaskResponse>;
-	duplicateBlock: IEnqueueTaskBuilder<DuplicateBlockTaskPayload, TDuplicateBlockTaskResponse>;
-	exportSpace: IEnqueueTaskBuilder<ExportSpaceTaskPayload, TExportSpaceTaskResponse>;
-	renameGroup: IEnqueueTaskBuilder<RenameGroupTaskPayload, TRenameGroupTaskResponse>;
-	restoreSnapshot: IEnqueueTaskBuilder<RestoreSnapshotTaskPayload, TRestoreSnapshotTaskResponse>;
+	deleteSpace: IEnqueueTaskBuilder<
+		DeleteSpaceTaskPayload,
+		DeleteSpaceTaskSuccessResponse,
+		DeleteSpaceTaskInProgressResponse,
+		DeleteSpaceTaskFailureResponse
+	>;
+	exportBlock: IEnqueueTaskBuilder<
+		ExportBlockTaskPayload,
+		ExportBlockTaskSuccessResponse,
+		ExportBlockTaskInProgressResponse,
+		ExportBlockTaskFailureResponse
+	>;
+	importFile: IEnqueueTaskBuilder<
+		TImportFileTaskPayload,
+		ImportFileMergeIntoCollectionTaskSuccessResponse | ImportFileReplaceBlockTaskSuccessResponse,
+		ImportFileMergeIntoCollectionTaskInProgressResponse | ImportFileReplaceBlockTaskInProgressResponse,
+		ImportFileMergeIntoCollectionTaskFailureResponse | ImportFileReplaceBlockTaskFailureResponse
+	>;
+	importEvernote: IEnqueueTaskBuilder<
+		ImportEvernoteTaskPayload,
+		ImportEvernoteTaskSuccessResponse,
+		ImportEvernoteTaskInProgressResponse,
+		ImportEvernoteTaskFailureResponse
+	>;
+	duplicateBlock: IEnqueueTaskBuilder<
+		DuplicateBlockTaskPayload,
+		DuplicateBlockTaskSuccessResponse,
+		DuplicateBlockTaskInProgressResponse,
+		DuplicateBlockTaskFailureResponse
+	>;
+	exportSpace: IEnqueueTaskBuilder<
+		ExportSpaceTaskPayload,
+		ExportSpaceTaskSuccessResponse,
+		ExportSpaceTaskInProgressResponse,
+		ExportSpaceTaskFailureResponse
+	>;
+	renameGroup: IEnqueueTaskBuilder<
+		RenameGroupTaskPayload,
+		RenameGroupTaskSuccessResponse,
+		RenameGroupTaskInProgressResponse,
+		RenameGroupTaskFailureResponse
+	>;
+	restoreSnapshot: IEnqueueTaskBuilder<
+		RestoreSnapshotTaskPayload,
+		RestoreSnapshotTaskSuccessResponse,
+		RestoreSnapshotTaskInProgressResponse,
+		RestoreSnapshotTaskFailureResponse
+	>;
 }

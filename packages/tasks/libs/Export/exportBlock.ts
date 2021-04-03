@@ -7,7 +7,7 @@ export const exportBlock = async (
 	export_options: ExportOptions & { recursive: boolean },
 	options: INotionEndpointsOptions
 ) => {
-	const export_url: string | null = null;
+	let export_url = '';
 
 	await enqueueAndPollTask<'exportBlock'>(
 		block_id,
@@ -19,6 +19,11 @@ export const exportBlock = async (
 					exportOptions: export_options,
 					recursive: export_options.recursive
 				}
+			}
+		},
+		{
+			success: (response) => {
+				export_url = response.status.exportURL;
 			}
 		},
 		options

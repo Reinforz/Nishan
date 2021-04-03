@@ -46,6 +46,12 @@ export interface NotionApiUnauthorizedError extends INotionApiError {
 	name: 'UnauthorizedError';
 }
 
+export interface NotionApiUnauthorizedLoginTryAgainError extends INotionApiError {
+	message: 'Token was invalid or expired.';
+	name: 'UnauthorizedError';
+	clientData: { type: 'login_try_again' };
+}
+
 export interface NotionApiUserRateLimitResponseError extends INotionApiError {
 	message: 'Please try again later.';
 	name: 'UserRateLimitResponse';
@@ -103,4 +109,5 @@ export type TNotionApiError =
 	| NotionApiUnauthorizedError
 	| TNotionApiValidatorError
 	| TNotionApiUserValidationError
-	| NotionApiPostgresNullConstraintError;
+	| NotionApiPostgresNullConstraintError
+	| NotionApiUnauthorizedLoginTryAgainError;

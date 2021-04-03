@@ -209,14 +209,16 @@ type IExportSpaceTaskResponse<S extends TTaskState> = IEnqueueTaskResponse<
 >;
 export interface ExportSpaceTaskSuccessResponse extends IExportSpaceTaskResponse<'success'> {
 	status: {
-		type: 'progress';
+		exportURL: string;
 		pagesExported: number;
+		type: 'complete';
 	};
 }
 export type ExportSpaceTaskInProgressResponse = IExportSpaceTaskResponse<'in_progress'> & {
 	status: {
-		type: 'progress';
+		exportURL: string;
 		pagesExported: number;
+		type: 'complete';
 	};
 };
 export type ExportSpaceTaskFailureResponse = IExportSpaceTaskResponse<'failure'>;

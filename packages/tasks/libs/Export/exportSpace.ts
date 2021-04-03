@@ -7,7 +7,9 @@ export const exportSpace = async (
 	export_options: ExportOptions,
 	options: INotionEndpointsOptions
 ) => {
-	return await enqueueAndPollTask(
+	let export_url = '';
+
+	await enqueueAndPollTask<'exportSpace'>(
 		space_id,
 		{
 			task: {
@@ -18,6 +20,11 @@ export const exportSpace = async (
 				}
 			}
 		},
+		{
+			success: (response) => (export_url = response.status.exportUrl)
+		},
 		options
 	);
+
+	return export_url;
 };

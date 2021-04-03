@@ -19,7 +19,7 @@ export const enqueueAndPollTask = async <E extends TTaskEventName>(
 
 	let is_task_in_progress = true;
 
-	while (!is_task_in_progress) {
+	while (is_task_in_progress) {
 		const { results } = await NotionEndpoints.Queries.getTasks({ taskIds: [ taskId ] }, options);
 		if (results[0].eventName === payload.task.eventName && results[0].state === 'success') {
 			is_task_in_progress = false;

@@ -10,7 +10,7 @@ export type TTaskType =
 	| 'exportSpace'
 	| 'renameGroup'
 	| 'restoreSnapshot';
-export type TaskState = 'in_progress' | 'success';
+export type TaskState = 'in_progress' | 'success' | 'failure';
 
 interface IEnqueueTaskPayload<T extends TTaskType, R> {
 	task: {

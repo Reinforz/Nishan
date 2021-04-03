@@ -2,6 +2,10 @@ import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionIdz } from '@nishans/idz';
 import { NotionTasks } from "../../libs";
 
+afterEach(()=>{
+  jest.restoreAllMocks()
+});
+
 it(`exportSpace`, async () => {
 	const space_id = NotionIdz.Generate.id(), enqueueTaskMock = jest
 			.spyOn(NotionEndpoints.Mutations, 'enqueueTask')

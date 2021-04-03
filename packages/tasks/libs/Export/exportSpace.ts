@@ -10,7 +10,6 @@ export const exportSpace = async (
 	let export_url = '';
 
 	await enqueueAndPollTask<'exportSpace'>(
-		space_id,
 		{
 			task: {
 				eventName: 'exportSpace',
@@ -21,7 +20,7 @@ export const exportSpace = async (
 			}
 		},
 		{
-			success: (response) => (export_url = response.status.exportUrl)
+			success: (response) => (export_url = response.status.exportURL)
 		},
 		options
 	);

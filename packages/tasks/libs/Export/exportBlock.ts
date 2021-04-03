@@ -10,7 +10,6 @@ export const exportBlock = async (
 	let export_url = '';
 
 	await enqueueAndPollTask<'exportBlock'>(
-		block_id,
 		{
 			task: {
 				eventName: 'exportBlock',
@@ -22,9 +21,7 @@ export const exportBlock = async (
 			}
 		},
 		{
-			success: (response) => {
-				export_url = response.status.exportURL;
-			}
+			success: (response) => (export_url = response.status.exportURL)
 		},
 		options
 	);

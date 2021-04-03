@@ -18,6 +18,9 @@ export const enqueueAndPollTask = async (
 			is_task_done = true;
 			export_url = results[0].status.exportURL;
 		}
+		else if (results[0].state === 'failure') {
+			throw new Error(results[0].error);
+		}
 	}
 	return export_url;
 };

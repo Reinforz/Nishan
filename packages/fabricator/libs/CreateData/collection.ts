@@ -1,7 +1,8 @@
 import { NotionIdz } from '@nishans/idz';
+import { NotionInit } from '@nishans/init';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
-import { ICollection, TView } from '@nishans/types';
+import { IOperation, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { ICollectionBlockInput, INotionFabricatorOptions } from '../';
 import { CreateData } from './';
@@ -15,7 +16,7 @@ import { CreateData } from './';
  */
 export async function collection (input: ICollectionBlockInput, parent_id: string, options: INotionFabricatorOptions, cb?: ((data: TView)=>any)) {
 	// Generate the collection id
-	const collection_id = NotionIdz.Generate.id(input.collection_id);
+	const operations: IOperation[] = [], collection_id = NotionIdz.Generate.id(input.collection_id);
 	// Generate the schema to store in the collection
 	const [ schema, ,format ] = await CreateData.schema(input.schema, {
 		parent_collection_id: collection_id,
@@ -31,28 +32,25 @@ export async function collection (input: ICollectionBlockInput, parent_id: strin
   format.page_section_visibility = input.page_section_visibility;
 
 	// construct the collection to store it in cache and in op stack
-	const collection_data: ICollection = {
+	const collection_data = NotionInit.collection({
 		id: collection_id,
 		schema,
 		cover: input.cover,
 		icon: input.icon,
 		parent_id,
-		parent_table: 'block',
-		alive: true,
 		name: input.name,
-		migrated: false,
-		version: 0,
     format
-	};
+	});
 
 	// Push the collection create operation to stack
-  await NotionOperations.executeOperations([NotionOperations.Chunk.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data)))], options);
+  operations.push(NotionOperations.Chunk.collection.update(collection_id, [], JSON.parse(JSON.stringify(collection_data))));
   // Create the views of the collection
-	const views_data = await CreateData.views(collection_data, input.views, options, parent_id, cb);
+	const [views_data, view_operations] = await CreateData.views(collection_data, input.views, options, parent_id, cb);
+  operations.push(...view_operations);
 	// Store the collection in cache
 	options.cache.collection.set(collection_id, collection_data);
 	// Log the collection creation
 	options.logger && NotionLogger.method.info(`CREATE collection ${collection_id}`);
 
-	return [ collection_data, views_data ] as const;
+	return [ collection_data, views_data, operations ] as const;
 }

@@ -34,13 +34,8 @@ export async function generateViewData (
 		shard_id: options.shard_id,
 		space_id: options.space_id
 	} as TView;
-	// Push the collection_view creation operation to the stack
-	await NotionOperations.executeOperations(
-		[ NotionOperations.Chunk.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data))) ],
-		options
-	);
 	// Add the view to the cache
 	options.cache.collection_view.set(view_id, view_data);
 	options.logger && NotionLogger.method.info(`CREATE collection_view ${view_data.id}`);
-	return view_data;
+	return [view_data, NotionOperations.Chunk.collection_view.update(view_id, [], JSON.parse(JSON.stringify(view_data)))] as const;
 }

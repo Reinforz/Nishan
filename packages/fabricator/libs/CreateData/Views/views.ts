@@ -1,4 +1,4 @@
-import { ICollection, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
+import { ICollection, IOperation, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { INotionFabricatorOptions, NotionFabricator, TViewCreateInput, TViewFilterCreateInput } from '../../';
 import { generateViewData } from './utils';
@@ -22,7 +22,7 @@ export async function views (
 	cb?: ((data: TView) => any)
 ) {
 	const schema_map = NotionUtils.generateSchemaMap(collection.schema),
-		views_data: TView[] = [];
+		views_data: TView[] = [], operations: IOperation[] = [];
 
 	if (views.length === 0) throw new Error(`input views array cannot be empty`);
 	for (let index = 0; index < views.length; index++) {
@@ -60,10 +60,11 @@ export async function views (
 			schema_map
 		);
 
-		const view_data = await generateViewData({ ...view, format: view_format, query2: view_query2 }, options, parent_id);
+		const [view_data, operation] = await generateViewData({ ...view, format: view_format, query2: view_query2 }, options, parent_id);
 		views_data.push(view_data);
+    operations.push(operation);
 		cb && (await cb(view_data));
 	}
 
-	return views_data;
+	return [views_data, operations] as const;
 }

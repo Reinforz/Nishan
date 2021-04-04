@@ -3,8 +3,7 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionFormula } from "@nishans/notion-formula";
 import { CollectionFormatPropertyVisibility, ICollection, ISchemaMapValue, Schema } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { ICollectionBlockInput, ParentCollectionData } from ".";
-import { INotionFabricatorOptions } from "../";
+import { ICollectionBlockInput, INotionFabricatorOptions, ParentCollectionData } from "../";
 import { CreateSchemaUnit } from "./SchemaUnit";
 /**
  * Generates a full schema from a passed input schema

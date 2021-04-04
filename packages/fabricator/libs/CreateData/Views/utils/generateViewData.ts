@@ -2,7 +2,7 @@ import { NotionIdz } from '@nishans/idz';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { TView } from '@nishans/types';
-import { INotionFabricatorOptions } from '../../';
+import { INotionFabricatorOptions } from '../../../';
 
 /**
  * Construct and return the view data using the passed info and stores it in cache and operation stack

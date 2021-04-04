@@ -3,8 +3,7 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, RelationSchemaUnit } from "@nishans/types";
-import { ParentCollectionData, TRelationSchemaUnitInput } from "..";
-import { INotionFabricatorOptions } from "../../../types";
+import { INotionFabricatorOptions, ParentCollectionData, TRelationSchemaUnitInput } from "../../";
 
 /**
  * Generates a new relation schema by validating the input relation schema unit passed

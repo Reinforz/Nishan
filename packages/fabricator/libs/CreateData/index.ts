@@ -11,5 +11,3 @@ export const CreateData = {
 	schema,
 	schema_unit: CreateSchemaUnit
 };
-
-export * from '../../types';

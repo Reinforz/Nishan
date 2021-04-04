@@ -3,7 +3,7 @@ import { NotionErrors } from '@nishans/errors';
 import { NotionLogger } from '@nishans/logger';
 import { ICollection, ISchemaMap, RollupSchemaUnit } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { INotionFabricatorOptions, TRollupSchemaUnitInput } from '..';
+import { INotionFabricatorOptions, TRollupSchemaUnitInput } from '../../';
 
 /**
  * Generate rollup schema unit

@@ -3,7 +3,8 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollection, TView } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateData, ICollectionBlockInput, INotionFabricatorOptions } from './';
+import { ICollectionBlockInput, INotionFabricatorOptions } from '../';
+import { CreateData } from './';
 
 /**
  * Creates a collection from the input

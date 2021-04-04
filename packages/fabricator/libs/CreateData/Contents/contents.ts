@@ -6,7 +6,8 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
 import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, ISpace, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
-import { CreateData, INotionFabricatorOptions, TBlockCreateInput } from "..";
+import { CreateData } from "../";
+import { INotionFabricatorOptions, TBlockCreateInput } from "../../";
 import { executeOperationAndStoreInCache, populatePermissions } from "./utils";
 
 /**

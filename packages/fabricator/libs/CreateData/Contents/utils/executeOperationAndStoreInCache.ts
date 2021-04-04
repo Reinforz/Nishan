@@ -1,6 +1,6 @@
 import { NotionOperations } from '@nishans/operations';
 import { TBlock } from '@nishans/types';
-import { INotionFabricatorOptions } from '../..';
+import { INotionFabricatorOptions } from '../../../';
 
 /**
  * * Push the block create operation to the stack

@@ -1,5 +1,5 @@
 import { NotionEndpoints } from '@nishans/endpoints';
-import { enqueueAndPollTask } from '../../libs/utils';
+import { NotionTasks } from '../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -40,7 +40,7 @@ describe('enqueueAndPollTask', () => {
 				]
 			}));
 
-		await enqueueAndPollTask(
+		await NotionTasks.enqueueAndPollTask(
 			arg,
 			{
 				success: (response) => {
@@ -84,7 +84,7 @@ describe('enqueueAndPollTask', () => {
 				]
 			}));
 
-		await enqueueAndPollTask(
+		await NotionTasks.enqueueAndPollTask(
 			arg,
 			{
 				failure: (response) => {

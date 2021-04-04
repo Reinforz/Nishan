@@ -1,7 +1,7 @@
 import { INotionEndpointsOptions, NotionEndpoints } from '@nishans/endpoints';
 import { IEnqueueTask, TTaskEventName } from '@nishans/types';
 
-interface ITaskCbs<E extends TTaskEventName> {
+export interface IEnqueueAndPollTaskCbs<E extends TTaskEventName> {
 	success: (task: IEnqueueTask[E]['response']['success']) => any;
 	failure: (task: IEnqueueTask[E]['response']['failure']) => any;
 	in_progress: (task: IEnqueueTask[E]['response']['in_progress']) => any;
@@ -9,7 +9,7 @@ interface ITaskCbs<E extends TTaskEventName> {
 
 export const enqueueAndPollTask = async <E extends TTaskEventName>(
 	payload: IEnqueueTask[E]['payload'],
-	cbs: Partial<ITaskCbs<E>>,
+	cbs: Partial<IEnqueueAndPollTaskCbs<E>>,
 	options: INotionEndpointsOptions
 ) => {
 	const { taskId } = await NotionEndpoints.Mutations.enqueueTask(payload, options);
@@ -20,12 +20,12 @@ export const enqueueAndPollTask = async <E extends TTaskEventName>(
 		const { results } = await NotionEndpoints.Queries.getTasks({ taskIds: [ taskId ] }, options);
 		if (results[0].state === 'success') {
 			is_task_in_progress = false;
-			cbs.success && cbs.success(results[0]);
+			cbs.success && (await cbs.success(results[0]));
 		} else if (results[0].state === 'failure') {
 			is_task_in_progress = false;
-			cbs.failure && cbs.failure(results[0]);
+			cbs.failure && (await cbs.failure(results[0]));
 		} else {
-			cbs.in_progress && cbs.in_progress(results[0]);
+			cbs.in_progress && (await cbs.in_progress(results[0]));
 		}
 	}
 };

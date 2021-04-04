@@ -1,6 +1,6 @@
 import { INotionEndpointsOptions } from '@nishans/endpoints';
 import { ExportOptions } from '@nishans/types';
-import { enqueueAndPollTask } from '../utils';
+import { NotionTasks } from '../';
 
 export const exportBlock = async (
 	block_id: string,
@@ -9,7 +9,7 @@ export const exportBlock = async (
 ) => {
 	let export_url = '';
 
-	await enqueueAndPollTask<'exportBlock'>(
+	await NotionTasks.enqueueAndPollTask<'exportBlock'>(
 		{
 			task: {
 				eventName: 'exportBlock',

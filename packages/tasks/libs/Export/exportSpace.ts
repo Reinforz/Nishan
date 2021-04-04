@@ -1,6 +1,6 @@
 import { INotionEndpointsOptions } from '@nishans/endpoints';
 import { ExportOptions } from '@nishans/types';
-import { enqueueAndPollTask } from '../utils';
+import { NotionTasks } from '../';
 
 export const exportSpace = async (
 	space_id: string,
@@ -9,7 +9,7 @@ export const exportSpace = async (
 ) => {
 	let export_url = '';
 
-	await enqueueAndPollTask<'exportSpace'>(
+	await NotionTasks.enqueueAndPollTask<'exportSpace'>(
 		{
 			task: {
 				eventName: 'exportSpace',

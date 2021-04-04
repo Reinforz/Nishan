@@ -14,14 +14,11 @@ import { INotionFabricatorOptions } from '../../../';
  */
 export async function executeOperationAndStoreInCache<T extends TBlock> (
 	data: T,
-	options: INotionFabricatorOptions,
+	options: Omit<INotionFabricatorOptions, 'cache_init_tracker'>,
 	cb?: ((data: TBlock) => any)
 ) {
 	const { id } = data;
-	await NotionOperations.executeOperations(
-		[ NotionOperations.Chunk.block.update(id, [], JSON.parse(JSON.stringify(data))) ],
-		options
-	);
 	options.cache.block.set(id, data);
 	cb && (await cb(data));
+	return NotionOperations.Chunk.block.update(id, [], JSON.parse(JSON.stringify(data)));
 }

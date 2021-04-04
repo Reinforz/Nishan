@@ -14,7 +14,7 @@ import { INotionFabricatorOptions } from '../../../';
  */
 export async function generateViewData (
 	{ id, name, type, format, query2 }: Pick<TView, 'name' | 'type' | 'format' | 'query2'> & { id?: string },
-	options: INotionFabricatorOptions,
+	options: Omit<INotionFabricatorOptions, "cache_init_tracker">,
 	parent_id: string
 ) {
 	// construct the view id, using a custom id

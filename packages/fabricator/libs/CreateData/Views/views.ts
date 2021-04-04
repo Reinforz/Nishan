@@ -17,7 +17,7 @@ import { generateViewData } from './utils';
 export async function views (
 	collection: Pick<ICollection, 'id' | 'schema'>,
 	views: TViewCreateInput[],
-	options: INotionFabricatorOptions,
+	options: Omit<INotionFabricatorOptions, "cache_init_tracker">,
 	parent_id: string,
 	cb?: ((data: TView) => any)
 ) {

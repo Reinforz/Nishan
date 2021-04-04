@@ -11,7 +11,7 @@ import { INotionFabricatorOptions, ParentCollectionData, TRelationSchemaUnitInpu
  * @param collection_data An object containing info used to make request, push to op stack and save to cache
  * @return The newly generated relation schema unit
  */
-export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData, options: INotionFabricatorOptions){
+export async function relation(input_schema_unit: Omit<TRelationSchemaUnitInput, "type">, collection_data: ParentCollectionData, options: Omit<INotionFabricatorOptions, "cache_init_tracker">){
   const operations: IOperation[] = [];
   const {parent_relation_schema_unit_id, parent_collection_id, name: parent_collection_name} = collection_data, child_relation_schema_unit_id = NotionIdz.Generate.shortId();
   const {relation_schema_unit_name, collection_id: child_collection_id} = input_schema_unit;

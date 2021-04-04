@@ -1,6 +1,6 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { TData, TDataType } from '@nishans/types';
+import { IOperation, TData, TDataType } from '@nishans/types';
 
 /**
  * Update the operation stack and parent's child container by either removing or adding the it based on the `keep` parameter
@@ -17,10 +17,10 @@ export async function updateChildContainer<T extends TData> (
 	keep: boolean,
 	child_id: string,
 	child_path: keyof T,
-	options: Omit<INotionCacheOptions, "cache_init_tracker"> & INotionOperationOptions
+	options: Omit<INotionCacheOptions, 'cache_init_tracker'> & INotionOperationOptions
 ) {
 	const parent_data = await NotionCache.fetchDataOrReturnCached(parent_table, parent_id, options);
-
+	const operations: IOperation[] = [];
 	if (!(parent_data as any)[child_path]) (parent_data as any)[child_path] = [];
 	// Extract the child container from the parent using child_path
 	const container = (parent_data as any)[child_path] as string[];
@@ -29,26 +29,21 @@ export async function updateChildContainer<T extends TData> (
 	// 2. Push to corresponding operation to the passed stack
 	if (!keep && container.includes(child_id)) {
 		(parent_data as any)[child_path] = container.filter((page_id) => page_id !== child_id) as any;
-		await NotionOperations.executeOperations(
-			[
-				NotionOperations.Chunk[parent_table].listRemove(parent_data.id, [ child_path as string ], {
-					id: child_id
-				})
-			],
-			options
+		operations.push(
+			NotionOperations.Chunk[parent_table].listRemove(parent_data.id, [ child_path as string ], {
+				id: child_id
+			})
 		);
 	} else if (keep && !container.includes(child_id)) {
 		// If the child container doesn't contains the child and it should be kept
 		// 1. Add the child id to the child container
 		// 2. Push to corresponding operation to the passed stack
 		container.push(child_id);
-		await NotionOperations.executeOperations(
-			[
-				NotionOperations.Chunk[parent_table].listAfter(parent_data.id, [ child_path as string ], {
-					id: child_id
-				})
-			],
-			options
+		operations.push(
+			NotionOperations.Chunk[parent_table].listAfter(parent_data.id, [ child_path as string ], {
+				id: child_id
+			})
 		);
 	}
+	return operations;
 }

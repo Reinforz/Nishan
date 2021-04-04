@@ -14,7 +14,7 @@ import { CreateData } from './';
  * @param options Data used to store to cache, ops stack, send request to get data
  * @returns a tuple of the collection_id, the generated view ids and the generated view map
  */
-export async function collection (input: ICollectionBlockInput, parent_id: string, options: INotionFabricatorOptions, cb?: ((data: TView)=>any)) {
+export async function collection (input: ICollectionBlockInput, parent_id: string, options: Omit<INotionFabricatorOptions, "cache_init_tracker">, cb?: ((data: TView)=>any)) {
 	// Generate the collection id
 	const operations: IOperation[] = [], collection_id = NotionIdz.Generate.id(input.collection_id);
 	// Generate the schema to store in the collection

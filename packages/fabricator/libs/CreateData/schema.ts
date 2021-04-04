@@ -11,7 +11,7 @@ import { CreateSchemaUnit } from "./SchemaUnit";
  * @param collection_data The object containing data used to send request, cache response for specific schema unit types
  * @returns Tuple of the constructed schema and schema map
  */
-export async function schema(input_schema_units: ICollectionBlockInput["schema"], data: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema}, options: INotionFabricatorOptions, cb?: ((data: ISchemaMapValue)=>any)){
+export async function schema(input_schema_units: ICollectionBlockInput["schema"], data: Omit<ParentCollectionData, "parent_relation_schema_unit_id"> & {current_schema?: Schema}, options: Omit<INotionFabricatorOptions, "cache_init_tracker">, cb?: ((data: ISchemaMapValue)=>any)){
   // const schema_unit_list = CreateMaps.schema_unit();
   // Construct the schema map, which will be used to obtain property references used in formula and rollup types
   const collection_format: ICollection["format"] = { property_visibility: []}, schema: Schema = data.current_schema ?? {}, schema_map = NotionUtils.generateSchemaMap(schema);
@@ -37,7 +37,7 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
         schema[schema_id] = await CreateSchemaUnit.rollup(input_schema_unit, schema_map, options);
         break;
       case "relation":
-        schema[schema_id] = await CreateSchemaUnit.relation(input_schema_unit, {...data, parent_relation_schema_unit_id: schema_id}, options);
+        schema[schema_id] = (await CreateSchemaUnit.relation(input_schema_unit, {...data, parent_relation_schema_unit_id: schema_id}, options))[0];
         break;
       default:
         schema[schema_id] = input_schema_unit;

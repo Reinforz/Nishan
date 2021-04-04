@@ -4,7 +4,7 @@ import { NotionIdz } from "@nishans/idz";
 import { NotionLineage } from "@nishans/lineage";
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from "@nishans/operations";
-import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IPage, ISpace, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
+import { ICollection, ICollectionBlock, ICollectionView, ICollectionViewPage, IColumn, IColumnList, IFactory, IOperation, IPage, ISpace, TBlock, TCollectionBlock, WebBookmarkProps } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { CreateData } from "../";
 import { INotionFabricatorOptions, TBlockCreateInput } from "../../";
@@ -36,6 +36,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
     alive: true
   } as const;
 
+  const operations: IOperation[] = [];
   
   const traverse = async (contents: TBlockCreateInput[], parent_id: string, parent_table: 'collection' | 'block' | 'space') => {
     for (let index = 0; index < contents.length; index++) {
@@ -75,8 +76,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
         };
         if (content.type === "collection_view_page") (data as ICollectionViewPage).permissions = [populatePermissions(options.user_id, content.isPrivate)];
         await executeOperationAndStoreInCache<ICollectionViewPage>(data as any, options, cb);
-        
-        const [, views_data] = await CreateData.collection({...content, collection_id}, block_id, options);
+        const [, views_data, collection_operations] = await CreateData.collection({...content, collection_id}, block_id, options);
         const view_ids = views_data.map(view_data=>view_data.id);
         await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], view_ids) ], options);
         (options.cache.block.get(block_id) as TCollectionBlock).view_ids = view_ids;
@@ -104,7 +104,7 @@ export async function contents(contents: TBlockCreateInput[], root_parent_id: st
             type: 'collection_view'
           };
         await executeOperationAndStoreInCache<ICollectionView>(collection_view_data, options, cb);
-        const views_data = await CreateData.views(collection, views, options, block_id);
+        const [views_data, view_operations] = await CreateData.views(collection, views, options, block_id);
         await NotionOperations.executeOperations([NotionOperations.Chunk.block.set(block_id, ['view_ids'], views_data.map(view_data=>view_data.id))], options);
         views_data.forEach(({id})=>view_ids.push(id))
       }

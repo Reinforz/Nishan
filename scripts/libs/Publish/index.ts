@@ -1,7 +1,7 @@
-import { publishPackages } from './publishPackages';
+import { publishAfterBuild } from './publishAfterBuild';
 import { publishUpdatedPackages } from './publishUpdatedPackages';
 
 export const NishanScriptsPublish = {
-	updatedPackages: publishUpdatedPackages,
-	packages: publishPackages
+	afterBuild: publishAfterBuild,
+	updatedPackages: publishUpdatedPackages
 };

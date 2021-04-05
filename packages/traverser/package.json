@@ -1,6 +1,6 @@
 {
   "name": "@nishans/traverser",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Traverse notion data with ease",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/traverser/README.md",
@@ -27,14 +27,14 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/lineage": "0.0.20",
-    "@nishans/logger": "0.0.17",
-    "@nishans/operations": "0.0.29",
-    "@nishans/utils": "0.0.22",
-    "@nishans/validators": "0.0.19"
+    "@nishans/lineage": "0.0.21",
+    "@nishans/logger": "0.0.18",
+    "@nishans/operations": "0.0.30",
+    "@nishans/utils": "0.0.23",
+    "@nishans/validators": "0.0.20"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.32"
+    "@nishans/types": "0.0.33"
   },
   "publishConfig": {
     "access": "public"

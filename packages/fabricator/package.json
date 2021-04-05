@@ -1,6 +1,6 @@
 {
   "name": "@nishans/fabricator",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "A package to generate notion blocks using a simple api",
   "keywords": [
     "notion",
@@ -31,20 +31,20 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.33",
-    "@nishans/endpoints": "0.0.29",
-    "@nishans/errors": "0.0.29",
-    "@nishans/idz": "0.0.17",
-    "@nishans/init": "0.0.20",
-    "@nishans/lineage": "0.0.20",
-    "@nishans/logger": "0.0.17",
-    "@nishans/notion-formula": "0.0.30",
-    "@nishans/operations": "0.0.29",
-    "@nishans/utils": "0.0.22",
-    "@nishans/validators": "0.0.19"
+    "@nishans/cache": "0.0.34",
+    "@nishans/endpoints": "0.0.30",
+    "@nishans/errors": "0.0.30",
+    "@nishans/idz": "0.0.18",
+    "@nishans/init": "0.0.21",
+    "@nishans/lineage": "0.0.21",
+    "@nishans/logger": "0.0.18",
+    "@nishans/notion-formula": "0.0.31",
+    "@nishans/operations": "0.0.30",
+    "@nishans/utils": "0.0.23",
+    "@nishans/validators": "0.0.20"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.32"
+    "@nishans/types": "0.0.33"
   },
   "publishConfig": {
     "access": "public"

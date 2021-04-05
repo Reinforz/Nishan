@@ -1,6 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
 import { NotionLineage } from '@nishans/lineage';
+import { NotionOperations } from '@nishans/operations';
 import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
@@ -43,14 +44,14 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 				break;
 			}
 		}
-		await NotionLineage.updateChildContainer<ISpaceView>(
+		await NotionOperations.executeOperations([...(await NotionLineage.updateChildContainer<ISpaceView>(
 			'space_view',
 			target_space_view.id,
 			favorite_status,
 			data.id,
 			'bookmarked_pages',
 			this.getProps()
-		);
+		))], this.getProps());
 	}
 
 	/**

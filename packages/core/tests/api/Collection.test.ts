@@ -6,7 +6,7 @@ import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
 import { Collection } from '../../libs';
-import { default_nishan_arg, o } from '../utils';
+import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -160,16 +160,15 @@ describe('template pages', () => {
 		);
 
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-			o.c.lr('collection_1', [ 'template_pages' ], { id: 'block_1' })
-		]);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.b.u(
+      o.b.u(
 				'block_1',
 				[],
-				expect.objectContaining({
-					alive: false
-				})
-			)
+				{
+					alive: false,
+          ...last_edited_props
+				}
+			),
+      o.c.lr('collection_1', [ 'template_pages' ], { id: 'block_1' }),
 		]);
 		expect(deleted_templates.length).toBe(1);
 		expect(deleted_templates[0].getCachedData()).toStrictEqual(block_1);

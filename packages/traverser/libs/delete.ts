@@ -55,7 +55,7 @@ export const remove = async <T extends TData, TD, C = any[]>(
 				operations.push(NotionOperations.Chunk[child_type].update(child_id, [], updated_data_payload));
 
 			if (typeof child_path === 'string')
-				await NotionLineage.updateChildContainer<T>(parent_type, parent_id, false, child_id, child_path, options);
+        operations.push(...await NotionLineage.updateChildContainer<T>(parent_type, parent_id, false, child_id, child_path, options));
 		}
 	};
 

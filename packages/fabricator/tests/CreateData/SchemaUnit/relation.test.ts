@@ -1,6 +1,5 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionLogger } from "@nishans/logger";
-import { NotionOperations } from "@nishans/operations";
 import { ICollection, INotionCache } from "@nishans/types";
 import { NotionUtils } from "@nishans/utils";
 import { default_nishan_arg, o } from "../../../../core/tests/utils";
@@ -49,12 +48,9 @@ const common_child_collection_relation_schema_unit = {
 
 it(`Should work correctly (default child_collection_relation_schema_unit name)`, async () => {
   const  [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
-  const executeOperationsMock = jest
-			.spyOn(NotionOperations, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
       
-  const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
+  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.schema_unit.relation(
     relation_arg,
     parent_collection_data,
     {...default_nishan_arg, cache}
@@ -71,20 +67,17 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
     property: child_relation_schema_unit_id,
     ...common_parent_collection_relation_schema_unit
   })
-  expect(executeOperationsMock).not.toHaveBeenCalled();
+  expect(operations).toStrictEqual([]);
   expect(logger_spy).toHaveBeenCalledTimes(1);
   expect(logger_spy).toHaveBeenCalledWith("READ collection child_collection_id");
 });
 
 it(`Should work correctly (custom child_collection_relation_schema_unit name)`, async () => {
   const [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
-  const executeOperationsMock = jest
-  .spyOn(NotionOperations, 'executeOperations')
-  .mockImplementationOnce(async () => undefined);
 
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-  const relation_schema_unit = await NotionFabricator.CreateData.schema_unit.relation(
+  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.schema_unit.relation(
     {
       ...relation_arg,
       relation_schema_unit_name: "Child Column"
@@ -108,7 +101,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
     ...common_parent_collection_relation_schema_unit
   });
 
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([o.c.u("child_collection_id", ["schema", child_relation_schema_unit_id], {
+  expect(operations).toStrictEqual([o.c.u("child_collection_id", ["schema", child_relation_schema_unit_id], {
     name: [["Child Column"]],
     ...common_child_collection_relation_schema_unit
   })]);

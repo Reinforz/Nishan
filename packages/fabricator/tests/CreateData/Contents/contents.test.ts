@@ -82,16 +82,16 @@ it(`parent=space`, async () => {
 
 	expect(logger_spy).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
-	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(page_id, [], {
 			...common_page_snapshot,
 			id: page_id,
 			parent_id: 'space_1',
 			parent_table: 'space'
-		})
+		}),
+		o.s.la('space_1', [ 'pages' ], { id: page_id })
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.s.la('space_1', [ 'pages' ], { id: page_id }) ]);
 	expect(cache.space.get('space_1')).toStrictEqual({
 		id: 'space_1',
 		pages: [ page_id ]
@@ -155,7 +155,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 
 	expect(logger_spy).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
-	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(page_id, [], {
 			...common_page_snapshot,
@@ -163,9 +163,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			is_template: true,
 			parent_id: collection_id,
 			parent_table: 'collection'
-		})
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+		}),
 		o.c.la(collection_id, [ 'template_pages' ], { id: page_id })
 	]);
 	expect(cache.collection.get(collection_id)).toStrictEqual({
@@ -182,15 +180,13 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 				block: new Map([ [ 'block_1', { type: 'page', id: 'block_1' } as any ] ])
 			},
 			row_one_id = v4(),
-			cv_id = v4();
+			cv_id = v4(),
+			view_id = v4();
 
 		const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
-		const createDataCollectionMock = jest
-				.spyOn(NotionFabricator.CreateData, 'collection')
-				.mockImplementationOnce(async () => [ { id: collection_id }, [ { id: 'view_1' } ] ] as any),
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
-				.mockImplementation(async () => undefined);
+		const executeOperationsMock = jest
+			.spyOn(NotionOperations, 'executeOperations')
+			.mockImplementation(async () => undefined);
 
 		await NotionFabricator.CreateData.contents(
 			[
@@ -204,7 +200,8 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 						{
 							type: 'table',
 							name: 'Table',
-							schema_units: [ tsu ]
+							schema_units: [ tsu ],
+							id: view_id
 						}
 					],
 					rows: [
@@ -233,7 +230,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			id: cv_id,
 			type: collection_block_type,
 			collection_id,
-			view_ids: [ 'view_1' ],
+			view_ids: [ view_id ],
 			parent_id: 'block_1',
 			parent_table: 'block',
 			...metadata
@@ -249,18 +246,14 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			];
 
 		expect(collection_view).toEqual(collection_block_snapshot);
-		expect(createDataCollectionMock).toHaveBeenCalledTimes(1);
-		expect(logger_spy).toHaveBeenCalledTimes(2);
-		expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${row_one_id}`);
-		expect(logger_spy).toHaveBeenNthCalledWith(2, `CREATE block ${collection_view.id}`);
+		expect(logger_spy).toHaveBeenCalledTimes(4);
+		expect(logger_spy).toHaveBeenNthCalledWith(3, `CREATE block ${row_one_id}`);
+		expect(logger_spy).toHaveBeenNthCalledWith(4, `CREATE block ${collection_view.id}`);
 		expect(cache.block.get(collection_view.id)).toBeTruthy();
 		expect(cache.block.get(row_one_id)).toBeTruthy();
-		expect(executeOperationsMock).toHaveBeenCalledTimes(4);
-		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
-			o.b.u(cv_id, [], { ...collection_block_snapshot, view_ids: [] })
-		]);
-		expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.s(cv_id, [ 'view_ids' ], [ 'view_1' ]) ]);
-		expect(executeOperationsMock.mock.calls[2][0]).toEqual([
+		expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+		expect(executeOperationsMock.mock.calls[0][0].slice(2)).toEqual([
+			o.b.u(cv_id, [], { ...collection_block_snapshot, view_ids: [ view_id ] }),
 			o.b.u(row_one_id, [], {
 				content: [],
 				permissions: [
@@ -278,9 +271,9 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 					title: [ [ 'Row one' ] ]
 				},
 				...metadata
-			})
+			}),
+			o.b.la('block_1', [ 'content' ], { id: cv_id })
 		]);
-		expect(executeOperationsMock.mock.calls[3][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: cv_id }) ]);
 	});
 });
 
@@ -388,19 +381,15 @@ it(`type=column_list`, async () => {
 			checked: [ [ 'Yes' ] ]
 		}
 	});
-	expect(executeOperationsMock).toHaveBeenCalledTimes(6);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.u(cl_id, [], expect.objectContaining({ id: cl_id }))
+		o.b.u(cl_id, [], expect.objectContaining({ id: cl_id })),
+		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id })),
+		o.b.u(c1_b1_id, [], expect.objectContaining({ id: c1_b1_id })),
+		o.b.la(c1_id, [ 'content' ], { id: c1_b1_id }),
+		o.b.s(cl_id, [ 'content' ], [ c1_id ]),
+		o.b.la('block_1', [ 'content' ], { id: cl_id })
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id }))
-	]);
-	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([
-		o.b.u(c1_b1_id, [], expect.objectContaining({ id: c1_b1_id }))
-	]);
-	expect(executeOperationsMock.mock.calls[3][0]).toStrictEqual([ o.b.la(c1_id, [ 'content' ], { id: c1_b1_id }) ]);
-	expect(executeOperationsMock.mock.calls[4][0]).toStrictEqual([ o.b.s(cl_id, [ 'content' ], [ c1_id ]) ]);
-	expect(executeOperationsMock.mock.calls[5][0]).toStrictEqual([ o.b.la('block_1', [ 'content' ], { id: cl_id }) ]);
 });
 
 it(`type=factory`, async () => {
@@ -466,23 +455,18 @@ it(`type=factory`, async () => {
 		},
 		...metadata
 	});
-	expect(executeOperationsMock).toHaveBeenCalledTimes(4);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.u(fid, [], expect.objectContaining({ id: fid }))
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id }))
-	]);
-	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([
-		o.b.la(fid, [ 'content' ], expect.objectContaining({ id: c1_id }))
-	]);
-	expect(executeOperationsMock.mock.calls[3][0]).toStrictEqual([
+		o.b.u(fid, [], expect.objectContaining({ id: fid })),
+		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id })),
+		o.b.la(fid, [ 'content' ], expect.objectContaining({ id: c1_id })),
 		o.b.la('block_1', [ 'content' ], expect.objectContaining({ id: fid }))
 	]);
 });
 
 it(`type=linked_db`, async () => {
 	const cv_id = v4(),
+		view_id = v4(),
 		cache: any = {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ]),
@@ -501,10 +485,6 @@ it(`type=linked_db`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const createDataViewsMock = jest
-		.spyOn(NotionFabricator.CreateData, 'views')
-		.mockImplementationOnce(() => [ { id: 'view_1' } ] as any);
-
 	await NotionFabricator.CreateData.contents(
 		[
 			{
@@ -515,7 +495,8 @@ it(`type=linked_db`, async () => {
 					{
 						type: 'table',
 						name: 'Table',
-						schema_units: [ tsu ]
+						schema_units: [ tsu ],
+						id: view_id
 					}
 				]
 			}
@@ -530,22 +511,18 @@ it(`type=linked_db`, async () => {
 	);
 	const collection_view_data = cache.block.get(cv_id) as ICollectionView;
 
-	expect(executeOperationsMock).toHaveBeenCalledTimes(3);
-	expect(createDataViewsMock).toHaveBeenCalledTimes(1);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(collection_view_data).toStrictEqual({
 		...metadata,
 		id: cv_id,
 		parent_id: 'block_1',
 		parent_table: 'block',
-		view_ids: [ 'view_1' ],
+		view_ids: [ view_id ],
 		collection_id: 'collection_1',
 		type: 'collection_view'
 	});
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.u(cv_id, [], expect.objectContaining({ id: cv_id }))
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([ o.b.s(cv_id, [ 'view_ids' ], [ 'view_1' ]) ]);
-	expect(executeOperationsMock.mock.calls[2][0]).toStrictEqual([
+	expect(executeOperationsMock.mock.calls[0][0].slice(1)).toStrictEqual([
+		o.b.u(cv_id, [], expect.objectContaining({ id: cv_id })),
 		o.b.la('block_1', [ 'content' ], expect.objectContaining({ id: cv_id }))
 	]);
 });
@@ -598,9 +575,9 @@ it(`type=bookmark`, async () => {
 				id: block_id,
 				type: 'bookmark'
 			})
-		)
+		),
+		o.b.la('block_1', [ 'content' ], { id: block_id })
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
 });
 
 it(`type=codepen`, async () => {
@@ -645,7 +622,7 @@ it(`type=codepen`, async () => {
 		source: 'https://google.com',
 		type: 'codepen'
 	});
-	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(
 			block_id,
@@ -657,9 +634,9 @@ it(`type=codepen`, async () => {
 					display_source: 500
 				}
 			})
-		)
+		),
+		o.b.la('block_1', [ 'content' ], { id: block_id })
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
 });
 
 it(`type=embed`, async () => {
@@ -703,7 +680,7 @@ it(`type=embed`, async () => {
 		source: 'https://google.com',
 		type: 'embed'
 	});
-	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 		o.b.u(
 			block_id,
@@ -712,7 +689,7 @@ it(`type=embed`, async () => {
 				id: block_id,
 				type: 'embed'
 			})
-		)
+		),
+		o.b.la('block_1', [ 'content' ], { id: block_id })
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toEqual([ o.b.la('block_1', [ 'content' ], { id: block_id }) ]);
 });

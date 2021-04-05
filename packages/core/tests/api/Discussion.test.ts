@@ -138,17 +138,17 @@ it(`deleteComments`, async () => {
 	const discussion = new Discussion(options);
 	await discussion.deleteComment('comment_1');
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.d.lr('discussion_1', [ 'comments' ], {
-			id: 'comment_1'
-		})
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
 		o.cm.u('comment_1', [], {
 			alive: false,
 			...last_edited_props
+		}),
+		o.d.lr('discussion_1', [ 'comments' ], {
+			id: 'comment_1'
 		})
 	]);
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'discussion_1', 'discussion' ]);
 	expect(comment_data.alive).toBe(false);
 	expect(discussion_data.comments).toStrictEqual([]);
 });
+
+// Page

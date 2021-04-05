@@ -34,8 +34,8 @@ it('deleteDiscussions', async () => {
 	expect(discussions).toStrictEqual([ discussion_1 ]);
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_id, 'block' ]);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.lr(block_id, [ 'discussions' ], { id: 'discussion_1' })
+		o.b.lr(block_id, [ 'discussions' ], { id: 'discussion_1' }),
+		o.b.u(block_id, [], last_edited_props)
 	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([ o.b.u(block_id, [], last_edited_props) ]);
 	expect(block_1.discussions).toStrictEqual([]);
 });

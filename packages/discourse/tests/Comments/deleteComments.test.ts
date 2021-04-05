@@ -29,14 +29,12 @@ it(`NotionDiscourse.deleteComments`, async () => {
 	await NotionDiscourse.Comments.delete('discussion_1', [ comment_id ], options);
 
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.d.lr('discussion_1', [ 'comments' ], {
-			id: comment_id
-		})
-	]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
 		o.cm.u(comment_id, [], {
 			alive: false,
 			...last_edited_props
+		}),
+		o.d.lr('discussion_1', [ 'comments' ], {
+			id: comment_id
 		})
 	]);
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'discussion_1', 'discussion' ]);

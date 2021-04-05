@@ -1,8 +1,7 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
-import { default_nishan_arg } from '../../../../core/tests/utils';
+import { default_nishan_arg, o } from '../../../../core/tests/utils';
 import { NotionFabricator } from '../../../libs';
 import { tsu } from '../../utils';
 
@@ -28,10 +27,7 @@ describe('Output correctly', () => {
 					value: '123'
 				}
 			},
-			cb = jest.fn(),
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
-				.mockImplementationOnce(async () => undefined);
+			cb = jest.fn();
 
 		const expected_view_data = {
 			id,
@@ -72,7 +68,7 @@ describe('Output correctly', () => {
 			space_id: 'space_1'
 		};
 
-		const views_data = await NotionFabricator.CreateData.views(
+		const [ views_data, operations ] = await NotionFabricator.CreateData.views(
 			default_collection,
 			[
 				{
@@ -92,7 +88,7 @@ describe('Output correctly', () => {
 			'parent_id',
 			cb
 		);
-		expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+		expect(operations).toStrictEqual([ o.cv.u(views_data[0].id, [], expected_view_data) ]);
 		expect(views_data).toStrictEqual([ expected_view_data ]);
 		expect(cb).toHaveBeenCalledWith(expect.objectContaining({ id }));
 	});

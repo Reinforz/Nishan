@@ -6,7 +6,7 @@ import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
 import { Space } from '../../libs';
 import { createSpaceIterateData } from '../../libs/utils';
-import { default_nishan_arg } from '../utils';
+import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -130,7 +130,17 @@ it(`createRootPages`, async () => {
 		}
 	]);
 
-  expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+  expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+    o.b.u(block_id, [], expect.objectContaining({
+      id: block_id,
+      parent_id: "space_1",
+      parent_table: "space"
+    })),
+    o.s.la('space_1', ['pages'], {
+      id: block_id
+    })]);
+    
 	expect(block_map.page.get('Page One')?.getCachedData()).toStrictEqual(expect.objectContaining({
     id: block_id
   }));
@@ -239,7 +249,16 @@ it(`deleteRootPage`, async()=>{
 	const root_page_map = await space.deleteRootPage('block_1');
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(['space_1', 'space']);
-  expect(executeOperationsMock).toHaveBeenCalledTimes(2);
+  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+    o.b.u('block_1', [], {
+      alive: false,
+      ...last_edited_props
+    }),
+    o.s.lr('space_1', ['pages'], {
+      id: 'block_1'
+    }),
+    o.s.u('space_1', [], last_edited_props)
+  ]);
 	expect(cache.block.get('block_1')?.alive).toBe(false);
 	expect(cache.space.get('space_1')).toStrictEqual(expect.objectContaining({
     pages: []

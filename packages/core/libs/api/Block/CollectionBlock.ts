@@ -35,7 +35,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 		const data = this.getCachedData(),
 			view_map = CreateMaps.view(),
 			props = this.getProps(),
-			views_data = await NotionFabricator.CreateData.views(
+			[ views_data, views_operations ] = await NotionFabricator.CreateData.views(
 				this.cache.collection.get(data.collection_id) as ICollection,
 				params,
 				this.getProps(),
@@ -45,6 +45,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 		const view_ids = views_data.map((view_data) => view_data.id);
 		await NotionOperations.executeOperations(
 			[
+				...views_operations,
 				NotionOperations.Chunk.block.set(data.id, [ 'view_ids' ], [ ...data.view_ids, ...view_ids ]),
 				NotionOperations.Chunk.block.update(data.id, [], this.updateLastEditedProps())
 			],

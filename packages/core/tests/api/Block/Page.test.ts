@@ -124,15 +124,18 @@ it(`deleteBlock`, async () => {
 
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_2.alive).toBe(false);
-	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.b.u(
+	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+    o.b.u(
 			'block_2',
 			[],
 			expect.objectContaining({
 				alive: false
 			})
 		),
+		o.b.lr('block_1', [ 'content' ], {
+			id: 'block_2'
+		}),
 		o.b.u('block_1', [], last_edited_props)
 	]);
 	expect(deleted_block_map.header.get('block_2')!.getCachedData()).toStrictEqual(block_2);

@@ -129,11 +129,11 @@ export async function contents (
 					};
 
 				const [ views_data, view_operations ] = await CreateData.views(collection, views, options, block_id);
+				views_data.forEach(({ id }) => view_ids.push(id));
 				operations.push(
 					...view_operations,
 					await executeOperationAndStoreInCache<ICollectionView>(collection_view_data, options, cb)
 				);
-				views_data.forEach(({ id }) => view_ids.push(id));
 			} else if (content.type === 'page') {
 				// Construct the default page object, with permissions data
 				const page_data: IPage = {

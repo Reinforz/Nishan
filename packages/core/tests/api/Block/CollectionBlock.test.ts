@@ -59,7 +59,7 @@ it(`createViews`, async () => {
 	
   const view_map = await collection_block.createViews(createViews_params);
 
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual(
+	expect(executeOperationsMock.mock.calls[0][0].slice(1)).toStrictEqual(
 		[
       o.b.s('block_1', ['view_ids'], [ 'collection_view_1', view_id ]),
       o.b.u('block_1', [], last_edited_props)
@@ -99,8 +99,9 @@ it(`deleteView`, async () => {
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(collection_view_1).toStrictEqual(expect.objectContaining({alive: false}));
-  expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
     o.cv.u('collection_view_1', [], expect.objectContaining({alive: false})),
+    o.b.lr('block_1', ['view_ids'], {id: 'collection_view_1'}),
     o.b.u('block_1', [], last_edited_props),
   ]);
   expect(deleted_view_map.table.get('collection_view_1')!.getCachedData()).toStrictEqual(collection_view_1)

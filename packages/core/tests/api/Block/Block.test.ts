@@ -273,8 +273,8 @@ describe('delete', () => {
 				alive: false
 			})
 		);
-		expect(executeOperationsMock).toHaveBeenCalledTimes(2);
-		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+		expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.b.u(
 				'block_1',
 				[],
@@ -299,8 +299,8 @@ describe('delete', () => {
 				alive: false
 			})
 		);
-		expect(executeOperationsMock).toHaveBeenCalledTimes(2);
-		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+		expect(executeOperationsMock).toHaveBeenCalledTimes(1);
+		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
 			o.b.u(
 				'block_3',
 				[],
@@ -443,7 +443,8 @@ it(`deleteDiscussion`, async () => {
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.b.lr('block_1', [ 'discussions' ], {
 			id: 'discussion_1'
-		})
+		}),
+		o.b.u('block_1', [], last_edited_props)
 	]);
 });
 

@@ -1,4 +1,4 @@
-import { Nishan } from '@nishans/core';
+import { NotionCore } from '@nishans/core';
 import { ApolloServer } from 'apollo-server';
 import { NotionGraphql } from '../libs';
 
@@ -8,7 +8,7 @@ afterEach(() => {
 
 it('server', async () => {
 	const getNotionUserMock = jest
-		.spyOn(Nishan.prototype, 'getNotionUser')
+		.spyOn(NotionCore.Api.Nishan.prototype, 'getNotionUser')
 		.mockImplementationOnce(async () => undefined as any);
 
 	const server = await NotionGraphql.server({ logger: false, interval: 0, token: 'token', user_id: 'user_root_1' });

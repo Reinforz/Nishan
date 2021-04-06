@@ -1,8 +1,8 @@
-import { Nishan } from '@nishans/core';
+import { NotionCore } from '@nishans/core';
 import { INotionEndpointsOptions } from '@nishans/endpoints';
 
 export async function initializeNishan ({ token, interval, user_id }: Required<INotionEndpointsOptions>) {
-	const nishan = new Nishan({
+	const nishan = new NotionCore.Api.Nishan({
 		token,
 		interval
 	});

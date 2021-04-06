@@ -68,9 +68,9 @@
     {
       "path": "./packages/core/tsconfig.json"
     },
-    {
-      "path": "./packages/cli/tsconfig.json"
-    },
+    // {
+    //   "path": "./packages/cli/tsconfig.json"
+    // },
     {
       "path": "./packages/graphql/tsconfig.json"
     },

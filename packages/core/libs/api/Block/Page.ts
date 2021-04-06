@@ -6,12 +6,11 @@ import { NotionPermissions } from '@nishans/permissions';
 import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
-import { CreateMaps, IBlockMap, INotionCoreOptions, PopulateMap } from '../../';
+import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
-import { Comment } from '../Comment';
-import { Discussion } from '../Discussion';
+import Comment from '../Comment';
+import Discussion from '../Discussion';
 import Block from './Block';
-
 /**
  * A class to represent Page type block of Notion
  * @noInheritDoc
@@ -44,14 +43,19 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 				break;
 			}
 		}
-		await NotionOperations.executeOperations([...(await NotionLineage.updateChildContainer<ISpaceView>(
-			'space_view',
-			target_space_view.id,
-			favorite_status,
-			data.id,
-			'bookmarked_pages',
+		await NotionOperations.executeOperations(
+			[
+				...(await NotionLineage.updateChildContainer<ISpaceView>(
+					'space_view',
+					target_space_view.id,
+					favorite_status,
+					data.id,
+					'bookmarked_pages',
+					this.getProps()
+				))
+			],
 			this.getProps()
-		))], this.getProps());
+		);
 	}
 
 	/**
@@ -60,10 +64,10 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
    * @returns Array of newly created block content objects
    */
 	async createBlocks (contents: TBlockCreateInput[]) {
-		const block_map = CreateMaps.block(),
+		const block_map = NotionCore.CreateMaps.block(),
 			props = this.getProps();
 		await NotionFabricator.CreateData.contents(contents, this.id, this.type as 'block', props, async (block) => {
-			await PopulateMap.block(block, block_map, props);
+			await NotionCore.PopulateMap.block(block, block_map, props);
 		});
 		return block_map;
 	}
@@ -79,10 +83,10 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 	async getBlocks (args?: FilterTypes<TBlock>, multiple?: boolean) {
 		return await this.getIterate<TBlock, IBlockMap>(
 			args,
-			{ container: CreateMaps.block(), multiple, child_ids: 'content', child_type: 'block' },
+			{ container: NotionCore.CreateMaps.block(), multiple, child_ids: 'content', child_type: 'block' },
 			(block_id) => this.cache.block.get(block_id) as TBlock,
 			async (_, block, block_map) => {
-				await PopulateMap.block(block, block_map, this.getProps());
+				await NotionCore.PopulateMap.block(block, block_map, this.getProps());
 			}
 		);
 	}
@@ -98,11 +102,11 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 				multiple,
 				child_ids: 'content',
 				child_type: 'block',
-				container: CreateMaps.block()
+				container: NotionCore.CreateMaps.block()
 			},
 			(child_id) => this.cache.block.get(child_id),
 			async (_, block, __, block_map) => {
-				await PopulateMap.block(block, block_map, this.getProps());
+				await NotionCore.PopulateMap.block(block, block_map, this.getProps());
 			}
 		);
 	}
@@ -127,10 +131,10 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 				child_ids: 'content',
 				child_path: 'content',
 				child_type: 'block',
-				container: CreateMaps.block()
+				container: NotionCore.CreateMaps.block()
 			},
 			(block_id) => this.cache.block.get(block_id),
-			async (id, block, container) => PopulateMap.block(block, container, this.getProps())
+			async (id, block, container) => NotionCore.PopulateMap.block(block, container, this.getProps())
 		);
 	}
 

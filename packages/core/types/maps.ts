@@ -78,19 +78,9 @@ import {
 	TitleSchemaUnit,
 	UrlSchemaUnit
 } from '@nishans/types';
-import {
-	Block,
-	BoardView,
-	CalendarView,
-	CollectionView,
-	CollectionViewPage,
-	GalleryView,
-	ListView,
-	Page,
-	SchemaUnit,
-	TableView,
-	TimelineView
-} from '../libs';
+import { Block, CollectionView, CollectionViewPage, Page } from '../libs/api/Block';
+import SchemaUnit from '../libs/api/SchemaUnit';
+import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from '../libs/api/View';
 
 export interface IPageMap {
 	collection_view_page: Map<string, CollectionViewPage>;

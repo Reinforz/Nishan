@@ -1,7 +1,7 @@
 import { TableViewCreateInput, TViewCreateInput } from "@nishans/fabricator";
 import { CheckboxSchemaUnit } from "@nishans/types";
 import { v4 as uuidv4 } from 'uuid';
-import { Nishan, Page } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import '../../env';
 import { difficulty, priority } from '../data';
 import { adders, counterFormula, curriculumInfoSchemaUnits, propertyChecked, status_phase_combos } from '../util';
@@ -21,7 +21,7 @@ const daily_sites = [
 ];
 
 export default async function step1(user_family_name: string, space_name: string) {
-	const nishan = new Nishan({
+	const nishan = new NotionCore.API.Nishan({
 		token: process.env.NOTION_TOKEN as string,
     logger: false
   });
@@ -427,5 +427,5 @@ export default async function step1(user_family_name: string, space_name: string
     }
   ]);
   // fs.writeFileSync(__dirname+"/data.json", JSON.stringify(target_page?.stack), 'utf-8');
-  return target_page as Page;
+  return target_page!;
 };

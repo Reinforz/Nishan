@@ -12,7 +12,7 @@ import { NotionPermissions } from '@nishans/permissions';
 import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/SpacePermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
-import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceUpdateInput, PopulateMap } from '../';
+import { INotionCoreOptions, IPageMap, ISpaceUpdateInput, NotionCore } from '../';
 import { createSpaceIterateData, transformToMultiple } from '../utils';
 import Data from './Data';
 import SpaceView from './SpaceView';
@@ -62,7 +62,7 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 	}
 
 	async createRootPages (contents: (ICollectionViewPageInput | IPageCreateInput)[]) {
-		const block_map = CreateMaps.block(),
+		const block_map = NotionCore.CreateMaps.block(),
 			props = this.getProps();
 		await NotionFabricator.CreateData.contents(
 			contents,
@@ -70,7 +70,7 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 			this.type as 'space',
 			this.getProps(),
 			async (block) => {
-				await PopulateMap.block(block, block_map, props);
+				await NotionCore.PopulateMap.block(block, block_map, props);
 			}
 		);
 		return block_map;
@@ -86,9 +86,9 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 	) {
 		return await this.getIterate<IPage | (ICollectionViewPage & { collection: ICollection }), IPageMap>(
 			args,
-			{ container: CreateMaps.page(), multiple, child_ids: 'pages', child_type: 'block' },
+			{ container: NotionCore.CreateMaps.page(), multiple, child_ids: 'pages', child_type: 'block' },
 			async (id) => await createSpaceIterateData(id, this.getProps()),
-			async (_, page, page_map) => await PopulateMap.page(page, page_map, this.getProps())
+			async (_, page, page_map) => await NotionCore.PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
 
@@ -116,10 +116,10 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 				child_ids: 'pages',
 				child_type: 'block',
 				multiple,
-				container: CreateMaps.page()
+				container: NotionCore.CreateMaps.page()
 			},
 			async (id) => await createSpaceIterateData(id, this.getProps()),
-			async (_, page, __, page_map) => await PopulateMap.page(page, page_map, this.getProps())
+			async (_, page, __, page_map) => await NotionCore.PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
 
@@ -144,10 +144,10 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 				child_ids: 'pages',
 				child_path: 'pages',
 				child_type: 'block',
-				container: CreateMaps.page()
+				container: NotionCore.CreateMaps.page()
 			},
 			async (block_id) => await createSpaceIterateData(block_id, this.getProps()),
-			async (_, page, page_map) => await PopulateMap.page(page, page_map, this.getProps())
+			async (_, page, page_map) => await NotionCore.PopulateMap.page(page, page_map, this.getProps())
 		);
 	}
 }

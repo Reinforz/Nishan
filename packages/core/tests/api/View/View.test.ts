@@ -3,7 +3,16 @@ import { tsu, txsu } from '@nishans/fabricator/tests/utils';
 import { NotionOperations } from '@nishans/operations';
 import { NotionCore } from '../../../libs';
 import { default_nishan_arg, o } from '../../utils';
-import { tas, txas } from './utils';
+
+export const tas = {
+	property: 'title',
+	direction: 'ascending'
+};
+
+export const txas = {
+	property: 'text',
+	direction: 'ascending'
+};
 
 afterEach(() => {
 	jest.restoreAllMocks();

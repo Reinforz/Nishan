@@ -201,8 +201,6 @@ export async function contents (
 					type: response.type
 				});
 
-				console.log(common_data);
-
 				const block_data: any = {
 					...common_data,
 					...metadata

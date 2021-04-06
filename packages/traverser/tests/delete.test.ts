@@ -59,7 +59,6 @@ it(`manual=false`, async () => {
 		...last_edited_props
 	});
 	expect(deleted_data).toStrictEqual([ dc1d, dc2d ]);
-	console.log(executeOperationsMock.mock.calls[0][0]);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ c1do, c1ro, c2do, c2ro, p1uo ]);
 });
 

@@ -580,7 +580,7 @@ it(`type=bookmark`, async () => {
 	]);
 });
 
-it(`type=codepen`, async () => {
+it(`type=embed`, async () => {
 	const block_id = v4();
 	const cache = {
 			...NotionCache.createDefaultCache(),
@@ -591,65 +591,9 @@ it(`type=codepen`, async () => {
 				({
 					format: {
 						display_source: 500
-					}
-				} as any)
-		),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
-
-	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
-
-	await NotionFabricator.CreateData.contents(
-		[
-			{
-				type: 'codepen',
-				properties: { source: [ [ 'https://google.com' ] ] },
-				id: block_id
-			}
-		],
-		'block_1',
-		'block',
-		{
-			...default_nishan_arg,
-			cache
-		}
-	);
-
-	expect(logger_spy).toHaveBeenCalledTimes(1);
-	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${block_id}`);
-	expect(getGenericEmbedBlockDataMock).toHaveBeenCalledTimes(1);
-	expect(getGenericEmbedBlockDataMock.mock.calls[0][0]).toStrictEqual({
-		pageWidth: 500,
-		source: 'https://google.com',
-		type: 'codepen'
-	});
-	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
-		o.b.u(
-			block_id,
-			[],
-			expect.objectContaining({
-				id: block_id,
-				type: 'codepen',
-				format: {
-					display_source: 500
-				}
-			})
-		),
-		o.b.la('block_1', [ 'content' ], { id: block_id })
-	]);
-});
-
-it(`type=embed`, async () => {
-	const block_id = v4();
-	const cache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
-		},
-		getGenericEmbedBlockDataMock = jest.spyOn(NotionEndpoints.Queries, 'getGenericEmbedBlockData').mockImplementation(
-			async () =>
-				({
-					format: {},
-					empty: true
+					},
+					empty: true,
+					type: 'embed'
 				} as any)
 		),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
@@ -661,7 +605,10 @@ it(`type=embed`, async () => {
 			{
 				type: 'embed',
 				properties: { source: [ [ 'https://google.com' ] ] },
-				id: block_id
+				id: block_id,
+				format: {
+					block_full_width: true
+				}
 			}
 		],
 		'block_1',
@@ -687,7 +634,11 @@ it(`type=embed`, async () => {
 			[],
 			expect.objectContaining({
 				id: block_id,
-				type: 'embed'
+				type: 'embed',
+				format: {
+					block_full_width: true,
+					display_source: 500
+				}
 			})
 		),
 		o.b.la('block_1', [ 'content' ], { id: block_id })

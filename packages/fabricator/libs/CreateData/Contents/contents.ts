@@ -67,8 +67,8 @@ export async function contents (
 				parent_id,
 				type: content.type
 			} as any;
-			if ((content as any).properties) common_data.properties = (content as any).properties;
-			if ((content as any).format) common_data.format = (content as any).format;
+			if ((content as any).properties) common_data.properties = { ...(content as any).properties };
+			if ((content as any).format) common_data.format = { ...(content as any).format };
 
 			/* else if (type === "drive") {
         const {
@@ -191,7 +191,17 @@ export async function contents (
 					options
 				);
 
-				if (!response.empty) NotionUtils.deepMerge(common_data, response);
+				NotionUtils.deepMerge(response, {
+					format: (content as any).format,
+					properties: (content as any).properties
+				});
+				NotionUtils.deepMerge(common_data, {
+					format: response.format,
+					properties: response.properties,
+					type: response.type
+				});
+
+				console.log(common_data);
 
 				const block_data: any = {
 					...common_data,

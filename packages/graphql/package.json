@@ -1,6 +1,6 @@
 {
   "name": "@nishans/graphql",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A graphql server for notion built using `@nishans/core`",
   "keywords": [
     "notion",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@nishans/cache": "0.0.34",
-    "@nishans/core": "0.0.30",
+    "@nishans/core": "0.0.31",
     "@nishans/endpoints": "0.0.30",
     "@nishans/utils": "0.0.23",
     "apollo-server": "^2.21.0",

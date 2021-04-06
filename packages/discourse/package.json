@@ -1,6 +1,6 @@
 {
   "name": "@nishans/discourse",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A package for working with notion discussions & comments",
   "keywords": [
     "notion-api",

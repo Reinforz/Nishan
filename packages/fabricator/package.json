@@ -1,6 +1,6 @@
 {
   "name": "@nishans/fabricator",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "description": "A package to generate notion blocks using a simple api",
   "keywords": [
     "notion",
@@ -36,7 +36,7 @@
     "@nishans/errors": "0.0.30",
     "@nishans/idz": "0.0.18",
     "@nishans/init": "0.0.21",
-    "@nishans/lineage": "0.0.21",
+    "@nishans/lineage": "0.0.22",
     "@nishans/logger": "0.0.18",
     "@nishans/notion-formula": "0.0.31",
     "@nishans/operations": "0.0.30",

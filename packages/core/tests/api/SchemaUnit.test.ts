@@ -4,7 +4,7 @@ import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import colors from "colors";
 import { tsu, txsu } from '../../../fabricator/tests/utils';
-import { SchemaUnit } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
 afterEach(() => {
@@ -28,7 +28,7 @@ it(`update`, async () => {
 
   const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-  const schema_unit = new SchemaUnit({
+  const schema_unit = new NotionCore.Api.SchemaUnit({
     ...default_nishan_arg,
     cache,
     id: 'collection_1',
@@ -77,7 +77,7 @@ describe('delete', () => {
       executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
     const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
-    const schema_unit = new SchemaUnit({
+    const schema_unit = new NotionCore.Api.SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
@@ -116,7 +116,7 @@ describe('delete', () => {
       ]),
     };
 
-    const schema_unit = new SchemaUnit({
+    const schema_unit = new NotionCore.Api.SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
@@ -145,7 +145,7 @@ describe('duplicate', () => {
       executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
     const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-    const schema_unit = new SchemaUnit({
+    const schema_unit = new NotionCore.Api.SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
@@ -180,7 +180,7 @@ describe('duplicate', () => {
       ]),
     };
 
-    const schema_unit = new SchemaUnit({
+    const schema_unit = new NotionCore.Api.SchemaUnit({
       ...default_nishan_arg,
       cache,
       id: 'collection_1',
@@ -206,7 +206,7 @@ it(`getCachedChildData`, () => {
     ]),
   };
 
-  const schema_unit = new SchemaUnit({
+  const schema_unit = new NotionCore.Api.SchemaUnit({
     ...default_nishan_arg,
     cache,
     id: 'collection_1',

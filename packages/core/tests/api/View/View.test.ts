@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
+import { tsu, txsu } from '@nishans/fabricator/tests/utils';
 import { NotionOperations } from '@nishans/operations';
-import { tsu, txsu } from '../../../../fabricator/tests/utils';
-import { View } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg, o } from '../../utils';
 import { tas, txas } from './utils';
 
@@ -102,12 +102,12 @@ const construct = () => {
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const view = new View({
+	const view = new NotionCore.Api.View({
 		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1'
 	});
-	const view_2 = new View({
+	const view_2 = new NotionCore.Api.View({
 		...default_nishan_arg,
 		cache,
 		id: 'collection_view_2'

@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
-import { SpaceView } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
 afterEach(() => {
@@ -16,7 +16,7 @@ it(`getCachedParentData`, () => {
 		user_root: new Map([ [ 'user_root_1', { space_views: [ 'space_view_1' ] } as any ] ])
 	};
 
-	const space_view = new SpaceView({
+	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_1'
@@ -44,7 +44,7 @@ it(`reposition`, async () => {
 		.spyOn(NotionOperations, 'executeOperations')
 		.mockImplementationOnce(async () => undefined);
 
-	const space_view = new SpaceView({
+	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_2'
@@ -72,7 +72,7 @@ it(`getSpace`, () => {
 
 	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const space_view = new SpaceView({
+	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_1'
@@ -110,7 +110,7 @@ it(`getBookmarkedPage`, async () => {
 		.spyOn(NotionCache, 'initializeCacheForSpecificData')
 		.mockImplementation(async () => undefined);
 
-	const space_view = new SpaceView({
+	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_1',
@@ -158,7 +158,7 @@ it(`updateBookmarkedPages`, async () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined);
 
-	const space_view = new SpaceView({
+	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
 		cache,
 		id: 'space_view_1',

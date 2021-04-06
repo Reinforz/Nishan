@@ -1,7 +1,7 @@
 import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { TView } from '@nishans/types';
 import { IViewMap } from '../../types';
-import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from '../api/View';
+import { BoardView, CalendarView, GalleryView, ListView, TableView, TimelineView } from '../Api/View';
 
 const ViewClass = {
 	board: BoardView,

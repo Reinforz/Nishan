@@ -3,7 +3,7 @@ import { TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from "uuid";
 import { tsu } from "../../../../fabricator/tests/utils";
-import { CollectionBlock } from "../../../libs";
+import { NotionCore } from "../../../libs";
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -29,7 +29,7 @@ const construct = () =>{
   executeOperationsMock = jest
     .spyOn(NotionOperations, 'executeOperations')
     .mockImplementation(async () => undefined);
-  const collection_block = new CollectionBlock({
+  const collection_block = new NotionCore.Api.CollectionBlock({
     ...default_nishan_arg,
 		cache,
 	});

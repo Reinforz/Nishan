@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { CreateMaps, PopulateMap } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
@@ -7,11 +7,11 @@ afterEach(() => {
 });
 
 it('PopulateMap.view', () => {
-	const view_map = CreateMaps.view();
+	const view_map = NotionCore.CreateMaps.view();
 
 	const cache = NotionCache.createDefaultCache();
 
-	PopulateMap.view(
+	NotionCore.PopulateMap.view(
 		{ name: 'Board', type: 'board', id: 'view_1' } as any,
 		{
 			...default_nishan_arg,

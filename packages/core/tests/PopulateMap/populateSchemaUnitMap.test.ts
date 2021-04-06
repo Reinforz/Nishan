@@ -1,17 +1,17 @@
 import { NotionCache } from '@nishans/cache';
-import { CreateMaps, PopulateMap } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it('PopulateMap.schemaUnit', () => {
-	const schema_unit_map = CreateMaps.schema_unit();
+it('NotionCore.PopulateMap.schemaUnit', () => {
+	const schema_unit_map = NotionCore.CreateMaps.schema_unit();
 
 	const cache = NotionCache.createDefaultCache();
 
-	PopulateMap.schemaUnit(
+	NotionCore.PopulateMap.schemaUnit(
 		'collection_1',
 		'title',
 		{ name: 'Title', type: 'title' },

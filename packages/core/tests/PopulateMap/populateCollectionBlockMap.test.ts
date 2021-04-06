@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { IBlockMap, PopulateMap } from '../../libs';
+import { IBlockMap, NotionCore } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
@@ -24,7 +24,7 @@ it(`PopulateMap.collection_block`, async () => {
 			return undefined as any;
 		});
 
-	await PopulateMap.collectionBlock(
+	await NotionCore.PopulateMap.collectionBlock(
 		block_1,
 		{
 			...default_nishan_arg,

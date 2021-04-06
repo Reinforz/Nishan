@@ -1,11 +1,11 @@
 export * from '../types';
-import { CoreApi } from './api';
+import { CoreApi } from './Api';
 import { createBlockClass } from './createBlockClass';
 import { CreateMaps } from './CreateMaps';
 import { PopulateMap } from './PopulateMap';
 
 export const NotionCore = {
-	API: CoreApi,
+	Api: CoreApi,
 	createBlockClass,
 	PopulateMap,
 	CreateMaps

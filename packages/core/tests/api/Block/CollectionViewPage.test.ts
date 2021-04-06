@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { CollectionViewPage } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg } from '../../utils';
 
 afterEach(() => {
@@ -15,7 +15,7 @@ it(`getCachedParentData`, async () => {
 		])
 	} as any;
 
-	const collection_view_page = new CollectionViewPage({
+	const collection_view_page = new NotionCore.Api.CollectionViewPage({
 		...default_nishan_arg,
 		cache,
 		id: 'block_2'

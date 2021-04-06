@@ -10,7 +10,7 @@ export const populateSchemaUnitMap = (
 	options: INotionFabricatorOptions,
 	schema_unit_map: ISchemaUnitMap
 ) => {
-	const schema_unit_obj = new NotionCore.API.SchemaUnit({
+	const schema_unit_obj = new NotionCore.Api.SchemaUnit({
 		id,
 		...options,
 		schema_id

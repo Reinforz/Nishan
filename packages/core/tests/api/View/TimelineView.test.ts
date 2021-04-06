@@ -1,4 +1,4 @@
-import { TimelineView } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg } from '../../utils';
 
 afterEach(() => {
@@ -6,5 +6,5 @@ afterEach(() => {
 });
 
 it(`TimelineView`, () => {
-	new TimelineView(default_nishan_arg);
+	new NotionCore.Api.TimelineView(default_nishan_arg);
 });

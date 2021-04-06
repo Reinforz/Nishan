@@ -5,7 +5,7 @@ import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
-import { Collection } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
@@ -24,7 +24,7 @@ it(`getCachedParentData`, async () => {
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
-	const collection = new Collection({
+	const collection = new NotionCore.Api.Collection({
 		...default_nishan_arg,
 		cache,
 		id: 'collection_1'
@@ -46,7 +46,7 @@ it(`createTemplates`, async () => {
 			collection: new Map([ [ 'collection_1', collection_1 ] ])
 		} as any;
 
-	const collection = new Collection({
+	const collection = new NotionCore.Api.Collection({
 		...default_nishan_arg,
 		cache,
 		id: 'collection_1'
@@ -92,7 +92,7 @@ describe('template pages', () => {
 				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
-		const collection = new Collection({
+		const collection = new NotionCore.Api.Collection({
 			...default_nishan_arg,
 			cache,
 			id: 'collection_1'
@@ -160,15 +160,11 @@ describe('template pages', () => {
 		);
 
 		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-      o.b.u(
-				'block_1',
-				[],
-				{
-					alive: false,
-          ...last_edited_props
-				}
-			),
-      o.c.lr('collection_1', [ 'template_pages' ], { id: 'block_1' }),
+			o.b.u('block_1', [], {
+				alive: false,
+				...last_edited_props
+			}),
+			o.c.lr('collection_1', [ 'template_pages' ], { id: 'block_1' })
 		]);
 		expect(deleted_templates.length).toBe(1);
 		expect(deleted_templates[0].getCachedData()).toStrictEqual(block_1);
@@ -193,7 +189,7 @@ describe('rows', () => {
 				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
-		const collection = new Collection({
+		const collection = new NotionCore.Api.Collection({
 			...default_nishan_arg,
 			cache,
 			id: 'collection_1'
@@ -310,7 +306,7 @@ describe('schema unit', () => {
 				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
-		const collection = new Collection({
+		const collection = new NotionCore.Api.Collection({
 			...default_nishan_arg,
 			cache,
 			id: 'collection_1'

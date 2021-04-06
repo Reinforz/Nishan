@@ -197,7 +197,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 		return (await NotionDiscourse.Discussions.create(
 			args.map((arg) => ({ ...arg, block_id: this.id })),
 			this.getProps()
-		)).map((discussion) => new NotionCore.API.Discussion({ id: discussion.id, ...this.getProps() }));
+		)).map((discussion) => new NotionCore.Api.Discussion({ id: discussion.id, ...this.getProps() }));
 	}
 
 	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
@@ -210,7 +210,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.update(this.id, args, { ...props, multiple })).map(
-			(discussion) => new NotionCore.API.Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 
@@ -221,7 +221,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.delete(this.id, args, { ...props, multiple })).map(
-			(discussion) => new NotionCore.API.Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 
@@ -232,7 +232,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.get(this.id, args, { ...props, multiple })).map(
-			(discussion) => new NotionCore.API.Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 }

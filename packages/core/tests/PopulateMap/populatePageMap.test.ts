@@ -1,12 +1,12 @@
 import { NotionCache } from '@nishans/cache';
-import { IPageMap, PopulateMap } from '../../libs';
+import { IPageMap, NotionCore } from '../../libs';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('PopulateMap.page', () => {
+describe('NotionCore.PopulateMap.page', () => {
 	it(`type=page`, async () => {
 		const page_map: IPageMap = {
 			page: new Map(),
@@ -15,10 +15,14 @@ describe('PopulateMap.page', () => {
 
 		const cache = NotionCache.createDefaultCache();
 
-		await PopulateMap.page({ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any, page_map, {
-			...default_nishan_arg,
-			cache
-		});
+		await NotionCore.PopulateMap.page(
+			{ id: 'block_1', type: 'page', properties: { title: [ [ 'Page' ] ] } } as any,
+			page_map,
+			{
+				...default_nishan_arg,
+				cache
+			}
+		);
 
 		expect(page_map.page.get('block_1')).not.toBeUndefined();
 		expect(page_map.page.get('Page')).not.toBeUndefined();
@@ -41,11 +45,13 @@ describe('PopulateMap.page', () => {
 			return undefined as any;
 		});
 
-		const PopulateMapCollectionBlockMock = jest.spyOn(PopulateMap, 'collectionBlock').mockImplementationOnce(() => {
-			return undefined as any;
-		});
+		const PopulateMapCollectionBlockMock = jest
+			.spyOn(NotionCore.PopulateMap, 'collectionBlock')
+			.mockImplementationOnce(() => {
+				return undefined as any;
+			});
 
-		await PopulateMap.page(block_1 as any, page_map, {
+		await NotionCore.PopulateMap.page(block_1 as any, page_map, {
 			...default_nishan_arg,
 			cache
 		});

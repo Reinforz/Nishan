@@ -1,10 +1,10 @@
-import { CalendarView } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`CalendarView`, () => {
-	new CalendarView(default_nishan_arg);
+it(`NotionCore.Api.CalendarView`, () => {
+	new NotionCore.Api.CalendarView(default_nishan_arg);
 });

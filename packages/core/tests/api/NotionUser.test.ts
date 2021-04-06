@@ -4,7 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { NotionUser } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
@@ -18,7 +18,7 @@ it('create space', async () => {
   const spaceId = v4(),page_id = v4(), cache: INotionCache = {
     ...NotionCache.createDefaultCache(),
     user_root: new Map([['user_root_1', { space_views: [] }] as any]),
-  }, notion_user = new NotionUser({
+  }, notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
   }), space_snapshot_data = {
@@ -117,7 +117,7 @@ it(`get space`, async () => {
       ['space_2', { id: 'space_2', shard_id: 123 }]
     ] as any),
   };
-  const notion_user = new NotionUser({
+  const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
     id: 'user_root_1',
@@ -140,7 +140,7 @@ it(`update space`, async () => {
   },
     executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
-  const notion_user = new NotionUser({
+  const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
     id: 'user_root_1',
@@ -172,7 +172,7 @@ it('getUserSettings', () => {
     user_settings: new Map([['user_root_1', { id: 'user_root_1', name: 'User Settings 1' }]] as any)
   };
 
-  const notion_user = new NotionUser({
+  const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
     id: 'user_root_1',
@@ -188,7 +188,7 @@ it('getUserRoot', () => {
     user_root: new Map([['user_root_1', { id: 'user_root_1', name: 'User Root 1' }]] as any),
   };
 
-  const notion_user = new NotionUser({
+  const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
     id: 'user_root_1',
@@ -204,7 +204,7 @@ it(`delete space`, async () => {
     space: new Map([['space_1', space_1]] as any),
   };
 
-  const notion_user = new NotionUser({
+  const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
     cache,
     id: 'user_root_1',

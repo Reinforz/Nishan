@@ -1,10 +1,10 @@
-import { GalleryView } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`GalleryView`, () => {
-	new GalleryView(default_nishan_arg);
+it(`NotionCore.Api.GalleryView`, () => {
+	new NotionCore.Api.GalleryView(default_nishan_arg);
 });

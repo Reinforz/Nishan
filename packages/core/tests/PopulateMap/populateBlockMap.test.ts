@@ -1,12 +1,13 @@
 import { NotionCache } from '@nishans/cache';
-import { Block, IBlockMap, PopulateMap } from '../../libs';
+import { IBlockMap, NotionCore } from '../../libs';
+import { Block } from '../../libs/Api/Block';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-describe('PopulateMap.block', () => {
+describe('NotionCore.PopulateMap.block', () => {
 	it(`type=collection_view_page`, async () => {
 		const block_map: any = {
 				page: new Map(),
@@ -24,11 +25,11 @@ describe('PopulateMap.block', () => {
 			return undefined as any;
 		});
 
-		const PopulateMapPageMock = jest.spyOn(PopulateMap, 'page').mockImplementationOnce(() => {
+		const PopulateMapPageMock = jest.spyOn(NotionCore.PopulateMap, 'page').mockImplementationOnce(() => {
 			return undefined as any;
 		});
 
-		await PopulateMap.block(block_1 as any, block_map, {
+		await NotionCore.PopulateMap.block(block_1 as any, block_map, {
 			...default_nishan_arg,
 			cache
 		});
@@ -48,7 +49,7 @@ describe('PopulateMap.block', () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
-		await PopulateMap.block(block_1 as any, block_map, {
+		await NotionCore.PopulateMap.block(block_1 as any, block_map, {
 			...default_nishan_arg,
 			cache
 		});
@@ -68,7 +69,7 @@ describe('PopulateMap.block', () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
-		await PopulateMap.block(block_1 as any, block_map, {
+		await NotionCore.PopulateMap.block(block_1 as any, block_map, {
 			...default_nishan_arg,
 			cache
 		});
@@ -87,11 +88,13 @@ describe('PopulateMap.block', () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any;
 
-		const PopulateMapCollectionBlockMock = jest.spyOn(PopulateMap, 'collectionBlock').mockImplementationOnce(() => {
-			return undefined as any;
-		});
+		const PopulateMapCollectionBlockMock = jest
+			.spyOn(NotionCore.PopulateMap, 'collectionBlock')
+			.mockImplementationOnce(() => {
+				return undefined as any;
+			});
 
-		await PopulateMap.block(block_1 as any, block_map, {
+		await NotionCore.PopulateMap.block(block_1 as any, block_map, {
 			...default_nishan_arg,
 			cache
 		});

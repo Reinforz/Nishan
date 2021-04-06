@@ -4,7 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { Space } from '../../libs';
+import { NotionCore } from '../../libs';
 import { createSpaceIterateData } from '../../libs/utils';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
@@ -55,7 +55,7 @@ it(`getSpaceView`, async () => {
 				[ 'space_view_1', { alive: true, space_id: 'space_1', id: 'space_view_1' } as any ]
 			]),
 		};
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
@@ -74,7 +74,7 @@ it(`delete`, async () => {
 	const cache = NotionCache.createDefaultCache();
   const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1'
@@ -112,7 +112,7 @@ it(`createRootPages`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
 
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
@@ -180,7 +180,7 @@ it(`getRootPage`, async () => {
 		},
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
@@ -203,7 +203,7 @@ it(`updateRootPage`, async()=>{
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined),
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',
@@ -239,7 +239,7 @@ it(`deleteRootPage`, async()=>{
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined),
     initializeCacheForSpecificDataMock = jest.spyOn(NotionCache, 'initializeCacheForSpecificData').mockImplementationOnce(async()=>undefined);
 
-	const space = new Space({
+	const space = new NotionCore.Api.Space({
     ...default_nishan_arg,
 		cache,
 		id: 'space_1',

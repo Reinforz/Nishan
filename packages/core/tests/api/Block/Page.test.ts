@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { Page } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -45,7 +45,7 @@ const construct = () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
 
-	const page = new Page({
+	const page = new NotionCore.Api.Page({
 		...default_nishan_arg,
 		cache,
 		logger: false
@@ -126,7 +126,7 @@ it(`deleteBlock`, async () => {
 	expect(block_2.alive).toBe(false);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-    o.b.u(
+		o.b.u(
 			'block_2',
 			[],
 			expect.objectContaining({
@@ -153,7 +153,7 @@ it(`updateBookmarkedStatus`, async () => {
 		},
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const page = new Page({
+	const page = new NotionCore.Api.Page({
 		...default_nishan_arg,
 		cache,
 		logger: false

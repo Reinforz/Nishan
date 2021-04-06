@@ -2,8 +2,8 @@ import { NotionCache } from '@nishans/cache';
 import { NotionOperations } from '@nishans/operations';
 import { NotionUtils } from '@nishans/utils';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
-import { ViewAggregator } from '../../../libs';
-import { detectAggregationErrors } from '../../../libs/api/View/Aggregator';
+import { NotionCore } from '../../../libs';
+import { detectAggregationErrors } from '../../../libs/Api/View/Aggregator';
 import { default_nishan_arg, o } from '../../utils';
 
 afterEach(() => {
@@ -66,7 +66,7 @@ const aggregationCrudSetup = () => {
 			.mockImplementationOnce(async () => undefined),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const view_aggregator = new ViewAggregator({
+	const view_aggregator = new NotionCore.Api.ViewAggregator({
 		...default_nishan_arg,
 		cache,
 		id: 'collection_view_1'

@@ -1,13 +1,14 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
+import { IEmbedInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IDiscussion, IPage, ISpace, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
-import { CreateMaps, Discussion, INotionCoreOptions, PopulateMap } from '../../';
+import { INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
 import Data from '../Data';
 
@@ -15,7 +16,7 @@ import Data from '../Data';
  * A class to represent block of Notion
  * @noInheritDoc
  */
-class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
+class Block<T extends TBlock, U extends Partial<TBlock | IEmbedInput>> extends Data<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'block' });
 	}
@@ -47,7 +48,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
    * @returns A block map
    */
 	async duplicate (infos: number | string[]) {
-		const block_map = CreateMaps.block(),
+		const block_map = NotionCore.CreateMaps.block(),
 			block = this.getCachedData();
 		const ids: string[] =
 			typeof infos === 'number'
@@ -97,7 +98,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 				this.cache.block.set(block_id, JSON.parse(JSON.stringify(duplicated_block)));
 			}
 			this.logger && NotionLogger.method.info(`CREATE block ${block_id}`);
-			await PopulateMap.block(block, block_map, this.getProps());
+			await NotionCore.PopulateMap.block(block, block_map, this.getProps());
 		}
 		return block_map;
 	}
@@ -197,7 +198,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 		return (await NotionDiscourse.Discussions.create(
 			args.map((arg) => ({ ...arg, block_id: this.id })),
 			this.getProps()
-		)).map((discussion) => new Discussion({ id: discussion.id, ...this.getProps() }));
+		)).map((discussion) => new NotionCore.Api.Discussion({ id: discussion.id, ...this.getProps() }));
 	}
 
 	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {
@@ -210,7 +211,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.update(this.id, args, { ...props, multiple })).map(
-			(discussion) => new Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 
@@ -221,7 +222,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	async deleteDiscussions (args: FilterTypes<IDiscussion>, multiple?: boolean) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.delete(this.id, args, { ...props, multiple })).map(
-			(discussion) => new Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 
@@ -232,7 +233,7 @@ class Block<T extends TBlock, U extends Partial<TBlock>> extends Data<T, U> {
 	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.get(this.id, args, { ...props, multiple })).map(
-			(discussion) => new Discussion({ ...props, id: discussion.id })
+			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
 		);
 	}
 }

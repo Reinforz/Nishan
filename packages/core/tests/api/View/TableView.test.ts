@@ -1,10 +1,10 @@
-import { TableView } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg } from '../../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();
 });
 
-it(`TableView`, () => {
-	new TableView(default_nishan_arg);
+it(`NotionCore.Api.TableView`, () => {
+	new NotionCore.Api.TableView(default_nishan_arg);
 });

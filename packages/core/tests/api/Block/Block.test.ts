@@ -3,7 +3,7 @@ import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { v4 } from 'uuid';
-import { Block, PopulateMap } from '../../../libs';
+import { NotionCore } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
 afterEach(() => {
@@ -46,16 +46,16 @@ const construct = () => {
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-	const block_1_obj = new Block({
+	const block_1_obj = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			cache
 		}),
-		block_2_obj = new Block({
+		block_2_obj = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			id: 'block_2',
 			cache
 		}),
-		block_3_obj = new Block({
+		block_3_obj = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			id: 'block_3',
 			cache
@@ -86,7 +86,7 @@ it('getCachedParentData', async () => {
 		])
 	} as any;
 
-	const block = new Block({
+	const block = new NotionCore.Api.Block({
 		...default_nishan_arg,
 		cache
 	});
@@ -107,7 +107,7 @@ describe('reposition', () => {
 			])
 		} as any;
 
-		const block = new Block({
+		const block = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			cache
 		});
@@ -129,7 +129,7 @@ describe('reposition', () => {
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: [] } ] ])
 		} as any;
 
-		const block = new Block({
+		const block = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			cache
 		});
@@ -195,13 +195,13 @@ describe('duplicate', () => {
 	it(`type=collection_view_page,arg=number`, async () => {
 		const { cache, executeOperationsMock } = construct();
 
-		const block = new Block({
+		const block = new NotionCore.Api.Block({
 			...default_nishan_arg,
 			id: 'block_2',
 			cache
 		});
 
-		const PopulateMapBlockMock = jest.spyOn(PopulateMap, 'block').mockImplementation(async () => undefined);
+		const PopulateMapBlockMock = jest.spyOn(NotionCore.PopulateMap, 'block').mockImplementation(async () => undefined);
 		const NotionMutationsEnqueueTaskMock = jest
 			.spyOn(NotionEndpoints.Mutations, 'enqueueTask')
 			.mockImplementation(async () => undefined as any);

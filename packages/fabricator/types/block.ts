@@ -266,7 +266,7 @@ export type TAdvancedBlockInput = IBreadcrumbInput | IFactoryInput | IEquationIn
 export interface IEmbedInput extends IBlockInput {
 	type: 'embed';
 	properties: IEmbed['properties'];
-	format?: IEmbed['format'];
+	format?: Partial<IEmbed['format']>;
 }
 
 export interface IDriveInput extends IBlockInput {

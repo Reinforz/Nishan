@@ -3,10 +3,10 @@ import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/trave
 import { IComment, IDiscussion } from '@nishans/types';
 import { INotionCoreOptions } from '../';
 import { transformToMultiple } from '../utils';
-import { Comment } from './Comment';
+import Comment from './Comment';
 import NotionData from './Data';
 
-export class Discussion extends NotionData<IDiscussion, IDiscussionUpdateInput> {
+export default class Discussion extends NotionData<IDiscussion, IDiscussionUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'discussion' });
 	}

@@ -3,7 +3,8 @@ import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { CollectionViewPage, Nishan, Page } from '../../libs';
+import { NotionCore } from '../../libs';
+import { CollectionViewPage, Page } from '../../libs/Api/Block';
 import { default_nishan_arg } from '../utils';
 
 afterEach(() => {
@@ -14,7 +15,7 @@ describe('get', () => {
 	it('arg=cb,multiple=true', async () => {
 		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
 
-		const nishan = new Nishan({
+		const nishan = new NotionCore.Api.Nishan({
 			...default_nishan_arg,
 			notion_operation_plugins: []
 		});
@@ -56,7 +57,7 @@ describe('get', () => {
 
 	it('arg=cb,multiple=false', async () => {
 		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementationOnce(() => undefined as any);
-		const nishan = new Nishan(default_nishan_arg);
+		const nishan = new NotionCore.Api.Nishan(default_nishan_arg);
 
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => {
 			return {
@@ -96,7 +97,7 @@ describe('get', () => {
 	it('arg=string,multiple=false', async () => {
 		const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-		const nishan = new Nishan({
+		const nishan = new NotionCore.Api.Nishan({
 			token: 'token'
 		});
 
@@ -163,7 +164,7 @@ describe('getPagesById', () => {
 				shard_id: 123
 			} as any;
 
-		const notion = new Nishan({
+		const notion = new NotionCore.Api.Nishan({
 			...default_nishan_arg,
 			cache: {
 				...NotionCache.createDefaultCache(),
@@ -218,7 +219,7 @@ describe('getPagesById', () => {
 
 		jest.spyOn(NotionEndpoints.Queries, 'getSpaces').mockImplementationOnce(async () => ({}));
 
-		const nishan = new Nishan({
+		const nishan = new NotionCore.Api.Nishan({
 			...default_nishan_arg,
 			cache
 		});

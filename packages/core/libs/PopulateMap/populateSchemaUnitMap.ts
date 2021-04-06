@@ -1,6 +1,6 @@
 import { INotionFabricatorOptions } from '@nishans/fabricator';
 import { TSchemaUnit } from '@nishans/types';
-import { SchemaUnit } from '..';
+import { NotionCore } from '../';
 import { ISchemaUnitMap } from '../../types';
 
 export const populateSchemaUnitMap = (
@@ -10,7 +10,7 @@ export const populateSchemaUnitMap = (
 	options: INotionFabricatorOptions,
 	schema_unit_map: ISchemaUnitMap
 ) => {
-	const schema_unit_obj = new SchemaUnit({
+	const schema_unit_obj = new NotionCore.Api.SchemaUnit({
 		id,
 		...options,
 		schema_id

@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
-import { Discussion } from '../../libs';
+import { NotionCore } from '../../libs';
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -37,7 +37,7 @@ it(`createComments`, async () => {
 			last_edited_by_table: 'notion_user'
 		};
 
-	const discussion = new Discussion(options);
+	const discussion = new NotionCore.Api.Discussion(options);
 
 	const comments = await discussion.createComments([
 		{
@@ -78,7 +78,7 @@ it('getComments', async () => {
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => ({} as any));
 
-	const discussion = new Discussion(options);
+	const discussion = new NotionCore.Api.Discussion(options);
 
 	const comment = await discussion.getComment('comment_1');
 	expect(comment.getCachedData()).toStrictEqual(comment_1);
@@ -100,7 +100,7 @@ it(`updateComments`, async () => {
 		} as any,
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const discussion = new Discussion(options);
+	const discussion = new NotionCore.Api.Discussion(options);
 
 	const comment = await discussion.updateComment([
 		'comment_1',
@@ -135,7 +135,7 @@ it(`deleteComments`, async () => {
 			.mockImplementation(async () => undefined),
 		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
 
-	const discussion = new Discussion(options);
+	const discussion = new NotionCore.Api.Discussion(options);
 	await discussion.deleteComment('comment_1');
 	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
 		o.cm.u('comment_1', [], {
@@ -150,5 +150,3 @@ it(`deleteComments`, async () => {
 	expect(comment_data.alive).toBe(false);
 	expect(discussion_data.comments).toStrictEqual([]);
 });
-
-// Page

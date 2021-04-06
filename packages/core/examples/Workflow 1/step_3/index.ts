@@ -1,6 +1,6 @@
 import { ILinkedDBInput, IPageCreateInput, TViewCreateInput } from '@nishans/fabricator';
 import { v4 as uuidv4 } from 'uuid';
-import { CollectionViewPage, Page } from '../../../libs';
+import { Page } from '../../../libs/Api/Block';
 import { categories, ecosystems, subject } from '../data';
 import { CommonMultiSelectSchema, status_phase_combos } from '../util';
 
@@ -80,7 +80,7 @@ function createLinkedDB (collection_id: string, cvp: 'EBooks' | 'Courses', title
 export default async function step3 (target_page: Page) {
 	const { collection_view_page } = await target_page.getBlocks((block) => block.type === 'collection_view_page');
 	const getCollectionId = (title: string) =>
-		(collection_view_page.get(title) as CollectionViewPage).getCachedData().collection_id;
+		(collection_view_page.get(title)!).getCachedData().collection_id;
 
 	const articles_cvp_id = getCollectionId('Articles'),
 		tasks_cvp_id = getCollectionId('Tasks'),

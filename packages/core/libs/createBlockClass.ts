@@ -16,16 +16,16 @@ export function createBlockClass (type: TBlockType, id: string, options: INotion
 	};
 
 	if (type === 'page') {
-		const Page = require('./api/Block/Page').default;
+		const Page = require('./Api/Block/Page').default;
 		return new Page(obj);
 	} else if (type === 'collection_view' || type === 'linked_db') {
-		const CollectionView = require('./api/Block/CollectionView').default;
+		const CollectionView = require('./Api/Block/CollectionView').default;
 		return new CollectionView(obj);
 	} else if (type === 'collection_view_page') {
-		const CollectionViewPage = require('./api/Block/CollectionViewPage').default;
+		const CollectionViewPage = require('./Api/Block/CollectionViewPage').default;
 		return new CollectionViewPage(obj);
 	} else if (NotionConstants.blockTypes().includes(type)) {
-		const Block = require('./api/Block/Block').default;
+		const Block = require('./Api/Block/Block').default;
 		return new Block(obj);
 	} else throw new NotionErrors.unsupported_block_type(type, NotionConstants.blockTypes());
 }

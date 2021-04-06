@@ -1,6 +1,6 @@
 {
   "name": "@nishans/init",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A package to initialize raw notion data",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/init/README.md",
@@ -27,7 +27,7 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.32"
+    "@nishans/types": "0.0.33"
   },
   "publishConfig": {
     "access": "public"

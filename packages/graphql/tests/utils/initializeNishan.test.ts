@@ -1,4 +1,4 @@
-import { Nishan, NotionUser } from '@nishans/core';
+import { NotionCore } from '@nishans/core';
 import { initializeNishan } from '../../libs/utils';
 
 afterEach(() => {
@@ -7,8 +7,10 @@ afterEach(() => {
 
 it('server', async () => {
 	const getNotionUserMock = jest
-		.spyOn(Nishan.prototype, 'getNotionUser')
-		.mockImplementationOnce(async () => new NotionUser({ user_id: 'user_root_1', token: 'token' } as any));
+		.spyOn(NotionCore.Api.Nishan.prototype, 'getNotionUser')
+		.mockImplementationOnce(
+			async () => new NotionCore.Api.NotionUser({ user_id: 'user_root_1', token: 'token' } as any)
+		);
 
 	const context = (await initializeNishan({ logger: false, interval: 0, token: 'token', user_id: 'user_root_1' }))();
 

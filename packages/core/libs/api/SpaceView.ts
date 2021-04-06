@@ -2,8 +2,8 @@ import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IOperation, ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
-import { CreateMaps, INotionCoreOptions, IPageMap, ISpaceViewUpdateInput, PopulateMap } from '../';
+import { IOperation, ISpace, ISpaceView, IUserRoot, TPage } from '@nishans/types';
+import { INotionCoreOptions, IPageMap, ISpaceViewUpdateInput, NotionCore } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
 import Space from './Space';
@@ -67,11 +67,11 @@ class SpaceView extends Data<ISpaceView, ISpaceViewUpdateInput> {
 				child_ids: 'bookmarked_pages',
 				child_type: 'block',
 				multiple,
-				container: CreateMaps.page()
+				container: NotionCore.CreateMaps.page()
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (_, page, page_map) => {
-				await PopulateMap.page(page, page_map, this.getProps());
+				await NotionCore.PopulateMap.page(page, page_map, this.getProps());
 			}
 		);
 	}
@@ -97,14 +97,12 @@ class SpaceView extends Data<ISpaceView, ISpaceViewUpdateInput> {
 			args,
 			{
 				// FEAT:1:E Move to lineage
-				child_ids: Array.from(this.cache.block.keys()).filter((id) =>
-					(this.cache.block.get(id) as TBlock).type.match(/^(page|collection_view_page)$/)
-				),
+				child_ids: NotionLineage.getPageIds(this.cache),
 				child_type: 'block',
 				multiple,
 				manual: true,
 				initialize_cache: false,
-				container: CreateMaps.page()
+				container: NotionCore.CreateMaps.page()
 			},
 			(id) => this.cache.block.get(id) as TPage,
 			async (id, page, updated_favorite_status, page_map) => {
@@ -118,7 +116,7 @@ class SpaceView extends Data<ISpaceView, ISpaceViewUpdateInput> {
 						this.getProps()
 					))
 				);
-				await PopulateMap.page(page, page_map, this.getProps());
+				await NotionCore.PopulateMap.page(page, page_map, this.getProps());
 			}
 		);
 		await NotionOperations.executeOperations(operations, this.getProps());

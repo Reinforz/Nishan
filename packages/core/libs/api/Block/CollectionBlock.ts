@@ -3,7 +3,7 @@ import { NotionFabricator, TCollectionBlockInput, TViewCreateInput } from '@nish
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
-import { CreateMaps, INotionCoreOptions, IViewMap } from '../../';
+import { INotionCoreOptions, IViewMap, NotionCore } from '../../';
 import { PopulateMap } from '../../PopulateMap';
 import { transformToMultiple } from '../../utils';
 import Collection from '../Collection';
@@ -33,7 +33,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 
 	async createViews (params: TViewCreateInput[]) {
 		const data = this.getCachedData(),
-			view_map = CreateMaps.view(),
+			view_map = NotionCore.CreateMaps.view(),
 			props = this.getProps(),
 			[ views_data, views_operations ] = await NotionFabricator.CreateData.views(
 				this.cache.collection.get(data.collection_id) as ICollection,
@@ -62,7 +62,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 	async getViews (args?: FilterTypes<TView>, multiple?: boolean) {
 		return await this.getIterate<TView, IViewMap>(
 			args,
-			{ multiple, container: CreateMaps.view(), child_ids: 'view_ids', child_type: 'collection_view' },
+			{ multiple, container: NotionCore.CreateMaps.view(), child_ids: 'view_ids', child_type: 'collection_view' },
 			(view_id) => this.cache.collection_view.get(view_id) as TView,
 			(x_, view, view_map) => PopulateMap.view(view, this.getProps(), view_map)
 		);
@@ -76,7 +76,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 		return await this.updateIterate<TView, TViewUpdateInput, IViewMap>(
 			args,
 			{
-				container: CreateMaps.view(),
+				container: NotionCore.CreateMaps.view(),
 				multiple,
 				child_ids: 'view_ids',
 				child_type: 'collection_view'
@@ -107,7 +107,7 @@ class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInpu
 				child_path: 'view_ids',
 				child_type: 'collection_view',
 				multiple,
-				container: CreateMaps.view()
+				container: NotionCore.CreateMaps.view()
 			},
 			(view_id) => this.cache.collection_view.get(view_id),
 			(_, view, view_map) => PopulateMap.view(view, this.getProps(), view_map)

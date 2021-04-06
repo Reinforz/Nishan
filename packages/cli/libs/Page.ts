@@ -1,9 +1,9 @@
-import { Nishan } from '@nishans/core';
+import { NotionCore } from '@nishans/core';
 
 export default async function pageCommand (argv: any){
   const method = argv._[3];
 
-  const nishan = new Nishan({
+  const nishan = new NotionCore.Api.Nishan({
     token: process.env.NISHAN_TOKEN_V2 as string,
     interval: parseInt(process.env.NISHAN_REQUEST_INTERVAL as string ?? '0') as number,
     logger: argv.verbose ?? false

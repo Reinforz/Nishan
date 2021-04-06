@@ -4,7 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { NotionTraverser } from '@nishans/traverser';
 import { IHeader } from '@nishans/types';
-import { NotionData } from '../../libs';
+import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
 afterEach(() => {
@@ -15,7 +15,7 @@ describe('constructor', () => {
 	it(`default cache, interval and token not provided`, () => {
 		expect(
 			() =>
-				new NotionData({
+				new NotionCore.Api.NotionData({
 					id: 'block_1',
 					shard_id: 123,
 					space_id: 'space_1',
@@ -32,7 +32,7 @@ it(`getLastEditedProps`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -48,7 +48,7 @@ it(`updateLastEditedProps`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -75,7 +75,7 @@ describe('getCachedData', () => {
 			block: new Map([ [ 'block_1', { id: 'block_1' } ] ])
 		} as any;
 
-		const block = new NotionData({
+		const block = new NotionCore.Api.NotionData({
 			...default_nishan_arg,
 			cache,
 			type: 'block'
@@ -94,7 +94,7 @@ describe('getCachedData', () => {
 
 		const loggerMethodMock = jest.spyOn(NotionLogger.method, 'warn');
 
-		const block = new NotionData({
+		const block = new NotionCore.Api.NotionData({
 			...default_nishan_arg,
 			cache,
 			type: 'block',
@@ -113,7 +113,7 @@ describe('getCachedData', () => {
 
 		const loggerMethodMock = jest.spyOn(NotionLogger.method, 'warn');
 
-		const block = new NotionData({
+		const block = new NotionCore.Api.NotionData({
 			...default_nishan_arg,
 			cache,
 			type: 'block'
@@ -130,7 +130,7 @@ it(`updateCachedData`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -150,7 +150,7 @@ it(`deleteCachedData`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1', alive: false } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -171,7 +171,7 @@ it(`update`, async () => {
 			.spyOn(NotionOperations, 'executeOperations')
 			.mockImplementationOnce(async () => undefined);
 
-	const block = new NotionData<IHeader, Partial<Pick<IHeader, 'alive'>>>({
+	const block = new NotionCore.Api.NotionData<IHeader, Partial<Pick<IHeader, 'alive'>>>({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -191,7 +191,7 @@ it(`getProps`, () => {
 		block: new Map([ [ 'block_1', { id: 'block_1', type: 'header' } ] ])
 	} as any;
 
-	const block = new NotionData<IHeader, IPageUpdateInput>({
+	const block = new NotionCore.Api.NotionData<IHeader, IPageUpdateInput>({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
@@ -215,14 +215,14 @@ it(`getIterate`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest
-		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
+		.spyOn(NotionCore.Api.NotionData.prototype, 'initializeCacheForThisData')
 		.mockImplementationOnce(() => {
 			return {} as any;
 		});
@@ -242,14 +242,14 @@ it(`updateIterate`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest
-		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
+		.spyOn(NotionCore.Api.NotionData.prototype, 'initializeCacheForThisData')
 		.mockImplementationOnce(() => {
 			return {} as any;
 		});
@@ -269,14 +269,14 @@ it(`deleteIterate`, async () => {
 		block: new Map([ [ 'block_1', { id: 'block_1' } ], [ 'block_2', { id: 'block_2' } ] ])
 	} as any;
 
-	const block = new NotionData({
+	const block = new NotionCore.Api.NotionData({
 		...default_nishan_arg,
 		cache,
 		type: 'block'
 	});
 
 	const initializeCacheForThisDataMock = jest
-		.spyOn(NotionData.prototype, 'initializeCacheForThisData')
+		.spyOn(NotionCore.Api.NotionData.prototype, 'initializeCacheForThisData')
 		.mockImplementation(async () => undefined);
 
 	const NotionTraverserDeleteMock = jest.spyOn(NotionTraverser, 'delete').mockImplementationOnce(() => {

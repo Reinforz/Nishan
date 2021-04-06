@@ -1,11 +1,11 @@
-import { block } from './block';
-import { page } from './page';
-import { schema_unit } from './schema_unit';
-import { view } from './view';
+import { createBlockMap } from './createBlockMap';
+import { createPageMap } from './createPageMap';
+import { createSchemaUnitMap } from './createSchemaUnitMap';
+import { createViewMap } from './createViewMap';
 
 export const CreateMaps = {
-	block,
-	view,
-	schema_unit,
-	page
+	block: createBlockMap,
+	view: createViewMap,
+	schemaUnit: createSchemaUnitMap,
+	page: createPageMap
 };

@@ -176,7 +176,7 @@ class Collection extends Data<ICollection, ICollectionUpdateInput> {
    */
 	async createSchemaUnits (args: TSchemaUnitInput[]) {
 		const data = this.getCachedData(),
-			schema_unit_map = NotionCore.CreateMaps.schema_unit(),
+			schema_unit_map = NotionCore.CreateMaps.schemaUnit(),
 			props = this.getProps();
 		await NotionFabricator.CreateData.schema(
 			args,
@@ -211,7 +211,7 @@ class Collection extends Data<ICollection, ICollectionUpdateInput> {
 		return await this.getIterate<ISchemaMapValue, ISchemaUnitMap>(
 			args,
 			{
-				container: NotionCore.CreateMaps.schema_unit(),
+				container: NotionCore.CreateMaps.schemaUnit(),
 				child_ids: Array.from(schema_map.keys()),
 				child_type: 'collection',
 				multiple,
@@ -247,7 +247,7 @@ class Collection extends Data<ICollection, ICollectionUpdateInput> {
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: NotionCore.CreateMaps.schema_unit(),
+				container: NotionCore.CreateMaps.schemaUnit(),
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),
@@ -293,7 +293,7 @@ class Collection extends Data<ICollection, ICollectionUpdateInput> {
 				child_type: 'collection',
 				multiple,
 				manual: true,
-				container: NotionCore.CreateMaps.schema_unit(),
+				container: NotionCore.CreateMaps.schemaUnit(),
 				initialize_cache: false
 			},
 			(name) => schema_map.get(name),

@@ -2,7 +2,7 @@ import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IOperation, ISpace, ISpaceView, IUserRoot, TBlock, TPage } from '@nishans/types';
+import { IOperation, ISpace, ISpaceView, IUserRoot, TPage } from '@nishans/types';
 import { INotionCoreOptions, IPageMap, ISpaceViewUpdateInput, NotionCore } from '../';
 import { transformToMultiple } from '../utils';
 import Data from './Data';
@@ -97,9 +97,7 @@ class SpaceView extends Data<ISpaceView, ISpaceViewUpdateInput> {
 			args,
 			{
 				// FEAT:1:E Move to lineage
-				child_ids: Array.from(this.cache.block.keys()).filter((id) =>
-					(this.cache.block.get(id) as TBlock).type.match(/^(page|collection_view_page)$/)
-				),
+				child_ids: NotionLineage.getPageIds(this.cache),
 				child_type: 'block',
 				multiple,
 				manual: true,

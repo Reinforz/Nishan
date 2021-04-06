@@ -7,7 +7,7 @@ afterEach(() => {
 });
 
 it('NotionCore.PopulateMap.schemaUnit', () => {
-	const schema_unit_map = NotionCore.CreateMaps.schema_unit();
+	const schema_unit_map = NotionCore.CreateMaps.schemaUnit();
 
 	const cache = NotionCache.createDefaultCache();
 

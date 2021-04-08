@@ -3,7 +3,6 @@ import { NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabri
 import { NotionLineage } from '@nishans/lineage';
 import { NotionOperations } from '@nishans/operations';
 import { NotionPermissions } from '@nishans/permissions';
-import { NotionBlockPermissions } from '@nishans/permissions/dist/libs/BlockPermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
@@ -17,7 +16,7 @@ import Block from './Block';
  */
 
 export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' | 'format'>>> {
-	Permissions: NotionBlockPermissions;
+	Permissions: InstanceType<typeof NotionPermissions.Block>;
 
 	constructor (arg: INotionCoreOptions) {
 		super(arg);

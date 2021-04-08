@@ -9,7 +9,6 @@ import {
 import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionPermissions } from '@nishans/permissions';
-import { NotionSpacePermissions } from '@nishans/permissions/dist/libs/SpacePermissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { ICollection, ICollectionViewPage, IPage, ISpace, ISpaceView, TPage } from '@nishans/types';
 import { INotionCoreOptions, IPageMap, ISpaceUpdateInput, NotionCore } from '../';
@@ -23,7 +22,7 @@ import SpaceView from './SpaceView';
  */
 export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 	space_view: ISpaceView;
-	Permissions: NotionSpacePermissions;
+	Permissions: InstanceType<typeof NotionPermissions.Space>;
 
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space' });

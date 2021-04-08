@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { IPageCreateInput, NotionFabricator } from '@nishans/fabricator';
-import { NotionOperations } from '@nishans/operations';
 import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
+import { createExecuteOperationsMock } from '../../../../utils/tests/executeOperationsMock';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
@@ -87,17 +87,14 @@ describe('template pages', () => {
 			} as any,
 			initializeCacheForSpecificDataMock = jest
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
-				.mockImplementationOnce(async () => undefined),
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
-				.mockImplementation(async () => undefined);
+				.mockImplementationOnce(async () => undefined);
 
 		const collection = new NotionCore.Api.Collection({
 			...default_nishan_arg,
 			cache,
 			id: 'collection_1'
 		});
-		return { cache, block_1, collection, executeOperationsMock, initializeCacheForSpecificDataMock };
+		return { cache, block_1, collection, initializeCacheForSpecificDataMock };
 	};
 
 	it(`getTemplates`, async () => {
@@ -112,7 +109,8 @@ describe('template pages', () => {
 	});
 
 	it(`updateTemplates`, async () => {
-		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		const { cache, collection, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		const { e1 } = createExecuteOperationsMock();
 		const pages = await collection.updateTemplate([ 'block_1', { alive: true } as any ]);
 
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
@@ -121,7 +119,7 @@ describe('template pages', () => {
 				alive: true
 			})
 		);
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		e1([
 			o.b.u(
 				'block_1',
 				[],
@@ -138,15 +136,9 @@ describe('template pages', () => {
 	});
 
 	it(`deleteTemplates`, async () => {
-		const {
-			cache,
-			block_1,
-			collection,
-			executeOperationsMock,
-			initializeCacheForSpecificDataMock
-		} = templateCrudSetup();
+		const { cache, block_1, collection, initializeCacheForSpecificDataMock } = templateCrudSetup();
+		const { e1 } = createExecuteOperationsMock();
 		const deleted_templates = await collection.deleteTemplate('block_1');
-
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
 		expect(cache.block.get('block_1')).toStrictEqual(
 			expect.objectContaining({
@@ -159,7 +151,7 @@ describe('template pages', () => {
 			})
 		);
 
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		e1([
 			o.b.u('block_1', [], {
 				alive: false,
 				...last_edited_props
@@ -184,9 +176,6 @@ describe('rows', () => {
 			} as any,
 			initializeCacheForSpecificDataMock = jest
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
-				.mockImplementation(async () => undefined),
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
 				.mockImplementation(async () => undefined);
 
 		const collection = new NotionCore.Api.Collection({
@@ -194,11 +183,11 @@ describe('rows', () => {
 			cache,
 			id: 'collection_1'
 		});
-		return { cache, collection, block_1, executeOperationsMock, initializeCacheForSpecificDataMock };
+		return { cache, collection, block_1, ...createExecuteOperationsMock(), initializeCacheForSpecificDataMock };
 	};
 
 	it(`createRows`, async () => {
-		const { cache, collection, executeOperationsMock } = rowCrudSetup();
+		const { cache, collection, e1 } = rowCrudSetup();
 		const block_id = v4();
 
 		await collection.createRows([
@@ -212,9 +201,7 @@ describe('rows', () => {
 			}
 		]);
 
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-			o.b.u(block_id, [], expect.objectContaining({ id: block_id }))
-		]);
+		e1([ o.b.u(block_id, [], expect.objectContaining({ id: block_id })) ]);
 		expect(cache.block.get(block_id)).toStrictEqual(expect.objectContaining({ id: block_id }));
 	});
 
@@ -229,7 +216,7 @@ describe('rows', () => {
 	});
 
 	it(`updateRow`, async () => {
-		const { cache, collection, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
+		const { cache, e1, collection, initializeCacheForSpecificDataMock } = rowCrudSetup();
 
 		const row_page = await collection.updateRow([ 'block_1', { alive: true } ] as any);
 
@@ -245,7 +232,7 @@ describe('rows', () => {
 		);
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		e1([
 			o.b.u(
 				'block_1',
 				[],
@@ -257,13 +244,13 @@ describe('rows', () => {
 	});
 
 	it(`deleteRow`, async () => {
-		const { cache, collection, block_1, executeOperationsMock, initializeCacheForSpecificDataMock } = rowCrudSetup();
+		const { cache, collection, block_1, e1, initializeCacheForSpecificDataMock } = rowCrudSetup();
 
 		const deleted_rows = await collection.deleteRow('block_1');
 
 		expect(initializeCacheForSpecificDataMock).toHaveBeenCalledTimes(2);
 		expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'collection_1', 'collection' ]);
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		e1([
 			o.b.u(
 				'block_1',
 				[],
@@ -301,26 +288,23 @@ describe('schema unit', () => {
 			} as any,
 			initializeCacheForSpecificDataMock = jest
 				.spyOn(NotionCache, 'initializeCacheForSpecificData')
-				.mockImplementationOnce(async () => undefined),
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
-				.mockImplementation(async () => undefined);
+				.mockImplementationOnce(async () => undefined);
 
 		const collection = new NotionCore.Api.Collection({
 			...default_nishan_arg,
 			cache,
 			id: 'collection_1'
 		});
-		return { cache, collection, schema, executeOperationsMock, initializeCacheForSpecificDataMock };
+		return { cache, collection, schema, ...createExecuteOperationsMock(), initializeCacheForSpecificDataMock };
 	};
 
 	it(`createSchemaUnits`, async () => {
-		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+		const { e1, collection, schema } = schemaUnitCrudSetup();
 
 		await collection.createSchemaUnits([ txsu ]);
 		const { schema_id } = NotionUtils.getSchemaMapUnit(NotionUtils.generateSchemaMap(schema), 'Text', []);
 
-		expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+		e1([
 			o.c.u(
 				'collection_1',
 				[ 'schema' ],
@@ -346,7 +330,7 @@ describe('schema unit', () => {
 	});
 
 	it(`updateSchemaUnit`, async () => {
-		const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+		const { e2, collection, schema } = schemaUnitCrudSetup();
 		const new_schema = {
 			title: {
 				type: 'title',
@@ -359,19 +343,17 @@ describe('schema unit', () => {
 		expect(schema_unit_map.title.get('New Title')).not.toBeUndefined();
 		expect(schema_unit_map.title.get('Title')).toBeUndefined();
 		expect(schema).toStrictEqual(expect.objectContaining(new_schema));
-		expect(executeOperationsMock.mock.calls[1][0]).toEqual([
-			o.c.u('collection_1', [ 'schema' ], expect.objectContaining(new_schema))
-		]);
+		e2([ o.c.u('collection_1', [ 'schema' ], expect.objectContaining(new_schema)) ]);
 	});
 
 	describe('deleteSchemaUnit', () => {
 		it(`Work correctly`, async () => {
-			const { executeOperationsMock, collection, schema } = schemaUnitCrudSetup();
+			const { e2, collection, schema } = schemaUnitCrudSetup();
 
 			const deleted_schema_unit_map = await collection.deleteSchemaUnit('Checkbox');
 
 			expect(schema.checkbox).toBeUndefined();
-			expect(executeOperationsMock.mock.calls[1][0]).toEqual([
+			e2([
 				o.c.u('collection_1', [ 'schema' ], {
 					title: tsu
 				})

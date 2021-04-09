@@ -20,8 +20,8 @@ import {
 	WebBookmarkProps
 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { CreateData } from '../';
-import { INotionFabricatorOptions, TBlockCreateInput } from '../../';
+import { INotionFabricatorOptions, TBlockCreateInput } from '../';
+import { CreateData } from './';
 import { executeOperationAndStoreInCache, populatePermissions } from './utils';
 
 /**

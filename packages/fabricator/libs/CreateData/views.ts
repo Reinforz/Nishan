@@ -1,6 +1,6 @@
 import { ICollection, IOperation, IViewFilter, TView, TViewQuery2 } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
-import { INotionFabricatorOptions, NotionFabricator, TViewCreateInput, TViewFilterCreateInput } from '../../';
+import { INotionFabricatorOptions, NotionFabricator, TViewCreateInput, TViewFilterCreateInput } from '../';
 import { generateViewData } from './utils';
 
 /**

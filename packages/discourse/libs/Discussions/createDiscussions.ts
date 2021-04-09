@@ -1,4 +1,4 @@
-import { INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { INotionCacheOptions } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionInit } from '@nishans/init';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
@@ -13,7 +13,6 @@ export const createDiscussions = async (
 ) => {
 	const operations: IOperation[] = [],
 		discussions: IDiscussion[] = [];
-  await NotionCache.initializeCacheForSpecificData(block_id, 'block',options);
     
   const block_data = options.cache.block.get(block_id) as IText;
 

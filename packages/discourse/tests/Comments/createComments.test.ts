@@ -1,6 +1,5 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -9,7 +8,7 @@ afterEach(() => {
 });
 
 it(`NotionDiscourse.createComments`, async () => {
-	const discussion_data: any = { id: 'discussion_1' },
+	const discussion_data: any = { id: 'discussion_1', comments: [] },
 		cache = {
 			...NotionCache.createDefaultCache(),
 			discussion: new Map([ [ 'discussion_1', discussion_data ] ])
@@ -19,7 +18,6 @@ it(`NotionDiscourse.createComments`, async () => {
 			cache
 		},
 		comment_id = NotionIdz.Generate.id(),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
 		comment_1_data = {
 			parent_id: expect.any(String),
 			parent_table: 'discussion',
@@ -35,18 +33,18 @@ it(`NotionDiscourse.createComments`, async () => {
 			last_edited_by_table: 'notion_user'
 		};
 
-	await NotionDiscourse.Comments.create(
+	const { operations } = await NotionDiscourse.Comments.create(
+		'discussion_1',
 		[
 			{
-				discussion_id: 'discussion_1',
 				text: [ [ 'First Comment' ] ],
-				comment_id
+				id: comment_id
 			}
 		],
 		options
 	);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	expect(operations).toStrictEqual([
 		o.cm.u(comment_id, [], expect.objectContaining(comment_1_data)),
 		o.d.la('discussion_1', [ 'comments' ], {
 			id: comment_id

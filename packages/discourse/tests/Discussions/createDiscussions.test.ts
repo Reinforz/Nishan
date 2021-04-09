@@ -1,6 +1,5 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
 import { default_nishan_arg, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -26,9 +25,6 @@ describe('createDiscussions', () => {
 				...default_nishan_arg,
 				cache
 			},
-			executeOperationsMock = jest
-				.spyOn(NotionOperations, 'executeOperations')
-				.mockImplementation(async () => undefined),
 			comment_1_data = {
 				parent_id: expect.any(String),
 				parent_table: 'discussion',
@@ -59,7 +55,6 @@ describe('createDiscussions', () => {
 			block_1_id,
 			discussion_data,
 			comment_1_data,
-			executeOperationsMock,
 			discussion_id,
 			options,
 			comment_1_id,
@@ -68,17 +63,9 @@ describe('createDiscussions', () => {
 	};
 
 	it(`default input`, async () => {
-		const {
-			comment_1_data,
+		const { comment_1_data, block_1_id, discussion_id, options, comment_1_id, cache, discussion_data } = init();
+		const { discussions, operations } = await NotionDiscourse.Discussions.create(
 			block_1_id,
-			discussion_id,
-			options,
-			comment_1_id,
-			cache,
-			executeOperationsMock,
-			discussion_data
-		} = init();
-		const discussions = await NotionDiscourse.Discussions.create(
 			[
 				{
 					comments: [
@@ -87,8 +74,7 @@ describe('createDiscussions', () => {
 							text: [ [ 'First Comment' ] ]
 						}
 					],
-					block_id: block_1_id,
-					discussion_id: discussion_id
+					id: discussion_id
 				}
 			],
 			options
@@ -97,7 +83,7 @@ describe('createDiscussions', () => {
 		expect(cache.comment.get(comment_1_id)).toStrictEqual(expect.objectContaining(comment_1_data));
 		expect(cache.discussion.get(discussion_id)).toStrictEqual(expect.objectContaining(discussion_data));
 		expect(cache.block.get(block_1_id)).toStrictEqual(expect.objectContaining({ discussions: [ discussion_id ] }));
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		expect(operations).toStrictEqual([
 			o.cm.u(comment_1_id, [], expect.objectContaining(comment_1_data)),
 			o.d.u(discussion_id, [], expect.objectContaining(discussion_data)),
 			o.b.la(
@@ -112,17 +98,9 @@ describe('createDiscussions', () => {
 	});
 
 	it(`custom input`, async () => {
-		const {
-			comment_1_data,
+		const { comment_1_data, block_1_id, discussion_id, options, comment_1_id, cache, discussion_data } = init();
+		const { discussions, operations } = await NotionDiscourse.Discussions.create(
 			block_1_id,
-			discussion_id,
-			options,
-			comment_1_id,
-			cache,
-			executeOperationsMock,
-			discussion_data
-		} = init();
-		const discussions = await NotionDiscourse.Discussions.create(
 			[
 				{
 					context: [ [ 'Different context' ] ],
@@ -132,8 +110,7 @@ describe('createDiscussions', () => {
 							text: [ [ 'First Comment' ] ]
 						}
 					],
-					block_id: block_1_id,
-					discussion_id: discussion_id
+					id: discussion_id
 				}
 			],
 			options
@@ -144,7 +121,7 @@ describe('createDiscussions', () => {
 			expect.objectContaining({ ...discussion_data, context: [ [ 'Different context' ] ] })
 		);
 		expect(cache.block.get(block_1_id)).toStrictEqual(expect.objectContaining({ discussions: [ discussion_id ] }));
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+		expect(operations).toStrictEqual([
 			o.cm.u(comment_1_id, [], expect.objectContaining(comment_1_data)),
 			o.d.u(discussion_id, [], expect.objectContaining({ ...discussion_data, context: [ [ 'Different context' ] ] })),
 			o.b.la(

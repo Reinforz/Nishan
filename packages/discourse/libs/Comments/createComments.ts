@@ -1,4 +1,4 @@
-import { INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { INotionCacheOptions } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionInit } from '@nishans/init';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
@@ -11,7 +11,6 @@ export const createComments = async (
 	args: ICommentCreateInput[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
-	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 	const operations: IOperation[] = [],
 		comments: IComment[] = [];
 	args.forEach((arg) => {

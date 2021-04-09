@@ -41,8 +41,8 @@ it(`createComments`, async () => {
 
 	const comments = await discussion.createComments([
 		{
-			text: [ [ 'First Comment' ] ],
-			comment_id
+			id: comment_id,
+			text: [ [ 'First Comment' ] ]
 		}
 	]);
 

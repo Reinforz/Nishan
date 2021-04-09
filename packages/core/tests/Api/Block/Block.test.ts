@@ -361,7 +361,7 @@ it(`createDiscussions`, async () => {
 		discussion_id = v4();
 	const discussions = await block_1_obj.createDiscussions([
 		{
-			discussion_id,
+			id: discussion_id,
 			comments: [
 				{
 					id: comment_id,

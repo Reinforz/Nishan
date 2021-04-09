@@ -7,21 +7,22 @@ import { NotionUtils } from '@nishans/utils';
 import { ICommentCreateInput } from '../';
 
 export const createComments = async (
+	discussion_id: string,
 	args: ICommentCreateInput[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
-	await NotionCache.fetchMultipleDataOrReturnCached(args.map((arg) => [ arg.discussion_id, 'discussion' ]), options);
+	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 	const operations: IOperation[] = [],
 		comments: IComment[] = [];
 	args.forEach((arg) => {
-		const discussion_data = options.cache.discussion.get(arg.discussion_id)!;
+		const discussion_data = options.cache.discussion.get(discussion_id)!;
 
-		const comment_id = NotionIdz.Generate.id(arg.comment_id);
+		const comment_id = NotionIdz.Generate.id(arg.id);
 		const comment_data = NotionInit.comment({
 			created_by_id: options.user_id,
 			last_edited_by_id: options.user_id,
 			id: comment_id,
-			parent_id: arg.discussion_id,
+			parent_id: discussion_id,
 			shard_id: options.shard_id,
 			space_id: options.space_id,
 			text: arg.text
@@ -29,7 +30,7 @@ export const createComments = async (
 		comments.push(comment_data);
 		operations.push(
 			NotionOperations.Chunk.comment.update(comment_id, [], JSON.parse(JSON.stringify(comment_data, null, 2))),
-			NotionOperations.Chunk.discussion.listAfter(arg.discussion_id, [ 'comments' ], {
+			NotionOperations.Chunk.discussion.listAfter(discussion_id, [ 'comments' ], {
 				id: comment_id
 			})
 		);
@@ -37,6 +38,5 @@ export const createComments = async (
 		NotionUtils.populateChildPath({ data: discussion_data, child_path: 'comments', child_id: comment_id });
 	});
 
-	await NotionOperations.executeOperations(operations, options);
-	return comments;
+	return { comments, operations };
 };

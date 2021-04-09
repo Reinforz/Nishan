@@ -2,25 +2,26 @@ import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
 import { NotionInit } from '@nishans/init';
 import { INotionOperationOptions, NotionOperations } from '@nishans/operations';
-import { IDiscussion, IOperation, IText, TTextFormat } from '@nishans/types';
+import { IDiscussion, IOperation, IText } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
+import { IDiscussionCreateInput } from "../types";
 
 export const createDiscussions = async (
-	args: { context?: TTextFormat, block_id: string; discussion_id?: string; comments: { text: TTextFormat; id?: string }[] }[],
+  block_id: string,
+	args: IDiscussionCreateInput[],
 	options: INotionCacheOptions & INotionOperationOptions
 ) => {
 	const operations: IOperation[] = [],
-		discussions: IDiscussion[] = [],
-		{ block: blocks_data } = await NotionCache.fetchMultipleDataOrReturnCached(
-			args.map((arg) => [ arg.block_id, 'block' ]),
-			options
-		);
+		discussions: IDiscussion[] = [];
+  await NotionCache.initializeCacheForSpecificData(block_id, 'block',options);
+    
+  const block_data = options.cache.block.get(block_id) as IText;
 
 	for (let index = 0; index < args.length; index++) {
 		const arg = args[index],
-			{ comments, block_id } = arg;
+			{ comments } = arg;
 		const comment_ids: string[] = [],
-			discussion_id = NotionIdz.Generate.id(arg.discussion_id);
+			discussion_id = NotionIdz.Generate.id(arg.id);
 		comments.forEach((comment) => {
 			const comment_id = NotionIdz.Generate.id(comment.id);
 			comment_ids.push(comment_id);
@@ -38,7 +39,6 @@ export const createDiscussions = async (
 			);
 			options.cache.comment.set(comment_id, comment_data);
 		});
-		const block_data = blocks_data[index] as IText;
 
 		const discussion_data = NotionInit.discussion({
       id: discussion_id,
@@ -60,6 +60,5 @@ export const createDiscussions = async (
 		);
 	}
 
-	await NotionOperations.executeOperations(operations, options);
-	return discussions;
+	return {discussions,operations};
 };

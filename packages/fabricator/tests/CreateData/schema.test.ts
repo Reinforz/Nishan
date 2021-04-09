@@ -30,10 +30,10 @@ describe('Work correctly', () => {
 		const cb = jest.fn(),
 			cache = NotionCache.createDefaultCache(),
 			createSchemaUnitRollupMock = jest
-				.spyOn(NotionFabricator.CreateData.schema_unit, 'rollup')
+				.spyOn(NotionFabricator.CreateData.SchemaUnit, 'rollup')
 				.mockImplementationOnce(async () => input_schema_units[2] as any),
 			createSchemaUnitRelationMock = jest
-				.spyOn(NotionFabricator.CreateData.schema_unit, 'relation')
+				.spyOn(NotionFabricator.CreateData.SchemaUnit, 'relation')
 				.mockImplementationOnce(async () => [ input_schema_units[3], [] ] as any);
 		const output_schema_values = [
 			tsu,

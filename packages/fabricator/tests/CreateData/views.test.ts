@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { Schema } from '@nishans/types';
 import { v4 } from 'uuid';
-import { default_nishan_arg, o } from '../../../../core/tests/utils';
-import { NotionFabricator } from '../../../libs';
-import { tsu } from '../../utils';
+import { default_nishan_arg, o } from '../../../core/tests/utils';
+import { NotionFabricator } from '../../libs';
+import { tsu } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();

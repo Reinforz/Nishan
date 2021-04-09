@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { IPage } from '@nishans/types';
-import { default_nishan_arg, o } from '../../../../../core/tests/utils';
-import { executeOperationAndStoreInCache } from '../../../../libs/CreateData/Contents/utils';
+import { default_nishan_arg, o } from '../../../../core/tests/utils';
+import { executeOperationAndStoreInCache } from '../../../libs/CreateData/utils';
 
 it(`name=string`, async () => {
 	const cache = NotionCache.createDefaultCache(),

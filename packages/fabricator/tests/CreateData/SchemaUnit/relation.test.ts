@@ -50,7 +50,7 @@ it(`Should work correctly (default child_collection_relation_schema_unit name)`,
   const  [child_collection, cache, parent_collection_data] = returnChildCollectionAndCache();
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
       
-  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.schema_unit.relation(
+  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.SchemaUnit.relation(
     relation_arg,
     parent_collection_data,
     {...default_nishan_arg, cache}
@@ -77,7 +77,7 @@ it(`Should work correctly (custom child_collection_relation_schema_unit name)`, 
 
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
-  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.schema_unit.relation(
+  const [relation_schema_unit, operations] = await NotionFabricator.CreateData.SchemaUnit.relation(
     {
       ...relation_arg,
       relation_schema_unit_name: "Child Column"

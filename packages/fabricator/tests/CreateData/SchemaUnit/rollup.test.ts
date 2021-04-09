@@ -27,7 +27,7 @@ it(`Should work correctly for target_property=title`, async () => {
 			target_property: 'Title',
 			aggregation: 'average'
 		} as any;
-	const generated_rollup_schema = await NotionFabricator.CreateData.schema_unit.rollup(rollup_arg, schema_map, {
+	const generated_rollup_schema = await NotionFabricator.CreateData.SchemaUnit.rollup(rollup_arg, schema_map, {
 		...default_nishan_arg,
 		cache: {
 			...NotionCache.createDefaultCache(),
@@ -58,7 +58,7 @@ it(`Should work correctly for target_property=title`, async () => {
 describe('Throw errors', () => {
 	it(`Should throw for using unknown relation_property`, async () => {
 		await expect(
-			NotionFabricator.CreateData.schema_unit.rollup(
+			NotionFabricator.CreateData.SchemaUnit.rollup(
 				{
 					collection_id: 'target_collection_id',
 					name: 'Rollup Column',
@@ -77,7 +77,7 @@ describe('Throw errors', () => {
 
 	it(`Should throw error if relation property is not relation type`, async () => {
 		await expect(
-			NotionFabricator.CreateData.schema_unit.rollup(
+			NotionFabricator.CreateData.SchemaUnit.rollup(
 				{
 					collection_id: 'target_collection_id',
 					name: 'Rollup Column',

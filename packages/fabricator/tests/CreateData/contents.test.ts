@@ -4,9 +4,9 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
-import { default_nishan_arg, last_edited_props, o } from '../../../../core/tests/utils';
-import { NotionFabricator } from '../../../libs';
-import { tsu } from '../../utils';
+import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
+import { NotionFabricator } from '../../libs';
+import { tsu } from '../utils';
 
 afterEach(() => {
 	jest.restoreAllMocks();

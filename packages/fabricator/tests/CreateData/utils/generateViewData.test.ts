@@ -1,8 +1,8 @@
 import { NotionLogger } from '@nishans/logger';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
-import { default_nishan_arg, o } from '../../../../../core/tests/utils';
-import { generateViewData } from '../../../../libs/CreateData/Views/utils';
+import { default_nishan_arg, o } from '../../../../core/tests/utils';
+import { generateViewData } from '../../../libs/CreateData/utils';
 
 const id = v4(),
 	cache: INotionCache = {

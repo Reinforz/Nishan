@@ -1,4 +1,5 @@
 import { ICommentCreateInput, ICommentUpdateInput, IDiscussionUpdateInput, NotionDiscourse } from '@nishans/discourse';
+import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion } from '@nishans/types';
 import { INotionCoreOptions } from '../';
@@ -11,11 +12,11 @@ export default class Discussion extends NotionData<IDiscussion, IDiscussionUpdat
 		super({ ...arg, type: 'discussion' });
 	}
 
-	async createComments (args: Omit<ICommentCreateInput, 'discussion_id'>[]) {
+	async createComments (args: ICommentCreateInput[]) {
 		const props = this.getProps();
-		return (await NotionDiscourse.Comments.create(args.map((arg) => ({ ...arg, discussion_id: this.id })), props)).map(
-			(comment) => new Comment({ ...props, id: comment.id })
-		);
+		const { comments, operations } = await NotionDiscourse.Comments.create(this.id, args, props);
+		await NotionOperations.executeOperations(operations, this.getProps());
+		return comments.map((comment) => new Comment({ ...props, id: comment.id }));
 	}
 
 	async getComment (arg?: FilterType<IComment>) {

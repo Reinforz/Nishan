@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionDiscourse } from '@nishans/discourse';
+import { IDiscussionCreateInput, NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { IEmbedInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
@@ -188,17 +188,10 @@ class Block<T extends TBlock, U extends Partial<TBlock | IEmbedInput>> extends D
 		);
 	}
 
-	async createDiscussions (
-		args: {
-			context?: TTextFormat;
-			discussion_id?: string;
-			comments: { text: TTextFormat; id?: string }[];
-		}[]
-	) {
-		return (await NotionDiscourse.Discussions.create(
-			args.map((arg) => ({ ...arg, block_id: this.id })),
-			this.getProps()
-		)).map((discussion) => new NotionCore.Api.Discussion({ id: discussion.id, ...this.getProps() }));
+	async createDiscussions (args: IDiscussionCreateInput[]) {
+		const { discussions, operations } = await NotionDiscourse.Discussions.create(this.id, args, this.getProps());
+		await NotionOperations.executeOperations(operations, this.getProps());
+		return discussions.map((discussion) => new NotionCore.Api.Discussion({ id: discussion.id, ...this.getProps() }));
 	}
 
 	async updateDiscussion (arg: UpdateType<IDiscussion, { context?: TTextFormat; resolved?: boolean }>) {

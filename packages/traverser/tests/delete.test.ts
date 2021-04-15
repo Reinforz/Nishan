@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionCache, IPage, TBlock } from '@nishans/types';
+import { createExecuteOperationsMock } from '../../../utils/tests';
 import { last_edited_props } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import {
@@ -28,9 +28,7 @@ afterEach(() => {
 it(`manual=false`, async () => {
 	const child_ids = [ c1id, c2id, c3id ];
 	const cache = constructCache(child_ids);
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementation(async () => undefined);
+	const { e1 } = createExecuteOperationsMock();
 	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
 	const cb_spy = jest.fn();
@@ -59,14 +57,12 @@ it(`manual=false`, async () => {
 		...last_edited_props
 	});
 	expect(deleted_data).toStrictEqual([ dc1d, dc2d ]);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ c1do, c1ro, c2do, c2ro, p1uo ]);
+	e1([ c1do, c1ro, c2do, c2ro, p1uo ]);
 });
 
 it(`manual=true`, async () => {
 	const cache = constructCache([ c1id, c2id, c3id ]);
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementationOnce(async () => undefined);
+	const { e1 } = createExecuteOperationsMock();
 
 	await NotionTraverser.delete<IPage, TBlock>([ c1id, c2id ], (id) => cache.block.get(id), {
 		...delete_props,
@@ -77,7 +73,7 @@ it(`manual=true`, async () => {
 	});
 
 	expect(cache.block.get(p1id)).toStrictEqual(up1d);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ p1uo ]);
+	e1([ p1uo ]);
 });
 
 it(`child_type & parent_type != block, child_path=undefined`, async () => {
@@ -95,9 +91,7 @@ it(`child_type & parent_type != block, child_path=undefined`, async () => {
 		])
 	} as INotionCache;
 
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementationOnce(async () => undefined);
+	const { e1 } = createExecuteOperationsMock();
 
 	await NotionTraverser.delete<IPage, ICollection>([ c1id ], (id) => cache.collection.get(id), {
 		...delete_props,
@@ -113,5 +107,5 @@ it(`child_type & parent_type != block, child_path=undefined`, async () => {
 		content: [ c1id ],
 		type: 'page'
 	});
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([]);
+	e1([]);
 });

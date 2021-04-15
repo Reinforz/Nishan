@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperations } from '@nishans/operations';
 import { NotionUtils } from '@nishans/utils';
+import { createExecuteOperationsMock } from '../../../../../utils/tests';
 import { tsu, txsu } from '../../../../fabricator/tests/utils';
 import { NotionCore } from '../../../libs';
 import { detectAggregationErrors } from '../../../libs/Api/View/Aggregator';
@@ -64,7 +64,7 @@ const aggregationCrudSetup = () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, e2, executeOperationsMock } = createExecuteOperationsMock();
 
 	const view_aggregator = new NotionCore.Api.ViewAggregator({
 		...default_nishan_arg,
@@ -77,17 +77,14 @@ const aggregationCrudSetup = () => {
 		collection_view_1,
 		collection_1,
 		initializeCacheForSpecificDataMock,
-		executeOperationsMock
+		executeOperationsMock,
+		e1,
+		e2
 	};
 };
 
 it(`createAggregation`, async () => {
-	const {
-		view_aggregator,
-		collection_view_1,
-		initializeCacheForSpecificDataMock,
-		executeOperationsMock
-	} = aggregationCrudSetup();
+	const { view_aggregator, collection_view_1, initializeCacheForSpecificDataMock, e1 } = aggregationCrudSetup();
 
 	await view_aggregator.createAggregation({
 		type: 'title',
@@ -103,19 +100,12 @@ it(`createAggregation`, async () => {
 	];
 
 	expect(collection_view_1.query2.aggregations).toStrictEqual(expect.arrayContaining(aggregations));
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining(aggregations))
-	]);
+	e1([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining(aggregations)) ]);
 	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 });
 
 it(`updateAggregations`, async () => {
-	const {
-		view_aggregator,
-		collection_view_1,
-		initializeCacheForSpecificDataMock,
-		executeOperationsMock
-	} = aggregationCrudSetup();
+	const { view_aggregator, collection_view_1, initializeCacheForSpecificDataMock, e2 } = aggregationCrudSetup();
 
 	await view_aggregator.updateAggregation([
 		'Text',
@@ -131,25 +121,16 @@ it(`updateAggregations`, async () => {
 	};
 
 	expect(collection_view_1.query2.aggregations[0]).toStrictEqual(aggregation);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining([ aggregation ]))
-	]);
+	e2([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], expect.arrayContaining([ aggregation ])) ]);
 	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 });
 
 it(`deleteAggregation`, async () => {
-	const {
-		view_aggregator,
-		collection_view_1,
-		initializeCacheForSpecificDataMock,
-		executeOperationsMock
-	} = aggregationCrudSetup();
+	const { view_aggregator, collection_view_1, initializeCacheForSpecificDataMock, e2 } = aggregationCrudSetup();
 
 	await view_aggregator.deleteAggregation('Text');
 
 	expect(initializeCacheForSpecificDataMock).not.toHaveBeenCalled();
 	expect(collection_view_1.query2.aggregations).toStrictEqual([]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], [])
-	]);
+	e2([ o.cv.s('collection_view_1', [ 'query2', 'aggregations' ], []) ]);
 });

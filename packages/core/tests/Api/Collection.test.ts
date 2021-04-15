@@ -3,7 +3,7 @@ import { IPageCreateInput, NotionFabricator } from '@nishans/fabricator';
 import { Schema } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { v4 } from 'uuid';
-import { createExecuteOperationsMock } from '../../../../utils/tests/executeOperationsMock';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { csu, tsu, txsu } from '../../../fabricator/tests/utils';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';

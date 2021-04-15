@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -23,7 +23,7 @@ it('deleteDiscussions', async () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => ({} as any)),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const discussions = await NotionDiscourse.Discussions.delete(block_id, [ 'discussion_1' ], {
 		...default_nishan_arg,
@@ -33,9 +33,6 @@ it('deleteDiscussions', async () => {
 
 	expect(discussions).toStrictEqual([ discussion_1 ]);
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_id, 'block' ]);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.lr(block_id, [ 'discussions' ], { id: 'discussion_1' }),
-		o.b.u(block_id, [], last_edited_props)
-	]);
+	e1([ o.b.lr(block_id, [ 'discussions' ], { id: 'discussion_1' }), o.b.u(block_id, [], last_edited_props) ]);
 	expect(block_1.discussions).toStrictEqual([]);
 });

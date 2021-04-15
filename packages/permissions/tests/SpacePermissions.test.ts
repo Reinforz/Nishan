@@ -1,8 +1,8 @@
 import { NotionCache } from "@nishans/cache";
 import { NotionEndpoints } from "@nishans/endpoints";
-import { NotionOperations } from "@nishans/operations";
 import { INotionCache } from "@nishans/types";
 import colors from "colors";
+import { createExecuteOperationsMock } from "../../../utils/tests";
 import { default_nishan_arg, o } from "../../core/tests/utils";
 import { NotionPermissions } from "../libs";
 
@@ -14,7 +14,7 @@ it(`addMembers`, async()=>{
         user_id: 'user_root_1'
       } ] } as any ] ]),
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+		{e1} = createExecuteOperationsMock();
 
 	const space = new NotionPermissions.Space({
     ...default_nishan_arg,
@@ -49,7 +49,7 @@ it(`addMembers`, async()=>{
       id: 'user_root_2'
     }
   ]);
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.s.spi('space_1', ["permissions"], { role: 'editor', type: "user_permission", user_id: 'user_root_2' }),
   ]);
   findUser.mockImplementationOnce(()=>{

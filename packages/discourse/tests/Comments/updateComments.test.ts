@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -19,7 +19,7 @@ it(`NotionDiscourse.updateComments`, async () => {
 			cache_init_tracker: new Map([ [ 'discussion_1', true ] ]),
 			cache
 		} as any,
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	await NotionDiscourse.Comments.update(
 		'discussion_1',
@@ -33,8 +33,6 @@ it(`NotionDiscourse.updateComments`, async () => {
 		],
 		options
 	);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cm.u('comment_1', [], { ...last_edited_props, text: [ [ 'New Comment' ] ] })
-	]);
+	e1([ o.cm.u('comment_1', [], { ...last_edited_props, text: [ [ 'New Comment' ] ] }) ]);
 	expect(comment_data.text).toStrictEqual([ [ 'New Comment' ] ]);
 });

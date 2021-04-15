@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { tsu, txsu } from '@nishans/fabricator/tests/utils';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../../utils/tests';
 import { NotionCore } from '../../../libs';
 import { default_nishan_arg, o } from '../../utils';
 
@@ -109,7 +109,7 @@ const construct = () => {
 				[ 'collection_view_1', collection_view_1 ]
 			])
 		} as any,
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, e2, executeOperationsMock } = createExecuteOperationsMock();
 
 	const view = new NotionCore.Api.View({
 		...default_nishan_arg,
@@ -121,7 +121,18 @@ const construct = () => {
 		cache,
 		id: 'collection_view_2'
 	});
-	return { view, cache, block_1, view_2, collection_view_2, collection_view_1, collection_1, executeOperationsMock };
+	return {
+		e1,
+		e2,
+		executeOperationsMock,
+		view,
+		cache,
+		block_1,
+		view_2,
+		collection_view_2,
+		collection_view_1,
+		collection_1
+	};
 };
 
 it('getCollection', async () => {
@@ -135,13 +146,10 @@ it('getCachedParentData', async () => {
 });
 
 it('reposition', async () => {
-	const { view, block_1 } = construct();
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementationOnce(async () => undefined);
+	const { e1, view, block_1 } = construct();
 
 	await view.reposition();
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.la(
 			block_1.id,
 			[ 'view_ids' ],
@@ -154,25 +162,21 @@ it('reposition', async () => {
 
 describe('createSorts', () => {
 	it(`pos=undefined`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e1 } = construct();
 
 		await view.createSorts([ [ 'Text', 'ascending' ] ]);
 
 		expect(collection_view_1.query2.sort[1]).toStrictEqual(txas);
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'query2', 'sort' ], expect.arrayContaining([ txas ]))
-		]);
+		e1([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], expect.arrayContaining([ txas ])) ]);
 	});
 
 	it(`pos=number`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e1 } = construct();
 
 		await view.createSorts([ [ 'Text', 'ascending', 0 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual([ txas, tas ]);
-		expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'query2', 'sort' ], [ txas, tas ])
-		]);
+		e1([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], [ txas, tas ]) ]);
 	});
 
 	it(`throws error when property already has a sort `, async () => {
@@ -183,7 +187,7 @@ describe('createSorts', () => {
 
 describe('updateSort', () => {
 	it(`pos=undefined`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 		const sort = [
 			{
 				direction: 'descending',
@@ -194,52 +198,44 @@ describe('updateSort', () => {
 		await view.updateSort([ 'Title', 'descending' ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort)
-		]);
+		e2([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`pos=number`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 		collection_view_1.query2.sort = [ txas, tas ];
 		const sort = [ tas, txas ];
 
 		await view.updateSort([ 'Text', 1 ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort)
-		]);
+		e2([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 
 	it(`pos=[direction,number]`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 		collection_view_1.query2.sort = [ { ...txas }, { ...tas } ];
 		const sort = [ { ...tas, direction: 'descending' }, txas ];
 
 		await view.updateSort([ 'Title', [ 'descending', 0 ] ]);
 
 		expect(collection_view_1.query2.sort).toStrictEqual(sort);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort)
-		]);
+		e2([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], sort) ]);
 	});
 });
 
 it(`deleteSort`, async () => {
-	const { view, collection_view_1, executeOperationsMock } = construct();
+	const { view, collection_view_1, e2 } = construct();
 
 	await view.deleteSort('Title');
 
 	expect(collection_view_1.query2.sort).toStrictEqual([]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.cv.s('collection_view_1', [ 'query2', 'sort' ], [])
-	]);
+	e2([ o.cv.s('collection_view_1', [ 'query2', 'sort' ], []) ]);
 });
 
 describe('updateFormatProperty', () => {
 	it(`format, width and position all given`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 
 		const table_properties = [
 			{
@@ -256,13 +252,11 @@ describe('updateFormatProperty', () => {
 		await view.updateFormatProperty([ 'Title', { type: 'table', position: 1, visible: false, width: 125 } ]);
 
 		expect(collection_view_1.format.table_properties).toStrictEqual(table_properties);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties)
-		]);
+		e2([ o.cv.s('collection_view_1', [ 'format', 'table_properties' ], table_properties) ]);
 	});
 
 	it(`format, width and position none given`, async () => {
-		const { view_2, collection_view_2, executeOperationsMock } = construct();
+		const { view_2, collection_view_2, e2 } = construct();
 		const list_properties = [
 			{
 				visible: true,
@@ -277,14 +271,12 @@ describe('updateFormatProperty', () => {
 		await view_2.updateFormatProperty([ 'Title', { type: 'list' } ]);
 
 		expect(collection_view_2.format.list_properties).toStrictEqual(list_properties);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.s('collection_view_2', [ 'format', 'list_properties' ], list_properties)
-		]);
+		e2([ o.cv.s('collection_view_2', [ 'format', 'list_properties' ], list_properties) ]);
 	});
 });
 
 it(`createFilters`, async () => {
-	const { view, collection_view_1, executeOperationsMock } = construct();
+	const { view, collection_view_1, e1 } = construct();
 
 	const filter_value: any = {
 		operator: 'string_contains',
@@ -303,14 +295,12 @@ it(`createFilters`, async () => {
 	]);
 
 	expect(collection_view_1.query2.filter.filters[2].filter).toStrictEqual(filter_value);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter)
-	]);
+	e1([ o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter) ]);
 });
 
 describe('updateFilters', () => {
 	it(`separate property and same position`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 
 		const filter_value = {
 			operator: 'string_starts_with',
@@ -330,13 +320,11 @@ describe('updateFilters', () => {
 		]);
 
 		expect(collection_view_1.query2.filter.filters[0].filter).toStrictEqual(filter_value);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter)
-		]);
+		e2([ o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter) ]);
 	});
 
 	it(`same property and different position`, async () => {
-		const { view, collection_view_1, executeOperationsMock } = construct();
+		const { view, collection_view_1, e2 } = construct();
 
 		const filter_value = {
 			operator: 'string_starts_with',
@@ -356,18 +344,14 @@ describe('updateFilters', () => {
 		]);
 
 		expect(collection_view_1.query2.filter.filters[1].filter).toStrictEqual(filter_value);
-		expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-			o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter)
-		]);
+		e2([ o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter) ]);
 	});
 });
 
 it(`deleteFilter`, async () => {
-	const { view, collection_view_1, executeOperationsMock } = construct();
+	const { view, collection_view_1, e2 } = construct();
 	await view.deleteFilter('0');
 
 	expect(collection_view_1.query2.filter.filters.length).toBe(1);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
-		o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter)
-	]);
+	e2([ o.cv.u('collection_view_1', [ 'query2', 'filter' ], collection_view_1.query2.filter) ]);
 });

@@ -1,5 +1,5 @@
 import { CollectionExtracted, PageExtracted, TViewExtracted } from '@nishans/extract';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { o } from '../../../core/tests/utils';
 import { NotionSync } from '../../libs';
 
@@ -34,9 +34,7 @@ it('writeToNotion', async () => {
 			format: {}
 		};
 
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementationOnce(async () => undefined);
+	const { e1 } = createExecuteOperationsMock();
 
 	await NotionSync.Write.toNotion(
 		{
@@ -53,7 +51,7 @@ it('writeToNotion', async () => {
 		}
 	);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.u(
 			expect.any(String),
 			[],

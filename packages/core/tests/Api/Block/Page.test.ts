@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
+import { createExecuteOperationsMock } from '../../../../../utils/tests';
 import { NotionCore } from '../../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
 
@@ -40,7 +40,7 @@ const construct = () => {
 			discussion: new Map([ [ 'discussion_1', discussion_1 ] ]),
 			comment: new Map([ [ 'comment_1', comment_1 ] ])
 		} as any,
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
+		{ e1, executeOperationsMock } = createExecuteOperationsMock(),
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => undefined);
@@ -60,7 +60,8 @@ const construct = () => {
 		block_2,
 		page,
 		initializeCacheForSpecificDataMock,
-		executeOperationsMock
+		executeOperationsMock,
+		e1
 	};
 };
 
@@ -98,14 +99,14 @@ it(`getBlock`, async () => {
 });
 
 it(`updateBlock`, async () => {
-	const { block_2, page, executeOperationsMock, initializeCacheForSpecificDataMock } = construct();
+	const { block_2, page, e1, initializeCacheForSpecificDataMock } = construct();
 
 	const block_map = await page.updateBlock([ 'block_2', { alive: false } as any ]);
 
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_map.header.get('block_2')).not.toBeUndefined();
 	expect(block_2.alive).toBe(false);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.u(
 			'block_2',
 			[],
@@ -118,14 +119,14 @@ it(`updateBlock`, async () => {
 });
 
 it(`deleteBlock`, async () => {
-	const { block_2, page, executeOperationsMock, initializeCacheForSpecificDataMock } = construct();
+	const { block_2, page, e1, executeOperationsMock, initializeCacheForSpecificDataMock } = construct();
 
 	const deleted_block_map = await page.deleteBlock('block_2');
 
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 	expect(block_2.alive).toBe(false);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.u(
 			'block_2',
 			[],
@@ -151,7 +152,7 @@ it(`updateBookmarkedStatus`, async () => {
 				[ 'space_view_1', space_view_1 as any ]
 			])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ executeOperationsMock } = createExecuteOperationsMock();
 
 	const page = new NotionCore.Api.Page({
 		...default_nishan_arg,

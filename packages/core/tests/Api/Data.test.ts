@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { IPageUpdateInput } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { NotionTraverser } from '@nishans/traverser';
 import { IHeader } from '@nishans/types';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
@@ -167,9 +167,7 @@ it(`update`, async () => {
 			block: new Map([ [ 'block_1', block_1 ] ])
 		} as any,
 		methodLogger = jest.spyOn(NotionLogger.method, 'info'),
-		executeOperationsMock = jest
-			.spyOn(NotionOperations, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const block = new NotionCore.Api.NotionData<IHeader, Partial<Pick<IHeader, 'alive'>>>({
 		...default_nishan_arg,
@@ -180,9 +178,7 @@ it(`update`, async () => {
 	await block.update({ alive: false });
 	expect(methodLogger).toHaveBeenCalledWith(`UPDATE block block_1`);
 	expect(block.getCachedData()).toStrictEqual(block_1);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.b.u('block_1', [], { alive: false, ...last_edited_props })
-	]);
+	e1([ o.b.u('block_1', [], { alive: false, ...last_edited_props }) ]);
 });
 
 it(`getProps`, () => {

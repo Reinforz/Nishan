@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
 
@@ -40,9 +40,7 @@ it(`reposition`, async () => {
 		user_root: new Map([ [ 'user_root_1', { id: 'user_root_1', space_views: [ 'space_view_1' ] } as any ] ])
 	};
 
-	const executeOperationsMock = jest
-		.spyOn(NotionOperations, 'executeOperations')
-		.mockImplementationOnce(async () => undefined);
+	const { executeOperationsMock, e1 } = createExecuteOperationsMock();
 
 	const space_view = new NotionCore.Api.SpaceView({
 		...default_nishan_arg,
@@ -52,7 +50,7 @@ it(`reposition`, async () => {
 
 	await space_view.reposition();
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.ur.la(
 			'user_root_1',
 			[ 'space_views' ],
@@ -153,7 +151,7 @@ it(`updateBookmarkedPages`, async () => {
 			space_view: new Map([ [ 'space_view_1', space_view_1 as any ] ]),
 			space: new Map([ [ 'space_1', { id: 'space_1' } as any ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
+		{ e2 } = createExecuteOperationsMock(),
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined);
@@ -178,7 +176,7 @@ it(`updateBookmarkedPages`, async () => {
 		space_id: 'space_1'
 	});
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'space_view_1', 'space_view' ]);
-	expect(executeOperationsMock.mock.calls[1][0]).toStrictEqual([
+	e2([
 		o.sv.la('space_view_1', [ 'bookmarked_pages' ], {
 			id: 'block_2'
 		})

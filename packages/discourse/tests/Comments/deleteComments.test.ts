@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -24,11 +24,11 @@ it(`NotionDiscourse.deleteComments`, async () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	await NotionDiscourse.Comments.delete('discussion_1', [ comment_id ], options);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.cm.u(comment_id, [], {
 			alive: false,
 			...last_edited_props

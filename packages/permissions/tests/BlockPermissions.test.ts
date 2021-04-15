@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
+import { createExecuteOperationsMock } from '../../../utils/tests';
 import { default_nishan_arg, o } from '../../core/tests/utils';
 import { NotionPermissions } from '../libs';
 
@@ -42,9 +42,7 @@ it('updateUserPermission', async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperations, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
 
@@ -57,7 +55,7 @@ it('updateUserPermission', async () => {
 	await notion_permissions.updateUserPermission(updateUserPermissionArgs, 'editor');
 
 	expect(getNotionUserIdFromEmailMock.mock.calls[0][0]).toStrictEqual(updateUserPermissionArgs);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.sp('block_1', [ 'permissions' ], { role: 'editor', type: 'user_permission', user_id: 'notion_user_2' }),
 		o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
 	]);
@@ -247,15 +245,13 @@ it(`updateNonUserSpecificPermission`, () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', block_1 ] ])
 		},
-		executeOperationsMock = jest
-			.spyOn(NotionOperations, 'executeOperations')
-			.mockImplementationOnce(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
 
 	notion_permissions.updateNonUserSpecificPermission('public_permission', { role: 'read_and_write' });
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.sp('block_1', [ 'permissions' ], { type: 'public_permission', role: 'read_and_write' }),
 		o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
 	]);

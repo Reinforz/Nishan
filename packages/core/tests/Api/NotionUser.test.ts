@@ -1,9 +1,9 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import { v4 } from 'uuid';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, last_edited_props, o } from '../utils';
 
@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 it('create space', async () => {
-  const executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+  const {e1} = createExecuteOperationsMock();
   const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
   const spaceId = v4(),page_id = v4(), cache: INotionCache = {
@@ -92,7 +92,7 @@ it('create space', async () => {
   expect(space_views.length).toBe(1);
   expect(cache.space_view.get(space_views[0])).toStrictEqual(space_view_snapshot_data);
   expect(space.getCachedData()).toStrictEqual(expect.objectContaining(space_snapshot_data));
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.s.u(expect.any(String), [], {
       disable_public_access: false,
       disable_export: false,
@@ -138,7 +138,7 @@ it(`update space`, async () => {
       ['space_2', { id: 'space_2', shard_id: 123, name: 'Space 2' }]
     ] as any),
   },
-    executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+    {e1} = createExecuteOperationsMock();
 
   const notion_user = new NotionCore.Api.NotionUser({
     ...default_nishan_arg,
@@ -155,7 +155,7 @@ it(`update space`, async () => {
     ...last_edited_props,
   });
 
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.s.u('space_1', [], {
       name: 'Space One',
         ...last_edited_props,

@@ -1,8 +1,8 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { INotionCache } from '@nishans/types';
 import colors from "colors";
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { tsu, txsu } from '../../../fabricator/tests/utils';
 import { NotionCore } from '../../libs';
 import { default_nishan_arg, o } from '../utils';
@@ -34,7 +34,7 @@ it(`update`, async () => {
     id: 'collection_1',
     schema_id: 'schema_id_1',
     logger: true
-  }), executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+  }), {e1} = createExecuteOperationsMock();
 
   const update_arg: any = {
     type: 'text',
@@ -49,7 +49,7 @@ it(`update`, async () => {
     schema_id_1: update_arg
   });
 
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.c.u('collection_1', [], {
       schema: {
         schema_id_1: update_arg
@@ -74,7 +74,7 @@ describe('delete', () => {
         ] as any
       ]),
     },
-      executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+      {e1} = createExecuteOperationsMock();
 
     const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
     const schema_unit = new NotionCore.Api.SchemaUnit({
@@ -91,7 +91,7 @@ describe('delete', () => {
     expect(cache.collection.get('collection_1')!.schema).toStrictEqual({
       schema_id_2: tsu
     });
-    expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+    e1([
       o.c.u('collection_1', [], {
         schema: {
           schema_id_2: tsu
@@ -142,7 +142,7 @@ describe('duplicate', () => {
         ] as any
       ]),
     },
-      executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async()=>undefined);
+      {e1} = createExecuteOperationsMock();
     const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
     const schema_unit = new NotionCore.Api.SchemaUnit({
@@ -157,7 +157,7 @@ describe('duplicate', () => {
     expect(Object.keys(collection_1.schema).length).toBe(2);
     expect(methodLoggerMock).toHaveBeenCalledTimes(1);
     expect(methodLoggerMock).toHaveBeenCalledWith("UPDATE collection collection_1");
-    expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+    e1([
       o.c.u('collection_1', [], {schema: expect.objectContaining({
         text: txsu
       })})

@@ -1,6 +1,6 @@
 import { NotionLogger } from '@nishans/logger';
-import { NotionOperations } from '@nishans/operations';
 import { ICollection, INotionCache, IPage, TBlock } from '@nishans/types';
+import { createExecuteOperationsMock } from '../../../utils/tests';
 import { o } from '../../core/tests/utils';
 import { NotionTraverser } from '../libs';
 import { c1id, c1uo, c2id, c2uo, c3id, cd, constructCache, p1id, p1uo, uc1d, uc2d, up1d, update_props } from './utils';
@@ -11,7 +11,7 @@ afterEach(() => {
 
 it(`manual=false`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 	const cache = constructCache(child_ids);
 	const methodLoggerMock = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
@@ -52,12 +52,12 @@ it(`manual=false`, async () => {
 	]);
 	expect(cache.block.get(p1id)).toStrictEqual(up1d);
 	expect(updated_data).toStrictEqual([ uc1d, uc2d ]);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ c1uo, c2uo, p1uo ]);
+	e1([ c1uo, c2uo, p1uo ]);
 });
 
 it(`manual=false,parent_type&child_type!=block`, async () => {
 	const child_ids = [ c1id ],
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 	const cache = {
 		collection: new Map([
 			[
@@ -88,7 +88,7 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 		id: p1id,
 		content: child_ids
 	});
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.c.u(c1id, [], {
 			data: c1id
 		})
@@ -97,7 +97,7 @@ it(`manual=false,parent_type&child_type!=block`, async () => {
 
 it(`manual=true`, async () => {
 	const child_ids = [ c1id, c2id, c3id ],
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 	const cache = constructCache(child_ids);
 
 	const updated_data = await NotionTraverser.update<IPage, TBlock, TBlock>(
@@ -129,5 +129,5 @@ it(`manual=true`, async () => {
 		}
 	]);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([ p1uo ]);
+	e1([ p1uo ]);
 });

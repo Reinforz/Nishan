@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
 
@@ -22,7 +22,7 @@ it('updateDiscussions', async () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementationOnce(async () => ({} as any)),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	await NotionDiscourse.Discussions.update(
 		block_id,
@@ -39,7 +39,7 @@ it('updateDiscussions', async () => {
 		resolved: true
 	});
 	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_id, 'block' ]);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.d.u('discussion_1', [], {
 			context: [ [ 'New Context' ] ],
 			resolved: true

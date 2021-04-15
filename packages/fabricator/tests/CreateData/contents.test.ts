@@ -4,6 +4,7 @@ import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { ICollectionView, IColumn, IColumnList, IFactory, ITodo } from '@nishans/types';
 import { v4 } from 'uuid';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionFabricator } from '../../libs';
 import { tsu } from '../utils';
@@ -55,7 +56,7 @@ it(`parent=space`, async () => {
 			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', space_1 ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
@@ -83,7 +84,7 @@ it(`parent=space`, async () => {
 	expect(logger_spy).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+	e1([
 		o.b.u(page_id, [], {
 			...common_page_snapshot,
 			id: page_id,
@@ -127,7 +128,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 			...NotionCache.createDefaultCache(),
 			collection: new Map([ [ collection_id, collection_1 ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
@@ -156,7 +157,7 @@ it(`is_template=true,contents=[],parent=collection`, async () => {
 	expect(logger_spy).toHaveBeenCalledTimes(1);
 	expect(logger_spy).toHaveBeenNthCalledWith(1, `CREATE block ${page_id}`);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+	e1([
 		o.b.u(page_id, [], {
 			...common_page_snapshot,
 			id: page_id,
@@ -282,7 +283,7 @@ it(`type=link_to_page`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -300,7 +301,7 @@ it(`type=link_to_page`, async () => {
 		}
 	);
 	expect(executeOperationsMock).toBeCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+	e1([
 		o.b.la('block_1', [ 'content' ], {
 			id: 'page_to_link'
 		})
@@ -315,7 +316,7 @@ it(`type=column_list`, async () => {
 		cl_id = v4(),
 		c1_id = v4(),
 		c1_b1_id = v4(),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -382,7 +383,7 @@ it(`type=column_list`, async () => {
 		}
 	});
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.u(cl_id, [], expect.objectContaining({ id: cl_id })),
 		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id })),
 		o.b.u(c1_b1_id, [], expect.objectContaining({ id: c1_b1_id })),
@@ -399,7 +400,7 @@ it(`type=factory`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -456,7 +457,7 @@ it(`type=factory`, async () => {
 		...metadata
 	});
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.b.u(fid, [], expect.objectContaining({ id: fid })),
 		o.b.u(c1_id, [], expect.objectContaining({ id: c1_id })),
 		o.b.la(fid, [ 'content' ], expect.objectContaining({ id: c1_id })),
@@ -483,7 +484,7 @@ it(`type=linked_db`, async () => {
 				]
 			])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ executeOperationsMock } = createExecuteOperationsMock();
 
 	await NotionFabricator.CreateData.contents(
 		[
@@ -533,7 +534,7 @@ it(`type=bookmark`, async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ 'block_1', { id: 'block_1', type: 'page' } as any ] ])
 		},
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
+		{ e1, executeOperationsMock } = createExecuteOperationsMock(),
 		setBookmarkMetadataMock = jest
 			.spyOn(NotionEndpoints.Mutations, 'setBookmarkMetadata')
 			.mockImplementation(async () => undefined as any),
@@ -567,7 +568,7 @@ it(`type=bookmark`, async () => {
 	expect(updateCacheManuallyMock).toHaveBeenCalledTimes(1);
 	expect(updateCacheManuallyMock.mock.calls[0][0]).toStrictEqual([ [ block_id, 'block' ] ]);
 	expect(executeOperationsMock).toHaveBeenCalledTimes(2);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+	e1([
 		o.b.u(
 			block_id,
 			[],
@@ -596,7 +597,7 @@ it(`type=embed`, async () => {
 					type: 'embed'
 				} as any)
 		),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
 	const logger_spy = jest.spyOn(NotionLogger.method, 'info').mockImplementation(() => undefined as any);
 
@@ -628,7 +629,7 @@ it(`type=embed`, async () => {
 		type: 'embed'
 	});
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
-	expect(executeOperationsMock.mock.calls[0][0]).toEqual([
+	e1([
 		o.b.u(
 			block_id,
 			[],

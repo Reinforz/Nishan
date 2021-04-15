@@ -1,6 +1,6 @@
 import { NotionCache } from '@nishans/cache';
 import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionCore } from '../../libs';
 
@@ -21,7 +21,7 @@ it(`createComments`, async () => {
 			cache_init_tracker: new Map([ [ 'discussion_1', true ] ]) as any
 		},
 		comment_id = NotionIdz.Generate.id(),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined),
+		{ e1 } = createExecuteOperationsMock(),
 		comment_1_data = {
 			parent_id: expect.any(String),
 			parent_table: 'discussion',
@@ -46,7 +46,7 @@ it(`createComments`, async () => {
 		}
 	]);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.cm.u(comment_id, [], expect.objectContaining(comment_1_data)),
 		o.d.la('discussion_1', [ 'comments' ], {
 			id: comment_id
@@ -98,7 +98,7 @@ it(`updateComments`, async () => {
 			cache_init_tracker: new Map([ [ 'discussion_1', true ] ]),
 			cache
 		} as any,
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const discussion = new NotionCore.Api.Discussion(options);
 
@@ -109,9 +109,7 @@ it(`updateComments`, async () => {
 		}
 	]);
 
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-		o.cm.u('comment_1', [], { ...last_edited_props, text: [ [ 'New Comment' ] ] })
-	]);
+	e1([ o.cm.u('comment_1', [], { ...last_edited_props, text: [ [ 'New Comment' ] ] }) ]);
 	expect(comment_1.text).toStrictEqual([ [ 'New Comment' ] ]);
 	expect(comment.getCachedData()).toStrictEqual(comment_1);
 });
@@ -133,11 +131,11 @@ it(`deleteComments`, async () => {
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
 			.mockImplementation(async () => undefined),
-		executeOperationsMock = jest.spyOn(NotionOperations, 'executeOperations').mockImplementation(async () => undefined);
+		{ e1 } = createExecuteOperationsMock();
 
 	const discussion = new NotionCore.Api.Discussion(options);
 	await discussion.deleteComment('comment_1');
-	expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+	e1([
 		o.cm.u('comment_1', [], {
 			alive: false,
 			...last_edited_props

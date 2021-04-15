@@ -11,6 +11,7 @@ export const createExecuteOperationsMock = () => {
 		.mockImplementation(async () => undefined);
 
 	return {
+		executeOperationsMock,
 		e1 (ops: IOperation[]) {
 			expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual(ops);
 		},

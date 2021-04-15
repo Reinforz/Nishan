@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { TViewCreateInput } from '@nishans/fabricator';
-import { NotionOperations } from '@nishans/operations';
 import { v4 } from "uuid";
+import { createExecuteOperationsMock } from '../../../../../utils/tests';
 import { tsu } from "../../../../fabricator/tests/utils";
 import { NotionCore } from "../../../libs";
 import { default_nishan_arg, last_edited_props, o } from '../../utils';
@@ -26,15 +26,13 @@ const construct = () =>{
   initializeCacheForSpecificDataMock = jest
     .spyOn(NotionCache, 'initializeCacheForSpecificData')
     .mockImplementation(async () => undefined),
-  executeOperationsMock = jest
-    .spyOn(NotionOperations, 'executeOperations')
-    .mockImplementation(async () => undefined);
+  {executeOperationsMock, e1} = createExecuteOperationsMock();
   const collection_block = new NotionCore.Api.CollectionBlock({
     ...default_nishan_arg,
 		cache,
 	});
 
-  return {collection_view_1, block_1, collection_block, collection_1, cache, executeOperationsMock, initializeCacheForSpecificDataMock};
+  return {e1, collection_view_1, block_1, collection_block, collection_1, cache, executeOperationsMock, initializeCacheForSpecificDataMock};
 }
 
 it(`getCollection`, async () => {
@@ -79,27 +77,27 @@ it(`getViews`, async () => {
 });
 
 it(`updateView`, async () => {
-  const {collection_block, initializeCacheForSpecificDataMock, executeOperationsMock} = construct();
+  const {collection_block, initializeCacheForSpecificDataMock, e1} = construct();
 
 	const view_map = await collection_block.updateView(['collection_view_1', {type: "board"}]);
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(view_map.table.get("Table")?.getCachedData()).toStrictEqual(expect.objectContaining({type: "board"}));
 	expect(view_map.table.get("collection_view_1")?.getCachedData()).toStrictEqual(expect.objectContaining({type: "board"}));
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.cv.u('collection_view_1', [], expect.objectContaining({type: 'board'})),
     o.b.u('block_1', [], last_edited_props),
   ])
 });
 
 it(`deleteView`, async () => {
-  const {block_1, collection_block, collection_view_1, initializeCacheForSpecificDataMock, executeOperationsMock} = construct();
+  const {block_1, collection_block, collection_view_1, initializeCacheForSpecificDataMock, e1} = construct();
 
 	const deleted_view_map = await collection_block.deleteView('collection_view_1');
 
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual(["block_1", 'block']);
 	expect(collection_view_1).toStrictEqual(expect.objectContaining({alive: false}));
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
+  e1([
     o.cv.u('collection_view_1', [], expect.objectContaining({alive: false})),
     o.b.lr('block_1', ['view_ids'], {id: 'collection_view_1'}),
     o.b.u('block_1', [], last_edited_props),

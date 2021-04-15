@@ -5,7 +5,13 @@
     "./experiment"
   ],
   "compilerOptions": {
+    "baseUrl": "./libs",
     "outDir": "./dist",
-    "rootDir": "./"
-  }
+    "rootDir": "./",
+    "paths": {
+      "@tests": [
+        "../../../utils/tests"
+      ]
+    }
+  },
 }

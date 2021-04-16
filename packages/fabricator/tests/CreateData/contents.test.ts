@@ -547,8 +547,9 @@ it(`type=bookmark`, async () => {
 			{
 				type: 'bookmark',
 				properties: { link: [ [ 'https://google.com' ] ], title: [ [ 'Page' ] ], description: [ [ '' ] ] },
-				id: block_id
-			}
+				id: block_id,
+        discussions: []
+      }
 		],
 		'block_1',
 		'block',

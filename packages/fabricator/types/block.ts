@@ -1,3 +1,4 @@
+import { IDiscussionCreateInput } from '@nishans/discourse';
 import { INotionRepositionParams } from '@nishans/lineage';
 import {
 	IAudio,
@@ -60,6 +61,7 @@ export interface ICollectionViewPageInput extends ICollectionBlockInput {
 interface IBlockInput {
 	id?: string;
 	type: TBlockType;
+	discussions?: IDiscussionCreateInput[];
 }
 
 export interface ILinkedDBInput extends IBlockInput {

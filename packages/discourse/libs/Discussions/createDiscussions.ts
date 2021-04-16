@@ -6,10 +6,10 @@ import { IDiscussion, IOperation, IText } from '@nishans/types';
 import { NotionUtils } from '@nishans/utils';
 import { IDiscussionCreateInput } from "../types";
 
-export const createDiscussions = async (
+export const createDiscussions = (
   block_id: string,
 	args: IDiscussionCreateInput[],
-	options: INotionCacheOptions & INotionOperationOptions
+	options: Omit<INotionCacheOptions, "cache_init_tracker"> & INotionOperationOptions
 ) => {
 	const operations: IOperation[] = [],
 		discussions: IDiscussion[] = [];

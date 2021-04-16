@@ -1,4 +1,5 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { NotionIdz } from '@nishans/idz';
 import { NotionInit } from '@nishans/init';
@@ -215,6 +216,11 @@ export async function contents (
 				};
 				operations.push(await executeOperationAndStoreInCache<any>(block_data, options, cb));
 			}
+
+			if ((content as any).discussions)
+				operations.push(
+					...NotionDiscourse.Discussions.create(block_id, (content as any).discussions, options).operations
+				);
 
 			if (content.type === 'bookmark') {
 				await NotionOperations.executeOperations(operations, options);

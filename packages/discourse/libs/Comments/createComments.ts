@@ -9,7 +9,7 @@ import { ICommentCreateInput } from '../';
 export const createComments = async (
 	discussion_id: string,
 	args: ICommentCreateInput[],
-	options: INotionCacheOptions & INotionOperationOptions
+	options: Omit<INotionCacheOptions, 'cache_init_tracker'> & INotionOperationOptions
 ) => {
 	const operations: IOperation[] = [],
 		comments: IComment[] = [];

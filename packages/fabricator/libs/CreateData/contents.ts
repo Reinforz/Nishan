@@ -17,6 +17,7 @@ import {
 	IOperation,
 	IPage,
 	ISpace,
+	ISpaceView,
 	TBlock,
 	WebBookmarkProps
 } from '@nishans/types';
@@ -146,6 +147,18 @@ export async function contents (
 				};
 
 				operations.push(await executeOperationAndStoreInCache<IPage>(page_data, options, cb));
+				const space_view = NotionLineage.Space.getSpaceView(options.space_id, options.cache);
+				if (space_view && content.isBookmarked === true)
+					operations.push(
+						...(await NotionLineage.updateChildContainer<ISpaceView>(
+							'space_view',
+							space_view.id,
+							true,
+							block_id,
+							'bookmarked_pages',
+							options
+						))
+					);
 				await traverse(content.contents, block_id, 'block');
 			} else if (content.type === 'column_list') {
 				const { contents } = content,

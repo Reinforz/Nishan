@@ -134,6 +134,7 @@ export interface IPageCreateInput extends IBlockInput {
 	isPrivate?: boolean;
 	contents: TBlockInput[];
 	is_template?: boolean;
+	isBookmarked?: true;
 }
 
 export interface IPageUpdateInput {

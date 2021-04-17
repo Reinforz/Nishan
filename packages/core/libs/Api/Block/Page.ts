@@ -134,4 +134,14 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 			async (id, block, container) => NotionCore.PopulateMap.block(block, container, this.getProps())
 		);
 	}
+
+	async toggleFollow () {
+		const follow_id = NotionLineage.Page.getFollowId(this.id, this.cache)!;
+		const follow = this.cache.follow.get(follow_id)!;
+		await NotionOperations.executeOperations(
+			[ NotionOperations.Chunk.follow.set(follow_id, [ 'following' ], !follow.following) ],
+			this.getProps()
+		);
+		follow.following = !follow.following;
+	}
 }

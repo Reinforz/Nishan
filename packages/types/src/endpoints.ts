@@ -31,7 +31,7 @@ import {
 	ViewAggregations,
 	ViewSorts
 } from './';
-import { ICommentData, IDiscussionData, IFollowData, IPageVisits, ISlackIntegration } from './recordMap';
+import { ICommentData, IDiscussionData, IFollowData, IPageVisits, ISlackIntegrationData } from './recordMap';
 
 interface INotionEndpoint<P, R> {
 	payload: P;
@@ -444,12 +444,7 @@ export interface INotionEndpoints {
 				follow: IFollowData;
 				discussion: IDiscussionData;
 				comment: ICommentData;
-				slack_integration: {
-					[k: string]: {
-						role: TPermissionRole;
-						value?: ISlackIntegration;
-					};
-				};
+				slack_integration: ISlackIntegrationData;
 			};
 		}
 	>;

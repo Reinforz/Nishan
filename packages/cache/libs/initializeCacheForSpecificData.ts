@@ -55,6 +55,15 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 						has_more_chunk = cursor.stack.length !== 0;
 						if (has_more_chunk) next_index = cursor.stack[0][0].index;
 					}
+
+					if (data.type !== 'collection_view') {
+						const { recordMap } = await NotionEndpoints.Queries.getActivityLog({
+							limit: 100,
+							spaceId: data.space_id,
+							navigableBlockId: data.id
+						});
+						NotionCache.saveToCache(recordMap, cache);
+					}
 				}
 
 				NotionCache.extractNotionUserIds(data).forEach((notion_user_id) =>

@@ -1,5 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { INotionFabricatorOptions } from '@nishans/fabricator';
+import { INotionFabricatorOptions, TBlockInput } from '@nishans/fabricator';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperationPluginFunction, NotionOperations } from '@nishans/operations';
 import { FilterTypes, IterateAndDeleteOptions, IterateAndGetOptions, IterateAndUpdateOptions, NotionTraverser, UpdateTypes } from "@nishans/traverser";
@@ -13,7 +13,7 @@ import { INotionCoreOptions } from '../';
  * @noInheritDoc
  */
 
-export default class NotionData<T extends TData, U extends Partial<TData>> {
+export default class NotionData<T extends TData, U extends Partial<TData | TBlockInput>> {
   id: string;
   type: TDataType;
   logger: boolean;

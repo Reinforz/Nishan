@@ -57,11 +57,14 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 					}
 
 					if (data.type !== 'collection_view') {
-						const { recordMap } = await NotionEndpoints.Queries.getActivityLog({
-							limit: 100,
-							spaceId: data.space_id,
-							navigableBlockId: data.id
-						});
+						const { recordMap } = await NotionEndpoints.Queries.getActivityLog(
+							{
+								limit: 100,
+								spaceId: data.space_id,
+								navigableBlockId: data.id
+							},
+							options
+						);
 						NotionCache.saveToCache(recordMap, cache);
 					}
 				}

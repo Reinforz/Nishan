@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
 import { IDiscussionCreateInput, NotionDiscourse } from '@nishans/discourse';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { IEmbedInput } from '@nishans/fabricator';
+import { TBlockInput } from '@nishans/fabricator';
 import { NotionIdz } from '@nishans/idz';
 import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
@@ -16,7 +16,7 @@ import Data from '../Data';
  * A class to represent block of Notion
  * @noInheritDoc
  */
-class Block<T extends TBlock, U extends Partial<TBlock | IEmbedInput>> extends Data<T, U> {
+class Block<T extends TBlock, U extends Partial<TBlockInput>> extends Data<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'block' });
 	}

@@ -4,11 +4,10 @@ import { NotionLineage } from '@nishans/lineage';
 import { NotionOperations } from '@nishans/operations';
 import { NotionPermissions } from '@nishans/permissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IComment, IDiscussion, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { IComment, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
 import Comment from '../Comment';
-import Discussion from '../Discussion';
 import Block from './Block';
 /**
  * A class to represent Page type block of Notion
@@ -134,21 +133,6 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 			},
 			(block_id) => this.cache.block.get(block_id),
 			async (id, block, container) => NotionCore.PopulateMap.block(block, container, this.getProps())
-		);
-	}
-
-	async getDiscussion (arg?: FilterType<IDiscussion>) {
-		return (await this.getDiscussions(transformToMultiple(arg), false))[0];
-	}
-
-	async getDiscussions (args?: FilterTypes<IDiscussion>, multiple?: boolean) {
-		const discussion_ids = NotionLineage.Page.getDiscussionIds(this.getCachedData(), this.cache);
-
-		return await this.getIterate<IDiscussion, Discussion[]>(
-			args,
-			{ container: [], multiple, child_ids: discussion_ids, child_type: 'discussion' },
-			(discussion_id) => this.cache.discussion.get(discussion_id),
-			async (id, __, container) => container.push(new Discussion({ ...this.getProps(), id }))
 		);
 	}
 

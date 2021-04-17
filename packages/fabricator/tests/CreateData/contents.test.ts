@@ -28,7 +28,7 @@ const metadata = {
 	alive: true
 };
 
-it(`parent=space`, async () => {
+it(`parent=space,isBookmarked=true`, async () => {
 	const space_1 = { id: 'space_1' } as any,
 		page_id = v4();
 	const common_page_snapshot = {
@@ -50,11 +50,12 @@ it(`parent=space`, async () => {
 				role: 'editor',
 				user_id
 			}
-		]
+		],
 	};
 	const cache = {
 			...NotionCache.createDefaultCache(),
-			space: new Map([ [ 'space_1', space_1 ] ])
+			space: new Map([ [ 'space_1', space_1 ] ]),
+      space_view: new Map([['space_view_1', {space_id: 'space_1', id: 'space_view_1'} as any]])
 		},
 		{ e1, executeOperationsMock } = createExecuteOperationsMock();
 
@@ -68,6 +69,7 @@ it(`parent=space`, async () => {
 				format: {
 					block_color: 'blue'
 				},
+        isBookmarked: true,
 				isPrivate: true,
 				id: page_id,
 				contents: []
@@ -91,6 +93,9 @@ it(`parent=space`, async () => {
 			parent_id: 'space_1',
 			parent_table: 'space'
 		}),
+    o.sv.la('space_view_1', ['bookmarked_pages'], {
+      id: page_id
+    }),
 		o.s.la('space_1', [ 'pages' ], { id: page_id })
 	]);
 	expect(cache.space.get('space_1')).toStrictEqual({

@@ -114,7 +114,8 @@ describe('initializeCacheForSpecificData', () => {
 				parent_table: 'space',
 				parent_id: 'space_1',
 				last_edited_by_id: 'notion_user_1',
-				created_by_id: 'notion_user_1'
+				created_by_id: 'notion_user_1',
+				space_id: 'space_1'
 			};
 
 			const cache = {
@@ -123,44 +124,47 @@ describe('initializeCacheForSpecificData', () => {
 			};
 
 			const updateCacheIfNotPresentMock = jest
-				.spyOn(NotionCache, 'updateCacheIfNotPresent')
-				.mockImplementationOnce(async () => undefined);
-			const loadPageChunkMock = jest
-				.spyOn(NotionEndpoints.Queries, 'loadPageChunk')
-				.mockImplementationOnce(
-					async () =>
-						({
-							recordMap: {
-								block: {
-									block_2: {
-										value: {
-											id: 'block_2'
+					.spyOn(NotionCache, 'updateCacheIfNotPresent')
+					.mockImplementationOnce(async () => undefined),
+				getActivityLogMock = jest
+					.spyOn(NotionEndpoints.Queries, 'getActivityLog')
+					.mockImplementationOnce(async () => ({ recordMap: {} } as any)),
+				loadPageChunkMock = jest
+					.spyOn(NotionEndpoints.Queries, 'loadPageChunk')
+					.mockImplementationOnce(
+						async () =>
+							({
+								recordMap: {
+									block: {
+										block_2: {
+											value: {
+												id: 'block_2'
+											}
 										}
 									}
+								},
+								cursor: {
+									stack: [ [ { index: 5 } ] ]
 								}
-							},
-							cursor: {
-								stack: [ [ { index: 5 } ] ]
-							}
-						} as any)
-				)
-				.mockImplementationOnce(
-					async () =>
-						({
-							recordMap: {
-								block: {
-									block_2: {
-										value: {
-											id: 'block_2'
+							} as any)
+					)
+					.mockImplementationOnce(
+						async () =>
+							({
+								recordMap: {
+									block: {
+										block_2: {
+											value: {
+												id: 'block_2'
+											}
 										}
 									}
+								},
+								cursor: {
+									stack: []
 								}
-							},
-							cursor: {
-								stack: []
-							}
-						} as any)
-				);
+							} as any)
+					);
 
 			await NotionCache.initializeCacheForSpecificData('block_1', 'block', {
 				token: 'token',
@@ -185,6 +189,11 @@ describe('initializeCacheForSpecificData', () => {
 				},
 				chunkNumber: 1,
 				verticalColumns: false
+			});
+			expect(getActivityLogMock.mock.calls[0][0]).toStrictEqual({
+				limit: 100,
+				spaceId: 'space_1',
+				navigableBlockId: 'block_1'
 			});
 			expect(loadPageChunkMock.mock.calls[1][0]).toStrictEqual({
 				pageId: 'block_1',

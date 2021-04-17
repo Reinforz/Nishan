@@ -164,21 +164,3 @@ it(`updateBookmarkedStatus`, async () => {
 
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 });
-
-it(`getDiscussion`, async () => {
-	const { discussion_1, page, initializeCacheForSpecificDataMock } = construct();
-
-	const discussion = await page.getDiscussion('discussion_1');
-
-	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
-	expect(discussion.getCachedData()).toBe(discussion_1);
-});
-
-it(`getComment`, async () => {
-	const { comment_1, page, initializeCacheForSpecificDataMock } = construct();
-
-	const comment = await page.getComment('comment_1');
-
-	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
-	expect(comment.getCachedData()).toBe(comment_1);
-});

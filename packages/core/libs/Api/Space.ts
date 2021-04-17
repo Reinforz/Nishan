@@ -27,7 +27,7 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'space' });
 		this.Permissions = new NotionPermissions.Space(arg);
-		this.space_view = NotionLineage.Space.getSpaceView(this.id, this.cache);
+		this.space_view = NotionLineage.Space.getSpaceView(this.id, this.cache)!;
 	}
 
 	/**

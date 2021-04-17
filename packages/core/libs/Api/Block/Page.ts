@@ -4,10 +4,9 @@ import { NotionLineage } from '@nishans/lineage';
 import { NotionOperations } from '@nishans/operations';
 import { NotionPermissions } from '@nishans/permissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IComment, IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
+import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
-import Comment from '../Comment';
 import Block from './Block';
 /**
  * A class to represent Page type block of Notion
@@ -133,21 +132,6 @@ export default class Page extends Block<IPage, Partial<Pick<IPage, 'properties' 
 			},
 			(block_id) => this.cache.block.get(block_id),
 			async (id, block, container) => NotionCore.PopulateMap.block(block, container, this.getProps())
-		);
-	}
-
-	async getComment (arg?: FilterType<IComment>) {
-		return (await this.getComments(transformToMultiple(arg), false))[0];
-	}
-
-	async getComments (args?: FilterTypes<IComment>, multiple?: boolean) {
-		const comment_ids = NotionLineage.Page.getCommentIds(this.getCachedData(), this.cache);
-
-		return await this.getIterate<IComment, Comment[]>(
-			args,
-			{ container: [], multiple, child_ids: comment_ids, child_type: 'comment' },
-			(comment_id) => this.cache.comment.get(comment_id),
-			async (id, __, container) => container.push(new Comment({ ...this.getProps(), id }))
 		);
 	}
 }

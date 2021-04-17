@@ -7,9 +7,10 @@ import { INotionRepositionParams, NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { IDiscussion, IPage, ISpace, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
+import { IComment, IDiscussion, IPage, ISpace, TBasicBlockType, TBlock, TData, TTextFormat } from '@nishans/types';
 import { INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
+import Comment from '../Comment';
 import Data from '../Data';
 
 /**
@@ -227,6 +228,21 @@ class Block<T extends TBlock, U extends Partial<TBlockInput>> extends Data<T, U>
 		const props = this.getProps();
 		return (await NotionDiscourse.Discussions.get(this.id, args, { ...props, multiple })).map(
 			(discussion) => new NotionCore.Api.Discussion({ ...props, id: discussion.id })
+		);
+	}
+
+	async getComment (arg?: FilterType<IComment>) {
+		return (await this.getComments(transformToMultiple(arg), false))[0];
+	}
+
+	async getComments (args?: FilterTypes<IComment>, multiple?: boolean) {
+		const comment_ids = NotionLineage.Block.getCommentIds(this.getCachedData(), this.cache);
+
+		return await this.getIterate<IComment, Comment[]>(
+			args,
+			{ container: [], multiple, child_ids: comment_ids, child_type: 'comment' },
+			(comment_id) => this.cache.comment.get(comment_id),
+			async (id, __, container) => container.push(new Comment({ ...this.getProps(), id }))
 		);
 	}
 }

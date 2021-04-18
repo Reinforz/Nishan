@@ -30,6 +30,14 @@ export const o = {
 		lr: NotionOperations.Chunk.block.listRemove,
 		sp: NotionOperations.Chunk.block.setPermissionItem
 	},
+	f: {
+		u: NotionOperations.Chunk.follow.update,
+		s: NotionOperations.Chunk.follow.set,
+		la: NotionOperations.Chunk.follow.listAfter,
+		lb: NotionOperations.Chunk.follow.listBefore,
+		lr: NotionOperations.Chunk.follow.listRemove,
+		sp: NotionOperations.Chunk.follow.setPermissionItem
+	},
 	d: {
 		u: NotionOperations.Chunk.discussion.update,
 		s: NotionOperations.Chunk.discussion.set,

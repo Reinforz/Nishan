@@ -14,7 +14,13 @@ const construct = () => {
 	const discussion_1: any = {
 			id: 'discussion_1',
 			parent_id: 'block_1',
-			parent_table: 'block'
+			parent_table: 'block',
+			comments: [ 'comment_1' ]
+		},
+		comment_1: any = {
+			context: [ [ 'Context' ] ],
+			resolved: false,
+			id: 'comment_1'
 		},
 		block_1: any = {
 			type: 'header',
@@ -38,7 +44,13 @@ const construct = () => {
 			...NotionCache.createDefaultCache(),
 			space: new Map([ [ 'space_1', { id: 'space_1', pages: [ 'block_3' ] } ] ]),
 			discussion: new Map([ [ 'discussion_1', discussion_1 ] ]),
-			block: new Map([ [ 'block_1', block_1 ], [ 'block_2', block_2 ], [ 'block_3', block_3 ], [ 'block_4', block_4 ] ])
+			block: new Map([
+				[ 'block_1', block_1 ],
+				[ 'block_2', block_2 ],
+				[ 'block_3', block_3 ],
+				[ 'block_4', block_4 ]
+			]),
+			comment: new Map([ [ 'comment_1', comment_1 ] ])
 		} as any,
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
@@ -458,4 +470,12 @@ it(`updateDiscussion`, async () => {
 		),
 		o.b.u('block_1', [], last_edited_props)
 	]);
+});
+
+it('getComments', async () => {
+	const { block_1_obj, cache, initializeCacheForSpecificDataMock } = construct();
+
+	const comment = await block_1_obj.getComment('comment_1');
+	expect(comment.getCachedData()).toStrictEqual(cache.comment.get('comment_1'));
+	expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ 'block_1', 'block' ]);
 });

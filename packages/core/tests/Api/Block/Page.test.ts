@@ -142,7 +142,7 @@ it(`deleteBlock`, async () => {
 	expect(deleted_block_map.header.get('block_2')!.getCachedData()).toStrictEqual(block_2);
 });
 
-it(`updateBookmarkedStatus`, async () => {
+it(`toggleBookmarked`, async () => {
 	const space_view_1 = { space_id: 'space_1', id: 'space_view_1', bookmarked_pages: [ 'block_1' ] },
 		cache: INotionCache = {
 			...NotionCache.createDefaultCache(),
@@ -160,7 +160,7 @@ it(`updateBookmarkedStatus`, async () => {
 		logger: false
 	});
 
-	await page.updateBookmarkedStatus(false);
+	await page.toggleBookmarked();
 
 	expect(executeOperationsMock).toHaveBeenCalledTimes(1);
 });

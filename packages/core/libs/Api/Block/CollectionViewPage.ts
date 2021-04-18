@@ -1,7 +1,6 @@
-import { NotionCache } from '@nishans/cache';
 import { ICollectionViewPageInput } from '@nishans/fabricator';
 import { NotionPermissions } from '@nishans/permissions';
-import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
+import { ICollectionViewPage } from '@nishans/types';
 import { INotionCoreOptions } from '../../';
 import { applyMixins } from '../../utils';
 import CollectionBlock from './CollectionBlock';
@@ -15,17 +14,11 @@ interface CollectionViewPage
 	extends CollectionBlock<ICollectionViewPage, ICollectionViewPageInput>,
 		PageBlock<ICollectionViewPage, ICollectionViewPageInput> {}
 
-class CollectionViewPage {
+class CollectionViewPage extends CollectionBlock<ICollectionViewPage, ICollectionViewPageInput> {
 	Permissions: InstanceType<typeof NotionPermissions.Block>;
 	constructor (arg: INotionCoreOptions) {
+		super(arg);
 		this.Permissions = new NotionPermissions.Block(arg);
-	}
-
-	async getCachedParentData () {
-		const data = this.getCachedData();
-		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as
-			| IPage
-			| ISpace;
 	}
 }
 

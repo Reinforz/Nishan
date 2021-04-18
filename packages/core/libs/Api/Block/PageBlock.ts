@@ -11,7 +11,7 @@ import Block from './Block';
  * @noInheritDoc
  */
 
-export default class PageBlock<T extends TBlock, U> extends Block<T, U> {
+export default class PageBlock<T extends TBlock, U> extends Block<T, U, IPage | ISpace> {
 	Permissions: InstanceType<typeof NotionPermissions.Block>;
 
 	constructor (arg: INotionCoreOptions) {

@@ -17,14 +17,14 @@ import Data from '../Data';
  * A class to represent block of Notion
  * @noInheritDoc
  */
-class Block<T extends TBlock, U extends Partial<TBlockInput>> extends Data<T, U> {
+class Block<T extends TBlock, U extends Partial<TBlockInput>, P extends TData> extends Data<T, U> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg, type: 'block' });
 	}
 
 	async getCachedParentData () {
 		const data = this.getCachedData();
-		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as TData;
+		return (await NotionCache.fetchDataOrReturnCached(data.parent_table, data.parent_id, this.getProps())) as P;
 	}
 
 	async reposition (arg?: INotionRepositionParams) {

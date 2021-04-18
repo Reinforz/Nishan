@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionFabricator, TCollectionBlockInput, TViewCreateInput } from '@nishans/fabricator';
 import { NotionOperations } from '@nishans/operations';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { ICollection, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
+import { ICollection, IPage, ISpace, TCollectionBlock, TView, TViewUpdateInput } from '@nishans/types';
 import { INotionCoreOptions, IViewMap, NotionCore } from '../../';
 import { PopulateMap } from '../../PopulateMap';
 import { transformToMultiple } from '../../utils';
@@ -13,7 +13,7 @@ import Block from './Block';
  * A class to represent collection block type in Notion
  * @noInheritDoc
  */
-class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInput> extends Block<T, U> {
+class CollectionBlock<T extends TCollectionBlock, U extends TCollectionBlockInput> extends Block<T, U, IPage | ISpace> {
 	constructor (arg: INotionCoreOptions) {
 		super({ ...arg });
 	}

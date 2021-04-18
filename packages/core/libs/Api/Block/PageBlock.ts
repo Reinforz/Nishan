@@ -2,7 +2,7 @@ import { NotionCache } from '@nishans/cache';
 import { NotionLineage } from '@nishans/lineage';
 import { NotionOperations } from '@nishans/operations';
 import { NotionPermissions } from '@nishans/permissions';
-import { IPage, ISpace, ISpaceView } from '@nishans/types';
+import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { INotionCoreOptions } from '../../';
 import Block from './Block';
 
@@ -11,7 +11,7 @@ import Block from './Block';
  * @noInheritDoc
  */
 
-export default class PageBlock extends Block<IPage, Partial<Pick<IPage, 'properties' | 'format'>>> {
+export default class PageBlock<T extends TBlock, U> extends Block<T, U> {
 	Permissions: InstanceType<typeof NotionPermissions.Block>;
 
 	constructor (arg: INotionCoreOptions) {

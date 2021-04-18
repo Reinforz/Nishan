@@ -3,16 +3,21 @@ import { ICollectionViewPageInput } from '@nishans/fabricator';
 import { NotionPermissions } from '@nishans/permissions';
 import { ICollectionViewPage, IPage, ISpace } from '@nishans/types';
 import { INotionCoreOptions } from '../../';
+import { applyMixins } from '../../utils';
 import CollectionBlock from './CollectionBlock';
+import PageBlock from './PageBlock';
 
 /**
  * A class to represent collection view page of Notion
  * @noInheritDoc
  */
-class CollectionViewPage extends CollectionBlock<ICollectionViewPage, ICollectionViewPageInput> {
+interface CollectionViewPage
+	extends CollectionBlock<ICollectionViewPage, ICollectionViewPageInput>,
+		PageBlock<ICollectionViewPage, ICollectionViewPageInput> {}
+
+class CollectionViewPage {
 	Permissions: InstanceType<typeof NotionPermissions.Block>;
 	constructor (arg: INotionCoreOptions) {
-		super(arg);
 		this.Permissions = new NotionPermissions.Block(arg);
 	}
 
@@ -24,4 +29,5 @@ class CollectionViewPage extends CollectionBlock<ICollectionViewPage, ICollectio
 	}
 }
 
+applyMixins(CollectionViewPage, [ CollectionBlock, PageBlock ]);
 export default CollectionViewPage;

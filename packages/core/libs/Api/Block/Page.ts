@@ -1,7 +1,6 @@
 import { NotionFabricator, TBlockCreateInput, TBlockInput } from '@nishans/fabricator';
-import { NotionPermissions } from '@nishans/permissions';
 import { FilterType, FilterTypes, UpdateType, UpdateTypes } from '@nishans/traverser';
-import { TBlock } from '@nishans/types';
+import { IPage, TBlock } from '@nishans/types';
 import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
 import PageBlock from './PageBlock';
@@ -11,12 +10,9 @@ import PageBlock from './PageBlock';
  * @noInheritDoc
  */
 
-export default class Page extends PageBlock {
-	Permissions: InstanceType<typeof NotionPermissions.Block>;
-
+export default class Page extends PageBlock<IPage, Partial<Pick<IPage, 'properties' | 'format'>>> {
 	constructor (arg: INotionCoreOptions) {
 		super(arg);
-		this.Permissions = new NotionPermissions.Block(arg);
 	}
 
 	/**

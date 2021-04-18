@@ -29,28 +29,24 @@ export default class PageBlock<T extends TBlock, U> extends Block<T, U, IPage | 
 	/**
    * Add/remove this page from the favorite list
    */
-	async updateBookmarkedStatus (favorite_status: boolean) {
+	async toggleBookmarked () {
 		const data = this.getCachedData();
-		let target_space_view: ISpaceView = null as any;
-		for (const [ , space_view ] of this.cache.space_view) {
-			if (space_view.space_id === data.space_id) {
-				target_space_view = space_view;
-				break;
-			}
-		}
-		await NotionOperations.executeOperations(
-			[
-				...(await NotionLineage.updateChildContainer<ISpaceView>(
-					'space_view',
-					target_space_view.id,
-					favorite_status,
-					data.id,
-					'bookmarked_pages',
-					this.getProps()
-				))
-			],
-			this.getProps()
-		);
+    const space_view = NotionLineage.Space.getSpaceView(data.space_id, this.cache);
+
+    if(space_view)
+      await NotionOperations.executeOperations(
+        [
+          ...(await NotionLineage.updateChildContainer<ISpaceView>(
+            'space_view',
+            space_view.id,
+            !(space_view.bookmarked_pages ?? []).includes(data.id),
+            data.id,
+            'bookmarked_pages',
+            this.getProps()
+          ))
+        ],
+        this.getProps()
+      );
 	}
 
 	async toggleFollow () {

@@ -8,6 +8,7 @@ import { IPage, ISpace, ISpaceView, TBlock } from '@nishans/types';
 import { IBlockMap, INotionCoreOptions, NotionCore } from '../../';
 import { transformToMultiple } from '../../utils';
 import Block from './Block';
+
 /**
  * A class to represent Page type block of Notion
  * @noInheritDoc

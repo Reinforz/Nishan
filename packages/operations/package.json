@@ -1,6 +1,6 @@
 {
   "name": "@nishans/operations",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "A package to inspect, modify and store notion operations",
   "keywords": [
     "notion",
@@ -31,12 +31,12 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/constants": "0.0.22",
-    "@nishans/endpoints": "0.0.30",
+    "@nishans/constants": "0.0.23",
+    "@nishans/endpoints": "0.0.31",
     "@nishans/logger": "0.0.18"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.33"
+    "@nishans/types": "0.0.34"
   },
   "publishConfig": {
     "access": "public"

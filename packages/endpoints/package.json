@@ -1,6 +1,6 @@
 {
   "name": "@nishans/endpoints",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "A package to expose all notion endpoints for queries and mutations",
   "keywords": [
     "notion",
@@ -38,7 +38,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.33"
+    "@nishans/types": "0.0.34"
   },
   "publishConfig": {
     "access": "public"

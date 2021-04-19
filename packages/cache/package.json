@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cache",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "A cache specially designed to retrieve and store notion data in memory",
   "keywords": [
     "notion",
@@ -31,13 +31,13 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/endpoints": "0.0.30",
+    "@nishans/endpoints": "0.0.31",
     "@nishans/logger": "0.0.18",
-    "@nishans/utils": "0.0.23",
-    "@nishans/constants": "0.0.22"
+    "@nishans/utils": "0.0.24",
+    "@nishans/constants": "0.0.23"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.33"
+    "@nishans/types": "0.0.34"
   },
   "publishConfig": {
     "access": "public"

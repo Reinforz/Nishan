@@ -7,7 +7,8 @@
   "keywords": [],
   "dependencies": {
     "@nishans/fabricator": "0.0.30",
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "@nishans/cache": "0.0.35"
   },
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "license": "MIT"

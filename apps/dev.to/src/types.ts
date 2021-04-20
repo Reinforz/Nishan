@@ -29,38 +29,40 @@ export interface IUnauthenticatedApiError {
 export type TApiError = IUnauthenticatedApiError;
 
 export interface IBookmarksFeedResponse {
-	page: {
-		pageInfo: {
-			hasNextPage: boolean;
-			endCursor: string;
-		};
-		edges: {
-			node: {
-				id: string;
-				title: string;
-				createdAt: string;
-				image: string;
-				readTime: number;
-				source: {
-					id: string;
-					name: string;
-					image: string;
-				};
-				permalink: string;
-				numComments: number;
-				numUpvotes: number;
-				commentsPermalink: string;
-				author: {
-					name: string;
-					image: string;
-				};
-				featuredComments: string[];
-				trending: null;
-				read: boolean;
-				upvoted: boolean;
-				commented: boolean;
-				bookmarked: boolean;
+	data: {
+		page: {
+			pageInfo: {
+				hasNextPage: boolean;
+				endCursor: string;
 			};
-		}[];
+			edges: {
+				node: {
+					id: string;
+					title: string;
+					createdAt: string;
+					image: string;
+					readTime: number;
+					source: {
+						id: string;
+						name: string;
+						image: string;
+					};
+					permalink: string;
+					numComments: number;
+					numUpvotes: number;
+					commentsPermalink: string;
+					author: {
+						name: string;
+						image: string;
+					};
+					featuredComments: string[];
+					trending: null;
+					read: boolean;
+					upvoted: boolean;
+					commented: boolean;
+					bookmarked: boolean;
+				};
+			}[];
+		};
 	};
 }

@@ -10,8 +10,48 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
     const response = await axios.post<TApiError | IBookmarksFeedResponse>(
       'https://api.daily.dev/graphql',
       {
-        query:
-          '\n  query BookmarksFeed(\n    $loggedIn: Boolean! = false\n    $first: Int\n    $after: String\n  ) {\n    page: bookmarksFeed(first: $first, after: $after) {\n      ...FeedPostConnection\n    }\n  }\n  \n  fragment FeedPostConnection on PostConnection {\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        ...FeedPost\n        ...UserPost @include(if: $loggedIn)\n      }\n    }\n  }\n  \n  fragment FeedPost on Post {\n    id\n    title\n    createdAt\n    image\n    readTime\n    source {\n      id\n      name\n      image\n    }\n    permalink\n    numComments\n    numUpvotes\n    commentsPermalink\n    author {\n      name\n      image\n    }\n    featuredComments {\n      id\n      content\n      permalink\n      author {\n        name\n        image\n      }\n    }\n    trending\n  }\n\n  \n  fragment UserPost on Post {\n    read\n    upvoted\n    commented\n    bookmarked\n  }\n\n\n',
+        query: `
+          query BookmarksFeed($loggedIn: Boolean! = false, $first: Int, $after: String) {
+            page: bookmarksFeed(first: $first, after: $after) {
+              ...FeedPostConnection
+            }
+          }
+          
+          fragment FeedPostConnection on PostConnection {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            edges {
+              node {
+                ...FeedPost
+                ...UserPost @include(if: $loggedIn)
+              }
+            }
+          }
+          
+          fragment FeedPost on Post {
+            id
+            title
+            createdAt
+            image
+            readTime
+            source {
+              id
+              name
+              image
+            }
+            permalink
+            author {
+              name
+              image
+            }
+          }
+          
+          fragment UserPost on Post {
+            read
+          }
+        `,
         variables: {
           first: 25,
           loggedIn: true,
@@ -26,7 +66,7 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
     );
     if("errors" in response.data){
       throw new Error(response.data.errors[0].message)
-    }else if("page" in response.data){
+    }else if("data" in response.data){
       const schema: ICollectionBlockInput["schema"] = [{
         name: "Dev.to Id",
         type: "text",
@@ -34,36 +74,39 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
         name: "Title",
         type: "title"
       }];
-      await NotionFabricator.CreateData.contents([{
-        type: "collection_view_page",
-        name: [[options.title ?? "Dev.to Bookmarks"]],
-        schema,
-        views: [
-          {
-            type: "table",
-            name: "Table",
-            schema_units: [{
-              name: "Title",
-              type: "title",
-            }]
-          }
-        ],
-        rows: response.data.page.edges.slice(0, 5).map(edge=>({
-          type: "page",
-          properties: {
-            title: [[edge.node.title]],
-          },
-          contents: []
-        }))
-      }], options.parent_id, options.parent_table, {
-        cache: NotionCache.createDefaultCache(),
-        shard_id: options.shard_id,
-        token: options.notion_cookie,
-        space_id: options.space_id,
-        user_id: options.user_id
-      })
-    
-      console.log(schema);
+
+      try{
+        await NotionFabricator.CreateData.contents([{
+          type: "collection_view_page",
+          name: [[options.title ?? "Dev.to Bookmarks"]],
+          schema,
+          views: [
+            {
+              type: "table",
+              name: "Table",
+              schema_units: [{
+                name: "Title",
+                type: "title",
+              }]
+            }
+          ],
+          rows: response.data.data.page.edges.map(edge=>({
+            type: "page",
+            properties: {
+              title: [[edge.node.title]],
+            },
+            contents: []
+          }))
+        }], options.parent_id, options.parent_table, {
+          cache: NotionCache.createDefaultCache(),
+          shard_id: options.shard_id,
+          token: options.notion_cookie,
+          space_id: options.space_id,
+          user_id: options.user_id
+        })
+      }catch(err){
+        console.log(err)
+      }
     }
   }catch(err){
     console.log(err)

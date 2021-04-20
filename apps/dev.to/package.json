@@ -1,0 +1,14 @@
+{
+  "name": "dev.to",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {},
+  "keywords": [],
+  "dependencies": {
+    "@nishans/fabricator": "0.0.30",
+    "axios": "^0.21.1"
+  },
+  "author": "Safwan Shaheer <devorein00@gmail.com>",
+  "license": "MIT"
+}

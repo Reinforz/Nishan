@@ -64,15 +64,33 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
         }
       }
     );
+
     if("errors" in response.data){
       throw new Error(response.data.errors[0].message)
-    }else if("data" in response.data){
+    } else if("data" in response.data){
       const schema: ICollectionBlockInput["schema"] = [{
-        name: "Dev.to Id",
-        type: "text",
-      }, {
         name: "Title",
-        type: "title"
+        type: "title",
+      }, {
+        name: "Image",
+        type: "url",
+        schema_id: 'image',
+      }, {
+        name: "Link",
+        type: "url",
+        schema_id: 'link',
+      }, {
+        name: "Read Time",
+        type: "number",
+        schema_id: 'read_time',
+      }, {
+        name: "Source",
+        type: "text",
+        schema_id: 'source',
+      }, {
+        name: "Author",
+        type: "text",
+        schema_id: 'author',
       }];
 
       try{
@@ -84,19 +102,23 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
             {
               type: "table",
               name: "Table",
-              schema_units: [{
-                name: "Title",
-                type: "title",
-              }]
+              schema_units: schema
             }
           ],
-          rows: response.data.data.page.edges.map(edge=>({
-            type: "page",
-            properties: {
-              title: [[edge.node.title]],
-            },
-            contents: []
-          }))
+          rows: response.data.data.page.edges.map(edge=>{
+            return {
+              type: "page",
+              properties: {
+                title: [[edge.node.title]],
+                image: [[edge.node.image]],
+                read_time: [[(edge.node.readTime ?? 0).toString()]],
+                source: [[edge.node.source.name]],
+                link: [[edge.node.permalink]],
+                author: [[edge.node.author?.name ?? '']],
+              },
+              contents: []
+            }
+          })
         }], options.parent_id, options.parent_table, {
           cache: NotionCache.createDefaultCache(),
           shard_id: options.shard_id,

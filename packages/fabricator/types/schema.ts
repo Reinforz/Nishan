@@ -43,7 +43,7 @@ export type TRelationSchemaUnitInput = {
 
 export type TRollupSchemaUnitInput = Omit<RollupSchemaUnit, 'target_property_type'>;
 
-export type TSchemaUnitInput =
+export type TSchemaUnitInput = (
 	| TRelationSchemaUnitInput
 	| TBasicSchemaUnit
 	| TRollupSchemaUnitInput
@@ -51,4 +51,4 @@ export type TSchemaUnitInput =
 	| CreatedTimeSchemaUnit
 	| CreatedBySchemaUnit
 	| LastEditedTimeSchemaUnit
-	| LastEditedBySchemaUnit;
+	| LastEditedBySchemaUnit) & { schema_id?: string };

@@ -41,26 +41,18 @@ export interface IBookmarksFeedResponse {
 					title: string;
 					createdAt: string;
 					image: string;
-					readTime: number;
+					readTime: number | null;
 					source: {
 						id: string;
 						name: string;
 						image: string;
 					};
 					permalink: string;
-					numComments: number;
-					numUpvotes: number;
-					commentsPermalink: string;
 					author: {
 						name: string;
 						image: string;
-					};
-					featuredComments: string[];
-					trending: null;
+					} | null;
 					read: boolean;
-					upvoted: boolean;
-					commented: boolean;
-					bookmarked: boolean;
 				};
 			}[];
 		};

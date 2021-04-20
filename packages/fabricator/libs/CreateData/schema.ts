@@ -21,7 +21,7 @@ export async function schema(input_schema_units: ICollectionBlockInput["schema"]
       {type, name, property_visibility} = input_schema_unit,
       // Generate the schema id for the specific schema unit
       // If its title keep it as title, else generate a random 5 character short id
-      schema_id = type === "title" ? "title" : NotionIdz.Generate.shortId();
+      schema_id = type === "title" ? "title" : input_schema_unit.schema_id ?? NotionIdz.Generate.shortId();
     // Get the schema_map_unit from the schema_map
     const schema_map_unit = schema_map.get(name);
     // If it exists throw an error since duplicate schema_unit name is not allowed 

@@ -21,7 +21,7 @@ it('updateDiscussions', async () => {
 		},
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
-			.mockImplementationOnce(async () => ({} as any));
+			.mockImplementation(async () => ({} as any));
 
   const executeOperationsMock = jest
 		.spyOn(NotionOperations, 'executeOperations')

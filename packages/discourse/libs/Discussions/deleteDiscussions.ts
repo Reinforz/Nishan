@@ -13,9 +13,9 @@ export const deleteDiscussions = async (
 		args,
 		(child_id) => options.cache.discussion.get(child_id),
 		{
-			child_path: 'discussions' as any,
+			child_path: 'discussions',
 			multiple: options.multiple,
-			child_ids: 'discussions' as any,
+			child_ids: 'discussions',
 			child_type: 'discussion',
 			container: [],
 			parent_id: block_id,

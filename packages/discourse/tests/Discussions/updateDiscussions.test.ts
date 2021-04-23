@@ -18,10 +18,10 @@ it('updateDiscussions', async () => {
 			...NotionCache.createDefaultCache(),
 			block: new Map([ [ block_id, { id: block_id, discussions: [ 'discussion_1' ] } ] ]),
 			discussion: new Map([ [ 'discussion_1', discussion_1 ] ])
-		}/* ,
+		},
 		initializeCacheForSpecificDataMock = jest
 			.spyOn(NotionCache, 'initializeCacheForSpecificData')
-			.mockImplementation(async () => ({} as any)) */;
+			.mockImplementation(async () => ({} as any));
 
   const executeOperationsMock = jest
 		.spyOn(NotionOperations, 'executeOperations')
@@ -41,7 +41,7 @@ it('updateDiscussions', async () => {
     context: [ [ 'New Context' ] ],
     resolved: true
   });
-  // expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_id, 'block' ]);
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([ block_id, 'block' ]);
   expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
     o.d.u('discussion_1', [], {
       context: [ [ 'New Context' ] ],

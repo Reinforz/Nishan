@@ -11,7 +11,7 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
       'https://api.daily.dev/graphql',
       {
         query: `
-          query BookmarksFeed($loggedIn: Boolean! = false, $first: Int, $after: String) {
+          query BookmarksFeed($loggedIn: Boolean! = true, $first: Int, $after: String) {
             page: bookmarksFeed(first: $first, after: $after) {
               ...FeedPostConnection
             }
@@ -102,23 +102,45 @@ export async function createBookmarkRows (options: ICreateBookmarkRowsParams) {
             {
               type: "table",
               name: "Table",
-              schema_units: schema
+              schema_units: [{
+                name: "Title",
+                type: "title",
+                format: 500,
+              }, {
+                name: "Image",
+                type: "url",
+                format: false
+              }, {
+                name: "Link",
+                type: "url",
+                format: 250,
+              }, {
+                name: "Read Time",
+                type: "number",
+                format: 50
+              }, {
+                name: "Source",
+                type: "text",
+                format: 150
+              }, {
+                name: "Author",
+                type: "text",
+                format: 150
+              }]
             }
           ],
-          rows: response.data.data.page.edges.map(edge=>{
-            return {
-              type: "page",
-              properties: {
-                title: [[edge.node.title]],
-                image: [[edge.node.image]],
-                read_time: [[(edge.node.readTime ?? 0).toString()]],
-                source: [[edge.node.source.name]],
-                link: [[edge.node.permalink]],
-                author: [[edge.node.author?.name ?? '']],
-              },
-              contents: []
-            }
-          })
+          rows: response.data.data.page.edges.map(edge=>({
+            type: "page",
+            properties: {
+              title: [[edge.node.title]],
+              image: [[edge.node.image]],
+              read_time: [[(edge.node.readTime ?? 0).toString()]],
+              source: [[edge.node.source.name]],
+              link: [[edge.node.permalink]],
+              author: [[edge.node.author?.name ?? '']],
+            },
+            contents: []
+          }))
         }], options.parent_id, options.parent_table, {
           cache: NotionCache.createDefaultCache(),
           shard_id: options.shard_id,

@@ -1,7 +1,7 @@
 import { NotionCache } from '@nishans/cache';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import { default_nishan_arg, last_edited_props, o } from '../../../core/tests/utils';
 import { NotionDiscourse } from '../../libs';
-import { createExecuteOperationsMock } from '../utils/createExecuteOperationsMock';
 
 afterEach(() => {
 	jest.restoreAllMocks();

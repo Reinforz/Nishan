@@ -1,10 +1,6 @@
 import { NotionOperations } from '@nishans/operations';
 import { IOperation } from '@nishans/types';
 
-afterEach(() => {
-	jest.restoreAllMocks();
-});
-
 export const createExecuteOperationsMock = () => {
 	const executeOperationsMock = jest
 		.spyOn(NotionOperations, 'executeOperations')

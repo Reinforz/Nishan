@@ -9,8 +9,7 @@ afterEach(() => {
 });
 
 it('updateDiscussions', async () => {
-  expect(1).toBe(1)
-	/* const discussion_1: any = {
+	const discussion_1: any = {
 			context: [ [ 'Context' ] ],
 			resolved: false
 		},
@@ -49,5 +48,5 @@ it('updateDiscussions', async () => {
       resolved: true
     }),
     o.b.u(block_id, [], last_edited_props)
-  ]); */
+  ]);
 });

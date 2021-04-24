@@ -1,4 +1,4 @@
-import { INotionCacheOptions, NotionCache } from '@nishans/cache';
+import { INotionCacheOptions } from '@nishans/cache';
 import { INotionOperationOptions } from '@nishans/operations';
 import { NotionTraverser, UpdateTypes } from '@nishans/traverser';
 import { IComment, IDiscussion } from '@nishans/types';
@@ -9,8 +9,6 @@ export const updateComments = async (
 	args: UpdateTypes<IComment, ICommentUpdateInput>,
 	options: INotionCacheOptions & INotionOperationOptions & { multiple?: boolean }
 ) => {
-	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
-
 	return await NotionTraverser.update<IDiscussion, IComment, ICommentUpdateInput, IComment[]>(
 		args,
 		(child_id) => options.cache.comment.get(child_id),

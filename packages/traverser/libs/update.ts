@@ -67,6 +67,10 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 		operations.push(
 			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
 		);
-	await NotionOperations.executeOperations(operations, options);
+	try{
+    await NotionOperations.executeOperations(operations, options);
+  }catch(err){
+    console.log("NotionOperations.executeOperations", err)
+  }
 	return container as C;
 };

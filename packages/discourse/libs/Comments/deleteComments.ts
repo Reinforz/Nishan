@@ -1,4 +1,4 @@
-import { INotionCacheOptions } from '@nishans/cache';
+import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { INotionOperationOptions } from '@nishans/operations';
 import { FilterTypes, NotionTraverser } from '@nishans/traverser';
 import { IComment, IDiscussion } from '@nishans/types';
@@ -8,6 +8,7 @@ export const deleteComments = async (
 	args: FilterTypes<IComment>,
 	options: INotionCacheOptions & INotionOperationOptions & { multiple?: boolean }
 ) => {
+	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 	return await NotionTraverser.delete<IDiscussion, IComment, IComment[]>(
 		args,
 		(child_id) => options.cache.comment.get(child_id),

@@ -1,7 +1,7 @@
 import { INotionCacheOptions, NotionCache } from '@nishans/cache';
 import { INotionOperationOptions } from '@nishans/operations';
 import { UpdateTypes } from '@nishans/traverser';
-import { IComment } from '@nishans/types';
+import { IComment, IDiscussion } from '@nishans/types';
 import { ICommentUpdateInput } from '../';
 
 export const updateComments = async (
@@ -11,5 +11,5 @@ export const updateComments = async (
 ) => {
 	await NotionCache.initializeCacheForSpecificData(discussion_id, 'discussion', options);
 
-	return []
+	return [] as IDiscussion[];
 };

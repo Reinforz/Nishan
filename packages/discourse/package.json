@@ -38,7 +38,7 @@
     "@nishans/operations": "0.0.31",
     "@nishans/idz": "0.0.18",
     "@nishans/utils": "0.0.24",
-    "@nishans/traverser": "0.0.22",
+    "@nishans/traverser": "0.0.23",
     "@nishans/init": "0.0.22"
   },
   "devDependencies": {

@@ -25,7 +25,7 @@ it(`NotionDiscourse.deleteComments`, async () => {
       ...default_nishan_arg,
       cache_init_tracker: {
         ...NotionCache.createDefaultCacheInitializeTracker(),
-        comment: new Map([['comment_1', true]])
+        discussion: new Map([['discussion_1', true]])
       },
       cache
     },

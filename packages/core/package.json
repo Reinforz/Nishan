@@ -28,7 +28,8 @@
     "dist/types"
   ],
   "scripts": {
-    "build": "tsc --sourceMap false"
+    "build": "tsc --sourceMap false",
+    "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
     "@nishans/cache": "0.0.35",

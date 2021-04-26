@@ -19,15 +19,14 @@ it(`NotionDiscourse.deleteComments`, async () => {
     cache = {
       ...NotionCache.createDefaultCache(),
       comment: new Map([[comment_id, comment_data]]),
-      discussion: new Map([['discussion_1', discussion_data]]),
-      block: new Map([
-        ['block_1', { id: 'block_1', discussions: ['discussion_1'] }]
-      ]),
-      space: new Map([['space_1', { id: 'space_1' }]]),
-      notion_user: new Map([['notion_user_1', { id: 'notion_user_1' }]])
+      discussion: new Map([['discussion_1', discussion_data]])
     } as any,
     options = {
       ...default_nishan_arg,
+      cache_init_tracker: {
+        ...NotionCache.createDefaultCacheInitializeTracker(),
+        comment: new Map([['comment_1', true]])
+      },
       cache
     },
     initializeCacheForSpecificDataMock = jest

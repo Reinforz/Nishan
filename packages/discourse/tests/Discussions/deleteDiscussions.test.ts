@@ -1,6 +1,5 @@
 import { NotionCache } from '@nishans/cache';
-import { NotionIdz } from '@nishans/idz';
-import { NotionOperations } from '@nishans/operations';
+import { createExecuteOperationsMock } from '../../../../utils/tests';
 import {
   default_nishan_arg,
   last_edited_props,
@@ -17,28 +16,25 @@ it('deleteDiscussions', async () => {
       context: [['Context']],
       resolved: false
     },
-    block_id = NotionIdz.Generate.id(),
-    block_1: any = { id: block_id, discussions: ['discussion_1'] },
+    block_1: any = { id: 'block_1', discussions: ['discussion_1'] },
     cache: any = {
       ...NotionCache.createDefaultCache(),
-      block: new Map([[block_id, block_1]]),
+      block: new Map([['block_1', block_1]]),
       discussion: new Map([['discussion_1', discussion_1]])
     },
     initializeCacheForSpecificDataMock = jest
       .spyOn(NotionCache, 'initializeCacheForSpecificData')
-      .mockImplementation(async () => ({} as any));
-  const executeOperationsMock = jest
-    .spyOn(NotionOperations, 'executeOperations')
-    .mockImplementation(async () => undefined);
+      .mockImplementation(async () => ({} as any)),
+    { e1 } = createExecuteOperationsMock();
 
   const discussions = await NotionDiscourse.Discussions.delete(
-    block_id,
+    'block_1',
     ['discussion_1'],
     {
       ...default_nishan_arg,
       cache_init_tracker: {
         ...NotionCache.createDefaultCacheInitializeTracker(),
-        discussion: new Map([['discussion_1', true]])
+        block: new Map([['block_1', true]])
       },
       cache,
       multiple: false
@@ -47,12 +43,12 @@ it('deleteDiscussions', async () => {
 
   expect(discussions).toStrictEqual([discussion_1]);
   expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([
-    block_id,
+    'block_1',
     'block'
   ]);
-  expect(executeOperationsMock.mock.calls[0][0]).toStrictEqual([
-    o.b.lr(block_id, ['discussions'], { id: 'discussion_1' }),
-    o.b.u(block_id, [], last_edited_props)
+  e1([
+    o.b.lr('block_1', ['discussions'], { id: 'discussion_1' }),
+    o.b.u('block_1', [], last_edited_props)
   ]);
   expect(block_1.discussions).toStrictEqual([]);
 });

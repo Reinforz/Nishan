@@ -28,6 +28,9 @@ it(`NotionDiscourse.updateComments`, async () => {
       },
       cache
     } as any,
+    initializeCacheForSpecificDataMock = jest
+      .spyOn(NotionCache, 'initializeCacheForSpecificData')
+      .mockImplementation(async () => undefined),
     { e1 } = createExecuteOperationsMock();
 
   await NotionDiscourse.Comments.update(
@@ -44,6 +47,10 @@ it(`NotionDiscourse.updateComments`, async () => {
   );
   e1([
     o.cm.u('comment_1', [], { ...last_edited_props, text: [['New Comment']] })
+  ]);
+  expect(initializeCacheForSpecificDataMock.mock.calls[0].slice(0, 2)).toEqual([
+    'discussion_1',
+    'discussion'
   ]);
   expect(comment_data.text).toStrictEqual([['New Comment']]);
 });

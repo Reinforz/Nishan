@@ -85,10 +85,6 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
         NotionUtils.updateLastEditedProps(parent_data, user_id)
       )
     );
-  try {
-    await NotionOperations.executeOperations(operations, options);
-    return container as C;
-  } catch (err) {
-    console.log('NotionOperations.executeOperations', err);
-  }
+  await NotionOperations.executeOperations(operations, options);
+  return container as C;
 };

@@ -107,7 +107,10 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 						collectionViewId: '',
 						query: {},
 						loader: {
-							type: 'table'
+							type: 'table',
+							loadContentCover: false,
+							limit: 5000,
+							userTimeZone: ''
 						}
 					},
 					options

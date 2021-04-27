@@ -110,7 +110,7 @@ export async function initializeCacheForSpecificData (id: string, type: TDataTyp
 							type: 'table',
 							loadContentCover: false,
 							limit: 5000,
-							userTimeZone: 'UTC'
+							userTimeZone: ''
 						}
 					},
 					options

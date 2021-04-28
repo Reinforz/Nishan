@@ -7,14 +7,24 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param options The notion request options
  * @param cache The cache to store result
  */
-export async function constructAndSyncRecordsParams (
-	args: UpdateCacheManuallyParam,
-	options: Omit<INotionCacheOptions, 'cache_init_tracker'>
+export async function constructAndSyncRecordsParams(
+  args: UpdateCacheManuallyParam,
+  options: Omit<INotionCacheOptions, 'cache_init_tracker'>
 ) {
-	const sync_record_values = NotionCache.constructSyncRecordsParams(args);
-	// fetch and save notion data to cache
-	if (sync_record_values.length) {
-		const { recordMap } = await NotionEndpoints.Queries.syncRecordValues({ requests: sync_record_values }, options);
-		NotionCache.saveToCache(recordMap, options.cache);
-	}
+  const sync_record_values = NotionCache.constructSyncRecordsParams(args);
+  // fetch and save notion data to cache
+  if (sync_record_values.length) {
+    const {
+      recordMapWithRoles
+    } = await NotionEndpoints.Queries.getRecordValues(
+      { requests: sync_record_values },
+      options
+    );
+    NotionCache.saveToCache(
+      recordMapWithRoles,
+      options.cache,
+      undefined,
+      Object.keys(recordMapWithRoles['space'])[0]
+    );
+  }
 }

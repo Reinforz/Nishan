@@ -21,15 +21,14 @@ import { INotionCacheOptions, NotionCache } from './';
 export async function initializeCacheForSpecificData(
   id: string,
   type: TDataType,
-  options: INotionCacheOptions & { space_id: string }
+  options: INotionCacheOptions
 ) {
   const should_initialize_cache =
     options.cache_init_tracker[type] &&
     options.cache_init_tracker[type].get(id) !== true;
   if (should_initialize_cache) {
     const { cache } = options;
-    const container: UpdateCacheManuallyParam = [],
-      extra_container: UpdateCacheManuallyParam = [];
+    const container: UpdateCacheManuallyParam = [];
     switch (type) {
       case 'block': {
         const data = (await NotionCache.fetchDataOrReturnCached(
@@ -59,7 +58,7 @@ export async function initializeCacheForSpecificData(
                     ]
                   ]
                 },
-                chunkNumber: 1,
+                chunkNumber: 0,
                 verticalColumns: false
               },
               options
@@ -70,11 +69,10 @@ export async function initializeCacheForSpecificData(
           }
 
           if (data.type !== 'collection_view') {
-            console.log(options.space_id);
             const { recordMap } = await NotionEndpoints.Queries.getActivityLog(
               {
                 limit: 100,
-                spaceId: options.space_id,
+                spaceId: data.space_id,
                 navigableBlockId: data.id
               },
               options
@@ -192,9 +190,11 @@ export async function initializeCacheForSpecificData(
     if (type === 'collection_view') {
       const data = cache[type].get(id) as TView,
         parent = cache.block.get(data.parent_id) as TCollectionBlock;
-      extra_container.push([parent.collection_id, 'collection']);
+      await NotionCache.updateCacheIfNotPresent(
+        [[parent.collection_id, 'collection']],
+        options
+      );
     }
-    await NotionCache.updateCacheIfNotPresent(extra_container, options);
     options.cache_init_tracker[type].set(id, true);
   }
 }

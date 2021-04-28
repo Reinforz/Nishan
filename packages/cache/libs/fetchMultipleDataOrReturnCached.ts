@@ -8,32 +8,39 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param id the id of the data
  * @param options Notion cache options
  */
-export async function fetchMultipleDataOrReturnCached (
-	params: UpdateCacheManuallyParam,
-	options: Omit<INotionCacheOptions, 'cache_init_tracker'>
+export async function fetchMultipleDataOrReturnCached(
+  params: UpdateCacheManuallyParam,
+  options: Omit<INotionCacheOptions, 'cache_init_tracker'>
 ) {
-	const result = NotionUtils.createDefaultRecordMap();
-	const sync_record_values: UpdateCacheManuallyParam = [];
-	for (let index = 0; index < params.length; index++) {
-		const [ id, table ] = params[index];
-		const data = options.cache[table].get(id);
-		if (data) result[table].push(data as any);
-		else sync_record_values.push([ id, table ]);
-	}
+  const result = NotionUtils.createDefaultRecordMap();
+  const sync_record_values: UpdateCacheManuallyParam = [];
+  for (let index = 0; index < params.length; index++) {
+    const [id, table] = params[index];
+    const data = options.cache[table].get(id);
+    if (data) result[table].push(data as any);
+    else sync_record_values.push([id, table]);
+  }
 
-	if (sync_record_values.length) {
-		// Fetch the data from notion's db
-		const { recordMap } = await NotionEndpoints.Queries.syncRecordValues(
-			{
-				requests: NotionCache.constructSyncRecordsParams(sync_record_values)
-			},
-			options
-		);
+  if (sync_record_values.length) {
+    // Fetch the data from notion's db
+    const {
+      recordMapWithRoles
+    } = await NotionEndpoints.Queries.getRecordValues(
+      {
+        requests: NotionCache.constructSyncRecordsParams(sync_record_values)
+      },
+      options
+    );
 
-		NotionCache.saveToCache(recordMap, options.cache, (data_type, _, data) => {
-			result[data_type].push(data as any);
-		});
-	}
+    NotionCache.saveToCache(
+      recordMapWithRoles,
+      options.cache,
+      (data_type, _, data) => {
+        result[data_type].push(data as any);
+      },
+      Object.keys(recordMapWithRoles['space'])[0]
+    );
+  }
 
-	return result;
+  return result;
 }

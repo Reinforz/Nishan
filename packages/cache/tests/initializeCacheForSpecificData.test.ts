@@ -210,7 +210,7 @@ describe('initializeCacheForSpecificData', () => {
             ]
           ]
         },
-        chunkNumber: 1,
+        chunkNumber: 0,
         verticalColumns: false
       });
       expect(getActivityLogMock.mock.calls[0][0]).toStrictEqual({
@@ -232,10 +232,10 @@ describe('initializeCacheForSpecificData', () => {
             ]
           ]
         },
-        chunkNumber: 1,
+        chunkNumber: 0,
         verticalColumns: false
       });
-      expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+      expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(1);
       expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
         ['notion_user_1', 'notion_user'],
         ['space_1', 'space']
@@ -273,7 +273,7 @@ describe('initializeCacheForSpecificData', () => {
       });
 
       expect(loadPageChunkMock).not.toHaveBeenCalled();
-      expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(2);
+      expect(updateCacheIfNotPresentMock).toHaveBeenCalledTimes(1);
       expect(updateCacheIfNotPresentMock.mock.calls[0][0]).toStrictEqual([
         ['notion_user_1', 'notion_user'],
         ['space_1', 'space']

@@ -1,6 +1,6 @@
 {
   "name": "@nishans/cache",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "A cache specially designed to retrieve and store notion data in memory",
   "keywords": [
     "notion",

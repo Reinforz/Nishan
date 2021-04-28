@@ -1,6 +1,4 @@
-import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
-import { NotionErrors } from '@nishans/errors';
 import {
   ICollectionViewPageInput,
   ICollectionViewPageUpdateInput,
@@ -8,7 +6,6 @@ import {
   IPageUpdateInput,
   NotionFabricator
 } from '@nishans/fabricator';
-import { NotionIdz } from '@nishans/idz';
 import { NotionLineage } from '@nishans/lineage';
 import { NotionLogger } from '@nishans/logger';
 import { NotionPermissions } from '@nishans/permissions';
@@ -26,7 +23,6 @@ import {
   ISpaceView,
   TPage
 } from '@nishans/types';
-import { NotionUtils } from '@nishans/utils';
 import {
   INotionCoreOptions,
   IPageMap,
@@ -196,47 +192,5 @@ export default class Space extends Data<ISpace, ISpaceUpdateInput> {
       async (_, page, page_map) =>
         await NotionCore.PopulateMap.page(page, page_map, this.getProps())
     );
-  }
-
-  async getPagesById(ids: string[]) {
-    ids = ids.map((id) =>
-      NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id))
-    );
-    const page_map = NotionCore.CreateMaps.page();
-    for (let index = 0; index < ids.length; index++) {
-      const id = ids[index];
-      await NotionCache.initializeCacheForSpecificData(
-        id,
-        'block',
-        this.getProps()
-      );
-      const page = this.cache.block.get(id) as TPage;
-      if (page.type === 'page') {
-        const page_obj = new NotionCore.Api.Page({
-          ...this.getProps(),
-          id: page.id
-        });
-        page_map.page.set(page.id, page_obj);
-        page_map.page.set(
-          NotionUtils.extractInlineBlockContent(page.properties.title),
-          page_obj
-        );
-      } else if (page.type === 'collection_view_page') {
-        const cvp_obj = new NotionCore.Api.CollectionViewPage({
-          ...this.getProps(),
-          id: page.id
-        });
-        const collection = this.cache.collection.get(
-          page.collection_id
-        ) as ICollection;
-        page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
-        page_map.collection_view_page.set(page.id, cvp_obj);
-      } else
-        throw new NotionErrors.unsupported_block_type((page as any).type, [
-          'page',
-          'collection_view_page'
-        ]);
-    }
-    return page_map;
   }
 }

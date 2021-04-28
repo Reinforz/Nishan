@@ -1,15 +1,19 @@
 import { NotionCache } from '@nishans/cache';
+import { NotionErrors } from '@nishans/errors';
+import { NotionIdz } from '@nishans/idz';
 import { NotionOperationPluginFunction } from '@nishans/operations';
 import { FilterType, FilterTypes, NotionTraverser } from '@nishans/traverser';
 import {
+  ICollection,
   INotionCache,
   INotionUser,
-  NotionCacheInitializerTracker
+  NotionCacheInitializerTracker,
+  TPage
 } from '@nishans/types';
-import { INotionCoreOptions } from '../';
+import { NotionUtils } from '@nishans/utils';
+import { INotionCoreOptions, NotionCore } from '../';
 import { transformToMultiple } from '../utils';
 import NotionUser from './NotionUser';
-
 export default class Nishan {
   token: string;
   interval: number;
@@ -101,5 +105,53 @@ export default class Nishan {
           })
         )
     );
+  }
+
+  async getPagesById(ids: string[]) {
+    await this.#initializeCache();
+    ids = ids.map((id) =>
+      NotionIdz.Transform.toUuid(NotionIdz.Transform.toId(id))
+    );
+    const page_map = NotionCore.CreateMaps.page();
+    for (let index = 0; index < ids.length; index++) {
+      const id = ids[index];
+      await NotionCache.initializeCacheForSpecificData(id, 'block', {
+        ...this.getProps(),
+        user_id: ''
+      });
+      const page = this.cache.block.get(id) as TPage;
+      if (page.type === 'page') {
+        const page_obj = new NotionCore.Api.Page({
+          ...this.getProps(),
+          user_id: page.created_by_id,
+          id: page.id,
+          space_id: page.space_id,
+          shard_id: page.shard_id
+        });
+        page_map.page.set(page.id, page_obj);
+        page_map.page.set(
+          NotionUtils.extractInlineBlockContent(page.properties.title),
+          page_obj
+        );
+      } else if (page.type === 'collection_view_page') {
+        const cvp_obj = new NotionCore.Api.CollectionViewPage({
+          ...this.getProps(),
+          user_id: page.created_by_id,
+          id: page.id,
+          space_id: page.space_id,
+          shard_id: page.shard_id
+        });
+        const collection = this.cache.collection.get(
+          page.collection_id
+        ) as ICollection;
+        page_map.collection_view_page.set(collection.name[0][0], cvp_obj);
+        page_map.collection_view_page.set(page.id, cvp_obj);
+      } else
+        throw new NotionErrors.unsupported_block_type((page as any).type, [
+          'page',
+          'collection_view_page'
+        ]);
+    }
+    return page_map;
   }
 }

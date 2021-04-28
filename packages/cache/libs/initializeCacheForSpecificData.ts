@@ -21,7 +21,7 @@ import { INotionCacheOptions, NotionCache } from './';
 export async function initializeCacheForSpecificData(
   id: string,
   type: TDataType,
-  options: INotionCacheOptions
+  options: INotionCacheOptions & { space_id: string }
 ) {
   const should_initialize_cache =
     options.cache_init_tracker[type] &&
@@ -70,10 +70,11 @@ export async function initializeCacheForSpecificData(
           }
 
           if (data.type !== 'collection_view') {
+            console.log(options.space_id);
             const { recordMap } = await NotionEndpoints.Queries.getActivityLog(
               {
                 limit: 100,
-                spaceId: data.space_id,
+                spaceId: options.space_id,
                 navigableBlockId: data.id
               },
               options

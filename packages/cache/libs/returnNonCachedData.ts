@@ -1,4 +1,4 @@
-import { UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { SyncRecordValuesTuple } from '@nishans/endpoints';
 import { INotionCache } from '@nishans/types';
 
 /**
@@ -6,9 +6,11 @@ import { INotionCache } from '@nishans/types';
  * @param update_cache_param Array of tuple of id and data_type to look for in the cache
  * @returns
  */
-export function returnNonCachedData (
-	update_cache_param: UpdateCacheManuallyParam,
-	cache: INotionCache
-): UpdateCacheManuallyParam {
-	return update_cache_param.filter((info) => !Boolean(cache[info[1]].get(info[0])));
+export function returnNonCachedData(
+  update_cache_param: SyncRecordValuesTuple,
+  cache: INotionCache
+): SyncRecordValuesTuple {
+  return update_cache_param.filter(
+    (info) => !Boolean(cache[info[1]].get(info[0]))
+  );
 }

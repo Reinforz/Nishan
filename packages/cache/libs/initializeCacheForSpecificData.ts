@@ -1,4 +1,4 @@
-import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionEndpoints, SyncRecordValuesTuple } from '@nishans/endpoints';
 import {
   ICollection,
   IComment,
@@ -28,7 +28,7 @@ export async function initializeCacheForSpecificData(
     options.cache_init_tracker[type].get(id) !== true;
   if (should_initialize_cache) {
     const { cache } = options;
-    const container: UpdateCacheManuallyParam = [];
+    const container: SyncRecordValuesTuple = [];
     switch (type) {
       case 'block': {
         const data = (await NotionCache.fetchDataOrReturnCached(

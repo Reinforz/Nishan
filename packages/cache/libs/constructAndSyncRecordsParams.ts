@@ -1,4 +1,4 @@
-import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionEndpoints, SyncRecordValuesTuple } from '@nishans/endpoints';
 import { INotionCacheOptions, NotionCache } from './';
 
 /**
@@ -8,7 +8,7 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param cache The cache to store result
  */
 export async function constructAndSyncRecordsParams(
-  args: UpdateCacheManuallyParam,
+  args: SyncRecordValuesTuple,
   options: Omit<INotionCacheOptions, 'cache_init_tracker'>
 ) {
   const sync_record_values = NotionCache.constructSyncRecordsParams(args);

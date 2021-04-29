@@ -1,4 +1,4 @@
-import { NotionEndpoints, UpdateCacheManuallyParam } from '@nishans/endpoints';
+import { NotionEndpoints, SyncRecordValuesTuple } from '@nishans/endpoints';
 import { NotionUtils } from '@nishans/utils';
 import { INotionCacheOptions, NotionCache } from './';
 
@@ -9,11 +9,11 @@ import { INotionCacheOptions, NotionCache } from './';
  * @param options Notion cache options
  */
 export async function fetchMultipleDataOrReturnCached(
-  params: UpdateCacheManuallyParam,
+  params: SyncRecordValuesTuple,
   options: Omit<INotionCacheOptions, 'cache_init_tracker'>
 ) {
   const result = NotionUtils.createDefaultRecordMap();
-  const sync_record_values: UpdateCacheManuallyParam = [];
+  const sync_record_values: SyncRecordValuesTuple = [];
   for (let index = 0; index < params.length; index++) {
     const [id, table] = params[index];
     const data = options.cache[table].get(id);

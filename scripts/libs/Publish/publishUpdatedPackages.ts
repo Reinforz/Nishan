@@ -22,7 +22,9 @@ export async function publishUpdatedPackages(
     );
   } else if (updated_packages_name === '*') {
     const package_dependency_map = createDependencyMap(
-      package_dirs,
+      package_dirs.filter(
+        (package_dir) => packages_map.get(`@nishans/${package_dir}`)?.published
+      ),
       packages_map
     );
     rearranged_packages = createPackagePublishOrder(

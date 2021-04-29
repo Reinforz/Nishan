@@ -1,6 +1,6 @@
 {
   "name": "@nishans/constants",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "A small package for all notion specific constants",
   "keywords": [
     "notion",
@@ -30,7 +30,7 @@
     "build": "tsc --sourceMap false"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

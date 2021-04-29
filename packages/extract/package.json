@@ -1,6 +1,6 @@
 {
   "name": "@nishans/extract",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A small package to extract required notion data",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/extract/README.md",
@@ -27,7 +27,7 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

@@ -22,8 +22,6 @@ export async function updatePackageDependency(
       (dependency_name) => {
         const packages_deps_info = packages_map.get(dependency_name)!;
         if (packages_deps_info) {
-          package_json_data[dependency_type][dependency_name] =
-            packages_deps_info.version;
           if (
             package_json_data[dependency_type][dependency_name] !==
             packages_deps_info.version
@@ -33,6 +31,8 @@ export async function updatePackageDependency(
                 `${dependency_type} ${dependency_name} ${packages_deps_info.version}`
               )
             );
+          package_json_data[dependency_type][dependency_name] =
+            packages_deps_info.version;
         }
       }
     );

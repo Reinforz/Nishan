@@ -1,6 +1,6 @@
 {
   "name": "@nishans/tasks",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A package to enqueue and poll notion tasks",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/tasks/README.md",
@@ -27,11 +27,11 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/endpoints": "0.0.31",
-    "@nishans/idz": "0.0.18"
+    "@nishans/endpoints": "0.0.32",
+    "@nishans/idz": "0.0.19"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

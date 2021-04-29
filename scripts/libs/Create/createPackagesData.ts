@@ -5,7 +5,7 @@ import { createPackageMap } from './createPackageMap';
 
 export async function createPackagesData () {
 	const packages_data_json_path = path.resolve(__dirname, '../../../packages.json');
-	const package_map = await createPackageMap();
+	const [package_map] = await createPackageMap();
 	const packages_data: Pick<IPackageInfo, 'name' | 'description' | 'published'>[] = [];
 	for (const [ , package_data ] of package_map) {
 		packages_data.push({

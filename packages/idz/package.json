@@ -1,6 +1,6 @@
 {
   "name": "@nishans/idz",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A small package to validate, generate and parse notion ids",
   "keywords": [
     "notion",

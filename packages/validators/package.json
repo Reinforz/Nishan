@@ -1,6 +1,6 @@
 {
   "name": "@nishans/validators",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A group of modules to validate various things related to notion",
   "keywords": [],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/validators/README.md",
@@ -27,10 +27,10 @@
     "test": "npx jest --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/errors": "0.0.31"
+    "@nishans/errors": "0.0.32"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

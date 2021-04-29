@@ -1,6 +1,6 @@
 {
   "name": "@nishans/permissions",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "A package to easily deal with notion permissions",
   "keywords": [
     "notion",
@@ -31,13 +31,13 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "@nishans/endpoints": "0.0.31",
-    "@nishans/logger": "0.0.18",
+    "@nishans/endpoints": "0.0.32",
+    "@nishans/logger": "0.0.19",
     "@nishans/operations": "0.0.31",
-    "@nishans/utils": "0.0.24"
+    "@nishans/utils": "0.0.25"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

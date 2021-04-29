@@ -1,6 +1,6 @@
 {
   "name": "@nishans/discourse",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "A package for working with notion discussions & comments",
   "keywords": [
     "notion-api",
@@ -34,14 +34,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.37",
-    "@nishans/operations": "0.0.31",
-    "@nishans/idz": "0.0.18",
-    "@nishans/utils": "0.0.24",
-    "@nishans/traverser": "0.0.25",
-    "@nishans/init": "0.0.22"
+    "@nishans/cache": "0.0.38",
+    "@nishans/operations": "0.0.32",
+    "@nishans/idz": "0.0.19",
+    "@nishans/utils": "0.0.25",
+    "@nishans/traverser": "0.0.26",
+    "@nishans/init": "0.0.23"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   }
 }

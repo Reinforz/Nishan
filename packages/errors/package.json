@@ -1,6 +1,6 @@
 {
   "name": "@nishans/errors",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "A small package containing various notion specific error classes",
   "keywords": [
     "notion",
@@ -34,7 +34,7 @@
     "colors": "^1.4.0"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.34"
+    "@nishans/types": "0.0.35"
   },
   "publishConfig": {
     "access": "public"

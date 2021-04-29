@@ -18,28 +18,26 @@ describe('fetchMultipleDataOrReturnCached', () => {
         ...NotionCache.createDefaultCache(),
         block: new Map([['block_1', block_1]])
       } as any;
-    const getRecordValuesMock = jest.spyOn(
-      NotionEndpoints.Queries,
-      'getRecordValues'
-    );
-    getRecordValuesMock.mockImplementationOnce(async () => {
-      return {
-        recordMapWithRoles: {
-          block: {
-            block_2: {
-              value: block_2
-            }
-          },
-          space: {
-            space_1: {
-              value: {
-                id: 'space_1'
+    const getRecordValuesMock = jest
+      .spyOn(NotionEndpoints.Queries, 'getRecordValues')
+      .mockImplementationOnce(async () => {
+        return {
+          recordMapWithRoles: {
+            block: {
+              block_2: {
+                value: block_2
+              }
+            },
+            space: {
+              space_1: {
+                value: {
+                  id: 'space_1'
+                }
               }
             }
           }
-        }
-      } as any;
-    });
+        } as any;
+      });
     const result_record_map = await NotionCache.fetchMultipleDataOrReturnCached(
       [
         ['block_1', 'block'],

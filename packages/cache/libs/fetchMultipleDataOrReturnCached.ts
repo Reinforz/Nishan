@@ -31,6 +31,9 @@ export async function fetchMultipleDataOrReturnCached(
       },
       options
     );
+    let space_id = '';
+    if (recordMapWithRoles['space'])
+      space_id = Object.keys(recordMapWithRoles['space'])[0];
 
     NotionCache.saveToCache(
       recordMapWithRoles,
@@ -38,7 +41,7 @@ export async function fetchMultipleDataOrReturnCached(
       (data_type, _, data) => {
         result[data_type].push(data as any);
       },
-      Object.keys(recordMapWithRoles['space'])[0]
+      space_id
     );
   }
 

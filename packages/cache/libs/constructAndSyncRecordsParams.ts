@@ -20,11 +20,15 @@ export async function constructAndSyncRecordsParams(
       { requests: sync_record_values },
       options
     );
+    let space_id = '';
+    if (recordMapWithRoles['space'])
+      space_id = Object.keys(recordMapWithRoles['space'])[0];
+
     NotionCache.saveToCache(
       recordMapWithRoles,
       options.cache,
       undefined,
-      Object.keys(recordMapWithRoles['space'])[0]
+      space_id
     );
   }
 }

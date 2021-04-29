@@ -18,9 +18,11 @@ export function saveToCache(
       Object.entries(recordMap[key] as Record<any, any>).forEach(
         ([record_id, record_value]) => {
           const data = record_value.value;
-          if (space_id) data.space_id = space_id;
-          cache[key].set(record_id, data);
-          cb && cb(key, record_id, data);
+          if(data){
+            if (space_id && space_id !== '') data.space_id = space_id;
+            cache[key].set(record_id, data);
+            cb && cb(key, record_id, data);
+          }
         }
       );
   });

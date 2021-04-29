@@ -100,8 +100,7 @@ export default class Nishan {
             ...this.getProps(),
             user_id: id,
             id,
-            space_id: '0',
-            shard_id: 0
+            space_id: '0'
           })
         )
     );
@@ -125,8 +124,7 @@ export default class Nishan {
           ...this.getProps(),
           user_id: page.created_by_id,
           id: page.id,
-          space_id: page.space_id,
-          shard_id: page.shard_id
+          space_id: page.space_id
         });
         page_map.page.set(page.id, page_obj);
         page_map.page.set(
@@ -138,8 +136,7 @@ export default class Nishan {
           ...this.getProps(),
           user_id: page.created_by_id,
           id: page.id,
-          space_id: page.space_id,
-          shard_id: page.shard_id
+          space_id: page.space_id
         });
         const collection = this.cache.collection.get(
           page.collection_id

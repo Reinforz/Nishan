@@ -1,0 +1,621 @@
+
+> nishans@0.0.0 pretest
+> run-s build
+
+
+> nishans@0.0.0 prebuild
+> npm run lint && run-s clean
+
+
+> nishans@0.0.0 lint
+> npx eslint . --color
+
+
+> nishans@0.0.0 clean
+> del-cli packages/*/dist
+
+
+> nishans@0.0.0 build
+> tsc --build tsconfig.json
+
+packages/types/src/view.ts(1,48): error TS2305: Module '"./"' has no exported member 'SpaceShardProps'.
+packages/types/src/recordMap.ts(16,10): error TS2305: Module '"./block"' has no exported member 'SpaceShardProps'.
+packages/types/src/activity.ts(1,23): error TS2305: Module '"./block"' has no exported member 'SpaceShardProps'.
+packages/extract/libs/collection.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/extract/libs/types.ts(1,43): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/extract/libs/pages.ts(1,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/extract/libs/views.ts(1,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/blockMetadata.ts(1,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/collection.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/comment.ts(1,26): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/discussion.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/spaceView.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/View/aggregation.ts(1,73): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/View/filter.ts(1,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/init/libs/View/sort.ts(1,34): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/bgColorTypes.ts(1,26): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/blockTypes.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/colorTypes.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/dataTypes.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/functionNames.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/operationCommands.ts(1,35): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/schemaUnitTypes.ts(1,33): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/constants/libs/viewTypes.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/FunctionArgumentLengthMismatch.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/FunctionArgumentTypeMismatch.ts(1,51): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/NonExistentData.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/NonExistentSchemaUnitType.ts(1,33): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/UnsupportedBlockType.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/UnsupportedDataType.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/UnsupportedFunctionName.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/errors/libs/UnsupportedPropertyType.ts(1,33): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/validators/libs/checkDateSchemaUnit.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/validators/libs/checkDateSchemaUnit.ts(2,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/validators/libs/checkSelectSchemaUnit.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/validators/libs/checkSelectSchemaUnit.ts(2,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/validators/libs/dataContainsAliveProp.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/validators/libs/dataContainsEditedProps.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/createDefaultRecordMap.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/utils/libs/createDefaultRecordMap.ts(18,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/createDefaultRecordMap.ts(39,35): error TS7006: Parameter 'data_type' implicitly has an 'any' type.
+packages/utils/libs/createDefaultRecordMap.ts(39,50): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ space: any[]; block: any[]; collection: any[]; collection_view: any[]; notion_user: any[]; space_view: any[]; user_root: any[]; user_settings: any[]; comment: any[]; discussion: any[]; follow: any[]; slack_integration: any[]; page_visits: any[]; activity: any[]; notification: any[]; }'.
+packages/utils/libs/extractInlineBlockContent.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/extractInlineBlockContent.ts(4,30): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+packages/utils/libs/extractInlineBlockContent.ts(4,36): error TS7006: Parameter 'current' implicitly has an 'any' type.
+packages/utils/libs/generateSchemaMap.ts(1,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/generateSchemaMap.ts(12,18): error TS2571: Object is of type 'unknown'.
+packages/utils/libs/generateSchemaMap.ts(14,4): error TS2698: Spread types may only be created from object types.
+packages/utils/libs/getSchemaMapUnit.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/utils/libs/getSchemaMapUnit.ts(2,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/getSchemaUnit.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/utils/libs/getSchemaUnit.ts(2,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/utils/libs/populateChildPath.ts(1,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/inline-blocks/libs/types.ts(1,62): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/inline-blocks/libs/NotionInlineBlock.ts(1,41): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/inline-blocks/libs/TextHighlightColor.ts(1,43): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/inline-blocks/libs/TextStyleFormatter.ts(1,48): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/endpoints/libs/types.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/endpoints/libs/Mutations.ts(1,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/endpoints/libs/Queries.ts(1,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/endpoints/libs/Request/createTransaction.ts(1,46): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/tasks/libs/enqueueAndPollTask.ts(1,58): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/tasks/libs/enqueueAndPollTask.ts(2,46): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/tasks/libs/Export/exportBlock.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/tasks/libs/Export/exportBlock.ts(2,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/tasks/libs/Export/exportSpace.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/tasks/libs/Export/exportSpace.ts(2,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/tasks/libs/importFile.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/tasks/libs/importFile.ts(2,40): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/applyPluginsToOperationsStack.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Chunk/index.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/operations/libs/Chunk/index.ts(2,64): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Chunk/index.ts(12,38): error TS7006: Parameter 'table' implicitly has an 'any' type.
+packages/operations/libs/Chunk/index.ts(14,47): error TS7006: Parameter 'command' implicitly has an 'any' type.
+packages/operations/libs/executeOperations.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/operations/libs/executeOperations.ts(3,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/types.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/operations/libs/types.ts(2,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Plugins/Options/skip.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Plugins/removeEmptyOperationsPlugin.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Plugins/removeLastEditedPropsPlugin.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/operations/libs/Plugins/validateOperationsPlugin.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/operations/libs/Plugins/validateOperationsPlugin.ts(2,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/permissions/libs/BlockPermissions.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/permissions/libs/BlockPermissions.ts(7,8): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/permissions/libs/BlockPermissions.ts(20,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/permissions/libs/BlockPermissions.ts(21,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/permissions/libs/BlockPermissions.ts(120,53): error TS7006: Parameter 'permission' implicitly has an 'any' type.
+packages/permissions/libs/SpacePermissions.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/permissions/libs/SpacePermissions.ts(7,8): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/permissions/libs/SpacePermissions.ts(14,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/permissions/libs/SpacePermissions.ts(105,8): error TS7006: Parameter 'permission' implicitly has an 'any' type.
+packages/cache/libs/types.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/types.ts(2,61): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/constructAndSyncRecordsParams.ts(1,56): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/constructSyncRecordsParams.ts(1,39): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/constructSyncRecordsParams.ts(2,34): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/constructSyncRecordsParams.ts(7,17): error TS7006: Parameter 'arg' implicitly has an 'any' type.
+packages/cache/libs/createDefaultCache.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/cache/libs/createDefaultCache.ts(2,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/createDefaultCache.ts(6,39): error TS7006: Parameter 'data_type' implicitly has an 'any' type.
+packages/cache/libs/createDefaultCacheInitializeTracker.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/cache/libs/createDefaultCacheInitializeTracker.ts(2,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/createDefaultCacheInitializeTracker.ts(6,39): error TS7006: Parameter 'data_type' implicitly has an 'any' type.
+packages/cache/libs/extractNotionUserIds.ts(1,42): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/extractNotionUserIds.ts(11,8): error TS7006: Parameter 'permission' implicitly has an 'any' type.
+packages/cache/libs/extractSpaceAndParentId.ts(1,39): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/extractSpaceAndParentId.ts(2,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/fetchDataOrReturnCached.ts(1,34): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/fetchMultipleDataOrReturnCached.ts(1,56): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/fetchMultipleDataOrReturnCached.ts(2,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/cache/libs/initializeCacheForSpecificData.ts(1,56): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/initializeCacheForSpecificData.ts(13,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/initializeCacheForSpecificData.ts(87,60): error TS7006: Parameter 'sync_record_value' implicitly has an 'any' type.
+packages/cache/libs/initializeCacheForSpecificData.ts(99,29): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/cache/libs/initializeCacheForSpecificData.ts(111,32): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/cache/libs/initializeCacheForSpecificData.ts(122,31): error TS7006: Parameter 'space_view' implicitly has an 'any' type.
+packages/cache/libs/initializeCacheForSpecificData.ts(135,40): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/cache/libs/initializeCacheForSpecificData.ts(167,42): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/cache/libs/initializeNotionCache.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/initializeNotionCache.ts(15,36): error TS2571: Object is of type 'unknown'.
+packages/cache/libs/initializeNotionCache.ts(18,17): error TS2571: Object is of type 'unknown'.
+packages/cache/libs/initializeNotionCache.ts(19,4): error TS2571: Object is of type 'unknown'.
+packages/cache/libs/initializeNotionCache.ts(20,6): error TS7006: Parameter 'permission' implicitly has an 'any' type.
+packages/cache/libs/returnNonCachedData.ts(1,39): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/returnNonCachedData.ts(2,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/returnNonCachedData.ts(14,6): error TS7006: Parameter 'info' implicitly has an 'any' type.
+packages/cache/libs/saveToCache.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/cache/libs/saveToCache.ts(2,59): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/saveToCache.ts(16,40): error TS7006: Parameter 'key' implicitly has an 'any' type.
+packages/cache/libs/updateCacheIfNotPresent.ts(1,39): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/updateCacheIfNotPresent.ts(13,18): error TS7006: Parameter 'arg' implicitly has an 'any' type.
+packages/cache/libs/updateCacheManually.ts(1,39): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/cache/libs/validateCache.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/cache/libs/validateCache.ts(3,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/cache/libs/validateCache.ts(14,22): error TS7006: Parameter 'cache_key' implicitly has an 'any' type.
+packages/cache/libs/validateCache.ts(24,38): error TS2731: Implicit conversion of a 'symbol' to a 'string' will fail at runtime. Consider wrapping this expression in 'String(...)'.
+packages/lineage/libs/Block/getCommentIds.ts(1,45): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/Block/getCommentIds.ts(5,41): error TS7006: Parameter 'discussion_id' implicitly has an 'any' type.
+packages/lineage/libs/Collection/getRowPageIds.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/lineage/libs/getPageIds.ts(1,38): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/NotionUser/getSpaceIds.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/Page/getCommentIds.ts(1,37): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/Page/getCommentIds.ts(7,24): error TS7006: Parameter 'block_id' implicitly has an 'any' type.
+packages/lineage/libs/Page/getDiscussionIds.ts(1,37): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/Page/getDiscussionIds.ts(6,24): error TS7006: Parameter 'block_id' implicitly has an 'any' type.
+packages/lineage/libs/Page/getFollowId.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/positionChildren.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/lineage/libs/positionChildren.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/lineage/libs/positionChildren.ts(4,46): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/Space/getSpaceView.ts(1,42): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/lineage/libs/updateChildContainer.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/lineage/libs/updateChildContainer.ts(2,59): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/lineage/libs/updateChildContainer.ts(3,46): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/types.ts(1,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/traverser/libs/types.ts(2,52): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/utils/iterateChildren.ts(2,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/delete.ts(1,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/traverser/libs/delete.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/traverser/libs/delete.ts(4,35): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/delete.ts(5,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/traverser/libs/delete.ts(6,34): error TS2307: Cannot find module '@nishans/validators' or its corresponding type declarations.
+packages/traverser/libs/get.ts(2,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/update.ts(2,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/traverser/libs/update.ts(3,35): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/traverser/libs/update.ts(4,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/traverser/libs/update.ts(5,34): error TS2307: Cannot find module '@nishans/validators' or its corresponding type declarations.
+packages/discourse/libs/Comments/createComments.ts(1,37): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Comments/createComments.ts(3,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/discourse/libs/Comments/createComments.ts(4,59): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Comments/createComments.ts(5,38): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Comments/createComments.ts(6,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/discourse/libs/Comments/deleteComments.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Comments/deleteComments.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Comments/deleteComments.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Comments/deleteComments.ts(4,39): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Comments/deleteComments.ts(14,4): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Comments/deleteComments.ts(25,10): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Comments/deleteComments.ts(25,13): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/discourse/libs/Comments/deleteComments.ts(25,19): error TS7006: Parameter 'comments' implicitly has an 'any' type.
+packages/discourse/libs/Comments/getComments.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Comments/getComments.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Comments/getComments.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Comments/getComments.ts(4,39): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Comments/getComments.ts(14,4): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Comments/getComments.ts(24,10): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Comments/getComments.ts(24,13): error TS7006: Parameter 'comment' implicitly has an 'any' type.
+packages/discourse/libs/Comments/getComments.ts(24,22): error TS7006: Parameter 'container' implicitly has an 'any' type.
+packages/discourse/libs/Comments/updateComments.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Comments/updateComments.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Comments/updateComments.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Comments/updateComments.ts(4,39): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Comments/updateComments.ts(26,6): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Comments/updateComments.ts(36,12): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Comments/updateComments.ts(36,15): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/discourse/libs/Comments/updateComments.ts(36,21): error TS7006: Parameter '__' implicitly has an 'any' type.
+packages/discourse/libs/Comments/updateComments.ts(36,25): error TS7006: Parameter 'discussions' implicitly has an 'any' type.
+packages/discourse/libs/types.ts(1,42): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Discussions/createDiscussions.ts(1,37): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Discussions/createDiscussions.ts(3,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/discourse/libs/Discussions/createDiscussions.ts(4,59): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Discussions/createDiscussions.ts(5,48): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Discussions/createDiscussions.ts(6,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(4,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(14,4): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(25,10): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(25,13): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/deleteDiscussions.ts(25,19): error TS7006: Parameter 'discussions' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/getDiscussions.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Discussions/getDiscussions.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Discussions/getDiscussions.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Discussions/getDiscussions.ts(4,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Discussions/getDiscussions.ts(14,4): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/getDiscussions.ts(24,10): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/getDiscussions.ts(24,13): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/getDiscussions.ts(24,19): error TS7006: Parameter 'discussions' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/updateDiscussions.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/discourse/libs/Discussions/updateDiscussions.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/discourse/libs/Discussions/updateDiscussions.ts(3,46): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/discourse/libs/Discussions/updateDiscussions.ts(4,49): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/discourse/libs/Discussions/updateDiscussions.ts(19,4): error TS7006: Parameter 'child_id' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/updateDiscussions.ts(29,10): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/updateDiscussions.ts(29,13): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/updateDiscussions.ts(29,19): error TS7006: Parameter '__' implicitly has an 'any' type.
+packages/discourse/libs/Discussions/updateDiscussions.ts(29,23): error TS7006: Parameter 'discussions' implicitly has an 'any' type.
+packages/discourse/experiment/index.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/notion-formula/types/formula-array.ts(1,40): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/types/formula-object.ts(1,55): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/FunctionFormulaInfo/types.ts(1,62): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/FunctionFormulaInfo/utils/generateFormulaInfo.ts(1,62): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/FunctionFormulaInfo/map.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateArg/literal.ts(1,50): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/generateNotionFormulaAST.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/generateNotionFormulaAST.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/generateNotionFormulaAST.ts(4,91): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/getResultTypeFromSchemaType.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/getResultTypeFromSchemaType.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/utils/getResultTypeFromSchemaType.ts(3,53): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateArg/property.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateArg/property.ts(2,66): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/array.ts(1,38): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/object.ts(1,38): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/GenerateAST/string.ts(1,43): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/generateSchemaMapFromRemoteSchema.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/notion-formula/libs/generateSchemaMapFromRemoteSchema.ts(3,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/notion-formula/libs/generateSchemaMapFromRemoteSchema.ts(4,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/types/aggregations.ts(1,63): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/block.ts(1,40): error TS2307: Cannot find module '@nishans/discourse' or its corresponding type declarations.
+packages/fabricator/types/block.ts(2,41): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/fabricator/types/block.ts(37,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/filter.ts(1,76): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/schema.ts(1,75): error TS2307: Cannot find module '@nishans/notion-formula' or its corresponding type declarations.
+packages/fabricator/types/schema.ts(10,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/sort.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/utils.ts(1,37): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/fabricator/types/utils.ts(2,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/types/utils.ts(3,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/types/view.ts(1,41): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/fabricator/types/view.ts(14,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/collection.ts(2,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/collection.ts(4,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/collection.ts(5,35): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/collection.ts(6,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/collection.ts(51,10): error TS2339: Property 'cache' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/collection.ts(53,10): error TS2339: Property 'logger' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/utils/executeOperationAndStoreInCache.ts(1,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/utils/executeOperationAndStoreInCache.ts(2,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/utils/executeOperationAndStoreInCache.ts(21,10): error TS2339: Property 'cache' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/utils/generateViewData.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/utils/generateViewData.ts(4,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/utils/generateViewData.ts(40,23): error TS2339: Property 'space_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/utils/generateViewData.ts(43,11): error TS2339: Property 'cache' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/utils/generateViewData.ts(44,11): error TS2339: Property 'logger' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/utils/populatePermissions.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(2,33): error TS2307: Cannot find module '@nishans/discourse' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(3,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(5,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(6,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(8,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(23,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(24,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/contents.ts(49,28): error TS2339: Property 'user_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(50,32): error TS2339: Property 'user_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(51,23): error TS2339: Property 'space_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(103,41): error TS2339: Property 'user_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(180,53): error TS2339: Property 'user_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(187,19): error TS2339: Property 'space_id' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(188,19): error TS2339: Property 'cache' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/contents.ts(346,15): error TS2339: Property 'logger' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/SchemaUnit/relation.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/relation.ts(4,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/relation.ts(5,61): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/relation.ts(21,11): error TS2339: Property 'logger' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/SchemaUnit/relation.ts(57,13): error TS2339: Property 'logger' does not exist on type 'Omit<INotionFabricatorOptions, "cache_init_tracker">'.
+packages/fabricator/libs/CreateData/SchemaUnit/rollup.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/rollup.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/rollup.ts(4,59): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/rollup.ts(5,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/SchemaUnit/rollup.ts(18,42): error TS2344: Type 'string' does not satisfy the constraint 'never'.
+  Type 'string' is not assignable to type 'never'.
+packages/fabricator/libs/CreateData/schema.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/schema.ts(3,31): error TS2307: Cannot find module '@nishans/notion-formula' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/schema.ts(4,90): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/schema.ts(5,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/schema.ts(37,90): error TS2345: Argument of type 'Omit<INotionFabricatorOptions, "cache_init_tracker">' is not assignable to parameter of type 'Pick<INotionFabricatorOptions, "token" | "logger" | "cache" | "interval" | "user_id">'.
+  Type 'Omit<INotionFabricatorOptions, "cache_init_tracker">' is missing the following properties from type 'Pick<INotionFabricatorOptions, "token" | "logger" | "cache" | "interval" | "user_id">': token, logger, cache, interval, user_id
+packages/fabricator/libs/CreateData/views.ts(1,74): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/CreateData/views.ts(2,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/format.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/format.ts(2,184): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/format.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/format.ts(50,100): error TS2571: Object is of type 'unknown'.
+packages/fabricator/libs/PopulateViewData/format/format.ts(50,133): error TS2571: Object is of type 'unknown'.
+packages/fabricator/libs/PopulateViewData/format/format.ts(79,52): error TS7031: Binding element 'value' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewData/format/utils/tableFormat.ts(1,34): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/properties.ts(10,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/format/properties.ts(11,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/aggregation.ts(1,64): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/filters.ts(1,55): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/filters.ts(2,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/query2.ts(1,156): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/query2.ts(2,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/query2.ts(3,34): error TS2307: Cannot find module '@nishans/validators' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewData/query2/sort.ts(1,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/aggregations.ts(1,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/aggregations.ts(2,86): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/aggregations.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/aggregations.ts(13,25): error TS7006: Parameter 'aggregation' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewMaps/aggregations.ts(13,38): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewMaps/filters.ts(1,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/filters.ts(2,77): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/filters.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/filters.ts(16,29): error TS7006: Parameter 'filter' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewMaps/filters.ts(16,37): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewMaps/properties.ts(1,71): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/properties.ts(2,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/sorts.ts(1,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/sorts.ts(2,48): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/sorts.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/fabricator/libs/PopulateViewMaps/sorts.ts(13,18): error TS7006: Parameter 'sort' implicitly has an 'any' type.
+packages/fabricator/libs/PopulateViewMaps/sorts.ts(13,24): error TS7006: Parameter 'index' implicitly has an 'any' type.
+packages/fabricator/experiment/index.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/types/block.ts(1,35): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/types/block.ts(2,109): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/utils/createSpaceIterateData.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/utils/createSpaceIterateData.ts(2,57): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/utils/createSpaceIterateData.ts(7,34): error TS2344: Type '"cache" | "token" | "interval" | "user_id"' does not satisfy the constraint '"id"'.
+  Type '"cache"' is not assignable to type '"id"'.
+packages/core/libs/utils/createSpaceIterateData.ts(17,16): error TS2571: Object is of type 'unknown'.
+packages/core/libs/utils/transformToMultiple.ts(1,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(2,55): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(7,8): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(15,8): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(21,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(22,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(23,34): error TS2307: Cannot find module '@nishans/validators' or its corresponding type declarations.
+packages/core/libs/Api/Data.ts(51,23): error TS2339: Property 'logger' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(52,24): error TS2339: Property 'user_id' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(53,41): error TS2339: Property 'notion_operation_plugins' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(54,25): error TS2339: Property 'space_id' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(55,25): error TS2339: Property 'interval' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(60,11): error TS2339: Property 'cache_init_tracker' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(62,14): error TS2339: Property 'token' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Data.ts(63,22): error TS2339: Property 'token' does not exist on type 'INotionCoreOptions & { cache?: any; type: any; }'.
+packages/core/libs/Api/Comment.ts(1,37): error TS2307: Cannot find module '@nishans/discourse' or its corresponding type declarations.
+packages/core/libs/Api/Comment.ts(2,26): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(2,57): error TS2307: Cannot find module '@nishans/discourse' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(3,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(4,29): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(6,56): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(8,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(9,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(10,99): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/Block.ts(168,53): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/core/libs/Api/Block/Block.ts(195,27): error TS7006: Parameter 'discussion' implicitly has an 'any' type.
+packages/core/libs/Api/Block/Block.ts(208,5): error TS7006: Parameter 'discussion' implicitly has an 'any' type.
+packages/core/libs/Api/Block/Block.ts(219,5): error TS7006: Parameter 'discussion' implicitly has an 'any' type.
+packages/core/libs/Api/Block/Block.ts(230,5): error TS7006: Parameter 'discussion' implicitly has an 'any' type.
+packages/core/libs/createBlockClass.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/core/libs/createBlockClass.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/core/libs/createBlockClass.ts(3,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/createBlockClass.ts(4,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateBlockMap.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateBlockMap.ts(2,37): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateBlockMap.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateBlockMap.ts(20,3): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IBlockMap'.
+packages/core/libs/PopulateMap/populateBlockMap.ts(22,14): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IBlockMap'.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(2,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(3,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(4,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(25,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IBlockMap'.
+packages/core/libs/PopulateMap/populateCollectionBlockMap.ts(26,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IBlockMap'.
+packages/core/libs/PopulateMap/populatePageMap.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populatePageMap.ts(2,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populatePageMap.ts(3,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateSchemaUnitMap.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateSchemaUnitMap.ts(2,29): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateSchemaUnitMap.ts(18,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'ISchemaUnitMap'.
+packages/core/libs/PopulateMap/populateSchemaUnitMap.ts(19,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'ISchemaUnitMap'.
+packages/core/libs/Api/View/View.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(3,153): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(4,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(5,56): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(6,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(7,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(8,123): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(9,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/Api/View/View.ts(84,36): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/core/libs/Api/View/View.ts(122,35): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/core/libs/Api/View/View.ts(159,59): error TS7006: Parameter 'filter' implicitly has an 'any' type.
+packages/core/libs/Api/View/View.ts(197,71): error TS7006: Parameter 'filter' implicitly has an 'any' type.
+packages/core/libs/Api/View/View.ts(227,8): error TS7006: Parameter 'format_property' implicitly has an 'any' type.
+packages/core/libs/Api/View/CalendarView.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(1,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(2,86): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(4,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(12,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(13,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/Api/View/Aggregator.ts(71,12): error TS2339: Property 'query2' does not exist on type 'T'.
+packages/core/libs/Api/View/Aggregator.ts(114,12): error TS2339: Property 'query2' does not exist on type 'T'.
+packages/core/libs/Api/View/Aggregator.ts(143,49): error TS7006: Parameter 'data' implicitly has an 'any' type.
+packages/core/libs/Api/View/TableView.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/ListView.ts(1,27): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/GalleryView.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/TimelineView.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/View/BoardView.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateViewMap.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateViewMap.ts(2,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/PopulateMap/populateViewMap.ts(16,23): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ board: typeof BoardView; gallery: typeof GalleryView; list: typeof ListView; timeline: typeof TimelineView; table: typeof TableView; calendar: typeof CalendarView; }'.
+packages/core/libs/PopulateMap/populateViewMap.ts(20,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IViewMap'.
+packages/core/libs/PopulateMap/populateViewMap.ts(21,2): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IViewMap'.
+packages/core/libs/Api/Block/PageBlock.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Block/PageBlock.ts(2,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/Block/PageBlock.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Block/PageBlock.ts(4,35): error TS2307: Cannot find module '@nishans/permissions' or its corresponding type declarations.
+packages/core/libs/Api/Block/PageBlock.ts(5,51): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/Page.ts(1,66): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Block/Page.ts(2,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Block/Page.ts(3,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/Page.ts(26,101): error TS7006: Parameter 'block' implicitly has an 'any' type.
+packages/core/libs/Api/Collection.ts(6,8): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(7,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(9,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(15,8): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(22,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(23,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/Api/Collection.ts(250,8): error TS7006: Parameter 'schema_unit' implicitly has an 'any' type.
+packages/core/libs/Api/Block/CollectionBlock.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionBlock.ts(2,75): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionBlock.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionBlock.ts(4,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionBlock.ts(5,87): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionBlock.ts(43,6): error TS7006: Parameter 'view' implicitly has an 'any' type.
+packages/core/libs/Api/Block/CollectionBlock.ts(45,36): error TS7006: Parameter 'view_data' implicitly has an 'any' type.
+packages/core/libs/Api/Block/CollectionView.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionView.ts(2,38): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionView.ts(3,40): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionViewPage.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionViewPage.ts(2,35): error TS2307: Cannot find module '@nishans/permissions' or its corresponding type declarations.
+packages/core/libs/Api/Block/CollectionViewPage.ts(3,37): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/SchemaUnit.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/SchemaUnit.ts(4,42): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/types/maps.ts(30,8): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/types/maps.ts(81,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/types/nishan.ts(1,42): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Discussion.ts(1,99): error TS2307: Cannot find module '@nishans/discourse' or its corresponding type declarations.
+packages/core/libs/Api/Discussion.ts(2,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Discussion.ts(3,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Discussion.ts(4,39): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Discussion.ts(19,24): error TS7006: Parameter 'comment' implicitly has an 'any' type.
+packages/core/libs/Api/Discussion.ts(29,5): error TS7006: Parameter 'comment' implicitly has an 'any' type.
+packages/core/libs/Api/Discussion.ts(40,5): error TS7006: Parameter 'comment' implicitly has an 'any' type.
+packages/core/libs/Api/Discussion.ts(51,5): error TS7006: Parameter 'comment' implicitly has an 'any' type.
+packages/core/libs/Api/SpaceView.ts(1,56): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/SpaceView.ts(3,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/SpaceView.ts(4,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/SpaceView.ts(5,66): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(8,8): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(9,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(11,35): error TS2307: Cannot find module '@nishans/permissions' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(17,8): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(25,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Space.ts(91,14): error TS7006: Parameter 'block' implicitly has an 'any' type.
+packages/core/libs/Api/UserRoot.ts(1,66): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/UserRoot.ts(2,39): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/UserSettings.ts(1,31): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(1,33): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(2,34): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(4,28): error TS2307: Cannot find module '@nishans/init' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(5,31): error TS2307: Cannot find module '@nishans/lineage' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(7,34): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(13,8): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/NotionUser.ts(14,63): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(2,30): error TS2307: Cannot find module '@nishans/errors' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(4,47): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(5,58): error TS2307: Cannot find module '@nishans/traverser' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(12,8): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(13,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/core/libs/Api/Nishan.ts(27,35): error TS2344: Type '"token" | "interval" | "logger"' does not satisfy the constraint '"id"'.
+  Type '"token"' is not assignable to type '"id"'.
+packages/core/libs/Api/Nishan.ts(28,53): error TS2339: Property 'notion_operation_plugins' does not exist on type 'INotionCoreOptions'.
+packages/core/libs/Api/Nishan.ts(32,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+packages/core/libs/Api/Nishan.ts(33,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+packages/core/libs/Api/Nishan.ts(35,5): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+packages/core/libs/Api/Nishan.ts(87,8): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/core/libs/Api/Nishan.ts(97,8): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/core/libs/Api/Nishan.ts(97,12): error TS7006: Parameter '_' implicitly has an 'any' type.
+packages/core/libs/Api/Nishan.ts(97,15): error TS7006: Parameter 'container' implicitly has an 'any' type.
+packages/core/libs/Api/Nishan.ts(101,13): error TS2345: Argument of type '{ user_id: any; id: any; space_id: string; token: string; cache: any; interval: number; logger: boolean; notion_operation_plugins: any[]; cache_init_tracker: any; }' is not assignable to parameter of type 'INotionCoreOptions'.
+  Object literal may only specify known properties, and 'user_id' does not exist in type 'INotionCoreOptions'.
+packages/core/libs/Api/Nishan.ts(125,11): error TS2345: Argument of type '{ user_id: any; id: any; space_id: any; token: string; cache: any; interval: number; logger: boolean; notion_operation_plugins: any[]; cache_init_tracker: any; }' is not assignable to parameter of type 'INotionCoreOptions'.
+  Object literal may only specify known properties, and 'user_id' does not exist in type 'INotionCoreOptions'.
+packages/core/libs/Api/Nishan.ts(137,11): error TS2345: Argument of type '{ user_id: any; id: any; space_id: any; token: string; cache: any; interval: number; logger: boolean; notion_operation_plugins: any[]; cache_init_tracker: any; }' is not assignable to parameter of type 'INotionCoreOptions'.
+  Object literal may only specify known properties, and 'user_id' does not exist in type 'INotionCoreOptions'.
+packages/core/libs/CreateMaps/createBlockMap.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/core/libs/CreateMaps/createBlockMap.ts(9,36): error TS7006: Parameter 'block_type' implicitly has an 'any' type.
+packages/core/libs/CreateMaps/createBlockMap.ts(9,52): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IBlockMap'.
+packages/core/libs/CreateMaps/createSchemaUnitMap.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/core/libs/CreateMaps/createSchemaUnitMap.ts(9,41): error TS7006: Parameter 'schema_unit_type' implicitly has an 'any' type.
+packages/core/libs/CreateMaps/createSchemaUnitMap.ts(9,63): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'ISchemaUnitMap'.
+packages/core/libs/CreateMaps/createViewMap.ts(1,33): error TS2307: Cannot find module '@nishans/constants' or its corresponding type declarations.
+packages/core/libs/CreateMaps/createViewMap.ts(9,35): error TS7006: Parameter 'view_type' implicitly has an 'any' type.
+packages/core/libs/CreateMaps/createViewMap.ts(9,50): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type 'IViewMap'.
+packages/core/experiment/index.ts(9,46): error TS2345: Argument of type '{ token: string; interval: number; }' is not assignable to parameter of type 'Pick<INotionCoreOptions, "token" | "interval" | "logger"> & { notion_operation_plugins?: any; cache?: any; }'.
+  Property 'logger' is missing in type '{ token: string; interval: number; }' but required in type 'Pick<INotionCoreOptions, "token" | "interval" | "logger">'.
+packages/core/examples/Workflow 1/data/phase.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/priority.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/status.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/difficulty.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/category.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/ecosystem.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/subject.ts(1,28): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/purpose.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/data/source.ts(1,30): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/util.ts(1,56): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/examples/Workflow 1/util.ts(7,8): error TS2307: Cannot find module '@nishans/notion-formula' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_1/index.ts(1,56): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_1/index.ts(2,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_1/index.ts(24,43): error TS2345: Argument of type '{ token: string; logger: boolean; }' is not assignable to parameter of type 'Pick<INotionCoreOptions, "token" | "interval" | "logger"> & { notion_operation_plugins?: any; cache?: any; }'.
+  Property 'interval' is missing in type '{ token: string; logger: boolean; }' but required in type 'Pick<INotionCoreOptions, "token" | "interval" | "logger">'.
+packages/core/examples/Workflow 1/step_1/index.ts(29,44): error TS7006: Parameter 'user' implicitly has an 'any' type.
+packages/core/examples/Workflow 1/step_1/index.ts(31,38): error TS7006: Parameter 'space' implicitly has an 'any' type.
+packages/core/examples/Workflow 1/step_2/index.ts(1,77): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_2/index.ts(2,76): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_2/index.ts(561,47): error TS7006: Parameter 'schema_unit' implicitly has an 'any' type.
+packages/core/examples/Workflow 1/step_3/index.ts(1,68): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_3/index.ts(81,64): error TS7006: Parameter 'block' implicitly has an 'any' type.
+packages/core/examples/Workflow 1/step_4/index.ts(1,29): error TS2307: Cannot find module '@nishans/fabricator' or its corresponding type declarations.
+packages/core/examples/Workflow 1/step_4/index.ts(23,65): error TS7006: Parameter 'block' implicitly has an 'any' type.
+packages/graphql/libs/Resolvers/utils/getBlockResolveType.ts(1,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection.ts(2,36): error TS2307: Cannot find module '@nishans/core' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection.ts(3,36): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection.ts(4,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection.ts(15,47): error TS7006: Parameter 'template_page' implicitly has an 'any' type.
+packages/graphql/libs/Resolvers/utils/notionUserResolvers.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/utils/notionUserResolvers.ts(2,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/utils/commonBlockResolvers.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/utils/commonBlockResolvers.ts(2,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/utils/getParentResolveType.ts(1,65): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection_block.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection_block.ts(2,36): error TS2307: Cannot find module '@nishans/core' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/collection_block.ts(3,47): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/page.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/page.ts(2,36): error TS2307: Cannot find module '@nishans/core' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/page.ts(3,23): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/page.ts(4,29): error TS2307: Cannot find module '@nishans/utils' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/page.ts(13,28): error TS7006: Parameter 'content_id' implicitly has an 'any' type.
+packages/graphql/libs/Resolvers/page.ts(13,84): error TS7006: Parameter 'block' implicitly has an 'any' type.
+packages/graphql/libs/Resolvers/query.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/space.ts(1,29): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/space.ts(2,36): error TS2307: Cannot find module '@nishans/core' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/space.ts(3,24): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/graphql/libs/Resolvers/space.ts(12,27): error TS7006: Parameter 'id' implicitly has an 'any' type.
+packages/graphql/libs/utils/initializeNishan.ts(1,28): error TS2307: Cannot find module '@nishans/core' or its corresponding type declarations.
+packages/graphql/libs/utils/initializeNishan.ts(2,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/graphql/libs/server.ts(1,41): error TS2307: Cannot find module '@nishans/endpoints' or its corresponding type declarations.
+packages/sync/libs/extractData.ts(1,83): error TS2307: Cannot find module '@nishans/extract' or its corresponding type declarations.
+packages/sync/libs/extractData.ts(2,43): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/sync/libs/types.ts(1,68): error TS2307: Cannot find module '@nishans/extract' or its corresponding type declarations.
+packages/sync/libs/Read/readFromMongodb.ts(1,68): error TS2307: Cannot find module '@nishans/extract' or its corresponding type declarations.
+packages/sync/libs/Read/readFromNotion.ts(1,50): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/sync/libs/Read/readFromNotion.ts(2,64): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.
+packages/sync/libs/Read/readFromNotion.ts(32,37): error TS7006: Parameter 'view_id' implicitly has an 'any' type.
+packages/sync/libs/Restore/fromFile.ts(1,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/sync/libs/Restore/fromMongodb.ts(1,41): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/sync/libs/Store/File/fromNotion.ts(1,37): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/sync/libs/Store/Mongodb/fromNotion.ts(1,37): error TS2307: Cannot find module '@nishans/cache' or its corresponding type declarations.
+packages/sync/libs/Write/writeToMongodb.ts(1,68): error TS2307: Cannot find module '@nishans/extract' or its corresponding type declarations.
+packages/sync/libs/Write/writeToNotion.ts(1,59): error TS2307: Cannot find module '@nishans/operations' or its corresponding type declarations.
+packages/sync/libs/Write/writeToNotion.ts(2,33): error TS2307: Cannot find module '@nishans/types' or its corresponding type declarations.

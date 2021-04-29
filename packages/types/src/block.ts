@@ -1,444 +1,492 @@
-import { IPermission, ISpace, Schema, TCodeLanguage, TFormatBlockColor, TTextFormat } from '.';
+import {
+  IPermission,
+  ISpace,
+  Schema,
+  TCodeLanguage,
+  TFormatBlockColor,
+  TTextFormat
+} from '.';
 import { ViewFormatProperties } from './view';
 
 export interface NotionNode {
-	alive: boolean;
-	version: number;
-	id: string;
+  alive: boolean;
+  version: number;
+  id: string;
 }
 
 export interface ParentProps {
-	parent_id: string;
-	parent_table: 'block' | 'space' | 'user_root' | 'collection';
+  parent_id: string;
+  parent_table: 'block' | 'space' | 'user_root' | 'collection';
 }
 
 export interface CreatedProps {
-	created_by_id: string;
-	created_by_table: 'notion_user';
-	created_time: number;
+  created_by_id: string;
+  created_by_table: 'notion_user';
+  created_time: number;
 }
 
 export interface LastEditedProps {
-	last_edited_by_id: string;
-	last_edited_by_table: 'notion_user';
-	last_edited_time: number;
+  last_edited_by_id: string;
+  last_edited_by_table: 'notion_user';
+  last_edited_time: number;
 }
 
-export interface SpaceShardProps {
-	shard_id: number;
-	space_id: string;
+export interface SpaceProps {
+  space_id: string;
 }
 
-export interface IBlock extends SpaceShardProps, NotionNode, ParentProps, CreatedProps, LastEditedProps {
-	discussions?: string[];
+export interface IBlock
+  extends SpaceProps,
+    NotionNode,
+    ParentProps,
+    CreatedProps,
+    LastEditedProps {
+  discussions?: string[];
 }
 
-export type TMediaBlockType = 'code' | 'image' | 'video' | 'bookmark' | 'audio' | 'file';
+export type TMediaBlockType =
+  | 'code'
+  | 'image'
+  | 'video'
+  | 'bookmark'
+  | 'audio'
+  | 'file';
 export type TBasicBlockType =
-	| 'page'
-	| 'text'
-	| 'header'
-	| 'sub_header'
-	| 'sub_sub_header'
-	| 'to_do'
-	| 'bulleted_list'
-	| 'numbered_list'
-	| 'toggle'
-	| 'quote'
-	| 'divider'
-	| 'callout';
-export type TAdvancedBlockType = 'table_of_contents' | 'equation' | 'factory' | 'breadcrumb';
+  | 'page'
+  | 'text'
+  | 'header'
+  | 'sub_header'
+  | 'sub_sub_header'
+  | 'to_do'
+  | 'bulleted_list'
+  | 'numbered_list'
+  | 'toggle'
+  | 'quote'
+  | 'divider'
+  | 'callout';
+export type TAdvancedBlockType =
+  | 'table_of_contents'
+  | 'equation'
+  | 'factory'
+  | 'breadcrumb';
 export type TEmbedBlockType =
-	| 'drive'
-	| 'figma'
-	| 'tweet'
-	| 'codepen'
-	| 'gist'
-	| 'maps'
-	| 'embed'
-	| 'abstract'
-	| 'invision'
-	| 'framer'
-	| 'whimsical'
-	| 'miro'
-	| 'pdf'
-	| 'loom'
-	| 'typeform';
-export type TCollectionBlockType = 'collection_view_page' | 'collection_view' | 'linked_db';
+  | 'drive'
+  | 'figma'
+  | 'tweet'
+  | 'codepen'
+  | 'gist'
+  | 'maps'
+  | 'embed'
+  | 'abstract'
+  | 'invision'
+  | 'framer'
+  | 'whimsical'
+  | 'miro'
+  | 'pdf'
+  | 'loom'
+  | 'typeform';
+export type TCollectionBlockType =
+  | 'collection_view_page'
+  | 'collection_view'
+  | 'linked_db';
 export type TColumnBlockType = 'column_list' | 'column';
 export type TBlockType =
-	| TEmbedBlockType
-	| TMediaBlockType
-	| TBasicBlockType
-	| TAdvancedBlockType
-	| TCollectionBlockType
-	| TColumnBlockType;
+  | TEmbedBlockType
+  | TMediaBlockType
+  | TBasicBlockType
+  | TAdvancedBlockType
+  | TCollectionBlockType
+  | TColumnBlockType;
 
 export interface MediaProps {
-	source: string[][];
-	caption?: string[][];
+  source: string[][];
+  caption?: string[][];
 }
 
 export interface MediaFormat {
-	block_aspect_ratio?: number;
-	block_full_width?: boolean;
-	block_page_width?: boolean;
-	block_preserve_scale?: boolean;
-	block_width?: number;
-	block_height?: number;
-	display_source: string;
+  block_aspect_ratio?: number;
+  block_full_width?: boolean;
+  block_page_width?: boolean;
+  block_preserve_scale?: boolean;
+  block_width?: number;
+  block_height?: number;
+  display_source: string;
 }
 
 export interface WebBookmarkFormat {
-	bookmark_cover: string;
-	bookmark_icon: string;
-	block_color?: TFormatBlockColor;
+  bookmark_cover: string;
+  bookmark_icon: string;
+  block_color?: TFormatBlockColor;
 }
 
 export interface WebBookmarkProps {
-	link: string[][];
-	description?: TTextFormat;
-	title: TTextFormat;
-	caption?: string[][];
+  link: string[][];
+  description?: TTextFormat;
+  title: TTextFormat;
+  caption?: string[][];
 }
 
 export interface CodeFormat {
-	code_wrap: boolean;
+  code_wrap: boolean;
 }
 
 export interface CodeProps {
-	title: TTextFormat;
-	language: [[TCodeLanguage]];
+  title: TTextFormat;
+  language: [[TCodeLanguage]];
 }
 
 export interface FileProps {
-	title: TTextFormat;
-	source: string[][];
-	caption?: string[][];
+  title: TTextFormat;
+  source: string[][];
+  caption?: string[][];
 }
 
 export interface FileFormat {
-	block_color?: TFormatBlockColor;
+  block_color?: TFormatBlockColor;
 }
 
 export interface TodoProps {
-	title: TTextFormat;
-	checked: ('Yes' | 'No')[][];
+  title: TTextFormat;
+  checked: ('Yes' | 'No')[][];
 }
 
 // -----------------
 
 export interface IMedia {
-	properties: MediaProps;
-	format?: MediaFormat;
-	file_ids: string[];
+  properties: MediaProps;
+  format?: MediaFormat;
+  file_ids: string[];
 }
 
 export interface ICommonText {
-	properties: {
-		title: TTextFormat;
-	};
-	format?: {
-		block_color?: TFormatBlockColor;
-	};
+  properties: {
+    title: TTextFormat;
+  };
+  format?: {
+    block_color?: TFormatBlockColor;
+  };
 }
 export interface IVideo extends IBlock, IMedia {
-	type: 'video';
+  type: 'video';
 }
 export interface IAudio extends IBlock, IMedia {
-	type: 'audio';
+  type: 'audio';
 }
 export interface IImage extends IBlock, IMedia {
-	type: 'image';
+  type: 'image';
 }
 export interface IWebBookmark extends IBlock {
-	type: 'bookmark';
-	properties: WebBookmarkProps;
-	format?: WebBookmarkFormat;
+  type: 'bookmark';
+  properties: WebBookmarkProps;
+  format?: WebBookmarkFormat;
 }
 
 export interface ICode extends IBlock {
-	type: 'code';
-	properties: CodeProps;
-	format?: CodeFormat;
+  type: 'code';
+  properties: CodeProps;
+  format?: CodeFormat;
 }
 export interface IFile extends IBlock {
-	type: 'file';
-	properties: FileProps;
-	format?: FileFormat;
+  type: 'file';
+  properties: FileProps;
+  format?: FileFormat;
 }
 
-export type TMediaBlock = IVideo | IAudio | IImage | IWebBookmark | ICode | IFile;
+export type TMediaBlock =
+  | IVideo
+  | IAudio
+  | IImage
+  | IWebBookmark
+  | ICode
+  | IFile;
 
 // Basic IBlock Types
 export interface PageProps {
-	title: TTextFormat;
-	[k: string]: TTextFormat;
+  title: TTextFormat;
+  [k: string]: TTextFormat;
 }
 
 export interface PageFormat {
-	page_icon?: string;
-	page_font?: null | 'mono' | 'serif';
-	page_full_width?: boolean;
-	page_small_text?: boolean;
-	block_locked_by?: string;
-	block_locked?: boolean;
-	page_cover?: string;
-	page_cover_position?: number;
-	block_color?: TFormatBlockColor;
-	page_section_visibility?: {
-		backlinks: 'section_show' | 'section_hide' | 'section_collapsed';
-		comments: 'section_hide' | 'section_show';
-	};
+  page_icon?: string;
+  page_font?: null | 'mono' | 'serif';
+  page_full_width?: boolean;
+  page_small_text?: boolean;
+  block_locked_by?: string;
+  block_locked?: boolean;
+  page_cover?: string;
+  page_cover_position?: number;
+  block_color?: TFormatBlockColor;
+  page_section_visibility?: {
+    backlinks: 'section_show' | 'section_hide' | 'section_collapsed';
+    comments: 'section_hide' | 'section_show';
+  };
 }
 
 export interface IPage extends IBlock {
-	properties: PageProps;
-	type: 'page';
-	content: string[];
-	format?: PageFormat;
-	is_template?: boolean;
-	file_ids?: string[];
-	permissions: IPermission[];
+  properties: PageProps;
+  type: 'page';
+  content: string[];
+  format?: PageFormat;
+  is_template?: boolean;
+  file_ids?: string[];
+  permissions: IPermission[];
 }
 
 export interface IColumnFormat {
-	format: {
-		column_ratio: number;
-	};
+  format: {
+    column_ratio: number;
+  };
 }
 
 export interface IColumn
-	extends NotionNode,
-		ParentProps,
-		CreatedProps,
-		LastEditedProps,
-		IColumnFormat,
-		SpaceShardProps {
-	content: string[];
-	type: 'column';
-	properties?: Record<string, unknown>;
+  extends NotionNode,
+    ParentProps,
+    CreatedProps,
+    LastEditedProps,
+    IColumnFormat,
+    SpaceProps {
+  content: string[];
+  type: 'column';
+  properties?: Record<string, unknown>;
 }
 
-export interface IColumnList extends NotionNode, ParentProps, CreatedProps, LastEditedProps, SpaceShardProps {
-	content: string[];
-	type: 'column_list';
-	format?: Record<string, unknown>;
-	properties?: Record<string, unknown>;
+export interface IColumnList
+  extends NotionNode,
+    ParentProps,
+    CreatedProps,
+    LastEditedProps,
+    SpaceProps {
+  content: string[];
+  type: 'column_list';
+  format?: Record<string, unknown>;
+  properties?: Record<string, unknown>;
 }
 
 export interface ICollectionBlock extends IBlock {
-	format: {
-		block_locked_by?: string;
-		block_locked?: boolean;
-	};
-	view_ids: string[];
-	collection_id: string;
-	type: 'collection_view' | 'collection_view_page';
+  format: {
+    block_locked_by?: string;
+    block_locked?: boolean;
+  };
+  view_ids: string[];
+  collection_id: string;
+  type: 'collection_view' | 'collection_view_page';
 }
 
 export interface ICollectionView extends ICollectionBlock {
-	type: 'collection_view';
+  type: 'collection_view';
 }
 
 export interface ICollectionViewPage extends ICollectionBlock {
-	type: 'collection_view_page';
-	permissions: IPermission[];
+  type: 'collection_view_page';
+  permissions: IPermission[];
 }
 
 export type TCollectionBlock = ICollectionView | ICollectionViewPage;
 
 export interface IText extends IBlock, ICommonText {
-	type: 'text';
+  type: 'text';
 }
 export interface ITodo extends IBlock {
-	type: 'to_do';
-	properties: TodoProps;
-	format?: {
-		block_color?: TFormatBlockColor;
-	};
+  type: 'to_do';
+  properties: TodoProps;
+  format?: {
+    block_color?: TFormatBlockColor;
+  };
 }
 export interface IHeader extends IBlock, ICommonText {
-	type: 'header';
+  type: 'header';
 }
 export interface ISubHeader extends IBlock, ICommonText {
-	type: 'sub_header';
+  type: 'sub_header';
 }
 export interface ISubSubHeader extends IBlock, ICommonText {
-	type: 'sub_sub_header';
+  type: 'sub_sub_header';
 }
 export interface IBulletedList extends IBlock, ICommonText {
-	type: 'bulleted_list';
+  type: 'bulleted_list';
 }
 export interface INumberedList extends IBlock, ICommonText {
-	type: 'numbered_list';
+  type: 'numbered_list';
 }
 export interface IToggle extends IBlock, ICommonText {
-	type: 'toggle';
+  type: 'toggle';
 }
 export interface IQuote extends IBlock, ICommonText {
-	type: 'quote';
+  type: 'quote';
 }
 export interface IDivider extends IBlock {
-	type: 'divider';
-	properties?: Record<string, unknown>;
-	format?: Record<string, unknown>;
+  type: 'divider';
+  properties?: Record<string, unknown>;
+  format?: Record<string, unknown>;
 }
 export interface ICallout extends IBlock, ICommonText {
-	type: 'callout';
+  type: 'callout';
 }
 
 export type TBasicBlock =
-	| IText
-	| ITodo
-	| IHeader
-	| ISubHeader
-	| ISubSubHeader
-	| IBulletedList
-	| INumberedList
-	| IToggle
-	| IQuote
-	| IDivider
-	| ICallout
-	| IPage
-	| TCollectionBlock;
+  | IText
+  | ITodo
+  | IHeader
+  | ISubHeader
+  | ISubSubHeader
+  | IBulletedList
+  | INumberedList
+  | IToggle
+  | IQuote
+  | IDivider
+  | ICallout
+  | IPage
+  | TCollectionBlock;
 
 // Advanced block types
 export interface ITOC extends IBlock {
-	type: 'table_of_contents';
-	format?: {
-		block_color?: TFormatBlockColor;
-	};
-	properties?: Record<string, unknown>;
+  type: 'table_of_contents';
+  format?: {
+    block_color?: TFormatBlockColor;
+  };
+  properties?: Record<string, unknown>;
 }
 
 export interface IEquation extends IBlock {
-	type: 'equation';
-	properties: {
-		title: TTextFormat;
-	};
-	format?: {
-		block_color?: TFormatBlockColor;
-	};
+  type: 'equation';
+  properties: {
+    title: TTextFormat;
+  };
+  format?: {
+    block_color?: TFormatBlockColor;
+  };
 }
 
 export interface IBreadcrumb extends IBlock {
-	type: 'breadcrumb';
-	properties?: Record<string, unknown>;
-	format?: Record<string, unknown>;
+  type: 'breadcrumb';
+  properties?: Record<string, unknown>;
+  format?: Record<string, unknown>;
 }
 export interface IFactory extends IBlock {
-	type: 'factory';
-	properties: {
-		title: TTextFormat;
-	};
-	format?: {
-		block_color?: TFormatBlockColor;
-	};
-	content: string[];
+  type: 'factory';
+  properties: {
+    title: TTextFormat;
+  };
+  format?: {
+    block_color?: TFormatBlockColor;
+  };
+  content: string[];
 }
 
 export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;
 
 // Embeds Type
 export interface IEmbedBlock extends IBlock {
-	properties: MediaProps;
-	format?: MediaFormat;
-	type: TEmbedBlockType;
+  properties: MediaProps;
+  format?: MediaFormat;
+  type: TEmbedBlockType;
 }
 export interface IEmbed extends IEmbedBlock {
-	type: 'embed';
+  type: 'embed';
 }
 export interface ICodepen extends IEmbedBlock {
-	type: 'codepen';
+  type: 'codepen';
 }
 export interface IMaps extends IEmbedBlock {
-	type: 'maps';
+  type: 'maps';
 }
 export interface IFigma extends IEmbedBlock {
-	type: 'figma';
+  type: 'figma';
 }
 export interface IGist extends IEmbedBlock {
-	type: 'gist';
+  type: 'gist';
 }
 export interface IAbstract extends IEmbedBlock {
-	type: 'abstract';
+  type: 'abstract';
 }
 export interface IInvision extends IEmbedBlock {
-	type: 'invision';
+  type: 'invision';
 }
 export interface IFramer extends IEmbedBlock {
-	type: 'framer';
+  type: 'framer';
 }
 export interface IWhimsical extends IEmbedBlock {
-	type: 'whimsical';
+  type: 'whimsical';
 }
 export interface IMiro extends IEmbedBlock {
-	type: 'miro';
+  type: 'miro';
 }
 export interface IPdf extends IEmbedBlock {
-	type: 'pdf';
+  type: 'pdf';
 }
 export interface ILoom extends IEmbedBlock {
-	type: 'loom';
+  type: 'loom';
 }
 export interface ITypeform extends IEmbedBlock {
-	type: 'typeform';
+  type: 'typeform';
 }
 export interface IDrive extends IBlock {
-	type: 'drive';
-	properties?: Record<string, unknown>;
-	format?: {
-		drive_properties: {
-			file_id: string;
-			icon: string;
-			modified_time: number;
-			title: string;
-			trashed: boolean;
-			url: string;
-			user_name: string;
-		};
-		drive_status: {
-			authed: boolean;
-			last_fetched: number;
-		};
-	};
-	file_id?: string;
+  type: 'drive';
+  properties?: Record<string, unknown>;
+  format?: {
+    drive_properties: {
+      file_id: string;
+      icon: string;
+      modified_time: number;
+      title: string;
+      trashed: boolean;
+      url: string;
+      user_name: string;
+    };
+    drive_status: {
+      authed: boolean;
+      last_fetched: number;
+    };
+  };
+  file_id?: string;
 }
 export interface ITweet extends IBlock {
-	type: 'tweet';
-	properties: {
-		source: string[][];
-	};
-	format?: Record<string, unknown>;
+  type: 'tweet';
+  properties: {
+    source: string[][];
+  };
+  format?: Record<string, unknown>;
 }
 
-export type TEmbedBlock = IEmbed | ITweet | ICodepen | IMaps | IFigma | IDrive | IGist;
+export type TEmbedBlock =
+  | IEmbed
+  | ITweet
+  | ICodepen
+  | IMaps
+  | IFigma
+  | IDrive
+  | IGist;
 
-export type TBlock = TBasicBlock | TMediaBlock | TAdvancedBlock | TEmbedBlock | IColumnList | IColumn;
+export type TBlock =
+  | TBasicBlock
+  | TMediaBlock
+  | TAdvancedBlock
+  | TEmbedBlock
+  | IColumnList
+  | IColumn;
 
 export type TParentType = IPage | ISpace | ICollectionViewPage;
 
 export type TPropertyVisibility = 'show' | 'hide_if_empty' | 'hide';
 
 export type CollectionFormatPropertyVisibility = {
-	property: string;
-	visibility: 'show' | 'hide_if_empty' | 'hide';
+  property: string;
+  visibility: 'show' | 'hide_if_empty' | 'hide';
 };
 
 export interface ICollection extends NotionNode, ParentProps {
-	description?: TTextFormat;
-	icon?: string;
-	cover?: string;
-	migrated: boolean;
-	name: TTextFormat;
-	schema: Schema;
-	template_pages?: string[];
-	format?: {
-		property_visibility?: CollectionFormatPropertyVisibility[];
-		page_section_visibility?: PageFormat['page_section_visibility'];
-		collection_page_properties?: ViewFormatProperties[];
-	};
+  description?: TTextFormat;
+  icon?: string;
+  cover?: string;
+  migrated: boolean;
+  name: TTextFormat;
+  schema: Schema;
+  template_pages?: string[];
+  format?: {
+    property_visibility?: CollectionFormatPropertyVisibility[];
+    page_section_visibility?: PageFormat['page_section_visibility'];
+    collection_page_properties?: ViewFormatProperties[];
+  };
 }
 
 export type TPage = IPage | ICollectionViewPage;

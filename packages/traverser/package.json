@@ -27,7 +27,7 @@
     "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
-    "@nishans/lineage": "0.0.25",
+    "@nishans/lineage": "0.0.26",
     "@nishans/logger": "0.0.19",
     "@nishans/operations": "0.0.32",
     "@nishans/utils": "0.0.25",

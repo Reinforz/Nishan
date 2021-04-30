@@ -6,7 +6,6 @@ export const creatDefaultNishanArg = () => {
 		cache: NotionCache.createDefaultCache(),
 		id: 'block_1',
 		interval: 0,
-		shard_id: 123,
 		space_id: 'space_1',
 		token: 'token',
 		user_id: 'user_root_1',

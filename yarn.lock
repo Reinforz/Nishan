@@ -2661,16 +2661,6 @@
     "@nishans/errors" "0.0.25"
     "@nishans/utils" "0.0.19"
 
-"@nishans/cache@0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.37.tgz#fad1e88e4cfe7e2cc686eb71f8637c41fca326e9"
-  integrity sha512-YAq+SOhRIGIiUuPSYt9Y36OILHGKReJhRDcVlyw3hH1ZtGw7Ly3Sq3F6jxyJN20VajFQPm+9fa53DXbamnaI+Q==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/endpoints" "0.0.31"
-    "@nishans/logger" "0.0.18"
-    "@nishans/utils" "0.0.24"
-
 "@nishans/constants@0.0.19":
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.19.tgz#455473c10bf68f3bb15794519e7fc5654f934c02"
@@ -2709,26 +2699,10 @@
     axios "^0.21.1"
     uuid "^8.3.2"
 
-"@nishans/endpoints@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.31.tgz#54b9ac5c09e1798cba6933e1871969ba3969ce24"
-  integrity sha512-FIIBvsYnybzweAGfploi7fqJCRyhyYYLqveaFTZMIGCY2pvQLh+6ck5CHBujjZKmnyDMY7XhBgab1iiyk9ql6Q==
-  dependencies:
-    "@nishans/logger" "0.0.18"
-    axios "^0.21.1"
-    uuid "^8.3.2"
-
 "@nishans/errors@0.0.25":
   version "0.0.25"
   resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.25.tgz#e58cbf15b4f7c6004386f0e00d12c14894e2f054"
   integrity sha512-Mc7hm6xTBjPvI5vu4YoQYWqgmP5fYqEy8Pny2br5zxaJjrS1obZJ78CVMtslEKchlQ7d0HRc5QxcxYAiDZM1KA==
-  dependencies:
-    colors "^1.4.0"
-
-"@nishans/errors@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.31.tgz#f6a1b095e981e778bf69ece2dff31731095d8ffc"
-  integrity sha512-3VQ0GVjQmWqpY8YDU2BBnMmgTsTgtXBZliINYHCgBznALPwmAJ8gKMdsilE4sUokalhSFoIoQ5DK5H2MkjiObQ==
   dependencies:
     colors "^1.4.0"
 
@@ -2775,28 +2749,10 @@
     "@nishans/logger" "0.0.16"
     "@nishans/operations" "0.0.27"
 
-"@nishans/lineage@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@nishans/lineage/-/lineage-0.0.25.tgz#a5546adc5d952b4f723af06696fe6524ce8c06b4"
-  integrity sha512-uCvUEmNnc76d1PVqBonoLT/dpDSoSvYyLixkc6l3yFvxBcIrOwvHymdlNL+KrMw4yTsCu5o8wf0vvul5+P/Z/w==
-  dependencies:
-    "@nishans/cache" "0.0.37"
-    "@nishans/errors" "0.0.31"
-    "@nishans/logger" "0.0.18"
-    "@nishans/operations" "0.0.31"
-
 "@nishans/logger@0.0.16":
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/@nishans/logger/-/logger-0.0.16.tgz#1b679d8f616695858891fdf6de1c82d3cb97da86"
   integrity sha512-bMXaIJONaTGlj7nHkzNQBcKS/N0oOH5uVb76S80vaPw1VtuT7Zmn8MhMhun7a66pFxrymAB6gn6pQGQDplslPQ==
-  dependencies:
-    colors "1.4.0"
-    winston "^3.3.3"
-
-"@nishans/logger@0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@nishans/logger/-/logger-0.0.18.tgz#ade3db64bdccce711466099954c28af047207dda"
-  integrity sha512-Holph2dQGUeePsSBrBvBeU8SqkB6Ufs++dbxDQyrAY9ODSl33B1hwIlmWa4/Yklui/rH/Bu6AG5IRLnzjVgJmQ==
   dependencies:
     colors "1.4.0"
     winston "^3.3.3"
@@ -2819,15 +2775,6 @@
   dependencies:
     "@nishans/constants" "0.0.19"
     "@nishans/endpoints" "0.0.27"
-
-"@nishans/operations@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.31.tgz#1218a52e9776148c5b144213796989a488abb1f4"
-  integrity sha512-xyEY2iUNb+sDPHh+1VeyoXJGh7822qozBe92VWaKuESVcdGk/+iJGuYJ/YaUzBONMMm+5LoNFaHK6tIi2ALrVA==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/endpoints" "0.0.31"
-    "@nishans/logger" "0.0.18"
 
 "@nishans/permissions@0.0.18":
   version "0.0.18"
@@ -2860,14 +2807,6 @@
   dependencies:
     "@nishans/constants" "0.0.19"
     "@nishans/errors" "0.0.25"
-
-"@nishans/utils@0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.24.tgz#74126f283b5bbbbffea3c3881a8d9cf90d648fec"
-  integrity sha512-NMiB4lPbtYoj5ObdRhXkTHOABitYtUcNpO2InCqGnK3131xWTXrnGFFEosr59L28Z0hl34MQtSzkLdWc4PycqA==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/errors" "0.0.31"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -4461,9 +4400,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^17.0.0":
-  version "17.0.4"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.4.tgz#a67c6f7a460d2660e950d9ccc1c2f18525c28220"
-  integrity sha512-onz2BqScSFMoTRdJUZUDD/7xrusM8hBA2Fktk2qgaTYPCgPvWnDEgkrOs8hhPUf2jfcIXkJ5yK6VfYormJS3Jw==
+  version "17.0.5"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.5.tgz#3d887570c4489011f75a3fc8f965bf87d09a1bea"
+  integrity sha512-bj4biDB9ZJmGAYTWSKJly6bMr4BLUiBrx9ujiJEoP9XIDY9CTaPGxE5QWN/1WjpPLzYF7/jRNnV2nNxNe970sw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

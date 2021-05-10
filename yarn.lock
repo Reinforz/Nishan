@@ -1603,10 +1603,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@eslint/eslintrc@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.0.tgz#99cc0a0584d72f1df38b900fb062ba995f395547"
-  integrity sha512-2ZPCc+uNbjV5ERJr+aKSPRwZgKd2z11x0EgLvb1PURmUrn9QNRXFqje0Ldq454PfAVyaJYyrDvvIKSFP4NnBog==
+"@eslint/eslintrc@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.1.tgz#442763b88cecbe3ee0ec7ca6d6dd6168550cbf14"
+  integrity sha512-5v7TDE9plVhvxQeWLXDTvFvJBdH6pEsdnl2g/dAptmuFEPedQ4Erq5rsDsX+mvAM610IhNaO2W5V1dOOnDKxkQ==
   dependencies:
     ajv "^6.12.4"
     debug "^4.1.1"
@@ -2661,16 +2661,6 @@
     "@nishans/errors" "0.0.25"
     "@nishans/utils" "0.0.19"
 
-"@nishans/cache@0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@nishans/cache/-/cache-0.0.37.tgz#fad1e88e4cfe7e2cc686eb71f8637c41fca326e9"
-  integrity sha512-YAq+SOhRIGIiUuPSYt9Y36OILHGKReJhRDcVlyw3hH1ZtGw7Ly3Sq3F6jxyJN20VajFQPm+9fa53DXbamnaI+Q==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/endpoints" "0.0.31"
-    "@nishans/logger" "0.0.18"
-    "@nishans/utils" "0.0.24"
-
 "@nishans/constants@0.0.19":
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/@nishans/constants/-/constants-0.0.19.tgz#455473c10bf68f3bb15794519e7fc5654f934c02"
@@ -2709,26 +2699,10 @@
     axios "^0.21.1"
     uuid "^8.3.2"
 
-"@nishans/endpoints@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/endpoints/-/endpoints-0.0.31.tgz#54b9ac5c09e1798cba6933e1871969ba3969ce24"
-  integrity sha512-FIIBvsYnybzweAGfploi7fqJCRyhyYYLqveaFTZMIGCY2pvQLh+6ck5CHBujjZKmnyDMY7XhBgab1iiyk9ql6Q==
-  dependencies:
-    "@nishans/logger" "0.0.18"
-    axios "^0.21.1"
-    uuid "^8.3.2"
-
 "@nishans/errors@0.0.25":
   version "0.0.25"
   resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.25.tgz#e58cbf15b4f7c6004386f0e00d12c14894e2f054"
   integrity sha512-Mc7hm6xTBjPvI5vu4YoQYWqgmP5fYqEy8Pny2br5zxaJjrS1obZJ78CVMtslEKchlQ7d0HRc5QxcxYAiDZM1KA==
-  dependencies:
-    colors "^1.4.0"
-
-"@nishans/errors@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/errors/-/errors-0.0.31.tgz#f6a1b095e981e778bf69ece2dff31731095d8ffc"
-  integrity sha512-3VQ0GVjQmWqpY8YDU2BBnMmgTsTgtXBZliINYHCgBznALPwmAJ8gKMdsilE4sUokalhSFoIoQ5DK5H2MkjiObQ==
   dependencies:
     colors "^1.4.0"
 
@@ -2775,28 +2749,10 @@
     "@nishans/logger" "0.0.16"
     "@nishans/operations" "0.0.27"
 
-"@nishans/lineage@0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@nishans/lineage/-/lineage-0.0.25.tgz#a5546adc5d952b4f723af06696fe6524ce8c06b4"
-  integrity sha512-uCvUEmNnc76d1PVqBonoLT/dpDSoSvYyLixkc6l3yFvxBcIrOwvHymdlNL+KrMw4yTsCu5o8wf0vvul5+P/Z/w==
-  dependencies:
-    "@nishans/cache" "0.0.37"
-    "@nishans/errors" "0.0.31"
-    "@nishans/logger" "0.0.18"
-    "@nishans/operations" "0.0.31"
-
 "@nishans/logger@0.0.16":
   version "0.0.16"
   resolved "https://registry.yarnpkg.com/@nishans/logger/-/logger-0.0.16.tgz#1b679d8f616695858891fdf6de1c82d3cb97da86"
   integrity sha512-bMXaIJONaTGlj7nHkzNQBcKS/N0oOH5uVb76S80vaPw1VtuT7Zmn8MhMhun7a66pFxrymAB6gn6pQGQDplslPQ==
-  dependencies:
-    colors "1.4.0"
-    winston "^3.3.3"
-
-"@nishans/logger@0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@nishans/logger/-/logger-0.0.18.tgz#ade3db64bdccce711466099954c28af047207dda"
-  integrity sha512-Holph2dQGUeePsSBrBvBeU8SqkB6Ufs++dbxDQyrAY9ODSl33B1hwIlmWa4/Yklui/rH/Bu6AG5IRLnzjVgJmQ==
   dependencies:
     colors "1.4.0"
     winston "^3.3.3"
@@ -2819,15 +2775,6 @@
   dependencies:
     "@nishans/constants" "0.0.19"
     "@nishans/endpoints" "0.0.27"
-
-"@nishans/operations@0.0.31":
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/@nishans/operations/-/operations-0.0.31.tgz#1218a52e9776148c5b144213796989a488abb1f4"
-  integrity sha512-xyEY2iUNb+sDPHh+1VeyoXJGh7822qozBe92VWaKuESVcdGk/+iJGuYJ/YaUzBONMMm+5LoNFaHK6tIi2ALrVA==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/endpoints" "0.0.31"
-    "@nishans/logger" "0.0.18"
 
 "@nishans/permissions@0.0.18":
   version "0.0.18"
@@ -2860,14 +2807,6 @@
   dependencies:
     "@nishans/constants" "0.0.19"
     "@nishans/errors" "0.0.25"
-
-"@nishans/utils@0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.24.tgz#74126f283b5bbbbffea3c3881a8d9cf90d648fec"
-  integrity sha512-NMiB4lPbtYoj5ObdRhXkTHOABitYtUcNpO2InCqGnK3131xWTXrnGFFEosr59L28Z0hl34MQtSzkLdWc4PycqA==
-  dependencies:
-    "@nishans/constants" "0.0.23"
-    "@nishans/errors" "0.0.31"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -8470,12 +8409,12 @@ eslint-webpack-plugin@^2.1.0:
     schema-utils "^3.0.0"
 
 eslint@^7.11.0, eslint@^7.17.0:
-  version "7.25.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.25.0.tgz#1309e4404d94e676e3e831b3a3ad2b050031eb67"
-  integrity sha512-TVpSovpvCNpLURIScDRB6g5CYu/ZFq9GfX2hLNIV4dSBKxIWojeDODvYl3t0k0VtMxYeR8OXPCFE5+oHMlGfhw==
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.26.0.tgz#d416fdcdcb3236cd8f282065312813f8c13982f6"
+  integrity sha512-4R1ieRf52/izcZE7AlLy56uIHHDLT74Yzz2Iv2l6kDaYvEu9x+wMB5dZArVL8SYGXSYV2YAg70FcW5Y5nGGNIg==
   dependencies:
     "@babel/code-frame" "7.12.11"
-    "@eslint/eslintrc" "^0.4.0"
+    "@eslint/eslintrc" "^0.4.1"
     ajv "^6.10.0"
     chalk "^4.0.0"
     cross-spawn "^7.0.2"

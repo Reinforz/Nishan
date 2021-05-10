@@ -43,6 +43,6 @@
   },
   "optionalDependencies": {
     "husky": "^6.0.0",
-    "sort-package-json": "1.49.0"
+    "sort-package-json": "1.50.0"
   }
 }

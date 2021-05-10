@@ -5,7 +5,7 @@ export async function createDbs(
   titles: TTextFormat[],
   space: InstanceType<typeof NotionCore.Api.Space>
 ) {
-  await space.createRootPages(
+  const page_map = await space.createRootPages(
     titles.map((title) => ({
       type: 'page',
       contents: [],
@@ -14,4 +14,5 @@ export async function createDbs(
       }
     }))
   );
+  return page_map.page;
 }

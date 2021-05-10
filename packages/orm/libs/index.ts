@@ -5,3 +5,5 @@ export const NotionOrm = {
   Db: NotionOrmDb,
   Table: NotionOrmTable
 };
+
+export * from './types';

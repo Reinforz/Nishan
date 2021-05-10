@@ -1,5 +1,7 @@
 import { createTables } from './createTables';
+import { deleteTables } from './deleteTables';
 
 export const NotionOrmTable = {
-  create: createTables
+  create: createTables,
+  delete: deleteTables
 };

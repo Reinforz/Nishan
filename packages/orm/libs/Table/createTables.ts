@@ -8,7 +8,7 @@ export async function createTables(
   await db.createBlocks(
     tableInfos.map(({ name, schema }) => ({
       type: 'collection_view_page',
-      name,
+      name: [[name]],
       rows: [],
       views: [
         {

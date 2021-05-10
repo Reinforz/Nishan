@@ -1,8 +1,7 @@
 import { NotionCore } from '@nishans/core';
-import { TTextFormat } from '@nishans/types';
 
 export async function createDbs(
-  titles: TTextFormat[],
+  titles: string[],
   space: InstanceType<typeof NotionCore.Api.Space>
 ) {
   const page_map = await space.createRootPages(
@@ -10,7 +9,7 @@ export async function createDbs(
       type: 'page',
       contents: [],
       properties: {
-        title
+        title: [[title]]
       }
     }))
   );

@@ -31,7 +31,8 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "@nishans/core": "0.0.35"
+    "@nishans/core": "0.0.35",
+    "@nishans/logger": "0.0.19"
   },
   "devDependencies": {
     "@nishans/types": "0.0.35"

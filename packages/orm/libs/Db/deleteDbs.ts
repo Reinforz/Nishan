@@ -12,7 +12,7 @@ export async function deleteDbs(
   titles.forEach((title) => {
     const root_page = root_page_map.page.get(title);
     if (!root_page) {
-      const msg = `${title} database listed doesn't exist`;
+      const msg = `${title} database doesn't exist`;
       NotionLogger.error(msg);
     }
   });

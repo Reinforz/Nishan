@@ -14,7 +14,7 @@ export async function createDbs(
   if (root_page_entries.length !== 0) {
     const msg = `${
       root_page_entries[0][1].getCachedData().properties.title[0][0]
-    } database already exists`;
+    } table already exists`;
     NotionLogger.error(msg);
   }
   const page_map = await space.createRootPages(

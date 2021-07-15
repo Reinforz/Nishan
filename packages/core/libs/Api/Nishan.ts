@@ -127,10 +127,12 @@ export default class Nishan {
           space_id: page.space_id
         });
         page_map.page.set(page.id, page_obj);
-        page_map.page.set(
-          NotionUtils.extractInlineBlockContent(page.properties.title),
-          page_obj
-        );
+        if (page.properties) {
+          page_map.page.set(
+            NotionUtils.extractInlineBlockContent(page.properties.title),
+            page_obj
+          );
+        }
       } else if (page.type === 'collection_view_page') {
         const cvp_obj = new NotionCore.Api.CollectionViewPage({
           ...this.getProps(),

@@ -127,7 +127,7 @@ export default class Nishan {
           space_id: page.space_id
         });
         page_map.page.set(page.id, page_obj);
-        if (page.properties) {
+        if (page.properties?.title) {
           page_map.page.set(
             NotionUtils.extractInlineBlockContent(page.properties.title),
             page_obj

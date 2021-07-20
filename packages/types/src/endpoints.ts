@@ -890,6 +890,10 @@ export interface INotionEndpoints {
     {
       recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
       results: {
+        highlight: {
+            pathText: string;
+            text?: string;
+        };
         id: string;
         isNavigable: boolean;
         score: number;

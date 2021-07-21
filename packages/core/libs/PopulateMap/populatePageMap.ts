@@ -18,6 +18,8 @@ export async function populatePageMap (page: TPage, page_map: IPageMap, options:
 		// 2. Add the page object to the page map using the name and id as key
 		const block_obj = createBlockClass(page.type, page.id, options);
 		page_map.page.set(page.id, block_obj);
-		page_map.page.set(NotionUtils.extractInlineBlockContent(page.properties.title), block_obj);
+		if (page.properties) {
+			page_map.page.set(NotionUtils.extractInlineBlockContent(page.properties.title), block_obj);
+		}
 	} else await PopulateMap.collectionBlock(page, options, page_map as any);
 }

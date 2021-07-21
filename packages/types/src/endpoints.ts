@@ -890,7 +890,7 @@ export interface INotionEndpoints {
     {
       recordMap: Pick<RecordMap, 'block' | 'collection' | 'space'>;
       results: {
-        highlight: {
+        highlight?: {
             pathText: string;
             text?: string;
         };

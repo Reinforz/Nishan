@@ -3,6 +3,7 @@ import {
   ISpace,
   Schema,
   TCodeLanguage,
+  TDataType,
   TFormatBlockColor,
   TTextFormat
 } from '.';
@@ -158,13 +159,13 @@ export interface IMedia {
   file_ids: string[];
 }
 
-export interface ICommonText {
+export interface ICommonText<F = Record<string, unknown>> {
   properties: {
     title: TTextFormat;
   };
   format?: {
     block_color?: TFormatBlockColor;
-  };
+  } & F;
 }
 export interface IVideo extends IBlock, IMedia {
   type: 'video';
@@ -304,18 +305,17 @@ export interface ISubSubHeader extends IBlock, ICommonText {
 }
 export interface IBulletedList extends IBlock, ICommonText {
   type: 'bulleted_list';
-  content?: string[]
+  content?: string[];
 }
-export interface INumberedList extends IBlock {
-  properties: {
-    title: TTextFormat;
-  };
+export interface INumberedList
+  extends IBlock,
+    ICommonText<{
+      list_start_index?: number;
+    }> {
   type: 'numbered_list';
-  content?: string[]
-  format?: {
-    list_start_index?: number;
-  };
+  content?: string[];
 }
+
 export interface IToggle extends IBlock, ICommonText {
   type: 'toggle';
 }
@@ -327,11 +327,23 @@ export interface IDivider extends IBlock {
   properties?: Record<string, unknown>;
   format?: Record<string, unknown>;
 }
-export interface ICallout extends IBlock, ICommonText {
+export interface ICallout extends IBlock, ICommonText<{ page_icon: string }> {
   type: 'callout';
 }
 
+export interface IAlias extends IBlock {
+  type: 'alias';
+  format: {
+    alias_pointer: {
+      id: string;
+      table: TDataType;
+      spaceId: string;
+    };
+  };
+}
+
 export type TBasicBlock =
+  | IAlias
   | IText
   | ITodo
   | IHeader

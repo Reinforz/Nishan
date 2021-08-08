@@ -304,9 +304,17 @@ export interface ISubSubHeader extends IBlock, ICommonText {
 }
 export interface IBulletedList extends IBlock, ICommonText {
   type: 'bulleted_list';
+  content?: string[]
 }
-export interface INumberedList extends IBlock, ICommonText {
+export interface INumberedList extends IBlock {
+  properties: {
+    title: TTextFormat;
+  };
   type: 'numbered_list';
+  content?: string[]
+  format?: {
+    list_start_index?: number;
+  };
 }
 export interface IToggle extends IBlock, ICommonText {
   type: 'toggle';

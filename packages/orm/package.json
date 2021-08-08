@@ -1,6 +1,6 @@
 {
   "name": "@nishans/orm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A package to use notion as a database by providing an easy to use orm api",
   "keywords": [
     "notion",
@@ -28,11 +28,14 @@
     "dist/libs"
   ],
   "scripts": {
-    "build": "tsc --sourceMap false"
+    "build": "tsc --sourceMap false",
+    "test": "npx jest --runInBand --config ../../jest.config.js"
   },
   "dependencies": {
     "@nishans/core": "0.0.35",
-    "@nishans/logger": "0.0.19"
+    "@nishans/logger": "0.0.19",
+    "@nishans/traverser": "0.0.26",
+    "@nishans/fabricator": "0.0.33"
   },
   "devDependencies": {
     "@nishans/types": "0.0.35"

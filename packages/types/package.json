@@ -1,6 +1,6 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Typescript type definitions for notion",
   "keywords": [
     "notion",
@@ -19,12 +19,12 @@
   "license": "MIT",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "main": "",
-  "types": "dist/src/index.d.ts",
+  "types": "dist/libs/index.d.ts",
   "directories": {
-    "lib": "src"
+    "lib": "libs"
   },
   "files": [
-    "dist/src"
+    "dist/libs"
   ],
   "scripts": {
     "build": "tsc --sourceMap false"

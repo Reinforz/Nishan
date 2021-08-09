@@ -165,6 +165,11 @@ export interface ICommonText<F = Record<string, unknown>> {
   };
   format?: {
     block_color?: TFormatBlockColor;
+    copied_from_pointer?: {
+      id: string,
+      table: "block",
+      spaceId: string
+    }
   } & F;
 }
 export interface IVideo extends IBlock, IMedia {

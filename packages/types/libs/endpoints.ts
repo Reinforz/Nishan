@@ -8,6 +8,7 @@ import {
   INotionUser,
   IPageVisitsData,
   IPermission,
+  IPointer,
   IViewFilter,
   MediaFormat,
   NotionApiUserRateLimitResponseError,
@@ -717,6 +718,16 @@ export interface INotionEndpoints {
     },
     {
       recordMap: Pick<RecordMap, 'block'>;
+      inaccessibleBacklinkCount: number;
+      backlinks: Array<{
+        block_id: string;
+        mentioned_from: {
+          type: 'property_mention';
+          pointer: IPointer;
+          block_id: string;
+          property_id: 'title';
+        };
+      }>;
     }
   >;
 

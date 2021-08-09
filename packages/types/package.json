@@ -1,12 +1,13 @@
 {
   "name": "@nishans/types",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "Typescript type definitions for notion",
   "keywords": [
     "notion",
     "notion-types",
     "notion-typescript",
-    "notion-type-definitions"
+    "notion-type-definitions",
+    "notion-typedefs"
   ],
   "homepage": "https://github.com/Devorein/Nishan/blob/master/packages/types/README.md",
   "bugs": {
@@ -18,7 +19,7 @@
   },
   "license": "MIT",
   "author": "Safwan Shaheer <devorein00@gmail.com>",
-  "main": "",
+  "main": "dist/libs/index.js",
   "types": "dist/libs/index.d.ts",
   "directories": {
     "lib": "libs"
@@ -27,6 +28,7 @@
     "dist/libs"
   ],
   "scripts": {
+    "prebuild": "del-cli ./dist/libs",
     "prepublishOnly": "npm run build",
     "build": "tsc --sourceMap false"
   },

@@ -1,9 +1,9 @@
 import {
   IPermission,
+  IPointer,
   ISpace,
   Schema,
   TCodeLanguage,
-  TDataType,
   TFormatBlockColor,
   TTextFormat
 } from '.';
@@ -42,6 +42,7 @@ export interface IBlock
     ParentProps,
     CreatedProps,
     LastEditedProps {
+  copied_from?: string;
   discussions?: string[];
 }
 
@@ -165,11 +166,7 @@ export interface ICommonText<F = Record<string, unknown>> {
   };
   format?: {
     block_color?: TFormatBlockColor;
-    copied_from_pointer?: {
-      id: string,
-      table: "block",
-      spaceId: string
-    }
+    copied_from_pointer?: IPointer;
   } & F;
 }
 export interface IVideo extends IBlock, IMedia {
@@ -339,11 +336,7 @@ export interface ICallout extends IBlock, ICommonText<{ page_icon: string }> {
 export interface IAlias extends IBlock {
   type: 'alias';
   format: {
-    alias_pointer: {
-      id: string;
-      table: TDataType;
-      spaceId: string;
-    };
+    alias_pointer: IPointer;
   };
 }
 

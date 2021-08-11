@@ -319,6 +319,7 @@ export interface INumberedList
 }
 
 export interface IToggle extends IBlock, ICommonText {
+  content: string[]
   type: 'toggle';
 }
 export interface IQuote extends IBlock, ICommonText {

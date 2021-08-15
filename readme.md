@@ -14,12 +14,6 @@
 </p>
 
 <p align="center">
-  <a href="https://discord.com/invite/SpwHCz8ysx">
-    <img src="https://img.shields.io/discord/804219491763617842.svg?style=flat&label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2">
-  </a>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/Total%20Packages-32-%2371368a">
   <img src="https://img.shields.io/badge/Published%20Packages-23-%2311806a">
 </p>

@@ -1,6 +1,6 @@
 import { ParentProps, SpaceProps, TBlock } from './block';
 import { IPermission } from './permissions';
-import { IComment, INotionData } from './recordMap';
+import { IComment, INotionRecordMap } from './recordMap';
 import { TSchemaUnitType } from './schema';
 import { TView } from './view';
 
@@ -217,4 +217,4 @@ export type TActivity =
   | ICollectionRowCreatedActivity
   | IUserInvitedActivity
   | IUserMentionedActivity;
-export type IActivityData = INotionData<TActivity>;
+export type IActivityRecordMap = INotionRecordMap<TActivity>;

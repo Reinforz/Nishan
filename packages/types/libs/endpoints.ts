@@ -2,11 +2,11 @@ import {
   EnqueueTaskPayload,
   EnqueueTaskResponse,
   GetTasksResponse,
-  IActivityData,
+  IActivityRecordMap,
   IDrive,
-  INotificationData,
+  INotificationRecordMap,
   INotionUser,
-  IPageVisitsData,
+  IPageVisitsRecordMap,
   IPermission,
   IPointer,
   IViewFilter,
@@ -33,11 +33,11 @@ import {
   ViewSorts
 } from './';
 import {
-  ICommentData,
-  IDiscussionData,
-  IFollowData,
+  ICommentRecordMap,
+  IDiscussionRecordMap,
+  IFollowRecordMap,
   IPageVisits,
-  ISlackIntegrationData
+  ISlackIntegrationRecordMap
 } from './recordMap';
 
 interface INotionEndpoint<P, R> {
@@ -145,8 +145,8 @@ export interface INotionEndpoints {
           | 'comment'
           | 'discussion'
         > & {
-          activity: IActivityData;
-          notifications: INotificationData;
+          activity: IActivityRecordMap;
+          notifications: INotificationRecordMap;
         }
       >;
     }
@@ -453,7 +453,7 @@ export interface INotionEndpoints {
     },
     {
       recordMap: {
-        page_visit: IPageVisitsData;
+        page_visit: IPageVisitsRecordMap;
       };
       pageVisits: IPageVisits[];
     }
@@ -479,11 +479,11 @@ export interface INotionEndpoints {
         RecordMap,
         'block' | 'collection' | 'notion_user' | 'space'
       > & {
-        activity: IActivityData;
-        follow: IFollowData;
-        discussion: IDiscussionData;
-        comment: ICommentData;
-        slack_integration: ISlackIntegrationData;
+        activity: IActivityRecordMap;
+        follow: IFollowRecordMap;
+        discussion: IDiscussionRecordMap;
+        comment: ICommentRecordMap;
+        slack_integration: ISlackIntegrationRecordMap;
       };
     }
   >;

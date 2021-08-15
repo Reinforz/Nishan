@@ -12,26 +12,26 @@ import {
   TPlanType,
   TView
 } from './';
-import { IActivityData } from './activity';
+import { IActivityRecordMap } from './activity';
 import { SpaceProps } from './block';
 import { TTextFormat } from './inlineformat';
-import { INotificationData } from './notifications';
+import { INotificationRecordMap } from './notifications';
 
-export interface INotionData<T> {
+export interface INotionRecordMap<T> {
   [key: string]: {
     role: TPermissionRole;
     value: T;
   };
 }
 
-export type IBlockData = INotionData<TBlock>;
-export type ISpaceData = INotionData<ISpace>;
-export type ISpaceViewData = INotionData<ISpaceView>;
-export type ICollectionData = INotionData<ICollection>;
-export type IViewData = INotionData<TView>;
-export type INotionUserData = INotionData<INotionUser>;
-export type IUserRootData = INotionData<IUserRoot>;
-export type IUserSettingsData = INotionData<IUserSettings>;
+export type IBlockRecordMap = INotionRecordMap<TBlock>;
+export type ISpaceRecordMap = INotionRecordMap<ISpace>;
+export type ISpaceViewRecordMap = INotionRecordMap<ISpaceView>;
+export type ICollectionRecordMap = INotionRecordMap<ICollection>;
+export type IViewRecordMap = INotionRecordMap<TView>;
+export type INotionUserRecordMap = INotionRecordMap<INotionUser>;
+export type IUserRootRecordMap = INotionRecordMap<IUserRoot>;
+export type IUserSettingsRecordMap = INotionRecordMap<IUserSettings>;
 
 export interface ISpace extends CreatedProps, LastEditedProps {
   beta_enabled: boolean;
@@ -74,6 +74,8 @@ export interface INotionUser {
   onboarding_completed: boolean;
   profile_photo: string;
   version: number;
+  mobile_onboarding_completed: boolean
+  name: string
 }
 
 export interface IUserRoot {
@@ -121,7 +123,7 @@ export interface ISlackIntegration {
   webhook_url: string;
 }
 
-export type ISlackIntegrationData = INotionData<ISlackIntegration>;
+export type ISlackIntegrationRecordMap = INotionRecordMap<ISlackIntegration>;
 
 export interface IPageVisits {
   id: string;
@@ -133,7 +135,7 @@ export interface IPageVisits {
   visited_at: number;
 }
 
-export type IPageVisitsData = INotionData<IPageVisits>;
+export type IPageVisitsRecordMap = INotionRecordMap<IPageVisits>;
 
 export interface IFollow {
   created_time: number;
@@ -144,7 +146,7 @@ export interface IFollow {
   version: number;
 }
 
-export type IFollowData = INotionData<IFollow>;
+export type IFollowRecordMap = INotionRecordMap<IFollow>;
 
 export interface IComment
   extends NotionNode,
@@ -156,7 +158,7 @@ export interface IComment
   parent_table: 'discussion';
 }
 
-export type ICommentData = INotionData<IComment>;
+export type ICommentRecordMap = INotionRecordMap<IComment>;
 
 export interface IDiscussion extends SpaceProps, ParentProps {
   id: string;
@@ -167,22 +169,22 @@ export interface IDiscussion extends SpaceProps, ParentProps {
   parent_table: 'block';
 }
 
-export type IDiscussionData = INotionData<IDiscussion>;
+export type IDiscussionRecordMap = INotionRecordMap<IDiscussion>;
 
 export interface RecordMap {
-  block: IBlockData;
-  collection: ICollectionData;
-  collection_view: IViewData;
-  space: ISpaceData;
-  notion_user: INotionUserData;
-  space_view: ISpaceViewData;
-  user_root: IUserRootData;
-  user_settings: IUserSettingsData;
-  discussion: IDiscussionData;
-  comment: ICommentData;
-  follow: IFollowData;
-  slack_integration: ISlackIntegrationData;
-  page_visits: IPageVisitsData;
-  activity: IActivityData;
-  notification: INotificationData;
+  block: IBlockRecordMap;
+  collection: ICollectionRecordMap;
+  collection_view: IViewRecordMap;
+  space: ISpaceRecordMap;
+  notion_user: INotionUserRecordMap;
+  space_view: ISpaceViewRecordMap;
+  user_root: IUserRootRecordMap;
+  user_settings: IUserSettingsRecordMap;
+  discussion: IDiscussionRecordMap;
+  comment: ICommentRecordMap;
+  follow: IFollowRecordMap;
+  slack_integration: ISlackIntegrationRecordMap;
+  page_visits: IPageVisitsRecordMap;
+  activity: IActivityRecordMap;
+  notification: INotificationRecordMap;
 }

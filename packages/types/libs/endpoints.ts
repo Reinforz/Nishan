@@ -14,6 +14,7 @@ import {
   NotionApiUserRateLimitResponseError,
   NotionApiUserValidationIncorrectPasswordError,
   NotionApiUserValidationInvalidOrExpiredPasswordError,
+  NotionApiUserValidationSAMLError,
   NotionApiUserValidationUserWithEmailExistsError,
   RecordMap,
   SubscribedSubscriptionData,
@@ -150,6 +151,12 @@ export interface INotionEndpoints {
         }
       >;
     }
+  >;
+  getSamlRedirect: INotionEndpoint<
+    {
+      email: string;
+    },
+    Record<string, unknown> | NotionApiUserValidationSAMLError
   >;
   logoutActiveSessions: INotionEndpoint<
     Record<string, unknown>,

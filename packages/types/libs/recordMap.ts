@@ -74,8 +74,8 @@ export interface INotionUser {
   onboarding_completed: boolean;
   profile_photo: string;
   version: number;
-  mobile_onboarding_completed: boolean
-  name: string
+  mobile_onboarding_completed: boolean;
+  name: string;
 }
 
 export interface IUserRoot {
@@ -164,7 +164,7 @@ export interface IDiscussion extends SpaceProps, ParentProps {
   id: string;
   version: number;
   resolved: boolean;
-  context: TTextFormat;
+  context?: [[string]];
   comments: string[];
   parent_table: 'block';
 }

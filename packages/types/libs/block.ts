@@ -291,7 +291,7 @@ export interface IText extends IBlock, ICommonText {
 }
 export interface ITodo extends IBlock {
   type: 'to_do';
-  properties: TodoProps;
+  properties?: TodoProps;
   format?: {
     block_color?: TFormatBlockColor;
   };
@@ -319,10 +319,10 @@ export interface INumberedList
 }
 
 export interface IToggle extends IBlock, ICommonText {
-  content: string[];
+  content?: string[];
   type: 'toggle';
 }
-export interface IQuote extends IBlock, ICommonText {
+export interface IQuote extends IBlock, ICommonText<{ quote_size?: 'large' }> {
   type: 'quote';
 }
 export interface IDivider extends IBlock {
@@ -330,8 +330,16 @@ export interface IDivider extends IBlock {
   properties?: Record<string, unknown>;
   format?: Record<string, unknown>;
 }
-export interface ICallout extends IBlock, ICommonText<{ page_icon: string }> {
+export interface ICallout extends IBlock {
   type: 'callout';
+  properties?: {
+    title: TTextFormat;
+  };
+  format?: {
+    block_color?: TFormatBlockColor;
+    copied_from_pointer?: IPointer;
+    page_icon: string;
+  };
 }
 
 export interface IAlias extends IBlock {

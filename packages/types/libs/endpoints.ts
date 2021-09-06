@@ -724,16 +724,21 @@ export interface INotionEndpoints {
       blockId: string;
     },
     {
-      recordMap: Pick<RecordMap, 'block'>;
+      recordMap: Pick<RecordMap, 'block' | 'space'>;
       inaccessibleBacklinkCount: number;
       backlinks: Array<{
         block_id: string;
-        mentioned_from: {
-          type: 'property_mention';
-          pointer: IPointer;
-          block_id: string;
-          property_id: 'title';
-        };
+        mentioned_from:
+          | {
+              type: 'property_mention';
+              pointer: IPointer;
+              block_id: string;
+              property_id: 'title';
+            }
+          | {
+              type: 'alias';
+              pointer: IPointer;
+            };
       }>;
     }
   >;

@@ -102,7 +102,9 @@ export type TBlockType =
 
 export interface MediaProps {
   source: string[][];
-  caption?: string[][];
+  size?: string[][];
+  title?: string[][];
+  caption?: TTextFormat;
 }
 
 export interface MediaFormat {
@@ -135,6 +137,7 @@ export interface CodeFormat {
 export interface CodeProps {
   title: TTextFormat;
   language: [[TCodeLanguage]];
+  caption: TTextFormat
 }
 
 export interface FileProps {
@@ -295,6 +298,7 @@ export interface ITodo extends IBlock {
   format?: {
     block_color?: TFormatBlockColor;
   };
+  content?: string[];
 }
 export interface IHeader extends IBlock, ICommonText {
   type: 'header';

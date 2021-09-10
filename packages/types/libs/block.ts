@@ -127,7 +127,7 @@ export interface WebBookmarkProps {
   link: string[][];
   description?: TTextFormat;
   title: TTextFormat;
-  caption?: string[][];
+  caption?: TTextFormat;
 }
 
 export interface CodeFormat {
@@ -137,13 +137,13 @@ export interface CodeFormat {
 export interface CodeProps {
   title: TTextFormat;
   language: [[TCodeLanguage]];
-  caption: TTextFormat
+  caption: TTextFormat;
 }
 
 export interface FileProps {
   title: TTextFormat;
   source: string[][];
-  caption?: string[][];
+  caption?: TTextFormat;
 }
 
 export interface FileFormat {
@@ -317,6 +317,7 @@ export interface INumberedList
   extends IBlock,
     ICommonText<{
       list_start_index?: number;
+      list_format?: 'numbers' | 'letters' | 'roman';
     }> {
   type: 'numbered_list';
   content?: string[];

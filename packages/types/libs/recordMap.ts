@@ -160,7 +160,11 @@ export interface IComment
 
 export type ICommentRecordMap = INotionRecordMap<IComment>;
 
-export interface IDiscussion extends SpaceProps, ParentProps {
+export interface IDiscussion
+  extends SpaceProps,
+    ParentProps,
+    CreatedProps,
+    LastEditedProps {
   id: string;
   version: number;
   resolved: boolean;

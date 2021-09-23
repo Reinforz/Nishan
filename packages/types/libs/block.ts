@@ -329,6 +329,7 @@ export interface IToggle extends IBlock, ICommonText {
 }
 export interface IQuote extends IBlock, ICommonText<{ quote_size?: 'large' }> {
   type: 'quote';
+  content?: string[];
 }
 export interface IDivider extends IBlock {
   type: 'divider';
@@ -345,6 +346,7 @@ export interface ICallout extends IBlock {
     copied_from_pointer?: IPointer;
     page_icon: string;
   };
+  content?: string[];
 }
 
 export interface IAlias extends IBlock {

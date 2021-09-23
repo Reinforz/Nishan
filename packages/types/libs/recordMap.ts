@@ -148,23 +148,16 @@ export interface IFollow {
 
 export type IFollowRecordMap = INotionRecordMap<IFollow>;
 
-export interface IComment
-  extends NotionNode,
-    SpaceProps,
-    CreatedProps,
-    LastEditedProps {
+export interface IComment extends NotionNode, SpaceProps, CreatedProps {
   text: TTextFormat;
   parent_id: string;
   parent_table: 'discussion';
+  last_edited_time: number;
 }
 
 export type ICommentRecordMap = INotionRecordMap<IComment>;
 
-export interface IDiscussion
-  extends SpaceProps,
-    ParentProps,
-    CreatedProps,
-    LastEditedProps {
+export interface IDiscussion extends SpaceProps, ParentProps {
   id: string;
   version: number;
   resolved: boolean;

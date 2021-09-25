@@ -2,6 +2,7 @@ import { NishanScriptsCreate } from './Create';
 import { NishanScriptsExtract } from './Extract';
 import { NishanScriptsGet } from './Get';
 import { NishanScriptsInstall } from './Install';
+import { NishanScriptsLink } from './Link';
 import { NishanScriptsPublish } from './Publish';
 import { NishanScriptsUpdate } from './Update';
 
@@ -11,5 +12,6 @@ export const NishanScripts = {
   Publish: NishanScriptsPublish,
   Create: NishanScriptsCreate,
   Extract: NishanScriptsExtract,
-  Install: NishanScriptsInstall
+  Install: NishanScriptsInstall,
+  Link: NishanScriptsLink
 };

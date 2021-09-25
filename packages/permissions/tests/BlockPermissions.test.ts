@@ -6,303 +6,380 @@ import { default_nishan_arg, o } from '../../core/tests/utils';
 import { NotionPermissions } from '../libs';
 
 afterEach(() => {
-	jest.restoreAllMocks();
+  jest.restoreAllMocks();
 });
 
 it(`addUserPermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block({
-		...default_nishan_arg,
-		notion_operation_plugins: undefined,
-		logger: undefined
-	});
-	const updateUserPermissionsMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updateUserPermissions')
-		.mockImplementationOnce(async () => undefined);
+  const notion_permissions = new NotionPermissions.Block({
+    ...default_nishan_arg,
+    notion_operation_plugins: undefined,
+    logger: undefined
+  });
 
-	await notion_permissions.addUserPermission({ email: 'devorein00@gmail.com' }, 'editor');
-	expect(updateUserPermissionsMock).toHaveBeenCalledTimes(1);
-	expect(updateUserPermissionsMock.mock.calls[0][0]).toStrictEqual([ [ { email: 'devorein00@gmail.com' }, 'editor' ] ]);
+  const updateUserPermissionsMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updateUserPermissions')
+    .mockImplementationOnce(async () => undefined);
+
+  await notion_permissions.addUserPermission(
+    { email: 'devorein00@gmail.com' },
+    'editor'
+  );
+  expect(updateUserPermissionsMock).toHaveBeenCalledTimes(1);
+  expect(updateUserPermissionsMock.mock.calls[0][0]).toStrictEqual([
+    [{ email: 'devorein00@gmail.com' }, 'editor']
+  ]);
 });
 
 it(`removeUserPermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updateUserPermissionsMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updateUserPermissions')
-		.mockImplementationOnce(async () => undefined);
+  const updateUserPermissionsMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updateUserPermissions')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.removeUserPermission({ email: 'devorein00@gmail.com' });
-	expect(updateUserPermissionsMock).toHaveBeenCalledTimes(1);
-	expect(updateUserPermissionsMock.mock.calls[0][0]).toStrictEqual([ [ { email: 'devorein00@gmail.com' }, 'none' ] ]);
+  await notion_permissions.removeUserPermission({
+    email: 'devorein00@gmail.com'
+  });
+  expect(updateUserPermissionsMock).toHaveBeenCalledTimes(1);
+  expect(updateUserPermissionsMock.mock.calls[0][0]).toStrictEqual([
+    [{ email: 'devorein00@gmail.com' }, 'none']
+  ]);
 });
 
 it('updateUserPermission', async () => {
-	const block_1: any = { id: 'block_1', permissions: [] },
-		cache: INotionCache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ])
-		},
-		{ e1 } = createExecuteOperationsMock();
+  const block_1: any = { id: 'block_1', permissions: [] },
+    cache: INotionCache = {
+      ...NotionCache.createDefaultCache(),
+      block: new Map([['block_1', block_1]])
+    },
+    { e1 } = createExecuteOperationsMock();
 
-	const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+  const notion_permissions = new NotionPermissions.Block({
+    ...default_nishan_arg,
+    cache,
+    id: 'block_1'
+  });
 
-	const updateUserPermissionArgs = { email: 'devorein00@gmail.com' };
+  const updateUserPermissionArgs = { email: 'devorein00@gmail.com' };
 
-	const getNotionUserIdFromEmailMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'getNotionUserIdFromEmail')
-		.mockImplementationOnce(async () => 'notion_user_2');
+  const getNotionUserIdFromEmailMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'getNotionUserIdFromEmail')
+    .mockImplementationOnce(async () => 'notion_user_2');
 
-	await notion_permissions.updateUserPermission(updateUserPermissionArgs, 'editor');
+  await notion_permissions.updateUserPermission(
+    updateUserPermissionArgs,
+    'editor'
+  );
 
-	expect(getNotionUserIdFromEmailMock.mock.calls[0][0]).toStrictEqual(updateUserPermissionArgs);
-	e1([
-		o.b.sp('block_1', [ 'permissions' ], { role: 'editor', type: 'user_permission', user_id: 'notion_user_2' }),
-		o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
-	]);
+  expect(getNotionUserIdFromEmailMock.mock.calls[0][0]).toStrictEqual(
+    updateUserPermissionArgs
+  );
+  e1([
+    o.b.sp('block_1', ['permissions'], {
+      role: 'editor',
+      type: 'user_permission',
+      user_id: 'notion_user_2'
+    }),
+    o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
+  ]);
 });
 
 describe('getNotionUserIdFromEmail', () => {
-	it(`email is passed, notion_user exists`, async () => {
-		const notion_user_2 = { id: 'notion_user_2' };
-		const NotionQueriesFindUserMock = jest
-			.spyOn(NotionEndpoints.Queries, 'findUser')
-			.mockImplementationOnce(async () => {
-				return { value: { value: notion_user_2 } as any };
-			});
+  it(`email is passed, notion_user exists`, async () => {
+    const notion_user_2 = { id: 'notion_user_2' };
+    const NotionQueriesFindUserMock = jest
+      .spyOn(NotionEndpoints.Queries, 'findUser')
+      .mockImplementationOnce(async () => {
+        return { value: { value: notion_user_2 } as any };
+      });
 
-		const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+    const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-		const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({ email: 'devorein00@gmail.com' });
+    const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({
+      email: 'devorein00@gmail.com'
+    });
 
-		expect(notion_user_id).toBe('notion_user_2');
-		expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
-		expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
-	});
+    expect(notion_user_id).toBe('notion_user_2');
+    expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
+    expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({
+      email: 'devorein00@gmail.com'
+    });
+  });
 
-	it(`id is passed`, async () => {
-		const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
-		const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({ id: 'notion_user_2' });
+  it(`id is passed`, async () => {
+    const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+    const notion_user_id = await notion_permissions.getNotionUserIdFromEmail({
+      id: 'notion_user_2'
+    });
 
-		expect(notion_user_id).toBe('notion_user_2');
-	});
+    expect(notion_user_id).toBe('notion_user_2');
+  });
 
-	it(`email is passed, notion_user doesn't exist`, async () => {
-		const NotionQueriesFindUserMock = jest
-			.spyOn(NotionEndpoints.Queries, 'findUser')
-			.mockImplementationOnce(async () => {
-				return {};
-			});
+  it(`email is passed, notion_user doesn't exist`, async () => {
+    const NotionQueriesFindUserMock = jest
+      .spyOn(NotionEndpoints.Queries, 'findUser')
+      .mockImplementationOnce(async () => {
+        return {};
+      });
 
-		const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+    const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-		await expect(notion_permissions.getNotionUserIdFromEmail({ email: 'devorein00@gmail.com' })).rejects.toThrow(
-			`User does not have a notion account`
-		);
+    await expect(
+      notion_permissions.getNotionUserIdFromEmail({
+        email: 'devorein00@gmail.com'
+      })
+    ).rejects.toThrow(`User does not have a notion account`);
 
-		expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
-		expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({ email: 'devorein00@gmail.com' });
-	});
+    expect(NotionQueriesFindUserMock).toHaveBeenCalledTimes(1);
+    expect(NotionQueriesFindUserMock.mock.calls[0][0]).toStrictEqual({
+      email: 'devorein00@gmail.com'
+    });
+  });
 });
 
 describe('updatePermissionsArray', () => {
-	it(`role=none`, () => {
-		const block_1: any = {
-				id: 'block_1',
-				permissions: [
-					{
-						role: 'editor',
-						type: 'user_permission',
-						user_id: 'notion_user_1'
-					}
-				]
-			},
-			cache: INotionCache = {
-				...NotionCache.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ])
-			};
+  it(`role=none`, () => {
+    const block_1: any = {
+        id: 'block_1',
+        permissions: [
+          {
+            role: 'editor',
+            type: 'user_permission',
+            user_id: 'notion_user_1'
+          }
+        ]
+      },
+      cache: INotionCache = {
+        ...NotionCache.createDefaultCache(),
+        block: new Map([['block_1', block_1]])
+      };
 
-		const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+    const notion_permissions = new NotionPermissions.Block({
+      ...default_nishan_arg,
+      cache,
+      id: 'block_1'
+    });
 
-		const operation = notion_permissions.updatePermissionsArray('user_permission', { role: 'none' }, 'notion_user_1');
+    const operation = notion_permissions.updatePermissionsArray(
+      'user_permission',
+      { role: 'none' },
+      'notion_user_1'
+    );
 
-		expect(operation).toStrictEqual(
-			o.b.sp('block_1', [ 'permissions' ], {
-				type: 'user_permission',
-				user_id: 'notion_user_1',
-				role: 'none'
-			})
-		);
-		expect(block_1.permissions).toStrictEqual([]);
-	});
+    expect(operation).toStrictEqual(
+      o.b.sp('block_1', ['permissions'], {
+        type: 'user_permission',
+        user_id: 'notion_user_1',
+        role: 'none'
+      })
+    );
+    expect(block_1.permissions).toStrictEqual([]);
+  });
 
-	it(`permissions doesn't exist,permission_type=user_permission`, () => {
-		const block_1: any = {
-				id: 'block_1',
-				permissions: []
-			},
-			cache: INotionCache = {
-				...NotionCache.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ])
-			};
+  it(`permissions doesn't exist,permission_type=user_permission`, () => {
+    const block_1: any = {
+        id: 'block_1',
+        permissions: []
+      },
+      cache: INotionCache = {
+        ...NotionCache.createDefaultCache(),
+        block: new Map([['block_1', block_1]])
+      };
 
-		const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+    const notion_permissions = new NotionPermissions.Block({
+      ...default_nishan_arg,
+      cache,
+      id: 'block_1'
+    });
 
-		const operations = notion_permissions.updatePermissionsArray(
-			'user_permission',
-			{ role: 'editor' },
-			'notion_user_1'
-		);
-		const permission = {
-			type: 'user_permission',
-			user_id: 'notion_user_1',
-			role: 'editor'
-		};
-		expect(operations).toStrictEqual(o.b.sp('block_1', [ 'permissions' ], permission));
-		expect(block_1.permissions).toStrictEqual([ permission ]);
-	});
+    const operations = notion_permissions.updatePermissionsArray(
+      'user_permission',
+      { role: 'editor' },
+      'notion_user_1'
+    );
+    const permission = {
+      type: 'user_permission',
+      user_id: 'notion_user_1',
+      role: 'editor'
+    };
+    expect(operations).toStrictEqual(
+      o.b.sp('block_1', ['permissions'], permission)
+    );
+    expect(block_1.permissions).toStrictEqual([permission]);
+  });
 
-	it(`permissions update,permission_type=space_permission`, () => {
-		const block_1: any = {
-				id: 'block_1',
-				permissions: [
-					{
-						type: 'space_permission',
-						role: 'editor'
-					}
-				]
-			},
-			cache: INotionCache = {
-				...NotionCache.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ])
-			};
+  it(`permissions update,permission_type=space_permission`, () => {
+    const block_1: any = {
+        id: 'block_1',
+        permissions: [
+          {
+            type: 'space_permission',
+            role: 'editor'
+          }
+        ]
+      },
+      cache: INotionCache = {
+        ...NotionCache.createDefaultCache(),
+        block: new Map([['block_1', block_1]])
+      };
 
-		const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+    const notion_permissions = new NotionPermissions.Block({
+      ...default_nishan_arg,
+      cache,
+      id: 'block_1'
+    });
 
-		const operation = notion_permissions.updatePermissionsArray('space_permission', { role: 'comment_only' });
-		const permission = {
-			type: 'space_permission',
-			role: 'comment_only'
-		};
-		expect(operation).toStrictEqual(o.b.sp('block_1', [ 'permissions' ], permission));
-		expect(block_1.permissions).toStrictEqual([ permission ]);
-	});
+    const operation = notion_permissions.updatePermissionsArray(
+      'space_permission',
+      { role: 'comment_only' }
+    );
+    const permission = {
+      type: 'space_permission',
+      role: 'comment_only'
+    };
+    expect(operation).toStrictEqual(
+      o.b.sp('block_1', ['permissions'], permission)
+    );
+    expect(block_1.permissions).toStrictEqual([permission]);
+  });
 
-	it(`update permissions role`, () => {
-		const block_1: any = {
-				id: 'block_1',
-				permissions: [
-					{
-						type: 'user_permission',
-						user_id: 'notion_user_1',
-						role: 'editor'
-					}
-				]
-			},
-			cache: INotionCache = {
-				...NotionCache.createDefaultCache(),
-				block: new Map([ [ 'block_1', block_1 ] ])
-			};
+  it(`update permissions role`, () => {
+    const block_1: any = {
+        id: 'block_1',
+        permissions: [
+          {
+            type: 'user_permission',
+            user_id: 'notion_user_1',
+            role: 'editor'
+          }
+        ]
+      },
+      cache: INotionCache = {
+        ...NotionCache.createDefaultCache(),
+        block: new Map([['block_1', block_1]])
+      };
 
-		const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+    const notion_permissions = new NotionPermissions.Block({
+      ...default_nishan_arg,
+      cache,
+      id: 'block_1'
+    });
 
-		const permission = {
-			type: 'user_permission',
-			user_id: 'notion_user_1',
-			role: 'read_and_write'
-		};
+    const permission = {
+      type: 'user_permission',
+      user_id: 'notion_user_1',
+      role: 'read_and_write'
+    };
 
-		const operation = notion_permissions.updatePermissionsArray(
-			'user_permission',
-			{ role: 'read_and_write' },
-			'notion_user_1'
-		);
-		expect(operation).toStrictEqual(o.b.sp('block_1', [ 'permissions' ], permission));
-		expect(block_1.permissions).toStrictEqual([ permission ]);
-	});
+    const operation = notion_permissions.updatePermissionsArray(
+      'user_permission',
+      { role: 'read_and_write' },
+      'notion_user_1'
+    );
+    expect(operation).toStrictEqual(
+      o.b.sp('block_1', ['permissions'], permission)
+    );
+    expect(block_1.permissions).toStrictEqual([permission]);
+  });
 });
 
 it(`addPublicPermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updatePublicPermissionMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updatePublicPermission')
-		.mockImplementationOnce(async () => undefined);
+  const updatePublicPermissionMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updatePublicPermission')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.addPublicPermission({ role: 'read_and_write' });
-	expect(updatePublicPermissionMock).toHaveBeenCalledWith({
-		allow_duplicate: true,
-		allow_search_engine_indexing: true,
-		role: 'read_and_write'
-	});
+  await notion_permissions.addPublicPermission({ role: 'read_and_write' });
+  expect(updatePublicPermissionMock).toHaveBeenCalledWith({
+    allow_duplicate: true,
+    allow_search_engine_indexing: true,
+    role: 'read_and_write'
+  });
 });
 
 it(`updateNonUserSpecificPermission`, () => {
-	const block_1: any = {
-			id: 'block_1',
-			permissions: []
-		},
-		cache: INotionCache = {
-			...NotionCache.createDefaultCache(),
-			block: new Map([ [ 'block_1', block_1 ] ])
-		},
-		{ e1 } = createExecuteOperationsMock();
+  const block_1: any = {
+      id: 'block_1',
+      permissions: []
+    },
+    cache: INotionCache = {
+      ...NotionCache.createDefaultCache(),
+      block: new Map([['block_1', block_1]])
+    },
+    { e1 } = createExecuteOperationsMock();
 
-	const notion_permissions = new NotionPermissions.Block({ ...default_nishan_arg, cache, id: 'block_1' });
+  const notion_permissions = new NotionPermissions.Block({
+    ...default_nishan_arg,
+    cache,
+    id: 'block_1'
+  });
 
-	notion_permissions.updateNonUserSpecificPermission('public_permission', { role: 'read_and_write' });
+  notion_permissions.updateNonUserSpecificPermission('public_permission', {
+    role: 'read_and_write'
+  });
 
-	e1([
-		o.b.sp('block_1', [ 'permissions' ], { type: 'public_permission', role: 'read_and_write' }),
-		o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
-	]);
+  e1([
+    o.b.sp('block_1', ['permissions'], {
+      type: 'public_permission',
+      role: 'read_and_write'
+    }),
+    o.b.u('block_1', [], { last_edited_time: expect.any(Number) })
+  ]);
 });
 
 it(`updatePublicPermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updateNonUserSpecificPermissionMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updateNonUserSpecificPermission')
-		.mockImplementationOnce(async () => undefined);
+  const updateNonUserSpecificPermissionMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updateNonUserSpecificPermission')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.updatePublicPermission({ role: 'comment_only' });
-	expect(updateNonUserSpecificPermissionMock).toHaveBeenCalledWith('public_permission', {
-		role: 'comment_only'
-	});
+  await notion_permissions.updatePublicPermission({ role: 'comment_only' });
+  expect(updateNonUserSpecificPermissionMock).toHaveBeenCalledWith(
+    'public_permission',
+    {
+      role: 'comment_only'
+    }
+  );
 });
 
 it(`removePublicPermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updatePublicPermissionMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updatePublicPermission')
-		.mockImplementationOnce(async () => undefined);
+  const updatePublicPermissionMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updatePublicPermission')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.removePublicPermission();
-	expect(updatePublicPermissionMock).toHaveBeenCalledWith({
-		role: 'none'
-	});
+  await notion_permissions.removePublicPermission();
+  expect(updatePublicPermissionMock).toHaveBeenCalledWith({
+    role: 'none'
+  });
 });
 
 it(`updateSpacePermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updateNonUserSpecificPermissionMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updateNonUserSpecificPermission')
-		.mockImplementationOnce(async () => undefined);
+  const updateNonUserSpecificPermissionMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updateNonUserSpecificPermission')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.updateSpacePermission('comment_only');
-	expect(updateNonUserSpecificPermissionMock).toHaveBeenCalledWith('space_permission', {
-		role: 'comment_only'
-	});
+  await notion_permissions.updateSpacePermission('comment_only');
+  expect(updateNonUserSpecificPermissionMock).toHaveBeenCalledWith(
+    'space_permission',
+    {
+      role: 'comment_only'
+    }
+  );
 });
 
 it(`removeSpacePermission`, async () => {
-	const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
+  const notion_permissions = new NotionPermissions.Block(default_nishan_arg);
 
-	const updateSpacePermissionMock = jest
-		.spyOn(NotionPermissions.Block.prototype, 'updateSpacePermission')
-		.mockImplementationOnce(async () => undefined);
+  const updateSpacePermissionMock = jest
+    .spyOn(NotionPermissions.Block.prototype, 'updateSpacePermission')
+    .mockImplementationOnce(async () => undefined);
 
-	await notion_permissions.removeSpacePermission();
-	expect(updateSpacePermissionMock).toHaveBeenCalledWith('none');
+  await notion_permissions.removeSpacePermission();
+  expect(updateSpacePermissionMock).toHaveBeenCalledWith('none');
 });

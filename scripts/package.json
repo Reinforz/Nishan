@@ -4,7 +4,10 @@
   "description": "A collection of libs for automating manual package related tasks",
   "main": "dist/libs/index.js",
   "typings": "dist/libs/index.d.ts",
-  "scripts": {},
+  "scripts": {
+    "build": "npx tsc",
+    "build:watch": "npx tsc -w"
+  },
   "keywords": [],
   "author": "Safwan Shaheer <devorein00@gmail.com>",
   "license": "MIT",

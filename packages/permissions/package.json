@@ -37,7 +37,7 @@
     "@nishans/utils": "0.0.25"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.35"
+    "@nishans/types": "0.0.47"
   },
   "publishConfig": {
     "access": "public"

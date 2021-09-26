@@ -10,6 +10,7 @@ interface PositionChildrenParam {
 	child_id: string;
 	position?: INotionRepositionParams;
 	parent_type: TDataType;
+  space_id: string
 }
 
 /**
@@ -17,7 +18,7 @@ interface PositionChildrenParam {
  * @param arg Data containing Child position information
  */
 export function positionChildren<T extends TData> (child_path: keyof T, arg: PositionChildrenParam) {
-	const { child_id, position, parent_type, logger } = arg;
+	const { child_id, position, parent_type, logger, space_id } = arg;
 	const parent: any = arg.parent;
 	// Get the child path based on the parent type
 	const contains_container = parent[child_path];
@@ -64,7 +65,7 @@ export function positionChildren<T extends TData> (child_path: keyof T, arg: Pos
 		// If the passed position is undefined or null, its pushed to the last
 		container.push(child_id);
 		// Returns the appropriate operation for positioning the child
-		return NotionOperations.Chunk[parent_type].listAfter(parent.id, [ child_path as string ], {
+		return NotionOperations.Chunk[parent_type].listAfter(parent.id, space_id, [ child_path as string ], {
 			after: '',
 			id: child_id
 		}) as IOperation;

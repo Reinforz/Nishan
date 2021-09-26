@@ -15,7 +15,6 @@
     "build": "tsc --build tsconfig.json",
     "clean": "del-cli packages/*/dist",
     "dev": "run-s start",
-    "pretest": "run-s build",
     "test": "lerna run test",
     "lint": "npx eslint . --color",
     "transpile:scripts": "cd scripts && tsc",

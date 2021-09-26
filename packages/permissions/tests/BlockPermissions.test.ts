@@ -1,4 +1,3 @@
-import { NotionCache } from '@nishans/cache';
 import { NotionEndpoints } from '@nishans/endpoints';
 import { INotionCache } from '@nishans/types';
 import { createExecuteOperationsMock } from '../../../utils/tests';
@@ -48,8 +47,7 @@ it(`removeUserPermission`, async () => {
 
 it('updateUserPermission', async () => {
   const block_1: any = { id: 'block_1', permissions: [] },
-    cache: INotionCache = {
-      ...NotionCache.createDefaultCache(),
+    cache = {
       block: new Map([['block_1', block_1]])
     },
     { e1 } = createExecuteOperationsMock();
@@ -149,8 +147,7 @@ describe('updatePermissionsArray', () => {
           }
         ]
       },
-      cache: INotionCache = {
-        ...NotionCache.createDefaultCache(),
+      cache = {
         block: new Map([['block_1', block_1]])
       };
 
@@ -181,8 +178,7 @@ describe('updatePermissionsArray', () => {
         id: 'block_1',
         permissions: []
       },
-      cache: INotionCache = {
-        ...NotionCache.createDefaultCache(),
+      cache = {
         block: new Map([['block_1', block_1]])
       };
 
@@ -219,9 +215,8 @@ describe('updatePermissionsArray', () => {
         ]
       },
       cache: INotionCache = {
-        ...NotionCache.createDefaultCache(),
         block: new Map([['block_1', block_1]])
-      };
+      } as any;
 
     const notion_permissions = new NotionPermissions.Block({
       ...default_nishan_arg,
@@ -254,8 +249,7 @@ describe('updatePermissionsArray', () => {
           }
         ]
       },
-      cache: INotionCache = {
-        ...NotionCache.createDefaultCache(),
+      cache = {
         block: new Map([['block_1', block_1]])
       };
 

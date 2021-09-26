@@ -4,8 +4,8 @@ import { getComments } from './getComments';
 import { updateComments } from './updateComments';
 
 export const NotionDiscourseComments = {
-	create: createComments,
-	update: updateComments,
-	delete: deleteComments,
-	get: getComments
+  create: createComments,
+  update: updateComments,
+  delete: deleteComments,
+  get: getComments
 };

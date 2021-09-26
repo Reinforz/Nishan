@@ -20,7 +20,6 @@ export const createComments = async (
     const comment_id = NotionIdz.Generate.id(arg.id);
     const comment_data = NotionInit.comment({
       created_by_id: options.user_id,
-      last_edited_by_id: options.user_id,
       id: comment_id,
       parent_id: discussion_id,
       space_id: options.space_id,
@@ -30,12 +29,18 @@ export const createComments = async (
     operations.push(
       NotionOperations.Chunk.comment.update(
         comment_id,
+        options.space_id,
         [],
         JSON.parse(JSON.stringify(comment_data, null, 2))
       ),
-      NotionOperations.Chunk.discussion.listAfter(discussion_id, ['comments'], {
-        id: comment_id
-      })
+      NotionOperations.Chunk.discussion.listAfter(
+        discussion_id,
+        options.space_id,
+        ['comments'],
+        {
+          id: comment_id
+        }
+      )
     );
     options.cache.comment.set(comment_id, comment_data);
     NotionUtils.populateChildPath({

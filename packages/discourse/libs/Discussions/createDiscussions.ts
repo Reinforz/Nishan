@@ -27,7 +27,6 @@ export const createDiscussions = (
       comment_ids.push(comment_id);
       const comment_data = NotionInit.comment({
         created_by_id: options.user_id,
-        last_edited_by_id: options.user_id,
         id: comment_id,
         parent_id: discussion_id,
         space_id: options.space_id,
@@ -36,6 +35,7 @@ export const createDiscussions = (
       operations.push(
         NotionOperations.Chunk.comment.update(
           comment_id,
+          options.space_id,
           [],
           JSON.parse(JSON.stringify(comment_data, null, 2))
         )
@@ -47,7 +47,7 @@ export const createDiscussions = (
       id: discussion_id,
       parent_id: block_id,
       resolved: false,
-      context: arg.context ?? block_data.properties.title,
+      context: [[(arg.context ?? block_data.properties.title)[0][0]]],
       comments: comment_ids,
       space_id: options.space_id
     });
@@ -61,12 +61,18 @@ export const createDiscussions = (
     operations.push(
       NotionOperations.Chunk.discussion.update(
         discussion_id,
+        options.space_id,
         [],
         JSON.parse(JSON.stringify(discussion_data, null, 2))
       ),
-      NotionOperations.Chunk.block.listAfter(block_id, ['discussions'], {
-        id: discussion_id
-      })
+      NotionOperations.Chunk.block.listAfter(
+        block_id,
+        options.space_id,
+        ['discussions'],
+        {
+          id: discussion_id
+        }
+      )
     );
   }
 

@@ -34,14 +34,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@nishans/cache": "0.0.38",
-    "@nishans/operations": "0.0.32",
-    "@nishans/idz": "0.0.19",
-    "@nishans/utils": "0.0.25",
-    "@nishans/traverser": "0.0.26",
-    "@nishans/init": "0.0.23"
+    "@nishans/cache": "^0.0.38",
+    "@nishans/idz": "^0.0.19",
+    "@nishans/init": "^0.0.23",
+    "@nishans/operations": "^0.0.32",
+    "@nishans/traverser": "^0.0.26",
+    "@nishans/utils": "^0.0.25"
   },
   "devDependencies": {
-    "@nishans/types": "0.0.35"
+    "@nishans/types": "^0.0.35"
   }
 }

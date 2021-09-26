@@ -6,6 +6,7 @@
     "./examples"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "./dist",
     "rootDir": "./",
   },

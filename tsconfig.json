@@ -47,7 +47,7 @@
     {
       "path": "./packages/permissions/tsconfig.json"
     },
-    {
+    /* {
       "path": "./packages/cache/tsconfig.json"
     },
     {
@@ -76,6 +76,6 @@
     },
     {
       "path": "./packages/sync/tsconfig.json"
-    }
+    } */
   ]
 }

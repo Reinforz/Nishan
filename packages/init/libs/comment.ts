@@ -3,12 +3,7 @@ import { IComment } from '@nishans/types';
 export const comment = (
   arg: Pick<
     IComment,
-    | 'parent_id'
-    | 'text'
-    | 'id'
-    | 'space_id'
-    | 'created_by_id'
-    | 'last_edited_by_id'
+    'parent_id' | 'text' | 'id' | 'space_id' | 'created_by_id'
   >
 ) => {
   return {
@@ -22,7 +17,6 @@ export const comment = (
     created_by_id: arg.created_by_id,
     created_by_table: 'notion_user',
     created_time: Date.now(),
-    last_edited_by_id: arg.last_edited_by_id,
     last_edited_by_table: 'notion_user',
     last_edited_time: Date.now()
   } as IComment;

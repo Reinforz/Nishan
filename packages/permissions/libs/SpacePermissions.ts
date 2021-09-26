@@ -72,6 +72,7 @@ export class NotionSpacePermissions {
         operations.push(
           NotionOperations.Chunk.space.setPermissionItem(
             this.id,
+            this.space_id,
             ['permissions'],
             permission_data
           )

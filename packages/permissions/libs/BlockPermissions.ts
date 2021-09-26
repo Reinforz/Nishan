@@ -113,6 +113,7 @@ export class NotionBlockPermissions {
       } as IUserPermission;
     operation = NotionOperations.Chunk.block.setPermissionItem(
       this.id,
+      this.space_id,
       ['permissions'],
       permission_data
     );
@@ -174,7 +175,7 @@ export class NotionBlockPermissions {
     await NotionOperations.executeOperations(
       [
         ...operations,
-        NotionOperations.Chunk.block.update(this.id, [], {
+        NotionOperations.Chunk.block.update(this.id, this.space_id, [], {
           last_edited_time: Date.now()
         })
       ],
@@ -221,7 +222,7 @@ export class NotionBlockPermissions {
           permission_type,
           options as IPublicPermission
         ),
-        NotionOperations.Chunk.block.update(this.id, [], {
+        NotionOperations.Chunk.block.update(this.id, this.space_id, [], {
           last_edited_time: Date.now()
         })
       ],

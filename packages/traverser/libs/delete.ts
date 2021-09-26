@@ -14,64 +14,95 @@ import { getChildIds, iterateChildren } from './utils';
  * @param cb additional callback
  */
 export const remove = async <T extends TData, TD, C = any[]>(
-	args: FilterTypes<TD>,
-	transform: ((id: string) => TD | undefined | Promise<TD | undefined>),
-	options: IterateAndDeleteChildrenOptions<T, C>,
-	cb?: ((id: string, data: TD, container: C) => any)
+  args: FilterTypes<TD>,
+  transform: (id: string) => TD | undefined | Promise<TD | undefined>,
+  options: IterateAndDeleteChildrenOptions<T, C>,
+  cb?: (id: string, data: TD, container: C) => any
 ) => {
-	const {
-			container,
-			child_path,
-			user_id,
-			multiple = true,
-			manual = false,
-			parent_id,
-			child_type,
-			logger,
-			cache,
-			parent_type,
-			child_ids
-		} = options,
-		// get the data from the cache
-		parent_data = cache[parent_type].get(parent_id) as T,
-		operations: IOperation[] = [];
+  const {
+      container,
+      child_path,
+      user_id,
+      multiple = true,
+      manual = false,
+      parent_id,
+      child_type,
+      logger,
+      cache,
+      parent_type,
+      child_ids,
+      space_id
+    } = options,
+    // get the data from the cache
+    parent_data = cache[parent_type].get(parent_id) as T,
+    operations: IOperation[] = [];
 
-	const updateData = async (child_id: string, child_data: TD) => {
-		cb && (await cb(child_id, child_data, container));
-		logger && NotionLogger.method.info(`DELETE ${child_type} ${child_id}`);
+  const updateData = async (child_id: string, child_data: TD) => {
+    cb && (await cb(child_id, child_data, container));
+    logger && NotionLogger.method.info(`DELETE ${child_type} ${child_id}`);
 
-		let last_edited_props = {};
-		if (!manual) {
-			const updated_data: any = {};
-			if (NotionValidators.dataContainsAliveProp(child_type)) updated_data.alive = false;
+    let last_edited_props = {};
+    if (!manual) {
+      const updated_data: any = {};
+      if (NotionValidators.dataContainsAliveProp(child_type))
+        updated_data.alive = false;
 
-			if (NotionValidators.dataContainsEditedProps(child_type))
-				last_edited_props = NotionUtils.updateLastEditedProps(child_data, user_id);
+      if (NotionValidators.dataContainsEditedProps(child_type))
+        last_edited_props = NotionUtils.updateLastEditedProps(
+          child_data,
+          user_id
+        );
 
-			NotionUtils.deepMerge(child_data, updated_data);
-			const updated_data_payload = { ...updated_data, ...last_edited_props };
-			// Push the updated block data to the stack
-			if (Object.keys(updated_data_payload).length !== 0)
-				operations.push(NotionOperations.Chunk[child_type].update(child_id, [], updated_data_payload));
+      NotionUtils.deepMerge(child_data, updated_data);
+      const updated_data_payload = { ...updated_data, ...last_edited_props };
+      // Push the updated block data to the stack
+      if (Object.keys(updated_data_payload).length !== 0)
+        operations.push(
+          NotionOperations.Chunk[child_type].update(
+            child_id,
+            space_id,
+            [],
+            updated_data_payload
+          )
+        );
 
-			if (typeof child_path === 'string')
-        operations.push(...await NotionLineage.updateChildContainer<T>(parent_type, parent_id, false, child_id, child_path, options));
-		}
-	};
+      if (typeof child_path === 'string')
+        operations.push(
+          ...(await NotionLineage.updateChildContainer<T>(
+            parent_type,
+            parent_id,
+            false,
+            child_id,
+            child_path,
+            space_id,
+            options
+          ))
+        );
+    }
+  };
 
-	await iterateChildren<TD, boolean>({ args, cb: updateData, method: 'DELETE' }, transform, {
-		child_ids: getChildIds(child_ids, parent_data),
-		multiple,
-		child_type,
-		parent_id,
-		parent_type
-	});
+  await iterateChildren<TD, boolean>(
+    { args, cb: updateData, method: 'DELETE' },
+    transform,
+    {
+      child_ids: getChildIds(child_ids, parent_data),
+      multiple,
+      child_type,
+      parent_id,
+      parent_type
+    }
+  );
 
-	// if parent data exists, update the last_edited_props for the cache and push to stack
-	if (NotionValidators.dataContainsEditedProps(parent_type))
-		operations.push(
-			NotionOperations.Chunk[parent_type].update(parent_id, [], NotionUtils.updateLastEditedProps(parent_data, user_id))
-		);
-	await NotionOperations.executeOperations(operations, options);
-	return container;
+  // if parent data exists, update the last_edited_props for the cache and push to stack
+  if (NotionValidators.dataContainsEditedProps(parent_type))
+    operations.push(
+      NotionOperations.Chunk[parent_type].update(
+        parent_id,
+        space_id,
+        [],
+        NotionUtils.updateLastEditedProps(parent_data, user_id)
+      )
+    );
+  await NotionOperations.executeOperations(operations, options);
+  return container;
 };

@@ -29,7 +29,8 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
       logger,
       cache,
       parent_type,
-      child_ids
+      child_ids,
+      space_id
     } = options,
     parent_data = cache[parent_type].get(parent_id) as T,
     operations: IOperation[] = [];
@@ -57,7 +58,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
 
       NotionUtils.deepMerge(child_data, updated_data);
       operations.push(
-        NotionOperations.Chunk[child_type].update(child_id, [], {
+        NotionOperations.Chunk[child_type].update(child_id, space_id, [], {
           ...updated_data,
           ...last_edited_props
         })
@@ -81,6 +82,7 @@ export const update = async <T extends TData, CD, RD, C = any[]>(
     operations.push(
       NotionOperations.Chunk[parent_type].update(
         parent_id,
+        space_id,
         [],
         NotionUtils.updateLastEditedProps(parent_data, user_id)
       )

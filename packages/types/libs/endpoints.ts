@@ -655,9 +655,15 @@ export interface INotionEndpoints {
 
   queryCollection: INotionEndpoint<
     {
-      collectionId: string;
-      collectionViewId: string;
-      query: {
+      collection: {
+        id: string;
+        spaceId: string;
+      };
+      collectionView: {
+        id: string;
+        spaceId: string;
+      };
+      query?: {
         filter?: IViewFilter;
         sort?: ViewSorts[];
         aggregations?: ViewAggregations[];
@@ -669,24 +675,44 @@ export interface INotionEndpoints {
           view_type: TViewType;
         }[];
       };
-      loader: {
-        limit?: number;
-        searchQuery?: string;
-        type: 'table';
-        loadContentCover?: boolean;
-        userTimeZone?: string;
-      };
+      loader:
+        | {
+            limit?: number;
+            searchQuery?: string;
+            type: 'table';
+            loadContentCover?: boolean;
+            userTimeZone?: string;
+          }
+        | {
+            searchQuery?: string;
+            type: 'reducer';
+            reducers: {
+              collection_group_results: { type: 'results'; limit: number };
+            };
+            userTimeZone?: string;
+          };
     },
     {
-      result: {
-        aggregationResults: {
-          type: 'number';
-          value: number;
-        }[];
-        blockIds: string[];
-        total: number;
-        type: 'table';
-      };
+      result:
+        | {
+            aggregationResults: {
+              type: 'number';
+              value: number;
+            }[];
+            blockIds: string[];
+            total: number;
+            type: 'table';
+          }
+        | {
+            type: 'reducer';
+            reducerResults: {
+              collection_group_results: {
+                type: 'results';
+                blockIds: string[];
+                total: number;
+              };
+            };
+          };
       recordMap: Pick<
         RecordMap,
         'collection' | 'space' | 'collection_view' | 'block'

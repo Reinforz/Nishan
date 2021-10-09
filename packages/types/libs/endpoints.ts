@@ -25,10 +25,7 @@ import {
   TPermissionRole,
   TPlanType,
   Transaction,
-  TSchemaUnitType,
   TSearchNotionEndpointPayload,
-  TViewAggregationsAggregators,
-  TViewType,
   UnsubscribedSubscriptionData,
   ViewAggregations,
   ViewSorts
@@ -663,56 +660,30 @@ export interface INotionEndpoints {
         id: string;
         spaceId: string;
       };
-      query?: {
+      loader: {
+        searchQuery?: string;
+        type: 'reducer';
+        reducers: {
+          [k in string]:
+            | { type: 'aggregation'; aggregation: ViewAggregations }
+            | { type: 'results'; total: number };
+        };
+        userTimeZone?: string;
         filter?: IViewFilter;
         sort?: ViewSorts[];
-        aggregations?: ViewAggregations[];
-        aggregate?: {
-          aggregation_type: TViewAggregationsAggregators;
-          id: string;
-          property: string;
-          type: TSchemaUnitType;
-          view_type: TViewType;
-        }[];
       };
-      loader:
-        | {
-            limit?: number;
-            searchQuery?: string;
-            type: 'table';
-            loadContentCover?: boolean;
-            userTimeZone?: string;
-          }
-        | {
-            searchQuery?: string;
-            type: 'reducer';
-            reducers: {
-              collection_group_results: { type: 'results'; limit: number };
-            };
-            userTimeZone?: string;
-          };
     },
     {
-      result:
-        | {
-            aggregationResults: {
-              type: 'number';
-              value: number;
-            }[];
+      result: {
+        type: 'reducer';
+        reducerResults: {
+          collection_group_results: {
+            type: 'results';
             blockIds: string[];
             total: number;
-            type: 'table';
-          }
-        | {
-            type: 'reducer';
-            reducerResults: {
-              collection_group_results: {
-                type: 'results';
-                blockIds: string[];
-                total: number;
-              };
-            };
           };
+        };
+      };
       recordMap: Pick<
         RecordMap,
         'collection' | 'space' | 'collection_view' | 'block'

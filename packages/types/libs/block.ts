@@ -8,34 +8,28 @@ import {
   TTextFormat
 } from '.';
 import { ViewFormatProperties } from './view';
-
 export interface NotionNode {
   alive: boolean;
   version: number;
   id: string;
 }
-
 export interface ParentProps {
   parent_id: string;
   parent_table: 'block' | 'space' | 'user_root' | 'collection';
 }
-
 export interface CreatedProps {
   created_by_id: string;
   created_by_table: 'notion_user';
   created_time: number;
 }
-
 export interface LastEditedProps {
   last_edited_by_id: string;
   last_edited_by_table: 'notion_user';
   last_edited_time: number;
 }
-
 export interface SpaceProps {
   space_id: string;
 }
-
 export interface IBlock
   extends SpaceProps,
     NotionNode,
@@ -45,68 +39,28 @@ export interface IBlock
   copied_from?: string;
   discussions?: string[];
 }
-
-export type TMediaBlockType =
-  | 'code'
-  | 'image'
-  | 'video'
-  | 'bookmark'
-  | 'audio'
-  | 'file';
-export type TBasicBlockType =
-  | 'page'
-  | 'text'
-  | 'header'
-  | 'sub_header'
-  | 'sub_sub_header'
-  | 'to_do'
-  | 'bulleted_list'
-  | 'numbered_list'
-  | 'toggle'
-  | 'quote'
-  | 'divider'
-  | 'callout';
-export type TAdvancedBlockType =
-  | 'table_of_contents'
-  | 'equation'
-  | 'factory'
-  | 'breadcrumb';
-export type TEmbedBlockType =
-  | 'drive'
-  | 'figma'
-  | 'tweet'
-  | 'codepen'
-  | 'gist'
-  | 'maps'
-  | 'embed'
-  | 'abstract'
-  | 'invision'
-  | 'framer'
-  | 'whimsical'
-  | 'miro'
-  | 'pdf'
-  | 'loom'
-  | 'typeform';
-export type TCollectionBlockType =
+export declare type TMediaBlockType = TMediaBlock['type'];
+export declare type TBasicBlockType = TBasicBlock['type'];
+export declare type TAdvancedBlockType = TAdvancedBlock['type'];
+export declare type TEmbedBlockType = TEmbedBlock['type'];
+export declare type TCollectionBlockType =
   | 'collection_view_page'
   | 'collection_view'
   | 'linked_db';
-export type TColumnBlockType = 'column_list' | 'column';
-export type TBlockType =
+export declare type TColumnBlockType = 'column_list' | 'column';
+export declare type TBlockType =
   | TEmbedBlockType
   | TMediaBlockType
   | TBasicBlockType
   | TAdvancedBlockType
   | TCollectionBlockType
   | TColumnBlockType;
-
 export interface MediaProps {
   source: string[][];
   size?: string[][];
   title?: string[][];
   caption?: TTextFormat;
 }
-
 export interface MediaFormat {
   block_aspect_ratio?: number;
   block_full_width?: boolean;
@@ -116,53 +70,42 @@ export interface MediaFormat {
   block_height?: number;
   display_source: string;
 }
-
 export interface WebBookmarkFormat {
   bookmark_cover: string;
   bookmark_icon: string;
   block_color?: TFormatBlockColor;
 }
-
 export interface WebBookmarkProps {
   link: string[][];
   description?: TTextFormat;
   title: TTextFormat;
   caption?: TTextFormat;
 }
-
 export interface CodeFormat {
   code_wrap: boolean;
 }
-
 export interface CodeProps {
   title: TTextFormat;
   language: [[TCodeLanguage]];
   caption: TTextFormat;
 }
-
 export interface FileProps {
   title: TTextFormat;
   source: string[][];
   caption?: TTextFormat;
 }
-
 export interface FileFormat {
   block_color?: TFormatBlockColor;
 }
-
 export interface TodoProps {
   title: TTextFormat;
   checked: ('Yes' | 'No')[][];
 }
-
-// -----------------
-
 export interface IMedia {
   properties: MediaProps;
   format?: MediaFormat;
   file_ids: string[];
 }
-
 export interface ICommonText<F = Record<string, unknown>> {
   properties: {
     title: TTextFormat;
@@ -186,7 +129,6 @@ export interface IWebBookmark extends IBlock {
   properties: WebBookmarkProps;
   format?: WebBookmarkFormat;
 }
-
 export interface ICode extends IBlock {
   type: 'code';
   properties: CodeProps;
@@ -197,21 +139,17 @@ export interface IFile extends IBlock {
   properties: FileProps;
   format?: FileFormat;
 }
-
-export type TMediaBlock =
+export declare type TMediaBlock =
   | IVideo
   | IAudio
   | IImage
   | IWebBookmark
   | ICode
   | IFile;
-
-// Basic IBlock Types
 export interface PageProps {
   title: TTextFormat;
   [k: string]: TTextFormat;
 }
-
 export interface PageFormat {
   page_icon?: string;
   page_font?: null | 'mono' | 'serif';
@@ -227,7 +165,6 @@ export interface PageFormat {
     comments: 'section_hide' | 'section_show';
   };
 }
-
 export interface IPage extends IBlock {
   properties: PageProps;
   type: 'page';
@@ -237,13 +174,11 @@ export interface IPage extends IBlock {
   file_ids?: string[];
   permissions: IPermission[];
 }
-
 export interface IColumnFormat {
   format: {
     column_ratio: number;
   };
 }
-
 export interface IColumn
   extends NotionNode,
     ParentProps,
@@ -255,7 +190,6 @@ export interface IColumn
   type: 'column';
   properties?: Record<string, unknown>;
 }
-
 export interface IColumnList
   extends NotionNode,
     ParentProps,
@@ -267,7 +201,6 @@ export interface IColumnList
   format?: Record<string, unknown>;
   properties?: Record<string, unknown>;
 }
-
 export interface ICollectionBlock extends IBlock {
   format: {
     block_locked_by?: string;
@@ -277,18 +210,14 @@ export interface ICollectionBlock extends IBlock {
   collection_id: string;
   type: 'collection_view' | 'collection_view_page';
 }
-
 export interface ICollectionView extends ICollectionBlock {
   type: 'collection_view';
 }
-
 export interface ICollectionViewPage extends ICollectionBlock {
   type: 'collection_view_page';
   permissions: IPermission[];
 }
-
-export type TCollectionBlock = ICollectionView | ICollectionViewPage;
-
+export declare type TCollectionBlock = ICollectionView | ICollectionViewPage;
 export interface IText extends IBlock, ICommonText {
   type: 'text';
 }
@@ -322,12 +251,15 @@ export interface INumberedList
   type: 'numbered_list';
   content?: string[];
 }
-
 export interface IToggle extends IBlock, ICommonText {
   content?: string[];
   type: 'toggle';
 }
-export interface IQuote extends IBlock, ICommonText<{ quote_size?: 'large' }> {
+export interface IQuote
+  extends IBlock,
+    ICommonText<{
+      quote_size?: 'large';
+    }> {
   type: 'quote';
   content?: string[];
 }
@@ -348,15 +280,13 @@ export interface ICallout extends IBlock {
   };
   content?: string[];
 }
-
 export interface IAlias extends IBlock {
   type: 'alias';
   format: {
     alias_pointer: IPointer;
   };
 }
-
-export type TBasicBlock =
+export declare type TBasicBlock =
   | IAlias
   | IText
   | ITodo
@@ -371,16 +301,13 @@ export type TBasicBlock =
   | ICallout
   | IPage
   | TCollectionBlock;
-
-// Advanced block types
-export interface ITOC extends IBlock {
+export interface IToc extends IBlock {
   type: 'table_of_contents';
   format?: {
     block_color?: TFormatBlockColor;
   };
   properties?: Record<string, unknown>;
 }
-
 export interface IEquation extends IBlock {
   type: 'equation';
   properties: {
@@ -390,7 +317,6 @@ export interface IEquation extends IBlock {
     block_color?: TFormatBlockColor;
   };
 }
-
 export interface IBreadcrumb extends IBlock {
   type: 'breadcrumb';
   properties?: Record<string, unknown>;
@@ -406,10 +332,27 @@ export interface IFactory extends IBlock {
   };
   content: string[];
 }
-
-export type TAdvancedBlock = ITOC | IEquation | IBreadcrumb | IFactory;
-
-// Embeds Type
+export interface ITransclusionContainer extends IBlock {
+  type: 'transclusion_container';
+  content?: string[];
+}
+export interface ITransclusionReference extends IBlock {
+  type: 'transclusion_reference';
+  format?: {
+    copied_from_pointer?: IPointer;
+    transclusion_reference_pointer?: IPointer;
+  };
+  copied_from?: string;
+}
+export declare type TTransclusionBlock =
+  | ITransclusionReference
+  | ITransclusionContainer;
+export declare type TAdvancedBlock =
+  | TTransclusionBlock
+  | IToc
+  | IEquation
+  | IBreadcrumb
+  | IFactory;
 export interface IEmbedBlock extends IBlock {
   properties: MediaProps;
   format?: MediaFormat;
@@ -481,33 +424,35 @@ export interface ITweet extends IBlock {
   };
   format?: Record<string, unknown>;
 }
-
-export type TEmbedBlock =
+export declare type TEmbedBlock =
   | IEmbed
   | ITweet
   | ICodepen
   | IMaps
   | IFigma
   | IDrive
-  | IGist;
-
-export type TBlock =
+  | IGist
+  | IAbstract
+  | IInvision
+  | ILoom
+  | IFramer
+  | IWhimsical
+  | IMiro
+  | IPdf
+  | ITypeform;
+export declare type TBlock =
   | TBasicBlock
   | TMediaBlock
   | TAdvancedBlock
   | TEmbedBlock
   | IColumnList
   | IColumn;
-
-export type TParentType = IPage | ISpace | ICollectionViewPage;
-
-export type TPropertyVisibility = 'show' | 'hide_if_empty' | 'hide';
-
-export type CollectionFormatPropertyVisibility = {
+export declare type TParentType = IPage | ISpace | ICollectionViewPage;
+export declare type TPropertyVisibility = 'show' | 'hide_if_empty' | 'hide';
+export declare type CollectionFormatPropertyVisibility = {
   property: string;
   visibility: 'show' | 'hide_if_empty' | 'hide';
 };
-
 export interface ICollection extends NotionNode, ParentProps {
   description?: TTextFormat;
   icon?: string;
@@ -522,5 +467,4 @@ export interface ICollection extends NotionNode, ParentProps {
     collection_page_properties?: ViewFormatProperties[];
   };
 }
-
-export type TPage = IPage | ICollectionViewPage;
+export declare type TPage = IPage | ICollectionViewPage;

@@ -666,7 +666,7 @@ export interface INotionEndpoints {
         reducers: {
           [k in string]:
             | { type: 'aggregation'; aggregation: ViewAggregations }
-            | { type: 'results'; total: number };
+            | { type: 'results'; limit: number };
         };
         userTimeZone?: string;
         filter?: IViewFilter;

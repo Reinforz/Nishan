@@ -1,10 +1,17 @@
-import { RollupViewAggregationsAggregator, TFormula, TTextColor } from '.';
+import {
+  RollupViewAggregationsAggregator,
+  TDateFormat,
+  TFormula,
+  TTextColor,
+  TTimeFormat
+} from '.';
 
 export type TNumberFormat =
   | 'number'
   | 'number_with_commas'
   | 'percent'
   | 'dollar'
+  | 'canadian_dollar'
   | 'euro'
   | 'pound'
   | 'yen'
@@ -70,7 +77,7 @@ export interface ISchemaUnit {
 export interface SelectOption {
   id: string;
   value: string;
-  color: Exclude<TTextColor, 'teal'> | 'green';
+  color: Exclude<TTextColor, 'teal' | 'default'> | 'green';
 }
 
 /* Basic Schema Units */
@@ -100,6 +107,8 @@ export interface TitleSchemaUnit extends ISchemaUnit {
 
 export interface DateSchemaUnit extends ISchemaUnit {
   type: 'date';
+  date_format?: TDateFormat;
+  time_format?: TTimeFormat;
 }
 
 export interface PersonSchemaUnit extends ISchemaUnit {

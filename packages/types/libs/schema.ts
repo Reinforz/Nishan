@@ -77,7 +77,7 @@ export interface ISchemaUnit {
 export interface SelectOption {
   id: string;
   value: string;
-  color: Exclude<TTextColor, 'teal' | 'default'> | 'green';
+  color: Exclude<TTextColor, 'teal'> | 'green';
 }
 
 /* Basic Schema Units */

@@ -30,6 +30,7 @@ import {
   ViewAggregations,
   ViewSorts
 } from './';
+import { InlineDate } from './date';
 import {
   ICommentRecordMap,
   IDiscussionRecordMap,
@@ -677,11 +678,24 @@ export interface INotionEndpoints {
       result: {
         type: 'reducer';
         reducerResults: {
-          collection_group_results: {
-            type: 'results';
-            blockIds: string[];
-            total: number;
-          };
+          [key: string]:
+            | {
+                type: 'results';
+                blockIds: string[];
+                total: number;
+              }
+            | {
+                aggregationResult:
+                  | {
+                      type: 'number';
+                      value: number;
+                    }
+                  | {
+                      type: 'date';
+                      value: InlineDate;
+                    };
+                type: 'aggregation';
+              };
         };
       };
       recordMap: Pick<

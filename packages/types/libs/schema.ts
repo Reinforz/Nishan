@@ -148,7 +148,7 @@ export interface RelationSchemaUnit extends ISchemaUnit {
 
 export interface RollupSchemaUnit extends ISchemaUnit {
   type: 'rollup';
-  collection_id: string;
+  collection_id?: string;
   relation_property: string;
   target_property: string;
   target_property_type: TSchemaUnitType;

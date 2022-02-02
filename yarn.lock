@@ -2809,6 +2809,16 @@
   resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.28.tgz#4319dbbbcbb36d375b619912f73168c36350c298"
   integrity sha512-b4niZI/9iEuYB2c8NXoYQbGrdLTN924lZrz1lR4Iy8DszsnWX5YX/Vg6+Om0mxqzbWmExmg4P7ow2kuNM9hW2Q==
 
+"@nishans/types@0.0.35", "@nishans/types@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.35.tgz#edbede935b6cf92b5d633ee60d7b348088fbd291"
+  integrity sha512-XlrfmggJpQ7CBJKVUqzxUD5/N2rr6j2qaPkeIWh86qX5Wu965D76eq7N79Wvt/jqDqCVjc8vjz5fIwwng4WnJg==
+
+"@nishans/types@0.0.47":
+  version "0.0.47"
+  resolved "https://registry.yarnpkg.com/@nishans/types/-/types-0.0.47.tgz#10a279b193a5ed5a2a4a547b7e34d78a3856426e"
+  integrity sha512-g2tYL6VL41Z5OEvhgeQMASXy9XEimzzAsbEtrktnoqwiUuf8M3Vw//1eKGgy/CFK4Gkz1oDGEF6M9YFB6DyVAA==
+
 "@nishans/utils@0.0.19":
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/@nishans/utils/-/utils-0.0.19.tgz#5127ae7a9240290d2ea03fecdcb4df455aa8f2cc"
@@ -4310,10 +4320,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@^15.0.0":
-  version "15.0.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.0.3.tgz#ee09fcaac513576474c327da5818d421b98db88a"
-  integrity sha512-/WbxFeBU+0F79z9RdEOXH4CsDga+ibi5M8uEYr91u3CkT/pdWcV8MCook+4wDPnZBexRdwWS+PiVZ2xJviAzcQ==
+"@types/node@*", "@types/node@^17.0.14":
+  version "17.0.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.14.tgz#33b9b94f789a8fedd30a68efdbca4dbb06b61f20"
+  integrity sha512-SbjLmERksKOGzWzPNuW7fJM7fk3YXVTFiZWB/Hs99gwhk+/dnrQRPBQjPW9aO+fi1tAffi9PrwFvsmOKmDTyng==
 
 "@types/node@^10.1.0":
   version "10.17.55"

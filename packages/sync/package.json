@@ -38,13 +38,13 @@
     "@nishans/extract": "0.0.23",
     "@nishans/operations": "0.0.32",
     "js-yaml": "^4.0.0",
-    "mongodb": "^3.6.3",
+    "mongodb": "^4.13.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@nishans/types": "0.0.35",
     "@types/js-yaml": "^4.0.0",
-    "@types/mongodb": "^3.6.3",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^15.0.0",
     "@types/uuid": "^8.3.0"
   },
